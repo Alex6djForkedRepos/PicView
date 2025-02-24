@@ -39,10 +39,6 @@ public partial class KeybindingsWindow : Window
             MinimizeButton.Foreground = new SolidColorBrush(color);
             CloseButton.Foreground = new SolidColorBrush(color);
         }
-        else if (!Settings.Theme.Dark)
-        {
-            ParentBorder.Background = new SolidColorBrush(Color.FromArgb(114,132, 132, 132));
-        }
         Loaded += delegate
         {
             MinWidth = MaxWidth = Width;

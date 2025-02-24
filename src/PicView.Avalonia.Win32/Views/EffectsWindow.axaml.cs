@@ -43,7 +43,6 @@ public partial class EffectsWindow : Window
         }
         else if (!Settings.Theme.Dark)
         {
-            ParentBorder.Background = new SolidColorBrush(Color.FromArgb(114,132, 132, 132));
         }
         Loaded += delegate
         {

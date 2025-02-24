@@ -72,8 +72,10 @@ public static class ThemeManager
         Application.Current.Resources["ContextMenuTextColor"] = mainColor;
         Application.Current.Resources["ContextMenuBackgroundColor"] = Color.Parse("#A1464646");
             
-        Application.Current.Resources["MenuBackgroundColor"] = Color.Parse("#D73E3E3E");
-        Application.Current.Resources["MenuButtonColor"] = Color.Parse("#76909090");
+        Application.Current.Resources["MenuBackgroundColor"] = Color.Parse("#6D5B5B5B");
+        Application.Current.Resources["MenuButtonColor"] = Color.Parse("#50797979");
+        
+        Application.Current.Resources["WindowBorderColor"] = Color.Parse("#15FFFFFF");
         
     }
 

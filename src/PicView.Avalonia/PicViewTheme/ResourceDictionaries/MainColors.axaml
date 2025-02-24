@@ -98,17 +98,11 @@
             <Color x:Key="ContextMenuTextColor">#2B251E</Color>
 
             <Color x:Key="WindowBackgroundColor">#fff</Color>
-            <Color x:Key="WindowSecondaryBackgroundColor">#FFF2F2F2</Color>
-            <Color x:Key="WindowBorderColor">#13FFFFFF</Color>
-            <Color x:Key="WindowButtonBackgroundColor">#FFF1F1F1</Color>
+            <Color x:Key="WindowSecondaryBackgroundColor">#fff</Color>
+            <Color x:Key="WindowBorderColor">#39FFFFFF</Color>
+            <Color x:Key="WindowButtonBackgroundColor">#fff</Color>
 
-            <ImageBrush
-                DestinationRect="0,0,200,200"
-                Opacity=".6"
-                Source="/PicViewTheme/Resources/noisy-texture-200x200-o4-d23-c-ffffff-t1.png"
-                Stretch="Fill"
-                TileMode="FlipXY"
-                x:Key="NoisyTexture" />
+            <Color x:Key="NoisyTexture">#17FFFFFF</Color>
         </ResourceDictionary>
     </ResourceDictionary.ThemeDictionaries>
 </ResourceDictionary>

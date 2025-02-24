@@ -50,10 +50,6 @@ public partial class ExifWindow : Window
             OpenWithButton.Foreground = new SolidColorBrush(color);
             LocateOnDiskButton.Foreground = new SolidColorBrush(color);
         }
-        else if (!Settings.Theme.Dark)
-        {
-            ParentBorder.Background = new SolidColorBrush(Color.FromArgb(114,132, 132, 132));
-        }
 
         if (Settings.Theme.GlassTheme || !Settings.Theme.Dark)
         {

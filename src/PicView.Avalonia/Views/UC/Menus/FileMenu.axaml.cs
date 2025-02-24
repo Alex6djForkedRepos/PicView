@@ -12,6 +12,7 @@ public partial class FileMenu  : AnimatedMenu
         {
             if (Settings.Theme.GlassTheme)
             {
+                
             }
             else if (!Settings.Theme.Dark)
             {

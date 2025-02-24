@@ -522,11 +522,6 @@ public class ImageIterator : IAsyncDisposable
                             {
                                 IsLoading = false
                             };
-                            if (preloadValue.ImageModel.Image is null)
-                            {
-                                await cts.CancelAsync();
-                                return;
-                            }
                         }
                     } while (preloadValue.IsLoading);
                 }
@@ -560,7 +555,7 @@ public class ImageIterator : IAsyncDisposable
                     _vm.SecondaryImageSource = nextPreloadValue.ImageModel?.Image;
                 }
 
-                if (!cts.IsCancellationRequested)
+                if (!cts.IsCancellationRequested && index == CurrentIndex)
                 {
                     await UpdateImage.UpdateSource(_vm, index, ImagePaths, IsReversed, preloadValue,
                             nextPreloadValue)
@@ -569,7 +564,7 @@ public class ImageIterator : IAsyncDisposable
             }
             else
             {
-                if (!cts.IsCancellationRequested)
+                if (!cts.IsCancellationRequested && index == CurrentIndex)
                 {
                     await UpdateImage.UpdateSource(_vm, index, ImagePaths, IsReversed, preloadValue)
                         .ConfigureAwait(false);
@@ -593,9 +588,9 @@ public class ImageIterator : IAsyncDisposable
             PreLoader.Add(index, ImagePaths, preloadValue?.ImageModel);
 
             // Add recent files, except when browsing archive
-            if (string.IsNullOrWhiteSpace(TempFileHelper.TempFilePath) && ImagePaths.Count > index)
+            if (string.IsNullOrWhiteSpace(TempFileHelper.TempFilePath) && ImagePaths.Count > CurrentIndex)
             {
-                FileHistoryNavigation.Add(ImagePaths[index]);
+                FileHistoryNavigation.Add(ImagePaths[CurrentIndex]);
             }
         }
         catch (OperationCanceledException)
