@@ -60,6 +60,13 @@ public static class QuickLoad
             {
                 WindowFunctions.CenterWindowOnScreen();
             }
+            else if (vm.PixelWidth > UIHelper.GetMainView.Bounds.Width || vm.PixelHeight > UIHelper.GetMainView.Bounds.Height)
+            {
+                // Fixes weird bug where the image is not rendered correctly
+                vm.ImageViewer.MainBorder.Width = vm.ImageViewer.ImageScrollViewer.Bounds.Width;
+                vm.ImageViewer.MainBorder.Height = vm.ImageViewer.ImageScrollViewer.Bounds.Height;
+                WindowResizing.SetSize(vm);
+            }
         }, DispatcherPriority.Send);
 
         vm.IsLoading = false;
