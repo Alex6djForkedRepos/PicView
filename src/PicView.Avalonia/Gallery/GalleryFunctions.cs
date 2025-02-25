@@ -93,22 +93,19 @@ public static class GalleryFunctions
 
         void Removal()
         {
-            if (galleryListBox.Items.Count > index)
+            var removalIndex = galleryListBox.Items.Count > index ? index : galleryListBox.Items.Count - 1;
+            if (removalIndex <= -1)
             {
-                galleryListBox.Items.RemoveAt(index);
+                return;
             }
-            else
+            if (galleryListBox.Items[removalIndex] is not GalleryItem galleryItem)
             {
-                var lastIndex = galleryListBox.Items.Count - 1 < 0 ? galleryListBox.Items.Count - 1 : 0;
-                if (lastIndex <= -1)
-                {
-                    return;
-                }
-
-                if (galleryListBox.Items[lastIndex] is GalleryItem galleryItem)
-                {
-                    galleryListBox.Items.Remove(galleryItem);
-                }
+                return;
+            }
+            galleryListBox.Items.Remove(galleryItem);
+            if (galleryItem.GalleryImage.Source is IDisposable galleryImage)
+            {
+                galleryImage.Dispose();
             }
         }
     }

@@ -390,9 +390,9 @@ public class PreLoader : IAsyncDisposable
         {
             lock (_lock)
             {
-                if (item.ImageModel?.Image is Bitmap bitmap)
+                if (item.ImageModel?.Image is IDisposable disposable)
                 {
-                    bitmap.Dispose();
+                    disposable.Dispose();
                 }
             }
         }
