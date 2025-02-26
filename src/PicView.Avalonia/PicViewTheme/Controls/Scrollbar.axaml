@@ -91,7 +91,11 @@
             <Setter Property="Width" Value="30" />
             <Setter Property="Template">
                 <ControlTemplate>
-                    <Border Background="{DynamicResource SecondaryBackgroundColor}" UseLayoutRounding="False">
+                    <Border
+                        Background="{DynamicResource SecondaryBackgroundColor}"
+                        BorderBrush="{DynamicResource MainBorderColor}"
+                        BorderThickness="1,0,0,0"
+                        UseLayoutRounding="False">
                         <Grid RowDefinitions="Auto,*,Auto">
                             <RepeatButton
                                 Background="Transparent"
