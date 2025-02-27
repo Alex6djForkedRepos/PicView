@@ -156,7 +156,8 @@ public static class SetTitleHelper
 
     public static void ResetTitle(MainViewModel vm)
     {
-        vm.WindowTitle = TranslationHelper.GetTranslation("NoImage") + " - PicView";
-        vm.TitleTooltip = vm.Title = TranslationHelper.GetTranslation("NoImage");
+        vm.Title = TranslationHelper.Translation.NoImage;
+        vm.WindowTitle = TranslationHelper.Translation.NoImage + " - PicView";
+        vm.TitleTooltip = TranslationHelper.Translation.NoImage;
     }
 }
