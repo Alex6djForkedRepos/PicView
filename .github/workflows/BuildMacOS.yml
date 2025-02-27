@@ -28,7 +28,11 @@ jobs:
         id: get-version
         run: pwsh -File "${{ github.workspace }}/Build/Get-VersionInfo.ps1"
 
-      # Step 4: Build arm64 version
+      # Step 4: Restore dependencies
+      - name: Restore dependencies
+        run: dotnet restore src/PicView.Avalonia.MacOS/PicView.Avalonia.MacOS.csproj
+
+      # Step 5: Build arm64 version
       - name: Build arm64 version
         run: |
           pwsh -File "${{ github.workspace }}/Build/Build Avalonia.MacOS.ps1" `
@@ -37,7 +41,12 @@ jobs:
             -appVersion "${{steps.get-version.outputs.version}}"
         shell: pwsh
         
-      # Step 6: Upload arm64 artifacts
+      # Step 6: Create DMG for arm64
+      - name: Create DMG for arm64
+        run: |
+          hdiutil create -volname "PicView" -srcfolder "${{ github.workspace }}/Build/PicView-v${{steps.get-version.outputs.version}}-osx-arm64/PicView.app" -ov -format UDZO "${{ github.workspace }}/Build/PicView-v${{steps.get-version.outputs.version}}-osx-arm64.dmg"
+        
+      # Step 7: Upload arm64 artifacts
       - name: Upload arm64 artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -47,7 +56,7 @@ jobs:
             ${{ github.workspace }}/Build/PicView-v${{steps.get-version.outputs.version}}-osx-arm64.dmg
           retention-days: 14
 
-      # Step 7: Build and create x64 .app bundle
+      # Step 8: Build x64 version
       - name: Build x64 version
         run: |
           pwsh -File "${{ github.workspace }}/Build/Build Avalonia.MacOS.ps1" `
@@ -56,13 +65,12 @@ jobs:
             -appVersion "${{steps.get-version.outputs.version}}"
         shell: pwsh
         
-      # Step 8: Create DMG for x64
+      # Step 9: Create DMG for x64
       - name: Create DMG for x64
         run: |
           hdiutil create -volname "PicView" -srcfolder "${{ github.workspace }}/Build/PicView-v${{steps.get-version.outputs.version}}-osx-x64/PicView.app" -ov -format UDZO "${{ github.workspace }}/Build/PicView-v${{steps.get-version.outputs.version}}-osx-x64.dmg"
 
-
-      # Step 9: Upload x64 artifacts
+      # Step 10: Upload x64 artifacts
       - name: Upload x64 artifacts
         uses: actions/upload-artifact@v4
         with:
