@@ -1,5 +1,5 @@
 {
-  "About": "PicView について",
+  "About": "について",
   "ActionProgram": "プログラム",
   "AddedToClipboard": "クリップボードへコピー",
   "AdditionalFunctions": "追加機能",
@@ -262,7 +262,7 @@
   "Resolution": "解像度",
   "ResolutionUnit": "解像度の単位",
   "RestartApp": "アプリの再起動",
-  "RestoreDown": "Restore Down",
+  "RestoreDown": "復元する",
   "Reverse": "後へ",
   "Right": "右",
   "RotateLeft": "左回転",
