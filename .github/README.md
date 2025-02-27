@@ -19,7 +19,7 @@ Enjoy a clean, free, and fast experience with no bloated UI or annoying pop-ups.
 
 # Downloads
 
-[![](https://img.shields.io/badge/Windows-x64-blue?style=flat-square&logo=windows&logoColor=fff)](https://github.com/Ruben2776/PicView/releases/download/3.0.2/Setup-PicView-v3.0.2-win-x64.exe) [![](https://img.shields.io/badge/Windows-arm64-blue?style=flat-square&logo=windows&logoColor=fff)](https://github.com/Ruben2776/PicView/releases/download/3.0.2/Setup-PicView-v3.0.2-win-arm64.exee)
+[![](https://img.shields.io/badge/Windows-x64-blue?style=flat-square&logo=windows&logoColor=fff)](https://github.com/Ruben2776/PicView/releases/download/3.0.3/Setup-PicView-v3.0.3-win-x64.exe) [![](https://img.shields.io/badge/Windows-arm64-blue?style=flat-square&logo=windows&logoColor=fff)](https://github.com/Ruben2776/PicView/releases/download/3.0.3/Setup-PicView-v3.0.3-win-arm64.exe)
 
 [Latest releases at PicView.org](https://picview.org/download)
 
@@ -207,7 +207,8 @@ Romanian by <a href="https://crowdin.com/profile/lmg">M. Gabriel Lup</a> <br>
 Swedish by <a href="https://github.com/sparmark">Stefan Parmark</a> <br>
 Brazilian Portuguese by <a href="https://github.com/andercard0">Anderson Cardoso</a> <br>
 Dutch by <a href="https://github.com/Lien5">Lien5</a> <br>
-English and Danish by me<br>
+Japanese by <a href="https://github.com/coolvitto">coolvitto</a> <br>
+English and Danish by <a href="https://github.com/Ruben2776">Ruben2776</a><br>
 
 **Looking for translators!**
 If you want to help translate another language or update/improve a current one and be listed here, please take a look at
