@@ -48,30 +48,14 @@ public static class QuickLoad
             secondaryPreloadValue = await NavigationManager.GetNextPreLoadValueAsync();
             vm.SecondaryImageSource = secondaryPreloadValue?.ImageModel?.Image;
         }
+        
         await Dispatcher.UIThread.InvokeAsync(() =>
         {
             vm.ImageViewer.SetTransform(imageModel.EXIFOrientation);
-            if (!Settings.Zoom.ScrollEnabled)
-            {
-                WindowResizing.SetSize(imageModel.PixelWidth, imageModel.PixelHeight, secondaryPreloadValue?.ImageModel?.PixelWidth ?? 0, secondaryPreloadValue?.ImageModel?.PixelHeight ?? 0, imageModel.Rotation, vm);
-            }
-
+            SetSize();
             if (Settings.WindowProperties.AutoFit)
             {
                 WindowFunctions.CenterWindowOnScreen();
-            }
-            else if (vm.PixelWidth > vm.ImageViewer.Bounds.Width)
-            {
-                // Fixes weird bug where the image is not rendered correctly
-                // TODO: check if this will still be needed in future Avalonia versions
-                if (vm.PixelHeight > vm.ImageViewer.Bounds.Height)
-                {
-                    vm.ImageViewer.MainBorder.Height = vm.ImageViewer.ImageScrollViewer.Bounds.Height;
-                }
-
-                vm.ImageViewer.MainBorder.Width = vm.ImageViewer.ImageScrollViewer.Bounds.Width;
-
-                WindowResizing.SetSize(vm);
             }
         }, DispatcherPriority.Send);
 
@@ -79,7 +63,7 @@ public static class QuickLoad
         
         NavigationManager.InitializeImageIterator(vm);
         vm.GetIndex = NavigationManager.GetNonZeroIndex;
-
+        
         if (Settings.ImageScaling.ShowImageSideBySide)
         {
             SetTitleHelper.SetSideBySideTitle(vm, imageModel, secondaryPreloadValue?.ImageModel);
@@ -103,8 +87,34 @@ public static class QuickLoad
             }
         }
         
-        vm.ExifOrientation = imageModel.EXIFOrientation;
+        await Dispatcher.UIThread.InvokeAsync(() =>
+        {
+            if (vm.PixelWidth > vm.ImageViewer.Bounds.Width && !Settings.Zoom.ScrollEnabled)
+            {
+                // Fixes weird bug where the image is not rendered correctly
+                // TODO: check if this will still be needed in future Avalonia versions
+                if (vm.PixelHeight > vm.ImageViewer.Bounds.Height)
+                {
+                    vm.ImageViewer.MainBorder.Height = vm.ImageViewer.ImageScrollViewer.Bounds.Height;
+                }
+
+                vm.ImageViewer.MainBorder.Width = vm.ImageViewer.ImageScrollViewer.Bounds.Width;
+
+                WindowResizing.SetSize(1, 1, 0, 0, 0, vm);
+            }
+        });
         
+        await Dispatcher.UIThread.InvokeAsync(() =>
+        {
+            if (vm.PixelWidth > vm.ImageViewer.Bounds.Width && !Settings.Zoom.ScrollEnabled)
+            {
+                vm.ImageViewer.MainBorder.Height = double.NaN;
+                vm.ImageViewer.MainBorder.Width = double.NaN;
+
+                SetSize();
+            }
+        }, DispatcherPriority.Send);
+
         if (Settings.Zoom.ScrollEnabled)
         {
             // Bad fix for scrolling
@@ -120,20 +130,8 @@ public static class QuickLoad
                 WindowResizing.SetSize(imageModel.PixelWidth, imageModel.PixelHeight, secondaryPreloadValue?.ImageModel?.PixelWidth ?? 0, secondaryPreloadValue?.ImageModel?.PixelHeight ?? 0, imageModel.Rotation, vm);
             }, DispatcherPriority.Send);
         }
-        else if (!Settings.WindowProperties.AutoFit)
-        {
-            if (vm.PixelWidth > vm.ImageViewer.Bounds.Width)
-            {
-                // Fixes weird bug where the image is not rendered correctly
-                // TODO: check if this will still be needed in future Avalonia versions
-                vm.ImageSource = imageModel.Image;
-                vm.SecondaryImageSource = secondaryPreloadValue?.ImageModel?.Image;
-                await Dispatcher.UIThread.InvokeAsync(() =>
-                {
-                    WindowResizing.SetSize(imageModel.PixelWidth, imageModel.PixelHeight, secondaryPreloadValue?.ImageModel?.PixelWidth ?? 0, secondaryPreloadValue?.ImageModel?.PixelHeight ?? 0, imageModel.Rotation, vm);
-                }, DispatcherPriority.Send);
-            }
-        }
+
+        vm.ExifOrientation = imageModel.EXIFOrientation;
         
         // Add recent files, except when browsing archive
         if (string.IsNullOrWhiteSpace(TempFileHelper.TempFilePath))
@@ -178,5 +176,12 @@ public static class QuickLoad
         }
 
         await Task.WhenAll(tasks).ConfigureAwait(false);
+        
+        return;
+
+        void SetSize()
+        {
+            WindowResizing.SetSize(imageModel.PixelWidth, imageModel.PixelHeight, secondaryPreloadValue?.ImageModel?.PixelWidth ?? 0, secondaryPreloadValue?.ImageModel?.PixelHeight ?? 0, imageModel.Rotation, vm);
+        }
     }
 }
