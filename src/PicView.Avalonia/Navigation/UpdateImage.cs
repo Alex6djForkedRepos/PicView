@@ -98,9 +98,7 @@ public static class UpdateImage
             {
                 if (TiffManager.IsTiff(preLoadValue.ImageModel.FileInfo.FullName))
                 {
-                    SetTitleHelper.TrySetTiffTitle(preLoadValue.ImageModel.PixelWidth,
-                        preLoadValue.ImageModel.PixelHeight, NavigationManager.GetCurrentIndex,
-                        preLoadValue.ImageModel.FileInfo, vm);
+                    SetTitleHelper.TrySetTiffTitle(preLoadValue.ImageModel, vm);
                 }
                 else
                 {

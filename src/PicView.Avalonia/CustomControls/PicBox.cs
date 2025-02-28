@@ -18,8 +18,8 @@ using PicView.Avalonia.ViewModels;
 using ReactiveUI;
 using Vector = Avalonia.Vector;
 
-
 namespace PicView.Avalonia.CustomControls;
+
 public class PicBox : Control
 {
     #region Fields and Properties

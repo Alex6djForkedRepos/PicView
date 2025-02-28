@@ -65,13 +65,13 @@ public static class SetTitleHelper
     {
         if (imageModel is null)
         {
-            ReturnError();
+            ReturnError(vm);
             return;
         }
 
         if (imageModel.FileInfo is null)
         {
-            ReturnError();
+            ReturnError(vm);
             return;
         }
 
@@ -80,42 +80,44 @@ public static class SetTitleHelper
         vm.WindowTitle = windowTitles.TitleWithAppName;
         vm.Title = windowTitles.BaseTitle;
         vm.TitleTooltip = windowTitles.FilePathTitle;
-
-        return;
-
-        void ReturnError()
-        {
-            vm.WindowTitle =
-                vm.Title =
-                    vm.TitleTooltip = TranslationHelper.GetTranslation("UnableToRender");
-        }
     }
     
     public static void SetTiffTitle(TiffManager.TiffNavigationInfo tiffNavigationInfo, int width, int height, int index, FileInfo fileInfo, MainViewModel vm)
     {
-        var name = tiffNavigationInfo.Pages[tiffNavigationInfo.CurrentPage].FileName + $" [{tiffNavigationInfo.CurrentPage + 1}/{tiffNavigationInfo.PageCount}]";
         var singeImageWindowTitles = ImageTitleFormatter.GenerateTiffTitleStrings(width, height, index, fileInfo, tiffNavigationInfo, 1, NavigationManager.GetCollection);
         vm.WindowTitle = singeImageWindowTitles.TitleWithAppName;
         vm.Title = singeImageWindowTitles.BaseTitle; 
         vm.TitleTooltip = singeImageWindowTitles.BaseTitle;
     }
     
-    public static void TrySetTiffTitle(int width, int height, int index, FileInfo fileInfo, MainViewModel vm)
+    public static void TrySetTiffTitle(ImageModel? imageModel, MainViewModel vm)
     {
-        if (TiffManager.GetTiffPageCount(fileInfo.FullName) is { } pageCount and > 1)
+        if (imageModel is null)
+        {
+            ReturnError(vm);
+            return;
+        }
+
+        if (imageModel.FileInfo is null)
+        {
+            ReturnError(vm);
+            return;
+        }
+        
+        if (TiffManager.GetTiffPageCount(imageModel.FileInfo.FullName) is { } pageCount and > 1)
         {
             var tiffNavigationInfo = new TiffManager.TiffNavigationInfo
             {
                 CurrentPage = 0,
                 PageCount = pageCount,
-                Pages = TiffManager.LoadTiffPages(fileInfo.FullName)
+                Pages = TiffManager.LoadTiffPages(imageModel.FileInfo.FullName)
             };
-            SetTiffTitle(tiffNavigationInfo, width, height,
-                NavigationManager.GetCurrentIndex, fileInfo, vm);
+            SetTiffTitle(tiffNavigationInfo, imageModel.PixelWidth, imageModel.PixelHeight,
+                NavigationManager.GetCurrentIndex, imageModel.FileInfo, vm);
         }
         else
         {
-            SetTitle(vm);
+            SetTitle(vm, imageModel);
         }
     }
     
@@ -123,13 +125,13 @@ public static class SetTitleHelper
     {
         if (imageModel1 is null || imageModel2 is null)
         {
-            ReturnError();
+            ReturnError(vm);
             return;
         }
 
         if (imageModel1.FileInfo is null || imageModel2.FileInfo is null)
         {
-            ReturnError();
+            ReturnError(vm);
             return;
         }
 
@@ -143,16 +145,14 @@ public static class SetTitleHelper
         vm.WindowTitle = windowTitle;
         vm.Title = title;
         vm.TitleTooltip = titleTooltip;
-
-        return;
-
-        void ReturnError()
-        {
-            vm.WindowTitle =
-                vm.Title =
-                    vm.TitleTooltip = TranslationHelper.GetTranslation("UnableToRender");
-        }
     }
+    
+    private static void ReturnError(MainViewModel vm)
+    {
+        vm.WindowTitle =
+            vm.Title =
+                vm.TitleTooltip = TranslationHelper.GetTranslation("UnableToRender");
+    }   
 
     public static void ResetTitle(MainViewModel vm)
     {
