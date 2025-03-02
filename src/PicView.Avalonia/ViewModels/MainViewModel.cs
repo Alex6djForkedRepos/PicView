@@ -1418,54 +1418,18 @@ public class MainViewModel : ViewModelBase
         });
     }
     
-    public async Task SetAsWallpaperTask(string path)
-    {
-        if (string.IsNullOrWhiteSpace(path))
-        {
-            return;
-        }
-        await SetAsWallpaperTask(path, WallpaperStyle.Fit).ConfigureAwait(false);
-    }
+    public async Task SetAsWallpaperTask(string path) => await SetAsWallpaperTask(path, WallpaperStyle.Fit).ConfigureAwait(false);
     
-    public async Task SetAsWallpaperFilledTask(string path)
-    {
-        if (string.IsNullOrWhiteSpace(path))
-        {
-            return;
-        }
-        await SetAsWallpaperTask(path, WallpaperStyle.Fill).ConfigureAwait(false);
-    }
+    public async Task SetAsWallpaperFilledTask(string path) => await SetAsWallpaperTask(path, WallpaperStyle.Fill).ConfigureAwait(false);
     
-    public async Task SetAsWallpaperTiledTask(string path)
-    {
-        if (string.IsNullOrWhiteSpace(path))
-        {
-            return;
-        }
-        await SetAsWallpaperTask(path, WallpaperStyle.Tile).ConfigureAwait(false);
-    }
+    public async Task SetAsWallpaperTiledTask(string path) => await SetAsWallpaperTask(path, WallpaperStyle.Tile).ConfigureAwait(false);
     
-    public async Task SetAsWallpaperStretchedTask(string path)
-    {
-        if (string.IsNullOrWhiteSpace(path))
-        {
-            return;
-        }
-        await SetAsWallpaperTask(path, WallpaperStyle.Stretch).ConfigureAwait(false);
-    }
+    public async Task SetAsWallpaperStretchedTask(string path) => await SetAsWallpaperTask(path, WallpaperStyle.Stretch).ConfigureAwait(false);
     
-    public async Task SetAsWallpaperCenteredTask(string path)
-    {
-        if (string.IsNullOrWhiteSpace(path))
-        {
-            return;
-        }
-        await SetAsWallpaperTask(path, WallpaperStyle.Center).ConfigureAwait(false);
-    }
+    public async Task SetAsWallpaperCenteredTask(string path) => await SetAsWallpaperTask(path, WallpaperStyle.Center).ConfigureAwait(false);
     
     public async Task SetAsWallpaperTask(string path, WallpaperStyle style)
     {
-
         if (PlatformService is null)
         {
             return;

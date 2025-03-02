@@ -21,7 +21,7 @@ public static class ImageHelper
     {
         Bitmap? source = null;
         
-        if (vm.EffectConfig is not null)
+        if (vm.EffectConfig is not null || string.IsNullOrWhiteSpace(path))
         {
             if (vm.ImageSource is Bitmap bmp)
             {
