@@ -16,6 +16,7 @@ using PicView.Avalonia.WindowBehavior;
 using PicView.Core.ArchiveHandling;
 using PicView.Core.FileHandling;
 using PicView.Core.Gallery;
+using PicView.Core.Http;
 using PicView.Core.ImageDecoding;
 using PicView.Core.Localization;
 using PicView.Core.Navigation;
@@ -527,7 +528,7 @@ public static class NavigationManager
         {
             vm.PlatformService.StopTaskbarProgress();
 
-            var httpDownload = HttpNavigation.GetDownloadClient(url);
+            var httpDownload = HttpManager.GetDownloadClient(url);
             using var client = httpDownload.Client;
             client.ProgressChanged += (totalFileSize, totalBytesDownloaded, progressPercentage) =>
             {
@@ -536,7 +537,7 @@ public static class NavigationManager
                     return;
                 }
 
-                var displayProgress = HttpNavigation.GetProgressDisplay(totalFileSize, totalBytesDownloaded,
+                var displayProgress = HttpManager.GetProgressDisplay(totalFileSize, totalBytesDownloaded,
                     progressPercentage);
                 vm.Title = displayProgress;
                 vm.TitleTooltip = displayProgress;

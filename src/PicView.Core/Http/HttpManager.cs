@@ -1,14 +1,14 @@
 ﻿using PicView.Core.FileHandling;
 using PicView.Core.Localization;
 
-namespace PicView.Core.Navigation;
+namespace PicView.Core.Http;
 
-public static class HttpNavigation
+public static class HttpManager
 {
     public struct HttpDownload
     {
         public string DownloadPath { get; init; }
-        public HttpHelper.HttpClientDownloadWithProgress? Client { get; init; }
+        public HttpClientDownloadWithProgress? Client { get; init; }
     }
     
     public static HttpDownload GetDownloadClient(string url)
@@ -33,7 +33,7 @@ public static class HttpNavigation
         tempPath = Path.Combine(tempPath, fileName);
         TempFileHelper.TempFilePath = string.Empty; // Reset it, since not browsing archive
 
-        var client = new HttpHelper.HttpClientDownloadWithProgress(url, tempPath);
+        var client = new HttpClientDownloadWithProgress(url, tempPath);
 
         return new HttpDownload
         {
