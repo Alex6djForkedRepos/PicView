@@ -280,18 +280,21 @@ public static class UpdateImage
             vm.GalleryMode = GalleryMode.Closed;
         }
 
+        vm.FileInfo = null;
+
         await dispatchAction(() => { WindowResizing.SetSize(width, height, 0, 0, 0, vm); }, DispatcherPriority.Render);
 
         var singeImageWindowTitles = ImageTitleFormatter.GenerateTitleForSingleImage(width, height, name, 1);
         vm.WindowTitle = singeImageWindowTitles.TitleWithAppName;
         vm.Title = singeImageWindowTitles.BaseTitle;
         vm.TitleTooltip = singeImageWindowTitles.BaseTitle;
-        vm.GalleryMargin = new Thickness(0, 0, 0, 0);
 
         vm.PlatformService.StopTaskbarProgress();
 
         vm.PixelWidth = width;
         vm.PixelHeight = height;
+
+        vm.GalleryMargin = new Thickness(0);
 
         await dispatchAction(() => { UIHelper.GetGalleryView.IsVisible = false; }, DispatcherPriority.Render);
         await NavigationManager.DisposeImageIteratorAsync();
