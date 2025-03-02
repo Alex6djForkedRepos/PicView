@@ -364,18 +364,6 @@ public static class NavigationManager
             switch (check.Value.Type)
             {
                 case ErrorHelper.LoadAbleFileType.File:
-                    // Navigate to the image if it exists in the image iterator
-                    if (_imageIterator is not null)
-                    {
-                        if (_imageIterator.ImagePaths.Contains(check.Value.Data))
-                        {
-                            await _imageIterator.IterateToIndex(_imageIterator.ImagePaths.IndexOf(check.Value.Data),
-                                    _cancellationTokenSource)
-                                .ConfigureAwait(false);
-                            return;
-                        }
-                    }
-
                     vm.CurrentView = vm.ImageViewer;
                     await LoadPicFromFile(check.Value.Data, vm).ConfigureAwait(false);
                     vm.IsLoading = false;
@@ -449,6 +437,12 @@ public static class NavigationManager
                 {
                     await _imageIterator.IterateToIndex(index, _cancellationTokenSource).ConfigureAwait(false);
                     await CheckIfTiffAndUpdate(vm, fileInfo, index);
+                    if (Settings.Gallery.IsBottomGalleryShown && GetCount > 0)
+                    {
+                        vm.GalleryMode = GalleryMode.ClosedToBottom;
+                    }
+
+                    vm.AreNavigationButtonsEnabled = true;
                 }
                 else
                 {
