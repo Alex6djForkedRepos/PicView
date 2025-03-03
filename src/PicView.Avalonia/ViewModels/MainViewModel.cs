@@ -13,7 +13,6 @@ using PicView.Avalonia.ImageHandling;
 using PicView.Avalonia.ImageTransformations;
 using PicView.Avalonia.Interfaces;
 using PicView.Avalonia.LockScreen;
-using PicView.Avalonia.Navigation;
 using PicView.Avalonia.UI;
 using PicView.Avalonia.Wallpaper;
 using PicView.Avalonia.WindowBehavior;
@@ -60,65 +59,17 @@ public class MainViewModel : ViewModelBase
 
         NextCommand = ReactiveCommand.Create(() => { Task.Run(FunctionsHelper.Next); });
 
-        NextButtonCommand = ReactiveCommand.Create(() =>
-        {
-            var button = UIHelper.GetBottomBar?.NextButton;
-            if (button != null)
-            {
-                button.Interval =
-                    (int)TimeSpan.FromSeconds(SettingsHelper.Settings.UIProperties.NavSpeed).TotalMilliseconds;
-            }
+        NextButtonCommand = ReactiveCommand.Create(() => { UIHelper.NextButtonNavigation(this); });
 
-            Task.Run(() =>
-                NavigationManager.NavigateAndPositionCursor(true, false, this)
-            );
-        });
-
-        NextArrowButtonCommand = ReactiveCommand.Create(() =>
-        {
-            var button = UIHelper.GetMainView?.ClickArrowRight?.PolyButton;
-            if (button != null)
-            {
-                button.Interval =
-                    (int)TimeSpan.FromSeconds(SettingsHelper.Settings.UIProperties.NavSpeed).TotalMilliseconds;
-            }
-
-            Task.Run(() =>
-                NavigationManager.NavigateAndPositionCursor(true, true, this)
-            );
-        });
+        NextArrowButtonCommand = ReactiveCommand.Create(() => { UIHelper.NextArrowButtonNavigation(this); });
 
         NextFolderCommand = ReactiveCommand.Create(() => { Task.Run(FunctionsHelper.NextFolder); });
 
         PreviousCommand = ReactiveCommand.Create(() => { Task.Run(FunctionsHelper.Prev); });
 
-        PreviousButtonCommand = ReactiveCommand.Create(() =>
-        {
-            var button = UIHelper.GetBottomBar?.PreviousButton;
-            if (button != null)
-            {
-                button.Interval =
-                    (int)TimeSpan.FromSeconds(SettingsHelper.Settings.UIProperties.NavSpeed).TotalMilliseconds;
-            }
+        PreviousButtonCommand = ReactiveCommand.Create(()  => { UIHelper.PreviousButtonNavigation(this); });
 
-            Task.Run(() =>
-                NavigationManager.NavigateAndPositionCursor(false, false, this)
-            );
-        });
-
-        PreviousArrowButtonCommand = ReactiveCommand.Create(() =>
-        {
-            var button = UIHelper.GetMainView?.ClickArrowLeft?.PolyButton;
-            if (button != null)
-            {
-                button.Interval =
-                    (int)TimeSpan.FromSeconds(SettingsHelper.Settings.UIProperties.NavSpeed).TotalMilliseconds;
-            }
-
-            Task.Run(() =>
-                NavigationManager.NavigateAndPositionCursor(false, true, this)
-            );
-        });
+        PreviousArrowButtonCommand = ReactiveCommand.Create(() => { UIHelper.PreviousArrowButtonNavigation(this); });
 
         PreviousFolderCommand = ReactiveCommand.Create(() => { Task.Run(FunctionsHelper.PrevFolder); });
 

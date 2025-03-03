@@ -86,7 +86,7 @@ public static class HideInterfaceLogic
         }
         
         WindowResizing.SetSize(vm);
-        UIHelper.CloseMenus(vm);
+        MenuManager.CloseMenus(vm);
         await SaveSettingsAsync();
     }
     

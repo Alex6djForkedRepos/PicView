@@ -283,7 +283,7 @@ public static class GalleryFunctions
             return;
         }
 
-        UIHelper.CloseMenus(vm);
+        MenuManager.CloseMenus(vm);
         if (Settings.Gallery.IsBottomGalleryShown)
         {
             // Showing bottom gallery is enabled
@@ -332,7 +332,7 @@ public static class GalleryFunctions
             return;
         }
 
-        UIHelper.CloseMenus(vm);
+        MenuManager.CloseMenus(vm);
 
         if (Settings.Gallery.IsBottomGalleryShown)
         {

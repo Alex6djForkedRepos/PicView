@@ -338,7 +338,7 @@ public static class NavigationManager
             return;
         }
 
-        UIHelper.CloseMenus(vm);
+        MenuManager.CloseMenus(vm);
         vm.IsLoading = true;
         SetTitleHelper.SetLoadingTitle(vm);
 

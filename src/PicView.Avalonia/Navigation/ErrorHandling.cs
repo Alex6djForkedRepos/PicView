@@ -51,7 +51,7 @@ public static class ErrorHandling
 
             vm.GalleryMode = GalleryMode.Closed;
             GalleryFunctions.Clear();
-            UIHelper.CloseMenus(vm);
+            MenuManager.CloseMenus(vm);
             vm.GalleryMargin = new Thickness(0, 0, 0, 0);
             vm.GetIndex = 0;
             vm.PlatformService.StopTaskbarProgress();

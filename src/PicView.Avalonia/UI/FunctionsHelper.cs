@@ -159,7 +159,7 @@ public static class FunctionsHelper
         {
             return Task.CompletedTask;
         }
-        UIHelper.CloseMenus(Vm);
+        MenuManager.CloseMenus(Vm);
         return Task.CompletedTask;
     }
 
@@ -169,7 +169,7 @@ public static class FunctionsHelper
         {
             return Task.CompletedTask;
         }
-        UIHelper.ToggleFileMenu(Vm);
+        MenuManager.ToggleFileMenu(Vm);
         return Task.CompletedTask;
     }
 
@@ -179,7 +179,7 @@ public static class FunctionsHelper
         {
             return Task.CompletedTask;
         }
-        UIHelper.ToggleImageMenu(Vm);
+        MenuManager.ToggleImageMenu(Vm);
         return Task.CompletedTask;
     }
 
@@ -189,7 +189,7 @@ public static class FunctionsHelper
         {
             return Task.CompletedTask;
         }
-        UIHelper.ToggleSettingsMenu(Vm);
+        MenuManager.ToggleSettingsMenu(Vm);
         return Task.CompletedTask;
     }
 
@@ -199,7 +199,7 @@ public static class FunctionsHelper
         {
             return Task.CompletedTask;
         }
-        UIHelper.ToggleToolsMenu(Vm);
+        MenuManager.ToggleToolsMenu(Vm);
         return Task.CompletedTask;
     }
 
@@ -260,7 +260,7 @@ public static class FunctionsHelper
 
     public static async Task Up()
     {
-        await UIHelper.NavigateUp(Vm);
+        await Rotation.NavigateUp(Vm);
     }
 
     public static async Task RotateRight()
@@ -275,7 +275,7 @@ public static class FunctionsHelper
 
     public static async Task Down()
     {
-        await UIHelper.NavigateDown(Vm);
+        await Rotation.NavigateDown(Vm);
     }
     
     public static async Task ScrollDown()
@@ -432,7 +432,7 @@ public static class FunctionsHelper
     {
         await Dispatcher.UIThread.InvokeAsync(() =>
         {
-            UIHelper.Center(Vm);
+            Rotation.Center(Vm);
         });
     }
     
@@ -1081,12 +1081,4 @@ public static class FunctionsHelper
     #endregion
     
     #endregion
-
-    #if DEBUG
-    public static async Task Invalidate()
-    {
-        Vm?.ImageViewer?.MainImage?.InvalidateVisual();
-        //Vm?.ImageViewer?.InvalidateVisual();
-    }
-    #endif
 }

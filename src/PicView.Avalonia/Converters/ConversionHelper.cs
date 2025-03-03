@@ -9,7 +9,7 @@ namespace PicView.Avalonia.Converters;
 
 internal static class ConversionHelper
 {
-    internal static async Task<bool> ResizeImageByPercentage(FileInfo fileInfo, int selectedIndex)
+    public static async Task<bool> ResizeImageByPercentage(FileInfo fileInfo, int selectedIndex)
     {
         var percentage = 100 - selectedIndex * 5;
 
@@ -36,7 +36,7 @@ internal static class ConversionHelper
         }
     }
 
-    internal static async Task<bool> ResizeByWidth(FileInfo fileInfo, double width)
+    public static async Task<bool> ResizeByWidth(FileInfo fileInfo, double width)
     {
         if (width <= 0)
         {
@@ -46,7 +46,7 @@ internal static class ConversionHelper
         return await SaveImageFileHelper.ResizeImageAsync(fileInfo, (uint)width, 0).ConfigureAwait(false);
     }
 
-    internal static async Task<bool> ResizeByHeight(FileInfo fileInfo, double height)
+    public static async Task<bool> ResizeByHeight(FileInfo fileInfo, double height)
     {
         if (height <= 0)
         {
@@ -56,7 +56,7 @@ internal static class ConversionHelper
         return await SaveImageFileHelper.ResizeImageAsync(fileInfo, 0, (uint)height).ConfigureAwait(false);
     }
 
-    internal static async Task<string> ConvertTask(FileInfo fileInfo, int selectedIndex)
+    public static async Task<string> ConvertTask(FileInfo fileInfo, int selectedIndex)
     {
         var currentExtension = fileInfo.Extension.ToLower();
         var newExtension = selectedIndex switch

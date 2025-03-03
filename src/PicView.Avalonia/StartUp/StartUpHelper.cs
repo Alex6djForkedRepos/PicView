@@ -116,7 +116,7 @@ public static class StartUpHelper
         HandleWindowControlSettings(vm, desktop);
         ValidateGallerySettings(vm, settingsExists);
         SetWindowEventHandlers(window);
-        UIHelper.AddMenus();
+        MenuManager.AddMenus();
 
         Application.Current.Name = "PicView";
 
