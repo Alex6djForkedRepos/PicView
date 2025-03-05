@@ -429,6 +429,13 @@ public class PreLoader : IAsyncDisposable
         }
 
         _preLoadList.Clear();
+        
+#if DEBUG
+        if (ShowAddRemove)
+        {
+            Trace.WriteLine("Preloader cleared");
+        }
+#endif
     }
 
     /// <summary>
@@ -618,6 +625,13 @@ public class PreLoader : IAsyncDisposable
         }
 
         _disposed = true;
+        
+#if DEBUG
+        if (ShowAddRemove)
+        {
+            Trace.WriteLine("Preloader disposed");
+        }
+#endif
     }
 
     public async ValueTask DisposeAsync()
