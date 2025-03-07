@@ -639,53 +639,26 @@ public static class FunctionsHelper
 
     #region Copy and Paste functions
 
-    public static async Task CopyFile()
-    {
-        await ClipboardHelper.CopyFileToClipboard(Vm?.FileInfo?.FullName, Vm);
-    }
+    public static async Task CopyFile() =>
+        await ClipboardFileOperations.CopyFileToClipboard(Vm?.FileInfo?.FullName, Vm).ConfigureAwait(false);
 
-    public static async Task CopyFilePath()
-    {
-        await ClipboardHelper.CopyTextToClipboard(Vm?.FileInfo?.FullName);
-    }
+    public static async Task CopyFilePath() => 
+        await ClipboardTextOperations.CopyTextToClipboard(Vm?.FileInfo?.FullName).ConfigureAwait(false);
 
-    public static async Task CopyImage()
-    {
-        if (Vm is null)
-        {
-            return;
-        }
-        await ClipboardHelper.CopyImageToClipboard(Vm);
-    }
+    public static async Task CopyImage() => 
+        await ClipboardImageOperations.CopyImageToClipboard(Vm).ConfigureAwait(false);
 
-    public static async Task CopyBase64()
-    {
-        if (Vm is null)
-        {
-            return;
-        }
-        await ClipboardHelper.CopyBase64ToClipboard(Vm.FileInfo?.FullName, vm: Vm);
-    }
+    public static async Task CopyBase64() =>
+        await ClipboardImageOperations.CopyBase64ToClipboard(Vm.FileInfo?.FullName, vm: Vm).ConfigureAwait(false);
 
-    public static async Task DuplicateFile() => await ClipboardHelper.DuplicateCurrentFile(Vm).ConfigureAwait(false);
+    public static async Task DuplicateFile() => 
+        await ClipboardFileOperations.Duplicate(Vm.FileInfo?.FullName, Vm).ConfigureAwait(false);
 
-    public static async Task CutFile()
-    {
-        if (Vm is null)
-        {
-            return;
-        }
-        await ClipboardHelper.CutFile(Vm.FileInfo.FullName, Vm);
-    }
+    public static async Task CutFile() =>
+        await ClipboardFileOperations.CutFile(Vm.FileInfo.FullName, Vm).ConfigureAwait(false);
 
-    public static async Task Paste()
-    {
-        if (Vm is null)
-        {
-            return;
-        }
-        await ClipboardHelper.Paste(Vm);
-    }
+    public static async Task Paste() =>
+        await ClipboardPasteOperations.Paste(Vm).ConfigureAwait(false);
     
     #endregion
 

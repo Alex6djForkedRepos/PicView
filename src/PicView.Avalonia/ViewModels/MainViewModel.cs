@@ -1477,22 +1477,26 @@ public class MainViewModel : ViewModelBase
     private async Task ConvertFileExtension(int index) =>
         await ConversionHelper.ConvertFileExtension(index, this).ConfigureAwait(false);
 
-    private async Task CopyFileTask(string path) => await ClipboardHelper.CopyFileToClipboard(path, this);
+    private async Task CopyFileTask(string path) => 
+        await ClipboardFileOperations.CopyFileToClipboard(path, this).ConfigureAwait(false);
 
-    private static async Task CopyFilePathTask(string path) => await ClipboardHelper.CopyTextToClipboard(path);
+    private static async Task CopyFilePathTask(string path) => 
+        await ClipboardTextOperations.CopyTextToClipboard(path).ConfigureAwait(false);
 
-    private async Task CopyBase64Task(string path) => await ClipboardHelper.CopyBase64ToClipboard(path, this);
+    private async Task CopyBase64Task(string path) =>
+        await ClipboardImageOperations.CopyBase64ToClipboard(path, this).ConfigureAwait(false);
 
-    private async Task CutFileTask(string path) => await ClipboardHelper.CutFile(path, this);
+    private async Task CutFileTask(string path) =>
+        await ClipboardFileOperations.CutFile(path, this).ConfigureAwait(false);
 
     private static async Task DeleteFileTask(string path) =>
-        await Task.Run(() => FileDeletionHelper.DeleteFileWithErrorMsg(path, false));
+        await Task.Run(() => FileDeletionHelper.DeleteFileWithErrorMsg(path, false)).ConfigureAwait(false);
 
     private static async Task RecycleFileTask(string path) =>
-        await Task.Run(() => FileDeletionHelper.DeleteFileWithErrorMsg(path, true));
+        await Task.Run(() => FileDeletionHelper.DeleteFileWithErrorMsg(path, true)).ConfigureAwait(false);
 
     private async Task DuplicateFileTask(string path) =>
-        await ClipboardHelper.Duplicate(path, this).ConfigureAwait(false);
+        await ClipboardFileOperations.Duplicate(path, this).ConfigureAwait(false);
 
     private async Task ShowFilePropertiesTask(string path) =>
         await FileManager.ShowFileProperties(path, this).ConfigureAwait(false);

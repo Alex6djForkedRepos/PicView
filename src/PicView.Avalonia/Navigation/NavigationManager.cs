@@ -1,6 +1,5 @@
 ﻿using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using ImageMagick;
@@ -817,12 +816,7 @@ public static class NavigationManager
             }
             else 
             {
-                if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop)
-                {
-                    return;
-                }
-                var clipboard = desktop.MainWindow.Clipboard;
-                await ClipboardHelper.PasteClipboardImage(vm, clipboard);
+                await ClipboardImageOperations.PasteClipboardImage(vm);
             }
             return;
         }
