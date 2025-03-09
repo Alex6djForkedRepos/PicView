@@ -88,7 +88,7 @@ public partial class StartUpMenu : UserControl
         if (DataContext is not MainViewModel vm)
             return;
 
-        SetTitleHelper.SetNoImageTitle(vm);
+        TitleManager.SetNoImageTitle(vm);
     }
 
     public void ResponsiveSize(double width, double height)

@@ -24,7 +24,7 @@ internal static class ConversionHelper
     
     public static async Task ResizeImageByPercentage(int percentage, MainViewModel vm)
     {
-        SetTitleHelper.SetLoadingTitle(vm);
+        TitleManager.SetLoadingTitle(vm);
         var success = await ResizeImageByPercentage(vm.FileInfo, percentage);
         if (success)
         {
@@ -32,7 +32,7 @@ internal static class ConversionHelper
         }
         else
         {
-            SetTitleHelper.SetTitle(vm);
+            TitleManager.SetTitle(vm);
         }
     }
 

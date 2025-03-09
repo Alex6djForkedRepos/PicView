@@ -89,7 +89,7 @@ public static class QuickLoad
         
         if (Settings.ImageScaling.ShowImageSideBySide)
         {
-            SetTitleHelper.SetSideBySideTitle(vm, imageModel, secondaryPreloadValue?.ImageModel);
+            TitleManager.SetSideBySideTitle(vm, imageModel, secondaryPreloadValue?.ImageModel);
             
             // Sometimes the images are not rendered in side by side, this fixes it
             // TODO: Improve and fix side by side and remove this hack 
@@ -102,11 +102,11 @@ public static class QuickLoad
         {
             if (TiffManager.IsTiff(imageModel.FileInfo.FullName))
             {
-                SetTitleHelper.TrySetTiffTitle(imageModel, vm);
+                TitleManager.TrySetTiffTitle(imageModel, vm);
             }
             else
             {
-                SetTitleHelper.SetTitle(vm, imageModel);
+                TitleManager.SetTitle(vm, imageModel);
             }
         }
         

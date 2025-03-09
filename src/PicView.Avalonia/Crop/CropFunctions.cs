@@ -76,7 +76,7 @@ public static class CropFunctions
 
         vm.CurrentView = vm.ImageViewer;
         IsCropping = false;
-        SetTitleHelper.SetTitle(vm);
+        TitleManager.SetTitle(vm);
         
         // Reset image type to fix issue with animated images
         switch (vm.ImageType)

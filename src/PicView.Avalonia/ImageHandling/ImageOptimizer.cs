@@ -39,6 +39,6 @@ public static class ImageOptimizer
             }
         });
         
-        SetTitleHelper.SetTitle(vm);
+        TitleManager.SetTitle(vm);
     }
 }

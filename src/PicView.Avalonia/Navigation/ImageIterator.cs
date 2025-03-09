@@ -118,7 +118,7 @@ public class ImageIterator : IAsyncDisposable
 
             ImagePaths = newList;
 
-            SetTitleHelper.SetTitle(_vm);
+            TitleManager.SetTitle(_vm);
 
             var index = ImagePaths.IndexOf(e.FullPath);
             if (index < 0)
@@ -204,7 +204,7 @@ public class ImageIterator : IAsyncDisposable
             else
             {
                 RemoveItemFromPreLoader(index);
-                SetTitleHelper.SetTitle(_vm);
+                TitleManager.SetTitle(_vm);
             }
 
             var removed = GalleryFunctions.RemoveGalleryItem(index, _vm);
@@ -305,7 +305,7 @@ public class ImageIterator : IAsyncDisposable
                 _vm.FileInfo = fileInfo;
             }
 
-            SetTitleHelper.SetTitle(_vm);
+            TitleManager.SetTitle(_vm);
             PreLoader.RefreshFileInfo(oldIndex, fileInfo, ImagePaths);
             Resynchronize();
 
@@ -664,7 +664,7 @@ public class ImageIterator : IAsyncDisposable
         
         void LoadingPreview()
         {
-            SetTitleHelper.SetLoadingTitle(_vm);
+            TitleManager.SetLoadingTitle(_vm);
             _vm.IsLoading = true;
 
             _vm.SelectedGalleryItemIndex = index;

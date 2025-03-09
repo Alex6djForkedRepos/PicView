@@ -297,7 +297,7 @@ public static class NavigationManager
             return;
         }
 
-        SetTitleHelper.SetLoadingTitle(vm);
+        TitleManager.SetLoadingTitle(vm);
         if (_cancellationTokenSource is not null)
         {
             await _cancellationTokenSource.CancelAsync();
@@ -307,7 +307,7 @@ public static class NavigationManager
 
         if (fileList is null)
         {
-            SetTitleHelper.SetTitle(vm);
+            TitleManager.SetTitle(vm);
         }
         else
         {
@@ -315,7 +315,7 @@ public static class NavigationManager
             await LoadWithoutImageIterator(new FileInfo(fileList[0]), vm, fileList);
             if (vm.Title == TranslationHelper.Translation.Loading)
             {
-                SetTitleHelper.SetTitle(vm);
+                TitleManager.SetTitle(vm);
             }
         }
     }
@@ -339,7 +339,7 @@ public static class NavigationManager
 
         MenuManager.CloseMenus(vm);
         vm.IsLoading = true;
-        SetTitleHelper.SetLoadingTitle(vm);
+        TitleManager.SetLoadingTitle(vm);
 
         // Starting in new task makes it more responsive and works better
         await Task.Run(async () =>
@@ -473,7 +473,7 @@ public static class NavigationManager
         }
 
         vm.IsLoading = true;
-        SetTitleHelper.SetLoadingTitle(vm);
+        TitleManager.SetLoadingTitle(vm);
 
         var extraction = await ArchiveExtraction
             .ExtractArchiveAsync(path, vm.PlatformService.ExtractWithLocalSoftwareAsync).ConfigureAwait(false);
@@ -592,7 +592,7 @@ public static class NavigationManager
     /// <returns>A task representing the asynchronous operation.</returns>
     public static async Task LoadPicFromBase64Async(string base64, MainViewModel vm)
     {
-        SetTitleHelper.SetLoadingTitle(vm);
+        TitleManager.SetLoadingTitle(vm);
         vm.IsLoading = true;
         vm.ImageSource = null;
         vm.FileInfo = null;
@@ -653,7 +653,7 @@ public static class NavigationManager
     public static async Task LoadPicFromDirectoryAsync(string file, MainViewModel vm, FileInfo? fileInfo = null)
     {
         vm.IsLoading = true;
-        SetTitleHelper.SetLoadingTitle(vm);
+        TitleManager.SetLoadingTitle(vm);
 
         if (_cancellationTokenSource is not null)
         {
@@ -941,7 +941,7 @@ public static class NavigationManager
                     nextImageModel.PixelHeight, imageModel.Rotation, vm);
             });
             
-            SetTitleHelper.SetSideBySideTitle(vm, imageModel, nextImageModel);
+            TitleManager.SetSideBySideTitle(vm, imageModel, nextImageModel);
             UpdateImage.SetStats(vm, index, imageModel);
             
             // Fixes incorrect rendering in the side by side view
@@ -955,11 +955,11 @@ public static class NavigationManager
             {
                 if (Settings.ImageScaling.ShowImageSideBySide)
                 {
-                    SetTitleHelper.SetSideBySideTitle(vm, imageModel, nextImageModel);
+                    TitleManager.SetSideBySideTitle(vm, imageModel, nextImageModel);
                 }
                 else
                 {
-                    SetTitleHelper.SetTitle(vm, imageModel);
+                    TitleManager.SetTitle(vm, imageModel);
                 }
         
                 UpdateImage.SetStats(vm, index, imageModel);

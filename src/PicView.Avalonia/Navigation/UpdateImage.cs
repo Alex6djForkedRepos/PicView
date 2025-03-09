@@ -91,7 +91,7 @@ public static class UpdateImage
 
         if (Settings.ImageScaling.ShowImageSideBySide)
         {
-            SetTitleHelper.SetSideBySideTitle(vm, preLoadValue.ImageModel, nextPreloadValue?.ImageModel);
+            TitleManager.SetSideBySideTitle(vm, preLoadValue.ImageModel, nextPreloadValue?.ImageModel);
         }
         else
         {
@@ -99,16 +99,16 @@ public static class UpdateImage
             {
                 if (TiffManager.IsTiff(preLoadValue.ImageModel.FileInfo.FullName))
                 {
-                    SetTitleHelper.TrySetTiffTitle(preLoadValue.ImageModel, vm);
+                    TitleManager.TrySetTiffTitle(preLoadValue.ImageModel, vm);
                 }
                 else
                 {
-                    SetTitleHelper.SetTitle(vm, preLoadValue.ImageModel);
+                    TitleManager.SetTitle(vm, preLoadValue.ImageModel);
                 }
             }
             else
             {
-                SetTitleHelper.SetTitle(vm, preLoadValue.ImageModel);
+                TitleManager.SetTitle(vm, preLoadValue.ImageModel);
             }
         }
         
@@ -200,7 +200,7 @@ public static class UpdateImage
             }
         }, DispatcherPriority.Render);
         
-        SetTitleHelper.SetTiffTitle(tiffNavigationInfo, width, height, index, fileInfo, vm);
+        TitleManager.SetTiffTitle(tiffNavigationInfo, width, height, index, fileInfo, vm);
 
         var imageModel = new ImageModel
         {

@@ -72,7 +72,7 @@ public static class SettingsUpdater
         }
         finally
         {
-            SetTitleHelper.SetTitle(vm);
+            TitleManager.SetTitle(vm);
             vm.IsLoading = false;
         }
     }
@@ -124,7 +124,7 @@ public static class SettingsUpdater
         Settings.Sorting.IncludeSubDirectories = false;
         
         await NavigationManager.ReloadFileListAsync().ConfigureAwait(false);
-        SetTitleHelper.SetTitle(vm);
+        TitleManager.SetTitle(vm);
     }
     
     public static async Task TurnOnSubdirectories(MainViewModel vm)
@@ -133,7 +133,7 @@ public static class SettingsUpdater
         Settings.Sorting.IncludeSubDirectories = true;
         
         await NavigationManager.ReloadFileListAsync().ConfigureAwait(false);
-        SetTitleHelper.SetTitle(vm);
+        TitleManager.SetTitle(vm);
     }
     
     public static async Task ToggleTaskbarProgress(MainViewModel vm)
@@ -189,7 +189,7 @@ public static class SettingsUpdater
         vm.IsShowingSideBySide = false;
         vm.SecondaryImageSource = null;
         WindowResizing.SetSize(vm);
-        SetTitleHelper.SetTitle(vm);
+        TitleManager.SetTitle(vm);
     }
     
     public static async Task TurnOnSideBySide(MainViewModel vm)
@@ -229,7 +229,7 @@ public static class SettingsUpdater
             {
                 WindowResizing.SetSize(vm.ImageWidth, vm.ImageHeight, preloadValue.ImageModel.PixelWidth,
                     preloadValue.ImageModel.PixelHeight, vm.RotationAngle, vm);
-                SetTitleHelper.SetSideBySideTitle(vm, imageModel1, imageModel2);
+                TitleManager.SetSideBySideTitle(vm, imageModel1, imageModel2);
             });
         }
     }
