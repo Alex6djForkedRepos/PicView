@@ -194,9 +194,39 @@ public static class TitleManager
     /// </remarks>
     public static void SetSideBySideTitle(MainViewModel vm, ImageModel? imageModel1, ImageModel? imageModel2)
     {
-        if (!ValidateImageModel(imageModel1, vm) || !ValidateImageModel(imageModel2, vm))
+        // Fix image models, which can be null caused by race conditions?
+        if (!ValidateImageModel(imageModel1, vm))
         {
-            return;
+            if (vm.FileInfo is null)
+            {
+                return;
+            }
+            imageModel1 = new ImageModel
+            {
+                FileInfo = vm.FileInfo,
+                PixelWidth = vm.PixelWidth,
+                PixelHeight = vm.PixelHeight
+            };
+        }
+        if (!ValidateImageModel(imageModel2, vm))
+        {
+            if (!NavigationManager.CanNavigate(vm))
+            {
+                return;
+            }
+            var nextFileName = NavigationManager.GetNextFileName;
+            if (string.IsNullOrWhiteSpace(nextFileName))
+            {
+                return;
+            }
+            using var magickImage = new MagickImage();
+            magickImage.Ping(nextFileName);
+            imageModel2 = new ImageModel
+            {
+                FileInfo = new FileInfo(nextFileName),
+                PixelWidth = (int)magickImage.Width,
+                PixelHeight = (int)magickImage.Height
+            };
         }
         
         var firstWindowTitles = ImageTitleFormatter.GenerateTitleStrings(imageModel1.PixelWidth,

@@ -386,16 +386,6 @@ public class PreLoader : IAsyncDisposable
             Trace.WriteLine($"{nameof(Remove)} exception:\n{e.Message}");
 #endif
         }
-        finally
-        {
-            lock (_lock)
-            {
-                if (item.ImageModel?.Image is IDisposable disposable)
-                {
-                    disposable.Dispose();
-                }
-            }
-        }
 
         return false;
     }
@@ -422,9 +412,12 @@ public class PreLoader : IAsyncDisposable
         _cancellationTokenSource = null;
         foreach (var item in _preLoadList.Values)
         {
-            if (item.ImageModel?.Image is Bitmap img)
+            lock (_lock)
             {
-                img.Dispose();
+                if (item.ImageModel?.Image is Bitmap img)
+                {
+                    img.Dispose();
+                }
             }
         }
 

@@ -42,14 +42,25 @@ public static class UpdateImage
             var fileInfo = preLoadValue.ImageModel?.FileInfo ?? new FileInfo(imagePaths[index]);
             preLoadValue.ImageModel = await GetImageModel.GetImageModelAsync(fileInfo).ConfigureAwait(false);
         }
+        
+        if (preLoadValue.ImageModel?.FileInfo is null)
+        {
+            preLoadValue.ImageModel.FileInfo = new FileInfo(NavigationManager.GetCurrentFileName);
+        }
 
         if (Settings.ImageScaling.ShowImageSideBySide)
         {
             nextPreloadValue ??= await NavigationManager.GetNextPreLoadValueAsync().ConfigureAwait(false);
             if (nextPreloadValue.ImageModel?.Image is null && index == NavigationManager.GetCurrentIndex)
             {
-                var fileInfo = nextPreloadValue.ImageModel?.FileInfo ?? new FileInfo(NavigationManager.GetNextFileName);
-                nextPreloadValue.ImageModel = await GetImageModel.GetImageModelAsync(fileInfo).ConfigureAwait(false);
+                var nextFileInfo = nextPreloadValue.ImageModel?.FileInfo ?? new FileInfo(NavigationManager.GetNextFileName);
+                nextPreloadValue.ImageModel = await GetImageModel.GetImageModelAsync(nextFileInfo).ConfigureAwait(false);
+            }
+
+            if (nextPreloadValue.ImageModel?.FileInfo is null)
+            {
+                // Sometimes the FileInfo is null, don't know why. This fixes it. Probably a race condition?
+                nextPreloadValue.ImageModel.FileInfo = new FileInfo(NavigationManager.GetNextFileName);
             }
         }
 
@@ -66,18 +77,29 @@ public static class UpdateImage
             }
 
             vm.ImageViewer.SetTransform(preLoadValue.ImageModel.EXIFOrientation);
-            if (Settings.ImageScaling.ShowImageSideBySide)
+            if (Settings.ImageScaling.ShowImageSideBySide && nextPreloadValue is { ImageModel: not null })
             {
                 vm.SecondaryImageSource = nextPreloadValue.ImageModel.Image;
+                if (preLoadValue is { ImageModel: not null})
+                {
+                    vm.ImageSource = preLoadValue.ImageModel.Image;
+                }
             }
-
-            vm.ImageSource = preLoadValue.ImageModel.Image;
-            if (preLoadValue.ImageModel.ImageType is ImageType.AnimatedGif or ImageType.AnimatedWebp)
+            else if (preLoadValue is { ImageModel: not null})
             {
-                vm.ImageViewer.MainImage.InitialAnimatedSource = preLoadValue.ImageModel.FileInfo.FullName;
+                if (preLoadValue.ImageModel.ImageType is ImageType.AnimatedGif or ImageType.AnimatedWebp)
+                {
+                    vm.ImageViewer.MainImage.InitialAnimatedSource = preLoadValue.ImageModel.FileInfo.FullName;
+                }
+                
+                vm.ImageSource = preLoadValue.ImageModel.Image;
+                vm.SecondaryImageSource = null;
+                vm.ImageType = preLoadValue.ImageModel.ImageType;
             }
-
-            vm.ImageType = preLoadValue.ImageModel.ImageType;
+            else
+            {
+                return;
+            }
 
             if (!Settings.Zoom.ScrollEnabled)
             {
@@ -135,7 +157,7 @@ public static class UpdateImage
                 GalleryNavigation.CenterScrollToSelectedItem(vm);
             }
         }
-
+        
         SetStats(vm, index, preLoadValue.ImageModel);
         
         return;

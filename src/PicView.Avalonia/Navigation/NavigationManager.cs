@@ -59,7 +59,15 @@ public static class NavigationManager
     {
         if (!CanNavigate(vm))
         {
-            return;
+            if (vm.FileInfo is null && _imageIterator is not null)
+            {
+                // Fixes issue that shouldn't happen. Should investigate.
+                vm.FileInfo = new FileInfo(_imageIterator.ImagePaths[0]);
+            }
+            else
+            {
+                return;
+            }
         }
 
         if (GalleryFunctions.IsFullGalleryOpen)

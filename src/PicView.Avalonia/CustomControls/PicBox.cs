@@ -230,33 +230,24 @@ public class PicBox : Control, IDisposable
             return;
         }
         
-        var isSideBySide = Settings.ImageScaling.ShowImageSideBySide;
-        var secondarySource = SecondarySource as IImage;
         var viewPort = DetermineViewPort();
         
-        var sourceInfo = GetImageSourceInfo(source);
-        var secondarySourceInfo = isSideBySide ? GetSecondaryImageInfo(secondarySource) : null;
-        
-        if (isSideBySide && secondarySourceInfo.HasValue)
+        if (Settings.ImageScaling.ShowImageSideBySide)
         {
-            RenderImageSideBySide(context, source, secondarySource, viewPort, sourceInfo.Size, secondarySourceInfo.Value.Size);
+            var secondarySource = SecondarySource as IImage;
+            RenderImageSideBySide(context, source, secondarySource, viewPort, GetImageSize(source), GetSecondaryImageInfo(secondarySource));
         }
         else
         {
-            RenderImage(context, source, viewPort, sourceInfo.Size);
+            RenderImage(context, source, viewPort, GetImageSize(source));
         }
     }
 
-    private struct ImageSourceInfo
-    {
-        public Size Size { get; init; }
-    }
-
-    private ImageSourceInfo GetImageSourceInfo(IImage source)
+    private Size GetImageSize(IImage source)
     {
         try
         {
-            return new ImageSourceInfo { Size = source.Size };
+            return source?.Size ?? GetSizeFromAlternativeSources();
         }
         catch (Exception e)
         {
@@ -267,60 +258,62 @@ public class PicBox : Control, IDisposable
         }
     }
 
-    private ImageSourceInfo GetSizeFromAlternativeSources()
+    private Size GetSizeFromAlternativeSources()
     {
         if (DataContext is not MainViewModel vm)
         {
-            return new ImageSourceInfo { Size = new Size() };
+            return new Size();
         }
 
         var preloadValue = NavigationManager.GetCurrentPreLoadValue();
         if (preloadValue?.ImageModel != null)
         {
-            return new ImageSourceInfo { Size = new Size(preloadValue.ImageModel.PixelWidth, preloadValue.ImageModel.PixelHeight) };
+            return new Size(preloadValue.ImageModel.PixelWidth, preloadValue.ImageModel.PixelHeight);
         }
-        
-        if (vm.FileInfo?.Exists == true)
+
+        if (vm.FileInfo?.Exists != true)
         {
-            try
-            {
-                using var magickImage = new MagickImage();
-                magickImage.Ping(vm.FileInfo);
-                return new ImageSourceInfo { Size = new Size(magickImage.Width, magickImage.Height) };
-            }
-            catch (Exception exception)
-            {
-#if DEBUG
-                Console.WriteLine(exception);
-#endif
-            }
+            return  new Size();
         }
-        
-        return new ImageSourceInfo { Size = new Size() };
+
+        try
+        {
+            using var magickImage = new MagickImage();
+            magickImage.Ping(vm.FileInfo);
+            return new Size(magickImage.Width, magickImage.Height);
+        }
+        catch (Exception exception)
+        {
+#if DEBUG
+            Console.WriteLine(exception);
+#endif
+        }
+
+        return new Size();
     }
 
-    private ImageSourceInfo? GetSecondaryImageInfo(IImage? secondarySource)
+    private Size GetSecondaryImageInfo(IImage? secondarySource)
     {
         if (secondarySource == null)
         {
-            return null;
+            return new Size();
         }
         
         try
         {
-            return new ImageSourceInfo { Size = secondarySource.Size };
+            return secondarySource.Size;
         }
         catch (Exception)
         {
             if (DataContext is not MainViewModel vm)
             {
-                return null;
+                return new Size();
             }
 
             var nextPreloadValue = NavigationManager.GetNextPreLoadValue();
             if (nextPreloadValue?.ImageModel != null)
             {
-                return new ImageSourceInfo { Size = new Size(nextPreloadValue.ImageModel.PixelWidth, nextPreloadValue.ImageModel.PixelHeight) };
+                return new Size(nextPreloadValue.ImageModel.PixelWidth, nextPreloadValue.ImageModel.PixelHeight);
             }
             
             if (NavigationManager.CanNavigate(vm))
@@ -329,16 +322,16 @@ public class PicBox : Control, IDisposable
                 {
                     using var magickImage = new MagickImage();
                     magickImage.Ping(NavigationManager.GetNextFileName);
-                    return new ImageSourceInfo { Size = new Size(magickImage.Width, magickImage.Height) };
+                    return new Size(magickImage.Width, magickImage.Height);
                 }
                 catch
                 {
-                    return null;
+                    return new Size();
                 }
             }
         }
         
-        return null;
+        return new Size();
     }
 
     private void RenderImage(DrawingContext context, IImage source, Rect viewPort, Size sourceSize)
@@ -433,7 +426,7 @@ public class PicBox : Control, IDisposable
         }
         catch (Exception)
         {
-            return GetSizeFromAlternativeSources().Size;
+            return GetSizeFromAlternativeSources();
         }
     }
 

@@ -537,7 +537,7 @@ public class ImageIterator : IAsyncDisposable
             CurrentIndex = index;
 
             // ReSharper disable once MethodHasAsyncOverload
-            var preloadValue = GetCurrentPreLoadValue();
+            var preloadValue = GetPreLoadValue(index);
             if (preloadValue is not null)
             {
                 // Wait for image to load
@@ -590,11 +590,6 @@ public class ImageIterator : IAsyncDisposable
                     // Skip loading if user went to next value
                     await cts.CancelAsync();
                     return;
-                }
-
-                if (nextPreloadValue is not null)
-                {
-                    _vm.SecondaryImageSource = nextPreloadValue.ImageModel?.Image;
                 }
 
                 if (!cts.IsCancellationRequested && index == CurrentIndex)
