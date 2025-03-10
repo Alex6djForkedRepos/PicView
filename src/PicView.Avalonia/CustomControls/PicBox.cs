@@ -22,8 +22,25 @@ namespace PicView.Avalonia.CustomControls;
 
 public class PicBox : Control, IDisposable
 {
+    #region Helper Methods
+
+    private Rect DetermineViewPort()
+    {
+        if (Bounds is { Width: > 0, Height: > 0 })
+        {
+            return new Rect(Bounds.Size);
+        }
+
+        var mainView = UIHelper.GetMainView;
+        return mainView == null
+            ? new Rect()
+            : new Rect(Bounds.X, Bounds.Y, mainView.Bounds.Width, mainView.Bounds.Height);
+    }
+
+    #endregion
+
     #region Fields and Properties
-    
+
     private CompositionCustomVisual? _customVisual;
     private FileStream? _stream;
     private IGifInstance? _animInstance;
@@ -31,14 +48,11 @@ public class PicBox : Control, IDisposable
     private readonly IDisposable? _imageTypeSubscription;
     private bool _isDisposed;
     
-    /// <summary>
-    /// Defines the <see cref="Source"/> property.
-    /// </summary>
     public static readonly StyledProperty<object?> SourceProperty =
         AvaloniaProperty.Register<PicBox, object?>(nameof(Source));
 
     /// <summary>
-    /// Gets or sets the image that will be displayed.
+    ///     Gets or sets the image that will be displayed.
     /// </summary>
     [Content]
     public object? Source
@@ -46,15 +60,12 @@ public class PicBox : Control, IDisposable
         get => GetValue(SourceProperty);
         set => SetValue(SourceProperty, value);
     }
-
-    /// <summary>
-    /// Defines the <see cref="SecondarySource"/> property.
-    /// </summary>
+    
     public static readonly StyledProperty<object?> SecondarySourceProperty =
         AvaloniaProperty.Register<PicBox, object?>(nameof(SecondarySource));
 
     /// <summary>
-    /// Gets or sets the second image that will be displayed, when side by side view is enabled
+    ///     Gets or sets the second image that will be displayed, when side by side view is enabled
     /// </summary>
     [Content]
     public object? SecondarySource
@@ -62,8 +73,8 @@ public class PicBox : Control, IDisposable
         get => GetValue(SecondarySourceProperty);
         set => SetValue(SecondarySourceProperty, value);
     }
-    
-    public static readonly StyledProperty<double> SecondaryImageWidthProperty = 
+
+    public static readonly StyledProperty<double> SecondaryImageWidthProperty =
         AvaloniaProperty.Register<PicBox, double>(nameof(SecondaryImageWidth));
 
     public double SecondaryImageWidth
@@ -73,25 +84,25 @@ public class PicBox : Control, IDisposable
     }
 
     /// <summary>
-    /// Defines the <see cref="ImageType"/> property.
+    ///     Defines the <see cref="ImageType" /> property.
     /// </summary>
     public static readonly AvaloniaProperty<ImageType> ImageTypeProperty =
         AvaloniaProperty.Register<PicBox, ImageType>(nameof(ImageType));
 
     /// <summary>
-    /// Gets or sets the image type.
-    /// Determines if <see cref="Source"/> is an animated image, scalable vector graphics (SVG) or raster image.
+    ///     Gets or sets the image type.
+    ///     Determines if <see cref="Source" /> is an animated image, scalable vector graphics (SVG) or raster image.
     /// </summary>
     public ImageType ImageType
     {
         get => (ImageType)(GetValue(ImageTypeProperty) ?? false);
         set => SetValue(ImageTypeProperty, value);
     }
-    
+
     #endregion
-    
+
     #region Constructors
-    
+
     static PicBox()
     {
         // Registers the SourceProperty to render when the source changes
@@ -111,7 +122,7 @@ public class PicBox : Control, IDisposable
     private void UpdateSource(ImageType imageType)
     {
         CleanupResources();
-        
+
         switch (imageType)
         {
             case ImageType.Svg:
@@ -159,13 +170,14 @@ public class PicBox : Control, IDisposable
         _stream?.Dispose();
         _stream = null;
     }
-    
+
     #endregion
 
     #region Rendering
 
+
     /// <summary>
-    /// Renders the control.
+    ///     Renders the image represented by <see cref="Source" />.
     /// </summary>
     /// <param name="context">The drawing context.</param>
     public sealed override void Render(DrawingContext context)
@@ -211,7 +223,7 @@ public class PicBox : Control, IDisposable
 
     private void RenderAnimatedImageIfRequired(DrawingContext context)
     {
-        if (ImageType is not (ImageType.AnimatedGif or ImageType.AnimatedWebp) || 
+        if (ImageType is not (ImageType.AnimatedGif or ImageType.AnimatedWebp) ||
             string.IsNullOrWhiteSpace(InitialAnimatedSource))
         {
             return;
@@ -229,13 +241,14 @@ public class PicBox : Control, IDisposable
         {
             return;
         }
-        
+
         var viewPort = DetermineViewPort();
-        
+
         if (Settings.ImageScaling.ShowImageSideBySide)
         {
             var secondarySource = SecondarySource as IImage;
-            RenderImageSideBySide(context, source, secondarySource, viewPort, GetImageSize(source), GetSecondaryImageInfo(secondarySource));
+            RenderImageSideBySide(context, source, secondarySource, viewPort, GetImageSize(source),
+                GetSecondaryImageInfo(secondarySource));
         }
         else
         {
@@ -273,7 +286,7 @@ public class PicBox : Control, IDisposable
 
         if (vm.FileInfo?.Exists != true)
         {
-            return  new Size();
+            return new Size();
         }
 
         try
@@ -298,7 +311,7 @@ public class PicBox : Control, IDisposable
         {
             return new Size();
         }
-        
+
         try
         {
             return secondarySource.Size;
@@ -315,7 +328,7 @@ public class PicBox : Control, IDisposable
             {
                 return new Size(nextPreloadValue.ImageModel.PixelWidth, nextPreloadValue.ImageModel.PixelHeight);
             }
-            
+
             if (NavigationManager.CanNavigate(vm))
             {
                 try
@@ -330,7 +343,7 @@ public class PicBox : Control, IDisposable
                 }
             }
         }
-        
+
         return new Size();
     }
 
@@ -353,7 +366,8 @@ public class PicBox : Control, IDisposable
         }
     }
 
-    private void RenderImageSideBySide(DrawingContext context, IImage source, IImage? secondarySource, Rect viewPort, Size sourceSize, Size secondarySourceSize)
+    private void RenderImageSideBySide(DrawingContext context, IImage source, IImage? secondarySource, Rect viewPort,
+        Size sourceSize, Size secondarySourceSize)
     {
         if (source == null || secondarySource == null)
         {
@@ -365,7 +379,7 @@ public class PicBox : Control, IDisposable
 
         // Calculate the scaled size of the second image based on the specified width (SecondaryImageWidth)
         var scaledSecondarySize = new Size(SecondaryImageWidth, secondarySourceSize.Height * scale);
-    
+
         // Calculate the remaining width for the first image
         var firstImageWidth = viewPort.Width - scaledSecondarySize.Width;
 
@@ -398,13 +412,13 @@ public class PicBox : Control, IDisposable
 #endif
         }
     }
-    
+
     #endregion
 
     #region Measurement and Layout
-    
+
     /// <summary>
-    /// Measures the control.
+    ///     Measures the control.
     /// </summary>
     /// <param name="availableSize">The available size.</param>
     /// <returns>The desired size of the control.</returns>
@@ -414,7 +428,7 @@ public class PicBox : Control, IDisposable
         {
             return new Size();
         }
-        
+
         if (Source is not IImage source)
         {
             return new Size();
@@ -430,7 +444,7 @@ public class PicBox : Control, IDisposable
         }
     }
 
-    /// <inheritdoc/>
+    /// <inheritdoc />
     protected override Size ArrangeOverride(Size finalSize)
     {
         UpdateLayout();
@@ -438,9 +452,9 @@ public class PicBox : Control, IDisposable
     }
 
     #endregion
-    
+
     #region Calculations
-    
+
     private static Vector CalculateScaling(Size destinationSize, Size sourceSize)
     {
         var isConstrainedWidth = !double.IsPositiveInfinity(destinationSize.Width);
@@ -461,47 +475,34 @@ public class PicBox : Control, IDisposable
 
         return new Vector(scaleX, scaleY);
     }
-    
-    public static Size CalculateSize(Size destinationSize, Size sourceSize)
+
+    private static Size CalculateSize(Size destinationSize, Size sourceSize)
     {
         return sourceSize * CalculateScaling(destinationSize, sourceSize);
-    }
-    
-    #endregion
-    
-    #region Helper Methods
-    
-    private Rect DetermineViewPort()
-    {
-        if (Bounds.Width > 0 && Bounds.Height > 0)
-        {
-            return new Rect(Bounds.Size);
-        }
-
-        var mainView = UIHelper.GetMainView;
-        return mainView == null ? new Rect() : new Rect(Bounds.X, Bounds.Y, mainView.Bounds.Width, mainView.Bounds.Height);
     }
 
     #endregion
 
     #region Animation
-    
+
     private void UpdateAnimationInstance(FileStream fileStream)
     {
         _animInstance?.Dispose();
-        _animInstance = ImageType == ImageType.AnimatedGif 
-            ? new GifInstance(fileStream) 
+        _animInstance = ImageType == ImageType.AnimatedGif
+            ? new GifInstance(fileStream)
             : new WebpInstance(fileStream);
-            
+
         _animInstance.IterationCount = IterationCount.Infinite;
         _customVisual?.SendHandlerMessage(_animInstance);
         AnimationUpdate();
     }
-    
+
     private void AnimationUpdate()
     {
         if (_customVisual is null)
+        {
             return;
+        }
 
         var sourceSize = Bounds.Size;
         var viewPort = DetermineViewPort();
@@ -517,13 +518,16 @@ public class PicBox : Control, IDisposable
     private void CreateVisual()
     {
         var compositor = ElementComposition.GetElementVisual(this)?.Compositor;
-        if (compositor == null || _customVisual?.Compositor == compositor) return;
+        if (compositor == null || _customVisual?.Compositor == compositor)
+        {
+            return;
+        }
 
         _customVisual ??= compositor.CreateCustomVisual(new CustomVisualHandler());
         ElementComposition.SetElementChildVisual(this, _customVisual);
         _customVisual.SendHandlerMessage(CustomVisualHandler.StartMessage);
     }
-    
+
     private void DestroyVisual()
     {
         if (_customVisual == null)
@@ -536,9 +540,9 @@ public class PicBox : Control, IDisposable
     }
 
     #endregion
-    
+
     #region Visual Tree and Disposal
-    
+
     protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnDetachedFromVisualTree(e);
@@ -549,16 +553,19 @@ public class PicBox : Control, IDisposable
     {
         return new ImageAutomationPeer(this);
     }
-    
+
     public void Dispose()
     {
-        if (_isDisposed) return;
-        
+        if (_isDisposed)
+        {
+            return;
+        }
+
         _imageTypeSubscription?.Dispose();
         _animInstance?.Dispose();
         _stream?.Dispose();
         DestroyVisual();
-        
+
         _isDisposed = true;
     }
 

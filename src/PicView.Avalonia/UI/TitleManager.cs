@@ -100,16 +100,19 @@ public static class TitleManager
     /// <remarks>If the image model or its file info is null, an error message is set as the title.</remarks>
     public static void SetTitle(MainViewModel vm, ImageModel? imageModel)
     {
-        if (imageModel is null)
+        if (!ValidateImageModel(imageModel, vm))
         {
-            ReturnError(vm);
-            return;
-        }
-
-        if (imageModel.FileInfo is null)
-        {
-            ReturnError(vm);
-            return;
+            if (vm.FileInfo is null)
+            {
+                ReturnError(vm);
+                return;
+            }
+            imageModel = new ImageModel
+            {
+                FileInfo = vm.FileInfo,
+                PixelWidth = vm.PixelWidth,
+                PixelHeight = vm.PixelHeight
+            };
         }
 
         var windowTitles = ImageTitleFormatter.GenerateTitleStrings(imageModel.PixelWidth, imageModel.PixelHeight,
