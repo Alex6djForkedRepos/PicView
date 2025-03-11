@@ -266,8 +266,16 @@ public class PreLoader : IAsyncDisposable
     /// <param name="fileName">The full path of the image file to retrieve the preloaded value for.</param>
     /// <param name="list">The list of image paths.</param>
     /// <returns>The preloaded value if it exists; otherwise, null.</returns>
-    public PreLoadValue? Get(string fileName, List<string> list) =>
-        Get(_preLoadList.Values.ToList().FindIndex(x => x.ImageModel.FileInfo.FullName == fileName), list);
+    public PreLoadValue? Get(string fileName, List<string> list)
+    {
+        if (list == null || string.IsNullOrEmpty(fileName))
+        {
+            return null;
+        }
+
+        var index = list.IndexOf(fileName);
+        return index >= 0 ? _preLoadList[index] : null;
+    }
 
 
     /// <summary>
@@ -492,7 +500,17 @@ public class PreLoader : IAsyncDisposable
         }
 #endif
 
-        _cancellationTokenSource ??= new CancellationTokenSource();
+        if (_cancellationTokenSource is not null)
+        {
+            if (_cancellationTokenSource.IsCancellationRequested)
+            {
+                _cancellationTokenSource = new CancellationTokenSource();
+            }
+        }
+        else
+        {
+            _cancellationTokenSource = new CancellationTokenSource();
+        }
 
         try
         {
