@@ -85,13 +85,19 @@ public partial class EditableTitlebar : UserControl
 
         if (!vm.IsEditableTitlebarOpen)
         {
-            _ = MainKeyboardShortcuts.MainWindow_KeysDownAsync(e).ConfigureAwait(false);
+            // Don't pass the key to the main window
+            // Prevents keydown event being registered twice
+            e.Handled = true;  
             return;
         }
-
+        
         if (e.Key is Key.Escape)
         {
             CloseTitlebar();
+            e.Handled = true;
+            var topLevel = TopLevel.GetTopLevel(this);
+            topLevel?.Focus();
+            return;
         }
         MainKeyboardShortcuts.IsKeysEnabled = false;
         base.OnKeyDown(e);

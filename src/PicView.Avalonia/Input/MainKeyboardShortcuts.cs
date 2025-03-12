@@ -186,6 +186,10 @@ public static class MainKeyboardShortcuts
         // Handle escape key
         if (e.Key == Key.Escape)
         {
+            if (UIHelper.GetMainView.DataContext as MainViewModel is { IsEditableTitlebarOpen: true })
+            {
+                return true;
+            }
             await FunctionsMapper.Close().ConfigureAwait(false);
             return true;
         }
