@@ -19,7 +19,7 @@ Enjoy a clean, free, and fast experience with no bloated UI or annoying pop-ups.
 
 # Downloads
 
-[![](https://img.shields.io/badge/Windows-x64-blue?style=flat-square&logo=windows&logoColor=fff)](https://github.com/Ruben2776/PicView/releases/download/3.0.3/Setup-PicView-v3.0.3-win-x64.exe) [![](https://img.shields.io/badge/Windows-arm64-blue?style=flat-square&logo=windows&logoColor=fff)](https://github.com/Ruben2776/PicView/releases/download/3.0.3/Setup-PicView-v3.0.3-win-arm64.exe)
+[![](https://img.shields.io/badge/Windows-x64-blue?style=flat-square&logo=windows&logoColor=fff)](https://github.com/Ruben2776/PicView/releases/download/3.0.4/PicView-v3.0.4-win-x64.exe) [![](https://img.shields.io/badge/Windows-arm64-blue?style=flat-square&logo=windows&logoColor=fff)](https://github.com/Ruben2776/PicView/releases/download/3.0.4/PicView-v3.0.4-win-arm64.exe)
 
 [Latest releases at PicView.org](https://picview.org/download)
 
