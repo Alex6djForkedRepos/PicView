@@ -80,8 +80,16 @@ public static class FileManager
         try
         {
             vm.IsLoading = true;
-            await ExecutePlatformServiceOperationAsync(path!, vm, 
-                (platformService, file) => platformService.Print(file));
+            var file = await ImageFormatConverter.ConvertToCommonSupportedFormatAsync(path, vm)
+                .ConfigureAwait(false);
+            
+            if (string.IsNullOrWhiteSpace(file))
+            {
+                await TooltipHelper.ShowTooltipMessageAsync(TranslationManager.Translation.UnexpectedError);
+                return;
+            }
+
+            await Task.Run(() => vm.PlatformService.Print(path));
         }
         catch (Exception ex)
         {
@@ -139,24 +147,6 @@ public static class FileManager
     private static bool ValidateParameters(string? path, object? platformService)
     {
         return !string.IsNullOrWhiteSpace(path) && platformService != null;
-    }
-    
-    /// <summary>
-    /// Helper method to handle common platform service operations that might require file conversion
-    /// </summary>
-    private static async Task ExecutePlatformServiceOperationAsync(string path, MainViewModel vm, 
-        Action<dynamic, string> platformServiceAction)
-    {
-        var file = await ImageFormatConverter.ConvertToCommonSupportedFormatAsync(path, vm)
-            .ConfigureAwait(false);
-            
-        if (string.IsNullOrWhiteSpace(file))
-        {
-            await TooltipHelper.ShowTooltipMessageAsync(TranslationManager.Translation.UnexpectedError);
-            return;
-        }
-
-        await Task.Run(() => platformServiceAction(vm.PlatformService!, file));
     }
     
     /// <summary>
