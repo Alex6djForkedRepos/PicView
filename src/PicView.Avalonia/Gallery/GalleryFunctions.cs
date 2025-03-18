@@ -110,7 +110,7 @@ public static class GalleryFunctions
         }
     }
 
-    public static async Task<bool> AddGalleryItem(int index, FileInfo fileInfo, MainViewModel? vm)
+    public static async Task<bool> AddGalleryItem(int index, FileInfo fileInfo, MainViewModel? vm, DispatcherPriority? priority = null)
     {
         var mainView = UIHelper.GetMainView;
 
@@ -175,7 +175,7 @@ public static class GalleryFunctions
                 {
                     galleryItem.GalleryImage.Source = thumb;
                 }
-            }, DispatcherPriority.Render);
+            }, priority ?? DispatcherPriority.Render);
             return true;
         }
         catch (Exception exception)
@@ -381,6 +381,4 @@ public static class GalleryFunctions
     }
 
     #endregion
-
-
 }

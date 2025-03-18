@@ -181,5 +181,25 @@ public static class GalleryNavigation
             await NavigationManager.Navigate(vm.SelectedGalleryItemIndex, vm).ConfigureAwait(false);
         }
     }
+    
+    /// <summary>
+    ///     Scrolls the gallery to the next or previous page.
+    /// </summary>
+    /// <param name="next">True to scroll to the next page, false for the previous page.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
+    public static async Task ScrollGallery(bool next)
+    {
+        await Dispatcher.UIThread.InvokeAsync(() =>
+        {
+            if (next)
+            {
+                UIHelper.GetGalleryView.GalleryListBox.PageRight();
+            }
+            else
+            {
+                UIHelper.GetGalleryView.GalleryListBox.PageLeft();
+            }
+        });
+    }
 }
 

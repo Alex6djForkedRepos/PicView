@@ -282,4 +282,30 @@ public static class GalleryLoad
 
         await LoadGallery(vm, currentDirectory).ConfigureAwait(false);
     }
+    
+    /// <summary>
+    ///     Checks and reloads the gallery if necessary based on the provided file info.
+    /// </summary>
+    /// <param name="fileInfo">The file info to check.</param>
+    /// <param name="vm">The main view model instance.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
+    public static async Task CheckAndReloadGallery(FileInfo fileInfo, MainViewModel vm)
+    {
+        if (Settings.Gallery.IsBottomGalleryShown || GalleryFunctions.IsFullGalleryOpen)
+        {
+            GalleryFunctions.Clear();
+
+            // Check if the bottom gallery should be shown
+            if (!GalleryFunctions.IsFullGalleryOpen)
+            {
+                if (vm.GalleryMode is GalleryMode.BottomToClosed or GalleryMode.FullToClosed or GalleryMode.Closed)
+                {
+                    // Trigger animation to show it
+                    vm.GalleryMode = GalleryMode.ClosedToBottom;
+                }
+            }
+
+            await ReloadGalleryAsync(vm, fileInfo.DirectoryName);
+        }
+    }
 }

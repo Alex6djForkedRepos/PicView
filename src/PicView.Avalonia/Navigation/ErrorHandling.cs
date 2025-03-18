@@ -1,9 +1,11 @@
 ﻿using Avalonia;
 using Avalonia.Threading;
+using PicView.Avalonia.Clipboard;
 using PicView.Avalonia.Gallery;
 using PicView.Avalonia.UI;
 using PicView.Avalonia.ViewModels;
 using PicView.Core.Calculations;
+using PicView.Core.FileHandling;
 using PicView.Core.Gallery;
 using PicView.Core.Navigation;
 using StartUpMenu = PicView.Avalonia.Views.StartUpMenu;
@@ -92,7 +94,22 @@ public static class ErrorHandling
 
         try
         {
-            await NavigationManager.FullReload(vm);
+            if (!NavigationManager.CanNavigate(vm))
+            {
+                var url = vm.PicViewer.Title.GetURL();
+                if (!string.IsNullOrEmpty(url))
+                {
+                    await NavigationManager.LoadPicFromUrlAsync(url, vm).ConfigureAwait(false);
+                }
+                else 
+                {
+                    await ClipboardImageOperations.PasteClipboardImage(vm);
+                }
+            }
+            else
+            {
+                await NavigationManager.QuickReload().ConfigureAwait(false);
+            }
         }
         catch (Exception e)
         {
@@ -105,10 +122,5 @@ public static class ErrorHandling
         {
             vm.IsLoading = false;
         }
-    }
-    
-    public static async Task ReloadImageAsync(MainViewModel vm)
-    {
-        await NavigationManager.FullReload(vm);
     }
 }

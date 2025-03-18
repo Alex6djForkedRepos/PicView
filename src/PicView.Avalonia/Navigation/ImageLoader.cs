@@ -1,0 +1,460 @@
+﻿using Avalonia.Media.Imaging;
+using ImageMagick;
+using PicView.Avalonia.ImageHandling;
+using PicView.Avalonia.Input;
+using PicView.Avalonia.UI;
+using PicView.Avalonia.ViewModels;
+using PicView.Core.ArchiveHandling;
+using PicView.Core.Gallery;
+using PicView.Core.Http;
+using PicView.Core.ImageDecoding;
+using PicView.Core.Localization;
+using PicView.Core.Navigation;
+
+namespace PicView.Avalonia.Navigation;
+
+public static class ImageLoader
+{
+    #region Cancellation
+
+    private static CancellationTokenSource? _cancellationTokenSource;
+    
+    public static void Cancel()
+    {
+        if (_cancellationTokenSource is not null)
+        {
+            _cancellationTokenSource.Cancel();
+            _cancellationTokenSource.Dispose();
+            _cancellationTokenSource = null;
+        }
+
+        _cancellationTokenSource = new CancellationTokenSource();
+    }
+
+    public static async Task CancelAsync()
+    {
+        if (_cancellationTokenSource is not null)
+        {
+            await _cancellationTokenSource.CancelAsync().ConfigureAwait(false);
+            _cancellationTokenSource.Dispose();
+            _cancellationTokenSource = null;
+        }
+
+        _cancellationTokenSource = new CancellationTokenSource();
+    }
+
+    #endregion
+
+    #region Image Iterator Loading
+
+    public static async Task LastIterationAsync(ImageIterator imageIterator) => await imageIterator.NextIteration(NavigateTo.Last, _cancellationTokenSource)
+        .ConfigureAwait(false);
+    
+    public static async Task FirstIterationAsync(ImageIterator imageIterator) => await imageIterator.NextIteration(NavigateTo.First, _cancellationTokenSource)
+        .ConfigureAwait(false);
+    
+    /// <summary>
+    ///     Checks if the previous iteration has been cancelled and starts the iteration at the given index
+    /// </summary>
+    /// <param name="index">The index to iterate to.</param>
+    /// <param name="imageIterator">The ImageIterator instance.</param>
+    public static async Task CheckCancellationAndStartIterateToIndex(int index, ImageIterator imageIterator)
+    {
+        if (_cancellationTokenSource is not null)
+        {
+            await _cancellationTokenSource.CancelAsync().ConfigureAwait(false);
+        }
+
+        _cancellationTokenSource = new CancellationTokenSource();
+        await imageIterator.NextIteration(index, _cancellationTokenSource).ConfigureAwait(false);
+    }
+
+    #endregion
+
+    #region Load Pic From String
+
+    /// <summary>
+    ///     Loads a picture from a given string source, which can be a file path, directory path, or URL.
+    /// </summary>
+    public static async Task LoadPicFromStringAsync(string source, MainViewModel vm, ImageIterator imageIterator)
+    {
+        if (string.IsNullOrWhiteSpace(source) || vm is null)
+        {
+            return;
+        }
+
+        MenuManager.CloseMenus(vm);
+        vm.IsLoading = true;
+        TitleManager.SetLoadingTitle(vm);
+
+        // Starting in new task makes it more responsive and works better
+        await Task.Run(async () =>
+        {
+            var check = ErrorHelper.CheckIfLoadableString(source);
+
+            if (check == null)
+            {
+                await ErrorHandling.ReloadAsync(vm).ConfigureAwait(false);
+                vm.IsLoading = false;
+                ArchiveExtraction.Cleanup();
+                return;
+            }
+
+            switch (check.Value.Type)
+            {
+                case ErrorHelper.LoadAbleFileType.File:
+                    vm.CurrentView = vm.ImageViewer;
+                    await LoadPicFromFile(check.Value.Data, vm, imageIterator).ConfigureAwait(false);
+                    vm.IsLoading = false;
+                    ArchiveExtraction.Cleanup();
+                    return;
+                case ErrorHelper.LoadAbleFileType.Directory:
+                    vm.CurrentView = vm.ImageViewer;
+                    await LoadPicFromDirectoryAsync(check.Value.Data, vm).ConfigureAwait(false);
+                    vm.IsLoading = false;
+                    ArchiveExtraction.Cleanup();
+                    return;
+                case ErrorHelper.LoadAbleFileType.Web:
+                    vm.CurrentView = vm.ImageViewer;
+                    await LoadPicFromUrlAsync(check.Value.Data, vm, imageIterator).ConfigureAwait(false);
+                    vm.IsLoading = false;
+                    ArchiveExtraction.Cleanup();
+                    return;
+                case ErrorHelper.LoadAbleFileType.Base64:
+                    vm.CurrentView = vm.ImageViewer;
+                    await LoadPicFromBase64Async(check.Value.Data, vm, imageIterator).ConfigureAwait(false);
+                    vm.IsLoading = false;
+                    ArchiveExtraction.Cleanup();
+                    return;
+                case ErrorHelper.LoadAbleFileType.Zip:
+                    vm.CurrentView = vm.ImageViewer;
+                    await LoadPicFromArchiveAsync(check.Value.Data, vm, imageIterator).ConfigureAwait(false);
+                    vm.IsLoading = false;
+                    return;
+                default:
+                    await ErrorHandling.ReloadAsync(vm).ConfigureAwait(false);
+                    vm.IsLoading = false;
+                    ArchiveExtraction.Cleanup();
+                    return;
+            }
+        });
+    }
+
+    #endregion
+
+
+    #region Load Pic From File
+    
+    public static async Task LoadPicFromFile(string fileName, MainViewModel vm, ImageIterator imageIterator, FileInfo? fileInfo = null)
+    {
+        if (vm is null)
+        {
+            return;
+        }
+
+        fileInfo ??= new FileInfo(fileName);
+        if (!fileInfo.Exists)
+        {
+            return;
+        }
+
+        await CancelAsync().ConfigureAwait(false);
+
+        if (imageIterator is not null)
+        {
+            if (fileInfo.DirectoryName == imageIterator.InitialFileInfo.DirectoryName)
+            {
+                var index = imageIterator.ImagePaths.IndexOf(fileInfo.FullName);
+                if (index != -1)
+                {
+                    await imageIterator.IterateToIndex(index, _cancellationTokenSource).ConfigureAwait(false);
+                    await NavigationManager.CheckIfTiffAndUpdate(vm, fileInfo, index);
+                    if (Settings.Gallery.IsBottomGalleryShown && NavigationManager.GetCount > 0)
+                    {
+                        vm.GalleryMode = GalleryMode.ClosedToBottom;
+                    }
+                }
+                else
+                {
+                    await NavigationManager.LoadWithoutImageIterator(fileInfo, vm);
+                }
+            }
+            else
+            {
+                await NavigationManager.LoadWithoutImageIterator(fileInfo, vm);
+            }
+        }
+        else
+        {
+            if (Settings.UIProperties.IsTaskbarProgressEnabled)
+            {
+                vm.PlatformService.StopTaskbarProgress();
+            }
+
+            await NavigationManager.LoadWithoutImageIterator(fileInfo, vm);
+        }
+    }
+
+    #endregion
+
+    #region Load Pic From Directory
+
+    /// <summary>
+    ///     Loads a picture from a directory.
+    /// </summary>
+    /// <param name="file">The path to the directory containing the picture.</param>
+    /// <param name="vm">The main view model instance.</param>
+    /// <param name="fileInfo">Optional: FileInfo object for the directory.</param>
+    public static async Task LoadPicFromDirectoryAsync(string file, MainViewModel vm, FileInfo? fileInfo = null)
+    {
+        vm.IsLoading = true;
+        TitleManager.SetLoadingTitle(vm);
+
+        if (_cancellationTokenSource is not null)
+        {
+            await _cancellationTokenSource.CancelAsync().ConfigureAwait(false);
+        }
+
+        _cancellationTokenSource = new CancellationTokenSource();
+
+        if (Settings.UIProperties.IsTaskbarProgressEnabled)
+        {
+            vm.PlatformService.StopTaskbarProgress();
+        }
+
+        fileInfo ??= new FileInfo(file);
+
+        var newFileList = await Task.Run(() =>
+        {
+            var fileList = vm.PlatformService.GetFiles(fileInfo);
+            if (fileList.Count > 0)
+            {
+                return fileList;
+            }
+
+            // Attempt to reload with subdirectories and reset the setting
+            if (Settings.Sorting.IncludeSubDirectories)
+            {
+                return null;
+            }
+
+            Settings.Sorting.IncludeSubDirectories = true;
+            fileList = vm.PlatformService.GetFiles(fileInfo);
+            if (fileList.Count <= 0)
+            {
+                return null;
+            }
+
+            Settings.Sorting.IncludeSubDirectories = false;
+            return fileList;
+        }).ConfigureAwait(false);
+
+        if (newFileList is null)
+        {
+            await ErrorHandling.ReloadAsync(vm).ConfigureAwait(false);
+            return;
+        }
+
+        var firstFileInfo = new FileInfo(newFileList[0]);
+        await NavigationManager.LoadWithoutImageIterator(firstFileInfo, vm, newFileList);
+    }
+
+    #endregion
+
+    #region Load Pic From Archive
+
+    /// <summary>
+    ///     Asynchronously loads pictures from the specified archive file.
+    /// </summary>
+    /// <param name="path">The path to the archive file containing the picture(s) to load.</param>
+    /// <param name="vm">The main view model instance used to manage UI state and operations.</param>
+    ///  <param name="imageIterator">The image iterator to use for navigation.</param>
+    public static async Task LoadPicFromArchiveAsync(string path, MainViewModel vm, ImageIterator imageIterator)
+    {
+        if (_cancellationTokenSource is not null)
+        {
+            await _cancellationTokenSource.CancelAsync();
+        }
+
+        vm.IsLoading = true;
+        TitleManager.SetLoadingTitle(vm);
+
+        var extraction = await ArchiveExtraction
+            .ExtractArchiveAsync(path, vm.PlatformService.ExtractWithLocalSoftwareAsync).ConfigureAwait(false);
+        if (!extraction)
+        {
+            await ErrorHandling.ReloadAsync(vm);
+            return;
+        }
+
+        if (Directory.Exists(ArchiveExtraction.TempZipDirectory))
+        {
+            var dirInfo = new DirectoryInfo(ArchiveExtraction.TempZipDirectory);
+            if (dirInfo.EnumerateDirectories().Any())
+            {
+                var firstDir = dirInfo.EnumerateDirectories().First();
+                var firstFile = firstDir.EnumerateFiles().First();
+                await LoadPicFromFile(firstFile.FullName, vm, imageIterator, firstFile).ConfigureAwait(false);
+            }
+            else
+            {
+                await LoadPicFromDirectoryAsync(ArchiveExtraction.TempZipDirectory, vm).ConfigureAwait(false);
+            }
+
+            MainKeyboardShortcuts.ClearKeyDownModifiers(); // Fix possible modifier key state issue
+        }
+        else
+        {
+            await imageIterator.DisposeAsync();
+            await ErrorHandling.ReloadAsync(vm);
+        }
+    }
+    
+
+    #endregion
+
+    #region Load Pic From URL
+    
+    /// <summary>
+    ///     Loads a picture from a given URL.
+    /// </summary>
+    /// <param name="url">The URL of the picture to load.</param>
+    /// <param name="vm">The main view model instance.</param>
+    /// <param name="imageIterator">The image iterator to use for navigation.</param>
+    public static async Task LoadPicFromUrlAsync(string url, MainViewModel vm, ImageIterator imageIterator)
+    {
+        var tasks = new List<Task>();
+        if (_cancellationTokenSource is not null)
+        {
+            tasks.Add(_cancellationTokenSource.CancelAsync());
+        }
+
+        string destination;
+
+        try
+        {
+            vm.PlatformService.StopTaskbarProgress();
+
+            var httpDownload = HttpManager.GetDownloadClient(url);
+            using var client = httpDownload.Client;
+            client.ProgressChanged += (totalFileSize, totalBytesDownloaded, progressPercentage) =>
+            {
+                if (totalFileSize is null || totalBytesDownloaded is null || progressPercentage is null)
+                {
+                    return;
+                }
+
+                var displayProgress = HttpManager.GetProgressDisplay(totalFileSize, totalBytesDownloaded,
+                    progressPercentage);
+                vm.PicViewer.Title = displayProgress;
+                vm.PicViewer.TitleTooltip = displayProgress;
+                vm.PicViewer.WindowTitle = displayProgress;
+                if (Settings.UIProperties.IsTaskbarProgressEnabled)
+                {
+                    vm.PlatformService.SetTaskbarProgress((ulong)totalBytesDownloaded, (ulong)totalFileSize);
+                }
+            };
+            tasks.Add(client.StartDownloadAsync());
+            if (imageIterator is not null)
+            {
+                tasks.Add(imageIterator.DisposeAsync().AsTask());
+            }
+            
+            await Task.WhenAll(tasks).ConfigureAwait(false);
+            destination = httpDownload.DownloadPath;
+        }
+        catch (Exception e)
+        {
+#if DEBUG
+            Console.WriteLine("LoadPicFromUrlAsync exception = \n" + e.Message);
+#endif
+            await Task.WhenAll(
+                TooltipHelper.ShowTooltipMessageAsync(e.Message, true),
+                ErrorHandling.ReloadAsync(vm)).ConfigureAwait(false);
+            return;
+        }
+
+        var fileInfo = new FileInfo(destination);
+        if (!fileInfo.Exists)
+        {
+            await ErrorHandling.ReloadAsync(vm);
+            return;
+        }
+
+        var imageModel = await GetImageModel.GetImageModelAsync(fileInfo).ConfigureAwait(false);
+        await UpdateImage.SetSingleImageAsync(imageModel.Image, imageModel.ImageType, url, vm);
+
+        vm.IsLoading = false;
+        vm.PicViewer.FileInfo = fileInfo;
+        vm.PicViewer.ExifOrientation = imageModel.EXIFOrientation;
+        FileHistory.Add(url);
+
+        await NavigationManager.DisposeImageIteratorAsync();
+    }
+
+    #endregion
+
+    #region Load Pic From Base64
+
+        /// <summary>
+    ///     Loads a picture from a Base64-encoded string.
+    /// </summary>
+    /// <param name="base64">The Base64-encoded string representing the picture.</param>
+    /// <param name="vm">The main view model instance.</param>
+    /// <param name="imageIterator">The image iterator to use for navigation.</param>
+    public static async Task LoadPicFromBase64Async(string base64, MainViewModel vm, ImageIterator imageIterator)
+    {
+        TitleManager.SetLoadingTitle(vm);
+        vm.IsLoading = true;
+        vm.PicViewer.ImageSource = null;
+        vm.PicViewer.FileInfo = null;
+        
+        if (_cancellationTokenSource is not null)
+        {
+            await _cancellationTokenSource.CancelAsync();
+        }
+        await NavigationManager.DisposeImageIteratorAsync();
+
+        await Task.Run(async () =>
+        {
+            // TODO: Handle base64 if it's SVG image
+            try
+            {
+                var magickImage = ImageDecoder.Base64ToMagickImage(base64);
+                magickImage.Format = MagickFormat.Png;
+                await using var memoryStream = new MemoryStream();
+                await magickImage.WriteAsync(memoryStream);
+                memoryStream.Position = 0;
+                var bitmap = new Bitmap(memoryStream);
+                var imageModel = new ImageModel
+                {
+                    Image = bitmap,
+                    PixelWidth = bitmap?.PixelSize.Width ?? 0,
+                    PixelHeight = bitmap?.PixelSize.Height ?? 0,
+                    ImageType = ImageType.Bitmap
+                };
+                await UpdateImage.SetSingleImageAsync(imageModel.Image, imageModel.ImageType,
+                    TranslationManager.Translation.Base64Image, vm);
+            }
+            catch (Exception e)
+            {
+#if DEBUG
+                Console.WriteLine("LoadPicFromBase64Async exception = \n" + e.Message);
+#endif
+                if (vm.PicViewer.FileInfo is not null && vm.PicViewer.FileInfo.Exists)
+                {
+                    await LoadPicFromFile(vm.PicViewer.FileInfo.FullName, vm, imageIterator, vm.PicViewer.FileInfo);
+                }
+                else
+                {
+                    await imageIterator.DisposeAsync();
+                    await ErrorHandling.ReloadAsync(vm);
+                }
+            }
+        });
+        vm.IsLoading = false;
+    }
+
+    #endregion
+    
+}

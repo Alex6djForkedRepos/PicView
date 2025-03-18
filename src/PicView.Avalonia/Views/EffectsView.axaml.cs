@@ -62,7 +62,7 @@ public partial class EffectsView : UserControl
     private void InitializeUIEvents(MainViewModel vm)
     {
         PointerPressed += OnPointerPressed;
-        ClearEffectsItem.Click += async (_, _) => await RemoveEffects(vm);
+        ClearEffectsItem.Click += async (_, _) => await RemoveEffects();
         ResetContrastBtn.Click += (_, _) => ContrastSlider.Value = 0;
         ResetBrightnessBtn.Click += (_, _) => BrightnessSlider.Value = 0;
         ResetPencilSketchBtn.Click += (_, _) => PencilSketchSlider.Value = 0;
@@ -173,12 +173,12 @@ public partial class EffectsView : UserControl
         }
     }
 
-    public async Task RemoveEffects(MainViewModel vm)
+    public async Task RemoveEffects()
     {
         _reloading = true;
         try
         {
-            await ErrorHandling.ReloadImageAsync(vm).ConfigureAwait(false);
+            await NavigationManager.QuickReload().ConfigureAwait(false);
             await Dispatcher.UIThread.InvokeAsync(Reset);
         }
         finally

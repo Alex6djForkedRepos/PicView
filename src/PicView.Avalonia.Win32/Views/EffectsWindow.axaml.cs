@@ -3,7 +3,6 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
-using PicView.Avalonia.ViewModels;
 using PicView.Avalonia.WindowBehavior;
 using PicView.Core.Localization;
 
@@ -51,7 +50,7 @@ public partial class EffectsWindow : Window
             
             ClearEffectsItem.Click += delegate
             {
-                EffectsView?.RemoveEffects(DataContext as MainViewModel);
+                EffectsView?.RemoveEffects();
             };
             
             ClientSizeProperty.Changed.Subscribe(size =>
