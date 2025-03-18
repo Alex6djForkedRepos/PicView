@@ -4,7 +4,7 @@ namespace PicView.Core.Calculations;
 
 public static class ImageSizeCalculationHelper
 {
-    private const int MinTitleWidth = 295;
+    private const int MinTitleWidth = 250;
     private const int Padding = 45;
     
     /// <summary>
