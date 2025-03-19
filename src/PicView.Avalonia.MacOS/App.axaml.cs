@@ -15,6 +15,7 @@ using PicView.Avalonia.ViewModels;
 using PicView.Avalonia.WindowBehavior;
 using PicView.Core.FileHandling;
 using PicView.Core.Localization;
+using PicView.Core.MacOS.Wallpaper;
 
 namespace PicView.Avalonia.MacOS;
 
@@ -428,7 +429,7 @@ public class App : Application, IPlatformSpecificService
 
     public void SetAsWallpaper(string path, int wallpaperStyle)
     {
-        // TODO: Implement SetAsWallpaper
+        WallpaperHelper.SetWallpaper(path, -1);
     }
 
     public bool SetAsLockScreen(string path)

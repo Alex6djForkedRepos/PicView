@@ -42,7 +42,7 @@ public static class WallpaperManager
             case WallpaperStyle.Tile:
                 if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
                 {
-                    return -1;
+                    return 5; 
                 }
                 if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                 {
@@ -52,7 +52,7 @@ public static class WallpaperManager
             case WallpaperStyle.Center:
                 if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
                 {
-                    return -1;
+                    return 4; 
                 }
                 if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                 {
@@ -62,7 +62,7 @@ public static class WallpaperManager
             case WallpaperStyle.Stretch:
                 if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
                 {
-                    return -1;
+                    return 3; 
                 }
                 if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                 {
@@ -72,7 +72,7 @@ public static class WallpaperManager
             case WallpaperStyle.Fit:
                 if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
                 {
-                    return -1;
+                    return 2; 
                 }
                 if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                 {
@@ -82,7 +82,7 @@ public static class WallpaperManager
             case WallpaperStyle.Fill:
                 if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
                 {
-                    return -1;
+                    return 1;
                 }
                 if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                 {
@@ -90,7 +90,7 @@ public static class WallpaperManager
                 }
                 break;
             default:
-                return 3;
+                return RuntimeInformation.IsOSPlatform(OSPlatform.OSX) ? 1 : 3;
         }
         return 0;
     }

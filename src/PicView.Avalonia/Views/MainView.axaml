@@ -597,6 +597,25 @@
 
             <!--  Set as wallpaper  -->
             <MenuItem
+                Command="{CompiledBinding SetAsWallpaperCommand}"
+                CommandParameter="{CompiledBinding PicViewer.FileInfo.FullName,
+                                                   FallbackValue=''}"
+                Header="{CompiledBinding Translation.SetAsWallpaper,
+                                         Mode=OneWay}"
+                IsEnabled="{CompiledBinding PicViewer.ImageSource,
+                                            Converter={x:Static ObjectConverters.IsNotNull}}"
+                x:Name="MacOSWallpaperMenuItem">
+                <MenuItem.Icon>
+                    <Path
+                        Data="{StaticResource PanoramaGeometry}"
+                        Fill="{StaticResource Brush0}"
+                        Height="10.40"
+                        Stretch="Fill"
+                        Width="13" />
+                </MenuItem.Icon>
+            </MenuItem>
+
+            <MenuItem
                 Header="{CompiledBinding Translation.SetAsWallpaper,
                                          Mode=OneWay}"
                 IsEnabled="{CompiledBinding PicViewer.ImageSource,
