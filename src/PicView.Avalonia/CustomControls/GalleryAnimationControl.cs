@@ -174,14 +174,6 @@ public class GalleryAnimationControl : UserControl
             {
                 Opacity = FullOpacity;
                 ViewModel.GalleryVerticalAlignment = VerticalAlignment.Stretch;
-            });
-
-            // Wait for animation completion
-            await Task.Delay(opacityAnimation.Delay);
-
-            // Center the selected item
-            await Dispatcher.UIThread.InvokeAsync(() =>
-            {
                 GalleryNavigation.CenterScrollToSelectedItem(ViewModel);
             });
         }
@@ -349,13 +341,7 @@ public class GalleryAnimationControl : UserControl
             {
                 Height = to;
                 UIHelper.GetGalleryView.BlurMask.BlurEnabled = true;
-            });
-
-            ViewModel.GalleryVerticalAlignment = VerticalAlignment.Stretch;
-
-            // Center the selected item
-            await Dispatcher.UIThread.InvokeAsync(() =>
-            {
+                ViewModel.GalleryVerticalAlignment = VerticalAlignment.Stretch;
                 GalleryNavigation.CenterScrollToSelectedItem(ViewModel);
             });
         }
@@ -398,11 +384,6 @@ public class GalleryAnimationControl : UserControl
                 UIHelper.GetGalleryView.BlurMask.BlurEnabled = false;
                 ViewModel.GalleryItemMargin = BottomGalleryItemMargin;
                 ViewModel.GalleryOrientation = Orientation.Horizontal;
-            });
-
-            // Center the selected item
-            await Dispatcher.UIThread.InvokeAsync(() =>
-            {
                 GalleryNavigation.CenterScrollToSelectedItem(ViewModel);
             });
         }
@@ -439,7 +420,7 @@ public class GalleryAnimationControl : UserControl
     }
 
     #endregion
-
+    
     #region Cleanup
 
     protected override void OnUnloaded(RoutedEventArgs e)
