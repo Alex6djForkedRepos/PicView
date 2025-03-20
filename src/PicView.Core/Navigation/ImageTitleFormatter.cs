@@ -38,7 +38,7 @@ public static class ImageTitleFormatter
     /// <summary>
     /// The name of the application.
     /// </summary>
-    internal const string AppName = "PicView";
+    public const string AppName = "PicView";
 
       /// <summary>
     /// Generates the title strings based on the specified parameters, including image properties
