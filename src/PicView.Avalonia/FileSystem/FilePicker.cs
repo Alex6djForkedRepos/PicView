@@ -184,7 +184,7 @@ public static class FilePicker
 
             var options = new FilePickerSaveOptions
             {
-                Title = $"{TranslationManager.Translation.OpenFileDialog} - PicView",
+                Title = $"{TranslationManager.Translation.SaveAs} - PicView",
                 FileTypeChoices = [
                     FilePickerFileTypes.ImageAll,
                     JpegFileType,
