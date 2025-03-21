@@ -1,4 +1,4 @@
-﻿namespace PicView.Avalonia.MacOS;
+﻿namespace PicView.Core.MacOS;
 
 public static class MacOsKeybindings
 {

@@ -1,4 +1,4 @@
-﻿namespace PicView.Avalonia.Win32;
+﻿namespace PicView.Core.WindowsNT;
 
 public static class WindowsKeybindings
 {

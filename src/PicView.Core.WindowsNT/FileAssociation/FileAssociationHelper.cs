@@ -95,7 +95,7 @@ public static class FileAssociationHelper
         {
             // Remove leading period if present
             if (extension.StartsWith("."))
-                extension = extension.Substring(1);
+                extension = extension[1..];
                 
             var progId = $"{ImageTitleFormatter.AppName}.{extension}";
 

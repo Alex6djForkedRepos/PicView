@@ -15,6 +15,7 @@ using PicView.Avalonia.ViewModels;
 using PicView.Avalonia.WindowBehavior;
 using PicView.Core.FileHandling;
 using PicView.Core.Localization;
+using PicView.Core.MacOS;
 using PicView.Core.MacOS.Wallpaper;
 
 namespace PicView.Avalonia.MacOS;
