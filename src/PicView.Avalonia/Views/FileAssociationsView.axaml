@@ -30,776 +30,22 @@
             Padding="0,5,10,15"
             Text="Select file types to associate. Unselected types will be unregistered." />
 
-        <Panel Background="{DynamicResource TertiaryBackgroundColor}">
-            <TextBlock
-                Classes="txt"
-                FontFamily="/Assets/Fonts/Roboto-Bold.ttf#Roboto"
-                FontSize="14"
-                Foreground="{StaticResource SecondaryTextColor}"
-                HorizontalAlignment="Left"
-                Padding="10,5,0,5"
-                Text="{CompiledBinding Translation.FileExtension,
-                                       Mode=OneWay}" />
-
-            <StackPanel
-                Background="{DynamicResource SecondaryBackgroundColor}"
-                HorizontalAlignment="Right"
-                Orientation="Horizontal">
-                <Button Classes="altHover" Padding="10,2,10,2">
-
-                    <TextBlock
-                        Classes="txt"
-                        Foreground="{StaticResource SecondaryTextColor}"
-                        Text="{CompiledBinding Translation.SelectAll,
-                                               Mode=OneWay}" />
-                </Button>
-
-                <Rectangle
-                    Fill="{DynamicResource TertiaryBorderColor}"
-                    Height="16"
-                    Margin="5,0,5,0"
-                    Width="2" />
-
-                <Button Classes="altHover" Padding="10,2,10,2">
-                    <TextBlock
-                        Classes="txt"
-                        Foreground="{StaticResource SecondaryTextColor}"
-                        Text="Unselect All" />
-                </Button>
-            </StackPanel>
-        </Panel>
-
-        <Border
-            Background="#13000000"
-            BorderBrush="{DynamicResource MainBorderColor}"
-            BorderThickness="1">
-            <customControls:AutoScrollViewer Background="Transparent" Height="315">
-                <StackPanel>
-
-                    <ToggleButton
-                        Background="Transparent"
-                        BorderThickness="0"
-                        Classes="altHover"
-                        Margin="0,0,0,10">
-                        <TextBlock
-                            Classes="txt"
-                            Margin="0"
-                            Padding="0,1,5,0"
-                            Text="Joint Photographic Experts Group (.jpg, .jpeg, .jpe)" />
-                    </ToggleButton>
-
-                    <ToggleButton
-                        Background="Transparent"
-                        BorderThickness="0"
-                        Classes="altHover"
-                        Margin="0,0,0,10">
-                        <TextBlock
-                            Classes="txt"
-                            Margin="0"
-                            Padding="0,1,5,0"
-                            Text="JPEG File Interchange Format (.jfif)" />
-                    </ToggleButton>
-
-                    <ToggleButton
-                        Background="Transparent"
-                        BorderThickness="0"
-                        Classes="altHover"
-                        Margin="0,0,0,10">
-                        <TextBlock
-                            Classes="txt"
-                            Margin="0"
-                            Padding="0,1,5,0"
-                            Text="Portable Network Graphics (.png)" />
-                    </ToggleButton>
-
-                    <ToggleButton
-                        Background="Transparent"
-                        BorderThickness="0"
-                        Classes="altHover"
-                        Margin="0,0,0,10">
-                        <TextBlock
-                            Classes="txt"
-                            Margin="0"
-                            Padding="0,1,5,0"
-                            Text="Windows Bitmap (.bmp)" />
-                    </ToggleButton>
-
-                    <ToggleButton
-                        Background="Transparent"
-                        BorderThickness="0"
-                        Classes="altHover"
-                        Margin="0,0,0,10">
-                        <TextBlock
-                            Classes="txt"
-                            Margin="0"
-                            Padding="0,1,5,0"
-                            Text="Graphics Interchange Format (.gif)" />
-                    </ToggleButton>
-
-                    <ToggleButton
-                        Background="Transparent"
-                        BorderThickness="0"
-                        Classes="altHover"
-                        Margin="0,0,0,10">
-                        <TextBlock
-                            Classes="txt"
-                            Margin="0"
-                            Padding="0,1,5,0"
-                            Text="WebP (.webp)" />
-                    </ToggleButton>
-
-                    <ToggleButton
-                        Background="Transparent"
-                        BorderThickness="0"
-                        Classes="altHover"
-                        Margin="0,0,0,10">
-                        <TextBlock
-                            Classes="txt"
-                            Margin="0"
-                            Padding="0,1,5,0"
-                            Text="Wireless Bitmap (.wbmp)" />
-                    </ToggleButton>
-
-                    <ToggleButton
-                        Background="Transparent"
-                        BorderThickness="0"
-                        Classes="altHover"
-                        Margin="0,0,0,10">
-                        <TextBlock
-                            Classes="txt"
-                            Margin="0"
-                            Padding="0,1,5,0"
-                            Text="Advanced Video Interlace Format (.avif)" />
-                    </ToggleButton>
-
-                    <ToggleButton
-                        Background="Transparent"
-                        BorderThickness="0"
-                        Classes="altHover"
-                        Margin="0,0,0,10">
-                        <TextBlock
-                            Classes="txt"
-                            Margin="0"
-                            Padding="0,1,5,0"
-                            Text="Icon (.ico)" />
-                    </ToggleButton>
-
-                    <ToggleButton
-                        Background="Transparent"
-                        BorderThickness="0"
-                        Classes="altHover"
-                        Margin="0,0,0,10">
-                        <TextBlock
-                            Classes="txt"
-                            Margin="0"
-                            Padding="0,1,5,0"
-                            Text="Scalable Vector Graphics (.svg, svgz)" />
-                    </ToggleButton>
-
-                    <ToggleButton
-                        Background="Transparent"
-                        BorderThickness="0"
-                        Classes="altHover"
-                        Margin="0,0,0,10">
-                        <TextBlock
-                            Classes="txt"
-                            Margin="0"
-                            Padding="0,1,5,0"
-                            Text="Photoshop (.psd, .psb)" />
-                    </ToggleButton>
-
-                    <ToggleButton
-                        Background="Transparent"
-                        BorderThickness="0"
-                        Classes="altHover"
-                        Margin="0,0,0,10">
-                        <TextBlock
-                            Classes="txt"
-                            Margin="0"
-                            Padding="0,1,5,0"
-                            Text="XCF (.xcf)" />
-                    </ToggleButton>
-
-                    <ToggleButton
-                        Background="Transparent"
-                        BorderThickness="0"
-                        Classes="altHover"
-                        Margin="0,0,0,10">
-                        <TextBlock
-                            Classes="txt"
-                            Margin="0"
-                            Padding="0,1,5,0"
-                            Text="Tagged Image File Format (.tif, .tiff)" />
-                    </ToggleButton>
-
-                    <ToggleButton
-                        Background="Transparent"
-                        BorderThickness="0"
-                        Classes="altHover"
-                        Margin="0,0,0,10">
-                        <TextBlock
-                            Classes="txt"
-                            Margin="0"
-                            Padding="0,1,5,0"
-                            Text="High-Enhanced Image File (.heic, .heif)" />
-                    </ToggleButton>
-
-                    <ToggleButton
-                        Background="Transparent"
-                        BorderThickness="0"
-                        Classes="altHover"
-                        Margin="0,0,0,10">
-                        <TextBlock
-                            Classes="txt"
-                            Margin="0"
-                            Padding="0,1,5,0"
-                            Text="JPEG XL (.jxl)" />
-                    </ToggleButton>
-
-                    <ToggleButton
-                        Background="Transparent"
-                        BorderThickness="0"
-                        Classes="altHover"
-                        Margin="0,0,0,10">
-                        <TextBlock
-                            Classes="txt"
-                            Margin="0"
-                            Padding="0,1,5,0"
-                            Text="JPEG 2000 (.jp2)" />
-                    </ToggleButton>
-
-                    <ToggleButton
-                        Background="Transparent"
-                        BorderThickness="0"
-                        Classes="altHover"
-                        Margin="0,0,0,10">
-                        <TextBlock
-                            Classes="txt"
-                            Margin="0"
-                            Padding="0,1,5,0"
-                            Text="High Dynamic Range (.hdr)" />
-                    </ToggleButton>
-
-                    <ToggleButton
-                        Background="Transparent"
-                        BorderThickness="0"
-                        Classes="altHover"
-                        Margin="0,0,0,10">
-                        <TextBlock
-                            Classes="txt"
-                            Margin="0"
-                            Padding="0,1,5,0"
-                            Text="Quite OK Image (.qoi)" />
-                    </ToggleButton>
-
-                    <ToggleButton
-                        Background="Transparent"
-                        BorderThickness="0"
-                        Classes="altHover"
-                        Margin="0,0,0,10">
-                        <TextBlock
-                            Classes="txt"
-                            Margin="0"
-                            Padding="0,1,5,0"
-                            Text="Direct Draw Surface (.dds)" />
-                    </ToggleButton>
-
-                    <ToggleButton
-                        Background="Transparent"
-                        BorderThickness="0"
-                        Classes="altHover"
-                        Margin="0,0,0,10">
-                        <TextBlock
-                            Classes="txt"
-                            Margin="0"
-                            Padding="0,1,5,0"
-                            Text="Truevision Targa (.tga)" />
-                    </ToggleButton>
-
-                    <ToggleButton
-                        Background="Transparent"
-                        BorderThickness="0"
-                        Classes="altHover"
-                        Margin="0,0,0,10">
-                        <TextBlock
-                            Classes="txt"
-                            Margin="0"
-                            Padding="0,1,5,0"
-                            Text="Truevision Thumb (.thm)" />
-                    </ToggleButton>
-
-                    <ToggleButton
-                        Background="Transparent"
-                        BorderThickness="0"
-                        Classes="altHover"
-                        Margin="0,0,0,10">
-                        <TextBlock
-                            Classes="txt"
-                            Margin="0"
-                            Padding="0,1,5,0"
-                            Text="Base64 (.b64)" />
-                    </ToggleButton>
-
-                    <ToggleButton
-                        Background="Transparent"
-                        BorderThickness="0"
-                        Classes="altHover"
-                        Margin="0,0,0,10">
-                        <TextBlock
-                            Classes="txt"
-                            Margin="0"
-                            Padding="0,1,5,0"
-                            Text="Framed Raster (.3fr)" />
-                    </ToggleButton>
-
-                    <ToggleButton
-                        Background="Transparent"
-                        BorderThickness="0"
-                        Classes="altHover"
-                        Margin="0,0,0,10">
-                        <TextBlock
-                            Classes="txt"
-                            Margin="0"
-                            Padding="0,1,5,0"
-                            Text="Raw Image (.arw)" />
-                    </ToggleButton>
-
-                    <ToggleButton
-                        Background="Transparent"
-                        BorderThickness="0"
-                        Classes="altHover"
-                        Margin="0,0,0,10">
-                        <TextBlock
-                            Classes="txt"
-                            Margin="0"
-                            Padding="0,1,5,0"
-                            Text="Raw Image (.cr2, .cr3)" />
-                    </ToggleButton>
-
-                    <ToggleButton
-                        Background="Transparent"
-                        BorderThickness="0"
-                        Classes="altHover"
-                        Margin="0,0,0,10">
-                        <TextBlock
-                            Classes="txt"
-                            Margin="0"
-                            Padding="0,1,5,0"
-                            Text="Raw Image (.crw)" />
-                    </ToggleButton>
-
-                    <ToggleButton
-                        Background="Transparent"
-                        BorderThickness="0"
-                        Classes="altHover"
-                        Margin="0,0,0,10">
-                        <TextBlock
-                            Classes="txt"
-                            Margin="0"
-                            Padding="0,1,5,0"
-                            Text="Raw Image (.dcr)" />
-                    </ToggleButton>
-
-                    <ToggleButton
-                        Background="Transparent"
-                        BorderThickness="0"
-                        Classes="altHover"
-                        Margin="0,0,0,10">
-                        <TextBlock
-                            Classes="txt"
-                            Margin="0"
-                            Padding="0,1,5,0"
-                            Text="Raw Image (.dng)" />
-                    </ToggleButton>
-
-                    <ToggleButton
-                        Background="Transparent"
-                        BorderThickness="0"
-                        Classes="altHover"
-                        Margin="0,0,0,10">
-                        <TextBlock
-                            Classes="txt"
-                            Margin="0"
-                            Padding="0,1,5,0"
-                            Text="Raw Image (.erf)" />
-                    </ToggleButton>
-
-                    <ToggleButton
-                        Background="Transparent"
-                        BorderThickness="0"
-                        Classes="altHover"
-                        Margin="0,0,0,10">
-                        <TextBlock
-                            Classes="txt"
-                            Margin="0"
-                            Padding="0,1,5,0"
-                            Text="Raw Image (.kdc)" />
-                    </ToggleButton>
-
-                    <ToggleButton
-                        Background="Transparent"
-                        BorderThickness="0"
-                        Classes="altHover"
-                        Margin="0,0,0,10">
-                        <TextBlock
-                            Classes="txt"
-                            Margin="0"
-                            Padding="0,1,5,0"
-                            Text="Raw Image (.mdc)" />
-                    </ToggleButton>
-
-                    <ToggleButton
-                        Background="Transparent"
-                        BorderThickness="0"
-                        Classes="altHover"
-                        Margin="0,0,0,10">
-                        <TextBlock
-                            Classes="txt"
-                            Margin="0"
-                            Padding="0,1,5,0"
-                            Text="Raw Image (.mef)" />
-                    </ToggleButton>
-
-                    <ToggleButton
-                        Background="Transparent"
-                        BorderThickness="0"
-                        Classes="altHover"
-                        Margin="0,0,0,10">
-                        <TextBlock
-                            Classes="txt"
-                            Margin="0"
-                            Padding="0,1,5,0"
-                            Text="Raw Image (.mos)" />
-                    </ToggleButton>
-
-                    <ToggleButton
-                        Background="Transparent"
-                        BorderThickness="0"
-                        Classes="altHover"
-                        Margin="0,0,0,10">
-                        <TextBlock
-                            Classes="txt"
-                            Margin="0"
-                            Padding="0,1,5,0"
-                            Text="Raw Image (.mrw)" />
-                    </ToggleButton>
-
-                    <ToggleButton
-                        Background="Transparent"
-                        BorderThickness="0"
-                        Classes="altHover"
-                        Margin="0,0,0,10">
-                        <TextBlock
-                            Classes="txt"
-                            Margin="0"
-                            Padding="0,1,5,0"
-                            Text="Raw Image (.nef, .nrw)" />
-                    </ToggleButton>
-
-                    <ToggleButton
-                        Background="Transparent"
-                        BorderThickness="0"
-                        Classes="altHover"
-                        Margin="0,0,0,10">
-                        <TextBlock
-                            Classes="txt"
-                            Margin="0"
-                            Padding="0,1,5,0"
-                            Text="Raw Image (.orf)" />
-                    </ToggleButton>
-
-                    <ToggleButton
-                        Background="Transparent"
-                        BorderThickness="0"
-                        Classes="altHover"
-                        Margin="0,0,0,10">
-                        <TextBlock
-                            Classes="txt"
-                            Margin="0"
-                            Padding="0,1,5,0"
-                            Text="Raw Image (.pef)" />
-                    </ToggleButton>
-
-                    <ToggleButton
-                        Background="Transparent"
-                        BorderThickness="0"
-                        Classes="altHover"
-                        Margin="0,0,0,10">
-                        <TextBlock
-                            Classes="txt"
-                            Margin="0"
-                            Padding="0,1,5,0"
-                            Text="Raw Image (.raw)" />
-                    </ToggleButton>
-
-                    <ToggleButton
-                        Background="Transparent"
-                        BorderThickness="0"
-                        Classes="altHover"
-                        Margin="0,0,0,10">
-                        <TextBlock
-                            Classes="txt"
-                            Margin="0"
-                            Padding="0,1,5,0"
-                            Text="Raw Image (.rw2)" />
-                    </ToggleButton>
-
-                    <ToggleButton
-                        Background="Transparent"
-                        BorderThickness="0"
-                        Classes="altHover"
-                        Margin="0,0,0,10">
-                        <TextBlock
-                            Classes="txt"
-                            Margin="0"
-                            Padding="0,1,5,0"
-                            Text="Raw Image (.srf)" />
-                    </ToggleButton>
-
-                    <ToggleButton
-                        Background="Transparent"
-                        BorderThickness="0"
-                        Classes="altHover"
-                        Margin="0,0,0,10">
-                        <TextBlock
-                            Classes="txt"
-                            Margin="0"
-                            Padding="0,1,5,0"
-                            Text="Raw Image (.x3f)" />
-                    </ToggleButton>
-
-                    <ToggleButton
-                        Background="Transparent"
-                        BorderThickness="0"
-                        Classes="altHover"
-                        Margin="0,0,0,10">
-                        <TextBlock
-                            Classes="txt"
-                            Margin="0"
-                            Padding="0,1,5,0"
-                            Text="Raw Image (.fpx)" />
-                    </ToggleButton>
-
-                    <ToggleButton
-                        Background="Transparent"
-                        BorderThickness="0"
-                        Classes="altHover"
-                        Margin="0,0,0,10">
-                        <TextBlock
-                            Classes="txt"
-                            Margin="0"
-                            Padding="0,1,5,0"
-                            Text="Raw Image (.pcd)" />
-                    </ToggleButton>
-
-                    <ToggleButton
-                        Background="Transparent"
-                        BorderThickness="0"
-                        Classes="altHover"
-                        Margin="0,0,0,10">
-                        <TextBlock
-                            Classes="txt"
-                            Margin="0"
-                            Padding="0,1,5,0"
-                            Text="Raw Image (.dcr)" />
-                    </ToggleButton>
-
-                    <ToggleButton
-                        Background="Transparent"
-                        BorderThickness="0"
-                        Classes="altHover"
-                        Margin="0,0,0,10">
-                        <TextBlock
-                            Classes="txt"
-                            Margin="0"
-                            Padding="0,1,5,0"
-                            Text="Raw Image (.exr)" />
-                    </ToggleButton>
-
-                    <ToggleButton
-                        Background="Transparent"
-                        BorderThickness="0"
-                        Classes="altHover"
-                        Margin="0,0,0,10">
-                        <TextBlock
-                            Classes="txt"
-                            Margin="0"
-                            Padding="0,1,5,0"
-                            Text="Raw Image (.pgm, .ppm)" />
-                    </ToggleButton>
-
-                    <ToggleButton
-                        Background="Transparent"
-                        BorderThickness="0"
-                        Classes="altHover"
-                        Margin="0,0,0,10">
-                        <TextBlock
-                            Classes="txt"
-                            Margin="0"
-                            Padding="0,1,5,0"
-                            Text="Raw Image (.wmf, .emf)" />
-                    </ToggleButton>
-
-                    <ToggleButton
-                        Background="Transparent"
-                        BorderThickness="0"
-                        Classes="altHover"
-                        Margin="0,0,0,10">
-                        <TextBlock
-                            Classes="txt"
-                            Margin="0"
-                            Padding="0,1,5,0"
-                            Text="WordPerfect Graphics (.wpg)" />
-                    </ToggleButton>
-
-                    <ToggleButton
-                        Background="Transparent"
-                        BorderThickness="0"
-                        Classes="altHover"
-                        Margin="0,0,0,10">
-                        <TextBlock
-                            Classes="txt"
-                            Margin="0"
-                            Padding="0,1,5,0"
-                            Text="Paintbrush bitmap graphics (.pcx)" />
-                    </ToggleButton>
-
-                    <ToggleButton
-                        Background="Transparent"
-                        BorderThickness="0"
-                        Classes="altHover"
-                        Margin="0,0,0,10">
-                        <TextBlock
-                            Classes="txt"
-                            Margin="0"
-                            Padding="0,1,5,0"
-                            Text="X Bitmap (.xbm)" />
-                    </ToggleButton>
-
-                    <ToggleButton
-                        Background="Transparent"
-                        BorderThickness="0"
-                        Classes="altHover"
-                        Margin="0,0,0,10">
-                        <TextBlock
-                            Classes="txt"
-                            Margin="0"
-                            Padding="0,1,5,0"
-                            Text="PX PixMap Bitmap (.xpm)" />
-                    </ToggleButton>
-
-                    <ToggleButton
-                        Background="Transparent"
-                        BorderThickness="0"
-                        Classes="altHover"
-                        Margin="0,0,0,10">
-                        <TextBlock
-                            Classes="txt"
-                            Margin="0"
-                            Padding="0,1,5,0"
-                            Text="Dr. Halo (.cut)" />
-                    </ToggleButton>
-
-                    <ToggleButton
-                        Background="Transparent"
-                        BorderThickness="0"
-                        Classes="altHover"
-                        Margin="0,0,0,10">
-                        <TextBlock
-                            Classes="txt"
-                            Margin="0"
-                            Padding="0,1,5,0"
-                            Text="Free Lossless Image Format Bitmap (.flif)" />
-                    </ToggleButton>
-
-                </StackPanel>
-            </customControls:AutoScrollViewer>
-        </Border>
-
-        <Panel>
-
-            <Image
-                Height="14"
-                HorizontalAlignment="Left"
-                Margin="5,0,0,0"
-                Width="14">
-                <DrawingImage>
-                    <DrawingGroup>
-                        <GeometryDrawing Geometry="F1 M19 11Q19 11.1964 18.9904 11.3925Q18.9807 11.5887 18.9615 11.7841Q18.9422 11.9796 18.9134 12.1738Q18.8846 12.3681 18.8463 12.5607Q18.808 12.7533 18.7602 12.9438Q18.7125 13.1343 18.6555 13.3223Q18.5985 13.5102 18.5323 13.6951Q18.4662 13.88 18.391 14.0615Q18.3159 14.2429 18.2319 14.4204Q18.1479 14.598 18.0554 14.7712Q17.9628 14.9444 17.8618 15.1128Q17.7609 15.2813 17.6518 15.4446Q17.5426 15.6079 17.4257 15.7656Q17.3087 15.9233 17.1841 16.0751Q17.0595 16.227 16.9276 16.3725Q16.7957 16.518 16.6569 16.6569Q16.518 16.7957 16.3725 16.9276Q16.227 17.0595 16.0751 17.1841Q15.9233 17.3087 15.7656 17.4257Q15.6079 17.5426 15.4446 17.6518Q15.2813 17.7609 15.1128 17.8618Q14.9444 17.9628 14.7712 18.0554Q14.598 18.1479 14.4204 18.2319Q14.2429 18.3159 14.0615 18.391Q13.88 18.4662 13.6951 18.5323Q13.5102 18.5985 13.3223 18.6555Q13.1343 18.7125 12.9438 18.7602Q12.7533 18.808 12.5607 18.8463Q12.3681 18.8846 12.1738 18.9134Q11.9796 18.9422 11.7841 18.9615Q11.5887 18.9807 11.3925 18.9904Q11.1964 19 11 19Q10.8036 19 10.6075 18.9904Q10.4113 18.9807 10.2159 18.9615Q10.0204 18.9422 9.82616 18.9134Q9.63189 18.8846 9.43928 18.8463Q9.24666 18.808 9.05616 18.7602Q8.86565 18.7125 8.67772 18.6555Q8.48979 18.5985 8.30488 18.5323Q8.11997 18.4662 7.93853 18.391Q7.75709 18.3159 7.57956 18.2319Q7.40203 18.1479 7.22883 18.0554Q7.05563 17.9628 6.88718 17.8618Q6.71873 17.7609 6.55544 17.6518Q6.39215 17.5426 6.2344 17.4257Q6.07666 17.3087 5.92485 17.1841Q5.77304 17.0595 5.62753 16.9276Q5.48201 16.7957 5.34315 16.6569Q5.20428 16.518 5.07239 16.3725Q4.9405 16.227 4.81592 16.0751Q4.69133 15.9233 4.57434 15.7656Q4.45735 15.6079 4.34824 15.4446Q4.23913 15.2813 4.13817 15.1128Q4.03721 14.9444 3.94463 14.7712Q3.85205 14.598 3.76809 14.4204Q3.68412 14.2429 3.60896 14.0615Q3.53381 13.88 3.46765 13.6951Q3.40149 13.5102 3.34448 13.3223Q3.28747 13.1343 3.23975 12.9438Q3.19203 12.7533 3.15372 12.5607Q3.1154 12.3681 3.08659 12.1738Q3.05777 11.9796 3.03852 11.7841Q3.01927 11.5887 3.00964 11.3925Q3 11.1964 3 11Q3 10.8036 3.00964 10.6075Q3.01927 10.4113 3.03852 10.2159Q3.05777 10.0204 3.08659 9.82616Q3.1154 9.63189 3.15372 9.43928Q3.19203 9.24666 3.23975 9.05616Q3.28747 8.86565 3.34448 8.67772Q3.40149 8.48979 3.46765 8.30488Q3.53381 8.11997 3.60896 7.93853Q3.68412 7.75709 3.76809 7.57956Q3.85205 7.40203 3.94463 7.22883Q4.03721 7.05563 4.13817 6.88718Q4.23913 6.71873 4.34824 6.55544Q4.45735 6.39215 4.57434 6.2344Q4.69133 6.07666 4.81592 5.92485Q4.9405 5.77304 5.07239 5.62753Q5.20428 5.48201 5.34315 5.34315Q5.48201 5.20428 5.62753 5.07239Q5.77304 4.9405 5.92485 4.81592Q6.07666 4.69133 6.23441 4.57434Q6.39215 4.45735 6.55544 4.34824Q6.71873 4.23913 6.88718 4.13817Q7.05563 4.03721 7.22883 3.94463Q7.40203 3.85205 7.57956 3.76809Q7.75709 3.68412 7.93853 3.60896Q8.11997 3.53381 8.30488 3.46765Q8.48979 3.40149 8.67772 3.34448Q8.86565 3.28747 9.05616 3.23975Q9.24666 3.19203 9.43928 3.15372Q9.63189 3.1154 9.82616 3.08659Q10.0204 3.05777 10.2159 3.03852Q10.4113 3.01927 10.6075 3.00964Q10.8036 3 11 3Q11.1964 3 11.3925 3.00964Q11.5887 3.01927 11.7841 3.03852Q11.9796 3.05777 12.1738 3.08659Q12.3681 3.1154 12.5607 3.15372Q12.7533 3.19203 12.9438 3.23975Q13.1343 3.28747 13.3223 3.34448Q13.5102 3.40149 13.6951 3.46765Q13.88 3.53381 14.0615 3.60896Q14.2429 3.68412 14.4204 3.76809Q14.598 3.85205 14.7712 3.94463Q14.9444 4.03721 15.1128 4.13817Q15.2813 4.23913 15.4446 4.34824Q15.6079 4.45735 15.7656 4.57434Q15.9233 4.69133 16.0751 4.81592Q16.227 4.9405 16.3725 5.07239Q16.518 5.20428 16.6569 5.34315Q16.7957 5.48201 16.9276 5.62753Q17.0595 5.77304 17.1841 5.92485Q17.3087 6.07666 17.4257 6.23441Q17.5426 6.39215 17.6518 6.55544Q17.7609 6.71873 17.8618 6.88718Q17.9628 7.05563 18.0554 7.22883Q18.1479 7.40203 18.2319 7.57956Q18.3159 7.75709 18.391 7.93853Q18.4662 8.11997 18.5323 8.30488Q18.5985 8.48979 18.6555 8.67772Q18.7125 8.86565 18.7602 9.05616Q18.808 9.24666 18.8463 9.43928Q18.8846 9.63189 18.9134 9.82616Q18.9422 10.0204 18.9615 10.2159Q18.9807 10.4113 18.9904 10.6075Q19 10.8036 19 11Z">
-                            <GeometryDrawing.Pen>
-                                <Pen
-                                    Brush="{StaticResource SecondaryTextColor}"
-                                    LineCap="Round"
-                                    LineJoin="Round"
-                                    MiterLimit="4"
-                                    Thickness="2" />
-                            </GeometryDrawing.Pen>
-                        </GeometryDrawing>
-                        <GeometryDrawing Geometry="F1 M21 21L16.7 16.7">
-                            <GeometryDrawing.Pen>
-                                <Pen
-                                    Brush="{StaticResource SecondaryTextColor}"
-                                    LineCap="Round"
-                                    LineJoin="Round"
-                                    MiterLimit="4"
-                                    Thickness="2" />
-                            </GeometryDrawing.Pen>
-                        </GeometryDrawing>
-                    </DrawingGroup>
-                </DrawingImage>
-            </Image>
-
-            <AutoCompleteBox
-                Background="{DynamicResource SecondaryBackgroundColor}"
-                BorderBrush="{DynamicResource MainBorderColor}"
-                FontFamily="/Assets/Fonts/Roboto-Regular.ttf#Roboto"
-                Foreground="{DynamicResource MainTextColor}"
-                HorizontalAlignment="Left"
-                Padding="23,7,4,6"
-                Watermark="Filter..."
-                Width="269" />
-
-            <Button
-                Background="{DynamicResource TertiaryBackgroundColor}"
-                Classes="altHover"
-                DockPanel.Dock="Right"
-                HorizontalAlignment="Right"
-                Padding="10,3,10,3">
-                <TextBlock
-                    Classes="txt"
-                    Foreground="{StaticResource SecondaryTextColor}"
-                    Text="{CompiledBinding Translation.ResetButtonText,
-                                           Mode=OneWay}" />
-            </Button>
-        </Panel>
-
-        <!-- <StackPanel Margin="0,20,0,0" Orientation="Horizontal"> -->
-        <!--  <Button  -->
-        <!--  Background="{DynamicResource AccentColor}"  -->
-        <!--  Classes="BorderStyle accentHover mainBtn"  -->
-        <!--  Margin="0,0,7,0">  -->
-        <!--         <TextBlock Classes="txt" Text="Associate selected" /> -->
-        <!--     </Button> -->
-        <!--    -->
-        <!--     <Button Classes="BorderStyle errorHover mainBtn" Margin="0"> -->
-        <!--         <TextBlock Classes="txt" Text="Unregister selected" /> -->
-        <!--     </Button> -->
-        <!--    -->
-        <!-- </StackPanel> -->
-
-        <Button
-            Background="{DynamicResource AccentColor}"
-            Classes="BorderStyle accentHover mainBtn"
+        <StackPanel
+            Background="Transparent"
             HorizontalAlignment="Right"
-            Margin="0,15,0,0">
-            <StackPanel Orientation="Horizontal">
+            Margin="0,0,0,5"
+            Orientation="Horizontal">
+
+            <Panel>
+
                 <Image
-                    Height="18"
-                    Margin="0,0,10,0"
-                    Width="18">
+                    Height="14"
+                    HorizontalAlignment="Left"
+                    Margin="5,0,0,0"
+                    Width="14">
                     <DrawingImage>
                         <DrawingGroup>
-                            <GeometryDrawing Geometry="F1 M20 13C20 18 16.5 20.5 12.34 21.95Q12.1766 22.0054 12.0041 22.0028Q11.8317 22.0002 11.67 21.94C7.5 20.5 4 18 4 13L4 6Q4 5.90151 4.01921 5.80491Q4.03843 5.70831 4.07612 5.61732Q4.11381 5.52632 4.16853 5.44443Q4.22325 5.36254 4.29289 5.29289Q4.36254 5.22325 4.44443 5.16853Q4.52632 5.11381 4.61732 5.07612Q4.70831 5.03843 4.80491 5.01921Q4.90151 5 5 5C7 5 9.5 3.8 11.24 2.28Q11.3188 2.21266 11.4083 2.16022Q11.4977 2.10779 11.595 2.0719Q11.6922 2.03601 11.7943 2.01778Q11.8963 1.99955 12 1.99955Q12.1037 1.99955 12.2057 2.01778Q12.3078 2.03601 12.405 2.0719Q12.5023 2.10779 12.5917 2.16022Q12.6812 2.21266 12.76 2.28C14.51 3.81 17 5 19 5Q19.0985 5 19.1951 5.01921Q19.2917 5.03843 19.3827 5.07612Q19.4737 5.11381 19.5556 5.16853Q19.6375 5.22325 19.7071 5.29289Q19.7767 5.36254 19.8315 5.44443Q19.8862 5.52632 19.9239 5.61732Q19.9616 5.70831 19.9808 5.80491Q20 5.90151 20 6L20 13Z">
+                            <GeometryDrawing Geometry="F1 M19 11Q19 11.1964 18.9904 11.3925Q18.9807 11.5887 18.9615 11.7841Q18.9422 11.9796 18.9134 12.1738Q18.8846 12.3681 18.8463 12.5607Q18.808 12.7533 18.7602 12.9438Q18.7125 13.1343 18.6555 13.3223Q18.5985 13.5102 18.5323 13.6951Q18.4662 13.88 18.391 14.0615Q18.3159 14.2429 18.2319 14.4204Q18.1479 14.598 18.0554 14.7712Q17.9628 14.9444 17.8618 15.1128Q17.7609 15.2813 17.6518 15.4446Q17.5426 15.6079 17.4257 15.7656Q17.3087 15.9233 17.1841 16.0751Q17.0595 16.227 16.9276 16.3725Q16.7957 16.518 16.6569 16.6569Q16.518 16.7957 16.3725 16.9276Q16.227 17.0595 16.0751 17.1841Q15.9233 17.3087 15.7656 17.4257Q15.6079 17.5426 15.4446 17.6518Q15.2813 17.7609 15.1128 17.8618Q14.9444 17.9628 14.7712 18.0554Q14.598 18.1479 14.4204 18.2319Q14.2429 18.3159 14.0615 18.391Q13.88 18.4662 13.6951 18.5323Q13.5102 18.5985 13.3223 18.6555Q13.1343 18.7125 12.9438 18.7602Q12.7533 18.808 12.5607 18.8463Q12.3681 18.8846 12.1738 18.9134Q11.9796 18.9422 11.7841 18.9615Q11.5887 18.9807 11.3925 18.9904Q11.1964 19 11 19Q10.8036 19 10.6075 18.9904Q10.4113 18.9807 10.2159 18.9615Q10.0204 18.9422 9.82616 18.9134Q9.63189 18.8846 9.43928 18.8463Q9.24666 18.808 9.05616 18.7602Q8.86565 18.7125 8.67772 18.6555Q8.48979 18.5985 8.30488 18.5323Q8.11997 18.4662 7.93853 18.391Q7.75709 18.3159 7.57956 18.2319Q7.40203 18.1479 7.22883 18.0554Q7.05563 17.9628 6.88718 17.8618Q6.71873 17.7609 6.55544 17.6518Q6.39215 17.5426 6.2344 17.4257Q6.07666 17.3087 5.92485 17.1841Q5.77304 17.0595 5.62753 16.9276Q5.48201 16.7957 5.34315 16.6569Q5.20428 16.518 5.07239 16.3725Q4.9405 16.227 4.81592 16.0751Q4.69133 15.9233 4.57434 15.7656Q4.45735 15.6079 4.34824 15.4446Q4.23913 15.2813 4.13817 15.1128Q4.03721 14.9444 3.94463 14.7712Q3.85205 14.598 3.76809 14.4204Q3.68412 14.2429 3.60896 14.0615Q3.53381 13.88 3.46765 13.6951Q3.40149 13.5102 3.34448 13.3223Q3.28747 13.1343 3.23975 12.9438Q3.19203 12.7533 3.15372 12.5607Q3.1154 12.3681 3.08659 12.1738Q3.05777 11.9796 3.03852 11.7841Q3.01927 11.5887 3.00964 11.3925Q3 11.1964 3 11Q3 10.8036 3.00964 10.6075Q3.01927 10.4113 3.03852 10.2159Q3.05777 10.0204 3.08659 9.82616Q3.1154 9.63189 3.15372 9.43928Q3.19203 9.24666 3.23975 9.05616Q3.28747 8.86565 3.34448 8.67772Q3.40149 8.48979 3.46765 8.30488Q3.53381 8.11997 3.60896 7.93853Q3.68412 7.75709 3.76809 7.57956Q3.85205 7.40203 3.94463 7.22883Q4.03721 7.05563 4.13817 6.88718Q4.23913 6.71873 4.34824 6.55544Q4.45735 6.39215 4.57434 6.2344Q4.69133 6.07666 4.81592 5.92485Q4.9405 5.77304 5.07239 5.62753Q5.20428 5.48201 5.34315 5.34315Q5.48201 5.20428 5.62753 5.07239Q5.77304 4.9405 5.92485 4.81592Q6.07666 4.69133 6.23441 4.57434Q6.39215 4.45735 6.55544 4.34824Q6.71873 4.23913 6.88718 4.13817Q7.05563 4.03721 7.22883 3.94463Q7.40203 3.85205 7.57956 3.76809Q7.75709 3.68412 7.93853 3.60896Q8.11997 3.53381 8.30488 3.46765Q8.48979 3.40149 8.67772 3.34448Q8.86565 3.28747 9.05616 3.23975Q9.24666 3.19203 9.43928 3.15372Q9.63189 3.1154 9.82616 3.08659Q10.0204 3.05777 10.2159 3.03852Q10.4113 3.01927 10.6075 3.00964Q10.8036 3 11 3Q11.1964 3 11.3925 3.00964Q11.5887 3.01927 11.7841 3.03852Q11.9796 3.05777 12.1738 3.08659Q12.3681 3.1154 12.5607 3.15372Q12.7533 3.19203 12.9438 3.23975Q13.1343 3.28747 13.3223 3.34448Q13.5102 3.40149 13.6951 3.46765Q13.88 3.53381 14.0615 3.60896Q14.2429 3.68412 14.4204 3.76809Q14.598 3.85205 14.7712 3.94463Q14.9444 4.03721 15.1128 4.13817Q15.2813 4.23913 15.4446 4.34824Q15.6079 4.45735 15.7656 4.57434Q15.9233 4.69133 16.0751 4.81592Q16.227 4.9405 16.3725 5.07239Q16.518 5.20428 16.6569 5.34315Q16.7957 5.48201 16.9276 5.62753Q17.0595 5.77304 17.1841 5.92485Q17.3087 6.07666 17.4257 6.23441Q17.5426 6.39215 17.6518 6.55544Q17.7609 6.71873 17.8618 6.88718Q17.9628 7.05563 18.0554 7.22883Q18.1479 7.40203 18.2319 7.57956Q18.3159 7.75709 18.391 7.93853Q18.4662 8.11997 18.5323 8.30488Q18.5985 8.48979 18.6555 8.67772Q18.7125 8.86565 18.7602 9.05616Q18.808 9.24666 18.8463 9.43928Q18.8846 9.63189 18.9134 9.82616Q18.9422 10.0204 18.9615 10.2159Q18.9807 10.4113 18.9904 10.6075Q19 10.8036 19 11Z">
                                 <GeometryDrawing.Pen>
                                     <Pen
                                         Brush="{StaticResource SecondaryTextColor}"
@@ -809,17 +55,7 @@
                                         Thickness="2" />
                                 </GeometryDrawing.Pen>
                             </GeometryDrawing>
-                            <GeometryDrawing Geometry="F1 M6.376 18.91Q6.45543 18.6963 6.55084 18.4893Q6.64626 18.2823 6.7571 18.0831Q6.86795 17.8839 6.99358 17.6937Q7.11922 17.5035 7.25893 17.3234Q7.39863 17.1433 7.5516 16.9743Q7.70457 16.8053 7.86993 16.6484Q8.03528 16.4915 8.21206 16.3476Q8.38883 16.2037 8.57602 16.0736Q8.76321 15.9435 8.95973 15.828Q9.15625 15.7125 9.36097 15.6123Q9.56568 15.512 9.77741 15.4276Q9.98915 15.3431 10.2067 15.275Q10.4242 15.2069 10.6463 15.1555Q10.8683 15.104 11.0937 15.0696Q11.319 15.0352 11.5463 15.0179Q11.7736 15.0007 12.0015 15.0008Q12.2295 15.0008 12.4568 15.0182Q12.6841 15.0355 12.9094 15.0701Q13.1347 15.1046 13.3567 15.1562Q13.5788 15.2077 13.7963 15.276Q14.0138 15.3442 14.2254 15.4288Q14.4371 15.5133 14.6418 15.6137Q14.8465 15.714 15.0429 15.8297Q15.2394 15.9453 15.4265 16.0754Q15.6136 16.2056 15.7903 16.3496Q15.967 16.4936 16.1323 16.6506Q16.2976 16.8076 16.4504 16.9767Q16.6033 17.1458 16.7429 17.326Q16.8825 17.5061 17.0081 17.6964Q17.1336 17.8867 17.2443 18.0859Q17.3551 18.2852 17.4504 18.4922Q17.5457 18.6993 17.625 18.913">
-                                <GeometryDrawing.Pen>
-                                    <Pen
-                                        Brush="{StaticResource SecondaryTextColor}"
-                                        LineCap="Round"
-                                        LineJoin="Round"
-                                        MiterLimit="4"
-                                        Thickness="2" />
-                                </GeometryDrawing.Pen>
-                            </GeometryDrawing>
-                            <GeometryDrawing Geometry="F1 M16 11Q16 11.1965 15.9807 11.3921Q15.9615 11.5876 15.9231 11.7804Q15.8848 11.9731 15.8278 12.1611Q15.7707 12.3492 15.6955 12.5307Q15.6203 12.7123 15.5277 12.8856Q15.4351 13.0589 15.3259 13.2223Q15.2167 13.3857 15.092 13.5376Q14.9674 13.6895 14.8284 13.8284Q14.6895 13.9674 14.5376 14.092Q14.3857 14.2167 14.2223 14.3259Q14.0589 14.4351 13.8856 14.5277Q13.7123 14.6203 13.5307 14.6955Q13.3492 14.7707 13.1611 14.8278Q12.9731 14.8848 12.7804 14.9231Q12.5876 14.9615 12.3921 14.9807Q12.1965 15 12 15Q11.8035 15 11.6079 14.9807Q11.4124 14.9615 11.2196 14.9231Q11.0269 14.8848 10.8389 14.8278Q10.6508 14.7707 10.4693 14.6955Q10.2877 14.6203 10.1144 14.5277Q9.94111 14.4351 9.77772 14.3259Q9.61433 14.2167 9.46243 14.092Q9.31052 13.9674 9.17157 13.8284Q9.03262 13.6895 8.90796 13.5376Q8.7833 13.3857 8.67412 13.2223Q8.56495 13.0589 8.47231 12.8856Q8.37968 12.7123 8.30448 12.5307Q8.22928 12.3492 8.17224 12.1611Q8.11519 11.9731 8.07686 11.7804Q8.03852 11.5876 8.01926 11.3921Q8 11.1965 8 11Q8 10.8035 8.01926 10.6079Q8.03852 10.4124 8.07686 10.2196Q8.11519 10.0269 8.17224 9.83886Q8.22928 9.65082 8.30448 9.46927Q8.37968 9.28772 8.47231 9.11441Q8.56495 8.94111 8.67412 8.77772Q8.7833 8.61433 8.90796 8.46243Q9.03262 8.31052 9.17157 8.17157Q9.31052 8.03262 9.46243 7.90796Q9.61433 7.78329 9.77772 7.67412Q9.94111 7.56495 10.1144 7.47231Q10.2877 7.37968 10.4693 7.30448Q10.6508 7.22928 10.8389 7.17224Q11.0269 7.1152 11.2196 7.07686Q11.4124 7.03852 11.6079 7.01926Q11.8035 7 12 7Q12.1965 7 12.3921 7.01926Q12.5876 7.03852 12.7804 7.07686Q12.9731 7.1152 13.1611 7.17224Q13.3492 7.22928 13.5307 7.30448Q13.7123 7.37968 13.8856 7.47231Q14.0589 7.56495 14.2223 7.67412Q14.3857 7.78329 14.5376 7.90796Q14.6895 8.03262 14.8284 8.17157Q14.9674 8.31052 15.092 8.46243Q15.2167 8.61433 15.3259 8.77772Q15.4351 8.94111 15.5277 9.11441Q15.6203 9.28772 15.6955 9.46927Q15.7707 9.65082 15.8278 9.83886Q15.8848 10.0269 15.9231 10.2196Q15.9615 10.4124 15.9807 10.6079Q16 10.8035 16 11Z">
+                            <GeometryDrawing Geometry="F1 M21 21L16.7 16.7">
                                 <GeometryDrawing.Pen>
                                     <Pen
                                         Brush="{StaticResource SecondaryTextColor}"
@@ -832,13 +68,583 @@
                         </DrawingGroup>
                     </DrawingImage>
                 </Image>
+
+                <AutoCompleteBox
+                    Background="Transparent"
+                    BorderBrush="Transparent"
+                    FontFamily="/Assets/Fonts/Roboto-Regular.ttf#Roboto"
+                    Foreground="{DynamicResource MainTextColor}"
+                    HorizontalAlignment="Left"
+                    Padding="23,7,4,6"
+                    Watermark="Filter..."
+                    Width="269" />
+
+                <customControls:IconButton
+                    Classes="altHover y"
+                    Data="{StaticResource CloseGeometry}"
+                    DockPanel.Dock="Right"
+                    Foreground="{DynamicResource MainTextColorFaded}"
+                    HorizontalAlignment="Right"
+                    Padding="10,3,10,3" />
+            </Panel>
+
+            <Button Classes="altHover y" Padding="10,2,10,2">
                 <TextBlock
                     Classes="txt"
-                    Margin="0,0,10,0"
-                    Text="{CompiledBinding Translation.Apply,
+                    Foreground="{StaticResource SecondaryTextColor}"
+                    Text="{CompiledBinding Translation.SelectAll,
                                            Mode=OneWay}" />
-            </StackPanel>
-        </Button>
+            </Button>
 
+            <Rectangle
+                Fill="{DynamicResource TertiaryBorderColor}"
+                Height="16"
+                Margin="5,0,5,0"
+                Width="2" />
+
+            <Button Classes="altHover y" Padding="10,2,10,2">
+                <TextBlock
+                    Classes="txt"
+                    Foreground="{StaticResource SecondaryTextColor}"
+                    Text="Unselect All" />
+            </Button>
+        </StackPanel>
+
+
+        <customControls:AutoScrollViewer Background="Transparent" Height="340">
+            <StackPanel>
+                <StackPanel.Styles>
+                    <Style Selector="CheckBox.x">
+                        <Setter Property="Margin" Value="15,0,0,5" />
+                    </Style>
+                    <Style Selector="CheckBox.y">
+                        <Setter Property="Margin" Value="0,10,0,10" />
+                    </Style>
+                </StackPanel.Styles>
+
+                <CheckBox Classes="altHover y" x:Name="NormalGroup">
+                    <TextBlock
+                        Classes="txt"
+                        FontFamily="/Assets/Fonts/Roboto-Bold.ttf#Roboto"
+                        Text="Normal" />
+                </CheckBox>
+
+                <CheckBox Classes="altHover x">
+                    <TextBlock
+                        Classes="txt"
+                        Margin="0"
+                        Padding="0,1,5,0"
+                        Text="Joint Photographic Experts Group (.jpg, .jpeg, .jpe)" />
+                </CheckBox>
+
+                <CheckBox Classes="altHover x">
+                    <TextBlock
+                        Classes="txt"
+                        Margin="0"
+                        Padding="0,1,5,0"
+                        Text="JPEG File Interchange Format (.jfif)" />
+                </CheckBox>
+
+                <CheckBox Classes="altHover x">
+                    <TextBlock
+                        Classes="txt"
+                        Margin="0"
+                        Padding="0,1,5,0"
+                        Text="Portable Network Graphics (.png)" />
+                </CheckBox>
+
+                <CheckBox Classes="altHover x">
+                    <TextBlock
+                        Classes="txt"
+                        Margin="0"
+                        Padding="0,1,5,0"
+                        Text="Windows Bitmap (.bmp)" />
+                </CheckBox>
+
+                <CheckBox Classes="altHover x">
+                    <TextBlock
+                        Classes="txt"
+                        Margin="0"
+                        Padding="0,1,5,0"
+                        Text="Graphics Interchange Format (.gif)" />
+                </CheckBox>
+
+                <CheckBox Classes="altHover x">
+                    <TextBlock
+                        Classes="txt"
+                        Margin="0"
+                        Padding="0,1,5,0"
+                        Text="WebP (.webp)" />
+                </CheckBox>
+
+                <CheckBox Classes="altHover x">
+                    <TextBlock
+                        Classes="txt"
+                        Margin="0"
+                        Padding="0,1,5,0"
+                        Text="Wireless Bitmap (.wbmp)" />
+                </CheckBox>
+
+                <CheckBox Classes="altHover x">
+                    <TextBlock
+                        Classes="txt"
+                        Margin="0"
+                        Padding="0,1,5,0"
+                        Text="Advanced Video Interlace Format (.avif)" />
+                </CheckBox>
+
+                <CheckBox Classes="altHover x">
+                    <TextBlock
+                        Classes="txt"
+                        Margin="0"
+                        Padding="0,1,5,0"
+                        Text="Icon (.ico)" />
+                </CheckBox>
+
+
+                <CheckBox Classes="altHover y" x:Name="GraphicsGroup">
+                    <TextBlock
+                        Classes="txt"
+                        FontFamily="/Assets/Fonts/Roboto-Bold.ttf#Roboto"
+                        Text="Graphics" />
+                </CheckBox>
+
+                <CheckBox Classes="altHover x">
+                    <TextBlock
+                        Classes="txt"
+                        Margin="0"
+                        Padding="0,1,5,0"
+                        Text="Scalable Vector Graphics (.svg, svgz)" />
+                </CheckBox>
+
+                <CheckBox Classes="altHover x">
+                    <TextBlock
+                        Classes="txt"
+                        Margin="0"
+                        Padding="0,1,5,0"
+                        Text="Photoshop (.psd, .psb)" />
+                </CheckBox>
+
+                <CheckBox Classes="altHover x">
+                    <TextBlock
+                        Classes="txt"
+                        Margin="0"
+                        Padding="0,1,5,0"
+                        Text="XCF (.xcf)" />
+                </CheckBox>
+
+                <CheckBox Classes="altHover x">
+                    <TextBlock
+                        Classes="txt"
+                        Margin="0"
+                        Padding="0,1,5,0"
+                        Text="Tagged Image File Format (.tif, .tiff)" />
+                </CheckBox>
+
+                <CheckBox Classes="altHover x">
+                    <TextBlock
+                        Classes="txt"
+                        Margin="0"
+                        Padding="0,1,5,0"
+                        Text="High-Enhanced Image File (.heic, .heif)" />
+                </CheckBox>
+
+                <CheckBox Classes="altHover x">
+                    <TextBlock
+                        Classes="txt"
+                        Margin="0"
+                        Padding="0,1,5,0"
+                        Text="JPEG XL (.jxl)" />
+                </CheckBox>
+
+                <CheckBox Classes="altHover x">
+                    <TextBlock
+                        Classes="txt"
+                        Margin="0"
+                        Padding="0,1,5,0"
+                        Text="JPEG 2000 (.jp2)" />
+                </CheckBox>
+
+                <CheckBox Classes="altHover x">
+                    <TextBlock
+                        Classes="txt"
+                        Margin="0"
+                        Padding="0,1,5,0"
+                        Text="High Dynamic Range (.hdr)" />
+                </CheckBox>
+
+                <CheckBox Classes="altHover x">
+                    <TextBlock
+                        Classes="txt"
+                        Margin="0"
+                        Padding="0,1,5,0"
+                        Text="Quite OK Image (.qoi)" />
+                </CheckBox>
+
+                <CheckBox Classes="altHover x">
+                    <TextBlock
+                        Classes="txt"
+                        Margin="0"
+                        Padding="0,1,5,0"
+                        Text="Direct Draw Surface (.dds)" />
+                </CheckBox>
+
+                <CheckBox Classes="altHover x">
+                    <TextBlock
+                        Classes="txt"
+                        Margin="0"
+                        Padding="0,1,5,0"
+                        Text="Truevision Targa (.tga)" />
+                </CheckBox>
+
+                <CheckBox Classes="altHover x">
+                    <TextBlock
+                        Classes="txt"
+                        Margin="0"
+                        Padding="0,1,5,0"
+                        Text="Industrial Light &amp; Magic OpenEXR (.exr)" />
+                </CheckBox>
+
+                <CheckBox Classes="altHover y" x:Name="RawGroup">
+                    <TextBlock
+                        Classes="txt"
+                        FontFamily="/Assets/Fonts/Roboto-Bold.ttf#Roboto"
+                        Text="Raw" />
+                </CheckBox>
+
+                <CheckBox Classes="altHover x">
+                    <TextBlock
+                        Classes="txt"
+                        Margin="0"
+                        Padding="0,1,5,0"
+                        Text="Raw (.raw)" />
+                </CheckBox>
+
+                <CheckBox Classes="altHover x">
+                    <TextBlock
+                        Classes="txt"
+                        Margin="0"
+                        Padding="0,1,5,0"
+                        Text="Framed Raster (.3fr)" />
+                </CheckBox>
+
+                <CheckBox Classes="altHover x">
+                    <TextBlock
+                        Classes="txt"
+                        Margin="0"
+                        Padding="0,1,5,0"
+                        Text="Sony Digital Camera RAW (.arw)" />
+                </CheckBox>
+
+                <CheckBox Classes="altHover x">
+                    <TextBlock
+                        Classes="txt"
+                        Margin="0"
+                        Padding="0,1,5,0"
+                        Text="Canon Digital Camera RAW (.cr2, .cr3, .crw)" />
+                </CheckBox>
+
+                <CheckBox Classes="altHover x">
+                    <TextBlock
+                        Classes="txt"
+                        Margin="0"
+                        Padding="0,1,5,0"
+                        Text="Kodak Raw (.dcr, .kdc)" />
+                </CheckBox>
+
+                <CheckBox Classes="altHover x">
+                    <TextBlock
+                        Classes="txt"
+                        Margin="0"
+                        Padding="0,1,5,0"
+                        Text="Digital Negative RAW (.dng)" />
+                </CheckBox>
+
+                <CheckBox Classes="altHover x">
+                    <TextBlock
+                        Classes="txt"
+                        Margin="0"
+                        Padding="0,1,5,0"
+                        Text="Epson Raw Image (.erf)" />
+                </CheckBox>
+
+                <CheckBox Classes="altHover x">
+                    <TextBlock
+                        Classes="txt"
+                        Margin="0"
+                        Padding="0,1,5,0"
+                        Text="Minolta Raw Image (.mdc)" />
+                </CheckBox>
+
+                <CheckBox Classes="altHover x">
+                    <TextBlock
+                        Classes="txt"
+                        Margin="0"
+                        Padding="0,1,5,0"
+                        Text="Mamiya Raw Image (.mef)" />
+                </CheckBox>
+
+                <CheckBox Classes="altHover x">
+                    <TextBlock
+                        Classes="txt"
+                        Margin="0"
+                        Padding="0,1,5,0"
+                        Text="Leaf/Aptus/Mamiya MOS Raw Image (.mos)" />
+                </CheckBox>
+
+                <CheckBox Classes="altHover x">
+                    <TextBlock
+                        Classes="txt"
+                        Margin="0"
+                        Padding="0,1,5,0"
+                        Text="Minolta Dimage RAW (.mrw)" />
+                </CheckBox>
+
+                <CheckBox Classes="altHover x">
+                    <TextBlock
+                        Classes="txt"
+                        Margin="0"
+                        Padding="0,1,5,0"
+                        Text="Nikon Raw Image (.nef)" />
+                </CheckBox>
+
+                <CheckBox Classes="altHover x">
+                    <TextBlock
+                        Classes="txt"
+                        Margin="0"
+                        Padding="0,1,5,0"
+                        Text="Nokia RAW Bitmap (.nrw)" />
+                </CheckBox>
+
+                <CheckBox Classes="altHover x">
+                    <TextBlock
+                        Classes="txt"
+                        Margin="0"
+                        Padding="0,1,5,0"
+                        Text="Olympus Digital Camera RAW (.orf)" />
+                </CheckBox>
+
+                <CheckBox Classes="altHover x">
+                    <TextBlock
+                        Classes="txt"
+                        Margin="0"
+                        Padding="0,1,5,0"
+                        Text="Pentax Raw Image (.pef)" />
+                </CheckBox>
+
+                <CheckBox Classes="altHover x">
+                    <TextBlock
+                        Classes="txt"
+                        Margin="0"
+                        Padding="0,1,5,0"
+                        Text="Panasonic RAW (.rw2)" />
+                </CheckBox>
+
+                <CheckBox Classes="altHover x">
+                    <TextBlock
+                        Classes="txt"
+                        Margin="0"
+                        Padding="0,1,5,0"
+                        Text="Sony SRF Raw (.srf)" />
+                </CheckBox>
+
+                <CheckBox Classes="altHover x">
+                    <TextBlock
+                        Classes="txt"
+                        Margin="0"
+                        Padding="0,1,5,0"
+                        Text="Sigma Foveon X3 (.x3f)" />
+                </CheckBox>
+
+                <CheckBox Classes="altHover x">
+                    <TextBlock
+                        Classes="txt"
+                        Margin="0"
+                        Padding="0,1,5,0"
+                        Text="Kodak FlashPix Bitmap (.fpx)" />
+                </CheckBox>
+
+                <CheckBox Classes="altHover x">
+                    <TextBlock
+                        Classes="txt"
+                        Margin="0"
+                        Padding="0,1,5,0"
+                        Text="Kodak PhotoCD Bitmap (.pcd)" />
+                </CheckBox>
+
+                <CheckBox Classes="altHover x">
+                    <TextBlock
+                        Classes="txt"
+                        Margin="0"
+                        Padding="0,1,5,0"
+                        Text="Kodak Raw (.dcr)" />
+                </CheckBox>
+
+                <CheckBox Classes="altHover x">
+                    <TextBlock
+                        Classes="txt"
+                        Margin="0"
+                        Padding="0,1,5,0"
+                        Text="Windows Metafile Image (.wmf, .emf)" />
+                </CheckBox>
+
+                <CheckBox Classes="altHover y" x:Name="UncommonGroup">
+                    <TextBlock
+                        Classes="txt"
+                        FontFamily="/Assets/Fonts/Roboto-Bold.ttf#Roboto"
+                        Text="Uncommon" />
+                </CheckBox>
+
+                <CheckBox Classes="altHover x">
+                    <TextBlock
+                        Classes="txt"
+                        Margin="0"
+                        Padding="0,1,5,0"
+                        Text="WordPerfect Graphics (.wpg)" />
+                </CheckBox>
+
+                <CheckBox Classes="altHover x">
+                    <TextBlock
+                        Classes="txt"
+                        Margin="0"
+                        Padding="0,1,5,0"
+                        Text="Paintbrush bitmap graphics (.pcx)" />
+                </CheckBox>
+
+                <CheckBox Classes="altHover x">
+                    <TextBlock
+                        Classes="txt"
+                        Margin="0"
+                        Padding="0,1,5,0"
+                        Text="X Bitmap (.xbm)" />
+                </CheckBox>
+
+                <CheckBox Classes="altHover x">
+                    <TextBlock
+                        Classes="txt"
+                        Margin="0"
+                        Padding="0,1,5,0"
+                        Text="PX PixMap Bitmap (.xpm)" />
+                </CheckBox>
+
+                <CheckBox Classes="altHover x">
+                    <TextBlock
+                        Classes="txt"
+                        Margin="0"
+                        Padding="0,1,5,0"
+                        Text="Dr. Halo (.cut)" />
+                </CheckBox>
+
+                <CheckBox Classes="altHover x">
+                    <TextBlock
+                        Classes="txt"
+                        Margin="0"
+                        Padding="0,1,5,0"
+                        Text="Free Lossless Image Format Bitmap (.flif)" />
+                </CheckBox>
+
+                <CheckBox Classes="altHover x">
+                    <TextBlock
+                        Classes="txt"
+                        Margin="0"
+                        Padding="0,1,5,0"
+                        Text="Truevision Thumb (.thm)" />
+                </CheckBox>
+
+                <CheckBox Classes="altHover x">
+                    <TextBlock
+                        Classes="txt"
+                        Margin="0"
+                        Padding="0,1,5,0"
+                        Text="Portable GrayMap Bitmap (.ppm)" />
+                </CheckBox>
+
+                <CheckBox Classes="altHover x">
+                    <TextBlock
+                        Classes="txt"
+                        Margin="0"
+                        Padding="0,1,5,0"
+                        Text="Portable PixMap  Bitmap (.ppm)" />
+                </CheckBox>
+
+                <CheckBox Classes="altHover x">
+                    <TextBlock
+                        Classes="txt"
+                        Margin="0"
+                        Padding="0,1,5,0"
+                        Text="Base64 (.b64)" />
+                </CheckBox>
+
+            </StackPanel>
+        </customControls:AutoScrollViewer>
+
+        <DockPanel Margin="0,15,0,0">
+
+            <Button
+                Background="{DynamicResource AccentColor}"
+                Classes="BorderStyle accentHover mainBtn"
+                DockPanel.Dock="Right"
+                HorizontalAlignment="Right">
+                <StackPanel Orientation="Horizontal">
+                    <Image
+                        Height="18"
+                        Margin="0,0,10,0"
+                        Width="18">
+                        <DrawingImage>
+                            <DrawingGroup>
+                                <GeometryDrawing Geometry="F1 M20 13C20 18 16.5 20.5 12.34 21.95Q12.1766 22.0054 12.0041 22.0028Q11.8317 22.0002 11.67 21.94C7.5 20.5 4 18 4 13L4 6Q4 5.90151 4.01921 5.80491Q4.03843 5.70831 4.07612 5.61732Q4.11381 5.52632 4.16853 5.44443Q4.22325 5.36254 4.29289 5.29289Q4.36254 5.22325 4.44443 5.16853Q4.52632 5.11381 4.61732 5.07612Q4.70831 5.03843 4.80491 5.01921Q4.90151 5 5 5C7 5 9.5 3.8 11.24 2.28Q11.3188 2.21266 11.4083 2.16022Q11.4977 2.10779 11.595 2.0719Q11.6922 2.03601 11.7943 2.01778Q11.8963 1.99955 12 1.99955Q12.1037 1.99955 12.2057 2.01778Q12.3078 2.03601 12.405 2.0719Q12.5023 2.10779 12.5917 2.16022Q12.6812 2.21266 12.76 2.28C14.51 3.81 17 5 19 5Q19.0985 5 19.1951 5.01921Q19.2917 5.03843 19.3827 5.07612Q19.4737 5.11381 19.5556 5.16853Q19.6375 5.22325 19.7071 5.29289Q19.7767 5.36254 19.8315 5.44443Q19.8862 5.52632 19.9239 5.61732Q19.9616 5.70831 19.9808 5.80491Q20 5.90151 20 6L20 13Z">
+                                    <GeometryDrawing.Pen>
+                                        <Pen
+                                            Brush="{StaticResource SecondaryTextColor}"
+                                            LineCap="Round"
+                                            LineJoin="Round"
+                                            MiterLimit="4"
+                                            Thickness="2" />
+                                    </GeometryDrawing.Pen>
+                                </GeometryDrawing>
+                                <GeometryDrawing Geometry="F1 M6.376 18.91Q6.45543 18.6963 6.55084 18.4893Q6.64626 18.2823 6.7571 18.0831Q6.86795 17.8839 6.99358 17.6937Q7.11922 17.5035 7.25893 17.3234Q7.39863 17.1433 7.5516 16.9743Q7.70457 16.8053 7.86993 16.6484Q8.03528 16.4915 8.21206 16.3476Q8.38883 16.2037 8.57602 16.0736Q8.76321 15.9435 8.95973 15.828Q9.15625 15.7125 9.36097 15.6123Q9.56568 15.512 9.77741 15.4276Q9.98915 15.3431 10.2067 15.275Q10.4242 15.2069 10.6463 15.1555Q10.8683 15.104 11.0937 15.0696Q11.319 15.0352 11.5463 15.0179Q11.7736 15.0007 12.0015 15.0008Q12.2295 15.0008 12.4568 15.0182Q12.6841 15.0355 12.9094 15.0701Q13.1347 15.1046 13.3567 15.1562Q13.5788 15.2077 13.7963 15.276Q14.0138 15.3442 14.2254 15.4288Q14.4371 15.5133 14.6418 15.6137Q14.8465 15.714 15.0429 15.8297Q15.2394 15.9453 15.4265 16.0754Q15.6136 16.2056 15.7903 16.3496Q15.967 16.4936 16.1323 16.6506Q16.2976 16.8076 16.4504 16.9767Q16.6033 17.1458 16.7429 17.326Q16.8825 17.5061 17.0081 17.6964Q17.1336 17.8867 17.2443 18.0859Q17.3551 18.2852 17.4504 18.4922Q17.5457 18.6993 17.625 18.913">
+                                    <GeometryDrawing.Pen>
+                                        <Pen
+                                            Brush="{StaticResource SecondaryTextColor}"
+                                            LineCap="Round"
+                                            LineJoin="Round"
+                                            MiterLimit="4"
+                                            Thickness="2" />
+                                    </GeometryDrawing.Pen>
+                                </GeometryDrawing>
+                                <GeometryDrawing Geometry="F1 M16 11Q16 11.1965 15.9807 11.3921Q15.9615 11.5876 15.9231 11.7804Q15.8848 11.9731 15.8278 12.1611Q15.7707 12.3492 15.6955 12.5307Q15.6203 12.7123 15.5277 12.8856Q15.4351 13.0589 15.3259 13.2223Q15.2167 13.3857 15.092 13.5376Q14.9674 13.6895 14.8284 13.8284Q14.6895 13.9674 14.5376 14.092Q14.3857 14.2167 14.2223 14.3259Q14.0589 14.4351 13.8856 14.5277Q13.7123 14.6203 13.5307 14.6955Q13.3492 14.7707 13.1611 14.8278Q12.9731 14.8848 12.7804 14.9231Q12.5876 14.9615 12.3921 14.9807Q12.1965 15 12 15Q11.8035 15 11.6079 14.9807Q11.4124 14.9615 11.2196 14.9231Q11.0269 14.8848 10.8389 14.8278Q10.6508 14.7707 10.4693 14.6955Q10.2877 14.6203 10.1144 14.5277Q9.94111 14.4351 9.77772 14.3259Q9.61433 14.2167 9.46243 14.092Q9.31052 13.9674 9.17157 13.8284Q9.03262 13.6895 8.90796 13.5376Q8.7833 13.3857 8.67412 13.2223Q8.56495 13.0589 8.47231 12.8856Q8.37968 12.7123 8.30448 12.5307Q8.22928 12.3492 8.17224 12.1611Q8.11519 11.9731 8.07686 11.7804Q8.03852 11.5876 8.01926 11.3921Q8 11.1965 8 11Q8 10.8035 8.01926 10.6079Q8.03852 10.4124 8.07686 10.2196Q8.11519 10.0269 8.17224 9.83886Q8.22928 9.65082 8.30448 9.46927Q8.37968 9.28772 8.47231 9.11441Q8.56495 8.94111 8.67412 8.77772Q8.7833 8.61433 8.90796 8.46243Q9.03262 8.31052 9.17157 8.17157Q9.31052 8.03262 9.46243 7.90796Q9.61433 7.78329 9.77772 7.67412Q9.94111 7.56495 10.1144 7.47231Q10.2877 7.37968 10.4693 7.30448Q10.6508 7.22928 10.8389 7.17224Q11.0269 7.1152 11.2196 7.07686Q11.4124 7.03852 11.6079 7.01926Q11.8035 7 12 7Q12.1965 7 12.3921 7.01926Q12.5876 7.03852 12.7804 7.07686Q12.9731 7.1152 13.1611 7.17224Q13.3492 7.22928 13.5307 7.30448Q13.7123 7.37968 13.8856 7.47231Q14.0589 7.56495 14.2223 7.67412Q14.3857 7.78329 14.5376 7.90796Q14.6895 8.03262 14.8284 8.17157Q14.9674 8.31052 15.092 8.46243Q15.2167 8.61433 15.3259 8.77772Q15.4351 8.94111 15.5277 9.11441Q15.6203 9.28772 15.6955 9.46927Q15.7707 9.65082 15.8278 9.83886Q15.8848 10.0269 15.9231 10.2196Q15.9615 10.4124 15.9807 10.6079Q16 10.8035 16 11Z">
+                                    <GeometryDrawing.Pen>
+                                        <Pen
+                                            Brush="{StaticResource SecondaryTextColor}"
+                                            LineCap="Round"
+                                            LineJoin="Round"
+                                            MiterLimit="4"
+                                            Thickness="2" />
+                                    </GeometryDrawing.Pen>
+                                </GeometryDrawing>
+                            </DrawingGroup>
+                        </DrawingImage>
+                    </Image>
+                    <TextBlock
+                        Classes="txt"
+                        Margin="0,0,10,0"
+                        Text="{CompiledBinding Translation.Apply,
+                                               Mode=OneWay}" />
+                </StackPanel>
+            </Button>
+
+            <Button
+                Classes="altHover y"
+                DockPanel.Dock="Right"
+                HorizontalAlignment="Right"
+                Padding="5,0">
+                <TextBlock
+                    Classes="txt"
+                    Foreground="{StaticResource SecondaryTextColor}"
+                    Text="{CompiledBinding Translation.ResetButtonText,
+                                           Mode=OneWay}" />
+            </Button>
+
+        </DockPanel>
     </StackPanel>
 </UserControl>
