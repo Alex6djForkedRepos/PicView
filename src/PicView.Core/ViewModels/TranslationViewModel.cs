@@ -266,9 +266,16 @@ public class TranslationViewModel : ReactiveObject
         Solarize = TranslationManager.Translation.Solarize;
         Maximize = TranslationManager.Translation.Maximize;
         SelectAll = TranslationManager.Translation.SelectAll;
+        Normal = TranslationManager.Translation.Normal;
     }
 
     #region Static Translation Strings
+    
+    public string? Normal
+    {
+        get;
+        set => this.RaiseAndSetIfChanged(ref field, value);
+    }
     
     public string? SelectAll
     {
