@@ -10,7 +10,7 @@
             <Setter Property="Focusable" Value="False" />
             <Setter Property="Template">
                 <ControlTemplate>
-                    <Border Background="{DynamicResource TertiaryBackgroundColor}" UseLayoutRounding="False">
+                    <Border Background="Transparent" UseLayoutRounding="False">
                         <Grid ColumnDefinitions="Auto,*,Auto">
                             <RepeatButton
                                 Background="Transparent"
@@ -92,10 +92,10 @@
             <Setter Property="Template">
                 <ControlTemplate>
                     <Border
-                        Background="{DynamicResource SecondaryBackgroundColor}"
-                        BorderBrush="{DynamicResource MainBorderColor}"
+                        Background="Transparent"
                         BorderThickness="1,0,0,0"
-                        UseLayoutRounding="False">
+                        UseLayoutRounding="False"
+                        x:Name="Border">
                         <Grid RowDefinitions="Auto,*,Auto">
                             <RepeatButton
                                 Background="Transparent"
@@ -215,5 +215,6 @@
         <Style Selector="^ /template/ RepeatButton:pointerover &gt; Path">
             <Setter Property="Fill" Value="{DynamicResource AccentColor}" />
         </Style>
+
     </ControlTheme>
 </ResourceDictionary>

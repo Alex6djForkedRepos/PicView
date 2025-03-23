@@ -22,20 +22,12 @@
                             VerticalAlignment="Center">
 
                             <Canvas Height="20" Width="20">
-                                <Border
-                                    Background="#eeebebeb"
-                                    CornerRadius="9"
-                                    Height="16"
+                                <Image
+                                    Height="18"
                                     IsVisible="False"
-                                    Margin="1,2.2,4,0"
-                                    UseLayoutRounding="True"
-                                    Width="16"
-                                    x:Name="TickMark">
-                                    <Path
-                                        Data="{StaticResource CheckMarkGeometry}"
-                                        Fill="{DynamicResource AccentColor}"
-                                        Stretch="Fill" />
-                                </Border>
+                                    Source="{StaticResource SquareCheckImage}"
+                                    Width="18"
+                                    x:Name="TickMark" />
 
                                 <Path
                                     Data="{StaticResource CrossMarkGeometry}"
@@ -52,6 +44,7 @@
                             Content="{TemplateBinding Content}"
                             ContentTemplate="{TemplateBinding ContentTemplate}"
                             HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            Margin="0,0,5,0"
                             Name="PART_ContentPresenter"
                             RecognizesAccessKey="True"
                             TextElement.Foreground="{TemplateBinding Foreground}"
@@ -62,7 +55,7 @@
         </Setter>
 
         <Style Selector="^:checked">
-            <Style Selector="^ /template/ Border#TickMark">
+            <Style Selector="^ /template/ Image#TickMark">
                 <Setter Property="IsVisible" Value="True" />
             </Style>
             <Style Selector="^ /template/ Path#CrossMark">
@@ -71,7 +64,7 @@
         </Style>
 
         <Style Selector="^:unchecked">
-            <Style Selector="^ /template/ Border#TickMark">
+            <Style Selector="^ /template/ Image#TickMark">
                 <Setter Property="IsVisible" Value="False" />
             </Style>
             <Style Selector="^ /template/ Path#CrossMark">
