@@ -29,127 +29,137 @@ public static class QuickLoad
             await NavigationManager.LoadPicFromArchiveAsync(file, vm).ConfigureAwait(false);
             return;
         }
+        
         vm.PicViewer.FileInfo = fileInfo;
-        
-        var imageModel = await GetImageModel.GetImageModelAsync(fileInfo).ConfigureAwait(false);
-        
+
+        if (Settings.ImageScaling.ShowImageSideBySide)
+        {
+            await SideBySideLoadingAsync(vm, fileInfo).ConfigureAwait(false);
+        }
+        else
+        {
+            await SingeImageLoadingAsync(vm, fileInfo).ConfigureAwait(false);
+        }
+
+        vm.IsLoading = false;
+    }
+
+    private static async Task SingeImageLoadingAsync(MainViewModel vm, FileInfo fileInfo)
+    {
+        var cancellationTokenSource = new CancellationTokenSource();
+        ImageModel? imageModel = null;
+        await Task.WhenAll(
+            Task.Run(() => { NavigationManager.InitializeImageIterator(vm); }, cancellationTokenSource.Token),
+            Task.Run(async () => imageModel = await ProgressiveImageLoader.LoadProgressivelyAsync(
+                fileInfo,vm, cancellationTokenSource.Token), cancellationTokenSource.Token));
+        await RenderingFixes(vm, imageModel, null);
+        SetPicViewerValues(vm, imageModel, fileInfo);
+        if (TiffManager.IsTiff(imageModel.FileInfo.FullName))
+        {
+            TitleManager.TrySetTiffTitle(imageModel, vm);
+        }
+        else
+        {
+            TitleManager.SetTitle(vm, imageModel);
+        }
+        await StartPreloaderAndGalleryAsync(vm, imageModel, fileInfo);
+        cancellationTokenSource.Dispose();
+    }
+
+    private static async Task SideBySideLoadingAsync(MainViewModel vm, FileInfo fileInfo)
+    {
+        NavigationManager.InitializeImageIterator(vm);
+        var imageModel = await GetImageModel.GetImageModelAsync(fileInfo);
+        var secondaryPreloadValue = await NavigationManager.GetNextPreLoadValueAsync();
+        vm.PicViewer.SecondaryImageSource = secondaryPreloadValue?.ImageModel?.Image;
+        SetPicViewerValues(vm, imageModel, fileInfo);
+        await RenderingFixes(vm, imageModel, secondaryPreloadValue.ImageModel);
+        TitleManager.SetSideBySideTitle(vm, imageModel, secondaryPreloadValue?.ImageModel);
+            
+        // Sometimes the images are not rendered in side by side, this fixes it
+        // TODO: Improve and fix side by side and remove this hack 
+        Dispatcher.UIThread.Post(() =>
+        {
+            vm.ImageViewer?.MainImage?.InvalidateVisual();
+        });
+        await StartPreloaderAndGalleryAsync(vm, imageModel, fileInfo);
+    }
+
+    private static void SetPicViewerValues(MainViewModel vm, ImageModel imageModel, FileInfo fileInfo)
+    {
         if (imageModel.ImageType is ImageType.AnimatedGif or ImageType.AnimatedWebp)
         {
-            vm.ImageViewer.MainImage.InitialAnimatedSource = file;
+            vm.ImageViewer.MainImage.InitialAnimatedSource = fileInfo.FullName;
         }
+        
         vm.PicViewer.ImageSource = imageModel.Image;
         vm.PicViewer.ImageType = imageModel.ImageType;
         vm.ZoomValue = 1;
         vm.PicViewer.PixelWidth = imageModel.PixelWidth;
         vm.PicViewer.PixelHeight = imageModel.PixelHeight;
-        PreLoadValue? secondaryPreloadValue = null;
-        if (Settings.ImageScaling.ShowImageSideBySide)
-        {
-            NavigationManager.InitializeImageIterator(vm);
-            secondaryPreloadValue = await NavigationManager.GetNextPreLoadValueAsync();
-            vm.PicViewer.SecondaryImageSource = secondaryPreloadValue?.ImageModel?.Image;
-        }
         
+        vm.PicViewer.ExifOrientation = imageModel.EXIFOrientation;
+        vm.GetIndex = NavigationManager.GetNonZeroIndex;
+    }
+
+    private static async Task RenderingFixes(MainViewModel vm, ImageModel imageModel, ImageModel? secondaryModel)
+    {
         // When width and height are the same, it renders image incorrectly at startup,
         // so need to handle it specially
         var is1To1 = imageModel.PixelWidth == imageModel.PixelHeight;
-        
+
         await Dispatcher.UIThread.InvokeAsync(() =>
         {
             vm.ImageViewer.SetTransform(imageModel.EXIFOrientation, false);
             if (Settings.WindowProperties.AutoFit && !Settings.Zoom.ScrollEnabled)
             {
-                SetSize();
+                SetSize(vm, imageModel, secondaryModel);
                 WindowFunctions.CenterWindowOnScreen();
             }
             else if (is1To1)
             {
-                var size = WindowResizing.GetSize(imageModel.PixelWidth, imageModel.PixelHeight, secondaryPreloadValue?.ImageModel?.PixelWidth ?? 0, secondaryPreloadValue?.ImageModel?.PixelHeight ?? 0, vm.RotationAngle, vm);
+                var size = WindowResizing.GetSize(imageModel.PixelWidth, imageModel.PixelHeight,
+                    secondaryModel?.PixelWidth ?? 0, secondaryModel?.PixelHeight ?? 0, vm.RotationAngle, vm);
                 if (!size.HasValue)
                 {
 #if DEBUG
-         Console.WriteLine($"{nameof(QuickLoadAsync)} {nameof(size)} is null");           
+                    Console.WriteLine($"{nameof(QuickLoadAsync)} {nameof(size)} is null");
 #endif
                     ErrorHandling.ShowStartUpMenu(vm);
                     return;
                 }
+
                 WindowResizing.SetSize(size.Value, vm);
                 vm.ImageViewer.MainBorder.Height = size.Value.Width;
                 vm.ImageViewer.MainBorder.Width = size.Value.Height;
             }
-            else if (imageModel.PixelWidth <= UIHelper.GetMainView.Bounds.Width && imageModel.PixelHeight <= UIHelper.GetMainView.Bounds.Height)
+            else if (imageModel.PixelWidth <= UIHelper.GetMainView.Bounds.Width &&
+                     imageModel.PixelHeight <= UIHelper.GetMainView.Bounds.Height)
             {
-                SetSize();
+                SetSize(vm, imageModel, secondaryModel);
+            }
+            
+            if (Settings.Zoom.ScrollEnabled)
+            {
+                // Bad fix for scrolling
+                // TODO: Implement proper startup scrolling fix
+                Settings.Zoom.ScrollEnabled = false;
             }
         }, DispatcherPriority.Send);
-
-        vm.IsLoading = false;
         
-        NavigationManager.InitializeImageIterator(vm);
-        
-        if (Settings.ImageScaling.ShowImageSideBySide)
-        {
-            TitleManager.SetSideBySideTitle(vm, imageModel, secondaryPreloadValue?.ImageModel);
-            
-            // Sometimes the images are not rendered in side by side, this fixes it
-            // TODO: Improve and fix side by side and remove this hack 
-            Dispatcher.UIThread.Post(() =>
-            {
-                vm.ImageViewer?.MainImage?.InvalidateVisual();
-            });
-        }
-        else
-        {
-            if (TiffManager.IsTiff(imageModel.FileInfo.FullName))
-            {
-                TitleManager.TrySetTiffTitle(imageModel, vm);
-            }
-            else
-            {
-                TitleManager.SetTitle(vm, imageModel);
-            }
-        }
-        
-        // Fixes weird bug where the image is not rendered correctly
-        // TODO: check if this will still be needed in future Avalonia versions
-        if (!Settings.WindowProperties.AutoFit && !Settings.Zoom.ScrollEnabled)
-        {
-            if (!is1To1)
-            {
-                await Dispatcher.UIThread.InvokeAsync(() =>
-                {
-                    if (imageModel.PixelWidth > UIHelper.GetMainView.Bounds.Width || imageModel.PixelHeight > UIHelper.GetMainView.Bounds.Height
-                        || imageModel.PixelWidth == imageModel.PixelHeight)
-                    {
-                        WindowResizing.SetSize(1, 1, 0, 0, 0, vm);
-                    }
-                });
-                await Dispatcher.UIThread.InvokeAsync(() =>
-                {
-                    if (imageModel.PixelWidth > UIHelper.GetMainView.Bounds.Width || imageModel.PixelHeight > UIHelper.GetMainView.Bounds.Height)
-                    {
-                        vm.ImageViewer.MainBorder.Height = double.NaN;
-                        vm.ImageViewer.MainBorder.Width = double.NaN;
-
-                        SetSize();
-                    }
-                }, DispatcherPriority.Send);
-            }
-        }
-
         if (Settings.Zoom.ScrollEnabled)
         {
             // Bad fix for scrolling
             // TODO: Implement proper startup scrolling fix
             Settings.Zoom.ScrollEnabled = false;
-            await Dispatcher.UIThread.InvokeAsync(SetSize, DispatcherPriority.Background);
+            await Dispatcher.UIThread.InvokeAsync(() => SetSize(vm, imageModel, secondaryModel), DispatcherPriority.Render);
             Settings.Zoom.ScrollEnabled = true;
-            await Dispatcher.UIThread.InvokeAsync(SetSize, DispatcherPriority.Send);
+            await Dispatcher.UIThread.InvokeAsync(() => SetSize(vm, imageModel, secondaryModel), DispatcherPriority.Send);
         }
-
-        vm.PicViewer.ExifOrientation = imageModel.EXIFOrientation;
-        vm.GetIndex = NavigationManager.GetNonZeroIndex;
-        
+    }
+    
+    private static async Task StartPreloaderAndGalleryAsync(MainViewModel vm, ImageModel imageModel, FileInfo fileInfo)
+    {
         // Add recent files, except when browsing archive
         if (string.IsNullOrWhiteSpace(TempFileHelper.TempFilePath))
         {
@@ -193,12 +203,19 @@ public static class QuickLoad
         }
 
         await Task.WhenAll(tasks).ConfigureAwait(false);
-        
-        return;
+    }
 
-        void SetSize()
+    private static void SetSize(MainViewModel vm, ImageModel imageModel, ImageModel? secondaryModel)
+    {
+        var size = WindowResizing.GetSize(imageModel.PixelWidth, imageModel.PixelHeight, secondaryModel?.PixelWidth ?? 0, secondaryModel?.PixelHeight ?? 0, vm.RotationAngle, vm);
+        if (!size.HasValue)
         {
-            WindowResizing.SetSize(imageModel.PixelWidth, imageModel.PixelHeight, secondaryPreloadValue?.ImageModel?.PixelWidth ?? 0, secondaryPreloadValue?.ImageModel?.PixelHeight ?? 0, imageModel.Rotation, vm);
+#if DEBUG
+            Console.WriteLine($"{nameof(QuickLoadAsync)} {nameof(size)} is null");           
+#endif
+            ErrorHandling.ShowStartUpMenu(vm);
+            return;
         }
+        WindowResizing.SetSize(size.Value, vm);
     }
 }

@@ -602,12 +602,14 @@ public class ImageIterator : IAsyncDisposable
     /// </summary>
     /// <param name="index">The index to iterate to.</param>
     /// <param name="cts">The cancellation token source.</param>
-    /// <returns>A <see cref="Task" /> that represents the asynchronous operation.</returns>
     public async Task IterateToIndex(int index, CancellationTokenSource cts)
     {
         if (index < 0 || index >= ImagePaths.Count)
         {
-            ErrorHandling.ShowStartUpMenu(_vm);
+            // Invalid index. Probably a race condition? Do nothing and report
+#if DEBUG
+            Trace.WriteLine($"Invalid index {index} in {nameof(ImageIterator)}:{nameof(IterateToIndex)}");
+#endif
             return;
         }
 
@@ -615,6 +617,7 @@ public class ImageIterator : IAsyncDisposable
         {
             CurrentIndex = index;
 
+            // Get cached preload value first, if available
             // ReSharper disable once MethodHasAsyncOverload
             var preloadValue = GetPreLoadValue(index);
             if (preloadValue is not null)
@@ -625,7 +628,7 @@ public class ImageIterator : IAsyncDisposable
                     LoadingPreview();
 
                     using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(cts.Token);
-                    linkedCts.CancelAfter(TimeSpan.FromMinutes(2));
+                    linkedCts.CancelAfter(TimeSpan.FromMinutes(1));
 
                     try
                     {
@@ -651,10 +654,13 @@ public class ImageIterator : IAsyncDisposable
             }
             else
             {
-                LoadingPreview();
-                preloadValue = await GetCurrentPreLoadValueAsync().ConfigureAwait(false);
+                var imageModel = await ProgressiveImageLoader.LoadProgressivelyAsync(
+                    new FileInfo(ImagePaths[index]), 
+                    _vm, 
+                    cts.Token);
+                preloadValue = new PreLoadValue(imageModel);
             }
-
+            
             if (CurrentIndex != index)
             {
                 // Skip loading if user went to next value
@@ -693,10 +699,10 @@ public class ImageIterator : IAsyncDisposable
             {
                 if (Settings.UIProperties.IsTaskbarProgressEnabled)
                 {
-                    await Dispatcher.UIThread.InvokeAsync(() =>
+                    Dispatcher.UIThread.Invoke(() =>
                     {
-                        _vm.PlatformService.SetTaskbarProgress((ulong)index, (ulong)ImagePaths.Count);
-                    });
+                        _vm.PlatformService.SetTaskbarProgress((ulong)CurrentIndex, (ulong)ImagePaths.Count);
+                    }, DispatcherPriority.Render);
                 }
 
                 await PreLoader.PreLoadAsync(index, IsReversed, ImagePaths)
@@ -741,7 +747,6 @@ public class ImageIterator : IAsyncDisposable
         void LoadingPreview()
         {
             TitleManager.SetLoadingTitle(_vm);
-            _vm.IsLoading = true;
 
             _vm.SelectedGalleryItemIndex = index;
             if (Settings.Gallery.IsBottomGalleryShown)
@@ -759,6 +764,7 @@ public class ImageIterator : IAsyncDisposable
             if (!Settings.ImageScaling.ShowImageSideBySide)
             {
                 _vm.PicViewer.ImageSource = thumb;
+                _vm.IsLoading = thumb is null;
             }
             else
             {
@@ -769,6 +775,7 @@ public class ImageIterator : IAsyncDisposable
                 }
                 _vm.PicViewer.ImageSource = thumb;
                 _vm.PicViewer.SecondaryImageSource = secondaryThumb;
+                _vm.IsLoading = thumb is null || secondaryThumb is null;
             }
         }
     }

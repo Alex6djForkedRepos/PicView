@@ -1,4 +1,5 @@
-﻿using Avalonia.Media.Imaging;
+﻿using System.Diagnostics;
+using Avalonia.Media.Imaging;
 using ImageMagick;
 using PicView.Core.FileHandling;
 
@@ -35,7 +36,19 @@ public static class GetThumbnails
     public static WriteableBitmap? GetExifThumb(string path)
     {
         using var magick = new MagickImage();
-        magick.Ping(path);
+        try
+        {
+            magick.Ping(path);
+        }
+        catch (Exception e)
+        {
+#if DEBUG
+            Trace.WriteLine(
+                $"\n{nameof(GetExifThumb)} ping exception: \n{e.Message}\n{e.StackTrace}");
+#endif
+            return null;
+        }
+
         var profile = magick.GetExifProfile();
         var thumbnail = profile?.CreateThumbnail();
         return thumbnail?.ToWriteableBitmap();

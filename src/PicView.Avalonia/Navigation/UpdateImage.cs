@@ -117,20 +117,20 @@ public static class UpdateImage
         }
         else
         {
-            if (TiffManager.IsTiff(preLoadValue.ImageModel.FileInfo.FullName))
+            if (TiffManager.IsTiff(preLoadValue.ImageModel?.FileInfo?.FullName))
             {
-                if (TiffManager.IsTiff(preLoadValue.ImageModel.FileInfo.FullName))
+                if (TiffManager.IsTiff(preLoadValue.ImageModel?.FileInfo?.FullName))
                 {
-                    TitleManager.TrySetTiffTitle(preLoadValue.ImageModel, vm);
+                    TitleManager.TrySetTiffTitle(preLoadValue?.ImageModel, vm);
                 }
                 else
                 {
-                    TitleManager.SetTitle(vm, preLoadValue.ImageModel);
+                    TitleManager.SetTitle(vm, preLoadValue?.ImageModel);
                 }
             }
             else
             {
-                TitleManager.SetTitle(vm, preLoadValue.ImageModel);
+                TitleManager.SetTitle(vm, preLoadValue?.ImageModel);
             }
         }
         

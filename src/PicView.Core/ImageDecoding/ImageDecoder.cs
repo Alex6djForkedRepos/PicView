@@ -4,18 +4,10 @@ using ImageMagick;
 namespace PicView.Core.ImageDecoding;
 
 /// <summary>
-/// Provides methods for decoding various image formats.
+///     Provides methods for decoding various image formats.
 /// </summary>
 public static class ImageDecoder
 {
-    private static readonly string[] Defines =
-    [
-        "34022", // ColorTable
-        "34025", // ImageColorValue
-        "34026", // BackgroundColorValue
-        "32928"
-    ];
-
     public static MagickImage? Base64ToMagickImage(string base64)
     {
         try
@@ -33,8 +25,8 @@ public static class ImageDecoder
                 BackgroundColor = MagickColors.Transparent
             };
 
-           magickImage.Read(new MemoryStream(base64Data), readSettings);
-           return magickImage;
+            magickImage.Read(new MemoryStream(base64Data), readSettings);
+            return magickImage;
         }
         catch (Exception e)
         {
@@ -49,5 +41,39 @@ public static class ImageDecoder
     {
         var base64String = await File.ReadAllTextAsync(fileInfo.FullName).ConfigureAwait(false);
         return Base64ToMagickImage(base64String);
+    }
+
+    public static async Task<MagickImage> LoadImageAtResolutionAsync(
+        FileInfo fileInfo,
+        int percentage,
+        double originalWidth,
+        double originalHeight,
+        CancellationToken cancellationToken)
+    {
+        return await Task.Run(() =>
+        {
+            var magickImage = new MagickImage();
+
+            // Fast metadata read for optimization targets
+            if (percentage < 100)
+            {
+                var settings = new MagickReadSettings
+                {
+                    Width = (uint?)(originalWidth * percentage / 100),
+                    Height = (uint?)(originalHeight * percentage / 100)
+                };
+                magickImage.Read(fileInfo, settings);
+            }
+            else
+            {
+                // For 100%, read the full image
+                magickImage.Read(fileInfo);
+            }
+
+            // Check cancellation before expensive operations
+            cancellationToken.ThrowIfCancellationRequested();
+
+            return magickImage;
+        }, cancellationToken);
     }
 }
