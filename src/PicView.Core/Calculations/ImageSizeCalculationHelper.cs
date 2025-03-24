@@ -16,7 +16,7 @@ public static class ImageSizeCalculationHelper
         return RuntimeInformation.IsOSPlatform(OSPlatform.OSX) ? 165 : 215;
     }
 
-    public static ImageSize GetImageSize(double width,
+    public static ImageSize GetSideBySideImageSize(double width,
         double height,
         double monitorWidth,
         double monitorHeight,
@@ -134,7 +134,6 @@ public static class ImageSizeCalculationHelper
                 xHeight = height * aspectRatio;
 
                 scrollWidth = Math.Max(xWidth + SizeDefaults.ScrollbarSize, SizeDefaults.WindowMinSize + SizeDefaults.ScrollbarSize + Padding + 16);
-                scrollHeight = containerHeight - margin;
             }
             else
             {
@@ -142,8 +141,9 @@ public static class ImageSizeCalculationHelper
                 xHeight = height / width * xWidth;
                 
                 scrollWidth = containerWidth + SizeDefaults.ScrollbarSize;
-                scrollHeight = containerHeight - margin;
             }
+
+            scrollHeight = containerHeight - margin;
         }
         else
         {
@@ -184,11 +184,11 @@ public static class ImageSizeCalculationHelper
         }
 
         // Get sizes for both images
-        var firstSize = GetImageSize(width, height, monitorWidth, monitorHeight, monitorMinWidth, monitorMinHeight,
+        var firstSize = GetSideBySideImageSize(width, height, monitorWidth, monitorHeight, monitorMinWidth, monitorMinHeight,
             interfaceSize, rotationAngle, dpiScaling, uiTopSize, uiBottomSize, galleryHeight,
             containerWidth,
             containerHeight);
-        var secondSize = GetImageSize(secondaryWidth, secondaryHeight, monitorWidth, monitorHeight, monitorMinWidth,
+        var secondSize = GetSideBySideImageSize(secondaryWidth, secondaryHeight, monitorWidth, monitorHeight, monitorMinWidth,
             monitorMinHeight, interfaceSize, rotationAngle, dpiScaling, uiTopSize, uiBottomSize,
             galleryHeight,
             containerWidth, containerHeight);

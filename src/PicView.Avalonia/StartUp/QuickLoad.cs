@@ -52,6 +52,7 @@ public static class QuickLoad
             Task.Run(() => { NavigationManager.InitializeImageIterator(vm); }, cancellationTokenSource.Token),
             Task.Run(async () => imageModel = await ProgressiveImageLoader.LoadProgressivelyAsync(
                 fileInfo,vm, cancellationTokenSource.Token), cancellationTokenSource.Token));
+        vm.IsLoading = false;
         await RenderingFixes(vm, imageModel, null);
         SetPicViewerValues(vm, imageModel, fileInfo);
         if (TiffManager.IsTiff(imageModel.FileInfo.FullName))
@@ -138,13 +139,6 @@ public static class QuickLoad
             {
                 SetSize(vm, imageModel, secondaryModel);
             }
-            
-            if (Settings.Zoom.ScrollEnabled)
-            {
-                // Bad fix for scrolling
-                // TODO: Implement proper startup scrolling fix
-                Settings.Zoom.ScrollEnabled = false;
-            }
         }, DispatcherPriority.Send);
         
         if (Settings.Zoom.ScrollEnabled)
@@ -155,6 +149,10 @@ public static class QuickLoad
             await Dispatcher.UIThread.InvokeAsync(() => SetSize(vm, imageModel, secondaryModel), DispatcherPriority.Render);
             Settings.Zoom.ScrollEnabled = true;
             await Dispatcher.UIThread.InvokeAsync(() => SetSize(vm, imageModel, secondaryModel), DispatcherPriority.Send);
+            if (Settings.WindowProperties.AutoFit)
+            {
+                await Dispatcher.UIThread.InvokeAsync(() => WindowFunctions.CenterWindowOnScreen());
+            }
         }
     }
     

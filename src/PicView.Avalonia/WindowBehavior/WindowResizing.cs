@@ -100,9 +100,10 @@ public static class WindowResizing
             }
             else
             {
+                var scrollbarSize = Settings.Zoom.ScrollEnabled ? SizeDefaults.ScrollbarSize : 0;
                 vm.GalleryWidth = vm.RotationAngle is 90 or 270
-                    ? Math.Max(size.Height, SizeDefaults.WindowMinSize + 15)
-                    : Math.Max(size.Width, SizeDefaults.WindowMinSize + 15);
+                    ? Math.Max(size.Height + scrollbarSize, SizeDefaults.WindowMinSize + scrollbarSize)
+                    : Math.Max(size.Width + scrollbarSize, SizeDefaults.WindowMinSize + scrollbarSize);
             }
         }
         else
@@ -229,7 +230,7 @@ public static class WindowResizing
         }
         else
         {
-            size = ImageSizeCalculationHelper.GetImageSize(
+            size = ImageSizeCalculationHelper.GetSideBySideImageSize(
                 width,
                 height,
                 screenSize.WorkingAreaWidth,

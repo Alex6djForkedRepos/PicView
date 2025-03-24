@@ -15,7 +15,7 @@
                     BorderThickness="{TemplateBinding BorderThickness}"
                     CornerRadius="{TemplateBinding CornerRadius}"
                     Name="border">
-                    <customControls:AutoScrollViewer
+                    <customControls:MainScrollViewer
                         AllowAutoHide="{TemplateBinding (ScrollViewer.AllowAutoHide)}"
                         Background="{TemplateBinding Background}"
                         BringIntoViewOnFocusChange="{TemplateBinding (ScrollViewer.BringIntoViewOnFocusChange)}"
@@ -30,7 +30,7 @@
                             ItemsPanel="{TemplateBinding ItemsPanel}"
                             Margin="{TemplateBinding Padding}"
                             Name="PART_ItemsPresenter" />
-                    </customControls:AutoScrollViewer>
+                    </customControls:MainScrollViewer>
                 </Border>
             </ControlTemplate>
         </Setter>

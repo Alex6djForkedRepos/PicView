@@ -15,7 +15,7 @@
         <vm:MainViewModel />
     </Design.DataContext>
     <LayoutTransformControl x:Name="ImageLayoutTransformControl">
-        <customControls:AutoScrollViewer
+        <customControls:MainScrollViewer
             Focusable="False"
             Height="{CompiledBinding PicViewer.ScrollViewerHeight,
                                      Mode=OneWay}"
@@ -45,6 +45,6 @@
                     UseLayoutRounding="True"
                     x:Name="MainImage" />
             </Border>
-        </customControls:AutoScrollViewer>
+        </customControls:MainScrollViewer>
     </LayoutTransformControl>
 </UserControl>
