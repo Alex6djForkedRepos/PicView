@@ -388,4 +388,6 @@ public class LanguageModel
     public string? ClearEffects { get; set; }
     public string? Solarize { get; set; }
     public string? PencilSketch { get; set; }
+    
+    
 }

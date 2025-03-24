@@ -98,7 +98,7 @@ public class FileAssociationsViewModel : ReactiveObject
         }
     }
     
-    private void InitializeFileTypes()
+    public void InitializeFileTypes()
     {
         var groups = new[]
         {
@@ -114,7 +114,7 @@ public class FileAssociationsViewModel : ReactiveObject
                 new FileTypeItem("Icon", [".ico"])
             ]),
             
-            new FileTypeGroup("Graphics", [
+            new FileTypeGroup(TranslationManager.GetTranslation("Graphics"), [
                 new FileTypeItem("Scalable Vector Graphics", [".svg", ".svgz"]),
                 new FileTypeItem("Photoshop", [".psd", ".psb"]),
                 new FileTypeItem("XCF", [".xcf"]),
@@ -129,7 +129,7 @@ public class FileAssociationsViewModel : ReactiveObject
                 new FileTypeItem("Industrial Light & Magic OpenEXR", [".exr"])
             ]),
             
-            new FileTypeGroup("Raw", [
+            new FileTypeGroup(TranslationManager.GetTranslation("Raw"), [
                 new FileTypeItem("Raw", [".raw"]),
                 new FileTypeItem("Framed Raster", [".3fr"]),
                 new FileTypeItem("Sony Digital Camera RAW", [".arw"]),
@@ -154,7 +154,7 @@ public class FileAssociationsViewModel : ReactiveObject
                 new FileTypeItem("Windows Metafile Image", [".wmf", ".emf"]),
             ]),
             
-            new FileTypeGroup("Uncommon", [
+            new FileTypeGroup(TranslationManager.GetTranslation("Uncommon"), [
                 new FileTypeItem("Wordperfect Graphics", [".wpg"]),
                 new FileTypeItem("Paintbrush bitmap graphics", [".pcx"]),
                 new FileTypeItem("X Bitmap", [".xbm"]),
@@ -166,7 +166,7 @@ public class FileAssociationsViewModel : ReactiveObject
                 new FileTypeItem("Base64", [".b64"])
             ]),
             
-            new FileTypeGroup("Archive", [
+            new FileTypeGroup(TranslationManager.GetTranslation("Archives"), [
                 new FileTypeItem("Zip", [".zip"], false),
                 new FileTypeItem("Rar", [".rar"], false),
                 new FileTypeItem("Gzip", [".gzip"], false),
@@ -184,7 +184,7 @@ public class FileAssociationsViewModel : ReactiveObject
 
 public class FileTypeGroup : ReactiveObject
 {
-    public string Name { get; }
+    public string Name { get; set; }
     public ObservableCollection<FileTypeItem> FileTypes { get; }
 
     public bool IsSelected

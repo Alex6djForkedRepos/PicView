@@ -4,6 +4,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
 using PicView.Avalonia.ViewModels;
+using PicView.Core.Localization;
 using PicView.Core.ViewModels;
 using ReactiveUI;
 
@@ -79,6 +80,26 @@ public partial class FileAssociationsView : UserControl
         // Create checkboxes for each file type group and item
         foreach (var fileTypeGroup in vm.AssociationsViewModel.FileTypeGroups)
         {
+            if (fileTypeGroup.Name is null)
+            {
+                // If going into this view too fast, sometimes the name is null. This is a workaround
+                if (fileTypeGroup.FileTypes.Any(x => x.Extension.StartsWith(".png")))
+                {
+                    fileTypeGroup.Name = TranslationManager.Translation.Normal!;
+                }
+                else if (fileTypeGroup.FileTypes.Any(x => x.Extension.StartsWith(".svg")))
+                {
+                    fileTypeGroup.Name = TranslationManager.GetTranslation("Graphics");
+                }
+                else if (fileTypeGroup.FileTypes.Any(x => x.Extension.StartsWith(".raw")))
+                {
+                    fileTypeGroup.Name = TranslationManager.GetTranslation("Raw");
+                }
+                else if (fileTypeGroup.FileTypes.Any(x => x.Extension.StartsWith(".wpg")))
+                {
+                    fileTypeGroup.Name = TranslationManager.GetTranslation("Uncommon");
+                }
+            }
             // Create group header checkbox
             var groupCheckBox = new CheckBox
             {
