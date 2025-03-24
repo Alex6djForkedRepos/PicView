@@ -35,6 +35,8 @@ public class MainViewModel : ReactiveObject
     public PicViewerModel PicViewer { get; } = new();
     
     public ExifViewModel Exif { get; } = new();
+    
+    public FileAssociationsViewModel? AssociationsViewModel { get; set; }
 
     public MainViewModel(IPlatformSpecificService? platformSpecificService)
     {

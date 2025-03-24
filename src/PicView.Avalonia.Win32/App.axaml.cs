@@ -17,6 +17,7 @@ using PicView.Avalonia.WindowBehavior;
 using PicView.Core.FileHandling;
 using PicView.Core.Localization;
 using PicView.Core.ProcessHandling;
+using PicView.Core.ViewModels;
 using PicView.Core.WindowsNT;
 using PicView.Core.WindowsNT.FileHandling;
 using PicView.Core.WindowsNT.Taskbar;
@@ -313,6 +314,7 @@ public partial class App : Application, IPlatformSpecificService
             }
             if (_settingsWindow is null)
             {
+                _vm.AssociationsViewModel ??= new FileAssociationsViewModel();
                 _settingsWindow = new SettingsWindow
                 {
                     DataContext = _vm,

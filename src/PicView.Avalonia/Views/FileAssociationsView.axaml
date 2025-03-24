@@ -76,19 +76,27 @@
                     Foreground="{DynamicResource MainTextColor}"
                     HorizontalAlignment="Left"
                     Padding="23,7,4,6"
+                    Text="{CompiledBinding AssociationsViewModel.FilterText,
+                                           FallbackValue='',
+                                           Mode=TwoWay}"
                     Watermark="Filter..."
-                    Width="269" />
+                    Width="269"
+                    x:Name="FilterBox" />
 
                 <customControls:IconButton
-                    Classes="altHover y"
+                    Classes="altHover"
                     Data="{StaticResource CloseGeometry}"
                     DockPanel.Dock="Right"
                     Foreground="{DynamicResource MainTextColorFaded}"
                     HorizontalAlignment="Right"
-                    Padding="10,3,10,3" />
+                    Padding="10,3,10,3"
+                    x:Name="ClearButton" />
             </Panel>
 
-            <Button Classes="altHover y" Padding="10,2,10,2">
+            <Button
+                Classes="altHover"
+                Padding="10,2,10,2"
+                x:Name="SelectAllButton">
                 <TextBlock
                     Classes="txt"
                     Foreground="{StaticResource SecondaryTextColor}"
@@ -102,7 +110,10 @@
                 Margin="5,0,5,0"
                 Width="2" />
 
-            <Button Classes="altHover y" Padding="10,2,10,2">
+            <Button
+                Classes="altHover"
+                Padding="10,2,10,2"
+                x:Name="UnSelectAllButton">
                 <TextBlock
                     Classes="txt"
                     Foreground="{StaticResource SecondaryTextColor}"
@@ -111,8 +122,11 @@
         </StackPanel>
 
 
-        <customControls:AutoScrollViewer Background="Transparent" Height="340">
-            <StackPanel>
+        <customControls:AutoScrollViewer
+            Background="Transparent"
+            Height="340"
+            x:Name="FileTypesScrollViewer">
+            <StackPanel x:Name="FileTypesContainer">
                 <StackPanel.Styles>
                     <Style Selector="CheckBox.x">
                         <Setter Property="Margin" Value="15,0,0,5" />
@@ -121,459 +135,6 @@
                         <Setter Property="Margin" Value="0,10,0,10" />
                     </Style>
                 </StackPanel.Styles>
-
-                <CheckBox Classes="altHover y" x:Name="NormalGroup">
-                    <TextBlock
-                        Classes="txt"
-                        FontFamily="/Assets/Fonts/Roboto-Bold.ttf#Roboto"
-                        Text="Normal" />
-                </CheckBox>
-
-                <CheckBox Classes="altHover x">
-                    <TextBlock
-                        Classes="txt"
-                        Margin="0"
-                        Padding="0,1,5,0"
-                        Text="Joint Photographic Experts Group (.jpg, .jpeg, .jpe)" />
-                </CheckBox>
-
-                <CheckBox Classes="altHover x">
-                    <TextBlock
-                        Classes="txt"
-                        Margin="0"
-                        Padding="0,1,5,0"
-                        Text="JPEG File Interchange Format (.jfif)" />
-                </CheckBox>
-
-                <CheckBox Classes="altHover x">
-                    <TextBlock
-                        Classes="txt"
-                        Margin="0"
-                        Padding="0,1,5,0"
-                        Text="Portable Network Graphics (.png)" />
-                </CheckBox>
-
-                <CheckBox Classes="altHover x">
-                    <TextBlock
-                        Classes="txt"
-                        Margin="0"
-                        Padding="0,1,5,0"
-                        Text="Windows Bitmap (.bmp)" />
-                </CheckBox>
-
-                <CheckBox Classes="altHover x">
-                    <TextBlock
-                        Classes="txt"
-                        Margin="0"
-                        Padding="0,1,5,0"
-                        Text="Graphics Interchange Format (.gif)" />
-                </CheckBox>
-
-                <CheckBox Classes="altHover x">
-                    <TextBlock
-                        Classes="txt"
-                        Margin="0"
-                        Padding="0,1,5,0"
-                        Text="WebP (.webp)" />
-                </CheckBox>
-
-                <CheckBox Classes="altHover x">
-                    <TextBlock
-                        Classes="txt"
-                        Margin="0"
-                        Padding="0,1,5,0"
-                        Text="Wireless Bitmap (.wbmp)" />
-                </CheckBox>
-
-                <CheckBox Classes="altHover x">
-                    <TextBlock
-                        Classes="txt"
-                        Margin="0"
-                        Padding="0,1,5,0"
-                        Text="Advanced Video Interlace Format (.avif)" />
-                </CheckBox>
-
-                <CheckBox Classes="altHover x">
-                    <TextBlock
-                        Classes="txt"
-                        Margin="0"
-                        Padding="0,1,5,0"
-                        Text="Icon (.ico)" />
-                </CheckBox>
-
-
-                <CheckBox Classes="altHover y" x:Name="GraphicsGroup">
-                    <TextBlock
-                        Classes="txt"
-                        FontFamily="/Assets/Fonts/Roboto-Bold.ttf#Roboto"
-                        Text="Graphics" />
-                </CheckBox>
-
-                <CheckBox Classes="altHover x">
-                    <TextBlock
-                        Classes="txt"
-                        Margin="0"
-                        Padding="0,1,5,0"
-                        Text="Scalable Vector Graphics (.svg, svgz)" />
-                </CheckBox>
-
-                <CheckBox Classes="altHover x">
-                    <TextBlock
-                        Classes="txt"
-                        Margin="0"
-                        Padding="0,1,5,0"
-                        Text="Photoshop (.psd, .psb)" />
-                </CheckBox>
-
-                <CheckBox Classes="altHover x">
-                    <TextBlock
-                        Classes="txt"
-                        Margin="0"
-                        Padding="0,1,5,0"
-                        Text="XCF (.xcf)" />
-                </CheckBox>
-
-                <CheckBox Classes="altHover x">
-                    <TextBlock
-                        Classes="txt"
-                        Margin="0"
-                        Padding="0,1,5,0"
-                        Text="Tagged Image File Format (.tif, .tiff)" />
-                </CheckBox>
-
-                <CheckBox Classes="altHover x">
-                    <TextBlock
-                        Classes="txt"
-                        Margin="0"
-                        Padding="0,1,5,0"
-                        Text="High-Enhanced Image File (.heic, .heif)" />
-                </CheckBox>
-
-                <CheckBox Classes="altHover x">
-                    <TextBlock
-                        Classes="txt"
-                        Margin="0"
-                        Padding="0,1,5,0"
-                        Text="JPEG XL (.jxl)" />
-                </CheckBox>
-
-                <CheckBox Classes="altHover x">
-                    <TextBlock
-                        Classes="txt"
-                        Margin="0"
-                        Padding="0,1,5,0"
-                        Text="JPEG 2000 (.jp2)" />
-                </CheckBox>
-
-                <CheckBox Classes="altHover x">
-                    <TextBlock
-                        Classes="txt"
-                        Margin="0"
-                        Padding="0,1,5,0"
-                        Text="High Dynamic Range (.hdr)" />
-                </CheckBox>
-
-                <CheckBox Classes="altHover x">
-                    <TextBlock
-                        Classes="txt"
-                        Margin="0"
-                        Padding="0,1,5,0"
-                        Text="Quite OK Image (.qoi)" />
-                </CheckBox>
-
-                <CheckBox Classes="altHover x">
-                    <TextBlock
-                        Classes="txt"
-                        Margin="0"
-                        Padding="0,1,5,0"
-                        Text="Direct Draw Surface (.dds)" />
-                </CheckBox>
-
-                <CheckBox Classes="altHover x">
-                    <TextBlock
-                        Classes="txt"
-                        Margin="0"
-                        Padding="0,1,5,0"
-                        Text="Truevision Targa (.tga)" />
-                </CheckBox>
-
-                <CheckBox Classes="altHover x">
-                    <TextBlock
-                        Classes="txt"
-                        Margin="0"
-                        Padding="0,1,5,0"
-                        Text="Industrial Light &amp; Magic OpenEXR (.exr)" />
-                </CheckBox>
-
-                <CheckBox Classes="altHover y" x:Name="RawGroup">
-                    <TextBlock
-                        Classes="txt"
-                        FontFamily="/Assets/Fonts/Roboto-Bold.ttf#Roboto"
-                        Text="Raw" />
-                </CheckBox>
-
-                <CheckBox Classes="altHover x">
-                    <TextBlock
-                        Classes="txt"
-                        Margin="0"
-                        Padding="0,1,5,0"
-                        Text="Raw (.raw)" />
-                </CheckBox>
-
-                <CheckBox Classes="altHover x">
-                    <TextBlock
-                        Classes="txt"
-                        Margin="0"
-                        Padding="0,1,5,0"
-                        Text="Framed Raster (.3fr)" />
-                </CheckBox>
-
-                <CheckBox Classes="altHover x">
-                    <TextBlock
-                        Classes="txt"
-                        Margin="0"
-                        Padding="0,1,5,0"
-                        Text="Sony Digital Camera RAW (.arw)" />
-                </CheckBox>
-
-                <CheckBox Classes="altHover x">
-                    <TextBlock
-                        Classes="txt"
-                        Margin="0"
-                        Padding="0,1,5,0"
-                        Text="Canon Digital Camera RAW (.cr2, .cr3, .crw)" />
-                </CheckBox>
-
-                <CheckBox Classes="altHover x">
-                    <TextBlock
-                        Classes="txt"
-                        Margin="0"
-                        Padding="0,1,5,0"
-                        Text="Kodak Raw (.dcr, .kdc)" />
-                </CheckBox>
-
-                <CheckBox Classes="altHover x">
-                    <TextBlock
-                        Classes="txt"
-                        Margin="0"
-                        Padding="0,1,5,0"
-                        Text="Digital Negative RAW (.dng)" />
-                </CheckBox>
-
-                <CheckBox Classes="altHover x">
-                    <TextBlock
-                        Classes="txt"
-                        Margin="0"
-                        Padding="0,1,5,0"
-                        Text="Epson Raw Image (.erf)" />
-                </CheckBox>
-
-                <CheckBox Classes="altHover x">
-                    <TextBlock
-                        Classes="txt"
-                        Margin="0"
-                        Padding="0,1,5,0"
-                        Text="Minolta Raw Image (.mdc)" />
-                </CheckBox>
-
-                <CheckBox Classes="altHover x">
-                    <TextBlock
-                        Classes="txt"
-                        Margin="0"
-                        Padding="0,1,5,0"
-                        Text="Mamiya Raw Image (.mef)" />
-                </CheckBox>
-
-                <CheckBox Classes="altHover x">
-                    <TextBlock
-                        Classes="txt"
-                        Margin="0"
-                        Padding="0,1,5,0"
-                        Text="Leaf/Aptus/Mamiya MOS Raw Image (.mos)" />
-                </CheckBox>
-
-                <CheckBox Classes="altHover x">
-                    <TextBlock
-                        Classes="txt"
-                        Margin="0"
-                        Padding="0,1,5,0"
-                        Text="Minolta Dimage RAW (.mrw)" />
-                </CheckBox>
-
-                <CheckBox Classes="altHover x">
-                    <TextBlock
-                        Classes="txt"
-                        Margin="0"
-                        Padding="0,1,5,0"
-                        Text="Nikon Raw Image (.nef)" />
-                </CheckBox>
-
-                <CheckBox Classes="altHover x">
-                    <TextBlock
-                        Classes="txt"
-                        Margin="0"
-                        Padding="0,1,5,0"
-                        Text="Nokia RAW Bitmap (.nrw)" />
-                </CheckBox>
-
-                <CheckBox Classes="altHover x">
-                    <TextBlock
-                        Classes="txt"
-                        Margin="0"
-                        Padding="0,1,5,0"
-                        Text="Olympus Digital Camera RAW (.orf)" />
-                </CheckBox>
-
-                <CheckBox Classes="altHover x">
-                    <TextBlock
-                        Classes="txt"
-                        Margin="0"
-                        Padding="0,1,5,0"
-                        Text="Pentax Raw Image (.pef)" />
-                </CheckBox>
-
-                <CheckBox Classes="altHover x">
-                    <TextBlock
-                        Classes="txt"
-                        Margin="0"
-                        Padding="0,1,5,0"
-                        Text="Panasonic RAW (.rw2)" />
-                </CheckBox>
-
-                <CheckBox Classes="altHover x">
-                    <TextBlock
-                        Classes="txt"
-                        Margin="0"
-                        Padding="0,1,5,0"
-                        Text="Sony SRF Raw (.srf)" />
-                </CheckBox>
-
-                <CheckBox Classes="altHover x">
-                    <TextBlock
-                        Classes="txt"
-                        Margin="0"
-                        Padding="0,1,5,0"
-                        Text="Sigma Foveon X3 (.x3f)" />
-                </CheckBox>
-
-                <CheckBox Classes="altHover x">
-                    <TextBlock
-                        Classes="txt"
-                        Margin="0"
-                        Padding="0,1,5,0"
-                        Text="Kodak FlashPix Bitmap (.fpx)" />
-                </CheckBox>
-
-                <CheckBox Classes="altHover x">
-                    <TextBlock
-                        Classes="txt"
-                        Margin="0"
-                        Padding="0,1,5,0"
-                        Text="Kodak PhotoCD Bitmap (.pcd)" />
-                </CheckBox>
-
-                <CheckBox Classes="altHover x">
-                    <TextBlock
-                        Classes="txt"
-                        Margin="0"
-                        Padding="0,1,5,0"
-                        Text="Kodak Raw (.dcr)" />
-                </CheckBox>
-
-                <CheckBox Classes="altHover x">
-                    <TextBlock
-                        Classes="txt"
-                        Margin="0"
-                        Padding="0,1,5,0"
-                        Text="Windows Metafile Image (.wmf, .emf)" />
-                </CheckBox>
-
-                <CheckBox Classes="altHover y" x:Name="UncommonGroup">
-                    <TextBlock
-                        Classes="txt"
-                        FontFamily="/Assets/Fonts/Roboto-Bold.ttf#Roboto"
-                        Text="Uncommon" />
-                </CheckBox>
-
-                <CheckBox Classes="altHover x">
-                    <TextBlock
-                        Classes="txt"
-                        Margin="0"
-                        Padding="0,1,5,0"
-                        Text="WordPerfect Graphics (.wpg)" />
-                </CheckBox>
-
-                <CheckBox Classes="altHover x">
-                    <TextBlock
-                        Classes="txt"
-                        Margin="0"
-                        Padding="0,1,5,0"
-                        Text="Paintbrush bitmap graphics (.pcx)" />
-                </CheckBox>
-
-                <CheckBox Classes="altHover x">
-                    <TextBlock
-                        Classes="txt"
-                        Margin="0"
-                        Padding="0,1,5,0"
-                        Text="X Bitmap (.xbm)" />
-                </CheckBox>
-
-                <CheckBox Classes="altHover x">
-                    <TextBlock
-                        Classes="txt"
-                        Margin="0"
-                        Padding="0,1,5,0"
-                        Text="PX PixMap Bitmap (.xpm)" />
-                </CheckBox>
-
-                <CheckBox Classes="altHover x">
-                    <TextBlock
-                        Classes="txt"
-                        Margin="0"
-                        Padding="0,1,5,0"
-                        Text="Dr. Halo (.cut)" />
-                </CheckBox>
-
-                <CheckBox Classes="altHover x">
-                    <TextBlock
-                        Classes="txt"
-                        Margin="0"
-                        Padding="0,1,5,0"
-                        Text="Free Lossless Image Format Bitmap (.flif)" />
-                </CheckBox>
-
-                <CheckBox Classes="altHover x">
-                    <TextBlock
-                        Classes="txt"
-                        Margin="0"
-                        Padding="0,1,5,0"
-                        Text="Truevision Thumb (.thm)" />
-                </CheckBox>
-
-                <CheckBox Classes="altHover x">
-                    <TextBlock
-                        Classes="txt"
-                        Margin="0"
-                        Padding="0,1,5,0"
-                        Text="Portable GrayMap Bitmap (.ppm)" />
-                </CheckBox>
-
-                <CheckBox Classes="altHover x">
-                    <TextBlock
-                        Classes="txt"
-                        Margin="0"
-                        Padding="0,1,5,0"
-                        Text="Portable PixMap  Bitmap (.ppm)" />
-                </CheckBox>
-
-                <CheckBox Classes="altHover x">
-                    <TextBlock
-                        Classes="txt"
-                        Margin="0"
-                        Padding="0,1,5,0"
-                        Text="Base64 (.b64)" />
-                </CheckBox>
 
             </StackPanel>
         </customControls:AutoScrollViewer>

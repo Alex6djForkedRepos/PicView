@@ -17,6 +17,7 @@ using PicView.Core.FileHandling;
 using PicView.Core.Localization;
 using PicView.Core.MacOS;
 using PicView.Core.MacOS.Wallpaper;
+using PicView.Core.ViewModels;
 
 namespace PicView.Avalonia.MacOS;
 
@@ -273,6 +274,7 @@ public class App : Application, IPlatformSpecificService
             }
             if (_settingsWindow is null)
             {
+                _vm.AssociationsViewModel ??= new FileAssociationsViewModel();
                 _settingsWindow = new SettingsWindow
                 {
                     DataContext = _vm,
