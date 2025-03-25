@@ -4,6 +4,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
 using PicView.Avalonia.ViewModels;
+using PicView.Core.FileAssociations;
 using PicView.Core.Localization;
 using PicView.Core.ViewModels;
 using ReactiveUI;
