@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Reactive;
 using System.Reactive.Linq;
 using DynamicData;
@@ -20,7 +21,13 @@ public class FileAssociationsViewModel : ReactiveObject
         set => this.RaiseAndSetIfChanged(ref field, value);
     } = string.Empty;
 
-    public ReactiveCommand<Unit, Unit> ApplyCommand { get; }
+    private bool IsProcessing
+    {
+        get;
+        set => this.RaiseAndSetIfChanged(ref field, value);
+    }
+
+    public ReactiveCommand<Unit, bool> ApplyCommand { get; }
     public ReactiveCommand<Unit, string> ClearFilterCommand { get; }
     
     public FileAssociationsViewModel()
@@ -38,9 +45,26 @@ public class FileAssociationsViewModel : ReactiveObject
             .Filter(filter)
             .Bind(out _fileTypeGroups)
             .Subscribe();
+
+        // Canexecute for ApplyCommand
+        var canExecute = this.WhenAnyValue(x => x.IsProcessing)
+            .Select(processing => !processing);
             
-        // Initialize commands
-        ApplyCommand = ReactiveCommand.CreateFromTask(async () => await ApplyFileAssociations());
+        // Initialize commands with error handling
+        ApplyCommand = ReactiveCommand.CreateFromTask(
+            ApplyFileAssociations, 
+            canExecute);
+            
+        // Handle errors from the Apply command
+        ApplyCommand.ThrownExceptions
+            .Subscribe(ex => 
+            {
+                IsProcessing = false;
+#if DEBUG
+                Debug.WriteLine($"Error in ApplyCommand: {ex}");
+#endif
+            });
+            
         ClearFilterCommand = ReactiveCommand.Create(() => FilterText = string.Empty);
     }
     
@@ -88,13 +112,22 @@ public class FileAssociationsViewModel : ReactiveObject
         }
     }
 
-    private async Task ApplyFileAssociations()
+    private async Task<bool> ApplyFileAssociations()
     {
-        // Ensure all UI changes are synced to the ViewModel
-        SyncUIStateToViewModel();
-        
-        // Now process the associations
-        await FileTypeHelper.SetFileAssociations(FileTypeGroups);
+        try
+        {
+            IsProcessing = true;
+            
+            // Ensure all UI changes are synced to the ViewModel
+            SyncUIStateToViewModel();
+            
+            // Now process the associations
+            return await FileTypeHelper.SetFileAssociations(FileTypeGroups);
+        }
+        finally
+        {
+            IsProcessing = false;
+        }
     }
     
     public void InitializeFileTypes()
@@ -108,8 +141,3 @@ public class FileAssociationsViewModel : ReactiveObject
         });
     }
 }
-
-
-
-
-

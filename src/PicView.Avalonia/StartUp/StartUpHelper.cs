@@ -15,6 +15,7 @@ using PicView.Avalonia.ViewModels;
 using PicView.Avalonia.Views;
 using PicView.Avalonia.WindowBehavior;
 using PicView.Core.Calculations;
+using PicView.Core.FileAssociations;
 using PicView.Core.Gallery;
 using PicView.Core.Navigation;
 using PicView.Core.ProcessHandling;
@@ -48,13 +49,27 @@ public static class StartUpHelper
                     Task.Run(async () => await UpdateManager.UpdateCurrentVersion(vm));
                     return;
                 }
-                if (arg.StartsWith("lockscreen", StringComparison.InvariantCultureIgnoreCase))
+                if (arg.StartsWith("associate:", StringComparison.OrdinalIgnoreCase) ||
+                    arg.StartsWith("unassociate:", StringComparison.OrdinalIgnoreCase))
                 {
-                    // var path = arg[(arg.LastIndexOf(',') + 1)..];
-                    // path = Path.GetFullPath(path);
-                    // vm.PlatformService.SetAsLockScreen(path);
-                    // Environment.Exit(0);
-                    return;
+                    for (int i = 1; i < args.Length; i++)
+                    {
+                        var currentArg = args[i];
+                        if (currentArg.StartsWith("associate:", StringComparison.OrdinalIgnoreCase) || 
+                            currentArg.StartsWith("unassociate:", StringComparison.OrdinalIgnoreCase))
+                        {
+                            Task.Run(async () =>
+                            {
+                                // Use the helper to process the association commands
+                                await FileTypeHelper.ProcessFileAssociationArguments(currentArg);
+                                if (args.Length <= 2)
+                                {
+                                    Environment.Exit(0);
+                                }
+                            });
+                        }
+                    }
+                    Environment.Exit(0);
                 }
             }
         }

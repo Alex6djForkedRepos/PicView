@@ -5,7 +5,9 @@ using Avalonia.Interactivity;
 using Avalonia.Media;
 using PicView.Avalonia.UI;
 using PicView.Core.Calculations;
+using PicView.Core.FileHandling;
 using PicView.Core.Localization;
+using PicView.Core.WindowsNT.FileAssociation;
 
 namespace PicView.Avalonia.Win32.Views;
 
@@ -73,6 +75,8 @@ public partial class SettingsWindow : Window
             Hide();
             await SaveSettingsAsync();
         };
+
+        InitializeFileAssociationManager();
     }
 
     private void MoveWindow(object? sender, PointerPressedEventArgs e)
@@ -92,4 +96,11 @@ public partial class SettingsWindow : Window
     {
         WindowState = WindowState.Minimized;
     }
+
+    private static void InitializeFileAssociationManager()
+    {
+        var iIFileAssociationService = new WindowsFileAssociationService();
+        FileAssociationManager.Initialize(iIFileAssociationService);
+    }
+
 }

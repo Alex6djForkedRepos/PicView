@@ -3,7 +3,9 @@ using Avalonia.Input;
 using Avalonia.Media;
 using PicView.Avalonia.UI;
 using PicView.Core.Calculations;
+using PicView.Core.FileHandling;
 using PicView.Core.Localization;
+using PicView.Core.MacOS.FileAssociation;
 
 namespace PicView.Avalonia.MacOS.Views;
 
@@ -42,6 +44,8 @@ public partial class SettingsWindow : Window
             Hide();
             await SaveSettingsAsync();
         };
+        
+        InitializeFileAssociationManager();
     }
 
     private void MoveWindow(object? sender, PointerPressedEventArgs e)
@@ -50,5 +54,11 @@ public partial class SettingsWindow : Window
 
         var hostWindow = (Window)VisualRoot;
         hostWindow?.BeginMoveDrag(e);
+    }
+    
+    private static void InitializeFileAssociationManager()
+    {
+        var iIFileAssociationService = new MacFileAssociationService();
+        FileAssociationManager.Initialize(iIFileAssociationService);
     }
 }

@@ -481,6 +481,11 @@ public class App : Application, IPlatformSpecificService
 
     public string DefaultJsonKeyMap()
     {
-     return   MacOsKeybindings.DefaultKeybindings;
+        return MacOsKeybindings.DefaultKeybindings;
+    }
+
+    public Task AssociateFileTypes(string s)
+    {
+        throw new NotImplementedException();
     }
 }

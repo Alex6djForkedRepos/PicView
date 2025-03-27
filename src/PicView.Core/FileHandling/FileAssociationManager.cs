@@ -15,32 +15,6 @@ public static class FileAssociationManager
     {
         _service = service ?? throw new ArgumentNullException(nameof(service));
     }
-    
-    /// <summary>
-    /// Associates all supported file extensions with the application
-    /// </summary>
-    public static async Task AssociateAllSupportedFiles()
-    {
-        EnsureInitialized();
-        
-        foreach (var ext in SupportedFiles.FileExtensions)
-        {
-            await _service.RegisterFileAssociation(ext, $"{ext.TrimStart('.')} Image File");
-        }
-    }
-    
-    /// <summary>
-    /// Removes all file associations for supported file extensions
-    /// </summary>
-    public static async Task UnassociateAllSupportedFiles()
-    {
-        EnsureInitialized();
-        
-        foreach (var ext in SupportedFiles.FileExtensions)
-        {
-            await _service.UnregisterFileAssociation(ext);
-        }
-    }
 
     /// <summary>
     /// Associates a single file extension with the application
@@ -56,8 +30,13 @@ public static class FileAssociationManager
     /// </summary>
     public static async Task<bool> UnassociateFile(string fileExtension)
     {
-        EnsureInitialized();
-        return await _service.UnregisterFileAssociation(fileExtension);
+        var isAssociated = await IsFileAssociated(fileExtension);
+        if (isAssociated)
+        {
+            return await _service.UnregisterFileAssociation(fileExtension);
+        }
+        
+        return false;
     }
     
     /// <summary>
@@ -67,22 +46,6 @@ public static class FileAssociationManager
     {
         EnsureInitialized();
         return await _service.IsFileAssociated(fileExtension);
-    }
-    
-    /// <summary>
-    /// Gets the association status of all supported file extensions
-    /// </summary>
-    public static async Task<Dictionary<string, bool>> GetAllAssociationStatus()
-    {
-        EnsureInitialized();
-        var result = new Dictionary<string, bool>();
-        
-        foreach (var ext in SupportedFiles.FileExtensions)
-        {
-            result[ext] = await _service.IsFileAssociated(ext);
-        }
-        
-        return result;
     }
     
     private static void EnsureInitialized()

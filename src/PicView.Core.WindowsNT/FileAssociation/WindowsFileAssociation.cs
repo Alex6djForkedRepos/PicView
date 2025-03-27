@@ -6,7 +6,7 @@ using System.Diagnostics;
 
 namespace PicView.Core.WindowsNT.FileAssociation;
 
-public static class FileAssociationHelper
+public static class WindowsFileAssociation
 {
     public static bool RegisterFileAssociation(string extension, string description)
     {
