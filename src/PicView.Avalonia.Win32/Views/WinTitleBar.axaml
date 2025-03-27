@@ -47,6 +47,7 @@
                 IconWidth="17"
                 IsEnabled="{CompiledBinding PicViewer.FileInfo,
                                             Converter={x:Static ObjectConverters.IsNotNull}}"
+                IsRepeatEnabled="False"
                 Width="30"
                 x:Name="GalleryButton" />
 
@@ -61,6 +62,7 @@
                 IconWidth="16"
                 IsEnabled="{CompiledBinding PicViewer.ImageSource,
                                             Converter={x:Static ObjectConverters.IsNotNull}}"
+                IsRepeatEnabled="False"
                 Margin="0"
                 Name="RotateRightButton"
                 ToolTip.Tip="{CompiledBinding Translation.RotateRight,
@@ -81,6 +83,7 @@
                 IconWidth="16"
                 IsEnabled="{CompiledBinding PicViewer.ImageSource,
                                             Converter={x:Static ObjectConverters.IsNotNull}}"
+                IsRepeatEnabled="False"
                 Margin="0"
                 ToolTip.Tip="{CompiledBinding Translation.IsFlipped,
                                               Mode=OneWay}"
@@ -95,13 +98,13 @@
                 Background="{DynamicResource WindowButtonBackgroundColor}"
                 BorderBrush="{DynamicResource MainBorderColor}"
                 Classes="hover"
-                ClickMode="Release"
                 Command="{CompiledBinding ExitCommand}"
                 Data="{StaticResource CloseGeometry}"
                 DockPanel.Dock="Right"
                 Foreground="{DynamicResource MainTextColor}"
                 IconHeight="10"
                 IconWidth="10"
+                IsRepeatEnabled="False"
                 Width="30"
                 x:Name="CloseButton" />
 
@@ -110,13 +113,13 @@
                 BorderBrush="{DynamicResource MainBorderColor}"
                 BorderThickness="0,0,1,0"
                 Classes="hover"
-                ClickMode="Release"
                 Command="{CompiledBinding ToggleFullscreenCommand}"
                 Data="{StaticResource FullscreenGeometry}"
                 DockPanel.Dock="Right"
                 Foreground="{DynamicResource MainTextColor}"
                 IconHeight="12"
                 IconWidth="12"
+                IsRepeatEnabled="False"
                 IsVisible="{CompiledBinding ShouldMaximizeBeShown,
                                             Mode=OneWay}"
                 Width="30"
@@ -127,13 +130,13 @@
                 BorderBrush="{DynamicResource MainBorderColor}"
                 BorderThickness="0,0,1,0"
                 Classes="hover"
-                ClickMode="Release"
                 Command="{CompiledBinding RestoreCommand}"
                 Data="{StaticResource RestoreGeometry}"
                 DockPanel.Dock="Right"
                 Foreground="{DynamicResource MainTextColor}"
                 IconHeight="12"
                 IconWidth="12"
+                IsRepeatEnabled="False"
                 IsVisible="{CompiledBinding !ShouldMaximizeBeShown,
                                             Mode=OneWay}"
                 Width="30"
@@ -143,14 +146,14 @@
                 Background="{DynamicResource WindowButtonBackgroundColor}"
                 BorderBrush="{DynamicResource MainBorderColor}"
                 BorderThickness="1,0,1,0"
-                Classes="hover"
-                ClickMode="Release"
+                Classes="hover "
                 Command="{CompiledBinding MinimizeCommand}"
                 Data="{StaticResource MinimizeGeometry}"
                 DockPanel.Dock="Right"
                 Foreground="{DynamicResource MainTextColor}"
                 IconHeight="12"
                 IconWidth="12"
+                IsRepeatEnabled="False"
                 Width="30"
                 x:Name="MinimizeButton" />
             <uc:EditableTitlebar

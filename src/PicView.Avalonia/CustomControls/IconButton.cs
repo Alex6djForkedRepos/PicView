@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Media;
 using Avalonia.Metadata;
 using Avalonia.Threading;
@@ -11,8 +12,128 @@ namespace PicView.Avalonia.CustomControls;
 /// A custom button control that displays an icon, which can be either a <see cref="DrawingImage"/>
 /// or a <see cref="StreamGeometry"/>. It also supports dynamic brush changes to reflect hover states.
 /// </summary>
-public class IconButton : RepeatButton
+public class IconButton : Button
 {
+    #region Repeat
+
+     /// <summary>
+        /// Defines the <see cref="Interval"/> property.
+        /// </summary>
+        public static readonly StyledProperty<int> IntervalProperty =
+            AvaloniaProperty.Register<RepeatButton, int>(nameof(Interval), 100);
+
+        /// <summary>
+        /// Defines the <see cref="Delay"/> property.
+        /// </summary>
+        public static readonly StyledProperty<int> DelayProperty =
+            AvaloniaProperty.Register<RepeatButton, int>(nameof(Delay), 300);
+
+        private DispatcherTimer? _repeatTimer;
+
+        /// <summary>
+        /// Gets or sets the amount of time, in milliseconds, of repeating clicks.
+        /// </summary>
+        public int Interval
+        {
+            get => GetValue(IntervalProperty);
+            set => SetValue(IntervalProperty, value);
+        }
+
+        /// <summary>
+        /// Gets or sets the amount of time, in milliseconds, to wait before repeating begins.
+        /// </summary>
+        public int Delay
+        {
+            get => GetValue(DelayProperty);
+            set => SetValue(DelayProperty, value);
+        }
+        
+        public static readonly StyledProperty<bool> IsRepeatEnabledProperty =
+            AvaloniaProperty.Register<RepeatButton, bool>(nameof(IsRepeatEnabled), true);
+        
+        public bool IsRepeatEnabled
+        {
+            get => GetValue(IsRepeatEnabledProperty);
+            set => SetValue(IsRepeatEnabledProperty, value);
+        }
+
+        private void StartTimer()
+        {
+            if (!IsRepeatEnabled)
+            {
+                return;
+            }
+            if (_repeatTimer == null)
+            {
+                _repeatTimer = new DispatcherTimer();
+                _repeatTimer.Tick += RepeatTimerOnTick;
+            }
+
+            if (_repeatTimer.IsEnabled) return;
+
+            _repeatTimer.Interval = TimeSpan.FromMilliseconds(Delay);
+            _repeatTimer.Start();
+        }
+
+        private void RepeatTimerOnTick(object? sender, EventArgs e)
+        {
+            if (!IsRepeatEnabled)
+            {
+                return;
+            }
+            var interval = TimeSpan.FromMilliseconds(Interval);
+            if (_repeatTimer!.Interval != interval)
+            {
+                _repeatTimer.Interval = interval;
+            }
+            OnClick();
+        }
+
+        private void StopTimer()
+        {
+            _repeatTimer?.Stop();
+        }
+
+        protected override void OnKeyDown(KeyEventArgs e)
+        {
+            base.OnKeyDown(e);
+
+            if (e.Key == Key.Space)
+            {
+                StartTimer();
+            }
+        }
+
+        protected override void OnKeyUp(KeyEventArgs e)
+        {
+            base.OnKeyUp(e);
+
+            StopTimer();
+        }
+
+        protected override void OnPointerPressed(PointerPressedEventArgs e)
+        {
+            base.OnPointerPressed(e);
+
+            if (e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
+            {
+                StartTimer();
+            }
+        }
+
+        protected override void OnPointerReleased(PointerReleasedEventArgs e)
+        {
+            base.OnPointerReleased(e);
+
+            if (e.InitialPressMouseButton == MouseButton.Left)
+            {
+                StopTimer();
+            }
+        }
+    
+
+    #endregion
+    
     /// <summary>
     /// Defines the <see cref="Icon"/> property.
     /// The icon is displayed as a <see cref="DrawingImage"/> with support for dynamic brush changes.
@@ -100,6 +221,10 @@ public class IconButton : RepeatButton
         if (change.Property == IconProperty)
         {
             Content = BuildIcon();
+        }
+        if (change.Property == IsPressedProperty && change.GetNewValue<bool>() == false)
+        {
+            StopTimer();
         }
     }
 
