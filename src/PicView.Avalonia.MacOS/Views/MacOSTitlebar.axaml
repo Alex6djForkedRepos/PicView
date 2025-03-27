@@ -33,6 +33,7 @@
             IconWidth="12"
             IsEnabled="{CompiledBinding PicViewer.FileInfo,
                                         Converter={x:Static ObjectConverters.IsNotNull}}"
+            IsRepeatEnabled="False"
             IsTabStop="False"
             Margin="0"
             ToolTip.Tip="{CompiledBinding Translation.IsFlipped,
@@ -57,6 +58,7 @@
             IconWidth="13"
             IsEnabled="{CompiledBinding PicViewer.FileInfo,
                                         Converter={x:Static ObjectConverters.IsNotNull}}"
+            IsRepeatEnabled="False"
             IsTabStop="False"
             Margin="0"
             ToolTip.Tip="{CompiledBinding Translation.RotateRight}"
@@ -76,6 +78,7 @@
             IconWidth="17"
             IsEnabled="{CompiledBinding PicViewer.FileInfo,
                                         Converter={x:Static ObjectConverters.IsNotNull}}"
+            IsRepeatEnabled="False"
             IsTabStop="False"
             Name="GalleryButton"
             Width="30" />
