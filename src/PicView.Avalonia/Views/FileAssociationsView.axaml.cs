@@ -3,6 +3,7 @@ using System.Reactive.Linq;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
+using PicView.Avalonia.UI;
 using PicView.Avalonia.ViewModels;
 using PicView.Core.FileAssociations;
 using PicView.Core.Localization;
@@ -19,6 +20,13 @@ public partial class FileAssociationsView : UserControl
     public FileAssociationsView()
     {
         InitializeComponent();
+        
+        FileTypesScrollViewer.Height = ScreenHelper.ScreenSize.WorkingAreaHeight switch
+        {
+            > 500 and <= 650 => 340,
+            >= 650 => 520,
+            _ => 240
+        };
 
         AttachedToVisualTree += delegate
         {
@@ -118,7 +126,7 @@ public partial class FileAssociationsView : UserControl
             // Create group header checkbox
             var groupCheckBox = new CheckBox
             {
-                Classes = { "altHover", "y" },
+                Classes = { "altHover", "y", "changeColor" },
                 Tag = "group",
                 Name = fileTypeGroup.Name.Trim(),
                 IsThreeState = true,
@@ -161,7 +169,7 @@ public partial class FileAssociationsView : UserControl
             {
                 var fileCheckBox = new CheckBox
                 {
-                    Classes = { "altHover", "x" },
+                    Classes = { "altHover", "x", "changeColor" },
                     Tag = fileType.Extension,
                     IsChecked = fileType.IsSelected,
                     IsThreeState = true

@@ -3,6 +3,8 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
+using PicView.Avalonia.UI;
+using PicView.Core.Calculations;
 using PicView.Core.Localization;
 
 namespace PicView.Avalonia.Win32.Views;
@@ -11,6 +13,12 @@ public partial class SettingsWindow : Window
 {
     public SettingsWindow()
     {
+        MinHeight = ScreenHelper.ScreenSize.WorkingAreaHeight switch
+        {
+            < 650 => 600,
+            >= 650 => 700,
+            _ => SizeDefaults.WindowMinSize
+        };
         InitializeComponent();
         if (Settings.Theme.GlassTheme)
         {

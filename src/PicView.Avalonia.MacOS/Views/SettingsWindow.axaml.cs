@@ -1,6 +1,8 @@
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
+using PicView.Avalonia.UI;
+using PicView.Core.Calculations;
 using PicView.Core.Localization;
 
 namespace PicView.Avalonia.MacOS.Views;
@@ -10,6 +12,12 @@ public partial class SettingsWindow : Window
     public SettingsWindow()
     {
         InitializeComponent();
+        MinHeight = ScreenHelper.ScreenSize.WorkingAreaHeight switch
+        {
+            < 650 => 600,
+            >= 650 => 700,
+            _ => SizeDefaults.WindowMinSize
+        };
         if (!Settings.Theme.Dark || Settings.Theme.GlassTheme)
         {
             TitleText.Background = Brushes.Transparent;

@@ -2,6 +2,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Input;
+using Avalonia.Media;
 
 namespace PicView.Avalonia.Views;
 
@@ -17,6 +18,10 @@ public partial class SettingsView : UserControl
         
         Loaded += delegate
         {
+            if (!Settings.Theme.Dark)
+            {
+                MainTabControl.Background = Brushes.Transparent;
+            }
             MainTabControl.MinHeight = MainTabControl.Bounds.Height;
             MainTabControl.SelectionChanged += TabSelectionChanged;
             PointerPressed += OnMouseButtonDown;

@@ -26,7 +26,7 @@
         <ToggleButton
             Background="Transparent"
             BorderThickness="0"
-            Classes="altHover"
+            Classes="altHover changeColor"
             Command="{CompiledBinding ToggleBottomGalleryCommand}"
             IsChecked="{CompiledBinding IsBottomGalleryShown}"
             Margin="0,0,0,10"
@@ -46,7 +46,7 @@
         <ToggleButton
             Background="Transparent"
             BorderThickness="0"
-            Classes="altHover"
+            Classes="altHover changeColor"
             Command="{CompiledBinding ToggleBottomGalleryShownInHiddenUICommand}"
             IsChecked="{CompiledBinding IsBottomGalleryShownInHiddenUI,
                                         Mode=TwoWay}"

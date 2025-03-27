@@ -24,7 +24,7 @@
         <ToggleButton
             Background="Transparent"
             BorderThickness="0"
-            Classes="altHover"
+            Classes="altHover changeColor"
             IsChecked="{CompiledBinding IsStretched}"
             Margin="0,0,0,10"
             ToolTip.Tip="{CompiledBinding Translation.Stretch,
@@ -42,7 +42,7 @@
         <ToggleButton
             Background="Transparent"
             BorderThickness="0"
-            Classes="altHover"
+            Classes="altHover changeColor"
             Command="{CompiledBinding ToggleScrollCommand}"
             IsChecked="{CompiledBinding IsScrollingEnabled}"
             Margin="0,0,0,10"
@@ -60,7 +60,7 @@
         <ToggleButton
             Background="Transparent"
             BorderThickness="0"
-            Classes="altHover"
+            Classes="altHover changeColor"
             Command="{CompiledBinding ShowSideBySideCommand}"
             IsChecked="{CompiledBinding PicViewer.IsShowingSideBySide}"
             Margin="0,0,0,10"

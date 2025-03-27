@@ -1,10 +1,7 @@
 <Window
     CanResize="False"
-    CornerRadius="0,0,8,8"
-    Height="300"
-    MinHeight="260"
+    MinHeight="700"
     SizeToContent="WidthAndHeight"
-    Title="Loading..."
     WindowStartupLocation="CenterOwner"
     x:Class="PicView.Avalonia.Win32.Views.SettingsWindow"
     x:DataType="viewModels:MainViewModel"

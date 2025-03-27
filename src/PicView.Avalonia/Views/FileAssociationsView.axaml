@@ -109,7 +109,7 @@
 
         <customControls:AutoScrollViewer
             Background="Transparent"
-            Height="340"
+            Height="520"
             x:Name="FileTypesScrollViewer">
             <StackPanel x:Name="FileTypesContainer">
                 <StackPanel.Styles>
