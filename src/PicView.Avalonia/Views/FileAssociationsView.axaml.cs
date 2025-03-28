@@ -149,17 +149,11 @@ public partial class FileAssociationsView : UserControl
             _allCheckBoxes.Add((groupCheckBox, fileTypeGroup.Name));
                 
             // Handle group checkbox changes to update all items in the group
-            groupCheckBox.IsCheckedChanged += delegate
+            groupCheckBox.Click += delegate
             {
-                var isChecked = groupCheckBox.IsChecked;
-                if (!isChecked.HasValue)
-                {
-                    return;
-                }
-
                 foreach (var fileType in fileTypeGroup.FileTypes)
                 {
-                    fileType.IsSelected = isChecked.Value;
+                    fileType.IsSelected = groupCheckBox.IsChecked;
                 }
                 UpdateCheckBoxesFromViewModel();
             };
