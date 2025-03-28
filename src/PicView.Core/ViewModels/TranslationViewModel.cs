@@ -267,9 +267,44 @@ public class TranslationViewModel : ReactiveObject
         Maximize = TranslationManager.Translation.Maximize;
         SelectAll = TranslationManager.Translation.SelectAll;
         Normal = TranslationManager.Translation.Normal;
+        FileAssociations = TranslationManager.Translation.FileAssociations;
+        SelectFileTypesToAssociate = TranslationManager.Translation.SelectFileTypesToAssociate;
+        Filter = TranslationManager.Translation.Filter;
+        UnselectAll = TranslationManager.Translation.UnselectAll;
+        Unassociate = TranslationManager.Translation.Unassociate;
     }
 
     #region Static Translation Strings
+    
+    public string? SelectFileTypesToAssociate
+    {
+        get;
+        set => this.RaiseAndSetIfChanged(ref field, value);
+    }
+    
+    public string? Filter
+    {
+        get;
+        set => this.RaiseAndSetIfChanged(ref field, value); 
+    }
+    
+    public string? UnselectAll
+    {
+        get;
+        set => this.RaiseAndSetIfChanged(ref field, value);
+    }
+    
+    public string? Unassociate
+    {
+        get;
+        set => this.RaiseAndSetIfChanged(ref field, value);
+    }
+    
+    public string? FileAssociations
+    {
+        get;
+        set => this.RaiseAndSetIfChanged(ref field, value);
+    }
     
     public string? Normal
     {

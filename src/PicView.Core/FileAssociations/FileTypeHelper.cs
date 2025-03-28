@@ -26,7 +26,7 @@ public static class FileTypeHelper
                 new FileTypeItem("Icon", [".ico"])
             ]),
             
-            new FileTypeGroup(TranslationManager.GetTranslation("Graphics"), [
+            new FileTypeGroup(TranslationManager.Translation.Graphics, [
                 new FileTypeItem("Scalable Vector Graphics", [".svg", ".svgz"], null),
                 new FileTypeItem("Photoshop", [".psd", ".psb"], null),
                 new FileTypeItem("XCF", [".xcf"], null),
@@ -41,7 +41,7 @@ public static class FileTypeHelper
                 new FileTypeItem("Industrial Light & Magic OpenEXR", [".exr"])
             ]),
             
-            new FileTypeGroup(TranslationManager.GetTranslation("Raw"), [
+            new FileTypeGroup(TranslationManager.Translation.RawCamera, [
                 new FileTypeItem("Raw", [".raw"]),
                 new FileTypeItem("Framed Raster", [".3fr"]),
                 new FileTypeItem("Sony Digital Camera RAW", [".arw"]),
@@ -66,7 +66,7 @@ public static class FileTypeHelper
                 new FileTypeItem("Windows Metafile Image", [".wmf", ".emf"]),
             ]),
             
-            new FileTypeGroup(TranslationManager.GetTranslation("Uncommon"), [
+            new FileTypeGroup(TranslationManager.Translation.Uncommon, [
                 new FileTypeItem("Wordperfect Graphics", [".wpg"]),
                 new FileTypeItem("Paintbrush bitmap graphics", [".pcx"], null),
                 new FileTypeItem("X Bitmap", [".xbm"]),
@@ -78,7 +78,7 @@ public static class FileTypeHelper
                 new FileTypeItem("Base64", [".b64"])
             ]),
             
-            new FileTypeGroup(TranslationManager.GetTranslation("Archives"), [
+            new FileTypeGroup(TranslationManager.Translation.Archives, [
                 new FileTypeItem("Zip", [".zip"], null),
                 new FileTypeItem("Rar", [".rar"], null),
                 new FileTypeItem("Gzip", [".gzip"], null),
