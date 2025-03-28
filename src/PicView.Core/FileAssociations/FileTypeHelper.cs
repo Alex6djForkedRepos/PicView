@@ -4,6 +4,7 @@ using System.Runtime.InteropServices;
 using System.Security.Principal;
 using PicView.Core.FileHandling;
 using PicView.Core.Localization;
+using PicView.Core.ProcessHandling;
 
 namespace PicView.Core.FileAssociations;
 
@@ -26,9 +27,9 @@ public static class FileTypeHelper
             ]),
             
             new FileTypeGroup(TranslationManager.GetTranslation("Graphics"), [
-                new FileTypeItem("Scalable Vector Graphics", [".svg", ".svgz"]),
-                new FileTypeItem("Photoshop", [".psd", ".psb"]),
-                new FileTypeItem("XCF", [".xcf"]),
+                new FileTypeItem("Scalable Vector Graphics", [".svg", ".svgz"], null),
+                new FileTypeItem("Photoshop", [".psd", ".psb"], null),
+                new FileTypeItem("XCF", [".xcf"], null),
                 new FileTypeItem("Tagged Image File Format", [".tif", ".tiff"]),
                 new FileTypeItem("High-Enhanced Image File", [".heic", ".heif"]),
                 new FileTypeItem("JPEG XL", [".jxl"]),
@@ -67,7 +68,7 @@ public static class FileTypeHelper
             
             new FileTypeGroup(TranslationManager.GetTranslation("Uncommon"), [
                 new FileTypeItem("Wordperfect Graphics", [".wpg"]),
-                new FileTypeItem("Paintbrush bitmap graphics", [".pcx"]),
+                new FileTypeItem("Paintbrush bitmap graphics", [".pcx"], null),
                 new FileTypeItem("X Bitmap", [".xbm"]),
                 new FileTypeItem("PX PixMap Bitmap", [".xpm"]),
                 new FileTypeItem("Dr. Halo ", [".cut"]),
@@ -122,17 +123,18 @@ public static class FileTypeHelper
                         }
                     }
                 }
-                
-                if (extensionsToAssociate.Count > 0)
+
+                if (extensionsToAssociate.Count <= 0)
                 {
-                    // Create command arguments - keep argument string shorter to avoid issues
-                    string associateArg = "associate:" + string.Join(",", extensionsToAssociate);
-                    
-                    // Start new process with elevated permissions
-                    return StartProcessWithElevatedPermission(associateArg);
+                    return true; // Nothing to do
                 }
-                
-                return true; // Nothing to do
+
+                // Create command arguments - keep argument string shorter to avoid issues
+                var associateArg = "associate:" + string.Join(",", extensionsToAssociate);
+                    
+                // Start new process with elevated permissions
+                return ProcessHelper.StartProcessWithElevatedPermission(associateArg);
+
             }
             
             // Standard processing path (non-Windows or already has admin rights)
@@ -183,36 +185,13 @@ public static class FileTypeHelper
         return principal.IsInRole(WindowsBuiltInRole.Administrator);
     }
     
-    private static bool StartProcessWithElevatedPermission(string arguments)
-    {
-        try
-        {
-            var startInfo = new ProcessStartInfo
-            {
-                FileName = Process.GetCurrentProcess().MainModule?.FileName,
-                Arguments = arguments,
-                UseShellExecute = true,
-                Verb = "runas" // This requests elevated permissions
-            };
-            
-            Process.Start(startInfo);
-            return true;
-        }
-        catch (Exception ex)
-        {
-            // User declined the UAC prompt or other error
-            Debug.WriteLine($"Failed to start elevated process: {ex.Message}");
-            return false;
-        }
-    }
-    
     public static async Task ProcessFileAssociationArguments(string arg)
     {
         try
         {
             if (arg.StartsWith("associate:", StringComparison.OrdinalIgnoreCase))
             {
-                string extensionsString = arg["associate:".Length..];
+                var extensionsString = arg["associate:".Length..];
                 if (string.IsNullOrWhiteSpace(extensionsString))
                     return;
                     

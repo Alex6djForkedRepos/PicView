@@ -21,14 +21,22 @@ public class FileAssociationsViewModel : ReactiveObject
         set => this.RaiseAndSetIfChanged(ref field, value);
     } = string.Empty;
 
-    private bool IsProcessing
+    public bool IsProcessing
     {
         get;
         set => this.RaiseAndSetIfChanged(ref field, value);
     }
 
+    public double Opacity
+    {
+        get;
+        set => this.RaiseAndSetIfChanged(ref field, value);
+    } = 1.0;
+
     public ReactiveCommand<Unit, bool> ApplyCommand { get; }
     public ReactiveCommand<Unit, string> ClearFilterCommand { get; }
+    
+    public ReactiveCommand<Unit, Unit> UnassociateCommand { get; }
     
     public FileAssociationsViewModel()
     {
@@ -64,8 +72,36 @@ public class FileAssociationsViewModel : ReactiveObject
                 Debug.WriteLine($"Error in ApplyCommand: {ex}");
 #endif
             });
+        
+        UnassociateCommand = ReactiveCommand.CreateFromTask(async () =>
+        {
+            try
+            {
+                IsProcessing = true;
+                UnselectFileTypes();
+                await FileTypeHelper.SetFileAssociations(FileTypeGroups);
+            }
+            finally
+            {
+                IsProcessing = false;
+            }
+        }, canExecute);
+        
+        UnassociateCommand.ThrownExceptions
+            .Subscribe(ex => 
+            {
+                IsProcessing = false;
+#if DEBUG
+                Debug.WriteLine($"Error in UnassociateCommand: {ex}");
+#endif
+            });
             
         ClearFilterCommand = ReactiveCommand.Create(() => FilterText = string.Empty);
+        
+        this.WhenAnyValue(x => x.IsProcessing).Subscribe(isProcessing =>
+        {
+            Opacity = isProcessing ? 0.3 : 1.0;
+        });
     }
     
     private Func<FileTypeGroup, bool> BuildFilter(string? filter)
@@ -129,8 +165,8 @@ public class FileAssociationsViewModel : ReactiveObject
             IsProcessing = false;
         }
     }
-    
-    public void InitializeFileTypes()
+
+    private void InitializeFileTypes()
     {
         var groups = FileTypeHelper.GetFileTypes();
         
@@ -139,5 +175,74 @@ public class FileAssociationsViewModel : ReactiveObject
             list.Clear();
             list.AddRange(groups);
         });
+    }
+    
+    public void ResetFileTypesToDefault()
+    {
+        // Get fresh default file types
+        var defaultGroups = FileTypeHelper.GetFileTypes();
+    
+        // Make a copy of the current groups to avoid enumeration issues
+        var currentGroups = _fileTypeGroups.ToArray();
+    
+        // Update selection states based on the defaults
+        foreach (var group in currentGroups)
+        {
+            var defaultGroup = defaultGroups.FirstOrDefault(g => g.Name == group.Name);
+            if (defaultGroup == null)
+            {
+                continue;
+            }
+
+            // Update the group's selection state
+            group.IsSelected = defaultGroup.IsSelected;
+            
+            // Update each file type's selection state
+            var fileTypes = group.FileTypes.ToArray();
+            foreach (var fileType in fileTypes)
+            {
+                var defaultType = defaultGroup.FileTypes.FirstOrDefault(dt => 
+                    dt.Description == fileType.Description);
+                
+                if (defaultType != null)
+                {
+                    fileType.IsSelected = defaultType.IsSelected;
+                }
+            }
+        }
+    }
+
+    public void UnselectFileTypes()
+    {
+        // Get fresh default file types
+        var defaultGroups = FileTypeHelper.GetFileTypes();
+    
+        // Make a copy of the current groups to avoid enumeration issues
+        var currentGroups = _fileTypeGroups.ToArray();
+    
+        // Update selection states based on the defaults
+        foreach (var group in currentGroups)
+        {
+            var defaultGroup = defaultGroups.FirstOrDefault(g => g.Name == group.Name);
+            if (defaultGroup == null)
+            {
+                continue;
+            }
+            
+            group.IsSelected = false;
+            
+            // Update each file type's selection state
+            var fileTypes = group.FileTypes.ToArray();
+            foreach (var fileType in fileTypes)
+            {
+                var defaultType = defaultGroup.FileTypes.FirstOrDefault(dt => 
+                    dt.Description == fileType.Description);
+                
+                if (defaultType != null)
+                {
+                    fileType.IsSelected = false;
+                }
+            }
+        }
     }
 }

@@ -38,15 +38,38 @@ public static class ProcessHelper
 
         return GetAppPath;
     }
+    
+    public static bool StartProcessWithElevatedPermission(string arguments)
+    {
+        try
+        {
+            var startInfo = new ProcessStartInfo
+            {
+                FileName = Process.GetCurrentProcess().MainModule?.FileName,
+                Arguments = arguments,
+                UseShellExecute = true,
+                Verb = "runas"
+            };
+            
+            Process.Start(startInfo);
+            return true;
+        }
+        catch (Exception ex)
+        {
+            // User declined the UAC prompt or other error
+            Debug.WriteLine($"Failed to start elevated process: {ex.Message}");
+            return false;
+        }
+    }
 
     /// <summary>
     /// Restarts the current application.
     /// </summary>
     public static void RestartApp(string? args)
     {
-        var GetAppPath = GetPathToProcess();
+        var getAppPath = GetPathToProcess();
 
-        Process.Start(new ProcessStartInfo(GetAppPath, args));
+        Process.Start(new ProcessStartInfo(getAppPath, args));
     }
 
     /// <summary>

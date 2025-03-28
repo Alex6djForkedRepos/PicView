@@ -32,7 +32,6 @@ public partial class FileAssociationsView : UserControl
         {
             FilterBox.TextChanged += FilterBox_TextChanged;
             
-            // Setup binding for the buttons
             SelectAllButton.Click += delegate
             {
                 foreach (var checkBox in FileTypesContainer.Children.OfType<CheckBox>())
@@ -80,8 +79,55 @@ public partial class FileAssociationsView : UserControl
                 }
             };
             
+            ResetButton.Click += delegate
+            {
+                if (DataContext is not MainViewModel { AssociationsViewModel: not null } vm)
+                {
+                    return;
+                }
+
+                // Use the view model to reset file types to default
+                vm.AssociationsViewModel.ResetFileTypesToDefault();
+                    
+                // Now update the UI checkboxes based on the reset data
+                var checkboxes = FileTypesContainer.Children.OfType<CheckBox>().ToArray();
+                    
+                foreach (var checkbox in checkboxes)
+                {
+                    ResetCheckboxStateFromViewModel(checkbox, vm.AssociationsViewModel);
+                }
+            };
+            
             InitializeCheckBoxesCollection();
         };
+    }
+    
+    private static void ResetCheckboxStateFromViewModel(CheckBox checkbox, FileAssociationsViewModel viewModel)
+    {
+        var tag = checkbox.Tag?.ToString();
+        if (tag == "group") // group checkbox
+        {
+            var name = checkbox.Name;
+            var group = viewModel.FileTypeGroups.FirstOrDefault(g => g.Name?.Trim() == name);
+            if (group != null)
+            {
+                checkbox.IsChecked = group.IsSelected;
+            }
+        }
+        else if (!string.IsNullOrEmpty(tag)) // file type checkbox
+        {
+            foreach (var group in viewModel.FileTypeGroups)
+            {
+                foreach (var fileType in group.FileTypes)
+                {
+                    if (fileType.Extension.Contains(tag))
+                    {
+                        checkbox.IsChecked = fileType.IsSelected;
+                        break;
+                    }
+                }
+            }
+        }
     }
         
     private void InitializeCheckBoxesCollection()
@@ -151,9 +197,11 @@ public partial class FileAssociationsView : UserControl
             // Handle group checkbox changes to update all items in the group
             groupCheckBox.Click += delegate
             {
+                var isChecked = groupCheckBox.IsChecked;
+
                 foreach (var fileType in fileTypeGroup.FileTypes)
                 {
-                    fileType.IsSelected = groupCheckBox.IsChecked;
+                    fileType.IsSelected = isChecked;
                 }
                 UpdateCheckBoxesFromViewModel();
             };
@@ -248,22 +296,23 @@ public partial class FileAssociationsView : UserControl
         // Find the group checkbox
         var groupCheckbox = FileTypesContainer.Children.OfType<CheckBox>()
             .FirstOrDefault(c => c.Tag?.ToString() == "group" && c.Name == group.Name.Trim());
-    
-        if (groupCheckbox != null)
+
+        if (groupCheckbox == null)
         {
-            // Set state based on children
-            if (anyNull)
-                groupCheckbox.IsChecked = null;
-            else if (allTrue)
-                groupCheckbox.IsChecked = true;
-            else if (allFalse)
-                groupCheckbox.IsChecked = false;
-            else
-                groupCheckbox.IsChecked = null; // Mixed state
-            
-            // Update the ViewModel
-            group.IsSelected = groupCheckbox.IsChecked;
+            return;
         }
+
+        if (anyNull)
+            groupCheckbox.IsChecked = null;
+        else if (allTrue)
+            groupCheckbox.IsChecked = true;
+        else if (allFalse)
+            groupCheckbox.IsChecked = false;
+        else
+            groupCheckbox.IsChecked = null;
+            
+        // Update the ViewModel
+        group.IsSelected = groupCheckbox.IsChecked;
     }
 
     private bool IsCheckboxInGroup(CheckBox checkbox, FileTypeGroup group)
