@@ -19,10 +19,15 @@ public static class FileAssociationManager
     /// <summary>
     /// Associates a single file extension with the application
     /// </summary>
-    public static async Task<bool> AssociateFile(string fileExtension)
+    /// <param name="fileExtension">The file extension to associate</param>
+    /// <param name="description">Optional custom description for the file type</param>
+    /// <returns>True if successful, false otherwise</returns>
+    public static async Task<bool> AssociateFile(string fileExtension, string? description = null)
     {
         EnsureInitialized();
-        return await _service.RegisterFileAssociation(fileExtension, $"{fileExtension.TrimStart('.')} Image File");
+        // Use provided description or generate a default one
+        var fileDescription = description ?? $"{fileExtension.TrimStart('.')} Image File";
+        return await _service.RegisterFileAssociation(fileExtension, fileDescription);
     }
     
     /// <summary>

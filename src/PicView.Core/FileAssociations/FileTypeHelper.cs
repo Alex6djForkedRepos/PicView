@@ -91,88 +91,88 @@ public static class FileTypeHelper
     
    
     public static async Task<bool> SetFileAssociations(ReadOnlyObservableCollection<FileTypeGroup> groups)
+{
+    try
     {
-        try
+        // If we're on Windows, check for admin permissions
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && !IsAdministrator())
         {
-            // If we're on Windows, check for admin permissions
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && !IsAdministrator())
-            {
-                // Build list of extensions to associate
-                var extensionsToAssociate = new List<string>();
-                
-                foreach (var group in groups)
-                {
-                    foreach (var fileType in group.FileTypes)
-                    {
-                        if (!fileType.IsSelected.HasValue || !fileType.IsSelected.Value) 
-                            continue;
-                        
-                        foreach (var extension in fileType.Extensions)
-                        {
-                            // Make sure to properly handle extensions that contain commas
-                            var individualExtensions = extension.Split([',', ' '], StringSplitOptions.RemoveEmptyEntries);
-        
-                            foreach (var ext in individualExtensions)
-                            {
-                                var cleanExt = ext.Trim();
-                                if (!cleanExt.StartsWith('.'))
-                                    cleanExt = "." + cleanExt;
-                                
-                                extensionsToAssociate.Add(cleanExt);
-                            }
-                        }
-                    }
-                }
-
-                if (extensionsToAssociate.Count <= 0)
-                {
-                    return true; // Nothing to do
-                }
-
-                // Create command arguments - keep argument string shorter to avoid issues
-                var associateArg = "associate:" + string.Join(",", extensionsToAssociate);
-                    
-                // Start new process with elevated permissions
-                return ProcessHelper.StartProcessWithElevatedPermission(associateArg);
-
-            }
+            // Build list of extensions to associate with descriptions
+            var extensionsToAssociate = new List<string>();
             
-            // Standard processing path (non-Windows or already has admin rights)
             foreach (var group in groups)
             {
                 foreach (var fileType in group.FileTypes)
                 {
-                    if (!fileType.IsSelected.HasValue) 
+                    if (!fileType.IsSelected.HasValue || !fileType.IsSelected.Value) 
                         continue;
                     
                     foreach (var extension in fileType.Extensions)
                     {
+                        // Make sure to properly handle extensions that contain commas
                         var individualExtensions = extension.Split([',', ' '], StringSplitOptions.RemoveEmptyEntries);
-        
+    
                         foreach (var ext in individualExtensions)
                         {
                             var cleanExt = ext.Trim();
                             if (!cleanExt.StartsWith('.'))
                                 cleanExt = "." + cleanExt;
-                
-                            if (fileType.IsSelected.Value)
-                                await FileAssociationManager.AssociateFile(cleanExt);
-                            else
-                                await FileAssociationManager.UnassociateFile(cleanExt);
+                            
+                            // Add the extension with its description, separated by a special delimiter
+                            extensionsToAssociate.Add($"{cleanExt}|{fileType.Description}");
                         }
                     }
                 }
             }
-            
-            return true;
+
+            if (extensionsToAssociate.Count <= 0)
+            {
+                return true; // Nothing to do
+            }
+
+            // Create command arguments - separate extensions with semicolons to avoid issues
+            var associateArg = "associate:" + string.Join(";", extensionsToAssociate);
+                
+            // Start new process with elevated permissions
+            return ProcessHelper.StartProcessWithElevatedPermission(associateArg);
         }
-        catch (Exception ex)
+        
+        // Standard processing path (non-Windows or already has admin rights)
+        foreach (var group in groups)
         {
-            // Log the exception or handle it appropriately
-            Debug.WriteLine($"Error in SetFileAssociations: {ex}");
-            return false;
+            foreach (var fileType in group.FileTypes)
+            {
+                if (!fileType.IsSelected.HasValue) 
+                    continue;
+                
+                foreach (var extension in fileType.Extensions)
+                {
+                    var individualExtensions = extension.Split([',', ' '], StringSplitOptions.RemoveEmptyEntries);
+    
+                    foreach (var ext in individualExtensions)
+                    {
+                        var cleanExt = ext.Trim();
+                        if (!cleanExt.StartsWith('.'))
+                            cleanExt = "." + cleanExt;
+            
+                        if (fileType.IsSelected.Value)
+                            await FileAssociationManager.AssociateFile(cleanExt, fileType.Description);
+                        else
+                            await FileAssociationManager.UnassociateFile(cleanExt);
+                    }
+                }
+            }
         }
+        
+        return true;
     }
+    catch (Exception ex)
+    {
+        // Log the exception or handle it appropriately
+        Debug.WriteLine($"Error in SetFileAssociations: {ex}");
+        return false;
+    }
+}
     
     private static bool IsAdministrator()
     {
@@ -194,15 +194,27 @@ public static class FileTypeHelper
                 var extensionsString = arg["associate:".Length..];
                 if (string.IsNullOrWhiteSpace(extensionsString))
                     return;
-                    
+                
+                // Split by semicolons for different extensions
                 var extensions = extensionsString
-                    .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                    .Split(';', StringSplitOptions.RemoveEmptyEntries)
                     .Select(ext => ext.Trim())
                     .ToArray();
-                    
+                
                 foreach (var extension in extensions)
                 {
-                    await FileAssociationManager.AssociateFile(extension);
+                    // Each extension may have a description after a pipe |
+                    var parts = extension.Split('|', 2);
+                    var ext = parts[0].Trim();
+                
+                    // Get description if available
+                    string? description = null;
+                    if (parts.Length > 1)
+                    {
+                        description = parts[1].Trim();
+                    }
+                
+                    await FileAssociationManager.AssociateFile(ext, description);
                 }
             }
         }
