@@ -96,6 +96,27 @@ public static class MainKeyboardShortcuts
     /// <param name="e">The key event arguments.</param>
     public static void MainWindow_KeysUp(KeyEventArgs e)
     {
+        // Handle escape key
+        if (e.Key == Key.Escape)
+        {
+            if (UIHelper.GetMainView.DataContext as MainViewModel is { IsEditableTitlebarOpen: true })
+            {
+                return;
+            }
+            
+            if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime { Windows.Count: > 1 } desktop)
+            {
+                desktop.Windows[^1].Close();
+                IsKeyHeldDown = true; // If closing the last window, make sure not to call Close()
+                return;
+            }
+
+            if (!IsKeyHeldDown)
+            {
+                _ = FunctionsMapper.Close();
+            }
+        }
+        
         UpdateModifierState(e.Key, false);
         Reset();
     }
@@ -182,27 +203,6 @@ public static class MainKeyboardShortcuts
                 .OfType<AnimatedPopUp>()
                 .FirstOrDefault()
                 ?.KeyDownHandler(null, e);
-            return true;
-        }
-
-        // Handle escape key
-        if (e.Key == Key.Escape)
-        {
-            if (UIHelper.GetMainView.DataContext as MainViewModel is { IsEditableTitlebarOpen: true })
-            {
-                return true;
-            }
-            
-            if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
-            {
-                if (desktop.Windows.Count > 1)
-                {
-                    desktop.Windows[^1].Close();
-                    return true;
-                }
-            }
-            
-            await FunctionsMapper.Close().ConfigureAwait(false);
             return true;
         }
 
