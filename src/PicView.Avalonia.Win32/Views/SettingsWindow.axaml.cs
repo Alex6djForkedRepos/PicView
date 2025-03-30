@@ -5,9 +5,7 @@ using Avalonia.Interactivity;
 using Avalonia.Media;
 using PicView.Avalonia.Input;
 using PicView.Avalonia.UI;
-using PicView.Core.Calculations;
 using PicView.Core.FileHandling;
-using PicView.Core.Localization;
 using PicView.Core.WindowsNT.FileAssociation;
 
 namespace PicView.Avalonia.Win32.Views;
@@ -16,13 +14,8 @@ public partial class SettingsWindow : Window
 {
     public SettingsWindow()
     {
-        MinHeight = ScreenHelper.ScreenSize.WorkingAreaHeight switch
-        {
-            < 650 => 600,
-            >= 650 => 700,
-            _ => SizeDefaults.WindowMinSize
-        };
         InitializeComponent();
+        ParentBorder.Height = ScreenHelper.GetWindowMaxHeight();
         if (Settings.Theme.GlassTheme)
         {
             LogoBorder.Background = Brushes.Transparent;
@@ -80,7 +73,8 @@ public partial class SettingsWindow : Window
         Loaded += delegate
         {
             MinWidth = Width;
-            Title = TranslationManager.GetTranslation("Settings") + " - PicView";
+            //Title = TranslationManager.GetTranslation("Settings") + " - PicView";
+            Title = $"{ScreenHelper.ScreenSize.WorkingAreaWidth} x {ScreenHelper.ScreenSize.WorkingAreaHeight} {ScreenHelper.ScreenSize.Scaling}";
         };
         KeyDown += (_, e) =>
         {

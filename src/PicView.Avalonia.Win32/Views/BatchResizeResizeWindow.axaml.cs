@@ -4,6 +4,7 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
 using PicView.Avalonia.Input;
+using PicView.Avalonia.UI;
 using PicView.Avalonia.WindowBehavior;
 using PicView.Core.Localization;
 
@@ -19,6 +20,7 @@ public partial class BatchResizeWindow : Window
 
     private void StartUp()
     {
+        ScrollViewer.MaxHeight = ScreenHelper.GetWindowMaxHeight();
         if (Settings.Theme.GlassTheme)
         {
             IconBorder.Background = Brushes.Transparent;

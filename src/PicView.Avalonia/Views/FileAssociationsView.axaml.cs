@@ -25,7 +25,8 @@ public partial class FileAssociationsView : UserControl
         FileTypesScrollViewer.Height = ScreenHelper.ScreenSize.WorkingAreaHeight switch
         {
             > 500 and <= 650 => 340,
-            >= 650 => 520,
+            >= 650 and <= 700 => 440,
+            >= 700 => 480,
             _ => 240
         };
 

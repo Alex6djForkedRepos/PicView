@@ -334,7 +334,7 @@ public static class WindowFunctions
         if (Settings.UIProperties.ShowInterface)
         {
             vm.IsTopToolbarShown = true;
-            vm.TitlebarHeight = SizeDefaults.TitlebarHeight;
+            vm.TitlebarHeight = SizeDefaults.MainTitlebarHeight;
             if (Settings.UIProperties.ShowBottomNavBar)
             {
                 vm.IsBottomToolbarShown = true;

@@ -4,5 +4,5 @@
     xmlns:sys="using:System"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <sys:TimeSpan x:Key="ButtonHoverAnimationDuration">0.25</sys:TimeSpan>
-
+    <sys:Double x:Key="TopBorderHeight">28</sys:Double>
 </ResourceDictionary>

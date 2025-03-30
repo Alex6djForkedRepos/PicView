@@ -13,13 +13,14 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <Border
+        Background="Transparent"
         BorderBrush="{DynamicResource WindowBorderColor}"
         BorderThickness="1"
         PointerPressed="MoveWindow"
         x:Name="ParentBorder">
         <StackPanel>
 
-            <DockPanel Height="28" LastChildFill="True">
+            <DockPanel Height="{StaticResource TopBorderHeight}" LastChildFill="True">
 
                 <Border
                     Background="{DynamicResource WindowButtonBackgroundColor}"
@@ -66,8 +67,8 @@
                     Background="{DynamicResource WindowSecondaryBackgroundColor}"
                     Classes="txt"
                     Foreground="{DynamicResource MainTextColor}"
-                    Height="28"
-                    LineHeight="28"
+                    Height="{StaticResource TopBorderHeight}"
+                    LineHeight="{StaticResource TopBorderHeight}"
                     Padding="30,0,0,0"
                     Text="{CompiledBinding Translation.BatchResize,
                                            Mode=OneWay}"
@@ -80,12 +81,13 @@
                 Height="1"
                 x:Name="BorderRectangle" />
 
-            <views:BatchResizeView
-                Background="{DynamicResource NoisyTexture}"
-                Focusable="True"
-                Margin="0"
-                Padding="10,2,5,10"
-                PointerPressed="MoveWindow" />
+            <customControls:MainScrollViewer x:Name="ScrollViewer">
+                <views:BatchResizeView
+                    Background="{DynamicResource NoisyTexture}"
+                    Focusable="True"
+                    Margin="0"
+                    Padding="10,2,5,10" />
+            </customControls:MainScrollViewer>
         </StackPanel>
     </Border>
 </Window>

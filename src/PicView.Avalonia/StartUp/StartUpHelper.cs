@@ -319,7 +319,7 @@ public static class StartUpHelper
         vm.TitlebarHeight = Settings.WindowProperties.Fullscreen
             || !Settings.UIProperties.ShowInterface
             ? 0
-            : SizeDefaults.TitlebarHeight;
+            : SizeDefaults.MainTitlebarHeight;
         vm.BottombarHeight = Settings.WindowProperties.Fullscreen
                              || !Settings.UIProperties.ShowInterface
             ? 0

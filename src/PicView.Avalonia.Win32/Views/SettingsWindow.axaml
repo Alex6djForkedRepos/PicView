@@ -1,6 +1,5 @@
 <Window
     CanResize="False"
-    MinHeight="700"
     SizeToContent="WidthAndHeight"
     WindowStartupLocation="CenterOwner"
     x:Class="PicView.Avalonia.Win32.Views.SettingsWindow"
@@ -17,11 +16,11 @@
         BorderThickness="1"
         PointerPressed="MoveWindow"
         x:Name="ParentBorder">
-        <Panel>
+        <StackPanel>
             <Border
                 BorderBrush="{DynamicResource MainBorderColor}"
                 BorderThickness="0,0,0,1"
-                Height="28"
+                Height="{StaticResource TopBorderHeight}"
                 VerticalAlignment="Top">
                 <DockPanel LastChildFill="True" VerticalAlignment="Top">
                     <Border
@@ -107,7 +106,7 @@
                         Background="{StaticResource WindowSecondaryBackgroundColor}"
                         Classes="txt"
                         Foreground="{DynamicResource MainTextColor}"
-                        LineHeight="28"
+                        LineHeight="{StaticResource TopBorderHeight}"
                         Padding="30,0,0,0"
                         Text="{CompiledBinding Translation.Settings,
                                                Mode=OneWay}"
@@ -116,11 +115,8 @@
                 </DockPanel>
             </Border>
 
-            <views:SettingsView
-                Background="{DynamicResource NoisyTexture}"
-                Margin="0,28,0,0"
-                x:Name="SettingsView" />
+            <views:SettingsView Background="{DynamicResource NoisyTexture}" x:Name="SettingsView" />
 
-        </Panel>
+        </StackPanel>
     </Border>
 </Window>

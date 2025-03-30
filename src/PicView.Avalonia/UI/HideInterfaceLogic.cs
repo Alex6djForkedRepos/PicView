@@ -58,7 +58,7 @@ public static class HideInterfaceLogic
                 vm.BottombarHeight = SizeDefaults.BottombarHeight;
             }
             Settings.UIProperties.ShowInterface = true;
-            vm.TitlebarHeight = SizeDefaults.TitlebarHeight;
+            vm.TitlebarHeight = SizeDefaults.MainTitlebarHeight;
             if (!GalleryFunctions.IsFullGalleryOpen)
             {
                 if (Settings.Gallery.IsBottomGalleryShown)

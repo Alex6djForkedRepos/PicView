@@ -3,7 +3,9 @@ using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Input;
 using Avalonia.Media;
+using PicView.Avalonia.UI;
 using PicView.Avalonia.ViewModels;
+using PicView.Core.Calculations;
 using ReactiveUI;
 
 namespace PicView.Avalonia.Views;
@@ -17,14 +19,13 @@ public partial class SettingsView : UserControl
     public SettingsView()
     {
         InitializeComponent();
-        
         Loaded += delegate
         {
+            Height = MainTabControl.MaxHeight = ScreenHelper.GetWindowMaxHeight() - SizeDefaults.TopBorderHeight;
             if (!Settings.Theme.Dark)
             {
                 MainTabControl.Background = Brushes.Transparent;
             }
-            MainTabControl.MinHeight = MainTabControl.Bounds.Height;
             MainTabControl.SelectionChanged += TabSelectionChanged;
             PointerPressed += OnMouseButtonDown;
 
