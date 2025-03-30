@@ -37,7 +37,26 @@ public partial class SettingsWindow : Window
             MinimizeButton.Background = Brushes.Transparent;
             MinimizeButton.BorderThickness = new Thickness(0);
             
+            GoBackBorder.Background = Brushes.Transparent;
+            GoBackBorder.BorderThickness = new Thickness(0);
+            GoBackButton.Background = Brushes.Transparent;
+            GoBackButton.BorderThickness = new Thickness(0);
+            
+            GoForwardBorder.Background = Brushes.Transparent;
+            GoForwardBorder.BorderThickness = new Thickness(0);
+            GoForwardButton.Background = Brushes.Transparent;
+            GoForwardButton.BorderThickness = new Thickness(0);
+            
             TitleText.Background = Brushes.Transparent;
+            
+            SettingsButton.Background = Brushes.Transparent;
+            SettingsButton.BorderThickness = new Thickness(0);
+
+            if (SettingsButton.Content is Button settingsIcon)
+            {
+                settingsIcon.Background = Brushes.Transparent;
+                settingsIcon.BorderThickness = new Thickness(0);
+            }
             
             if (!Application.Current.TryGetResource("SecondaryTextColor",
                     Application.Current.RequestedThemeVariant, out var textColor))

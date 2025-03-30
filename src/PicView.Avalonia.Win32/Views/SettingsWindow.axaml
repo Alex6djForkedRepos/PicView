@@ -37,32 +37,38 @@
                             Width="20" />
                     </Border>
 
-                    <Border Background="{StaticResource WindowSecondaryBackgroundColor}" DockPanel.Dock="Left">
+                    <Border
+                        Background="{DynamicResource WindowSecondaryBackgroundColor}"
+                        DockPanel.Dock="Left"
+                        x:Name="GoBackBorder">
                         <customControls:IconButton
-                            Background="{StaticResource WindowSecondaryBackgroundColor}"
+                            Background="{DynamicResource WindowSecondaryBackgroundColor}"
                             Classes="noBorderHover"
                             Command="{CompiledBinding SettingsViewModel.GoBackCommand}"
                             Data="{StaticResource ArrowLeftGeometry}"
-                            Foreground="{StaticResource SecondaryTextColor}"
+                            Foreground="{DynamicResource MainTextColor}"
                             IconHeight="12"
                             IconWidth="12"
-                            Padding="8,0" />
+                            Padding="8,0"
+                            x:Name="GoBackButton" />
                     </Border>
 
                     <Border
-                        Background="{StaticResource WindowSecondaryBackgroundColor}"
+                        Background="{DynamicResource WindowSecondaryBackgroundColor}"
                         BorderBrush="{DynamicResource MainBorderColor}"
                         BorderThickness="0,0,1,0"
-                        DockPanel.Dock="Left">
+                        DockPanel.Dock="Left"
+                        x:Name="GoForwardBorder">
                         <customControls:IconButton
-                            Background="{StaticResource WindowSecondaryBackgroundColor}"
+                            Background="{DynamicResource WindowSecondaryBackgroundColor}"
                             Classes="noBorderHover"
                             Command="{CompiledBinding SettingsViewModel.GoForwardCommand}"
                             Data="{StaticResource ArrowRightGeometry}"
-                            Foreground="{StaticResource SecondaryTextColor}"
+                            Foreground="{DynamicResource MainTextColor}"
                             IconHeight="12"
                             IconWidth="12"
-                            Padding="8,0" />
+                            Padding="8,0"
+                            x:Name="GoForwardButton" />
                     </Border>
 
                     <customControls:IconButton

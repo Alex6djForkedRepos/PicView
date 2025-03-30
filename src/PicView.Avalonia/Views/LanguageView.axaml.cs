@@ -19,22 +19,31 @@ public partial class LanguageView : UserControl
                 return;
             }
 
-            var languages = TranslationManager.GetLanguages().OrderBy(x => x);
-            foreach (var language in languages)
-            {
-                var lang = Path.GetFileNameWithoutExtension(language);
-                var isSelected = lang.Length switch
+            // Get languages and convert to a list of tuples with (language code and display name)
+            var languages = TranslationManager.GetLanguages()
+                .Select(filePath => 
                 {
-                    >= 4 => lang[^2..] == Settings.UIProperties.UserLanguage[^2..],
-                    2 => lang[..2] == Settings.UIProperties.UserLanguage[..2],
-                    _ => lang == Settings.UIProperties.UserLanguage
+                    var langCode = Path.GetFileNameWithoutExtension(filePath);
+                    var displayName = new CultureInfo(langCode).DisplayName;
+                    return (LanguageCode: langCode, DisplayName: displayName);
+                })
+                .OrderBy(x => x.DisplayName)  // Sort by display name instead of file path
+                .ToList();
+
+            foreach (var (langCode, displayName) in languages)
+            {
+                var isSelected = langCode.Length switch
+                {
+                    >= 4 => langCode[^2..] == Settings.UIProperties.UserLanguage[^2..],
+                    2 => langCode[..2] == Settings.UIProperties.UserLanguage[..2],
+                    _ => langCode == Settings.UIProperties.UserLanguage
                 };
 
                 var comboBoxItem = new ComboBoxItem
                 {
-                    Content = new CultureInfo(lang).DisplayName,
+                    Content = displayName,
                     IsSelected = isSelected,
-                    Tag = lang
+                    Tag = langCode
                 };
 
                 LanguageBox.Items.Add(comboBoxItem);

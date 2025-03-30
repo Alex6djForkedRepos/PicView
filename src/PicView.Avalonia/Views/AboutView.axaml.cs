@@ -1,4 +1,5 @@
 using System.Runtime.InteropServices;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia.Styling;
@@ -17,6 +18,33 @@ public partial class AboutView : UserControl
         Loaded += (_, _) =>
         {
             AppVersion.Text = VersionHelper.GetCurrentVersion();
+            
+            if (!Settings.Theme.Dark && !Settings.Theme.GlassTheme)
+            {
+                if (!Application.Current.TryGetResource("MainTextColor",
+                        Application.Current.RequestedThemeVariant, out var textColor))
+                {
+                    return;
+                }
+
+                if (textColor is not Color color)
+                {
+                    return;
+                }
+
+                UpdateButton.Background = Brushes.White;
+                UpdateButton.Foreground = new SolidColorBrush(color);
+                UpdateButton.Classes.Remove("altHover");
+                UpdateButton.Classes.Add("accentHover");
+                UpdateButton.PointerEntered += (_, _) =>
+                {
+                    UpdateButton.Foreground = Brushes.White;
+                };
+                UpdateButton.PointerExited += (_, _) =>
+                {
+                    UpdateButton.Foreground = new SolidColorBrush(color);
+                };
+            }
 
             KofiImage.PointerEntered += (_, _) =>
             {
