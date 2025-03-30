@@ -45,8 +45,11 @@ public static class ThemeManager
     {
         if (!settingsExists)
         {
-            application.RequestedThemeVariant = application.ActualThemeVariant;
-            Settings.Theme.Dark = application.RequestedThemeVariant == ThemeVariant.Dark;
+            // Use dark theme by default, until I can make a proper good light theme
+            application.RequestedThemeVariant = ThemeVariant.Dark;
+            
+            // application.RequestedThemeVariant = application.ActualThemeVariant;
+            // Settings.Theme.Dark = application.RequestedThemeVariant == ThemeVariant.Dark;
         }
         else
         {
