@@ -6,15 +6,12 @@ using Avalonia.Threading;
 using PicView.Avalonia.Navigation;
 using PicView.Avalonia.UI;
 using PicView.Avalonia.ViewModels;
-using PicView.Core.FileHandling;
 using PicView.Core.Localization;
 
 namespace PicView.Avalonia.FileSystem;
 
 public static class FilePicker
 {
-    private static readonly bool IsMacOS = RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
-
     public static async Task SelectAndLoadFile(MainViewModel vm)
     {
         if (vm is null)
@@ -49,19 +46,19 @@ public static class FilePicker
                 Title = $"{TranslationManager.Translation.OpenFileDialog} - PicView",
                 AllowMultiple = false,
                 FileTypeFilter = [
-                    AllFileType,
+                    GetFilePickerFileTypes.AllFileType,
                     FilePickerFileTypes.ImageAll,
-                    JpegFileType,
-                    PngFileType,
-                    GifFileType,
-                    BmpFileType,
-                    WebpFileType,
-                    TiffFileType,
-                    AvifFileType,
-                    HeicFileType,
-                    HeifFileType,
-                    SvgFileType,
-                    ArchiveFileType]
+                    GetFilePickerFileTypes.JpegFileType,
+                    GetFilePickerFileTypes.PngFileType,
+                    GetFilePickerFileTypes.GifFileType,
+                    GetFilePickerFileTypes.BmpFileType,
+                    GetFilePickerFileTypes.WebpFileType,
+                    GetFilePickerFileTypes.TiffFileType,
+                    GetFilePickerFileTypes.AvifFileType,
+                    GetFilePickerFileTypes.HeicFileType,
+                    GetFilePickerFileTypes.HeifFileType,
+                    GetFilePickerFileTypes.SvgFileType,
+                    GetFilePickerFileTypes.ArchiveFileType]
             };
 
             var files = await ExecuteOnUIThread(() => provider.OpenFilePickerAsync(options)).ConfigureAwait(false);
@@ -78,90 +75,6 @@ public static class FilePicker
         return null;
     }
 
-    private static FilePickerFileType AllFileType { get; } = new(TranslationManager.GetTranslation("SupportedFiles"))
-    {
-        Patterns = SupportedFiles.ConvertFilesToGlobFormat(),
-        AppleUniformTypeIdentifiers = ["public.image"],
-        MimeTypes = ["image/*"],
-    };
-    
-    private static FilePickerFileType AvifFileType { get; } = new(".avif")
-    {
-        Patterns = ["*.avif"],
-        AppleUniformTypeIdentifiers = ["public.avif"],
-        MimeTypes = ["image/avif"],
-    };
-    
-    private static FilePickerFileType TiffFileType { get; } = new(".tiff")
-    {
-        Patterns = ["*.tiff", "*.tif"],
-        AppleUniformTypeIdentifiers = ["public.tiff"],
-        MimeTypes = ["image/tiff"],
-    };
-    
-    private static FilePickerFileType WebpFileType { get; } = new(".webp")
-    {
-        Patterns = ["*.webp"],
-        AppleUniformTypeIdentifiers = ["org.webmproject.webp"],
-        MimeTypes = ["image/webp"],
-    };
-    
-    private static FilePickerFileType PngFileType { get; } = new(".png")
-    {
-        Patterns = ["*.png"],
-        AppleUniformTypeIdentifiers = ["public.png"],
-        MimeTypes = ["image/png"],
-    };
-    
-    private static FilePickerFileType JpegFileType { get; } = new(".jpg")
-    {
-        Patterns = ["*.jpg", "*.jpeg", "*.jfif"],
-        AppleUniformTypeIdentifiers = ["public.jpeg"],
-        MimeTypes = ["image/jpeg"],
-    };
-
-    private static FilePickerFileType ArchiveFileType { get; } = new(TranslationManager.GetTranslation("Archives"))
-    {
-        Patterns = SupportedFiles.ConvertArchivesToGlobFormat(),
-        AppleUniformTypeIdentifiers = ["public.archive"],
-        MimeTypes = ["application/zip", "application/x-rar-compressed", "application/x-tar", "application/x-7z-compressed"]
-    };
-    
-    private static FilePickerFileType GifFileType { get; } = new(".gif")
-    {
-        Patterns = ["*.gif"],
-        AppleUniformTypeIdentifiers = ["com.compuserve.gif"],
-        MimeTypes = ["image/gif"],
-    };
-    
-    private static FilePickerFileType BmpFileType { get; } = new(".bmp")
-    {
-        Patterns = ["*.bmp"],
-        AppleUniformTypeIdentifiers = ["com.microsoft.bmp"],
-        MimeTypes = ["image/bmp"],
-    };
-    
-    private static FilePickerFileType SvgFileType { get; } = new(".svg")
-    {
-        Patterns = ["*.svg"],
-        AppleUniformTypeIdentifiers = ["public.svg-image"],
-        MimeTypes = ["image/svg+xml"],
-    };
-    
-    private static FilePickerFileType HeicFileType { get; } = new(".heic")
-    {
-        Patterns = ["*.heic"],
-        AppleUniformTypeIdentifiers = ["public.heic"],
-        MimeTypes = ["image/heic"],
-    };
-    
-    private static FilePickerFileType HeifFileType { get; } = new(".heif")
-    {
-        Patterns = ["*.heif"],
-        AppleUniformTypeIdentifiers = ["public.heif"],
-        MimeTypes = ["image/heif"],
-    };
-
     public static async Task PickAndSaveFileAsAsync(string? fileName, MainViewModel vm)
     {
         var file = await PickFileForSavingAsync(fileName).ConfigureAwait(false);
@@ -177,8 +90,11 @@ public static class FilePicker
     {
         try
         {
-            var (provider, desktop) = GetProviderAndDesktop();
-            if (provider is null || desktop is null) return null;
+            if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop ||
+                desktop.MainWindow?.StorageProvider is not { } provider)
+            {
+                return null;
+            }
         
             var suggestedFileName = GetSuggestedFileName(fileName, ext);
 
@@ -187,16 +103,16 @@ public static class FilePicker
                 Title = $"{TranslationManager.Translation.SaveAs} - PicView",
                 FileTypeChoices = [
                     FilePickerFileTypes.ImageAll,
-                    JpegFileType,
-                    PngFileType,
-                    GifFileType,
-                    BmpFileType,
-                    WebpFileType,
-                    TiffFileType,
-                    AvifFileType,
-                    HeicFileType,
-                    HeifFileType,
-                    SvgFileType],
+                    GetFilePickerFileTypes.JpegFileType,
+                    GetFilePickerFileTypes.PngFileType,
+                    GetFilePickerFileTypes.GifFileType,
+                    GetFilePickerFileTypes.BmpFileType,
+                    GetFilePickerFileTypes.WebpFileType,
+                    GetFilePickerFileTypes.TiffFileType,
+                    GetFilePickerFileTypes.AvifFileType,
+                    GetFilePickerFileTypes.HeicFileType,
+                    GetFilePickerFileTypes.HeifFileType,
+                    GetFilePickerFileTypes.SvgFileType],
                 SuggestedFileName = suggestedFileName,
                 SuggestedStartLocation = await desktop.MainWindow.StorageProvider.TryGetFolderFromPathAsync(fileName).ConfigureAwait(false)
             };
@@ -250,17 +166,6 @@ public static class FilePicker
 
     }
     
-    private static (IStorageProvider? Provider, IClassicDesktopStyleApplicationLifetime? Desktop) GetProviderAndDesktop()
-    {
-        if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop ||
-            desktop.MainWindow?.StorageProvider is not { } provider)
-        {
-            return (null, null);
-        }
-        
-        return (provider, desktop);
-    }
-    
     private static string GetSuggestedFileName(string? fileName, string? ext)
     {
         if (string.IsNullOrWhiteSpace(fileName))
@@ -275,7 +180,7 @@ public static class FilePicker
     
     private static async Task<T> ExecuteOnUIThread<T>(Func<Task<T>> action)
     {
-        if (IsMacOS)
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
         {
             // Use Dispatcher to ensure we're on the UI thread for macOS
             return await Dispatcher.UIThread.InvokeAsync(action).ConfigureAwait(false);
