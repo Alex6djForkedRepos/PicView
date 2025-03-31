@@ -2,8 +2,8 @@ using System.Runtime.InteropServices;
 using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia.Threading;
+using PicView.Avalonia.Functions;
 using PicView.Avalonia.Input;
-using PicView.Avalonia.UI;
 using PicView.Avalonia.ViewModels;
 using PicView.Core.Localization;
 

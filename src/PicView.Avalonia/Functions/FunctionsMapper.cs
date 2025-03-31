@@ -10,6 +10,7 @@ using PicView.Avalonia.ImageHandling;
 using PicView.Avalonia.ImageTransformations;
 using PicView.Avalonia.Navigation;
 using PicView.Avalonia.SettingsManagement;
+using PicView.Avalonia.UI;
 using PicView.Avalonia.ViewModels;
 using PicView.Avalonia.WindowBehavior;
 using PicView.Core.FileHandling;
@@ -18,7 +19,7 @@ using PicView.Core.Keybindings;
 using PicView.Core.Navigation;
 using PicView.Core.ProcessHandling;
 
-namespace PicView.Avalonia.UI;
+namespace PicView.Avalonia.Functions;
 
 /// <summary>
 /// Used to map functions to their names, used for keyboard shortcuts

@@ -2,7 +2,7 @@
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Input;
-using PicView.Avalonia.UI;
+using PicView.Avalonia.Functions;
 
 namespace PicView.Avalonia.Input;
 

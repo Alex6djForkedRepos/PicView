@@ -7,6 +7,7 @@ using Avalonia.Media;
 using PicView.Avalonia.Clipboard;
 using PicView.Avalonia.Converters;
 using PicView.Avalonia.FileSystem;
+using PicView.Avalonia.Functions;
 using PicView.Avalonia.Gallery;
 using PicView.Avalonia.ImageTransformations;
 using PicView.Avalonia.Interfaces;
@@ -45,249 +46,249 @@ public class MainViewModel : ReactiveObject
 
         #region Window commands
 
-        ExitCommand = ReactiveCommand.CreateFromTask(WindowFunctions.Close);
-        MinimizeCommand = ReactiveCommand.CreateFromTask(WindowFunctions.Minimize);
-        MaximizeCommand = ReactiveCommand.CreateFromTask(WindowFunctions.MaximizeRestore);
-        RestoreCommand = ReactiveCommand.Create(WindowFunctions.Restore);
-        ToggleFullscreenCommand = ReactiveCommand.CreateFromTask(FunctionsMapper.ToggleFullscreen);
-        NewWindowCommand = ReactiveCommand.Create(ProcessHelper.StartNewProcess);
+        ExitCommand = FunctionsHelper.CreateReactiveCommand(WindowFunctions.Close);
+        MinimizeCommand = FunctionsHelper.CreateReactiveCommand(WindowFunctions.Minimize);
+        MaximizeCommand = FunctionsHelper.CreateReactiveCommand(WindowFunctions.MaximizeRestore);
+        RestoreCommand = FunctionsHelper.CreateReactiveCommand(WindowFunctions.Restore);
+        ToggleFullscreenCommand = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.ToggleFullscreen);
+        NewWindowCommand = FunctionsHelper.CreateReactiveCommand(ProcessHelper.StartNewProcess);
 
-        ShowExifWindowCommand = ReactiveCommand.Create(platformSpecificService.ShowExifWindow);
-        ShowSettingsWindowCommand = ReactiveCommand.Create(platformSpecificService.ShowSettingsWindow);
-        ShowKeybindingsWindowCommand = ReactiveCommand.Create(platformSpecificService.ShowKeybindingsWindow);
-        ShowAboutWindowCommand = ReactiveCommand.Create(platformSpecificService.ShowAboutWindow);
-        ShowBatchResizeWindowCommand = ReactiveCommand.Create(platformSpecificService.ShowBatchResizeWindow);
+        ShowExifWindowCommand = FunctionsHelper.CreateReactiveCommand(platformSpecificService.ShowExifWindow);
+        ShowSettingsWindowCommand = FunctionsHelper.CreateReactiveCommand(platformSpecificService.ShowSettingsWindow);
+        ShowKeybindingsWindowCommand = FunctionsHelper.CreateReactiveCommand(platformSpecificService.ShowKeybindingsWindow);
+        ShowAboutWindowCommand = FunctionsHelper.CreateReactiveCommand(platformSpecificService.ShowAboutWindow);
+        ShowBatchResizeWindowCommand = FunctionsHelper.CreateReactiveCommand(platformSpecificService.ShowBatchResizeWindow);
         ShowSingleImageResizeWindowCommand =
-            ReactiveCommand.Create(platformSpecificService.ShowSingleImageResizeWindow);
-        ShowEffectsWindowCommand = ReactiveCommand.Create(platformSpecificService.ShowEffectsWindow);
+            FunctionsHelper.CreateReactiveCommand(platformSpecificService.ShowSingleImageResizeWindow);
+        ShowEffectsWindowCommand = FunctionsHelper.CreateReactiveCommand(platformSpecificService.ShowEffectsWindow);
 
         #endregion Window commands
 
         #region Navigation Commands
 
-        NextCommand = ReactiveCommand.Create(() => { Task.Run(FunctionsMapper.Next); });
+        NextCommand = FunctionsHelper.CreateReactiveCommand(() => { Task.Run(FunctionsMapper.Next); });
 
-        NextButtonCommand = ReactiveCommand.Create(() => { UIHelper.NextButtonNavigation(this); });
+        NextButtonCommand = FunctionsHelper.CreateReactiveCommand(() => { UIHelper.NextButtonNavigation(this); });
 
-        NextArrowButtonCommand = ReactiveCommand.Create(() => { UIHelper.NextArrowButtonNavigation(this); });
+        NextArrowButtonCommand = FunctionsHelper.CreateReactiveCommand(() => { UIHelper.NextArrowButtonNavigation(this); });
 
-        NextFolderCommand = ReactiveCommand.Create(() => { Task.Run(FunctionsMapper.NextFolder); });
+        NextFolderCommand = FunctionsHelper.CreateReactiveCommand(() => { Task.Run(FunctionsMapper.NextFolder); });
 
-        PreviousCommand = ReactiveCommand.Create(() => { Task.Run(FunctionsMapper.Prev); });
+        PreviousCommand = FunctionsHelper.CreateReactiveCommand(() => { Task.Run(FunctionsMapper.Prev); });
 
-        PreviousButtonCommand = ReactiveCommand.Create(() => { UIHelper.PreviousButtonNavigation(this); });
+        PreviousButtonCommand = FunctionsHelper.CreateReactiveCommand(() => { UIHelper.PreviousButtonNavigation(this); });
 
-        PreviousArrowButtonCommand = ReactiveCommand.Create(() => { UIHelper.PreviousArrowButtonNavigation(this); });
+        PreviousArrowButtonCommand = FunctionsHelper.CreateReactiveCommand(() => { UIHelper.PreviousArrowButtonNavigation(this); });
 
-        PreviousFolderCommand = ReactiveCommand.Create(() => { Task.Run(FunctionsMapper.PrevFolder); });
+        PreviousFolderCommand = FunctionsHelper.CreateReactiveCommand(() => { Task.Run(FunctionsMapper.PrevFolder); });
 
-        Skip10Command = ReactiveCommand.CreateFromTask(FunctionsMapper.Next10);
+        Skip10Command = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.Next10);
 
-        Skip100Command = ReactiveCommand.CreateFromTask(FunctionsMapper.Next100);
+        Skip100Command = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.Next100);
 
-        Prev10Command = ReactiveCommand.CreateFromTask(FunctionsMapper.Prev10);
+        Prev10Command = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.Prev10);
 
-        Prev100Command = ReactiveCommand.CreateFromTask(FunctionsMapper.Prev100);
+        Prev100Command = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.Prev100);
 
-        FirstCommand = ReactiveCommand.CreateFromTask(FunctionsMapper.First);
+        FirstCommand = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.First);
 
-        LastCommand = ReactiveCommand.CreateFromTask(FunctionsMapper.Last);
+        LastCommand = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.Last);
 
-        ReloadCommand = ReactiveCommand.CreateFromTask(FunctionsMapper.Reload);
+        ReloadCommand = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.Reload);
 
         #endregion Navigation Commands
 
         #region Sort Commands
 
-        SortFilesByNameCommand = ReactiveCommand.CreateFromTask(FunctionsMapper.SortFilesByName);
+        SortFilesByNameCommand = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.SortFilesByName);
 
-        SortFilesByCreationTimeCommand = ReactiveCommand.CreateFromTask(FunctionsMapper.SortFilesByCreationTime);
+        SortFilesByCreationTimeCommand = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.SortFilesByCreationTime);
 
-        SortFilesByLastAccessTimeCommand = ReactiveCommand.CreateFromTask(FunctionsMapper.SortFilesByLastAccessTime);
+        SortFilesByLastAccessTimeCommand = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.SortFilesByLastAccessTime);
 
-        SortFilesBySizeCommand = ReactiveCommand.CreateFromTask(FunctionsMapper.SortFilesBySize);
+        SortFilesBySizeCommand = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.SortFilesBySize);
 
-        SortFilesByExtensionCommand = ReactiveCommand.CreateFromTask(FunctionsMapper.SortFilesByExtension);
+        SortFilesByExtensionCommand = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.SortFilesByExtension);
 
-        SortFilesRandomlyCommand = ReactiveCommand.CreateFromTask(FunctionsMapper.SortFilesRandomly);
+        SortFilesRandomlyCommand = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.SortFilesRandomly);
 
-        SortFilesAscendingCommand = ReactiveCommand.CreateFromTask(FunctionsMapper.SortFilesAscending);
+        SortFilesAscendingCommand = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.SortFilesAscending);
 
-        SortFilesDescendingCommand = ReactiveCommand.CreateFromTask(FunctionsMapper.SortFilesDescending);
+        SortFilesDescendingCommand = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.SortFilesDescending);
 
         #endregion Sort Commands
 
         #region Menus
 
-        CloseMenuCommand = ReactiveCommand.CreateFromTask(FunctionsMapper.CloseMenus);
+        CloseMenuCommand = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.CloseMenus);
 
-        ToggleFileMenuCommand = ReactiveCommand.CreateFromTask(FunctionsMapper.ToggleFileMenu);
+        ToggleFileMenuCommand = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.ToggleFileMenu);
 
-        ToggleImageMenuCommand = ReactiveCommand.CreateFromTask(FunctionsMapper.ToggleImageMenu);
+        ToggleImageMenuCommand = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.ToggleImageMenu);
 
-        ToggleSettingsMenuCommand = ReactiveCommand.CreateFromTask(FunctionsMapper.ToggleSettingsMenu);
+        ToggleSettingsMenuCommand = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.ToggleSettingsMenu);
 
-        ToggleToolsMenuCommand = ReactiveCommand.CreateFromTask(FunctionsMapper.ToggleToolsMenu);
+        ToggleToolsMenuCommand = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.ToggleToolsMenu);
 
         #endregion Menus
 
         #region Image commands
 
-        RotateLeftCommand = ReactiveCommand.CreateFromTask(FunctionsMapper.RotateLeft);
-        RotateLeftButtonCommand = ReactiveCommand.CreateFromTask(async () =>
+        RotateLeftCommand = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.RotateLeft);
+        RotateLeftButtonCommand = FunctionsHelper.CreateReactiveCommand(async () =>
         {
             await Rotation.RotateLeft(this, Rotation.RotationButton.RotateLeftButton);
         });
 
-        RotateRightCommand = ReactiveCommand.CreateFromTask(FunctionsMapper.RotateRight);
-        RotateRightButtonCommand = ReactiveCommand.CreateFromTask(async () =>
+        RotateRightCommand = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.RotateRight);
+        RotateRightButtonCommand = FunctionsHelper.CreateReactiveCommand(async () =>
         {
             await Rotation.RotateRight(this, Rotation.RotationButton.RotateRightButton);
         });
 
-        RotateRightWindowBorderButtonCommand = ReactiveCommand.CreateFromTask(async () =>
+        RotateRightWindowBorderButtonCommand = FunctionsHelper.CreateReactiveCommand(async () =>
         {
             await Rotation.RotateRight(this, Rotation.RotationButton.WindowBorderButton);
         });
 
-        FlipCommand = ReactiveCommand.CreateFromTask(FunctionsMapper.Flip);
+        FlipCommand = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.Flip);
 
-        StretchCommand = ReactiveCommand.CreateFromTask(FunctionsMapper.Stretch);
+        StretchCommand = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.Stretch);
 
-        CropCommand = ReactiveCommand.CreateFromTask(FunctionsMapper.Crop);
+        CropCommand = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.Crop);
 
-        ToggleScrollCommand = ReactiveCommand.CreateFromTask(FunctionsMapper.ToggleScroll);
+        ToggleScrollCommand = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.ToggleScroll);
 
-        OptimizeImageCommand = ReactiveCommand.CreateFromTask(FunctionsMapper.OptimizeImage);
+        OptimizeImageCommand = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.OptimizeImage);
 
-        ChangeBackgroundCommand = ReactiveCommand.CreateFromTask(FunctionsMapper.ChangeBackground);
+        ChangeBackgroundCommand = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.ChangeBackground);
 
-        ShowSideBySideCommand = ReactiveCommand.CreateFromTask(FunctionsMapper.SideBySide);
+        ShowSideBySideCommand = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.SideBySide);
 
         #endregion Image commands
 
         #region File commands
 
-        OpenFileCommand = ReactiveCommand.Create(() => { Task.Run(FunctionsMapper.Open); });
+        OpenFileCommand = FunctionsHelper.CreateReactiveCommand(() => { Task.Run(FunctionsMapper.Open); });
 
-        OpenLastFileCommand = ReactiveCommand.Create(() => { Task.Run(FunctionsMapper.OpenLastFile); });
+        OpenLastFileCommand = FunctionsHelper.CreateReactiveCommand(() => { Task.Run(FunctionsMapper.OpenLastFile); });
 
-        SaveFileCommand = ReactiveCommand.CreateFromTask(FunctionsMapper.Save);
+        SaveFileCommand = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.Save);
 
-        SaveFileAsCommand = ReactiveCommand.CreateFromTask(FunctionsMapper.SaveAs);
+        SaveFileAsCommand = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.SaveAs);
 
-        CopyFileCommand = ReactiveCommand.CreateFromTask<string>(CopyFileTask);
+        CopyFileCommand = FunctionsHelper.CreateReactiveCommand<string>(CopyFileTask);
 
-        CopyFilePathCommand = ReactiveCommand.CreateFromTask<string>(CopyFilePathTask);
+        CopyFilePathCommand = FunctionsHelper.CreateReactiveCommand<string>(CopyFilePathTask);
 
-        FilePropertiesCommand = ReactiveCommand.CreateFromTask<string>(ShowFilePropertiesTask);
+        FilePropertiesCommand = FunctionsHelper.CreateReactiveCommand<string>(ShowFilePropertiesTask);
 
-        CopyImageCommand = ReactiveCommand.CreateFromTask(FunctionsMapper.CopyImage);
+        CopyImageCommand = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.CopyImage);
 
-        CopyBase64Command = ReactiveCommand.CreateFromTask<string>(CopyBase64Task);
+        CopyBase64Command = FunctionsHelper.CreateReactiveCommand<string>(CopyBase64Task);
 
-        CutCommand = ReactiveCommand.CreateFromTask<string>(CutFileTask);
+        CutCommand = FunctionsHelper.CreateReactiveCommand<string>(CutFileTask);
 
-        PasteCommand = ReactiveCommand.Create(() => { Task.Run(FunctionsMapper.Paste); });
+        PasteCommand = FunctionsHelper.CreateReactiveCommand(() => { Task.Run(FunctionsMapper.Paste); });
 
-        OpenWithCommand = ReactiveCommand.CreateFromTask<string>(OpenWithTask);
+        OpenWithCommand = FunctionsHelper.CreateReactiveCommand<string>(OpenWithTask);
 
-        RenameCommand = ReactiveCommand.CreateFromTask(FunctionsMapper.Rename);
+        RenameCommand = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.Rename);
 
-        ResizeCommand = ReactiveCommand.CreateFromTask<int>(ResizeImageByPercentage);
-        ConvertCommand = ReactiveCommand.CreateFromTask<int>(ConvertFileExtension);
+        ResizeCommand = FunctionsHelper.CreateReactiveCommand<int>(ResizeImageByPercentage);
+        ConvertCommand = FunctionsHelper.CreateReactiveCommand<int>(ConvertFileExtension);
 
-        DuplicateFileCommand = ReactiveCommand.CreateFromTask<string>(DuplicateFileTask);
+        DuplicateFileCommand = FunctionsHelper.CreateReactiveCommand<string>(DuplicateFileTask);
 
-        PrintCommand = ReactiveCommand.CreateFromTask<string>(PrintTask);
+        PrintCommand = FunctionsHelper.CreateReactiveCommand<string>(PrintTask);
 
-        DeleteFileCommand = ReactiveCommand.CreateFromTask<string>(DeleteFileTask);
+        DeleteFileCommand = FunctionsHelper.CreateReactiveCommand<string>(DeleteFileTask);
 
-        RecycleFileCommand = ReactiveCommand.CreateFromTask<string>(RecycleFileTask);
+        RecycleFileCommand = FunctionsHelper.CreateReactiveCommand<string>(RecycleFileTask);
 
-        LocateOnDiskCommand = ReactiveCommand.CreateFromTask<string>(LocateOnDiskTask);
+        LocateOnDiskCommand = FunctionsHelper.CreateReactiveCommand<string>(LocateOnDiskTask);
 
-        SetAsWallpaperCommand = ReactiveCommand.CreateFromTask<string>(SetAsWallpaperTask);
-        SetAsWallpaperTiledCommand = ReactiveCommand.CreateFromTask<string>(SetAsWallpaperTiledTask);
-        SetAsWallpaperStretchedCommand = ReactiveCommand.CreateFromTask<string>(SetAsWallpaperStretchedTask);
-        SetAsWallpaperCenteredCommand = ReactiveCommand.CreateFromTask<string>(SetAsWallpaperCenteredTask);
-        SetAsWallpaperFilledCommand = ReactiveCommand.CreateFromTask<string>(SetAsWallpaperFilledTask);
+        SetAsWallpaperCommand = FunctionsHelper.CreateReactiveCommand<string>(SetAsWallpaperTask);
+        SetAsWallpaperTiledCommand = FunctionsHelper.CreateReactiveCommand<string>(SetAsWallpaperTiledTask);
+        SetAsWallpaperStretchedCommand = FunctionsHelper.CreateReactiveCommand<string>(SetAsWallpaperStretchedTask);
+        SetAsWallpaperCenteredCommand = FunctionsHelper.CreateReactiveCommand<string>(SetAsWallpaperCenteredTask);
+        SetAsWallpaperFilledCommand = FunctionsHelper.CreateReactiveCommand<string>(SetAsWallpaperFilledTask);
 
-        SetAsLockScreenCommand = ReactiveCommand.CreateFromTask<string>(SetAsLockScreenTask);
+        SetAsLockScreenCommand = FunctionsHelper.CreateReactiveCommand<string>(SetAsLockScreenTask);
 
         #endregion File commands
 
         #region EXIF commands
 
-        SetExifRating0Command = ReactiveCommand.CreateFromTask(FunctionsMapper.Set0Star);
-        SetExifRating1Command = ReactiveCommand.CreateFromTask(FunctionsMapper.Set1Star);
-        SetExifRating2Command = ReactiveCommand.CreateFromTask(FunctionsMapper.Set2Star);
-        SetExifRating3Command = ReactiveCommand.CreateFromTask(FunctionsMapper.Set3Star);
-        SetExifRating4Command = ReactiveCommand.CreateFromTask(FunctionsMapper.Set4Star);
-        SetExifRating5Command = ReactiveCommand.CreateFromTask(FunctionsMapper.Set5Star);
+        SetExifRating0Command = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.Set0Star);
+        SetExifRating1Command = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.Set1Star);
+        SetExifRating2Command = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.Set2Star);
+        SetExifRating3Command = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.Set3Star);
+        SetExifRating4Command = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.Set4Star);
+        SetExifRating5Command = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.Set5Star);
 
-        OpenGoogleLinkCommand = ReactiveCommand.CreateFromTask(FunctionsMapper.OpenGoogleMaps);
-        OpenBingLinkCommand = ReactiveCommand.CreateFromTask(FunctionsMapper.OpenBingMaps);
+        OpenGoogleLinkCommand = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.OpenGoogleMaps);
+        OpenBingLinkCommand = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.OpenBingMaps);
 
         #endregion EXIF commands
 
         #region Gallery Commands
 
-        ToggleGalleryCommand = ReactiveCommand.CreateFromTask(FunctionsMapper.ToggleGallery);
+        ToggleGalleryCommand = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.ToggleGallery);
 
-        ToggleBottomGalleryCommand = ReactiveCommand.CreateFromTask(FunctionsMapper.OpenCloseBottomGallery);
+        ToggleBottomGalleryCommand = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.OpenCloseBottomGallery);
 
-        CloseGalleryCommand = ReactiveCommand.CreateFromTask(FunctionsMapper.CloseGallery);
+        CloseGalleryCommand = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.CloseGallery);
 
-        GalleryItemStretchCommand = ReactiveCommand.Create<string>(SetGalleryItemStretch);
+        GalleryItemStretchCommand = FunctionsHelper.CreateReactiveCommand<string>(SetGalleryItemStretch);
 
         #endregion Gallery Commands
 
         #region UI Commands
 
-        ToggleUICommand = ReactiveCommand.CreateFromTask(FunctionsMapper.ToggleInterface);
+        ToggleUICommand = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.ToggleInterface);
 
-        ToggleBottomNavBarCommand = ReactiveCommand.CreateFromTask(FunctionsMapper.ToggleBottomToolbar);
+        ToggleBottomNavBarCommand = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.ToggleBottomToolbar);
 
-        ToggleBottomGalleryShownInHiddenUICommand = ReactiveCommand.CreateFromTask(async () =>
+        ToggleBottomGalleryShownInHiddenUICommand = FunctionsHelper.CreateReactiveCommand(async () =>
         {
             await HideInterfaceLogic.ToggleBottomGalleryShownInHiddenUI(this);
         });
 
-        ToggleFadeInButtonsOnHoverCommand = ReactiveCommand.CreateFromTask(async () =>
+        ToggleFadeInButtonsOnHoverCommand = FunctionsHelper.CreateReactiveCommand(async () =>
         {
             await HideInterfaceLogic.ToggleFadeInButtonsOnHover(this);
         });
 
-        ChangeCtrlZoomCommand = ReactiveCommand.CreateFromTask(FunctionsMapper.ChangeCtrlZoom);
+        ChangeCtrlZoomCommand = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.ChangeCtrlZoom);
 
-        ColorPickerCommand = ReactiveCommand.CreateFromTask(FunctionsMapper.ColorPicker);
+        ColorPickerCommand = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.ColorPicker);
 
-        SlideshowCommand = ReactiveCommand.CreateFromTask<int>(StartSlideShowTask);
+        SlideshowCommand = FunctionsHelper.CreateReactiveCommand<int>(StartSlideShowTask);
 
-        ToggleTaskbarProgressCommand = ReactiveCommand.CreateFromTask(FunctionsMapper.ToggleTaskbarProgress);
+        ToggleTaskbarProgressCommand = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.ToggleTaskbarProgress);
 
         #endregion UI Commands
 
         #region Settings commands
 
-        ChangeAutoFitCommand = ReactiveCommand.CreateFromTask(FunctionsMapper.AutoFitWindow);
+        ChangeAutoFitCommand = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.AutoFitWindow);
 
-        ChangeTopMostCommand = ReactiveCommand.CreateFromTask(FunctionsMapper.SetTopMost);
+        ChangeTopMostCommand = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.SetTopMost);
 
-        ToggleSubdirectoriesCommand = ReactiveCommand.CreateFromTask(FunctionsMapper.ToggleSubdirectories);
+        ToggleSubdirectoriesCommand = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.ToggleSubdirectories);
 
-        ToggleLoopingCommand = ReactiveCommand.CreateFromTask(FunctionsMapper.ToggleLooping);
+        ToggleLoopingCommand = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.ToggleLooping);
 
-        ResetSettingsCommand = ReactiveCommand.CreateFromTask(FunctionsMapper.ResetSettings);
+        ResetSettingsCommand = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.ResetSettings);
 
-        RestartCommand = ReactiveCommand.CreateFromTask(FunctionsMapper.Restart);
+        RestartCommand = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.Restart);
 
-        ToggleUsingTouchpadCommand = ReactiveCommand.CreateFromTask(FunctionsMapper.ToggleUsingTouchpad);
+        ToggleUsingTouchpadCommand = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.ToggleUsingTouchpad);
         
-        ShowSettingsFileCommand = ReactiveCommand.CreateFromTask(FunctionsMapper.ShowSettingsFile);
+        ShowSettingsFileCommand = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.ShowSettingsFile);
         
-        ShowKeybindingsFileCommand = ReactiveCommand.CreateFromTask(FunctionsMapper.ShowKeybindingsFile);
+        ShowKeybindingsFileCommand = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.ShowKeybindingsFile);
 
         #endregion Settings commands
     }

@@ -1,6 +1,7 @@
 ﻿using System.Reactive.Linq;
 using System.Runtime.InteropServices;
 using Avalonia.Input;
+using PicView.Avalonia.Functions;
 using PicView.Avalonia.Input;
 using PicView.Avalonia.UI;
 using PicView.Avalonia.ViewModels;

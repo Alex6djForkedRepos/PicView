@@ -6,8 +6,8 @@ using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.Styling;
 using Avalonia.Threading;
+using PicView.Avalonia.Functions;
 using PicView.Avalonia.Input;
-using PicView.Avalonia.UI;
 using PicView.Core.Localization;
 
 namespace PicView.Avalonia.CustomControls;

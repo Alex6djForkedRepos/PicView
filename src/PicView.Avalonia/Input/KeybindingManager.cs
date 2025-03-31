@@ -2,8 +2,8 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Avalonia.Input;
+using PicView.Avalonia.Functions;
 using PicView.Avalonia.Interfaces;
-using PicView.Avalonia.UI;
 using PicView.Core.Keybindings;
 
 namespace PicView.Avalonia.Input;
