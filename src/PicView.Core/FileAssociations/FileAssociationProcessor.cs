@@ -2,13 +2,39 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using PicView.Core.FileHandling;
 using PicView.Core.ProcessHandling;
 
 namespace PicView.Core.FileAssociations;
 
 /// <summary>
-/// Handles the processing of file association operations, including elevation for Windows and handling command-line arguments.
+/// Models for file association instructions
+/// </summary>
+public class FileAssociationInstructions
+{
+    public List<AssociationItem> ExtensionsToAssociate { get; set; } = [];
+    public List<string> ExtensionsToUnassociate { get; set; } = [];
+}
+
+public class AssociationItem
+{
+    public string Extension { get; set; } = string.Empty;
+    public string? Description { get; set; }
+}
+
+[JsonSourceGenerationOptions(AllowTrailingCommas = true, WriteIndented = true)]
+[JsonSerializable(typeof(FileAssociationInstructions))]
+[JsonSerializable(typeof(AssociationItem))]
+[JsonSerializable(typeof(List<AssociationItem>))]
+[JsonSerializable(typeof(List<string>))]
+internal partial class FileAssociationSourceGenerationContext : JsonSerializerContext
+{
+}
+
+/// <summary>
+/// Processes file associations through temporary files to handle large sets of associations.
 /// </summary>
 public static class FileAssociationProcessor
 {
@@ -49,11 +75,18 @@ public static class FileAssociationProcessor
         {
             if (arg.StartsWith("associate:", StringComparison.OrdinalIgnoreCase))
             {
-                await ProcessAssociationArgument(arg);
-            }
-            else if (arg.StartsWith("unassociate:", StringComparison.OrdinalIgnoreCase))
-            {
-                await ProcessUnassociationArgument(arg);
+                // Process the file path after the "associate:" prefix
+                var filePath = arg["associate:".Length..].Trim();
+                Debug.WriteLine($"Loading association file from path: {filePath}");
+                
+                if (File.Exists(filePath))
+                {
+                    await ProcessAssociationFile(filePath);
+                }
+                else
+                {
+                    Debug.WriteLine($"Association file not found: {filePath}");
+                }
             }
         }
         catch (Exception ex)
@@ -68,70 +101,79 @@ public static class FileAssociationProcessor
 
     private static async Task<bool> HandleNonAdminWindowsAssociations(ReadOnlyObservableCollection<FileTypeGroup> groups)
     {
-        // Build list of extensions to associate with descriptions
-        var extensionsToAssociate = new List<string>();
-        var extensionsToUnassociate = new List<string>();
-
-        foreach (var group in groups)
+        try
         {
-            foreach (var fileType in group.FileTypes)
+            // Create the instructions object
+            var instructions = new FileAssociationInstructions();
+
+            foreach (var group in groups)
             {
-                if (!fileType.IsSelected.HasValue)
+                foreach (var fileType in group.FileTypes)
                 {
-                    continue; // Skip null selections
-                }
-
-                foreach (var extension in fileType.Extensions)
-                {
-                    // Make sure to properly handle extensions that contain commas
-                    var individualExtensions =
-                        extension.Split([',', ' '], StringSplitOptions.RemoveEmptyEntries);
-
-                    foreach (var ext in individualExtensions)
+                    if (!fileType.IsSelected.HasValue)
                     {
-                        var cleanExt = ext.Trim();
-                        if (!cleanExt.StartsWith('.'))
-                        {
-                            cleanExt = "." + cleanExt;
-                        }
+                        continue; // Skip null selections
+                    }
 
-                        if (fileType.IsSelected.Value)
+                    foreach (var extension in fileType.Extensions)
+                    {
+                        // Make sure to properly handle extensions that contain commas
+                        var individualExtensions = extension.Split([',', ' '], StringSplitOptions.RemoveEmptyEntries);
+
+                        foreach (var ext in individualExtensions)
                         {
-                            // Add to association list
-                            extensionsToAssociate.Add($"{cleanExt}|{fileType.Description}");
-                        }
-                        else
-                        {
-                            // Add to unassociation list
-                            extensionsToUnassociate.Add($"{cleanExt}");
+                            var cleanExt = ext.Trim();
+                            if (!cleanExt.StartsWith('.'))
+                            {
+                                cleanExt = "." + cleanExt;
+                            }
+
+                            if (fileType.IsSelected.Value)
+                            {
+                                // Add to association list
+                                instructions.ExtensionsToAssociate.Add(new AssociationItem
+                                {
+                                    Extension = cleanExt,
+                                    Description = fileType.Description
+                                });
+                            }
+                            else
+                            {
+                                // Add to unassociation list
+                                instructions.ExtensionsToUnassociate.Add(cleanExt);
+                            }
                         }
                     }
                 }
             }
+
+            // If nothing to do, return early
+            if (instructions.ExtensionsToAssociate.Count == 0 && instructions.ExtensionsToUnassociate.Count == 0)
+            {
+                return true;
+            }
+
+            // Create a temporary file to store the instructions
+            var tempFilePath = Path.Combine(Path.GetTempPath(), $"PicViewAssoc_{Guid.NewGuid():N}.json");
+            Debug.WriteLine($"Creating association file at path: {tempFilePath}");
+            
+            // Save instructions to the temp file using the AOT-compatible serializer context
+            var json = JsonSerializer.Serialize(instructions, typeof(FileAssociationInstructions), 
+                FileAssociationSourceGenerationContext.Default);
+            await File.WriteAllTextAsync(tempFilePath, json);
+
+            // Create the command line argument
+            var associateArg = $"associate:{tempFilePath}";
+            Debug.WriteLine($"Launching elevated process with argument: {associateArg}");
+
+            // Start new process with elevated permissions
+            return await ProcessHelper.StartProcessWithElevatedPermissionAsync(associateArg);
         }
-
-        // Build arguments for the elevated process
-        var args = new List<string>();
-
-        if (extensionsToAssociate.Count > 0)
+        catch (Exception ex)
         {
-            // Create command arguments for associations
-            args.Add("associate:" + string.Join(";", extensionsToAssociate));
+            Debug.WriteLine($"Error preparing file associations: {ex.Message}");
+            return false;
         }
-
-        if (extensionsToUnassociate.Count > 0)
-        {
-            // Create command arguments for unassociations
-            args.Add("unassociate:" + string.Join(";", extensionsToUnassociate));
-        }
-
-        if (args.Count == 0)
-        {
-            return true; // Nothing to do
-        }
-
-        // Start new process with elevated permissions
-        return await ProcessHelper.StartProcessWithElevatedPermissionAsync(string.Join(" ", args));
     }
 
     private static async Task<bool> HandleDirectAssociations(ReadOnlyObservableCollection<FileTypeGroup> groups)
@@ -173,79 +215,71 @@ public static class FileAssociationProcessor
         return true;
     }
 
-    private static async Task ProcessAssociationArgument(string arg)
+    private static async Task ProcessAssociationFile(string filePath)
     {
-        var extensionsString = arg["associate:".Length..];
-        if (string.IsNullOrWhiteSpace(extensionsString))
+        try
         {
-            Debug.WriteLine("No extensions to associate found in arguments.");
-            return;
-        }
+            Debug.WriteLine($"Reading association file: {filePath}");
 
-        // Split by semicolons for different extensions
-        var extensions = extensionsString
-            .Split(';', StringSplitOptions.RemoveEmptyEntries)
-            .Select(ext => ext.Trim())
-            .ToArray();
+            // Read the JSON file
+            var json = await File.ReadAllTextAsync(filePath);
+            
+            // Use the source generation context for deserialization
+            var instructions = JsonSerializer.Deserialize(json, typeof(FileAssociationInstructions), 
+                FileAssociationSourceGenerationContext.Default) as FileAssociationInstructions;
 
-        Debug.WriteLine($"Found {extensions.Length} extensions to associate");
-
-        foreach (var extension in extensions)
-        {
-            try
+            if (instructions == null)
             {
-                // Each extension may have a description after a pipe |
-                var parts = extension.Split('|', 2);
-                var ext = parts[0].Trim();
+                Debug.WriteLine("Failed to parse association instructions from file");
+                return;
+            }
 
-                // Get description if available
-                string? description = null;
-                if (parts.Length > 1)
+            Debug.WriteLine($"Processing {instructions.ExtensionsToAssociate.Count} associations and " +
+                           $"{instructions.ExtensionsToUnassociate.Count} unassociations");
+
+            // Process associations
+            foreach (var item in instructions.ExtensionsToAssociate)
+            {
+                try
                 {
-                    description = parts[1].Trim();
+                    Debug.WriteLine($"Associating {item.Extension} with description '{item.Description}'");
+                    await FileAssociationManager.AssociateFile(item.Extension, item.Description);
                 }
-
-                Debug.WriteLine($"Associating {ext} with description '{description}'");
-                await FileAssociationManager.AssociateFile(ext, description);
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"Error associating {item.Extension}: {ex.Message}");
+                }
             }
-            catch (Exception extEx)
+
+            // Process unassociations
+            foreach (var extension in instructions.ExtensionsToUnassociate)
             {
-                Debug.WriteLine($"Error processing extension '{extension}': {extEx.Message}");
+                try
+                {
+                    Debug.WriteLine($"Unassociating {extension}");
+                    await FileAssociationManager.UnassociateFile(extension);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"Error unassociating {extension}: {ex.Message}");
+                }
             }
-        }
-    }
 
-    private static async Task ProcessUnassociationArgument(string arg)
-    {
-        var extensionsString = arg["unassociate:".Length..];
-        if (string.IsNullOrWhiteSpace(extensionsString))
-        {
-            Debug.WriteLine("No extensions to unassociate found in arguments.");
-            return;
-        }
-
-        // Split by semicolons for different extensions
-        var extensions = extensionsString
-            .Split(';', StringSplitOptions.RemoveEmptyEntries)
-            .Select(ext => ext.Trim())
-            .ToArray();
-
-        Debug.WriteLine($"Found {extensions.Length} extensions to unassociate");
-
-        foreach (var extension in extensions)
-        {
+            // Try to clean up the temp file
             try
             {
-                // For unassociate, we just need the extension (ignore any description)
-                var ext = extension.Split('|')[0].Trim();
-
-                Debug.WriteLine($"Unassociating {ext}");
-                await FileAssociationManager.UnassociateFile(ext);
+                File.Delete(filePath);
+                Debug.WriteLine($"Deleted temporary file: {filePath}");
             }
-            catch (Exception extEx)
+            catch (Exception ex)
             {
-                Debug.WriteLine($"Error unassociating extension '{extension}': {extEx.Message}");
+                Debug.WriteLine($"Failed to delete temporary file {filePath}: {ex.Message}");
             }
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"Error processing association file: {ex.Message}");
+            Debug.WriteLine($"Stack trace: {ex.StackTrace}");
         }
     }
 

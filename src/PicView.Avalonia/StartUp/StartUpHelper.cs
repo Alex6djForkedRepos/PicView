@@ -39,11 +39,9 @@ public static class StartUpHelper
             if (args.Length > 1)
             {
                 var arg = args[1];
-                if (arg.StartsWith("associate:", StringComparison.OrdinalIgnoreCase) ||
-                    arg.StartsWith("unassociate:", StringComparison.OrdinalIgnoreCase))
+                if (arg.StartsWith("associate:", StringComparison.OrdinalIgnoreCase))
                 {
-                    // This is important: we need to process the complete original argument,
-                    // not just the first part
+                    // Set file associations and exit
                     Task.Run(async () =>
                     {
                         try
@@ -51,14 +49,6 @@ public static class StartUpHelper
                             vm.PlatformService.InitiateFileAssociationService();
                             Debug.WriteLine($"Processing file association argument: {arg}");
                             await FileAssociationProcessor.ProcessFileAssociationArguments(arg);
-
-                            // Exit if this was just a file association command
-                            // and no other files were specified to be opened
-                            if (args.Length <= 2)
-                            {
-                                Debug.WriteLine("Exiting after processing file association");
-                                Environment.Exit(0);
-                            }
                         }
                         catch (Exception ex)
                         {
@@ -66,6 +56,7 @@ public static class StartUpHelper
                         }
                         finally
                         {
+                            // Always exit the elevated process after processing associations
                             Environment.Exit(0);
                         }
                     });
