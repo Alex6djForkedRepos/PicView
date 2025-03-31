@@ -440,7 +440,7 @@ public class ImageIterator : IAsyncDisposable
         {
             await _semaphore.WaitAsync();
             isRunning = true;
-            var fileList = await Task.FromResult(_vm.PlatformService.GetFiles(InitialFileInfo)).ConfigureAwait(false);
+            var fileList = await Task.FromResult(_vm.PlatformService.GetFiles(_vm.PicViewer.FileInfo)).ConfigureAwait(false);
             var oldList = ImagePaths;
             ImagePaths = fileList;
             CurrentIndex = ImagePaths.IndexOf(_vm.PicViewer.FileInfo.FullName);
