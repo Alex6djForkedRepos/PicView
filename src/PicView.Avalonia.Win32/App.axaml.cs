@@ -19,6 +19,7 @@ using PicView.Core.Localization;
 using PicView.Core.ProcessHandling;
 using PicView.Core.ViewModels;
 using PicView.Core.WindowsNT;
+using PicView.Core.WindowsNT.FileAssociation;
 using PicView.Core.WindowsNT.FileHandling;
 using PicView.Core.WindowsNT.Taskbar;
 using PicView.Core.WindowsNT.Wallpaper;
@@ -511,6 +512,12 @@ public partial class App : Application, IPlatformSpecificService
     public string DefaultJsonKeyMap()
     {
         return WindowsKeybindings.DefaultKeybindings;
+    }
+
+    public void InitiateFileAssociationService()
+    {
+        var iIFileAssociationService = new WindowsFileAssociationService();
+        FileAssociationManager.Initialize(iIFileAssociationService);
     }
 
     public void DisableScreensaver()

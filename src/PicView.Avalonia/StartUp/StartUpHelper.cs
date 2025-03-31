@@ -1,4 +1,5 @@
-﻿using System.Runtime.InteropServices;
+﻿using System.Diagnostics;
+using System.Runtime.InteropServices;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
@@ -35,35 +36,44 @@ public static class StartUpHelper
         }
         else
         {
-            if (Settings.UIProperties.OpenInSameWindow &&
-                ProcessHelper.CheckIfAnotherInstanceIsRunning())
-            {
-                HandleMultipleInstances(args);
-            }
-            else if (args.Length > 1)
+            if (args.Length > 1)
             {
                 var arg = args[1];
                 if (arg.StartsWith("associate:", StringComparison.OrdinalIgnoreCase) ||
                     arg.StartsWith("unassociate:", StringComparison.OrdinalIgnoreCase))
                 {
-                    for (int i = 1; i < args.Length; i++)
+                    // This is important: we need to process the complete original argument,
+                    // not just the first part
+                    Task.Run(async () =>
                     {
-                        var currentArg = args[i];
-                        if (currentArg.StartsWith("associate:", StringComparison.OrdinalIgnoreCase) || 
-                            currentArg.StartsWith("unassociate:", StringComparison.OrdinalIgnoreCase))
+                        try
                         {
-                            Task.Run(async () =>
+                            vm.PlatformService.InitiateFileAssociationService();
+                            Debug.WriteLine($"Processing file association argument: {arg}");
+                            await FileTypeHelper.ProcessFileAssociationArguments(arg);
+
+                            // Exit if this was just a file association command
+                            // and no other files were specified to be opened
+                            if (args.Length <= 2)
                             {
-                                // Use the helper to process the association commands
-                                await FileTypeHelper.ProcessFileAssociationArguments(currentArg);
-                                if (args.Length <= 2)
-                                {
-                                    Environment.Exit(0);
-                                }
-                            });
+                                Debug.WriteLine("Exiting after processing file association");
+                                Environment.Exit(0);
+                            }
                         }
-                    }
-                    Environment.Exit(0);
+                        catch (Exception ex)
+                        {
+                            Debug.WriteLine($"Error in file association processing: {ex.Message}");
+                        }
+                        finally
+                        {
+                            Environment.Exit(0);
+                        }
+                    });
+                }
+                else if (Settings.UIProperties.OpenInSameWindow &&
+                    ProcessHelper.CheckIfAnotherInstanceIsRunning())
+                {
+                    HandleMultipleInstances(args);
                 }
             }
         }

@@ -16,6 +16,7 @@ using PicView.Avalonia.WindowBehavior;
 using PicView.Core.FileHandling;
 using PicView.Core.Localization;
 using PicView.Core.MacOS;
+using PicView.Core.MacOS.FileAssociation;
 using PicView.Core.MacOS.Wallpaper;
 using PicView.Core.ViewModels;
 
@@ -485,8 +486,9 @@ public class App : Application, IPlatformSpecificService
         return MacOsKeybindings.DefaultKeybindings;
     }
 
-    public Task AssociateFileTypes(string s)
+    public void InitiateFileAssociationService()
     {
-        throw new NotImplementedException();
+        var iIFileAssociationService = new MacFileAssociationService();
+        FileAssociationManager.Initialize(iIFileAssociationService);
     }
 }

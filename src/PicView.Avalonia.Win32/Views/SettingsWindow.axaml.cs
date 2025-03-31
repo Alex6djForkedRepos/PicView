@@ -134,5 +134,4 @@ public partial class SettingsWindow : Window
         var iIFileAssociationService = new WindowsFileAssociationService();
         FileAssociationManager.Initialize(iIFileAssociationService);
     }
-
 }
