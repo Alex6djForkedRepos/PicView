@@ -122,6 +122,11 @@ public static class SettingsUpdater
     {
         vm.IsIncludingSubdirectories = false;
         Settings.Sorting.IncludeSubDirectories = false;
+
+        if (!NavigationManager.CanNavigate(vm))
+        {
+            return;
+        }
         
         await NavigationManager.ReloadFileListAsync().ConfigureAwait(false);
         TitleManager.SetTitle(vm);
@@ -131,6 +136,11 @@ public static class SettingsUpdater
     {
         vm.IsIncludingSubdirectories = true;
         Settings.Sorting.IncludeSubDirectories = true;
+        
+        if (!NavigationManager.CanNavigate(vm))
+        {
+            return;
+        }
         
         await NavigationManager.ReloadFileListAsync().ConfigureAwait(false);
         TitleManager.SetTitle(vm);
@@ -329,8 +339,6 @@ public static class SettingsUpdater
         }
         vm.ChangeCtrlZoomImage = scanEyeImage as DrawingImage;
     }
-    
-    
     
     public static async Task ToggleLooping(MainViewModel vm)
     {
