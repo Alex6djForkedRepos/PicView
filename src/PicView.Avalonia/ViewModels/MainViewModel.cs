@@ -372,7 +372,7 @@ public class MainViewModel : ReactiveObject
             if (Settings.WindowProperties.Fullscreen)
             {
                 return Settings.Gallery.IsBottomGalleryShown
-                    ? GetBottomGalleryItemHeight + SizeDefaults.ScrollbarSize
+                    ? GetBottomGalleryItemHeight + (SizeDefaults.ScrollbarSize - 1)
                     : 0;
             }
 
@@ -381,7 +381,7 @@ public class MainViewModel : ReactiveObject
                 return 0;
             }
 
-            return GetBottomGalleryItemHeight + SizeDefaults.ScrollbarSize;
+            return GetBottomGalleryItemHeight + (SizeDefaults.ScrollbarSize - 1);
         }
     }
 
