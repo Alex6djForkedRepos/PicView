@@ -2,8 +2,8 @@
     BorderThickness="1"
     CanResize="False"
     CornerRadius="8"
+    Focusable="True"
     SizeToContent="WidthAndHeight"
-    Title="Loading..."
     x:Class="PicView.Avalonia.Win32.Views.SingleImageResizeWindow"
     x:DataType="viewModels:MainViewModel"
     xmlns="https://github.com/avaloniaui"
@@ -20,7 +20,7 @@
         x:Name="ParentBorder">
         <StackPanel>
 
-            <DockPanel Height="28" LastChildFill="True">
+            <DockPanel Height="{StaticResource TopBorderHeight}" LastChildFill="True">
 
                 <Border
                     Background="{DynamicResource WindowButtonBackgroundColor}"
@@ -83,10 +83,7 @@
                 Height="1"
                 x:Name="BorderRectangle" />
 
-            <views:SingleImageResizeView
-                Background="{DynamicResource NoisyTexture}"
-                Focusable="True"
-                PointerPressed="MoveWindow" />
+            <views:SingleImageResizeView Background="{DynamicResource NoisyTexture}" />
         </StackPanel>
     </Border>
 </Window>
