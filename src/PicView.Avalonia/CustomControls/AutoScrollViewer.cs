@@ -212,7 +212,7 @@ public class AutoScrollViewer : ScrollViewer
             return;
         }
 
-        var speedFactor = 0.1;
+        const double speedFactor = 0.1;
         var offsetX = Math.Sign(deltaX) * Math.Max(0, Math.Abs(deltaX) - deadZone) * speedFactor;
         var offsetY = Math.Sign(deltaY) * Math.Max(0, Math.Abs(deltaY) - deadZone) * speedFactor;
 
