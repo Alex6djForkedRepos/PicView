@@ -522,11 +522,9 @@
                 Width="140" />
             <customControls:KeybindTextBox
                 Alt="True"
-                Background="{DynamicResource DisabledBackgroundColor}"
                 Classes="hover TStyle"
-                Foreground="{DynamicResource DisabledTextColor}"
-                IsReadOnly="True"
                 MethodName="ZoomIn"
+                ToolTip.Tip="{CompiledBinding Translation.ChangeKeybindingTooltip}"
                 Width="140" />
         </StackPanel>
 
@@ -543,11 +541,9 @@
                 Width="140" />
             <customControls:KeybindTextBox
                 Alt="True"
-                Background="{DynamicResource DisabledBackgroundColor}"
                 Classes="hover TStyle"
-                Foreground="{DynamicResource DisabledTextColor}"
-                IsReadOnly="True"
                 MethodName="ZoomOut"
+                ToolTip.Tip="{CompiledBinding Translation.ChangeKeybindingTooltip}"
                 Width="140" />
         </StackPanel>
 

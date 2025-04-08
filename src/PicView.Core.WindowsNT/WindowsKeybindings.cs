@@ -69,8 +69,8 @@ public static class WindowsKeybindings
                                                "PageDown": "ScrollDown",
                                                "Add": "ZoomIn",
                                                "OemPlus": "ZoomIn",
-                                               "OemMinus": "ZoomOut",
                                                "Subtract": "ZoomOut",
+                                               "OemMinus": "ZoomOut",
                                                "Delete": "DeleteFile",
                                                "Shift+Delete": "DeleteFilePermanently",
                                                "Alt+Enter": "Fullscreen"
