@@ -306,7 +306,7 @@
                         <TextBlock
                             Classes="txt"
                             Margin="0,8,0,0"
-                            Text="{CompiledBinding Exif.SizeMp,
+                            Text="{CompiledBinding Translation.SizeMp,
                                                    Mode=OneWay}"
                             Width="100" />
                         <customControls:FuncTextBox
