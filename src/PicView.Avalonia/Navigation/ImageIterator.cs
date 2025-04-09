@@ -654,10 +654,7 @@ public class ImageIterator : IAsyncDisposable
             }
             else
             {
-                var imageModel = await ProgressiveImageLoader.LoadProgressivelyAsync(
-                    new FileInfo(ImagePaths[index]), 
-                    _vm, 
-                    cts.Token);
+                var imageModel = await GetImageModel.GetImageModelAsync(new FileInfo(ImagePaths[index])).ConfigureAwait(false);
                 preloadValue = new PreLoadValue(imageModel);
             }
             

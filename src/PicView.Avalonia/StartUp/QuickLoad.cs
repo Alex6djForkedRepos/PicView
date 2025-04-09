@@ -2,7 +2,6 @@
 using PicView.Avalonia.Gallery;
 using PicView.Avalonia.ImageHandling;
 using PicView.Avalonia.Navigation;
-using PicView.Avalonia.Preloading;
 using PicView.Avalonia.UI;
 using PicView.Avalonia.ViewModels;
 using PicView.Avalonia.WindowBehavior;
@@ -50,8 +49,7 @@ public static class QuickLoad
         ImageModel? imageModel = null;
         await Task.WhenAll(
             Task.Run(() => { NavigationManager.InitializeImageIterator(vm); }, cancellationTokenSource.Token),
-            Task.Run(async () => imageModel = await ProgressiveImageLoader.LoadProgressivelyAsync(
-                fileInfo,vm, cancellationTokenSource.Token), cancellationTokenSource.Token));
+            Task.Run(async () => imageModel = await GetImageModel.GetImageModelAsync(fileInfo), cancellationTokenSource.Token));
         vm.IsLoading = false;
         await RenderingFixes(vm, imageModel, null);
         SetPicViewerValues(vm, imageModel, fileInfo);
