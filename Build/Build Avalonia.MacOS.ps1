@@ -70,7 +70,7 @@ $infoPlistContent = @"
     <key>CFBundleDisplayName</key>
     <string>PicView</string>
     <key>CFBundleIdentifier</key>
-    <string>com.ruben2776.picview</string>
+    <string>ruben2776.picview</string>
     <key>CFBundleVersion</key>
     <string>${appVersion}</string>
     <key>CFBundlePackageType</key>

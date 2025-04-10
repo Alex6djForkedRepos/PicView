@@ -448,9 +448,9 @@ public class App : Application, IPlatformSpecificService
         }
     }
 
-    public void SetAsWallpaper(string path, int wallpaperStyle)
+    public async Task SetAsWallpaper(string path, int wallpaperStyle)
     {
-        WallpaperHelper.SetWallpaper(path, -1);
+         await WallpaperHelper.SetWallpaper(path);
     }
 
     public bool SetAsLockScreen(string path)

@@ -472,10 +472,13 @@ public partial class App : Application, IPlatformSpecificService
         ProcessHelper.Print(path);
     }
 
-    public void SetAsWallpaper(string path, int wallpaperStyle)
+    public async Task SetAsWallpaper(string path, int wallpaperStyle)
     {
-        var style = (WallpaperHelper.WallpaperStyle)wallpaperStyle;
-        WallpaperHelper.SetDesktopWallpaper(path, style);
+        await Task.Run(() =>
+        {
+            var style = (WallpaperHelper.WallpaperStyle)wallpaperStyle;
+            WallpaperHelper.SetDesktopWallpaper(path, style);
+        });
     }
     
     public bool SetAsLockScreen(string path)
