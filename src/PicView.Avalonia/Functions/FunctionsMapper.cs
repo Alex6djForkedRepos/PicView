@@ -14,9 +14,9 @@ using PicView.Avalonia.UI;
 using PicView.Avalonia.ViewModels;
 using PicView.Avalonia.WindowBehavior;
 using PicView.Core.FileHandling;
+using PicView.Core.FileHistory;
 using PicView.Core.ImageDecoding;
 using PicView.Core.Keybindings;
-using PicView.Core.Navigation;
 using PicView.Core.ProcessHandling;
 
 namespace PicView.Avalonia.Functions;
@@ -507,15 +507,15 @@ public static class FunctionsMapper
 
     /// <inheritdoc cref="NavigationManager.LoadPicFromStringAsync(string, MainViewModel)" />
     public static async Task OpenLastFile() =>
-        await NavigationManager.LoadPicFromStringAsync(FileHistory.GetLastEntry(), Vm).ConfigureAwait(false);
+        await NavigationManager.LoadPicFromStringAsync(FileHistoryManager.GetLastEntry(), Vm).ConfigureAwait(false);
 
     /// <inheritdoc cref="NavigationManager.LoadPicFromStringAsync(string, MainViewModel)" />
     public static async Task OpenPreviousFileHistoryEntry() =>
-        await NavigationManager.LoadPicFromStringAsync(FileHistory.GetPreviousEntry(), Vm).ConfigureAwait(false);
+        await NavigationManager.LoadPicFromStringAsync(FileHistoryManager.GetPreviousEntry(), Vm).ConfigureAwait(false);
    
     /// <inheritdoc cref="NavigationManager.LoadPicFromStringAsync(string, MainViewModel)" />
     public static async Task OpenNextFileHistoryEntry() =>
-        await NavigationManager.LoadPicFromStringAsync(FileHistory.GetNextEntry(), Vm).ConfigureAwait(false);
+        await NavigationManager.LoadPicFromStringAsync(FileHistoryManager.GetNextEntry(), Vm).ConfigureAwait(false);
     
     /// <inheritdoc cref="FileManager.Print(string, MainViewModel)" />
     public static async Task Print() =>

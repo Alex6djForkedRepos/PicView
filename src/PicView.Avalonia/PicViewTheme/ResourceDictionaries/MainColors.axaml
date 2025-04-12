@@ -47,6 +47,8 @@
 
             <Color x:Key="DropDownBgColor">#303030</Color>
 
+            <Color x:Key="DarkenBgColor">#14000000</Color>
+
 
             <ImageBrush
                 DestinationRect="0,0,200,200"
@@ -69,7 +71,7 @@
                 Direction="360"
                 x:Key="TextShadow" />
 
-            <Color x:Key="ErrorColor">#FFFF0000</Color>
+            <Color x:Key="ErrorColor">#B51522</Color>
             <SolidColorBrush Color="{StaticResource ErrorColor}" x:Key="ErrorBrush" />
         </ResourceDictionary>
 

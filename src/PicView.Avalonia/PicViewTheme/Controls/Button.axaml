@@ -3,6 +3,8 @@
     <ControlTheme TargetType="Button" x:Key="{x:Type Button}">
         <Setter Property="ClickMode" Value="Press" />
         <Setter Property="Focusable" Value="False" />
+        <Setter Property="ToolTip.BetweenShowDelay" Value="-1" />
+        <Setter Property="ToolTip.ShowDelay" Value="900" />
 
         <Setter Property="Button.Template">
             <ControlTemplate TargetType="Button">
@@ -93,7 +95,7 @@
                 <Animation Duration="{StaticResource ButtonHoverAnimationDuration}" IterationCount="1">
                     <KeyFrame>
                         <Setter Property="Background">
-                            <SolidColorBrush Color="#992420" />
+                            <SolidColorBrush Color="{StaticResource ErrorColor}" />
                         </Setter>
                     </KeyFrame>
                     <KeyFrame Cue="1">
@@ -101,13 +103,13 @@
                             <SolidColorBrush Color="{StaticResource SecondaryTextColor}" />
                         </Setter>
                         <Setter Property="Background">
-                            <SolidColorBrush Color="#992420" />
+                            <SolidColorBrush Color="{StaticResource ErrorColor}" />
                         </Setter>
                     </KeyFrame>
                 </Animation>
             </Style.Animations>
             <Setter Property="Foreground" Value="{StaticResource SecondaryTextColor}" />
-            <Setter Property="Background" Value="#992420" />
+            <Setter Property="Background" Value="{StaticResource ErrorColor}" />
         </Style>
         <Style Selector="^.altHover:pointerover /template/ ContentPresenter#PART_ContentPresenter">
             <Style.Animations>
@@ -170,10 +172,20 @@
 
         <!--  End of animations  -->
 
-        <Style Selector="^.hover:pressed  /template/ ContentPresenter#PART_ContentPresenter">
+        <Style Selector="^.noAnimHover:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="{DynamicResource AccentColor}" />
+            <Setter Property="Foreground" Value="{DynamicResource MainTextColor}" />
+        </Style>
+
+        <Style Selector="^.active /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="{DynamicResource SecondaryAccentColor}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource SecondaryAccentColor}" />
+        </Style>
+
+        <Style Selector="^:not(.active).hover:pressed  /template/ ContentPresenter#PART_ContentPresenter">
             <Setter Property="Background" Value="{DynamicResource SecondaryAccentColor}" />
         </Style>
-        <Style Selector="^.altHover:pressed  /template/ ContentPresenter#PART_ContentPresenter">
+        <Style Selector="^:not(.active).altHover:pressed  /template/ ContentPresenter#PART_ContentPresenter">
             <Setter Property="Background" Value="{DynamicResource AltBackgroundHoverColor}" />
             <Setter Property="BorderBrush" Value="{DynamicResource SecondaryBorderColor}" />
         </Style>

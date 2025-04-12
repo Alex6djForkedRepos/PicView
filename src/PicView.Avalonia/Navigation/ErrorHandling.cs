@@ -5,8 +5,8 @@ using PicView.Avalonia.Gallery;
 using PicView.Avalonia.UI;
 using PicView.Avalonia.ViewModels;
 using PicView.Core.FileHandling;
+using PicView.Core.FileHistory;
 using PicView.Core.Gallery;
-using PicView.Core.Navigation;
 using PicView.Core.Sizing;
 using StartUpMenu = PicView.Avalonia.Views.StartUpMenu;
 
@@ -79,7 +79,7 @@ public static class ErrorHandling
         
         if (!NavigationManager.CanNavigate(vm))
         {
-            await NavigationManager.LoadPicFromStringAsync(FileHistory.GetLastEntry(), vm).ConfigureAwait(false);
+            await NavigationManager.LoadPicFromStringAsync(FileHistoryManager.GetLastEntry(), vm).ConfigureAwait(false);
             return;
         }
         

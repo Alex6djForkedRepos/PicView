@@ -95,13 +95,11 @@
                                 BorderBrush="{DynamicResource MainBorderColor}"
                                 BorderThickness="1"
                                 CornerRadius="8">
-                                <ScrollViewer>
-                                    <ItemsPresenter
-                                        Grid.IsSharedSizeScope="True"
-                                        ItemsPanel="{TemplateBinding ItemsPanel}"
-                                        Margin="2"
-                                        Name="PART_ItemsPresenter" />
-                                </ScrollViewer>
+                                <ItemsPresenter
+                                    Grid.IsSharedSizeScope="True"
+                                    ItemsPanel="{TemplateBinding ItemsPanel}"
+                                    Margin="2"
+                                    Name="PART_ItemsPresenter" />
                             </Border>
                         </Popup>
                     </Grid>
@@ -144,12 +142,12 @@
             </Setter>
         </Style>
 
-        <Style Selector="^:selected /template/ Border#root">
+        <Style Selector="^:not(.noHover):selected /template/ Border#root">
             <Setter Property="Background" Value="{DynamicResource AccentColor}" />
             <Setter Property="BorderBrush" Value="{DynamicResource AccentColor}" />
         </Style>
 
-        <Style Selector="^:selected /template/ ContentPresenter#PART_HeaderPresenter">
+        <Style Selector="^:not(.noHover):selected /template/ ContentPresenter#PART_HeaderPresenter">
             <Setter Property="Foreground" Value="{StaticResource SecondaryTextColor}" />
             <Setter Property="Effect" Value="{StaticResource TextShadow}" />
         </Style>
@@ -189,6 +187,58 @@
         </Style>
 
 
+    </ControlTheme>
+
+    <ControlTheme TargetType="MenuItem" x:Key="Slim">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Border Name="root">
+                    <Panel>
+                        <ContentPresenter
+                            Content="{TemplateBinding Header}"
+                            ContentTemplate="{TemplateBinding HeaderTemplate}"
+                            Foreground="{DynamicResource ContextMenuTextColor}"
+                            Margin="{TemplateBinding Padding}"
+                            Name="PART_HeaderPresenter"
+                            VerticalAlignment="Center">
+                            <ContentPresenter.DataTemplates>
+                                <DataTemplate DataType="sys:String">
+                                    <AccessText Text="{Binding}" />
+                                </DataTemplate>
+                            </ContentPresenter.DataTemplates>
+                        </ContentPresenter>
+                        <Popup
+                            IsLightDismissEnabled="False"
+                            IsOpen="{TemplateBinding IsSubMenuOpen,
+                                                     Mode=TwoWay}"
+                            Name="PART_Popup"
+                            Placement="RightEdgeAlignedTop">
+                            <Border
+                                Background="{DynamicResource ContextMenuBackgroundColor}"
+                                BorderBrush="{DynamicResource MainBorderColor}"
+                                BorderThickness="1"
+                                CornerRadius="8">
+                                <ItemsPresenter
+                                    Grid.IsSharedSizeScope="True"
+                                    ItemsPanel="{TemplateBinding ItemsPanel}"
+                                    Margin="2"
+                                    Name="PART_ItemsPresenter" />
+                            </Border>
+                        </Popup>
+                    </Panel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^:separator">
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Separator />
+                </ControlTemplate>
+            </Setter>
+        </Style>
     </ControlTheme>
 
     <ControlTheme TargetType="Separator" x:Key="{x:Type Separator}">

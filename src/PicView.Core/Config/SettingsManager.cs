@@ -8,16 +8,10 @@ namespace PicView.Core.Config;
 
 [JsonSourceGenerationOptions(AllowTrailingCommas = true, WriteIndented = true)]
 [JsonSerializable(typeof(AppSettings))]
-internal partial class SourceGenerationContext : JsonSerializerContext;
+internal partial class SettingsGenerationContext : JsonSerializerContext;
 
 public static class SettingsManager
 {
-    private const double CurrentSettingsVersion = 1.3;
-    private const string ConfigFileName = "UserSettings.json";
-    private const string LocalConfigPath = "Config/" + ConfigFileName;
-    private const string RoamingConfigFolder = "Ruben2776/PicView/Config";
-    private const string RoamingConfigPath = RoamingConfigFolder + "/" + ConfigFileName;
-    
     public static string? CurrentSettingsPath { get; private set; }
 
     public static AppSettings? Settings { get; private set; }
@@ -71,7 +65,7 @@ public static class SettingsManager
     /// </summary>
     private static string GetRoamingSettingsPath()
     {
-        return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), RoamingConfigPath);
+        return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), SettingsConfiguration.RoamingConfigPath);
     }
 
     /// <summary>
@@ -79,7 +73,7 @@ public static class SettingsManager
     /// </summary>
     private static string GetLocalSettingsPath()
     {
-        return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, LocalConfigPath);
+        return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, SettingsConfiguration.LocalConfigFilePath);
     }
 
     /// <summary>
@@ -97,7 +91,7 @@ public static class SettingsManager
             WindowProperties = new WindowProperties(),
             Zoom = new Zoom(),
             StartUp = new StartUp(),
-            Version = CurrentSettingsVersion
+            Version = SettingsConfiguration.CurrentSettingsVersion
         };
         // Get the default culture from the OS
         Settings.UIProperties.UserLanguage = CultureInfo.CurrentCulture.Name;
@@ -176,7 +170,7 @@ public static class SettingsManager
         var jsonString = await File.ReadAllTextAsync(path).ConfigureAwait(false);
 
         if (JsonSerializer.Deserialize(
-                jsonString, typeof(AppSettings), SourceGenerationContext.Default) is not AppSettings settings)
+                jsonString, typeof(AppSettings), SettingsGenerationContext.Default) is not AppSettings settings)
         {
             throw new JsonException("Failed to deserialize settings");
         }
@@ -250,7 +244,7 @@ public static class SettingsManager
             return;
         }
 
-        var json = JsonSerializer.Serialize(Settings, typeof(AppSettings), SourceGenerationContext.Default);
+        var json = JsonSerializer.Serialize(Settings, typeof(AppSettings), SettingsGenerationContext.Default);
         await File.WriteAllTextAsync(path, json).ConfigureAwait(false);
     }
 
@@ -259,13 +253,13 @@ public static class SettingsManager
     /// </summary>
     private static async Task<AppSettings> UpgradeSettingsIfNeededAsync(AppSettings settings)
     {
-        if (settings.Version >= CurrentSettingsVersion)
+        if (settings.Version >= SettingsConfiguration.CurrentSettingsVersion)
         {
             return settings;
         }
 
         await SynchronizeSettingsAsync(settings).ConfigureAwait(false);
-        settings.Version = CurrentSettingsVersion;
+        settings.Version = SettingsConfiguration.CurrentSettingsVersion;
 
         return settings;
     }
@@ -286,7 +280,7 @@ public static class SettingsManager
             var jsonString = await File.ReadAllTextAsync(localPath).ConfigureAwait(false);
 
             if (JsonSerializer.Deserialize(
-                    jsonString, typeof(AppSettings), SourceGenerationContext.Default) is not AppSettings existingSettings)
+                    jsonString, typeof(AppSettings), SettingsGenerationContext.Default) is not AppSettings existingSettings)
             {
                 return;
             }
@@ -310,10 +304,19 @@ public static class SettingsManager
     /// </summary>
     private static void MergeSettings(AppSettings existingSettings, AppSettings newSettings)
     {
+        existingSettings.UIProperties ??= newSettings.UIProperties;
+        existingSettings.Gallery ??= newSettings.Gallery;
+        existingSettings.Theme ??= newSettings.Theme;
+        existingSettings.Sorting ??= newSettings.Sorting;
+        existingSettings.ImageScaling ??= newSettings.ImageScaling;
+        existingSettings.WindowProperties ??= newSettings.WindowProperties;
+        existingSettings.Zoom ??= newSettings.Zoom;
+        existingSettings.StartUp ??= newSettings.StartUp;
+    
+        // Fallback for any properties missing in older versions
         foreach (var property in typeof(AppSettings).GetProperties())
         {
             var existingValue = property.GetValue(existingSettings);
-
             if (existingValue != null)
             {
                 continue;

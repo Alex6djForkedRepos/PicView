@@ -38,10 +38,6 @@
 
   
   <ItemGroup>
-    <AvaloniaXaml Remove="Themes\**" />
-    <Compile Remove="Themes\**" />
-    <EmbeddedResource Remove="Themes\**" />
-    <None Remove="Themes\**" />
     <Compile Update="Views\UC\DragDrogView.axaml.cs">
       <DependentUpon>DragDrogView.axaml</DependentUpon>
       <SubType>Code</SubType>
@@ -88,6 +84,10 @@
     </Compile>
     <Compile Update="Views\EffectsView.axaml.cs">
       <DependentUpon>EffectsView.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\UC\Buttons\PinButton.axaml.cs">
+      <DependentUpon>PinButton.axaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>

@@ -83,13 +83,13 @@
                 Height="1"
                 x:Name="BorderRectangle" />
 
-            <customControls:MainScrollViewer x:Name="ScrollViewer">
+            <customControls:AutoScrollViewer Theme="{StaticResource Main}" x:Name="ScrollViewer">
                 <views:BatchResizeView
                     Background="{DynamicResource NoisyTexture}"
                     Focusable="True"
                     Margin="0"
                     Padding="10,2,5,10" />
-            </customControls:MainScrollViewer>
+            </customControls:AutoScrollViewer>
         </StackPanel>
     </Border>
 </Window>

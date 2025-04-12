@@ -15,8 +15,8 @@ using PicView.Avalonia.ViewModels;
 using PicView.Avalonia.Views;
 using PicView.Avalonia.WindowBehavior;
 using PicView.Core.FileAssociations;
+using PicView.Core.FileHistory;
 using PicView.Core.Gallery;
-using PicView.Core.Navigation;
 using PicView.Core.ProcessHandling;
 using PicView.Core.Sizing;
 using PicView.Core.ViewModels;
@@ -147,7 +147,7 @@ public static class StartUpHelper
         }
         
         MenuManager.AddMenus();
-        FileHistory.Initialize();
+        FileHistoryManager.Initialize();
 
         Application.Current.Name = "PicView";
         

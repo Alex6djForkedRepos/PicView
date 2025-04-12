@@ -3,21 +3,23 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
+using Avalonia.Threading;
 using PicView.Avalonia.Converters;
 using PicView.Avalonia.Crop;
 using PicView.Avalonia.DragAndDrop;
 using PicView.Avalonia.Input;
-using PicView.Avalonia.Navigation;
 using PicView.Avalonia.UI;
+using PicView.Avalonia.UI.FileHistory;
 using PicView.Avalonia.ViewModels;
 using PicView.Avalonia.WindowBehavior;
-using PicView.Core.Extensions;
-using PicView.Core.Navigation;
+using PicView.Core.FileHistory;
 
 namespace PicView.Avalonia.Views;
 
 public partial class MainView : UserControl
 {
+    private FileHistoryMenuController? _historyMenuController;
+    
     public MainView()
     {
         InitializeComponent();
@@ -32,7 +34,7 @@ public partial class MainView : UserControl
             LostFocus += HandleLostFocus;
             PointerPressed += PointerPressedBehavior;
 
-            MainContextMenu.Opened += OnMainContextMenuOpened;
+            MainContextMenu.Opened += async (sender, args) =>  await OnMainContextMenuOpened(sender, args);
 
             if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
@@ -44,10 +46,22 @@ public partial class MainView : UserControl
                 MacOSWallpaperMenuItem.IsVisible = false;
             }
             
+            if (!FileHistoryManager.IsSortingDescending)
+            {
+                if (Application.Current.TryGetResource("SortAscImage",
+                        Application.Current.RequestedThemeVariant, out var sortAscImage))
+                {
+                    HistorySortButton.Icon = sortAscImage as DrawingImage;
+                }
+            }
+            
             if (DataContext is not MainViewModel vm)
             {
                 return;
             }
+            // Initialize the history menu controller
+            _historyMenuController = new FileHistoryMenuController(RecentFilesCM, HistorySortButton, HistoryClearButton, vm);
+
             HideInterfaceLogic.AddHoverButtonEvents(AltButtonsPanel, vm);
             PointerWheelChanged += async (_, e) => await vm.ImageViewer.PreviewOnPointerWheelChanged(this, e);
         };
@@ -87,87 +101,33 @@ public partial class MainView : UserControl
         DragAndDropHelper.RemoveDragDropView();
     }
 
-    private void OnMainContextMenuOpened(object? sender, EventArgs e)
+    private async Task OnMainContextMenuOpened(object? sender, EventArgs e)
     {
         if (DataContext is not MainViewModel vm)
         {
             return;
         }
-
-        CropMenuItem.IsEnabled = CropFunctions.DetermineIfShouldBeEnabled(vm);
-        ConversionHelper.DetermineIfOptimizeImageShouldBeEnabled(vm);
-
-        // Set source for ChangeCtrlZoomImage
-        if (!Application.Current.TryGetResource("ScanEyeImage", Application.Current.RequestedThemeVariant, out var scanEyeImage))
-        {
-            return;
-        }
-        if (!Application.Current.TryGetResource("LeftRightArrowsImage", Application.Current.RequestedThemeVariant, out var leftRightArrowsImage))
-        {
-            return;
-        }
-        var isNavigatingWithCtrl = Settings.Zoom.CtrlZoom;
-        vm.ChangeCtrlZoomImage = isNavigatingWithCtrl ? leftRightArrowsImage as DrawingImage : scanEyeImage as DrawingImage;
-
-        // Update file history menu items
-        UpdateFileHistoryMenuItems(vm);
-    }
-
-    private void UpdateFileHistoryMenuItems(MainViewModel vm)
-    {
-        // Clear existing items 
-        RecentFilesCM.Items.Clear();
-        var currentFilePath = NavigationManager.GetCurrentFileName;
-            
-        // Add menu items for each history entry
-        for (var i = 0; i < FileHistory.Count; i++)
-        {
-            var fileLocation = FileHistory.GetEntry(i);
-            if (string.IsNullOrEmpty(fileLocation))
-                continue;
-                
-            var isSelected = fileLocation == currentFilePath;
-            var filename = Path.GetFileNameWithoutExtension(fileLocation);
-            var header = filename.Length > 60 ? filename.Shorten(60) : filename;
-            
-            var item = new MenuItem
-            {
-                Header = header
-            };
-            if (isSelected)
-            {
-                item.Classes.Add("active");
-            }
-            
-            var filePath = fileLocation; // Local copy for the closure
-            item.Click += async delegate
-            {
-                await NavigationManager.LoadPicFromStringAsync(filePath, vm).ConfigureAwait(false);
-            };
-            
-            ToolTip.SetTip(item, fileLocation);
-            
-            RecentFilesCM.Items.Add(item);
-        }
         
-        // TODO add clear history translations
-        // Add a separator and "Clear history" option if there are items
-        // if (FileHistory.Count <= 0)
-        // {
-        //     return;
-        // }
-        //
-        // RecentFilesCM.Items.Add(new Separator());
-        //     
-        // var clearItem = new MenuItem { Header = TranslationHelper.GetTranslation("ClearHistory") };
-        // clearItem.Click += delegate
-        // {
-        //     FileHistory.Clear();
-        //     FileHistory.SaveToFile();
-        //     RecentFilesCM.Items.Clear();
-        // };
-        //     
-        // RecentFilesCM.Items.Add(clearItem);
+        await Dispatcher.UIThread.InvokeAsync(() =>
+        {
+            CropMenuItem.IsEnabled = CropFunctions.DetermineIfShouldBeEnabled(vm);
+            ConversionHelper.DetermineIfOptimizeImageShouldBeEnabled(vm);
+
+            // Set source for ChangeCtrlZoomImage
+            if (!Application.Current.TryGetResource("ScanEyeImage", Application.Current.RequestedThemeVariant, out var scanEyeImage))
+            {
+                return;
+            }
+            if (!Application.Current.TryGetResource("LeftRightArrowsImage", Application.Current.RequestedThemeVariant, out var leftRightArrowsImage))
+            {
+                return;
+            }
+            var isNavigatingWithCtrl = Settings.Zoom.CtrlZoom;
+            vm.ChangeCtrlZoomImage = isNavigatingWithCtrl ? leftRightArrowsImage as DrawingImage : scanEyeImage as DrawingImage;
+        }, DispatcherPriority.Render);
+        
+        // Update file history menu items in Dispatcher with low priority to avoid slowdown
+        await Dispatcher.UIThread.InvokeAsync(() => _historyMenuController?.UpdateFileHistoryMenu(), DispatcherPriority.Background);
     }
 
     private async Task Drop(object? sender, DragEventArgs e)

@@ -70,40 +70,40 @@ public partial class AppearanceView : UserControl
         switch ((ColorOptions)Settings.Theme.ColorTheme)
         {
             case ColorOptions.Raspberry:
-                RaspberryButton.Classes.Add("active");
+                RaspberryButton.Classes.Add("activeColorBtn");
                 break;
             case ColorOptions.Teal:
-                TealButton.Classes.Add("active");
+                TealButton.Classes.Add("activeColorBtn");
                 break;
             case ColorOptions.Emerald:
-                EmeraldButton.Classes.Add("active");
+                EmeraldButton.Classes.Add("activeColorBtn");
                 break;
             case ColorOptions.Golden:
-                GoldButton.Classes.Add("active");
+                GoldButton.Classes.Add("activeColorBtn");
                 break;
             case ColorOptions.Orange:
-                OrangeButton.Classes.Add("active");
+                OrangeButton.Classes.Add("activeColorBtn");
                 break;
             case ColorOptions.Pink:
-                PinkButton.Classes.Add("active");
+                PinkButton.Classes.Add("activeColorBtn");
                 break;
             case ColorOptions.Purple:
-                PurpleButton.Classes.Add("active");
+                PurpleButton.Classes.Add("activeColorBtn");
                 break;
             case ColorOptions.Red:
-                RedButton.Classes.Add("active");
+                RedButton.Classes.Add("activeColorBtn");
                 break;
             case ColorOptions.Ruby:
-                RubyButton.Classes.Add("active");
+                RubyButton.Classes.Add("activeColorBtn");
                 break;
             case ColorOptions.Magenta:
-                MagentaButton.Classes.Add("active");
+                MagentaButton.Classes.Add("activeColorBtn");
                 break;
             case ColorOptions.Blue:
-                BlueButton.Classes.Add("active");
+                BlueButton.Classes.Add("activeColorBtn");
                 break;
             case ColorOptions.Cyan:
-                CyanButton.Classes.Add("active");
+                CyanButton.Classes.Add("activeColorBtn");
                 break;
         }
         
@@ -157,7 +157,7 @@ public partial class AppearanceView : UserControl
 
         foreach (var button in buttons)
         {
-            button.Classes.Remove("active");
+            button.Classes.Remove("activeColorBtn");
         }
     }
     
@@ -167,40 +167,40 @@ public partial class AppearanceView : UserControl
         switch (colorTheme)
         {
             default:
-                BlueButton.Classes.Add("active");
+                BlueButton.Classes.Add("activeColorBtn");
                 break;
             case ColorOptions.Pink:
-                PinkButton.Classes.Add("active");
+                PinkButton.Classes.Add("activeColorBtn");
                 break;
             case ColorOptions.Orange:
-                OrangeButton.Classes.Add("active");
+                OrangeButton.Classes.Add("activeColorBtn");
                 break;
             case ColorOptions.Ruby:
-                RubyButton.Classes.Add("active");
+                RubyButton.Classes.Add("activeColorBtn");
                 break;
             case ColorOptions.Red:
-                RedButton.Classes.Add("active");
+                RedButton.Classes.Add("activeColorBtn");
                 break;
             case ColorOptions.Teal:
-                TealButton.Classes.Add("active");
+                TealButton.Classes.Add("activeColorBtn");
                 break;
             case ColorOptions.Raspberry:
-                RaspberryButton.Classes.Add("active");
+                RaspberryButton.Classes.Add("activeColorBtn");
                 break;
             case ColorOptions.Golden:
-                GoldButton.Classes.Add("active");
+                GoldButton.Classes.Add("activeColorBtn");
                 break;
             case ColorOptions.Purple:
-                PurpleButton.Classes.Add("active");
+                PurpleButton.Classes.Add("activeColorBtn");
                 break;
             case ColorOptions.Cyan:
-                CyanButton.Classes.Add("active");
+                CyanButton.Classes.Add("activeColorBtn");
                 break;
             case ColorOptions.Magenta:
-                MagentaButton.Classes.Add("active");
+                MagentaButton.Classes.Add("activeColorBtn");
                 break;
             case ColorOptions.Emerald:
-                EmeraldButton.Classes.Add("active");
+                EmeraldButton.Classes.Add("activeColorBtn");
                 break;
         }
 
@@ -269,34 +269,34 @@ public partial class AppearanceView : UserControl
         switch (selectedBg)
         {
             default:
-                TransparentBgButton.Classes.Add("active");
+                TransparentBgButton.Classes.Add("activeColorBtn");
                 break;
             case 1:
-                NoiseTextureButton.Classes.Add("active");
+                NoiseTextureButton.Classes.Add("activeColorBtn");
                 break;
             case 2:
-                CheckerboardButton.Classes.Add("active");
+                CheckerboardButton.Classes.Add("activeColorBtn");
                 break;
             case 3:
-                CheckerboardAltButton.Classes.Add("active");
+                CheckerboardAltButton.Classes.Add("activeColorBtn");
                 break;
             case 4:
-                WhiteBgButton.Classes.Add("active");
+                WhiteBgButton.Classes.Add("activeColorBtn");
                 break;
             case 5:
-                GrayBgButton.Classes.Add("active");
+                GrayBgButton.Classes.Add("activeColorBtn");
                 break;
             case 6:
-                DarkGrayBgButton.Classes.Add("active");
+                DarkGrayBgButton.Classes.Add("activeColorBtn");
                 break;
             case 7:
-                DarkGraySemiTransparentBgButton.Classes.Add("active");
+                DarkGraySemiTransparentBgButton.Classes.Add("activeColorBtn");
                 break;
             case 8:
-                DarkGraySemiTransparentAltBgButton.Classes.Add("active");
+                DarkGraySemiTransparentAltBgButton.Classes.Add("activeColorBtn");
                 break;
             case 9:
-                BlackBgButton.Classes.Add("active");
+                BlackBgButton.Classes.Add("activeColorBtn");
                 break;
         }
 
@@ -319,7 +319,7 @@ public partial class AppearanceView : UserControl
 
         foreach (var button in buttons)
         {
-            button.Classes.Remove("active");
+            button.Classes.Remove("activeColorBtn");
         }
     }
 }

@@ -10,6 +10,7 @@
     xmlns="https://github.com/avaloniaui"
     xmlns:buttons="clr-namespace:PicView.Avalonia.Views.UC.Buttons"
     xmlns:converters="clr-namespace:PicView.Avalonia.Converters"
+    xmlns:customControls="clr-namespace:PicView.Avalonia.CustomControls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:uc="clr-namespace:PicView.Avalonia.Views.UC"
@@ -231,7 +232,7 @@
             </MenuItem>
 
             <!--  Recent files  -->
-            <MenuItem Header="{Binding Translation.RecentFiles, Mode=OneWay}" x:Name="RecentFilesCM">
+            <MenuItem Header="{Binding Translation.RecentFiles, Mode=OneWay}">
                 <MenuItem.Icon>
                     <Path
                         Data="M504 255.531c.253 136.64-111.18 248.372-247.82 248.468-59.015.042-113.223-20.53-155.822-54.911-11.077-8.94-11.905-25.541-1.839-35.607l11.267-11.267c8.609-8.609 22.353-9.551 31.891-1.984C173.062 425.135 212.781 440 256 440c101.705 0 184-82.311 184-184 0-101.705-82.311-184-184-184-48.814 0-93.149 18.969-126.068 49.932l50.754 50.754c10.08 10.08 2.941 27.314-11.313 27.314H24c-8.837 0-16-7.163-16-16V38.627c0-14.254 17.234-21.393 27.314-11.314l49.372 49.372C129.209 34.136 189.552 8 256 8c136.81 0 247.747 110.78 248 247.531zm-180.912 78.784l9.823-12.63c8.138-10.463 6.253-25.542-4.21-33.679L288 256.349V152c0-13.255-10.745-24-24-24h-16c-13.255 0-24 10.745-24 24v135.651l65.409 50.874c10.463 8.137 25.541 6.253 33.679-4.21z"
@@ -240,6 +241,76 @@
                         Stretch="Fill"
                         Width="12" />
                 </MenuItem.Icon>
+                <MenuItem Theme="{StaticResource Slim}" x:Name="RecentFilesHeader">
+                    <MenuItem.Header>
+                        <DockPanel LastChildFill="False">
+                            <Button
+                                Classes="errorHover"
+                                CornerRadius="8,0,0,0"
+                                DockPanel.Dock="Left"
+                                Margin="0,0,5,0"
+                                Padding="8,4"
+                                x:Name="HistoryClearButton">
+                                <StackPanel Orientation="Horizontal">
+                                    <Path
+                                        Data="{StaticResource RecycleGeometry}"
+                                        Fill="{StaticResource Brush0}"
+                                        Height="12"
+                                        Stretch="Fill"
+                                        Width="12" />
+                                    <TextBlock
+                                        Classes="txt"
+                                        Margin="5,0,0,0"
+                                        Text="{CompiledBinding Translation.Clear}" />
+                                </StackPanel>
+                            </Button>
+
+                            <Button
+                                Classes="hover"
+                                DockPanel.Dock="Left"
+                                Margin="0,0,5,0"
+                                Padding="8,4"
+                                x:Name="HistoryFileButton">
+                                <StackPanel Orientation="Horizontal">
+                                    <Path
+                                        Data="{StaticResource FilePropertiesGeometry}"
+                                        Fill="{StaticResource Brush0}"
+                                        Height="12"
+                                        Stretch="Fill"
+                                        Width="12" />
+                                    <TextBlock
+                                        Classes="txt"
+                                        Margin="5,0,0,0"
+                                        Text="{CompiledBinding Translation.OpenFileHistory}" />
+                                </StackPanel>
+                            </Button>
+
+                            <customControls:IconButton
+                                Background="Transparent"
+                                Classes="hover"
+                                CornerRadius="0,8,0,0"
+                                DockPanel.Dock="Right"
+                                Icon="{StaticResource SortDescImage}"
+                                IconHeight="12"
+                                IconWidth="12"
+                                Margin="5,0,0,0"
+                                Padding="8,4"
+                                x:Name="HistorySortButton" />
+
+                        </DockPanel>
+                    </MenuItem.Header>
+                </MenuItem>
+                <Separator Background="{DynamicResource TertiaryBorderColor}" />
+                <MenuItem
+                    StaysOpenOnClick="True"
+                    Theme="{StaticResource Slim}"
+                    x:Name="RecentFilesContent">
+                    <MenuItem.Header>
+                        <customControls:AutoScrollViewer MaxHeight="450" Theme="{StaticResource Inline}">
+                            <StackPanel Margin="0,0,15,0" x:Name="RecentFilesCM" />
+                        </customControls:AutoScrollViewer>
+                    </MenuItem.Header>
+                </MenuItem>
             </MenuItem>
 
             <!--  Settings  -->

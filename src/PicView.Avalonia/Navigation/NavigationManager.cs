@@ -6,6 +6,7 @@ using PicView.Avalonia.Preloading;
 using PicView.Avalonia.UI;
 using PicView.Avalonia.ViewModels;
 using PicView.Avalonia.WindowBehavior;
+using PicView.Core.FileHistory;
 using PicView.Core.Gallery;
 using PicView.Core.ImageDecoding;
 using PicView.Core.Localization;
@@ -546,10 +547,10 @@ public static class NavigationManager
         }
 
         vm.IsLoading = false;
-        FileHistory.Add(_imageIterator.ImagePaths[index]);
+        FileHistoryManager.Add(_imageIterator.ImagePaths[index]);
         if (Settings.ImageScaling.ShowImageSideBySide)
         {
-            FileHistory.Add(_imageIterator.ImagePaths[_imageIterator.GetIteration(index, NavigateTo.Next)]);
+            FileHistoryManager.Add(_imageIterator.ImagePaths[_imageIterator.GetIteration(index, NavigateTo.Next)]);
         }
         await GalleryLoad.CheckAndReloadGallery(fileInfo, vm);
     }

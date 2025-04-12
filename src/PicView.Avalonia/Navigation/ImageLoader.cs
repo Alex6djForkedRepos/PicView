@@ -5,6 +5,7 @@ using PicView.Avalonia.Input;
 using PicView.Avalonia.UI;
 using PicView.Avalonia.ViewModels;
 using PicView.Core.ArchiveHandling;
+using PicView.Core.FileHistory;
 using PicView.Core.Gallery;
 using PicView.Core.Http;
 using PicView.Core.ImageDecoding;
@@ -245,6 +246,7 @@ public static class ImageLoader
                 await LoadPicFromDirectoryAsync(ArchiveExtraction.TempZipDirectory, vm).ConfigureAwait(false);
             }
 
+            FileHistoryManager.Add(path);
             MainKeyboardShortcuts.ClearKeyDownModifiers(); // Fix possible modifier key state issue
         }
         else
@@ -332,7 +334,7 @@ public static class ImageLoader
         vm.IsLoading = false;
         vm.PicViewer.FileInfo = fileInfo;
         vm.PicViewer.ExifOrientation = imageModel.EXIFOrientation;
-        FileHistory.Add(url);
+        FileHistoryManager.Add(url);
 
         await NavigationManager.DisposeImageIteratorAsync();
     }

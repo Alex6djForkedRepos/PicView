@@ -14,6 +14,7 @@
             Text="{CompiledBinding Translation.Language,
                                    Mode=OneWay}" />
         <ComboBox
+            AutoScrollToSelectedItem="True"
             Background="{DynamicResource SecondaryBackgroundColor}"
             BorderBrush="{DynamicResource MainBorderColor}"
             BorderThickness="1"

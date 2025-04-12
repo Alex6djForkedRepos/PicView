@@ -56,6 +56,7 @@ public class LanguageModel
     public string? ChangeKeybindingTooltip { get; set; }
     public string? ChangingThemeRequiresRestart { get; set; }
     public string? CheckForUpdates { get; set; }
+    public string? Clear { get; set; }
     public string? ClearEffects { get; set; }
     public string? ClipboardImage { get; set; }
     public string? Close { get; set; }
@@ -242,6 +243,7 @@ public class LanguageModel
     public string? OldMovie { get; set; }
     public string? Open { get; set; }
     public string? OpenFileDialog { get; set; }
+    public string? OpenFileHistory { get; set; }
     public string? OpenInSameWindow { get; set; }
     public string? OpenLastFile { get; set; }
     public string? OpenWith { get; set; }
@@ -256,6 +258,8 @@ public class LanguageModel
     public string? PercentComplete { get; set; }
     public string? PermanentlyDelete { get; set; }
     public string? PhotometricInterpretation { get; set; }
+    public string? Pin { get; set; }
+    public string? Pinned { get; set; }
     public string? Pixels { get; set; }
     public string? Portrait { get; set; }
     public string? Posterize { get; set; }
@@ -373,6 +377,7 @@ public class LanguageModel
     public string? Uniform { get; set; }
     public string? UniformToFill { get; set; }
     public string? Unknown { get; set; }
+    public string? Unpin { get; set; }
     public string? UnselectAll { get; set; }
     public string? UnsupportedFile { get; set; }
     public string? Up { get; set; }

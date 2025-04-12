@@ -1,16 +1,25 @@
 ﻿using System.Diagnostics;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using PicView.Core.ArchiveHandling;
+using PicView.Core.Config;
 using PicView.Core.FileHandling;
 
-namespace PicView.Core.Navigation;
+namespace PicView.Core.FileHistory;
+
+[JsonSourceGenerationOptions(AllowTrailingCommas = true, WriteIndented = true)]
+[JsonSerializable(typeof(FileHistoryEntries))]
+[JsonSerializable(typeof(List<Entry>))]
+internal partial class FileHistoryGenerationContext : JsonSerializerContext;
 
 /// <summary>
 ///     Manages the history of recently accessed files.
 /// </summary>
-public static class FileHistory
+public static class FileHistoryManager
 {
-    private const int MaxHistoryEntries = 15;
-    private static readonly List<string> Entries = new(MaxHistoryEntries);
+    private const int MaxHistoryEntries = 50;
+    private const int MaxPinnedEntries = 5;
+    private static readonly List<Entry> Entries = [];
     private static string? _fileLocation;
 
     // ReSharper disable once ReplaceWithFieldKeyword
@@ -21,10 +30,12 @@ public static class FileHistory
     /// </summary>
     public static int Count => Entries.Count;
 
+    public static bool IsSortingDescending { get; set; }
+
     /// <summary>
     ///     Gets all history entries.
     /// </summary>
-    public static IReadOnlyList<string> AllEntries => Entries.AsReadOnly();
+    public static IReadOnlyList<Entry> AllEntries => Entries.AsReadOnly();
 
     /// <summary>
     ///     Gets or sets the current index position in history.
@@ -32,7 +43,7 @@ public static class FileHistory
     public static int CurrentIndex
     {
         get => _currentIndex;
-        private set => _currentIndex = Math.Clamp(value, -1, Entries.Count - 1);
+        private set => _currentIndex = Math.Clamp(value, -1, Count - 1);
     }
 
     /// <summary>
@@ -43,13 +54,13 @@ public static class FileHistory
     /// <summary>
     ///     Indicates whether there is a next entry available in history (newer entry).
     /// </summary>
-    public static bool HasNext => CurrentIndex < Entries.Count - 1 && Entries.Count > 0;
+    public static bool HasNext => CurrentIndex < Count - 1 && Count > 0;
 
     /// <summary>
     ///     Gets the current entry at the current index.
     /// </summary>
     public static string? CurrentEntry =>
-        CurrentIndex >= 0 && CurrentIndex < Entries.Count ? Entries[CurrentIndex] : null;
+        CurrentIndex >= 0 && CurrentIndex < Count ? Entries[CurrentIndex].Path : null;
 
     /// <summary>
     ///     Initializes the file history by loading entries from the history file.
@@ -59,7 +70,7 @@ public static class FileHistory
     /// </remarks>
     public static void Initialize()
     {
-        _fileLocation = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Config/recent.txt");
+        _fileLocation = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, SettingsConfiguration.LocalHistoryFilePath);
         try
         {
             if (!File.Exists(_fileLocation))
@@ -74,7 +85,7 @@ public static class FileHistory
             {
                 // TODO: test on macOS
                 _fileLocation = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-                    "Ruben2776/PicView/Config/recent.txt");
+                    SettingsConfiguration.RoamingFileHistoryPath);
                 if (!File.Exists(_fileLocation))
                 {
                     CreateFile();
@@ -94,8 +105,8 @@ public static class FileHistory
 
         LoadFromFile();
         // Set the current index to the most recent entry.
-        CurrentIndex = Entries.Count > 0 ? Entries.Count - 1 : -1;
-        
+        CurrentIndex = Count > 0 ? Count - 1 : -1;
+
         return;
 
         void CreateFile()
@@ -111,21 +122,62 @@ public static class FileHistory
         }
     }
 
+    public static void Pin(string path) =>
+        Pin(path, true);
+
+    public static void UnPin(string path) =>
+        Pin(path, false);
+
+    private static void Pin(string path, bool isPinned)
+    {
+        var entryIndex = Entries.FindIndex(x => x.Path == path);
+        if (entryIndex < 0)
+        {
+            return;
+        }
+
+        // If already in the desired state, do nothing
+        if (Entries[entryIndex].IsPinned == isPinned)
+        {
+            return;
+        }
+
+        // If trying to pin and we already have max pinned entries, don't allow it
+        if (isPinned && Entries.Count(e => e.IsPinned) >= MaxPinnedEntries)
+        {
+            // Unpin the oldest pinned entry to make room
+            var oldestPinned = Entries.Where(e => e.IsPinned).OrderBy(e => Entries.IndexOf(e)).FirstOrDefault();
+            if (oldestPinned != null)
+            {
+                var oldestIndex = Entries.IndexOf(oldestPinned);
+                Entries[oldestIndex].IsPinned = false;
+            }
+        }
+
+        Entries[entryIndex].IsPinned = isPinned;
+    }
+
     /// <summary>
     ///     Adds an entry to the history.
     /// </summary>
     public static void Add(string path)
     {
-        // Don't add if browsing an archive.
-        if (string.IsNullOrWhiteSpace(path) 
-            || !string.IsNullOrWhiteSpace(ArchiveExtraction.TempZipDirectory)
-            || !string.IsNullOrWhiteSpace(TempFileHelper.TempFilePath))
+        if (string.IsNullOrWhiteSpace(path))
         {
             return;
         }
 
+        // Don't add if browsing an archive, unless the file is an archive itself.
+        if (!string.IsNullOrWhiteSpace(ArchiveExtraction.TempZipDirectory))
+        {
+            if (!path.IsArchive())
+            {
+                return;
+            }
+        }
+
         // Check if the entry already exists.
-        var existingIndex = Entries.IndexOf(path);
+        var existingIndex = Entries.FindIndex(x => x.Path == path);
 
         if (existingIndex >= 0)
         {
@@ -134,20 +186,34 @@ public static class FileHistory
             return;
         }
 
-        // Trim the list if it will exceed the maximum size.
-        if (Entries.Count >= MaxHistoryEntries)
+        // Count unpinned entries
+        var unpinnedCount = Entries.Count(e => !e.IsPinned);
+
+        // If we'll exceed the maximum unpinned entries, remove the oldest unpinned entry
+        if (unpinnedCount >= MaxHistoryEntries)
         {
-            // Remove oldest entry (at beginning).
-            Entries.RemoveAt(0);
-            // Adjust current index since we removed an item.
-            if (CurrentIndex > 0)
+            // Find the oldest unpinned entry
+            for (var i = 0; i < Entries.Count; i++)
             {
-                CurrentIndex--;
+                if (Entries[i].IsPinned)
+                {
+                    continue;
+                }
+
+                Entries.RemoveAt(i);
+
+                // Adjust current index since we removed an item.
+                if (CurrentIndex > i)
+                {
+                    CurrentIndex--;
+                }
+
+                break;
             }
         }
 
         // Add to the end of the list (newest entry).
-        Entries.Add(path);
+        Entries.Add(new Entry { Path = path });
 
         // Set the current index to the newly added item (last position).
         CurrentIndex = Entries.Count - 1;
@@ -184,7 +250,7 @@ public static class FileHistory
     /// <summary>
     ///     Gets an entry at the specified index.
     /// </summary>
-    public static string? GetEntry(int index)
+    public static Entry? GetEntry(int index)
     {
         if (index < 0 || index >= Entries.Count)
         {
@@ -197,17 +263,17 @@ public static class FileHistory
     /// <summary>
     ///     Gets the first entry in history (oldest).
     /// </summary>
-    public static string? GetFirstEntry() => Entries.Count > 0 ? Entries[0] : null;
+    public static string? GetFirstEntry() => Entries.Count > 0 ? Entries[0].Path : null;
 
     /// <summary>
     ///     Gets the last entry in history (newest).
     /// </summary>
-    public static string? GetLastEntry() => Entries.Count > 0 ? Entries[^1] : null;
+    public static string? GetLastEntry() => Entries.Count > 0 ? Entries[^1].Path : null;
 
     /// <summary>
     ///     Tries to find an entry that matches or contains the given string.
     /// </summary>
-    public static string? GetEntryByString(string searchString)
+    public static Entry? GetEntryByString(string searchString)
     {
         if (string.IsNullOrWhiteSpace(searchString))
         {
@@ -216,7 +282,7 @@ public static class FileHistory
 
         // First try exact match.
         var exactMatch = Entries.FirstOrDefault(e =>
-            string.Equals(e, searchString, StringComparison.OrdinalIgnoreCase));
+            string.Equals(e.Path, searchString, StringComparison.OrdinalIgnoreCase));
 
         if (exactMatch != null)
         {
@@ -224,8 +290,8 @@ public static class FileHistory
         }
 
         // Then try contains.
-        return Entries.FirstOrDefault(e =>
-            e.Contains(searchString, StringComparison.OrdinalIgnoreCase));
+        return Entries.Find(e => e.Path.Contains(searchString, StringComparison.OrdinalIgnoreCase)) ??
+               null;
     }
 
     /// <summary>
@@ -242,29 +308,8 @@ public static class FileHistory
     /// </summary>
     public static bool Remove(string path)
     {
-        var index = Entries.IndexOf(path);
+        var index = Entries.FindIndex(e => e.Path == path);
         if (index < 0)
-        {
-            return false;
-        }
-
-        Entries.RemoveAt(index);
-
-        // Adjust current index if necessary.
-        if (index <= CurrentIndex)
-        {
-            CurrentIndex = Math.Max(-1, CurrentIndex - 1);
-        }
-
-        return true;
-    }
-
-    /// <summary>
-    ///     Removes an entry at the specified index.
-    /// </summary>
-    public static bool RemoveAt(int index)
-    {
-        if (index < 0 || index >= Entries.Count)
         {
             return false;
         }
@@ -293,13 +338,13 @@ public static class FileHistory
             }
 
             var entry = GetEntryByString(oldName);
-            if (string.IsNullOrWhiteSpace(entry) || !Entries.Contains(entry))
+            if (string.IsNullOrWhiteSpace(entry?.Path) || Entries.All(x => x.Path != entry?.Path))
             {
                 return;
             }
 
-            var index = Entries.IndexOf(entry);
-            Entries[index] = newName;
+            var index = Entries.Where(x => x.Path == entry.Path).Select(x => Entries.IndexOf(x)).First();
+            Entries[index].Path = newName;
         }
         catch (Exception e)
         {
@@ -321,15 +366,23 @@ public static class FileHistory
                 return;
             }
 
-            // Create directory if it doesn't exist.
-            var directory = Path.GetDirectoryName(_fileLocation);
-            if (directory != null && !Directory.Exists(directory))
-            {
-                Directory.CreateDirectory(directory);
-            }
+            // Create a new sorted list with pinned entries first (max 5), then unpinned entries (max MaxHistoryEntries)
+            var sortedEntries = new List<Entry>();
 
-            // Write all entries to file.
-            File.WriteAllLines(_fileLocation, Entries);
+            // Add all pinned entries first (preserving their original order) - should be max 5
+            sortedEntries.AddRange(Entries.Where(e => e.IsPinned));
+
+            // Then add all unpinned entries (preserving their original order) - limited by MaxHistoryEntries
+            sortedEntries.AddRange(Entries.Where(e => !e.IsPinned));
+
+            var historyEntries = new FileHistoryEntries
+            {
+                Entries = sortedEntries,
+                IsSortingDescending = IsSortingDescending
+            };
+            var json = JsonSerializer.Serialize(historyEntries, typeof(FileHistoryEntries),
+                FileHistoryGenerationContext.Default);
+            File.WriteAllText(_fileLocation, json);
         }
         catch (Exception ex)
         {
@@ -351,13 +404,20 @@ public static class FileHistory
                 return;
             }
 
-            var lines = File.ReadAllLines(_fileLocation);
-            foreach (var line in lines)
+            var jsonString = File.ReadAllText(_fileLocation);
+
+            if (JsonSerializer.Deserialize(
+                    jsonString, typeof(FileHistoryEntries),
+                    FileHistoryGenerationContext.Default) is not FileHistoryEntries entries)
             {
-                if (!string.IsNullOrWhiteSpace(line) && Entries.Count < MaxHistoryEntries)
-                {
-                    Entries.Add(line);
-                }
+                throw new JsonException("Failed to deserialize settings");
+            }
+
+            IsSortingDescending = entries.IsSortingDescending;
+
+            foreach (var entry in entries.Entries)
+            {
+                Entries.Add(entry);
             }
         }
         catch (Exception ex)

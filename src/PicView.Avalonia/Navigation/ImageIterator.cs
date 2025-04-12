@@ -7,6 +7,7 @@ using PicView.Avalonia.Preloading;
 using PicView.Avalonia.UI;
 using PicView.Avalonia.ViewModels;
 using PicView.Core.FileHandling;
+using PicView.Core.FileHistory;
 using PicView.Core.Gallery;
 using PicView.Core.Navigation;
 using Timer = System.Timers.Timer;
@@ -274,7 +275,7 @@ public class ImageIterator : IAsyncDisposable
                 PreLoader.Resynchronize(ImagePaths);
             }
             
-            FileHistory.Remove(e.FullPath);
+            FileHistoryManager.Remove(e.FullPath);
 
         }
         catch (Exception exception)
@@ -355,7 +356,7 @@ public class ImageIterator : IAsyncDisposable
             Resynchronize();
 
             isRunning = false;
-            FileHistory.Rename(e.OldFullPath, e.FullPath);
+            FileHistoryManager.Rename(e.OldFullPath, e.FullPath);
             await Dispatcher.UIThread.InvokeAsync(() =>
                 GalleryFunctions.RenameGalleryItem(oldIndex, index, Path.GetFileNameWithoutExtension(e.Name), e.FullPath,
                     _vm));
@@ -711,10 +712,10 @@ public class ImageIterator : IAsyncDisposable
             // Add recent files
             if (string.IsNullOrWhiteSpace(TempFileHelper.TempFilePath) && ImagePaths.Count > CurrentIndex)
             {
-                FileHistory.Add(ImagePaths[CurrentIndex]);
+                FileHistoryManager.Add(ImagePaths[CurrentIndex]);
                 if (Settings.ImageScaling.ShowImageSideBySide)
                 {
-                    FileHistory.Add(ImagePaths[GetIteration(CurrentIndex, IsReversed ? NavigateTo.Previous : NavigateTo.Next)]);
+                    FileHistoryManager.Add(ImagePaths[GetIteration(CurrentIndex, IsReversed ? NavigateTo.Previous : NavigateTo.Next)]);
                 }
             }
         }

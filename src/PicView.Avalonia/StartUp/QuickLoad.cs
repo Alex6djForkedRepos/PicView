@@ -6,9 +6,9 @@ using PicView.Avalonia.UI;
 using PicView.Avalonia.ViewModels;
 using PicView.Avalonia.WindowBehavior;
 using PicView.Core.FileHandling;
+using PicView.Core.FileHistory;
 using PicView.Core.Gallery;
 using PicView.Core.ImageDecoding;
-using PicView.Core.Navigation;
 
 namespace PicView.Avalonia.StartUp;
 
@@ -170,7 +170,7 @@ public static class QuickLoad
         // Add recent files, except when browsing archive
         if (string.IsNullOrWhiteSpace(TempFileHelper.TempFilePath))
         {
-            FileHistory.Add(fileInfo.FullName);
+            FileHistoryManager.Add(fileInfo.FullName);
         }
 
         NavigationManager.AddToPreloader(NavigationManager.GetCurrentIndex, imageModel);

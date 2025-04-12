@@ -1,6 +1,7 @@
 <ResourceDictionary
     x:ClassModifier="internal"
     xmlns="https://github.com/avaloniaui"
+    xmlns:customControls="clr-namespace:PicView.Avalonia.CustomControls"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <ControlTheme TargetType="ComboBox" x:Key="{x:Type ComboBox}">
         <Setter Property="Foreground" Value="{StaticResource SecondaryTextColor}" />
@@ -83,15 +84,16 @@
                                 Background="{DynamicResource DropDownBgColor}"
                                 BorderBrush="{DynamicResource SecondaryBorderColor}"
                                 BorderThickness="1,0,1,1">
-                                <ScrollViewer
+                                <customControls:AutoScrollViewer
                                     HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}"
                                     IsDeferredScrollingEnabled="{TemplateBinding (ScrollViewer.IsDeferredScrollingEnabled)}"
+                                    Theme="{StaticResource Main}"
                                     VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}">
                                     <ItemsPresenter
                                         ItemsPanel="{TemplateBinding ItemsPanel}"
                                         Margin="4"
                                         Name="PART_ItemsPresenter" />
-                                </ScrollViewer>
+                                </customControls:AutoScrollViewer>
                             </Border>
                         </Popup>
                     </Panel>

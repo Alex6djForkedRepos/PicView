@@ -277,9 +277,44 @@ public class TranslationViewModel : ReactiveObject
         MoveToRecycleBin = TranslationManager.Translation.MoveToRecycleBin;
         ShowConfirmationDialogWhenPermanentlyDeletingFile = TranslationManager.Translation.ShowConfirmationDialogWhenPermanentlyDeletingFile;
         Downloading = TranslationManager.Translation.Downloading;
+        Pinned = TranslationManager.Translation.Pinned;
+        Unpin = TranslationManager.Translation.Unpin;
+        Pin = TranslationManager.Translation.Pin;
+        Clear = TranslationManager.Translation.Clear;
+        OpenFileHistory = TranslationManager.Translation.OpenFileHistory;
     }
 
     #region Static Translation Strings
+    
+    public string? Pinned
+    {
+        get;
+        set => this.RaiseAndSetIfChanged(ref field, value);
+    }
+    
+    public string? Unpin
+    {
+        get;
+        set => this.RaiseAndSetIfChanged(ref field, value);
+    }
+    
+    public string? Pin
+    {
+        get;
+        set => this.RaiseAndSetIfChanged(ref field, value);
+    }
+    
+    public string? Clear
+    {
+        get;
+        set => this.RaiseAndSetIfChanged(ref field, value);
+    }
+    
+    public string? OpenFileHistory
+    {
+        get;
+        set => this.RaiseAndSetIfChanged(ref field, value);
+    }
     
     public string? Downloading
     {
