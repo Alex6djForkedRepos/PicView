@@ -74,6 +74,7 @@ public class KeybindTextBox : TextBox
             Foreground = foreground;
             Text = TranslationManager.Translation.PressKey;
             CaretIndex = 0;
+            MainKeyboardShortcuts.IsEscKeyEnabled = false;
         };
         LostFocus += delegate
         {
@@ -81,7 +82,8 @@ public class KeybindTextBox : TextBox
                 return;
             var foreground = new SolidColorBrush((Color)(color ?? Color.Parse("#FFf6f4f4")));
             Foreground = foreground;
-            this.GetObservable(MethodNameProperty).Subscribe(_ => Text = GetFunctionKey());
+            Text = GetFunctionKey();
+            MainKeyboardShortcuts.IsEscKeyEnabled = true;
         };
     }
 
@@ -92,7 +94,7 @@ public class KeybindTextBox : TextBox
             return;
         var foreground = new SolidColorBrush((Color)(color ?? Color.Parse("#FFf6f4f4")));
         Foreground = foreground;
-        this.GetObservable(MethodNameProperty).Subscribe(_ => Text = GetFunctionKey());
+        Text = GetFunctionKey();
     }
 
     private async Task KeyDownHandler(object? sender, KeyEventArgs e)
@@ -126,6 +128,9 @@ public class KeybindTextBox : TextBox
 
         if (e.Key == Key.Escape)
         {
+            e.Handled = true;
+            MainKeyboardShortcuts.IsEscKeyEnabled = false;
+            
             await Dispatcher.UIThread.InvokeAsync(() =>
             {
                 Text = string.Empty;
@@ -133,6 +138,7 @@ public class KeybindTextBox : TextBox
 
             Remove();
             await Save();
+
             return;
         }
 
