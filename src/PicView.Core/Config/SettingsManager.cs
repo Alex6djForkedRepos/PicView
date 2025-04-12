@@ -196,7 +196,16 @@ public static class SettingsManager
                 await SaveSettingsToPathAsync(GetRoamingSettingsPath()).ConfigureAwait(false);
                 return true;
             }
-            await SaveSettingsToPathAsync(CurrentSettingsPath).ConfigureAwait(false);
+
+            if (!string.IsNullOrWhiteSpace(CurrentSettingsPath))
+            {
+                await SaveSettingsToPathAsync(CurrentSettingsPath).ConfigureAwait(false);
+            }
+            else
+            {
+                await SaveSettingsToPathAsync(GetUserSettingsPath()).ConfigureAwait(false);
+            }
+
             return true;
         }
         catch (UnauthorizedAccessException)
