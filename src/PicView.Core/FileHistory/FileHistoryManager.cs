@@ -18,7 +18,7 @@ internal partial class FileHistoryGenerationContext : JsonSerializerContext;
 public static class FileHistoryManager
 {
     private const int MaxHistoryEntries = 50;
-    private const int MaxPinnedEntries = 5;
+    public const int MaxPinnedEntries = 5;
     private static readonly List<Entry> Entries = [];
     private static string? _fileLocation;
 
@@ -61,6 +61,8 @@ public static class FileHistoryManager
     /// </summary>
     public static string? CurrentEntry =>
         CurrentIndex >= 0 && CurrentIndex < Count ? Entries[CurrentIndex].Path : null;
+
+    public static string CurrentFileHistoryFile => _fileLocation.Replace("/", "\\");
 
     /// <summary>
     ///     Initializes the file history by loading entries from the history file.
@@ -370,10 +372,10 @@ public static class FileHistoryManager
             var sortedEntries = new List<Entry>();
 
             // Add all pinned entries first (preserving their original order) - should be max 5
-            sortedEntries.AddRange(Entries.Where(e => e.IsPinned));
+            sortedEntries.AddRange(Entries.Where(e => e.IsPinned).Take(MaxPinnedEntries));
 
             // Then add all unpinned entries (preserving their original order) - limited by MaxHistoryEntries
-            sortedEntries.AddRange(Entries.Where(e => !e.IsPinned));
+            sortedEntries.AddRange(Entries.Where(e => !e.IsPinned).Take(MaxHistoryEntries));
 
             var historyEntries = new FileHistoryEntries
             {

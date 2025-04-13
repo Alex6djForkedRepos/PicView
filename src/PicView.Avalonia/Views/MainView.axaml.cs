@@ -7,6 +7,7 @@ using Avalonia.Threading;
 using PicView.Avalonia.Converters;
 using PicView.Avalonia.Crop;
 using PicView.Avalonia.DragAndDrop;
+using PicView.Avalonia.Functions;
 using PicView.Avalonia.Input;
 using PicView.Avalonia.UI;
 using PicView.Avalonia.UI.FileHistory;
@@ -60,7 +61,12 @@ public partial class MainView : UserControl
                 return;
             }
             // Initialize the history menu controller
+            // TODO: rewrite FileHistory to MVVM
             FileHistoryMenuController = new FileHistoryMenuController(RecentFilesCM, HistorySortButton, HistoryClearButton, vm);
+            HistoryFileButton.Click += async delegate
+            {
+                await FunctionsMapper.ShowRecentHistoryFile();
+            };
 
             HideInterfaceLogic.AddHoverButtonEvents(AltButtonsPanel, vm);
             PointerWheelChanged += async (_, e) => await vm.ImageViewer.PreviewOnPointerWheelChanged(this, e);
@@ -124,10 +130,10 @@ public partial class MainView : UserControl
             }
             var isNavigatingWithCtrl = Settings.Zoom.CtrlZoom;
             vm.ChangeCtrlZoomImage = isNavigatingWithCtrl ? leftRightArrowsImage as DrawingImage : scanEyeImage as DrawingImage;
-        }, DispatcherPriority.Render);
+        });
         
         // Update file history menu items in Dispatcher with low priority to avoid slowdown
-        await Dispatcher.UIThread.InvokeAsync(() => FileHistoryMenuController?.UpdateFileHistoryMenu(), DispatcherPriority.Background);
+        await Dispatcher.UIThread.InvokeAsync(() => FileHistoryMenuController?.UpdateFileHistoryMenu());
     }
 
     private async Task Drop(object? sender, DragEventArgs e)
