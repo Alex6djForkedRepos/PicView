@@ -25,6 +25,44 @@ public partial class MainView : UserControl
     {
         InitializeComponent();
 
+        if (!Settings.Theme.Dark && !Settings.Theme.GlassTheme)
+        {
+            if (!Application.Current.TryGetResource("MainTextColor",
+                    Application.Current.RequestedThemeVariant, out var mainTextColor) ||
+                !Application.Current.TryGetResource("SecondaryTextColor", Application.Current.RequestedThemeVariant, out var secondaryTextColor))
+            {
+                return;
+            }
+
+            if (mainTextColor is not Color color || secondaryTextColor is not Color secondaryColor)
+            {
+                return;
+            }
+
+            var brush = new SolidColorBrush(color);
+            var secondaryBrush = new SolidColorBrush(secondaryColor);
+            HistoryClearButton.PointerEntered += delegate       
+            {
+                HistoryClearTextBlock.Foreground = secondaryBrush;
+                HistoryClearPath.Fill = secondaryBrush;
+            };
+            HistoryClearButton.PointerExited += delegate       
+            {
+                HistoryClearTextBlock.Foreground = brush;
+                HistoryClearPath.Fill = brush;
+            };
+            HistoryFileButton.PointerEntered += delegate       
+            {
+                HistoryFileNameTextBlock.Foreground = secondaryBrush;
+                HistoryFileButtonPath.Fill = secondaryBrush;
+            };
+            HistoryFileButton.PointerExited += delegate       
+            {
+                HistoryFileNameTextBlock.Foreground = brush;
+                HistoryFileButtonPath.Fill = brush;
+            };
+        }
+
         Loaded += delegate
         {
             AddHandler(DragDrop.DragEnterEvent, DragEnter);

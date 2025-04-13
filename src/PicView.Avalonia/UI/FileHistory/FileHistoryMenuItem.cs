@@ -109,12 +109,15 @@ namespace PicView.Avalonia.UI.FileHistory
                 Padding = new Thickness(5, 6),
                 Width = 355
             };
+            
+            TextBlock? indexText = null;
+            TextBlock? headerText = null;
 
             if (index < 0)
             {
                 // Pinned item without index number
                 item.Padding = new Thickness(15, 0, 0, 0);
-                item.Content = new TextBlock
+                headerText = new TextBlock
                 {
                     Classes = { "txt" },
                     Text = header,
@@ -124,20 +127,67 @@ namespace PicView.Avalonia.UI.FileHistory
             else
             {
                 // Regular item with index number
-                var indexText = new TextBlock
+                indexText = new TextBlock
                 {
                     Classes = { "txt" },
                     Text = (index + 1).ToString(),
                     Padding = new Thickness(5, 0, 2, 0)
                 };
 
-                var headerText = new TextBlock
+                headerText = new TextBlock
                 {
                     Classes = { "txt" },
                     Text = header,
                     Padding = new Thickness(5, 0, 0, 0)
                 };
+            }
+            
+            if (!Settings.Theme.Dark)
+            {
+                if (!Application.Current.TryGetResource("MainTextColor",
+                        Application.Current.RequestedThemeVariant, out var mainTextColor) ||
+                    !Application.Current.TryGetResource("SecondaryTextColor", Application.Current.RequestedThemeVariant, out var secondaryTextColor))
+                {
+                    throw new InvalidOperationException();
+                }
 
+                if (mainTextColor is not Color color || secondaryTextColor is not Color secondaryColor)
+                {
+                    throw new InvalidOperationException();
+                }
+
+                var brush = new SolidColorBrush(color);
+                var secondaryBrush = new SolidColorBrush(secondaryColor);
+                if (indexText is not null)
+                {
+                    indexText.Foreground = brush;
+                }
+                headerText.Foreground = brush;
+
+                item.PointerEntered += delegate
+                {
+                    if (indexText is not null)
+                    {
+                        indexText.Foreground = secondaryBrush;
+                    }
+                    headerText.Foreground = secondaryBrush;
+                };
+                item.PointerExited += delegate
+                {
+                    if (indexText is not null)
+                    {
+                        indexText.Foreground = brush;
+                    }
+                    headerText.Foreground = brush;
+                };
+            }
+
+            if (index < 0)
+            {
+                item.Content = headerText;
+            }
+            else
+            {
                 item.Content = new StackPanel
                 {
                     Orientation = Orientation.Horizontal,

@@ -49,6 +49,23 @@ public class FileHistoryMenuBuilder(Panel menuContainer, MainViewModel viewModel
             FontFamily = new FontFamily("avares://PicView.Avalonia/Assets/Fonts/Roboto-Bold.ttf#Roboto"),
             Classes = { "txt" }
         };
+        if (!Settings.Theme.Dark)
+        {
+            if (!Application.Current.TryGetResource("MainTextColor",
+                    Application.Current.RequestedThemeVariant, out var mainTextColor))
+            {
+                throw new InvalidOperationException();
+            }
+
+            if (mainTextColor is not Color color)
+            {
+                throw new InvalidOperationException();
+            }
+
+            var brush = new SolidColorBrush(color);
+            pinnedHeader.Foreground = brush;
+        }
+
         menuContainer.Children.Add(pinnedHeader);
 
         // Add pinned entries

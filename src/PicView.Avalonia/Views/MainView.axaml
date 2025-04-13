@@ -257,11 +257,14 @@
                                         Fill="{StaticResource Brush0}"
                                         Height="12"
                                         Stretch="Fill"
-                                        Width="12" />
+                                        Width="12"
+                                        x:Name="HistoryClearPath" />
                                     <TextBlock
                                         Classes="txt"
+                                        Foreground="{DynamicResource MainTextColor}"
                                         Margin="5,0,0,0"
-                                        Text="{CompiledBinding Translation.Clear}" />
+                                        Text="{CompiledBinding Translation.Clear}"
+                                        x:Name="HistoryClearTextBlock" />
                                 </StackPanel>
                             </Button>
 
@@ -277,11 +280,14 @@
                                         Fill="{StaticResource Brush0}"
                                         Height="12"
                                         Stretch="Fill"
-                                        Width="12" />
+                                        Width="12"
+                                        x:Name="HistoryFileButtonPath" />
                                     <TextBlock
                                         Classes="txt"
+                                        Foreground="{DynamicResource MainTextColor}"
                                         Margin="5,0,0,0"
-                                        Text="{CompiledBinding Translation.OpenFileHistory}" />
+                                        Text="{CompiledBinding Translation.OpenFileHistory}"
+                                        x:Name="HistoryFileNameTextBlock" />
                                 </StackPanel>
                             </Button>
 
@@ -290,6 +296,7 @@
                                 Classes="hover"
                                 CornerRadius="0,8,0,0"
                                 DockPanel.Dock="Right"
+                                Foreground="{DynamicResource MainTextColor}"
                                 Icon="{StaticResource SortDescImage}"
                                 IconHeight="12"
                                 IconWidth="12"

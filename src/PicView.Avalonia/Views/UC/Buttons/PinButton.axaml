@@ -6,27 +6,30 @@
     x:Class="PicView.Avalonia.Views.UC.Buttons.PinButton"
     x:DataType="viewModels:MainViewModel"
     xmlns="https://github.com/avaloniaui"
-    xmlns:customControls="clr-namespace:PicView.Avalonia.CustomControls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewModels="clr-namespace:PicView.Avalonia.ViewModels"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Panel>
-        <customControls:IconButton
+        <Button
             Background="Transparent"
-            Icon="{StaticResource PinImage}"
-            IconHeight="12"
-            IconWidth="12"
             ToolTip.Tip="{CompiledBinding Translation.Pin,
                                           Mode=OneWay}"
-            x:Name="PinBtn" />
-        <customControls:IconButton
+            x:Name="PinBtn">
+            <Image
+                Height="12"
+                Source="{StaticResource PinImage}"
+                Width="12" />
+        </Button>
+        <Button
             Background="Transparent"
-            Icon="{StaticResource UnPinImage}"
-            IconHeight="12"
-            IconWidth="12"
             ToolTip.Tip="{CompiledBinding Translation.Unpin,
                                           Mode=OneWay}"
-            x:Name="UnPinBtn" />
+            x:Name="UnPinBtn">
+            <Image
+                Height="12"
+                Source="{StaticResource UnPinImage}"
+                Width="12" />
+        </Button>
     </Panel>
 </UserControl>
