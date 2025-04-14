@@ -6,6 +6,7 @@ using Avalonia.Threading;
 using PicView.Avalonia.Navigation;
 using PicView.Avalonia.ViewModels;
 using PicView.Avalonia.Views.UC.Buttons;
+using PicView.Core.ArchiveHandling;
 using PicView.Core.Extensions;
 using PicView.Core.FileHistory;
 
@@ -26,7 +27,16 @@ namespace PicView.Avalonia.UI.FileHistory
                 return;
             }
 
-            var isSelected = fileLocation == currentFilePath;
+            bool isSelected;
+            if (!string.IsNullOrWhiteSpace(ArchiveExtraction.TempZipDirectory))
+            {
+                isSelected = fileLocation == ArchiveExtraction.LastOpenedArchive;
+            }
+            else
+            {
+                isSelected = fileLocation == currentFilePath;
+            }
+            
             var filename = Path.GetFileName(fileLocation);
             var header = filename.Length > MaxFilenameLength ? filename.Shorten(MaxFilenameLength) : filename;
 
