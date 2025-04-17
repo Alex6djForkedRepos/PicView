@@ -29,12 +29,7 @@ public static class StartUpHelper
         Window window)
     {
         var args = Environment.GetCommandLineArgs();
-
-        if (!settingsExists)
-        {
-            InitializeWindowForNoSettings(vm);
-        }
-        else
+        if (settingsExists)
         {
             if (args.Length > 1)
             {
@@ -69,30 +64,6 @@ public static class StartUpHelper
             }
         }
         Task.Run(() => LanguageUpdater.UpdateLanguageAsync(vm.Translation, vm.PicViewer, settingsExists));
-        
-        InitializeSettings(vm);
-
-        if (Settings.WindowProperties.Fullscreen)
-        {
-            window.Show();
-            WindowFunctions.Fullscreen(vm, desktop);
-        }
-
-        ScreenHelper.UpdateScreenSize(window);
-        
-        if (Settings.WindowProperties.AutoFit && !Settings.WindowProperties.Fullscreen)
-        {
-            window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-            window.Width = SizeDefaults.WindowMinSize;
-            window.Height = SizeDefaults.WindowMinSize;
-        }
-        window.Show();
-        vm.ImageViewer = new ImageViewer();
-        
-        HandleStartUpMenuOrImage(vm, args);
-        
-        ResourceLimits.LimitMemory(new Percentage(90));
-        
         if (settingsExists)
         {
             Task.Run(() => KeybindingManager.LoadKeybindings(vm.PlatformService));
@@ -101,57 +72,65 @@ public static class StartUpHelper
         {
             Task.Run(() => KeybindingManager.SetDefaultKeybindings(vm.PlatformService));
         }
+        
+        InitializeSettings(vm);
+        
+        if (Settings.WindowProperties.AutoFit)
+        {
+            ScreenHelper.UpdateScreenSize(window);
+            HandleAutoFit(vm);
+        }
+        else
+        {
+            HandleNormalWindow(vm, window);
+        }
+        window.Show();
+        vm.ImageViewer = new ImageViewer();
+        
+        HandleStartUpMenuOrImage(vm, args);
+        ResourceLimits.LimitMemory(new Percentage(90));
 
         HandleThemeUpdates(vm);
         
-        if (settingsExists)
-        {
-            if (Settings.WindowProperties.Maximized && !Settings.WindowProperties.Fullscreen)
-            {
-                WindowFunctions.Maximize();
-            }
-            else if (Settings.WindowProperties.Fullscreen)
-            {
-                WindowFunctions.Fullscreen(vm, desktop);
-            }
-            else if (Settings.WindowProperties.AutoFit && !Settings.WindowProperties.Fullscreen)
-            {
-                HandleAutoFit(vm);
-            }
-            else if (!Settings.WindowProperties.Fullscreen)
-            {
-                HandleNormalWindow(vm, window);
-            }
-        }
-        
         UIHelper.SetControls(desktop);
-        HandleWindowControlSettings(vm, desktop);
+
         ValidateGallerySettings(vm, settingsExists);
-        SetWindowEventHandlers(window);
         
-        // Fixes incorrect fullscreen window
-        if (Settings.WindowProperties.Fullscreen)
+        // Need to delay setting fullscreen or maximized until after the window is shown to select the correct monitor
+        if (Settings.WindowProperties.Maximized && !Settings.WindowProperties.Fullscreen)
+        {
+            Dispatcher.UIThread.InvokeAsync(WindowFunctions.Maximize, DispatcherPriority.Normal).Wait();
+        }
+        else if (Settings.WindowProperties.Fullscreen)
         {
             Dispatcher.UIThread.InvokeAsync(() =>
             {
                 WindowFunctions.Fullscreen(vm, desktop);
                 
-            }, DispatcherPriority.ApplicationIdle).Wait();
-            WindowFunctions.Fullscreen(vm, desktop);
+            }, DispatcherPriority.Normal).Wait();
         }
+        
+        HandleWindowControlSettings(vm, desktop);
+        SetWindowEventHandlers(window);
+        MenuManager.AddMenus();
+        FileHistoryManager.Initialize();
+        
+        if (!Settings.WindowProperties.AutoFit)
+        {
+            // Need to update the screen size after the window is shown,
+            // to avoid rendering error when switching between auto-fit
+            ScreenHelper.UpdateScreenSize(window);
+        }
+
+        Application.Current.Name = "PicView";
+        
+        vm.AssociationsViewModel ??= new FileAssociationsViewModel();
         
         if (Settings.UIProperties.OpenInSameWindow)
         {
             // No other instance is running, create named pipe server
             _ = IPC.StartListeningForArguments(vm);
         }
-        
-        MenuManager.AddMenus();
-        FileHistoryManager.Initialize();
-
-        Application.Current.Name = "PicView";
-        
-        vm.AssociationsViewModel ??= new FileAssociationsViewModel();
     }
 
     private static void HandleThemeUpdates(MainViewModel vm)
@@ -229,16 +208,6 @@ public static class StartUpHelper
         {
             vm.IsTopToolbarShown = true;
             vm.IsBottomToolbarShown = Settings.UIProperties.ShowBottomNavBar;
-        }
-    }
-
-    private static void InitializeWindowForNoSettings(MainViewModel vm)
-    {
-        HandleAutoFit(vm);
-
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-        {
-            Settings.Zoom.IsUsingTouchPad = true;
         }
     }
 
