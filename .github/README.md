@@ -34,13 +34,13 @@ Enjoy a clean, free, and fast experience with no bloated UI or annoying pop-ups.
 
 Winget:
 ```cmd
-cmd $> winget install picview
+winget install picview
 ```
 
 Scoop:
 ```cmd
-cmd $> scoop bucket add extras
-cmd $> scoop install extras/picview
+scoop bucket add extras;
+scoop install extras/picview
 ```
 
 ___
