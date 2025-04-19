@@ -23,10 +23,15 @@ public partial class KeybindingsWindow : Window
             MinWidth = MaxWidth = Bounds.Width;
             Title = $"{TranslationManager.Translation.ApplicationShortcuts} - PicView";
         };
-        KeyDown += (_, e) =>
+        KeyUp += (_, e) =>
         {
             if (e.Key is Key.Escape)
             {
+                if (!MainKeyboardShortcuts.IsEscKeyEnabled)
+                {
+                    Focus();
+                    return;
+                }
                 e.Handled = true;
                 MainKeyboardShortcuts.IsEscKeyEnabled = false;
                 Close();
