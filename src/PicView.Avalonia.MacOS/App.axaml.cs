@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using System.Runtime;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
@@ -21,6 +20,9 @@ using PicView.Core.MacOS.FileAssociation;
 using PicView.Core.MacOS.Wallpaper;
 using PicView.Core.ProcessHandling;
 using PicView.Core.ViewModels;
+#if DEBUG
+using System.Runtime;
+#endif
 
 namespace PicView.Avalonia.MacOS;
 
@@ -38,8 +40,10 @@ public class App : Application, IPlatformSpecificService
 
     public override void Initialize()
     {
+#if DEBUG
         ProfileOptimization.SetProfileRoot(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Config/"));
         ProfileOptimization.StartProfile("ProfileOptimization");
+#endif
         base.OnFrameworkInitializationCompleted();
     }
 
@@ -57,21 +61,16 @@ public class App : Application, IPlatformSpecificService
             var settingsExists = await LoadSettingsAsync().ConfigureAwait(false);
         
             TranslationManager.Init();
-        
+            _vm = new MainViewModel(this);
+            
             await Dispatcher.UIThread.InvokeAsync(() =>
             {
                 ThemeManager.DetermineTheme(Current, settingsExists);
             
                 _mainWindow = new MacMainWindow();
                 desktop.MainWindow = _mainWindow;
-            },DispatcherPriority.Send);
-        
-            _vm = new MainViewModel(this);
-        
-            await Dispatcher.UIThread.InvokeAsync(() =>
-            {
-                
                 _mainWindow.DataContext = _vm;
+                
                 StartUpHelper.Start(_vm, settingsExists, desktop, _mainWindow);
             },DispatcherPriority.Send);
         }

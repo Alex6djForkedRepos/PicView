@@ -63,22 +63,13 @@ public static class StartUpHelper
                 }
             }
         }
-        Task.Run(() => LanguageUpdater.UpdateLanguageAsync(vm.Translation, vm.PicViewer, settingsExists));
-        if (settingsExists)
-        {
-            Task.Run(() => KeybindingManager.LoadKeybindings(vm.PlatformService));
-        }
-        else
-        {
-            Task.Run(() => KeybindingManager.SetDefaultKeybindings(vm.PlatformService));
-        }
         
         InitializeSettings(vm);
         
         if (Settings.WindowProperties.AutoFit)
         {
             ScreenHelper.UpdateScreenSize(window);
-            HandleAutoFit(vm);
+            HandleAutoFit(vm, window);
         }
         else
         {
@@ -89,6 +80,16 @@ public static class StartUpHelper
         
         HandleStartUpMenuOrImage(vm, args);
         ResourceLimits.LimitMemory(new Percentage(90));
+        
+        Task.Run(() => LanguageUpdater.UpdateLanguageAsync(vm.Translation, vm.PicViewer, settingsExists));
+        if (settingsExists)
+        {
+            Task.Run(() => KeybindingManager.LoadKeybindings(vm.PlatformService));
+        }
+        else
+        {
+            Task.Run(() => KeybindingManager.SetDefaultKeybindings(vm.PlatformService));
+        }
 
         HandleThemeUpdates(vm);
         
@@ -106,7 +107,6 @@ public static class StartUpHelper
             Dispatcher.UIThread.InvokeAsync(() =>
             {
                 WindowFunctions.Fullscreen(vm, desktop);
-                
             }, DispatcherPriority.Normal).Wait();
         }
         
@@ -199,15 +199,15 @@ public static class StartUpHelper
     {
         vm.CanResize = true;
         vm.IsAutoFit = false;
-        WindowFunctions.InitializeWindowSizeAndPosition(window);
         if (Settings.UIProperties.ShowInterface)
         {
             vm.IsTopToolbarShown = true;
             vm.IsBottomToolbarShown = Settings.UIProperties.ShowBottomNavBar;
         }
+        WindowFunctions.InitializeWindowSizeAndPosition(window);
     }
 
-    private static void HandleAutoFit(MainViewModel vm)
+    private static void HandleAutoFit(MainViewModel vm, Window window)
     {
         vm.SizeToContent = SizeToContent.WidthAndHeight;
         vm.CanResize = false;
@@ -217,6 +217,7 @@ public static class StartUpHelper
             vm.IsTopToolbarShown = true;
             vm.IsBottomToolbarShown = Settings.UIProperties.ShowBottomNavBar;
         }
+        window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
     }
 
     private static void HandleMultipleInstances(string[] args)
