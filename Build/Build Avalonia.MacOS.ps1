@@ -58,94 +58,16 @@ $resourcesPath = Join-Path -Path $contentsPath -ChildPath "Resources"
 New-Item -ItemType Directory -Force -Path $macOSPath
 New-Item -ItemType Directory -Force -Path $resourcesPath
 
-# Create Info.plist
-$infoPlistPath = Join-Path -Path $contentsPath -ChildPath "Info.plist"  # Add this line to specify the correct path
-$infoPlistContent = @"
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-    <key>CFBundleName</key>
-    <string>PicView</string>
-    <key>CFBundleDisplayName</key>
-    <string>PicView</string>
-    <key>CFBundleIdentifier</key>
-    <string>com.ruben2776.picview</string>
-    <key>CFBundleVersion</key>
-    <string>${appVersion}</string>
-    <key>CFBundlePackageType</key>
-    <string>APPL</string>
-    <key>CFBundleSignature</key>
-    <string>????</string>
-    <key>CFBundleExecutable</key>
-    <string>PicView</string>
-    <key>CFBundleIconFile</key>
-    <string>AppIcon.icns</string>
-    <key>CFBundleShortVersionString</key>
-    <string>${appVersion}</string>
-    <key>LSMinimumSystemVersion</key>
-    <string>10.15</string>
-    <key>NSHighResolutionCapable</key>
-    <true/>
-    <key>LSArchitecturePriority</key>
-    <array>
-        <string>$Platform</string>
-    </array>
-    <key>CFBundleSupportedPlatforms</key>
-    <array>
-        <string>MacOSX</string>
-    </array>
-    <key>NSRequiresAquaSystemAppearance</key>
-    <false/>
-	<key>LSApplicationCategoryType</key>
-    <string>public.app-category.graphics-design</string>
-       <key>CFBundleDocumentTypes</key>
-        <array>
-            <dict>
-                <key>CFBundleTypeName</key>
-                <string>Image File</string>
-                <key>LSItemContentTypes</key>
-                <array>
-                    <string>public.png</string>
-                    <string>public.jpeg</string>
-                    <string>public.jpg</string>
-                    <string>public.gif</string>
-                    <string>public.tiff</string>
-                    <string>public.bmp</string>
-                    <string>public.ico</string>
-                    <string>public.svg-image</string>
-                    <string>org.webmproject.webp</string>
-                    <string>org.khronos.avif</string>
-                </array>
-                <key>CFBundleTypeRole</key>
-                <string>Viewer</string>
-            </dict>
-        </array>
-        <key>UTExportedTypeDeclarations</key>
-        <array>
-            <dict>
-                <key>UTTypeIdentifier</key>
-                <string>org.khronos.avif</string>
-                <key>UTTypeConformsTo</key>
-                <array>
-                    <string>public.image</string>
-                </array>
-                <key>UTTypeDescription</key>
-                <string>AVIF Image</string>
-                <key>UTTypeTagSpecification</key>
-                <dict>
-                    <key>public.filename-extension</key>
-                    <array>
-                        <string>avif</string>
-                    </array>
-                    <key>public.mime-type</key>
-                    <string>image/avif</string>
-                </dict>
-            </dict>
-        </array>
-</dict>
-</plist>
-"@
+# Use template Info.plist and patch version and architecture
+$infoPlistTemplatePath = Join-Path -Path $PSScriptRoot -ChildPath "../src/PicView.Core.MacOS/Info.plist"
+$infoPlistPath = Join-Path -Path $contentsPath -ChildPath "Info.plist"
+
+# Read template as text
+$infoPlistContent = Get-Content $infoPlistTemplatePath -Raw
+
+# Replace placeholders with actual values
+$infoPlistContent = $infoPlistContent -replace "{{appVersion}}", $appVersion
+$infoPlistContent = $infoPlistContent -replace "{{platform}}", $Platform
 
 # Save Info.plist with UTF-8 encoding without BOM
 $utf8NoBomEncoding = New-Object System.Text.UTF8Encoding $false

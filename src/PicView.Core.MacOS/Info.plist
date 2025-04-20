@@ -26,7 +26,7 @@
         <true/>
         <key>LSArchitecturePriority</key>
         <array>
-            <string>$Platform</string>
+            <string>{{platform}}</string>
         </array>
         <key>CFBundleSupportedPlatforms</key>
         <array>
