@@ -38,8 +38,10 @@ public class App : Application, IPlatformSpecificService
 
     public override void Initialize()
     {
+        #if DEBUG
         ProfileOptimization.SetProfileRoot(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Config/"));
         ProfileOptimization.StartProfile("ProfileOptimization");
+        #endif
         base.OnFrameworkInitializationCompleted();
     }
 
@@ -48,6 +50,10 @@ public class App : Application, IPlatformSpecificService
         try
         {
             base.OnFrameworkInitializationCompleted();
+            
+            string? startUpFilePath = null;
+            EventHandler<UrlOpenedEventArgs> handler = (_, e) => { startUpFilePath = e.Urls[0]; };
+            Current.UrlsOpened += handler;
 
             if (ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop)
             {
@@ -67,12 +73,49 @@ public class App : Application, IPlatformSpecificService
             },DispatcherPriority.Send);
         
             _vm = new MainViewModel(this);
+            
+            // Can't get this to work
+            
+            // if (Current.TryGetFeature<IActivatableLifetime>() is { } activatableLifetime)
+            // {
+            //     activatableLifetime.Activated += async (_, e) =>
+            //     {
+            //         await TooltipHelper.ShowTooltipMessageAsync(activatableLifetime);
+            //         if (e is ProtocolActivatedEventArgs { Kind: ActivationKind.File } fileArgs)
+            //         {
+            //             await TooltipHelper.ShowTooltipMessageAsync($"App activated via Uri: {fileArgs.Uri}");
+            //             await NavigationManager.LoadPicFromStringAsync(fileArgs.Uri.ToString(), _vm).ConfigureAwait(false);
+            //         }
+            //         if (e is ProtocolActivatedEventArgs { Kind: ActivationKind.OpenUri } openArgs)
+            //         {
+            //             await TooltipHelper.ShowTooltipMessageAsync($"App activated via Uri: {openArgs.Uri}");
+            //             await  QuickLoad.QuickLoadAsync(_vm, openArgs.Uri.ToString()).ConfigureAwait(false);
+            //         }
+            //     };
+            // }
         
             await Dispatcher.UIThread.InvokeAsync(() =>
             {
                 _mainWindow.DataContext = _vm;
+#if DEBUG
+                StartUpHelper.StartWithArguments(_vm, settingsExists, desktop, _mainWindow);
+#else
                 StartUpHelper.StartWithoutArguments(_vm, settingsExists, desktop, _mainWindow);
+#endif
             },DispatcherPriority.Send);
+            if (startUpFilePath is not null)
+            {
+                await QuickLoad.QuickLoadAsync(_vm, startUpFilePath).ConfigureAwait(false);
+            }
+            else
+            {
+                ErrorHandling.ShowStartUpMenu(_vm);
+            }
+            Current.UrlsOpened += async (_, e) =>
+            {
+                await NavigationManager.LoadPicFromStringAsync(e.Urls[0], _vm).ConfigureAwait(false);
+            };
+            Current.UrlsOpened -= handler;
         }
         catch (Exception)
         {

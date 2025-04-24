@@ -1,5 +1,7 @@
 ﻿using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Platform;
 using Avalonia.ReactiveUI;
 
 namespace PicView.Avalonia.MacOS;
@@ -21,7 +23,8 @@ internal class Program
             .LogToTrace()
 #endif
             .UseReactiveUI()
-            .UsePlatformDetect()
+            .UseAvaloniaNative()
+            .UseSkia()
             .With(new SkiaOptions
             {
                 MaxGpuResourceSizeBytes = 256_000_000,
