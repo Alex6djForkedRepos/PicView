@@ -25,7 +25,7 @@ namespace PicView.Avalonia.StartUp;
 
 public static class StartUpHelper
 {
-    public static void Start(MainViewModel vm, bool settingsExists, IClassicDesktopStyleApplicationLifetime desktop,
+    public static void StartWithArguments(MainViewModel vm, bool settingsExists, IClassicDesktopStyleApplicationLifetime desktop,
         Window window)
     {
         var args = Environment.GetCommandLineArgs();
@@ -75,10 +75,36 @@ public static class StartUpHelper
         {
             HandleNormalWindow(vm, window);
         }
+        
+        vm.ImageViewer = new ImageViewer();
+        HandleStartUpMenuOrImage(vm, args);
+        window.Show();
+        
+        HandlePostWindowUpdates(vm, settingsExists, desktop, window);
+    }
+    
+        public static void StartWithoutArguments(MainViewModel vm, bool settingsExists, IClassicDesktopStyleApplicationLifetime desktop,
+        Window window)
+    {
+        InitializeSettings(vm);
+        
+        if (Settings.WindowProperties.AutoFit)
+        {
+            ScreenHelper.UpdateScreenSize(window);
+            HandleAutoFit(vm, window);
+        }
+        else
+        {
+            HandleNormalWindow(vm, window);
+        }
         window.Show();
         vm.ImageViewer = new ImageViewer();
         
-        HandleStartUpMenuOrImage(vm, args);
+        HandlePostWindowUpdates(vm, settingsExists, desktop, window);
+    }
+
+    private static void HandlePostWindowUpdates(MainViewModel vm, bool settingsExists, IClassicDesktopStyleApplicationLifetime desktop, Window window)
+    {
         ResourceLimits.LimitMemory(new Percentage(90));
         
         Task.Run(() => LanguageUpdater.UpdateLanguageAsync(vm.Translation, vm.PicViewer, settingsExists));
@@ -288,7 +314,6 @@ public static class StartUpHelper
             vm.BottomCornerRadius = new CornerRadius(0, 0, 8, 8);
         }
         
-        vm.IsLoading = true;
         vm.TitlebarHeight = Settings.WindowProperties.Fullscreen
             || !Settings.UIProperties.ShowInterface
             ? 0

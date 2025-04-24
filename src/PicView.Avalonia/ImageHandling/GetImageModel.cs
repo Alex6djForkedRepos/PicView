@@ -24,7 +24,7 @@ public static class GetImageModel
         { ".b64", new Base64Handler() }
     };
 
-    public static async Task<ImageModel> GetImageModelAsync(FileInfo fileInfo)
+    public static async Task<ImageModel> GetImageModelAsync(FileInfo fileInfo, MagickImage? magickImage = null)
     {
         if (fileInfo is null)
         {
@@ -38,9 +38,12 @@ public static class GetImageModel
         {
             // Get extension and prepare MagickImage for metadata
             var ext = fileInfo.Extension.ToLower();
-            using var magickImage = new MagickImage();
-            magickImage.Ping(fileInfo);
-            
+            if (magickImage is null)
+            {
+                magickImage = new MagickImage();
+                magickImage.Ping(fileInfo);
+            }
+
             // Extract EXIF orientation early
             imageModel.EXIFOrientation = EXIFHelper.GetImageOrientation(magickImage);
 
@@ -61,6 +64,10 @@ public static class GetImageModel
         {
             LogError($"Error processing {fileInfo.Name}: {e.Message}");
             return CreateErrorImageModel(fileInfo);
+        }
+        finally
+        {
+            magickImage.Dispose();
         }
     }
 

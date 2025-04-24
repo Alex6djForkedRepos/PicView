@@ -70,9 +70,8 @@ public class App : Application, IPlatformSpecificService
         
             await Dispatcher.UIThread.InvokeAsync(() =>
             {
-                
                 _mainWindow.DataContext = _vm;
-                StartUpHelper.Start(_vm, settingsExists, desktop, _mainWindow);
+                StartUpHelper.StartWithoutArguments(_vm, settingsExists, desktop, _mainWindow);
             },DispatcherPriority.Send);
         }
         catch (Exception)

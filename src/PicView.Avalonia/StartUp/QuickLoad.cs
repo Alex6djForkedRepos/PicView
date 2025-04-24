@@ -1,4 +1,5 @@
 ﻿using Avalonia.Threading;
+using ImageMagick;
 using PicView.Avalonia.Gallery;
 using PicView.Avalonia.ImageHandling;
 using PicView.Avalonia.Navigation;
@@ -19,37 +20,47 @@ public static class QuickLoad
         var fileInfo = new FileInfo(file);
         if (!fileInfo.Exists) // If not file, try to load if URL, base64 or directory
         {
+            vm.IsLoading = true;
             await NavigationManager.LoadPicFromStringAsync(file, vm).ConfigureAwait(false);
             return;
         }
 
         if (file.IsArchive()) // Handle if file exist and is an archive
         {
+            vm.IsLoading = true;
             await NavigationManager.LoadPicFromArchiveAsync(file, vm).ConfigureAwait(false);
             return;
         }
-        
+
+        var magickImage = new MagickImage();
+        magickImage.Ping(fileInfo);
         vm.PicViewer.FileInfo = fileInfo;
+        var isLargeImage = magickImage.Width * magickImage.Height > 5000000; // ~5 megapixels threshold
+        if (isLargeImage || Settings.ImageScaling.ShowImageSideBySide)
+        {
+            // Don't show loading indicator if image is too small
+            vm.IsLoading = true;
+        }
 
         if (Settings.ImageScaling.ShowImageSideBySide)
         {
-            await SideBySideLoadingAsync(vm, fileInfo).ConfigureAwait(false);
+            await SideBySideLoadingAsync(vm, fileInfo, magickImage).ConfigureAwait(false);
         }
         else
         {
-            await SingeImageLoadingAsync(vm, fileInfo).ConfigureAwait(false);
+            await SingeImageLoadingAsync(vm, fileInfo, magickImage).ConfigureAwait(false);
         }
 
         vm.IsLoading = false;
     }
 
-    private static async Task SingeImageLoadingAsync(MainViewModel vm, FileInfo fileInfo)
+    private static async Task SingeImageLoadingAsync(MainViewModel vm, FileInfo fileInfo, MagickImage? magickImage)
     {
         var cancellationTokenSource = new CancellationTokenSource();
         ImageModel? imageModel = null;
         await Task.WhenAll(
             Task.Run(() => { NavigationManager.InitializeImageIterator(vm); }, cancellationTokenSource.Token),
-            Task.Run(async () => imageModel = await SetSingleImageAsync(vm, fileInfo), cancellationTokenSource.Token))
+            Task.Run(async () => imageModel = await SetSingleImageAsync(vm, fileInfo, magickImage), cancellationTokenSource.Token))
             .ConfigureAwait(false);
         if (TiffManager.IsTiff(imageModel.FileInfo.FullName))
         {
@@ -63,9 +74,9 @@ public static class QuickLoad
         cancellationTokenSource.Dispose();
     }
 
-    private static async Task<ImageModel> SetSingleImageAsync(MainViewModel vm, FileInfo fileInfo)
+    private static async Task<ImageModel> SetSingleImageAsync(MainViewModel vm, FileInfo fileInfo, MagickImage? magickImage)
     {
-        var imageModel = await GetImageModel.GetImageModelAsync(fileInfo).ConfigureAwait(false);
+        var imageModel = await GetImageModel.GetImageModelAsync(fileInfo, magickImage).ConfigureAwait(false);
         SetPicViewerValues(vm, imageModel, fileInfo);
         vm.IsLoading = false;
         await Dispatcher.UIThread.InvokeAsync(() =>
@@ -76,10 +87,10 @@ public static class QuickLoad
         return imageModel;
     }
 
-    private static async Task SideBySideLoadingAsync(MainViewModel vm, FileInfo fileInfo)
+    private static async Task SideBySideLoadingAsync(MainViewModel vm, FileInfo fileInfo, MagickImage? magickImage)
     {
         NavigationManager.InitializeImageIterator(vm);
-        var imageModel = await GetImageModel.GetImageModelAsync(fileInfo);
+        var imageModel = await GetImageModel.GetImageModelAsync(fileInfo, magickImage);
         var secondaryPreloadValue = await NavigationManager.GetNextPreLoadValueAsync();
         vm.PicViewer.SecondaryImageSource = secondaryPreloadValue?.ImageModel?.Image;
         SetPicViewerValues(vm, imageModel, fileInfo);
