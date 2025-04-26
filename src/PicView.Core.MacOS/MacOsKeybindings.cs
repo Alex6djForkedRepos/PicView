@@ -61,7 +61,9 @@ public static class MacOsKeybindings
                                                 "Alt+Z": "ToggleInterface",
                                                 "Delete": "DeleteFile",
                                                 "Shift+Delete": "DeleteFilePermanently",
-                                                "Cmd+N": "NewWindow"
+                                                "Cmd+N": "NewWindow",
+                                                "J": "ResizeWindow",
+                                                "Alt+Cmd+I": "ResizeWindow"
                                               }
                                               """;
 }
