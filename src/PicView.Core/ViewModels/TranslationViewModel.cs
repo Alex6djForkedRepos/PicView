@@ -282,9 +282,16 @@ public class TranslationViewModel : ReactiveObject
         Pin = TranslationManager.Translation.Pin;
         Clear = TranslationManager.Translation.Clear;
         OpenFileHistory = TranslationManager.Translation.OpenFileHistory;
+        ConstrainBackgroundToImage = TranslationManager.Translation.ConstrainBackgroundToImage;
     }
 
     #region Static Translation Strings
+    
+    public string? ConstrainBackgroundToImage
+    {
+        get;
+        set => this.RaiseAndSetIfChanged(ref field, value);
+    }
     
     public string? Pinned
     {

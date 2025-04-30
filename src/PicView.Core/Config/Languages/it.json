@@ -59,6 +59,7 @@
   "ColorTone": "Tonalità di colore",
   "CompressedBitsPixel": "Bit per pixel compressi",
   "Compression": "Compressione",
+  "ConstrainBackgroundToImage": "Limita il colore di sfondo all'immagine",
   "Contrast": "Contrasto",
   "ConvertTo": "Convertire in",
   "ConvertedToBase64": "Convertito in base64",

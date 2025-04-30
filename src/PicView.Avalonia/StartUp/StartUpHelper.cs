@@ -346,6 +346,7 @@ public static class StartUpHelper
         vm.IsUsingTouchpad  = Settings.Zoom.IsUsingTouchPad;
         vm.IsAscending  = Settings.Sorting.Ascending;
         vm.BackgroundChoice = Settings.UIProperties.BgColorChoice;
+        vm.IsConstrainingBackgroundColor = Settings.UIProperties.IsConstrainBackgroundColorEnabled;
     }
 
     private static void SetWindowEventHandlers(Window w)

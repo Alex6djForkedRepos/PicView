@@ -41,6 +41,7 @@ public class UIProperties
     public bool ShowConfirmationOnEsc { get; set; } = false;
     public bool ShowRecycleConfirmation { get; set; } = false;
     public bool ShowPermanentDeletionConfirmation { get; set; } = true;
+    public bool IsConstrainBackgroundColorEnabled { get; set; } = true;
 }
 
 public class Theme

@@ -267,6 +267,8 @@ public class MainViewModel : ReactiveObject
         SlideshowCommand = FunctionsHelper.CreateReactiveCommand<int>(StartSlideShowTask);
 
         ToggleTaskbarProgressCommand = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.ToggleTaskbarProgress);
+        
+        ToggleConstrainBackgroundColorCommand = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.ToggleConstrainBackgroundColor);
 
         #endregion UI Commands
 
@@ -676,6 +678,8 @@ public class MainViewModel : ReactiveObject
     public ReactiveCommand<Unit, Unit>? ShowSettingsFileCommand { get; }
     
     public ReactiveCommand<Unit, Unit>? ShowKeybindingsFileCommand { get; }
+    
+    public ReactiveCommand<Unit, Unit>? ToggleConstrainBackgroundColorCommand { get; }
 
     #endregion Commands
 
@@ -797,6 +801,12 @@ public class MainViewModel : ReactiveObject
         set => this.RaiseAndSetIfChanged(ref field, value);
     }
 
+    public bool IsConstrainingBackgroundColor
+    {
+        get;
+        set => this.RaiseAndSetIfChanged(ref field, value);
+    }
+
     public bool IsIncludingSubdirectories
     {
         get;
@@ -881,6 +891,12 @@ public class MainViewModel : ReactiveObject
     #endregion Booleans
     
     public Brush? ImageBackground
+    {
+        get;
+        set => this.RaiseAndSetIfChanged(ref field, value);
+    }
+    
+    public Brush? ConstrainedImageBackground
     {
         get;
         set => this.RaiseAndSetIfChanged(ref field, value);

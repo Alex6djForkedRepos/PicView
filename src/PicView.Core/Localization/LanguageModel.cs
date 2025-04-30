@@ -70,6 +70,7 @@ public class LanguageModel
     public string? ColorTone { get; set; }
     public string? CompressedBitsPixel { get; set; }
     public string? Compression { get; set; }
+    public string? ConstrainBackgroundToImage { get; set; }
     public string? Contrast { get; set; }
     public string? ConvertedToBase64 { get; set; }
     public string? ConvertTo { get; set; }

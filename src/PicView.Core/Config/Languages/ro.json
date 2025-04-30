@@ -59,6 +59,7 @@
   "ColorTone": "Ton de culoare",
   "CompressedBitsPixel": "Biți compresați pe pixel",
   "Compression": "Compresie",
+  "ConstrainBackgroundToImage": "Restricționează culoarea de fundal la imagine",
   "Contrast": "Contrast",
   "ConvertTo": "Conversie în",
   "ConvertedToBase64": "CConvertit în base64",

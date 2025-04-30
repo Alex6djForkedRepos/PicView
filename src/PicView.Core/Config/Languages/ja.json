@@ -59,6 +59,7 @@
   "ColorTone": "色調",
   "CompressedBitsPixel": "圧縮されたピクセルあたりのビット数",
   "Compression": "圧縮",
+  "ConstrainBackgroundToImage": "背景色を画像に制限する",
   "Contrast": "コントラスト",
   "ConvertTo": "変換形式",
   "ConvertedToBase64": "base64 に変換",

@@ -103,7 +103,17 @@ public static class BackgroundManager
     public static void SetBackground(MainViewModel vm, int choice)
     {
         Settings.UIProperties.BgColorChoice = choice;
-        vm.ImageBackground = GetBackgroundBrush((BackgroundType)choice);
+        if (Settings.UIProperties.IsConstrainBackgroundColorEnabled)
+        {
+            vm.ImageBackground = new SolidColorBrush(Colors.Transparent);
+            vm.ConstrainedImageBackground = GetBackgroundBrush((BackgroundType)choice);
+        }
+        else
+        {
+            vm.ImageBackground = GetBackgroundBrush((BackgroundType)choice);
+            vm.ConstrainedImageBackground = new SolidColorBrush(Colors.Transparent);
+        }
+        
         vm.BackgroundChoice = choice;
     }
 

@@ -15,14 +15,14 @@ public static class DanishUnitTest
         Assert.Equal(TranslationManager.Translation.ActionProgram, "Action program");
         Assert.Equal(TranslationManager.Translation.AddedToClipboard, "Tilføjet til udklipsholderen");
         Assert.Equal(TranslationManager.Translation.AdditionalFunctions, "Diverse funktioner");
-        Assert.Equal(TranslationManager.Translation.AdjustNavSpeed, "Juster hastighed, når tasten holdes nede");
+        Assert.Equal(TranslationManager.Translation.AdjustNavSpeed, "Juster hastigheden når tasten holdes nede");
         Assert.Equal(TranslationManager.Translation.AdjustTimingForSlideshow, "Juster timing for slideshowet");
         Assert.Equal(TranslationManager.Translation.AdjustTimingForZoom, "Justér zooming hastighed");
         Assert.Equal(TranslationManager.Translation.AdjustZoomLevel, "Juster zoom niveau");
         Assert.Equal(TranslationManager.Translation.AdvanceBy100Images, "Gå 100 billeder frem");
         Assert.Equal(TranslationManager.Translation.AdvanceBy10Images, "Gå 10 billeder frem");
         Assert.Equal(TranslationManager.Translation.AllowZoomOut,
-            "Undgå at zoome billedet ud, når det allerede er i maksimal størrelse");
+            "Undgå at zoome billedet ud, når billedet allerede er i maksimal størrelse");
         Assert.Equal(TranslationManager.Translation.Alt, "Alt");
         Assert.Equal(TranslationManager.Translation.Altitude, "Højde");
         Assert.Equal(TranslationManager.Translation.AperturePriority, "Blænde prioritet");
@@ -38,7 +38,7 @@ public static class DanishUnitTest
         Assert.Equal(TranslationManager.Translation.AutoFitWindow, "Auto tilpas vindue");
         Assert.Equal(TranslationManager.Translation.BadArchive, "Arkivet kunne ikke behandles");
         Assert.Equal(TranslationManager.Translation.Base64Image, "Base64 billede");
-        Assert.Equal(TranslationManager.Translation.BatchResize, "Batch Billedstørrelse");
+        Assert.Equal(TranslationManager.Translation.BatchResize, "Batch størrelse");
         Assert.Equal(TranslationManager.Translation.BitDepth, "Bit dybde");
         Assert.Equal(TranslationManager.Translation.BlackAndWhite, "Sort/hvid");
         Assert.Equal(TranslationManager.Translation.Blur, "Sløring");
@@ -72,6 +72,7 @@ public static class DanishUnitTest
         Assert.Equal(TranslationManager.Translation.ColorTone, "Farve Tone");
         Assert.Equal(TranslationManager.Translation.CompressedBitsPixel, "Komprimerede bits pr. pixel");
         Assert.Equal(TranslationManager.Translation.Compression, "Kompression");
+        Assert.Equal(TranslationManager.Translation.ConstrainBackgroundToImage, "Begræns baggrundsfarve til billedet");
         Assert.Equal(TranslationManager.Translation.Contrast, "Kontrast");
         Assert.Equal(TranslationManager.Translation.ConvertTo, "Konverter til");
         Assert.Equal(TranslationManager.Translation.ConvertedToBase64, "Konverteret til base64");

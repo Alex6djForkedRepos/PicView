@@ -59,6 +59,7 @@
   "ColorTone": "Farbton",
   "CompressedBitsPixel": "Komprimierte Bits pro Pixel",
   "Compression": "Komprimierung",
+  "ConstrainBackgroundToImage": "Hintergrundfarbe auf Bild beschränken",
   "Contrast": "Kontrast",
   "ConvertTo": "Konvertieren zu",
   "ConvertedToBase64": "In Base64 umgewandelt",

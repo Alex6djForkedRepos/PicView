@@ -59,6 +59,7 @@
   "ColorTone": "Цветовой тон",
   "CompressedBitsPixel": "Сжатые биты на пиксель",
   "Compression": "Сжатие",
+  "ConstrainBackgroundToImage": "Ограничить цвет фона изображением",
   "Contrast": "Контраст",
   "ConvertTo": "Преобразовать в",
   "ConvertedToBase64": "Преобразовано в base64",

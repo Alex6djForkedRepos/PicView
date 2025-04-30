@@ -59,6 +59,7 @@
   "ColorTone": "Kleurtoon",
   "CompressedBitsPixel": "Gecomprimeerde bits per pixel",
   "Compression": "Compressie",
+  "ConstrainBackgroundToImage": "Beperk achtergrondkleur tot afbeelding",
   "Contrast": "Contrast",
   "ConvertTo": "Converteren naar",
   "ConvertedToBase64": "Geconverteerd naar base64",

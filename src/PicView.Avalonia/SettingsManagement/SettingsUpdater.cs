@@ -170,6 +170,26 @@ public static class SettingsUpdater
         await SaveSettingsAsync();
     }
     
+    public static async Task ToggleConstrainBackgroundColor(MainViewModel vm)
+    {
+        if (Settings.UIProperties.IsConstrainBackgroundColorEnabled)
+        {
+            Settings.UIProperties.IsConstrainBackgroundColorEnabled = false;
+            vm.IsConstrainingBackgroundColor = false;
+        }
+        else
+        {
+            Settings.UIProperties.IsConstrainBackgroundColorEnabled = true;
+            vm.IsConstrainingBackgroundColor = true;
+        }
+        
+        await Dispatcher.UIThread.InvokeAsync(() =>
+        {
+            BackgroundManager.SetBackground(vm);
+        });
+        await SaveSettingsAsync();
+    }
+    
     #region Image settings
 
     public static async Task ToggleSideBySide(MainViewModel vm)

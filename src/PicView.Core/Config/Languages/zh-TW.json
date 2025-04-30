@@ -59,6 +59,7 @@
   "ColorTone": "色調",
   "CompressedBitsPixel": "壓縮位元像素",
   "Compression": "壓縮",
+  "ConstrainBackgroundToImage": "將背景顏色限制為圖片區域",
   "Contrast": "對比度",
   "ConvertTo": "轉換成",
   "ConvertedToBase64": "已複製為 base64",

@@ -59,6 +59,7 @@
   "ColorTone": "Renk Tonu",
   "CompressedBitsPixel": "Piksel başına sıkıştırılmış bit",
   "Compression": "Sıkıştırma",
+  "ConstrainBackgroundToImage": "Arka plan rengini yalnızca görselle sınırla",
   "Contrast": "Kontrast",
   "ConvertTo": "Dönüştür",
   "ConvertedToBase64": "Base64'e dönüştürüldü",

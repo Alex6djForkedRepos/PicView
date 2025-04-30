@@ -369,6 +369,10 @@ public static class FunctionsMapper
     public static async Task ToggleTaskbarProgress() =>
         await SettingsUpdater.ToggleTaskbarProgress(Vm).ConfigureAwait(false);
     
+    /// <inheritdoc cref="SettingsUpdater.ToggleConstrainBackgroundColor(MainViewModel)" />
+    public static async Task ToggleConstrainBackgroundColor() =>
+        await SettingsUpdater.ToggleConstrainBackgroundColor(Vm).ConfigureAwait(false);
+    
     #endregion
 
     #region Gallery functions

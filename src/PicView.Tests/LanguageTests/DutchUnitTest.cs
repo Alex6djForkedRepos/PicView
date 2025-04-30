@@ -73,6 +73,7 @@ public static class DutchUnitTest
         Assert.Equal(TranslationManager.Translation.ColorTone, "Kleurtoon");
         Assert.Equal(TranslationManager.Translation.CompressedBitsPixel, "Gecomprimeerde bits per pixel");
         Assert.Equal(TranslationManager.Translation.Compression, "Compressie");
+        Assert.Equal(TranslationManager.Translation.ConstrainBackgroundToImage, "Beperk achtergrondkleur tot afbeelding");
         Assert.Equal(TranslationManager.Translation.Contrast, "Contrast");
         Assert.Equal(TranslationManager.Translation.ConvertTo, "Converteren naar");
         Assert.Equal(TranslationManager.Translation.ConvertedToBase64, "Geconverteerd naar base64");
