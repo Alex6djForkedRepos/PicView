@@ -182,7 +182,6 @@ public static class RussianUnitTest
         Assert.Equal(TranslationManager.Translation.HighQuality, "Высокое качество");
         Assert.Equal(TranslationManager.Translation.HighlightColor, "Цвет выделения");
         Assert.Equal(TranslationManager.Translation.ISOSpeed, "Чувствительность ISO");
-        Assert.Equal(TranslationManager.Translation.IconsUsed, "Используемые значки");
         Assert.Equal(TranslationManager.Translation.Image, "Изображение");
         Assert.Equal(TranslationManager.Translation.ImageAliasing, "Сглаживание изображения");
         Assert.Equal(TranslationManager.Translation.ImageControl, "Управление изображением");

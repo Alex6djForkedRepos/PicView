@@ -180,7 +180,6 @@ public static class DanishUnitTest
         Assert.Equal(TranslationManager.Translation.HighQuality, "Høj kvalitet");
         Assert.Equal(TranslationManager.Translation.HighlightColor, "Accentfarve");
         Assert.Equal(TranslationManager.Translation.ISOSpeed, "ISO hastighed");
-        Assert.Equal(TranslationManager.Translation.IconsUsed, "Brugte ikoner:");
         Assert.Equal(TranslationManager.Translation.Image, "Billede");
         Assert.Equal(TranslationManager.Translation.ImageAliasing, "Billedantialiasering");
         Assert.Equal(TranslationManager.Translation.ImageControl, "Billedstyring");

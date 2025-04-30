@@ -173,7 +173,6 @@ public static class KoreanUnitTest
         Assert.Equal(TranslationManager.Translation.HighQuality, "높은 품질");
         Assert.Equal(TranslationManager.Translation.HighlightColor, "강조 색상");
         Assert.Equal(TranslationManager.Translation.ISOSpeed, "ISO 속도");
-        Assert.Equal(TranslationManager.Translation.IconsUsed, "사용된 아이콘:");
         Assert.Equal(TranslationManager.Translation.Image, "이미지");
         Assert.Equal(TranslationManager.Translation.ImageAliasing, "이미지 앨리어싱");
         Assert.Equal(TranslationManager.Translation.ImageControl, "이미지 제어");

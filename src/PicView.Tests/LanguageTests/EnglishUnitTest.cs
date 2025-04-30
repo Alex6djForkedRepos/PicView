@@ -177,7 +177,6 @@ public static class EnglishUnitTest
         Assert.Equal(TranslationManager.Translation.HighQuality, "High quality");
         Assert.Equal(TranslationManager.Translation.HighlightColor, "Highlight color");
         Assert.Equal(TranslationManager.Translation.ISOSpeed, "ISO speed");
-        Assert.Equal(TranslationManager.Translation.IconsUsed, "Icons used:");
         Assert.Equal(TranslationManager.Translation.Image, "Image");
         Assert.Equal(TranslationManager.Translation.ImageAliasing, "Image aliasing");
         Assert.Equal(TranslationManager.Translation.ImageControl, "Image control");

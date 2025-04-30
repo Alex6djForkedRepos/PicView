@@ -172,7 +172,6 @@ public static class ChineseSimplifiedUnitTest
         Assert.Equal(TranslationManager.Translation.HighQuality, "高质量");
         Assert.Equal(TranslationManager.Translation.HighlightColor, "主题高亮色");
         Assert.Equal(TranslationManager.Translation.ISOSpeed, "ISO 速度");
-        Assert.Equal(TranslationManager.Translation.IconsUsed, "图标来自：");
         Assert.Equal(TranslationManager.Translation.Image, "图片");
         Assert.Equal(TranslationManager.Translation.ImageAliasing, "图像混淆");
         Assert.Equal(TranslationManager.Translation.ImageControl, "图片调整");

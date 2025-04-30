@@ -182,7 +182,6 @@ public static class PolishUnitTest
         Assert.Equal(TranslationManager.Translation.HighQuality, "Wysoka jakość");
         Assert.Equal(TranslationManager.Translation.HighlightColor, "Kolor zaznaczenia");
         Assert.Equal(TranslationManager.Translation.ISOSpeed, "Czułość ISO");
-        Assert.Equal(TranslationManager.Translation.IconsUsed, "Wykorzystane ikony:");
         Assert.Equal(TranslationManager.Translation.Image, "Obraz");
         Assert.Equal(TranslationManager.Translation.ImageAliasing, "Aliasing obrazu");
         Assert.Equal(TranslationManager.Translation.ImageControl, "Kontrola obrazu");

@@ -177,7 +177,6 @@ public class LanguageModel
     public string? High { get; set; }
     public string? HighlightColor { get; set; }
     public string? HighQuality { get; set; }
-    public string? IconsUsed { get; set; }
     public string? Image { get; set; }
     public string? ImageAliasing { get; set; }
     public string? ImageControl { get; set; }

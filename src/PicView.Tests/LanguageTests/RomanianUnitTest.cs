@@ -182,7 +182,6 @@ public static class RomanianUnitTest
         Assert.Equal(TranslationManager.Translation.HighQuality, "Calitate înaltă");
         Assert.Equal(TranslationManager.Translation.HighlightColor, "Culoare de evidențiere");
         Assert.Equal(TranslationManager.Translation.ISOSpeed, "Viteză ISO");
-        Assert.Equal(TranslationManager.Translation.IconsUsed, "Pictograme utilizate:");
         Assert.Equal(TranslationManager.Translation.Image, "Imagine");
         Assert.Equal(TranslationManager.Translation.ImageAliasing, "Aliasare imagine");
         Assert.Equal(TranslationManager.Translation.ImageControl, "Controlul imaginii");

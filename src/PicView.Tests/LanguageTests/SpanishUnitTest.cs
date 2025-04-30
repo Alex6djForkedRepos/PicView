@@ -182,7 +182,6 @@ public class SpanishUnitTest
         Assert.Equal(TranslationManager.Translation.HighQuality, "Alta calidad");
         Assert.Equal(TranslationManager.Translation.HighlightColor, "Color de resaltado");
         Assert.Equal(TranslationManager.Translation.ISOSpeed, "Velocidad ISO");
-        Assert.Equal(TranslationManager.Translation.IconsUsed, "Íconos usados:");
         Assert.Equal(TranslationManager.Translation.Image, "Imagen");
         Assert.Equal(TranslationManager.Translation.ImageAliasing, "Alias de imagen");
         Assert.Equal(TranslationManager.Translation.ImageControl, "Control de Imagen");

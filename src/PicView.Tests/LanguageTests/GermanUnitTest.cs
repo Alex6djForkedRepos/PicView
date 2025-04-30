@@ -180,7 +180,6 @@ public static class GermanUnitTest
         Assert.Equal(TranslationManager.Translation.HighQuality, "Hohe Qualität");
         Assert.Equal(TranslationManager.Translation.HighlightColor, "Hervorhebungsfarbe");
         Assert.Equal(TranslationManager.Translation.ISOSpeed, "ISO-Geschwindigkeit");
-        Assert.Equal(TranslationManager.Translation.IconsUsed, "Verwendete Symbole:");
         Assert.Equal(TranslationManager.Translation.Image, "Bild");
         Assert.Equal(TranslationManager.Translation.ImageAliasing, "Bild-Aliasing");
         Assert.Equal(TranslationManager.Translation.ImageControl, "Bildsteuerung");

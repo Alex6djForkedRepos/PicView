@@ -179,7 +179,6 @@ public static class DutchUnitTest
         Assert.Equal(TranslationManager.Translation.HighQuality, "Hoge kwaliteit");
         Assert.Equal(TranslationManager.Translation.HighlightColor, "Markeerkleur");
         Assert.Equal(TranslationManager.Translation.ISOSpeed, "ISO snelheid");
-        Assert.Equal(TranslationManager.Translation.IconsUsed, "Gebruikte iconen:");
         Assert.Equal(TranslationManager.Translation.Image, "Afbeelding");
         Assert.Equal(TranslationManager.Translation.ImageAliasing, "Beeldaliasing");
         Assert.Equal(TranslationManager.Translation.ImageControl, "Afbeeldingscontrole");

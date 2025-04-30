@@ -185,7 +185,6 @@ public static class BrazilianPortugueseUnitTest
         Assert.Equal(TranslationManager.Translation.HighQuality, "Alta qualidade");
         Assert.Equal(TranslationManager.Translation.HighlightColor, "Cor de realce");
         Assert.Equal(TranslationManager.Translation.ISOSpeed, "Velocidade ISO");
-        Assert.Equal(TranslationManager.Translation.IconsUsed, "Ícones usados:");
         Assert.Equal(TranslationManager.Translation.Image, "Imagem");
         Assert.Equal(TranslationManager.Translation.ImageAliasing, "Distorção da imagem");
         Assert.Equal(TranslationManager.Translation.ImageControl, "Controle da imagem");

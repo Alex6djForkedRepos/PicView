@@ -9,7 +9,6 @@ using PicView.Avalonia.ViewModels;
 using PicView.Avalonia.WindowBehavior;
 using PicView.Core.Config;
 using PicView.Core.Http;
-using PicView.Core.ProcessHandling;
 #if RELEASE
 using PicView.Core.Config;
 #endif
@@ -97,32 +96,6 @@ public static class UpdateManager
 #endif
     }
 
-    #endregion
-
-    #region Admin Privileges
-
-    /// <summary>
-    ///     Checks if the application needs to be elevated and restarts it if needed
-    /// </summary>
-    private static void HandleAdminPrivilegesIfNeeded()
-    {
-        if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-        {
-            return;
-        }
-
-        try
-        {
-            // Determines if the current directory has restricted access
-            var currentDirectory = new DirectoryInfo(Environment.ProcessPath);
-            _ = currentDirectory.GetAccessControl().AreAccessRulesProtected;
-        }
-        catch (Exception)
-        {
-            ProcessHelper.StartProcessWithElevatedPermission(UpdateArgument);
-            Environment.Exit(0);
-        }
-    }
     #endregion
 
     #region Update Info

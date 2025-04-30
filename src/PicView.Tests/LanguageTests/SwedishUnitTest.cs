@@ -179,7 +179,6 @@ public static class SwedishUnitTest
         Assert.Equal(TranslationManager.Translation.HighQuality, "Hög kvalitet");
         Assert.Equal(TranslationManager.Translation.HighlightColor, "Markera färg");
         Assert.Equal(TranslationManager.Translation.ISOSpeed, "ISO-tal");
-        Assert.Equal(TranslationManager.Translation.IconsUsed, "Använda ikoner:");
         Assert.Equal(TranslationManager.Translation.Image, "Bild");
         Assert.Equal(TranslationManager.Translation.ImageAliasing, "Kantutjämning");
         Assert.Equal(TranslationManager.Translation.ImageControl, "Bildkontroll");

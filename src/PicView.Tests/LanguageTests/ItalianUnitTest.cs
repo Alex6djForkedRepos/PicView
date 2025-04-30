@@ -184,7 +184,6 @@ public static class ItalianUnitTest
         Assert.Equal(TranslationManager.Translation.HighQuality, "Alta qualità");
         Assert.Equal(TranslationManager.Translation.HighlightColor, "Evidenzia colore");
         Assert.Equal(TranslationManager.Translation.ISOSpeed, "Velocità ISO");
-        Assert.Equal(TranslationManager.Translation.IconsUsed, "Icone utilizzate:");
         Assert.Equal(TranslationManager.Translation.Image, "Immagine");
         Assert.Equal(TranslationManager.Translation.ImageAliasing, "Alias delle immagini");
         Assert.Equal(TranslationManager.Translation.ImageControl, "Controllo dell'immagine");

@@ -185,7 +185,6 @@ public static class FrenchUnitTest
         Assert.Equal(TranslationManager.Translation.HighQuality, "Haute qualité");
         Assert.Equal(TranslationManager.Translation.HighlightColor, "Couleur de surbrillance");
         Assert.Equal(TranslationManager.Translation.ISOSpeed, "Vitesse ISO");
-        Assert.Equal(TranslationManager.Translation.IconsUsed, "Icônes utilisées :");
         Assert.Equal(TranslationManager.Translation.Image, "Image");
         Assert.Equal(TranslationManager.Translation.ImageAliasing, "Anticrénelage d'image");
         Assert.Equal(TranslationManager.Translation.ImageControl, "Contrôle des images");

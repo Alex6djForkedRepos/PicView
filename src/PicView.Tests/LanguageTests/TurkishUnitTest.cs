@@ -179,7 +179,6 @@ public static class TurkishUnitTest
         Assert.Equal(TranslationManager.Translation.HighQuality, "Yüksek kalite");
         Assert.Equal(TranslationManager.Translation.HighlightColor, "Vurgulama rengi");
         Assert.Equal(TranslationManager.Translation.ISOSpeed, "ISO hızı");
-        Assert.Equal(TranslationManager.Translation.IconsUsed, "Kullanılan ikonlar:");
         Assert.Equal(TranslationManager.Translation.Image, "Resim");
         Assert.Equal(TranslationManager.Translation.ImageAliasing, "Resim taklidi");
         Assert.Equal(TranslationManager.Translation.ImageControl, "Resim kontrolü");
