@@ -362,6 +362,8 @@ public static class WindowFunctions
             vm.SizeToContent = SizeToContent.WidthAndHeight;
             vm.CanResize = false;
             CenterWindowOnScreen();
+            vm.IsAutoFit = true;
+            _ = ResizeAndFixRenderingError(vm); // Fixes incorrect render size
         }
         else
         {
