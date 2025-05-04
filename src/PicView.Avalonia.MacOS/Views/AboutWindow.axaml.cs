@@ -2,11 +2,14 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
 using PicView.Avalonia.Input;
+using PicView.Avalonia.Interfaces;
+using PicView.Avalonia.MacOS.Update;
+using PicView.Avalonia.Update;
 using PicView.Core.Localization;
 
 namespace PicView.Avalonia.MacOS.Views;
 
-public partial class AboutWindow : Window
+public partial class AboutWindow : Window, IPlatformSpecificUpdate
 {
     public AboutWindow()
     {
@@ -29,6 +32,11 @@ public partial class AboutWindow : Window
                 Close();
             }
         };
+    }
+    
+    public async Task HandlePlatofrmUpdate(UpdateInfo updateInfo, string tempPath)
+    {
+        await MacUpdateHelper.HandleMacOSUpdate(updateInfo, tempPath);
     }
 
     private void MoveWindow(object? sender, PointerPressedEventArgs e)
