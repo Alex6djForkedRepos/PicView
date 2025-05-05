@@ -315,12 +315,6 @@ public static class ImageSizeCalculationHelper
     public static double GetTitleMaxWidth(double rotationAngle, double width, double height, double monitorMinWidth,
         double monitorMinHeight, double interfaceSize, double containerWidth)
     {
-        if (Settings.WindowProperties.Fullscreen)
-        {
-            // Title bar is not shown in fullscreen
-            return 0;
-        }
-        
         double titleMaxWidth;
         
         if (Settings.WindowProperties.AutoFit && !Settings.WindowProperties.Maximized)

@@ -115,6 +115,7 @@
                 </NativeMenu>
             </NativeMenuItem>
 
+            <!--  Image  -->
             <NativeMenuItem Header="{CompiledBinding Translation.Image, Mode=OneWay}">
                 <NativeMenu>
                     <NativeMenuItem
@@ -179,6 +180,8 @@
                     <NativeMenuItem Command="{CompiledBinding ShowEffectsWindowCommand}" Header="{CompiledBinding Translation.Effects, Mode=OneWay}" />
                 </NativeMenu>
             </NativeMenuItem>
+
+            <!--  Navigation  -->
             <NativeMenuItem Header="{CompiledBinding Translation.Navigation}">
                 <NativeMenu>
                     <NativeMenuItem Command="{CompiledBinding SlideshowCommand}" Header="{CompiledBinding Translation.Slideshow}" />
@@ -195,6 +198,8 @@
                     <NativeMenuItem Command="{CompiledBinding PreviousFolderCommand}" Header="{CompiledBinding Translation.PrevFolder}" />
                 </NativeMenu>
             </NativeMenuItem>
+
+            <!--  Interface configuration  -->
             <NativeMenuItem Header="{CompiledBinding Translation.InterfaceConfiguration}">
                 <NativeMenu>
                     <NativeMenuItem Command="{CompiledBinding ToggleFullscreenCommand}" Header="{CompiledBinding Translation.ToggleFullscreen, Mode=OneWay}" />
@@ -209,6 +214,7 @@
                 </NativeMenu>
             </NativeMenuItem>
 
+            <!--  Sort files  -->
             <NativeMenuItem Header="{CompiledBinding Translation.SortFilesBy, Mode=OneWay}">
                 <NativeMenu>
                     <NativeMenuItem
@@ -262,6 +268,7 @@
                 </NativeMenu>
             </NativeMenuItem>
 
+            <!--  Settings  -->
             <NativeMenuItem Header="{CompiledBinding Translation.Settings}">
                 <NativeMenu>
                     <NativeMenuItem Command="{CompiledBinding ChangeBackgroundCommand}" Header="{CompiledBinding Translation.ChangeBackground, Mode=OneWay}" />

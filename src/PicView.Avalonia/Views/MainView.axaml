@@ -1119,22 +1119,23 @@
                 </MenuItem>
 
                 <!--  Cut  -->
-                <MenuItem
-                    Command="{CompiledBinding CutCommand}"
-                    CommandParameter="{CompiledBinding PicViewer.FileInfo.FullName,
-                                                       FallbackValue=''}"
-                    Header="{CompiledBinding Translation.FileCut,
-                                             Mode=OneWay}"
-                    IsEnabled="False">
-                    <MenuItem.Icon>
-                        <Path
-                            Data="{StaticResource CutGeometry}"
-                            Fill="{StaticResource Brush0}"
-                            Height="12"
-                            Stretch="Fill"
-                            Width="12" />
-                    </MenuItem.Icon>
-                </MenuItem>
+                <!--  <MenuItem  -->
+                <!--  Command="{CompiledBinding CutCommand}"  -->
+                <!--  CommandParameter="{CompiledBinding PicViewer.FileInfo.FullName,  -->
+                <!--  FallbackValue=''}"  -->
+                <!--  Header="{CompiledBinding Translation.FileCut,  -->
+                <!--  Mode=OneWay}"  -->
+                <!--  IsEnabled="False">  -->
+                <!--     <MenuItem.Icon> -->
+                <!--  <Path  -->
+                <!--  Data="{StaticResource CutGeometry}"  -->
+                <!--  Fill="{StaticResource Brush0}"  -->
+                <!--  Height="12"  -->
+                <!--  Stretch="Fill"  -->
+                <!--  Width="12" />  -->
+                <!--     </MenuItem.Icon> -->
+                <!-- </MenuItem> -->
+
             </MenuItem>
 
             <!--  Copy file  -->

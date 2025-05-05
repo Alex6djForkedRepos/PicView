@@ -603,19 +603,35 @@ public static class WindowFunctions
 
     public static void WindowDragAndDoubleClickBehavior(Window window, PointerPressedEventArgs e)
     {
-        if (e.ClickCount == 2 && e.GetCurrentPoint(window).Properties.IsLeftButtonPressed)
-        {
-            _ = MaximizeRestore();
-            return;
-        }
-
         var currentScreen = ScreenHelper.ScreenSize;
-        window.BeginMoveDrag(e);
+        
         var screen = window.Screens.ScreenFromVisual(window);
         if (screen == null)
         {
             return;
         }
+        
+        if (e.ClickCount == 2 && e.GetCurrentPoint(window).Properties.IsLeftButtonPressed)
+        {
+            _ = MaximizeRestore();
+            if (!RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                return;
+            }
+
+            if (!Settings.WindowProperties.AutoFit)
+            {
+                return;
+            }
+
+            if (Settings.WindowProperties.Fullscreen || Settings.WindowProperties.Maximized)
+            {
+                window.Position = new PixelPoint(0, 0);
+            }
+            return;
+        }
+
+        window.BeginMoveDrag(e);
         
         if (screen.WorkingArea.Width == currentScreen.WorkingAreaWidth &&
             screen.WorkingArea.Height == currentScreen.WorkingAreaHeight && screen.Scaling == currentScreen.Scaling)

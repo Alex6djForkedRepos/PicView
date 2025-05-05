@@ -74,20 +74,20 @@ public static class StartUpHelper
         HandlePostWindowUpdates(vm, settingsExists, desktop, window);
     }
     
-        public static void StartWithoutArguments(MainViewModel vm, bool settingsExists, IClassicDesktopStyleApplicationLifetime desktop,
+    public static void StartWithoutArguments(MainViewModel vm, bool settingsExists, IClassicDesktopStyleApplicationLifetime desktop,
         Window window, string? arg = null)
     {
         InitializeSettings(vm);
         
         HandleWindowScalingMode(vm, window);
-
-        HandleStartUpMenuOrImage(vm, arg is null ? [] : [arg]);
+        
+        HandleStartUpMenuOrImage(vm, arg);
         window.Show();
         
         HandlePostWindowUpdates(vm, settingsExists, desktop, window);
     }
 
-    private static void HandleWindowScalingMode(MainViewModel vm, Window window)
+    public static void HandleWindowScalingMode(MainViewModel vm, Window window)
     {
         if (Settings.WindowProperties.AutoFit)
         {
@@ -100,7 +100,7 @@ public static class StartUpHelper
         }
     }
 
-    private static void HandlePostWindowUpdates(MainViewModel vm, bool settingsExists, IClassicDesktopStyleApplicationLifetime desktop, Window window)
+    public static void HandlePostWindowUpdates(MainViewModel vm, bool settingsExists, IClassicDesktopStyleApplicationLifetime desktop, Window window)
     {
         ResourceLimits.LimitMemory(new Percentage(90));
         
@@ -194,7 +194,24 @@ public static class StartUpHelper
             vm.CurrentView = vm.ImageViewer;
             Task.Run(() => QuickLoad.QuickLoadAsync(vm, args[1]));
         }
-        else if (Settings.StartUp.OpenLastFile)
+        else StartUpMenuOrLastFile(vm);
+    }
+    
+    public static void HandleStartUpMenuOrImage(MainViewModel vm, string? arg = null)
+    {
+        vm.ImageViewer = new ImageViewer();
+        
+        if (arg is not null)
+        {
+            vm.CurrentView = vm.ImageViewer;
+            Task.Run(() => QuickLoad.QuickLoadAsync(vm, arg));
+        }
+        else StartUpMenuOrLastFile(vm);
+    }
+    
+    private static void StartUpMenuOrLastFile(MainViewModel vm)
+    {
+        if (Settings.StartUp.OpenLastFile)
         {
             if (string.IsNullOrWhiteSpace(Settings.StartUp.LastFile))
             {
@@ -304,8 +321,8 @@ public static class StartUpHelper
             Settings.Gallery.FullGalleryStretchMode = "UniformToFill";
         }
     }
-    
-    private static void InitializeSettings(MainViewModel vm)
+
+    public static void InitializeSettings(MainViewModel vm)
     {    
         // Set corner radius on macOS
         if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))

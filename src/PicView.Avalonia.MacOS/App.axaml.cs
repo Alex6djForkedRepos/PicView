@@ -79,13 +79,10 @@ public class App : Application, IPlatformSpecificService
             await Dispatcher.UIThread.InvokeAsync(() =>
             {
                 _mainWindow.DataContext = _vm;
-                if (startUpFilePath is not null)
+                StartUpHelper.StartWithoutArguments(_vm, settingsExists, desktop, _mainWindow, startUpFilePath);
+                if (Settings.WindowProperties.AutoFit && startUpFilePath is not null)
                 {
-                    StartUpHelper.StartWithoutArguments(_vm, settingsExists, desktop, _mainWindow, startUpFilePath);
-                }
-                else
-                {
-                    StartUpHelper.StartWithoutArguments(_vm, settingsExists, desktop, _mainWindow);
+                    WindowFunctions.CenterWindowOnScreen();
                 }
             },DispatcherPriority.Send);
             
