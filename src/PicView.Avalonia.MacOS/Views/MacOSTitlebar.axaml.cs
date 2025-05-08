@@ -2,6 +2,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
+using PicView.Avalonia.ViewModels;
 using PicView.Avalonia.WindowBehavior;
 
 namespace PicView.Avalonia.MacOS.Views;
@@ -62,9 +63,9 @@ public partial class MacOSTitlebar : UserControl
 
     private void MoveWindow(PointerPressedEventArgs e)
     {
-        if (VisualRoot is null) { return; }
+        if (VisualRoot is null || DataContext is not MainViewModel vm) { return; }
 
         var hostWindow = (Window)VisualRoot;
-        WindowFunctions.WindowDragAndDoubleClickBehavior(hostWindow, e);
+        WindowFunctions.WindowDragAndDoubleClickBehavior(hostWindow, e, vm.PlatformWindowService);
     }
 }

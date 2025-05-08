@@ -29,6 +29,7 @@ namespace PicView.Avalonia.ViewModels;
 public class MainViewModel : ReactiveObject
 {
     public readonly IPlatformSpecificService? PlatformService;
+    public readonly IPlatformWindowService? PlatformWindowService;
     
     public TranslationViewModel Translation { get; } = new();
     public SettingsViewModel? SettingsViewModel { get; set; }
@@ -39,28 +40,29 @@ public class MainViewModel : ReactiveObject
     
     public FileAssociationsViewModel? AssociationsViewModel { get; set; }
 
-    public MainViewModel(IPlatformSpecificService? platformSpecificService)
+    public MainViewModel(IPlatformSpecificService? platformSpecificService, IPlatformWindowService? platformWindowService)
     {
         FunctionsMapper.Vm = this;
         PlatformService = platformSpecificService;
+        PlatformWindowService = platformWindowService;
 
         #region Window commands
 
         ExitCommand = FunctionsHelper.CreateReactiveCommand(WindowFunctions.Close);
         MinimizeCommand = FunctionsHelper.CreateReactiveCommand(WindowFunctions.Minimize);
-        MaximizeCommand = FunctionsHelper.CreateReactiveCommand(WindowFunctions.MaximizeRestore);
-        RestoreCommand = FunctionsHelper.CreateReactiveCommand(WindowFunctions.Restore);
+        MaximizeCommand = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.Maximize);
+        RestoreCommand = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.Restore);
         ToggleFullscreenCommand = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.ToggleFullscreen);
         NewWindowCommand = FunctionsHelper.CreateReactiveCommand(ProcessHelper.StartNewProcess);
 
-        ShowExifWindowCommand = FunctionsHelper.CreateReactiveCommand(platformSpecificService.ShowExifWindow);
-        ShowSettingsWindowCommand = FunctionsHelper.CreateReactiveCommand(platformSpecificService.ShowSettingsWindow);
-        ShowKeybindingsWindowCommand = FunctionsHelper.CreateReactiveCommand(platformSpecificService.ShowKeybindingsWindow);
-        ShowAboutWindowCommand = FunctionsHelper.CreateReactiveCommand(platformSpecificService.ShowAboutWindow);
-        ShowBatchResizeWindowCommand = FunctionsHelper.CreateReactiveCommand(platformSpecificService.ShowBatchResizeWindow);
+        ShowExifWindowCommand = FunctionsHelper.CreateReactiveCommand(PlatformWindowService.ShowExifWindow);
+        ShowSettingsWindowCommand = FunctionsHelper.CreateReactiveCommand(PlatformWindowService.ShowSettingsWindow);
+        ShowKeybindingsWindowCommand = FunctionsHelper.CreateReactiveCommand(PlatformWindowService.ShowKeybindingsWindow);
+        ShowAboutWindowCommand = FunctionsHelper.CreateReactiveCommand(PlatformWindowService.ShowAboutWindow);
+        ShowBatchResizeWindowCommand = FunctionsHelper.CreateReactiveCommand(PlatformWindowService.ShowBatchResizeWindow);
         ShowSingleImageResizeWindowCommand =
-            FunctionsHelper.CreateReactiveCommand(platformSpecificService.ShowSingleImageResizeWindow);
-        ShowEffectsWindowCommand = FunctionsHelper.CreateReactiveCommand(platformSpecificService.ShowEffectsWindow);
+            FunctionsHelper.CreateReactiveCommand(PlatformWindowService.ShowSingleImageResizeWindow);
+        ShowEffectsWindowCommand = FunctionsHelper.CreateReactiveCommand(PlatformWindowService.ShowEffectsWindow);
 
         #endregion Window commands
 

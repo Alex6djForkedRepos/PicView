@@ -1,6 +1,4 @@
-﻿using Avalonia;
-using Avalonia.Controls.ApplicationLifetimes;
-using PicView.Avalonia.Gallery;
+﻿using PicView.Avalonia.Gallery;
 using PicView.Avalonia.Input;
 using PicView.Avalonia.UI;
 using PicView.Avalonia.ViewModels;
@@ -51,7 +49,7 @@ public static class Slideshow
 
         if (!Settings.WindowProperties.Fullscreen)
         {
-            WindowFunctions.Restore(vm, Application.Current?.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime);
+            vm.PlatformWindowService.Restore();
             if (Settings.WindowProperties.AutoFit)
             {
                 WindowFunctions.CenterWindowOnScreen();
@@ -114,7 +112,7 @@ public static class Slideshow
 
         if (!Settings.WindowProperties.Fullscreen)
         {
-            await WindowFunctions.ToggleFullscreen(vm, false);
+            await vm.PlatformWindowService.ToggleFullscreen();
         }
 
         if (GalleryFunctions.IsFullGalleryOpen || Settings.Gallery.IsBottomGalleryShown)

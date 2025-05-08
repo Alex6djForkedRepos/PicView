@@ -83,6 +83,7 @@ public static class FunctionsMapper
             "NewWindow" => NewWindow,
             "Center" => Center,
             "Maximize" => Maximize,
+            "Restore" => Restore,
 
             // Windows
             "AboutWindow" => AboutWindow,
@@ -418,10 +419,20 @@ public static class FunctionsMapper
             Rotation.Center(Vm);
         });
     }
+
+    /// <inheritdoc cref="Interfaces.IPlatformWindowService.MaximizeRestore" />
+    public static Task Maximize()
+    {
+        Vm.PlatformWindowService.MaximizeRestore();
+        return Task.CompletedTask; 
+    }
     
-    /// <inheritdoc cref="WindowFunctions.MaximizeRestore()" />
-    public static async Task Maximize() =>
-        await WindowFunctions.MaximizeRestore().ConfigureAwait(false);
+    /// <inheritdoc cref="Interfaces.IPlatformWindowService.Restore" />
+    public static Task Restore()
+    {
+        Vm.PlatformWindowService.Restore();
+        return Task.CompletedTask; 
+    }
 
     /// <inheritdoc cref="ProcessHelper.StartNewProcess()" />
     public static async Task NewWindow() =>
@@ -429,43 +440,43 @@ public static class FunctionsMapper
 
     public static Task AboutWindow()
     {
-        Vm?.PlatformService?.ShowAboutWindow();
+        Dispatcher.UIThread.Invoke(() => Vm?.PlatformWindowService?.ShowAboutWindow());
         return Task.CompletedTask;
     }
 
     public static Task KeybindingsWindow()
     {
-        Vm?.PlatformService?.ShowKeybindingsWindow();
+        Dispatcher.UIThread.Invoke(() => Vm?.PlatformWindowService?.ShowKeybindingsWindow());
         return Task.CompletedTask;
     }
 
     public static Task EffectsWindow()
     {
-        Vm?.PlatformService?.ShowEffectsWindow();
+        Dispatcher.UIThread.Invoke(() => Vm?.PlatformWindowService?.ShowEffectsWindow());
         return Task.CompletedTask;
     }
 
     public static Task ImageInfoWindow()
     {
-        Vm.PlatformService.ShowExifWindow();
+        Dispatcher.UIThread.Invoke(() => Vm?.PlatformWindowService?.ShowExifWindow());
         return Task.CompletedTask;
     }
 
     public static Task ResizeWindow()
     {
-        Vm?.PlatformService?.ShowSingleImageResizeWindow();
+        Dispatcher.UIThread.Invoke(() => Vm?.PlatformWindowService?.ShowSingleImageResizeWindow());
         return Task.CompletedTask;
     }
     
     public static Task BatchResizeWindow()
     {
-        Vm?.PlatformService?.ShowBatchResizeWindow();
+        Dispatcher.UIThread.Invoke(() => Vm?.PlatformWindowService?.ShowBatchResizeWindow());
         return Task.CompletedTask;
     }
 
     public static Task SettingsWindow()
     {
-        Vm?.PlatformService.ShowSettingsWindow();
+        Dispatcher.UIThread.Invoke(() => Vm?.PlatformWindowService?.ShowSettingsWindow());
         return Task.CompletedTask;
     }
     
@@ -493,9 +504,9 @@ public static class FunctionsMapper
     public static async Task NormalWindowAndStretch() =>
         await WindowFunctions.NormalWindowStretch(Vm).ConfigureAwait(false);
 
-    /// <inheritdoc cref="WindowFunctions.ToggleFullscreen" />
+    /// <inheritdoc cref="Interfaces.IPlatformWindowService.ToggleFullscreen" />
     public static async Task ToggleFullscreen() =>
-        await WindowFunctions.ToggleFullscreen(Vm).ConfigureAwait(false);
+        await Vm.PlatformWindowService.ToggleFullscreen().ConfigureAwait(false);
     
     // This shouldn't be here, but keep as alias and backwards compatibility.
     public static Task Fullscreen() => ToggleFullscreen();
@@ -614,8 +625,8 @@ public static class FunctionsMapper
     public static async Task Reload() =>
         await ErrorHandling.ReloadAsync(Vm).ConfigureAwait(false);
 
-    public async static Task ResizeImage() => 
-        await Task.Run(() => Vm?.PlatformService?.ShowSingleImageResizeWindow()).ConfigureAwait(false);
+    public static Task ResizeImage() =>
+        ResizeWindow();
 
     /// <inheritdoc cref="CropFunctions.StartCropControl(MainViewModel)" />
     public static async Task Crop() =>

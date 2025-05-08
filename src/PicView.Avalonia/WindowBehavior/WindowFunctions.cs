@@ -1,18 +1,17 @@
-﻿using System.Runtime.InteropServices;
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Threading;
 using PicView.Avalonia.Input;
+using PicView.Avalonia.Interfaces;
 using PicView.Avalonia.Navigation;
 using PicView.Avalonia.UI;
 using PicView.Avalonia.ViewModels;
 using PicView.Core.ArchiveHandling;
 using PicView.Core.FileHandling;
 using PicView.Core.FileHistory;
-using PicView.Core.Sizing;
 
 // ReSharper disable CompareOfFloatsByEqualityOperator
 
@@ -240,282 +239,6 @@ public static class WindowFunctions
         await SaveSettingsAsync().ConfigureAwait(false);
     }
 
-    public static async Task ToggleFullscreen(MainViewModel vm, bool saveSettings = true)
-    {
-        if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop)
-        {
-            return;
-        }
-
-        if (Settings.WindowProperties.Fullscreen)
-        {
-            vm.IsFullscreen = false;
-
-            if (saveSettings)
-            {
-                Settings.WindowProperties.Fullscreen = false;
-            }
-
-            if (Settings.WindowProperties.AutoFit)
-            {
-                await Dispatcher.UIThread.InvokeAsync(() =>
-                    desktop.MainWindow.WindowState = WindowState.Normal);
-                CenterWindowOnScreen();
-            }
-            else
-            {
-                WindowResizing.RestoreSize(desktop.MainWindow);
-            }
-
-            Restore(vm, desktop);
-
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-            {
-                vm.BottomCornerRadius = new CornerRadius(0, 0, 8, 8);
-                if (Settings.WindowProperties.AutoFit)
-                {
-                    CenterWindowOnScreen();
-                }
-                else
-                {
-                    InitializeWindowSizeAndPosition(desktop.MainWindow);
-                }
-            }
-        }
-        else
-        {
-            WindowResizing.SaveSize(desktop.MainWindow);
-            Fullscreen(vm, desktop);
-            if (saveSettings)
-            {
-                Settings.WindowProperties.Fullscreen = true;
-            }
-        }
-
-        await SaveSettingsAsync().ConfigureAwait(false);
-    }
-
-    public static async Task MaximizeRestore()
-    {
-        if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop)
-        {
-            return;
-        }
-
-        var vm = desktop.MainWindow.DataContext as MainViewModel;
-        // Restore
-        if (desktop.MainWindow.WindowState is WindowState.Maximized or WindowState.FullScreen)
-        {
-            Restore(vm, desktop);
-        }
-        // Maximize
-        else
-        {
-            if (!Settings.WindowProperties.AutoFit)
-            {
-                WindowResizing.SaveSize(desktop.MainWindow);
-            }
-
-            Maximize();
-        }
-
-        await SaveSettingsAsync().ConfigureAwait(false);
-    }
-
-    public static void Restore()
-    {
-        if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop || desktop.MainWindow.DataContext is not MainViewModel vm)
-        {
-            return;
-        }
-
-        Restore(vm, desktop);
-    }
-
-    public static void Restore(MainViewModel vm, IClassicDesktopStyleApplicationLifetime desktop)
-    {
-        Settings.WindowProperties.Maximized = false;
-        Settings.WindowProperties.Fullscreen = false;
-        SetMargin();
-        vm.IsMaximized = false;
-        vm.IsFullscreen = false;
-        
-        if (Settings.UIProperties.ShowInterface)
-        {
-            vm.IsTopToolbarShown = true;
-            vm.TitlebarHeight = SizeDefaults.MainTitlebarHeight;
-            if (Settings.UIProperties.ShowBottomNavBar)
-            {
-                vm.IsBottomToolbarShown = true;
-                vm.BottombarHeight = SizeDefaults.BottombarHeight;
-            }
-
-            vm.IsUIShown = true;
-        }
-
-        Dispatcher.UIThread.InvokeAsync(() =>
-            desktop.MainWindow.WindowState = WindowState.Normal);
-        vm.IsUIShown = Settings.UIProperties.ShowInterface;
-        
-        if (Settings.WindowProperties.AutoFit)
-        {
-            vm.SizeToContent = SizeToContent.WidthAndHeight;
-            vm.CanResize = false;
-            vm.IsAutoFit = true;
-            CenterWindowOnScreen();
-            _ = ResizeAndFixRenderingError(vm); // Fixes incorrect render size
-        }
-        else
-        {
-            vm.SizeToContent = SizeToContent.Manual;
-            vm.CanResize = true;
-            InitializeWindowSizeAndPosition(desktop.MainWindow);
-        }
-        WindowResizing.SetSize(vm);
-    }
-
-    public static void Maximize()
-    {
-        // TODO: Fix incorrect size for bottom button bar
-
-        if (Dispatcher.UIThread.CheckAccess())
-        {
-            Set();
-        }
-        else
-        {
-            Dispatcher.UIThread.InvokeAsync(Set);
-        }
-
-        return;
-
-        void Set()
-        {
-            if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop)
-            {
-                return;
-            }
-
-            var vm = desktop.MainWindow.DataContext as MainViewModel;
-            if (Settings.WindowProperties.AutoFit)
-            {
-                vm.SizeToContent = SizeToContent.Manual;
-            }
-
-            desktop.MainWindow.WindowState = WindowState.Maximized;
-            Settings.WindowProperties.Maximized = true;
-            WindowResizing.SetSize(desktop.MainWindow.DataContext as MainViewModel);
-            SetMargin();
-            vm.IsMaximized = true;
-            vm.IsFullscreen = false;
-            vm.CanResize = false;
-        }
-    }
-    
-    private static void SetMargin()
-    {
-        if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop)
-        {
-            return;
-        }
-
-        if (desktop.MainWindow.DataContext is not MainViewModel vm)
-        {
-            return;
-        }
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-        {
-            if (Settings.WindowProperties.Maximized)
-            {
-                // Sometimes margin is 0 when it's not supposed to be, so replace with 7. Not sure why.
-                var left = desktop.MainWindow.OffScreenMargin.Left is 0 ? 7 : desktop.MainWindow.OffScreenMargin.Left;
-                var top = desktop.MainWindow.OffScreenMargin.Top is 0 ? 7 : desktop.MainWindow.OffScreenMargin.Top;
-                var right = desktop.MainWindow.OffScreenMargin.Right is 0 ? 7 : desktop.MainWindow.OffScreenMargin.Right;
-                var bottom = desktop.MainWindow.OffScreenMargin.Bottom is 0 ? 7 : desktop.MainWindow.OffScreenMargin.Bottom;
-                vm.TopScreenMargin = new Thickness(left, top, right, 0);
-                vm.BottomScreenMargin = new Thickness(left, 0, right, bottom);
-            }
-            else
-            {
-                var noThickness = new Thickness(0);
-                vm.TopScreenMargin = noThickness;
-                vm.BottomScreenMargin = noThickness;
-            }
-        }
-        else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-        {
-            vm.BottomCornerRadius = Settings.WindowProperties.Maximized ? 
-                new CornerRadius(0) :
-                new CornerRadius(0, 0, 8, 8);
-        }
-    }
-
-    public static void Fullscreen(MainViewModel vm, IClassicDesktopStyleApplicationLifetime desktop)
-    {
-        vm.SizeToContent = SizeToContent.Manual;
-        vm.IsFullscreen = true;
-        Settings.WindowProperties.Fullscreen = true;
-        vm.IsMaximized = false;
-        vm.CanResize = false;
-        Dispatcher.UIThread.Invoke(() =>
-        {
-            desktop.MainWindow.WindowState = WindowState.FullScreen;
-        });
-
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-        {
-            vm.IsTopToolbarShown = false; // Hide interface in fullscreen. Remember to turn back when exiting fullscreen
-            vm.IsBottomToolbarShown = false;
-            vm.IsUIShown = false;
-            Dispatcher.UIThread.Post(() =>
-            {
-                // Get the screen that the window is currently on
-                var window = desktop.MainWindow;
-                var screens = desktop.MainWindow.Screens;
-                var screen = screens.ScreenFromVisual(window);
-
-                if (screen == null)
-                {
-                    return; // No screen found (edge case)
-                }
-
-                // Get the scaling factor of the screen (DPI scaling)
-                var scalingFactor = screen.Scaling;
-
-                // Get the current screen's bounds (in physical pixels, not adjusted for scaling)
-                var screenBounds = screen.Bounds;
-
-                // Calculate the actual bounds in logical units (adjusting for scaling)
-                var screenWidth = screenBounds.Width / scalingFactor;
-                var screenHeight = screenBounds.Height / scalingFactor;
-
-                // Get the size of the window
-                var windowSize = window.ClientSize;
-
-                // Calculate the position to center the window on the screen
-                var centeredX = screenBounds.X + (screenWidth - windowSize.Width) / 2;
-                var centeredY = screenBounds.Y + (screenHeight - windowSize.Height) / 2;
-
-                // Set the window's new position
-                window.Position = new PixelPoint((int)centeredX, (int)centeredY);
-            });
-            // TODO: Add Fullscreen mode for Windows (and maybe for Linux?)
-            // macOS fullscreen version already works nicely
-        }
-        else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-        {
-            vm.BottomCornerRadius = new CornerRadius(0);
-            if (Settings.WindowProperties.AutoFit)
-            {
-                // TODO go to macOS fullscreen mode when auto fit is on
-            }
-        }
-        WindowResizing.SetSize(vm);
-
-        MenuManager.CloseMenus(vm);
-        vm.GalleryWidth = double.NaN;
-    }
-
     public static async Task Minimize()
     {
         if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop)
@@ -601,7 +324,7 @@ public static class WindowFunctions
 
     #region Window Drag and Behavior
 
-    public static void WindowDragAndDoubleClickBehavior(Window window, PointerPressedEventArgs e)
+    public static void WindowDragAndDoubleClickBehavior(Window window, PointerPressedEventArgs e, IPlatformWindowService platformWindowService)
     {
         var currentScreen = ScreenHelper.ScreenSize;
         
@@ -613,21 +336,7 @@ public static class WindowFunctions
         
         if (e.ClickCount == 2 && e.GetCurrentPoint(window).Properties.IsLeftButtonPressed)
         {
-            _ = MaximizeRestore();
-            if (!RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-            {
-                return;
-            }
-
-            if (!Settings.WindowProperties.AutoFit)
-            {
-                return;
-            }
-
-            if (Settings.WindowProperties.Fullscreen || Settings.WindowProperties.Maximized)
-            {
-                window.Position = new PixelPoint(0, 0);
-            }
+            platformWindowService.MaximizeRestore();
             return;
         }
 

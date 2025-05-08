@@ -20,20 +20,6 @@ public interface IPlatformSpecificService
     void LocateOnDisk(string path);
     
     void ShowFileProperties(string path);
-
-    void ShowAboutWindow();
-
-    void ShowExifWindow();
-
-    void ShowKeybindingsWindow();
-
-    void ShowSettingsWindow();
-    
-    void ShowEffectsWindow();
-    
-    void ShowSingleImageResizeWindow();
-    
-    void ShowBatchResizeWindow();
     
     void Print(string path);
     

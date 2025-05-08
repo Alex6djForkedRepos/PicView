@@ -123,13 +123,16 @@ public static class StartUpHelper
         // Need to delay setting fullscreen or maximized until after the window is shown to select the correct monitor
         if (Settings.WindowProperties.Maximized && !Settings.WindowProperties.Fullscreen)
         {
-            Dispatcher.UIThread.InvokeAsync(WindowFunctions.Maximize, DispatcherPriority.Normal).Wait();
+            Dispatcher.UIThread.InvokeAsync(() =>
+            {
+                vm.PlatformWindowService.Maximize(false);
+            }, DispatcherPriority.Normal).Wait();
         }
         else if (Settings.WindowProperties.Fullscreen)
         {
             Dispatcher.UIThread.InvokeAsync(() =>
             {
-                WindowFunctions.Fullscreen(vm, desktop);
+                vm.PlatformWindowService.Fullscreen(false);
             }, DispatcherPriority.Normal).Wait();
         }
         

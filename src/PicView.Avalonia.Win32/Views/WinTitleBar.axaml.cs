@@ -91,16 +91,12 @@ public partial class WinTitleBar : UserControl
 
     private void MoveWindow(PointerPressedEventArgs e)
     {
-        if (VisualRoot is null) { return; }
-
-        if (DataContext is not MainViewModel vm)
-        {
-            return;
-        }
+        if (VisualRoot is null || DataContext is not MainViewModel vm) { return; }
+        
         if (vm.IsEditableTitlebarOpen)
         {
             return;
         }
-        WindowFunctions.WindowDragAndDoubleClickBehavior((Window)VisualRoot, e);
+        WindowFunctions.WindowDragAndDoubleClickBehavior((Window)VisualRoot, e, vm.PlatformWindowService);
     }
 }

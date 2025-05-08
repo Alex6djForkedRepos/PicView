@@ -22,7 +22,7 @@ public partial class WinMainWindow : Window
         
         Loaded += delegate
         {
-            if (DataContext == null)
+            if (DataContext is not MainViewModel vm)
             {
                 return;
             }
@@ -44,28 +44,25 @@ public partial class WinMainWindow : Window
             
             this.WhenAnyValue(x => x.WindowState).Subscribe(state =>
             {
-                if (DataContext is not MainViewModel vm)
-                {
-                    return;
-                }
+
                 switch (state)
                 {
                     case WindowState.FullScreen:
                         if (!Settings.WindowProperties.Fullscreen)
                         {
-                            WindowFunctions.Fullscreen(vm, desktop);
+                            vm.PlatformWindowService.Fullscreen();
                         }
                         break;
                     case WindowState.Maximized:
                         if (!Settings.WindowProperties.Maximized)
                         {
-                            WindowFunctions.Maximize();
+                            vm.PlatformWindowService.Maximize();
                         }
                         break;
                     case WindowState.Normal:
                         if (Settings.WindowProperties.Fullscreen || Settings.WindowProperties.Maximized)
                         {
-                            WindowFunctions.Restore(vm, desktop);
+                            vm.PlatformWindowService.Restore();
                         }
                         break;
                 }

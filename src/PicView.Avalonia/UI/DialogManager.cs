@@ -5,7 +5,6 @@ using PicView.Avalonia.Crop;
 using PicView.Avalonia.Navigation;
 using PicView.Avalonia.ViewModels;
 using PicView.Avalonia.Views.UC.PopUps;
-using PicView.Avalonia.WindowBehavior;
 
 namespace PicView.Avalonia.UI;
 
@@ -42,7 +41,7 @@ public static class DialogManager
         // Handle fullscreen
         if (Settings.WindowProperties.Fullscreen)
         {
-            await WindowFunctions.MaximizeRestore();
+            await vm.PlatformWindowService.MaximizeRestore(false);
             return;
         }
         

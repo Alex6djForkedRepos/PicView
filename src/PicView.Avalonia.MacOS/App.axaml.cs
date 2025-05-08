@@ -1,14 +1,13 @@
 ﻿using System.Diagnostics;
 using System.Runtime;
 using Avalonia;
-using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using PicView.Avalonia.ColorManagement;
-using PicView.Avalonia.Functions;
 using PicView.Avalonia.Interfaces;
 using PicView.Avalonia.MacOS.Views;
+using PicView.Avalonia.MacOS.WindowImpl;
 using PicView.Avalonia.Navigation;
 using PicView.Avalonia.StartUp;
 using PicView.Avalonia.UI;
@@ -21,21 +20,15 @@ using PicView.Core.MacOS.FileAssociation;
 using PicView.Core.MacOS.FileFunctions;
 using PicView.Core.MacOS.Wallpaper;
 using PicView.Core.ProcessHandling;
-using PicView.Core.ViewModels;
+
 #pragma warning disable CS0618 // Type or member is obsolete
 
 namespace PicView.Avalonia.MacOS;
 
-public class App : Application, IPlatformSpecificService
+public class App : Application, IPlatformSpecificService, IPlatformWindowService
 {
     private MacMainWindow? _mainWindow;
-    private ExifWindow? _exifWindow;
-    private SettingsWindow? _settingsWindow;
-    private KeybindingsWindow? _keybindingsWindow;
-    private AboutWindow? _aboutWindow;
-    private SingleImageResizeWindow? _singleImageResizeWindow;
-    private BatchResizeWindow? _batchResizeWindow;
-    private EffectsWindow? _effectsWindow;
+    private static WindowManager? _windowManager;
     private MainViewModel? _vm;
 
     public override void Initialize()
@@ -74,7 +67,7 @@ public class App : Application, IPlatformSpecificService
                 desktop.MainWindow = _mainWindow;
             },DispatcherPriority.Send);
         
-            _vm = new MainViewModel(this);
+            _vm = new MainViewModel(this, this);
         
             await Dispatcher.UIThread.InvokeAsync(() =>
             {
@@ -84,6 +77,7 @@ public class App : Application, IPlatformSpecificService
                 {
                     WindowFunctions.CenterWindowOnScreen();
                 }
+                _windowManager = new WindowManager();
             },DispatcherPriority.Send);
             
             // Register for macOS file opening
@@ -100,316 +94,7 @@ public class App : Application, IPlatformSpecificService
     }
 
     #region Interface implementations
-
-    #region Windows
     
-    public void ShowAboutWindow()
-    {
-        if (Dispatcher.UIThread.CheckAccess())
-        {
-            Set();
-        }
-        else
-        {
-            Dispatcher.UIThread.InvokeAsync(Set);
-        }
-        return;
-
-        void Set()
-        {
-            if (Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop)
-            {
-                return;
-            }
-
-            if (_aboutWindow is null)
-            {
-                _aboutWindow = new AboutWindow
-                {
-                    DataContext = _vm,
-                    WindowStartupLocation = WindowStartupLocation.CenterOwner,
-                };
-                _aboutWindow.Show(desktop.MainWindow);
-                _aboutWindow.Closing += (s, e) => _aboutWindow = null;
-            }
-            else
-            {
-                if (_aboutWindow.WindowState == WindowState.Minimized)
-                {
-                    WindowFunctions.ShowMinimizedWindow(_aboutWindow);
-                }
-                else
-                {
-                    _aboutWindow.Show();
-                }       
-            }
-
-            _ = FunctionsMapper.CloseMenus();
-        }
-    }
-
-    public void ShowExifWindow()
-    {
-        if (Dispatcher.UIThread.CheckAccess())
-        {
-            Set();
-        }
-        else
-        {
-            Dispatcher.UIThread.InvokeAsync(Set);
-        }
-        return;
-
-        void Set()
-        {
-            if (Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop)
-            {
-                return;
-            }
-
-            if (_exifWindow is null)
-            {
-                _exifWindow = new ExifWindow
-                {
-                    DataContext = _vm,
-                    WindowStartupLocation = WindowStartupLocation.CenterOwner,
-                };
-                _exifWindow.Show(desktop.MainWindow);
-                _exifWindow.Closing += (s, e) => _exifWindow = null;
-            }
-            else
-            {
-                if (_exifWindow.WindowState == WindowState.Minimized)
-                {
-                    WindowFunctions.ShowMinimizedWindow(_exifWindow);
-                }
-                else
-                {
-                    _exifWindow.Show();
-                }      
-            }
-
-            _ = FunctionsMapper.CloseMenus();
-        }
-    }
-
-    public void ShowKeybindingsWindow()
-    {
-        if (Dispatcher.UIThread.CheckAccess())
-        {
-            Set();
-        }
-        else
-        {
-            Dispatcher.UIThread.InvokeAsync(Set);
-        }
-        return;
-
-        void Set()
-        {
-            if (Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop)
-            {
-                return;
-            }
-
-            if (_keybindingsWindow is null)
-            {
-                _keybindingsWindow = new KeybindingsWindow
-                {
-                    DataContext = _vm,
-                    WindowStartupLocation = WindowStartupLocation.CenterOwner,
-                };
-                _keybindingsWindow.Show(desktop.MainWindow);
-                _keybindingsWindow.Closing += (s, e) => _keybindingsWindow = null;
-            }
-            else
-            {
-                if (_keybindingsWindow.WindowState == WindowState.Minimized)
-                {
-                    WindowFunctions.ShowMinimizedWindow(_keybindingsWindow);
-                }
-                else
-                {
-                    _keybindingsWindow.Show();
-                }      
-            }
-
-            _ = FunctionsMapper.CloseMenus();
-        }
-    }
-
-    public void ShowSettingsWindow()
-    {
-        if (Dispatcher.UIThread.CheckAccess())
-        {
-            Set();
-        }
-        else
-        {
-            Dispatcher.UIThread.InvokeAsync(Set);
-        }
-        return;
-        void Set()
-        {
-            if (Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop)
-            {
-                return;
-            }
-            if (_settingsWindow is null)
-            {
-                _vm.AssociationsViewModel ??= new FileAssociationsViewModel();
-                _vm.SettingsViewModel ??= new SettingsViewModel();
-                _settingsWindow = new SettingsWindow
-                {
-                    DataContext = _vm,
-                    WindowStartupLocation = WindowStartupLocation.CenterOwner,
-                };
-                _settingsWindow.Show(desktop.MainWindow);
-                _settingsWindow.Closing += (s, e) => _settingsWindow = null;
-            }
-            else
-            {
-                if (_settingsWindow.WindowState == WindowState.Minimized)
-                {
-                    WindowFunctions.ShowMinimizedWindow(_settingsWindow);
-                }
-                else
-                {
-                    _settingsWindow.Show();
-                }     
-            }
-            _= FunctionsMapper.CloseMenus();
-            
-        }
-    }
-
-    public void ShowEffectsWindow()
-    {
-        if (Dispatcher.UIThread.CheckAccess())
-        {
-            Set();
-        }
-        else
-        {
-            Dispatcher.UIThread.InvokeAsync(Set);
-        }
-        return;
-        void Set()
-        {
-            if (Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop)
-            {
-                return;
-            }
-            if (_effectsWindow is null)
-            {
-                _effectsWindow = new EffectsWindow
-                {
-                    DataContext = _vm,    
-                    WindowStartupLocation = WindowStartupLocation.CenterOwner,
-                };
-                _effectsWindow.Show(desktop.MainWindow);
-                _effectsWindow.Closing += (s, e) => _effectsWindow = null;
-            }
-            else
-            {
-                if (_effectsWindow.WindowState == WindowState.Minimized)
-                {
-                    WindowFunctions.ShowMinimizedWindow(_effectsWindow);
-                }
-                else
-                {
-                    _effectsWindow.Show();
-                }   
-            }
-            _= FunctionsMapper.CloseMenus();
-        }
-    }
-
-    public void ShowSingleImageResizeWindow()
-    {
-        if (Dispatcher.UIThread.CheckAccess())
-        {
-            Set();
-        }
-        else
-        {
-            Dispatcher.UIThread.InvokeAsync(Set);
-        }
-        return;
-        void Set()
-        {
-            if (Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop)
-            {
-                return;
-            }
-            if (_singleImageResizeWindow is null)
-            {
-                _singleImageResizeWindow = new SingleImageResizeWindow
-                {
-                    DataContext = _vm,
-                    WindowStartupLocation = WindowStartupLocation.CenterOwner,
-                };
-                _singleImageResizeWindow.Show(desktop.MainWindow);
-                _singleImageResizeWindow.Closing += (s, e) => _singleImageResizeWindow = null;
-            }
-            else
-            {
-                if (_singleImageResizeWindow.WindowState == WindowState.Minimized)
-                {
-                    WindowFunctions.ShowMinimizedWindow(_singleImageResizeWindow);
-                }
-                else
-                {
-                    _singleImageResizeWindow.Show();
-                }  
-            }
-            _= FunctionsMapper.CloseMenus();
-        }
-    }
-
-    public void ShowBatchResizeWindow()
-    {
-        if (Dispatcher.UIThread.CheckAccess())
-        {
-            Set();
-        }
-        else
-        {
-            Dispatcher.UIThread.InvokeAsync(Set);
-        }
-        return;
-        void Set()
-        {
-            if (Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop)
-            {
-                return;
-            }
-            if (_batchResizeWindow is null)
-            {
-                _batchResizeWindow = new BatchResizeWindow
-                {
-                    DataContext = _vm,
-                    WindowStartupLocation = WindowStartupLocation.CenterOwner,
-                };
-                _batchResizeWindow.Show(desktop.MainWindow);
-                _batchResizeWindow.Closing += (s, e) => _batchResizeWindow = null;
-            }
-            else
-            {
-                if (_batchResizeWindow.WindowState == WindowState.Minimized)
-                {
-                    WindowFunctions.ShowMinimizedWindow(_batchResizeWindow);
-                }
-                else
-                {
-                    _batchResizeWindow.Show();
-                }  
-            }
-            _= FunctionsMapper.CloseMenus();
-        }   
-    }
-
-    #endregion
     public void SetTaskbarProgress(ulong progress, ulong maximum)
     {
         // TODO: Implement SetTaskbarProgress
@@ -526,6 +211,55 @@ public class App : Application, IPlatformSpecificService
         var iIFileAssociationService = new MacFileAssociationService();
         FileAssociationManager.Initialize(iIFileAssociationService);
     }
+    
+    #endregion
+    
+    public int Padding { get; set; } // TODO should be the width or height of the dock. Half if auto-hiding
+
+    public int CombinedTitleButtonsWidth { get; set; } = 165;
+    
+    #region Window interface implementations
+    
+    public void ShowAboutWindow() =>
+        _windowManager?.ShowAboutWindow(_vm);
+
+    public void ShowExifWindow() =>
+        _windowManager?.ShowExifWindow(_vm);
+
+    public void ShowKeybindingsWindow() =>
+        _windowManager?.ShowKeybindingsWindow(_vm);
+
+    public void ShowSettingsWindow() =>
+        _windowManager?.ShowSettingsWindow(_vm);
+
+    public void ShowSingleImageResizeWindow() =>
+        _windowManager?.ShowSingleImageResizeWindow(_vm);
+
+    public void ShowBatchResizeWindow() =>
+        _windowManager?.ShowBatchResizeWindow(_vm);
+
+    public void ShowEffectsWindow() =>
+        _windowManager?.ShowEffectsWindow(_vm);
+
+    /// <inheritdoc />
+    public async Task Maximize(bool saveSetting = true) =>
+        await MacOSWindow.Maximize(_mainWindow, _vm, saveSetting);
+    
+    /// <inheritdoc />
+    public async Task MaximizeRestore(bool saveSetting = true) =>
+        await MacOSWindow.ToggleMaximize(_mainWindow, _vm, saveSetting);
+
+    /// <inheritdoc />
+    public async Task Fullscreen(bool saveSetting = true) =>
+        await MacOSWindow.Fullscreen(_mainWindow, _vm, saveSetting);
+    
+    /// <inheritdoc />
+    public async Task ToggleFullscreen(bool saveSetting = true) =>
+        await MacOSWindow.ToggleFullscreen(_mainWindow, _vm, saveSetting);
+    
+    /// <inheritdoc />
+    public async Task Restore() =>
+        await MacOSWindow.Restore(_mainWindow, _vm);
     
     #endregion
 }

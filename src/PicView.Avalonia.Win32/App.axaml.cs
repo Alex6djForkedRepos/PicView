@@ -11,6 +11,7 @@ using PicView.Avalonia.Navigation;
 using PicView.Avalonia.StartUp;
 using PicView.Avalonia.ViewModels;
 using PicView.Avalonia.Win32.Views;
+using PicView.Avalonia.Win32.WindowImpl;
 using PicView.Core.FileHandling;
 using PicView.Core.Localization;
 using PicView.Core.ProcessHandling;
@@ -24,7 +25,7 @@ using Win32Clipboard = PicView.Core.WindowsNT.Copy.Win32Clipboard;
 
 namespace PicView.Avalonia.Win32;
 
-public class App : Application, IPlatformSpecificService
+public class App : Application, IPlatformSpecificService, IPlatformWindowService
 {
     private static WinMainWindow? _mainWindow;
     private static WindowManager? _windowManager;
@@ -71,7 +72,7 @@ public class App : Application, IPlatformSpecificService
                 desktop.MainWindow = _mainWindow;
             }, DispatcherPriority.Send);
 
-            _vm = new MainViewModel(this);
+            _vm = new MainViewModel(this, this);
 
             await Dispatcher.UIThread.InvokeAsync(() =>
             {
@@ -87,6 +88,10 @@ public class App : Application, IPlatformSpecificService
 #endif
         }
     }
+    
+    public int Padding { get; set; } = 45;
+
+    public int CombinedTitleButtonsWidth { get; set; } = 215;
 
     #region Interface Implementations
 
@@ -155,27 +160,6 @@ public class App : Application, IPlatformSpecificService
         FileExplorer.ShowFileProperties(path);
     }
 
-    public void ShowAboutWindow() =>
-        _windowManager?.ShowAboutWindow(_vm);
-
-    public void ShowExifWindow() =>
-        _windowManager?.ShowExifWindow(_vm);
-
-    public void ShowKeybindingsWindow() =>
-        _windowManager?.ShowKeybindingsWindow(_vm);
-
-    public void ShowSettingsWindow() =>
-        _windowManager?.ShowSettingsWindow(_vm);
-
-    public void ShowSingleImageResizeWindow() =>
-        _windowManager?.ShowSingleImageResizeWindow(_vm);
-
-    public void ShowBatchResizeWindow() =>
-        _windowManager?.ShowBatchResizeWindow(_vm);
-
-    public void ShowEffectsWindow() =>
-        _windowManager?.ShowEffectsWindow(_vm);
-
     public void Print(string path)
     {
         ProcessHelper.Print(path);
@@ -243,4 +227,50 @@ public class App : Application, IPlatformSpecificService
     }
 
     #endregion
+
+    #region Window interface implementations
+    
+    public void ShowAboutWindow() =>
+        _windowManager?.ShowAboutWindow(_vm);
+
+    public void ShowExifWindow() =>
+        _windowManager?.ShowExifWindow(_vm);
+
+    public void ShowKeybindingsWindow() =>
+        _windowManager?.ShowKeybindingsWindow(_vm);
+
+    public void ShowSettingsWindow() =>
+        _windowManager?.ShowSettingsWindow(_vm);
+
+    public void ShowSingleImageResizeWindow() =>
+        _windowManager?.ShowSingleImageResizeWindow(_vm);
+
+    public void ShowBatchResizeWindow() =>
+        _windowManager?.ShowBatchResizeWindow(_vm);
+
+    public void ShowEffectsWindow() =>
+        _windowManager?.ShowEffectsWindow(_vm);
+
+    /// <inheritdoc />
+    public async Task Maximize(bool saveSetting = true) =>
+        await Win32Window.Maximize(_mainWindow, _vm, saveSetting);
+    
+    /// <inheritdoc />
+    public async Task MaximizeRestore(bool saveSetting = true) =>
+        await Win32Window.ToggleMaximize(_mainWindow, _vm, saveSetting);
+
+    /// <inheritdoc />
+    public async Task Fullscreen(bool saveSetting = true) =>
+        await Win32Window.Fullscreen(_mainWindow, _vm, saveSetting);
+    
+    /// <inheritdoc />
+    public async Task ToggleFullscreen(bool saveSetting = true) =>
+        await Win32Window.ToggleFullscreen(_mainWindow, _vm, saveSetting);
+    
+    /// <inheritdoc />
+    public async Task Restore() =>
+        await Win32Window.Restore(_mainWindow, _vm);
+
+    #endregion
+
 }
