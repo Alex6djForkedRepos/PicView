@@ -11,7 +11,7 @@ namespace PicView.Avalonia.Views;
 
 public partial class AboutView : UserControl
 {
-    public IPlatformSpecificUpdate PlatformUpdate;
+    public required IPlatformSpecificUpdate PlatformUpdate;
 
     public AboutView()
     {

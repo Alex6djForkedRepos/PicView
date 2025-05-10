@@ -14,6 +14,8 @@ public partial class EffectsWindow : Window
     public EffectsWindow()
     {
         InitializeComponent();
+        Title = $"{TranslationManager.Translation.Effects}  - PicView";
+        
         if (Settings.Theme.GlassTheme)
         {
             IconBorder.Background = Brushes.Transparent;
@@ -46,9 +48,6 @@ public partial class EffectsWindow : Window
         }
         Loaded += delegate
         {
-            MinWidth = MaxWidth = Width;
-            Title = $"{TranslationManager.Translation.Effects}  - PicView";
-            
             ClearEffectsItem.Click += delegate
             {
                 EffectsView?.RemoveEffects();

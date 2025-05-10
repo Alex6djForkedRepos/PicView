@@ -316,6 +316,10 @@ public partial class SingleImageResizeView : UserControl
 
         ConversionComboBox.SelectedItem = NoConversion;
 
+        _isKeepingAspectRatio = true;
+        LinkChainImage.IsVisible = true;
+        UnlinkChainImage.IsVisible = false;
+
         ShowCancelButton();
     }
 
@@ -328,6 +332,11 @@ public partial class SingleImageResizeView : UserControl
         if (_isKeepingAspectRatio)
         {
             AdjustAspectRatio(PixelWidthTextBox);
+        }
+
+        if (!_isKeepingAspectRatio)
+        {
+            ShowResetButton();
         }
     }
 
