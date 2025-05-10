@@ -1,5 +1,6 @@
 ﻿using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Media;
 using PicView.Core.Localization;
 using Path = Avalonia.Controls.Shapes.Path;
@@ -9,18 +10,10 @@ namespace PicView.Avalonia.CustomControls;
 public class FuncTextBox : TextBox
 {
     private bool _contextMenuLoaded;
-        
+    private bool _initialFocus;
     public FuncTextBox()
     {
         ContextMenu = new ContextMenu();
-
-        PointerPressed += (_, e) =>
-        {
-            if (e.GetCurrentPoint(this).Properties.IsRightButtonPressed)
-            {
-                ContextMenu.Open(this);
-            }
-        };
 
         ContextMenu.Opening += (_, _) =>
         {
@@ -39,6 +32,23 @@ public class FuncTextBox : TextBox
         {
             Classes.Remove("active");
         };
+        
+        GotFocus += (_, _) => _initialFocus = true;
+        LostFocus += (_, _) => _initialFocus = false;
+    }
+    protected override void OnPointerPressed(PointerPressedEventArgs e)
+    {
+        base.OnPointerPressed(e);
+        if (!e.GetCurrentPoint(this).Properties.IsLeftButtonPressed || !_initialFocus)
+        {
+            return;
+        }
+
+        // When clicking into the textbox and it didn't have focus before
+        SelectAll();
+        CaretIndex = Text?.Length ?? 0;
+        e.Handled = true;
+        _initialFocus = false;
     }
 
     protected override Type StyleKeyOverride => typeof(TextBox);
@@ -137,7 +147,7 @@ public class FuncTextBox : TextBox
 
         var deleteMenuItem = new MenuItem
         {
-            Header = TranslationManager.Translation.DeleteFile,
+            Header = TranslationManager.Translation.Clear,
             Icon = new Path
             {
                 Width = 12,
