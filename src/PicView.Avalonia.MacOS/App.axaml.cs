@@ -84,7 +84,14 @@ public class App : Application, IPlatformSpecificService, IPlatformWindowService
             // Register for macOS file opening
             Current.UrlsOpened += async (_, e) =>
             {
-                await NavigationManager.LoadPicFromStringAsync(e.Urls[0], _vm).ConfigureAwait(false);
+                if (Settings.UIProperties.OpenInSameWindow)
+                {
+                    await NavigationManager.LoadPicFromStringAsync(e.Urls[0], _vm).ConfigureAwait(false);
+                }
+                else
+                {
+                    ProcessHelper.StartNewProcess(e.Urls[0]);
+                }
             };
             Current.UrlsOpened -= handler;
         }
