@@ -115,7 +115,11 @@ public partial class MainView : UserControl
                 await FunctionsMapper.ShowRecentHistoryFile();
             };
 
-            HideInterfaceLogic.AddHoverButtonEvents(AltButtonsPanel, vm);
+            // Setup hover fade buttons
+            _ = new HoverFadeButtonHandler(ClickArrowRight, vm, ClickArrowRight.PolyButton);
+            _ = new HoverFadeButtonHandler(ClickArrowLeft, vm, ClickArrowLeft.PolyButton);
+            _ = new HoverFadeButtonHandler(AltButtonsPanel, vm);
+            
             PointerWheelChanged += async (_, e) => await vm.ImageViewer.PreviewOnPointerWheelChanged(this, e);
         };
     }

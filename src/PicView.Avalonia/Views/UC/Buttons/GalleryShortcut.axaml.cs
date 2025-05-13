@@ -15,7 +15,7 @@ public partial class GalleryShortcut : UserControl
             {
                 return;
             }
-            HideInterfaceLogic.AddHoverButtonEvents(this, InnerButton, DataContext as MainViewModel);
+            _ = new HoverFadeButtonHandler(this, DataContext as MainViewModel, InnerButton);
             PointerWheelChanged += async (_, e) => await vm.ImageViewer.PreviewOnPointerWheelChanged(this, e);
         };
     }
