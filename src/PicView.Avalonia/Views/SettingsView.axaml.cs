@@ -15,106 +15,94 @@ public partial class SettingsView : UserControl
     private readonly Stack<TabItem?> _backStack = new();
     private readonly Stack<TabItem?> _forwardStack = new();
     private TabItem? _currentTab;
-    
+
     public SettingsView()
     {
         InitializeComponent();
-        Loaded += delegate
-        {
-            Height = MainTabControl.MaxHeight = ScreenHelper.GetWindowMaxHeight() - SizeDefaults.TopBorderHeight;
-            if (!Settings.Theme.Dark)
-            {
-                MainTabControl.Background = Brushes.Transparent;
-            }
-            MainTabControl.SelectionChanged += TabSelectionChanged;
-            PointerPressed += OnMouseButtonDown;
-
-            if (DataContext is not MainViewModel vm)
-            {
-                return;
-            }
-            
-            vm.SettingsViewModel.GoBackCommand = ReactiveCommand.Create(
-                GoBack, 
-                vm.SettingsViewModel.WhenAnyValue(x => x.IsBackButtonEnabled)
-            );
-            
-            vm.SettingsViewModel.GoForwardCommand = ReactiveCommand.Create(
-                GoForward, 
-                vm.SettingsViewModel.WhenAnyValue(x => x.IsForwardButtonEnabled)
-            );
-        };
+        Loaded += OnLoaded;
     }
 
-    private void TabSelectionChanged(object? sender, SelectionChangedEventArgs e)
+    private MainViewModel? ViewModel => DataContext as MainViewModel;
+
+    private void OnLoaded(object? sender, EventArgs e)
     {
-        if (sender is not TabControl tabControl)
-        {
-            return;
-        }
-
-        if (tabControl.SelectedItem is not TabItem tabItem)
-        {
-            return;
-        }
-        
-        if (_currentTab == tabItem)
-        {
-            return;
-        }
-
-        OnTabSelected(tabItem);
+        CloseItem.Click += (_, _) => (VisualRoot as Window)?.Close();
+        SetupUI();
+        AttachEventHandlers();
+        SetupCommands();
     }
 
-    public void OnTabSelected(TabItem? selectedTab)
+    private void SetupUI()
+    {
+        Height = MainTabControl.MaxHeight = ScreenHelper.GetWindowMaxHeight() - SizeDefaults.TopBorderHeight;
+        if (!Settings.Theme.Dark)
+        {
+            MainTabControl.Background = Brushes.Transparent;
+        }
+    }
+
+    private void AttachEventHandlers()
+    {
+        MainTabControl.SelectionChanged += OnTabSelectionChanged;
+        PointerPressed += OnPointerPressed;
+    }
+
+    private void SetupCommands()
+    {
+        if (ViewModel is not { SettingsViewModel: { } svm })
+        {
+            return;
+        }
+
+        svm.GoBackCommand = ReactiveCommand.Create(GoBack, svm.WhenAnyValue(x => x.IsBackButtonEnabled));
+        svm.GoForwardCommand = ReactiveCommand.Create(GoForward, svm.WhenAnyValue(x => x.IsForwardButtonEnabled));
+    }
+
+    private void OnTabSelectionChanged(object? sender, SelectionChangedEventArgs e)
+    {
+        if (MainTabControl.SelectedItem is TabItem selectedTab && _currentTab != selectedTab)
+        {
+            HandleTabSelection(selectedTab);
+        }
+    }
+
+    private void HandleTabSelection(TabItem selectedTab)
     {
         if (_currentTab != null)
         {
             _backStack.Push(_currentTab);
-            // Clear forward stack when a new tab is selected directly
-            _forwardStack.Clear();
+            _forwardStack.Clear(); // Clear forward history
         }
-    
+
         _currentTab = selectedTab;
         SelectTab(_currentTab);
         UpdateNavigationButtons();
     }
-    
-    public void GoBack()
+
+    private void GoBack()
     {
-        if (_backStack.Count <= 0)
+        if (!_backStack.TryPop(out var previousTab))
         {
             return;
         }
 
         _forwardStack.Push(_currentTab);
-        _currentTab = _backStack.Pop();
+        _currentTab = previousTab;
         SelectTab(_currentTab);
         UpdateNavigationButtons();
     }
 
-    public void GoForward()
+    private void GoForward()
     {
-        if (_forwardStack.Count <= 0)
+        if (!_forwardStack.TryPop(out var nextTab))
         {
             return;
         }
 
         _backStack.Push(_currentTab);
-        _currentTab = _forwardStack.Pop();
+        _currentTab = nextTab;
         SelectTab(_currentTab);
         UpdateNavigationButtons();
-    }
-
-    private void UpdateNavigationButtons()
-    {
-        if (DataContext is not MainViewModel vm)
-        {
-            return;
-        }
-        
-        vm.SettingsViewModel.IsBackButtonEnabled = _backStack.Count > 0;
-        vm.SettingsViewModel.IsForwardButtonEnabled = _forwardStack.Count > 0;
     }
 
     private void SelectTab(TabItem? tab)
@@ -122,21 +110,40 @@ public partial class SettingsView : UserControl
         MainTabControl.SelectedItem = tab;
     }
 
-    public void OnMouseButtonDown(object? sender, PointerPressedEventArgs e)
+    private void UpdateNavigationButtons()
+    {
+        if (ViewModel?.SettingsViewModel is not { } svm)
+        {
+            return;
+        }
+
+        svm.IsBackButtonEnabled = _backStack.Count > 0;
+        svm.IsForwardButtonEnabled = _forwardStack.Count > 0;
+    }
+
+    private void OnPointerPressed(object? sender, PointerPressedEventArgs e)
     {
         if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop)
         {
             return;
         }
+
         var topLevel = TopLevel.GetTopLevel(desktop.MainWindow);
-        var prop = e.GetCurrentPoint(topLevel).Properties;
-        if (prop.IsXButton1Pressed)  // Back button
+        var properties = e.GetCurrentPoint(topLevel).Properties;
+
+        if (properties.IsXButton1Pressed)
         {
             GoBack();
         }
-        else if (prop.IsXButton2Pressed)  // Forward button
+
+        if (properties.IsXButton2Pressed)
         {
             GoForward();
+        }
+
+        if (properties.IsRightButtonPressed)
+        {
+            ContextMenu.Open();
         }
     }
 }
