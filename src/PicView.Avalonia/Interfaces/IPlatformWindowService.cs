@@ -3,11 +3,6 @@
 public interface IPlatformWindowService
 {
     /// <summary>
-    /// Gets or sets the padding used to calculate space between the screen and the window.
-    /// </summary>
-    double Padding { get; }
-
-    /// <summary>
     /// Gets or sets the width of the buttons on the respective title bar implementation.
     /// </summary>
     int CombinedTitleButtonsWidth { get; set; }

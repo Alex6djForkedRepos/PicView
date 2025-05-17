@@ -90,12 +90,10 @@ public static class StartUpHelper
     public static void HandleWindowScalingMode(MainViewModel vm, Window window)
     {
         ScreenHelper.UpdateScreenSize(window);
-        if (!RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+
+        if (Settings.WindowProperties.Margin < 0)
         {
-            if (Settings.WindowProperties.Padding < 0)
-            {
-                Settings.WindowProperties.Padding = 45;
-            }
+            Settings.WindowProperties.Margin = 45;
         }
         if (Settings.WindowProperties.AutoFit)
         {

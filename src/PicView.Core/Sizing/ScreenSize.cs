@@ -25,4 +25,6 @@ public readonly record struct ScreenSize
     /// Gets the DPI scaling factor of the screen.
     /// </summary>
     public double Scaling { get; init; }
+    
+    public double Margin => Settings.WindowProperties.Margin is 0 ? 0 : Settings.WindowProperties.Margin / Scaling;
 }

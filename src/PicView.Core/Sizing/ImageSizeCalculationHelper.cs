@@ -5,7 +5,6 @@ public static class ImageSizeCalculationHelper
     private const int MinTitleWidth = 250;
     
     public static ImageSize GetImageSize(
-        double padding,
         double width,
         double height,
         ScreenSize screenSize,
@@ -33,7 +32,7 @@ public static class ImageSizeCalculationHelper
                          Settings.WindowProperties.Maximized;
             
         var borderSpaceHeight = fullscreen ? 0 : uiTopSize + uiBottomSize + galleryHeight;
-        var borderSpaceWidth = fullscreen ? 0 : padding;
+        var borderSpaceWidth = fullscreen ? 0 : screenSize.Margin;
 
         var workAreaWidth = screenSize.WorkingAreaWidth - borderSpaceWidth;
         var workAreaHeight = screenSize.WorkingAreaHeight - borderSpaceHeight;
@@ -45,19 +44,19 @@ public static class ImageSizeCalculationHelper
 
             maxWidth = Settings.ImageScaling.StretchImage 
                 ? workAreaWidth 
-                : Math.Min(workAreaWidth - padding, width);
+                : Math.Min(workAreaWidth - screenSize.Margin, width);
             
             maxHeight = workAreaHeight;
         }
         else if (Settings.WindowProperties.AutoFit)
         {
             maxWidth = Settings.ImageScaling.StretchImage
-                ? workAreaWidth - padding
-                : Math.Min(workAreaWidth - padding, width);
+                ? workAreaWidth - screenSize.Margin
+                : Math.Min(workAreaWidth - screenSize.Margin, width);
                     
             maxHeight = Settings.ImageScaling.StretchImage
-                ? workAreaHeight - padding
-                : Math.Min(workAreaHeight - padding, height);
+                ? workAreaHeight - screenSize.Margin
+                : Math.Min(workAreaHeight - screenSize.Margin, height);
         }
         else
         {
@@ -130,7 +129,7 @@ public static class ImageSizeCalculationHelper
                 xWidth = width * aspectRatio;
                 xHeight = height * aspectRatio;
 
-                scrollWidth = Math.Max(xWidth + SizeDefaults.ScrollbarSize, SizeDefaults.WindowMinSize + SizeDefaults.ScrollbarSize + padding + 16);
+                scrollWidth = Math.Max(xWidth + SizeDefaults.ScrollbarSize, SizeDefaults.WindowMinSize + SizeDefaults.ScrollbarSize + screenSize.Margin + 16);
                 scrollHeight = containerHeight - margin;
             }
             else
@@ -158,7 +157,6 @@ public static class ImageSizeCalculationHelper
     }
 
     public static ImageSize GetSideBySideImageSize(
-        double padding,
         double width,
         double height,
         double secondaryWidth,
@@ -182,11 +180,11 @@ public static class ImageSizeCalculationHelper
         }
 
         // Get sizes for both images
-        var firstSize = GetImageSize(padding, width, height, screenSize, minWidth, minHeight,
+        var firstSize = GetImageSize(width, height, screenSize, minWidth, minHeight,
             interfaceSize, rotationAngle, dpiScaling, uiTopSize, uiBottomSize, galleryHeight,
             containerWidth,
             containerHeight);
-        var secondSize = GetImageSize(padding, secondaryWidth, secondaryHeight, screenSize, minWidth,
+        var secondSize = GetImageSize(secondaryWidth, secondaryHeight, screenSize, minWidth,
             minHeight, interfaceSize, rotationAngle, dpiScaling, uiTopSize, uiBottomSize,
             galleryHeight,
             containerWidth, containerHeight);
@@ -203,7 +201,7 @@ public static class ImageSizeCalculationHelper
 
         if (Settings.WindowProperties.AutoFit)
         {
-            var widthPadding = Settings.ImageScaling.StretchImage ? 4 : padding;
+            var widthPadding = Settings.ImageScaling.StretchImage ? 4 : screenSize.Margin;
             var availableWidth = screenSize.WorkingAreaWidth - widthPadding;
             var availableHeight = screenSize.WorkingAreaHeight - (widthPadding + uiBottomSize + uiTopSize);
             if (rotationAngle is 0 or 180)
@@ -274,7 +272,7 @@ public static class ImageSizeCalculationHelper
                 var borderSpaceHeight = fullscreen ? 0 : uiTopSize + uiBottomSize + galleryHeight;
                 var workAreaHeight = screenSize.WorkingAreaHeight * dpiScaling - borderSpaceHeight;
                 scrollHeight = Math.Min(xHeight,
-                    Settings.ImageScaling.StretchImage ? workAreaHeight : workAreaHeight - padding);
+                    Settings.ImageScaling.StretchImage ? workAreaHeight : workAreaHeight - screenSize.Margin);
             }
             else
             {

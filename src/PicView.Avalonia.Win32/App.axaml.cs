@@ -9,7 +9,6 @@ using PicView.Avalonia.ColorManagement;
 using PicView.Avalonia.Interfaces;
 using PicView.Avalonia.Navigation;
 using PicView.Avalonia.StartUp;
-using PicView.Avalonia.UI;
 using PicView.Avalonia.ViewModels;
 using PicView.Avalonia.Win32.Views;
 using PicView.Avalonia.Win32.WindowImpl;
@@ -88,11 +87,6 @@ public class App : Application, IPlatformSpecificService, IPlatformWindowService
             Console.WriteLine(e);
 #endif
         }
-    }
-
-    public double Padding
-    {
-        get => Settings.WindowProperties.Padding / ScreenHelper.ScreenSize.Scaling;
     }
 
     public int CombinedTitleButtonsWidth
