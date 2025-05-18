@@ -40,7 +40,7 @@
   "CenterWindow": "Center window",
   "Centimeters": "centimeters",
   "ChangeBackground": "Change background",
-  "ChangeBackgroundTooltip": "Change between background color for images with transparent background",
+  "ChangeBackgroundTooltip": "Change the application's background color",
   "ChangeKeybindingText": "Click on a textbox to change keybinding. Pressing Esc unbinds key.",
   "ChangeKeybindingTooltip": "Click to change keybinding",
   "ChangingThemeRequiresRestart": "* Changing theme requires restart",
