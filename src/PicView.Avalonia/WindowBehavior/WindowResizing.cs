@@ -95,7 +95,7 @@ public static class WindowResizing
         SetSize(size.Value, vm);
     }
     
-    public static void SetSize(ImageSizeCalculationHelper.ImageSize size, MainViewModel vm)
+    public static void SetSize(ImageSize size, MainViewModel vm)
     {
         vm.TitleMaxWidth = size.TitleMaxWidth;
         vm.PicViewer.ImageWidth = size.Width;
@@ -129,7 +129,7 @@ public static class WindowResizing
         vm.PicViewer.AspectRatio = size.AspectRatio;
     }
 
-    public static ImageSizeCalculationHelper.ImageSize? GetSize(MainViewModel vm)
+    public static ImageSize? GetSize(MainViewModel vm)
     {
         double firstWidth, firstHeight;
         var preloadValue = NavigationManager.GetCurrentPreLoadValue();
@@ -194,7 +194,7 @@ public static class WindowResizing
         return GetSize(firstWidth, firstHeight, secondWidth, secondHeight, vm.RotationAngle, vm);
     }
     
-    public static ImageSizeCalculationHelper.ImageSize? GetSize(double width, double height, double secondWidth, double secondHeight, double rotation,
+    public static ImageSize? GetSize(double width, double height, double secondWidth, double secondHeight, double rotation,
         MainViewModel vm)
     {
         width = width == 0 ? vm.PicViewer.ImageWidth : width;
@@ -222,7 +222,7 @@ public static class WindowResizing
             return null;
         }
 
-        ImageSizeCalculationHelper.ImageSize size;
+        ImageSize size;
         if (Settings.ImageScaling.ShowImageSideBySide && secondWidth > 0 && secondHeight > 0)
         {
             size = ImageSizeCalculationHelper.GetSideBySideImageSize(
@@ -287,29 +287,6 @@ public static class WindowResizing
             Settings.WindowProperties.Left = left;
             Settings.WindowProperties.Width = window.Width;
             Settings.WindowProperties.Height = window.Height;
-        }
-    }
-
-    public static void RestoreSize(Window window)
-    {
-        if (Dispatcher.UIThread.CheckAccess())
-        {
-            Set();
-        }
-        else
-        {
-            Dispatcher.UIThread.InvokeAsync(Set);
-        }
-
-        return;
-
-        void Set()
-        {
-            var x = (int)Settings.WindowProperties.Left;
-            var y = (int)Settings.WindowProperties.Top;
-            window.Position = new PixelPoint(x, y);
-            window.Width = Settings.WindowProperties.Width;
-            window.Height = Settings.WindowProperties.Height;
         }
     }
 

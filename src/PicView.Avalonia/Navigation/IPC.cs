@@ -4,6 +4,7 @@ using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Threading;
 using PicView.Avalonia.ViewModels;
+using PicView.Core.DebugTools;
 
 namespace PicView.Avalonia.Navigation;
 
@@ -12,13 +13,14 @@ namespace PicView.Avalonia.Navigation;
 /// Allows multiple instances of the application to communicate, 
 /// enabling the transfer of commands or data between them.
 /// </summary>
+// ReSharper disable once InconsistentNaming
 internal static class IPC
 {
     /// <summary>
     /// The default name for the named pipe used by the application.
     /// This pipe is used to facilitate communication between instances of the application.
     /// </summary>
-    internal const string PipeName = "PicViewPipe";
+    private const string PipeName = "PicViewPipe";
 
     /// <summary>
     /// Sends an argument to a running instance of the application via the specified named pipe.
@@ -53,10 +55,7 @@ internal static class IPC
         }
         catch (Exception ex)
         {
-            // Log the exception if in debug mode
-#if DEBUG
-            Trace.WriteLine($"{nameof(SendArgumentToRunningInstance)} exception: \n{ex}");
-#endif
+            DebugHelper.LogDebug(nameof(IPC), nameof(SendArgumentToRunningInstance), ex);
             return false;
         }
         return true;

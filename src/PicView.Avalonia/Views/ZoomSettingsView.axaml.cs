@@ -46,7 +46,6 @@ public partial class ZoomSettingsView : UserControl
                         WindowResizing.SetSize(vm);
                         WindowFunctions.CenterWindowOnScreen();
                     }
-                    
                 });
         };
     }

@@ -1,5 +1,5 @@
 ﻿<customControls:AnimatedPopUp
-    ClickingOutSideCloses="False"
+    ClickingOutsideCloses="False"
     Padding="20"
     d:DesignHeight="450"
     d:DesignWidth="800"

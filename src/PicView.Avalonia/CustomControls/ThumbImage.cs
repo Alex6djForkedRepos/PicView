@@ -1,6 +1,7 @@
 ﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
+using PicView.Core.DebugTools;
 
 namespace PicView.Avalonia.CustomControls;
 
@@ -21,9 +22,7 @@ public class ThumbImage : Image
         }
         catch (Exception e)
         {
-#if DEBUG
-            Console.WriteLine(e);
-#endif
+            DebugHelper.LogDebug(nameof(ThumbImage), nameof(MeasureOverride), e);
         }
 
         return size ?? new Size();
@@ -42,9 +41,7 @@ public class ThumbImage : Image
         }
         catch (Exception e)
         {
-#if DEBUG
-            Console.WriteLine(e);
-#endif
+            DebugHelper.LogDebug(nameof(ThumbImage), nameof(ArrangeOverride), e);
         }
         return new Size();
     }

@@ -25,7 +25,6 @@ public static class ScreenHelper
     /// TODO: Add support for dragging between multiple monitors.
     /// Dragging to monitor with different scaling (DPI) causes weird incorrect size behavior,
     /// but starting the application works fine for either monitor, until you drag it to the other.
-    /// It works most of the time in debug mode, but not so much for AOT release.
     /// </remarks>
     public static void UpdateScreenSize(Window window)
     {

@@ -1,5 +1,4 @@
-﻿using System.Runtime.InteropServices;
-using System.Text;
+﻿using System.Text;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Platform.Storage;
@@ -32,9 +31,7 @@ public static class DragAndDropHelper
 
         var storageItems = files as IStorageItem[] ?? files.ToArray();
         var firstFile = storageItems.FirstOrDefault();
-        var path = RuntimeInformation.IsOSPlatform(OSPlatform.OSX)
-            ? firstFile.Path.AbsolutePath
-            : firstFile.Path.LocalPath;
+        var path = firstFile.Path.AbsolutePath;
         if (e.Data.Contains("text/x-moz-url"))
         {
             await HandleDropFromUrl(e, vm);
@@ -73,9 +70,7 @@ public static class DragAndDropHelper
         {
             foreach (var file in storageItems.Skip(1))
             {
-                var filepath = RuntimeInformation.IsOSPlatform(OSPlatform.OSX)
-                    ? file.Path.AbsolutePath
-                    : file.Path.LocalPath;
+                var filepath = file.Path.AbsolutePath;
                 if (filepath.IsSupported())
                 {
                     ProcessHelper.StartNewProcess(filepath);
@@ -160,9 +155,7 @@ public static class DragAndDropHelper
             return;
         }
         var firstFile = fileArray[0];
-        var path = RuntimeInformation.IsOSPlatform(OSPlatform.OSX)
-            ? firstFile.Path.AbsolutePath
-            : firstFile.Path.LocalPath;
+        var path = firstFile.Path.AbsolutePath;
         if (Directory.Exists(path))
         {
             await Dispatcher.UIThread.InvokeAsync(() =>
