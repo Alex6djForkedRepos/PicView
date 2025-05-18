@@ -52,6 +52,7 @@ public static class QuickLoad
         }
 
         vm.IsLoading = false;
+        vm.GetIndex = NavigationManager.GetNonZeroIndex;
     }
 
     private static async Task SingeImageLoadingAsync(MainViewModel vm, FileInfo fileInfo, MagickImage? magickImage)
