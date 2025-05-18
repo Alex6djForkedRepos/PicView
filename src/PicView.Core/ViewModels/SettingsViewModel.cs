@@ -57,4 +57,10 @@ public class SettingsViewModel : ReactiveObject
     } = Settings.UIProperties.ShowPermanentDeletionConfirmation;
 
     #endregion
+    
+    public double WindowMargin
+    {
+        get;
+        set => this.RaiseAndSetIfChanged(ref field, value);
+    }
 }

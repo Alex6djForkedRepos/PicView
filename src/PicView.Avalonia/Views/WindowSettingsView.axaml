@@ -1,0 +1,155 @@
+﻿<UserControl
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d"
+    x:Class="PicView.Avalonia.Views.WindowSettingsView"
+    x:DataType="viewModels:MainViewModel"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:customControls="clr-namespace:PicView.Avalonia.CustomControls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewModels="clr-namespace:PicView.Avalonia.ViewModels"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Design.DataContext>
+        <viewModels:MainViewModel />
+    </Design.DataContext>
+    <StackPanel HorizontalAlignment="Center" Orientation="Vertical">
+
+        <TextBlock
+            Classes="txt"
+            FontFamily="/Assets/Fonts/Roboto-Bold.ttf#Roboto"
+            FontSize="14"
+            Foreground="{StaticResource SecondaryTextColor}"
+            Margin="0,20,0,20"
+            Text="{CompiledBinding Translation.WindowScaling,
+                                   Mode=OneWay}" />
+
+        <ToggleButton
+            Background="Transparent"
+            BorderThickness="0"
+            Classes="altHover changeColor"
+            Command="{CompiledBinding ChangeAutoFitCommand}"
+            IsChecked="{CompiledBinding IsAutoFit}"
+            Margin="0,0,0,10"
+            Width="300">
+            <TextBlock
+                Classes="txt"
+                Foreground="{StaticResource SecondaryTextColor}"
+                Margin="0"
+                MaxWidth="240"
+                Padding="0,1,5,0"
+                Text="{CompiledBinding Translation.AutoFitWindow,
+                                       Mode=OneWay}" />
+        </ToggleButton>
+
+        <TextBlock
+            Classes="txt"
+            FontFamily="/Assets/Fonts/Roboto-Bold.ttf#Roboto"
+            FontSize="12"
+            IsEnabled="{CompiledBinding IsAutoFit}"
+            Margin="0,10,0,10"
+            MaxWidth="300"
+            Text="{CompiledBinding Translation.WindowMargin}" />
+        <customControls:CustomSlider
+            Height="30"
+            HorizontalAlignment="Center"
+            IsEnabled="{CompiledBinding IsAutoFit}"
+            IsSnapToTickEnabled="True"
+            Margin="0,1,0,1"
+            Maximum="100"
+            Minimum="0"
+            TickFrequency="1"
+            TickPlacement="BottomRight"
+            Value="{CompiledBinding SettingsViewModel.WindowMargin}"
+            Width="300" />
+        <TextBlock
+            Classes="txt"
+            FontFamily="/Assets/Fonts/Roboto-Bold.ttf#Roboto"
+            Foreground="{StaticResource MainTextColorFaded}"
+            IsEnabled="{CompiledBinding IsAutoFit}"
+            Margin="0,0,0,15"
+            Text="{CompiledBinding SettingsViewModel.WindowMargin,
+                                   Mode=OneWay}" />
+
+        <TextBlock
+            Classes="txt"
+            FontFamily="/Assets/Fonts/Roboto-Bold.ttf#Roboto"
+            FontSize="14"
+            Foreground="{StaticResource SecondaryTextColor}"
+            Margin="0,20,0,20"
+            Text="{CompiledBinding Translation.WindowManagement,
+                                   Mode=OneWay}" />
+
+        <ToggleButton
+            Background="Transparent"
+            BorderThickness="0"
+            Classes="altHover alt changeColor"
+            Command="{CompiledBinding ChangeTopMostCommand}"
+            IsChecked="{CompiledBinding IsTopMost}"
+            Margin="0,0,0,10"
+            Width="300">
+            <TextBlock
+                Classes="txt"
+                Foreground="{StaticResource SecondaryTextColor}"
+                Margin="0"
+                MaxWidth="240"
+                Padding="0,1,5,0"
+                Text="{CompiledBinding Translation.StayTopMost,
+                                       Mode=OneWay}" />
+        </ToggleButton>
+
+        <ToggleButton
+            Background="Transparent"
+            BorderThickness="0"
+            Classes="altHover changeColor"
+            IsChecked="{CompiledBinding IsStayingCentered}"
+            IsEnabled="{CompiledBinding IsAutoFit}"
+            Margin="0,0,0,10"
+            Width="300">
+            <TextBlock
+                Classes="txt"
+                Foreground="{StaticResource SecondaryTextColor}"
+                IsEnabled="{CompiledBinding IsAutoFit}"
+                Margin="0"
+                MaxWidth="240"
+                Padding="0,1,5,0"
+                Text="{CompiledBinding Translation.StayCentered,
+                                       Mode=OneWay}" />
+        </ToggleButton>
+
+        <ToggleButton
+            Background="Transparent"
+            BorderThickness="0"
+            Classes="altHover changeColor"
+            IsChecked="{CompiledBinding IsOpeningInSameWindow}"
+            Margin="0,0,0,10"
+            Width="300">
+            <TextBlock
+                Classes="txt"
+                Foreground="{StaticResource SecondaryTextColor}"
+                Margin="0"
+                MaxWidth="240"
+                Padding="0,1,5,0"
+                Text="{CompiledBinding Translation.OpenInSameWindow,
+                                       Mode=OneWay}" />
+        </ToggleButton>
+
+        <ToggleButton
+            Background="Transparent"
+            BorderThickness="0"
+            Classes="altHover changeColor"
+            IsChecked="{CompiledBinding IsShowingConfirmationOnEsc}"
+            Margin="0,0,0,10"
+            Width="300">
+            <TextBlock
+                Classes="txt"
+                Foreground="{StaticResource SecondaryTextColor}"
+                Margin="0"
+                MaxWidth="240"
+                Padding="0,1,5,0"
+                Text="{CompiledBinding Translation.ShowConfirmationOnEsc,
+                                       Mode=OneWay}" />
+        </ToggleButton>
+
+    </StackPanel>
+</UserControl>

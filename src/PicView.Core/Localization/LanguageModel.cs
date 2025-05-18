@@ -1,5 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
+// ReSharper disable PropertyCanBeMadeInitOnly.Global
+
 namespace PicView.Core.Localization;
 
 [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
@@ -389,7 +391,9 @@ public class LanguageModel
     public string? WhiteFluorescent { get; set; }
     public string? Width { get; set; }
     public string? WidthAndHeight { get; set; }
+    public string? Window { get; set; }
     public string? WindowManagement { get; set; }
+    public string? WindowMargin{ get; set; }
     public string? WindowScaling { get; set; }
     public string? Zoom { get; set; }
     public string? ZoomIn { get; set; }

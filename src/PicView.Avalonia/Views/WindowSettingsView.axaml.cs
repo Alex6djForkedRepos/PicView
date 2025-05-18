@@ -5,33 +5,13 @@ using ReactiveUI;
 
 namespace PicView.Avalonia.Views;
 
-public partial class ZoomSettingsView : UserControl
+public partial class WindowSettingsView : UserControl
 {
-    public ZoomSettingsView()
+    public WindowSettingsView()
     {
         InitializeComponent();
         Loaded += delegate
         {
-            MouseWheelBox.SelectedIndex = Settings.Zoom.CtrlZoom ? 0 : 1;
-
-            MouseWheelBox.SelectionChanged += async delegate
-            {
-                if (MouseWheelBox.SelectedIndex == -1)
-                {
-                    return;
-                }
-
-                Settings.Zoom.CtrlZoom = MouseWheelBox.SelectedIndex == 0;
-                await SaveSettingsAsync();
-            };
-            MouseWheelBox.DropDownOpened += delegate
-            {
-                if (MouseWheelBox.SelectedIndex == -1)
-                {
-                    MouseWheelBox.SelectedIndex = Settings.Zoom.CtrlZoom ? 0 : 1;
-                }
-            };
-
             if (DataContext is not MainViewModel vm)
             {
                 return;

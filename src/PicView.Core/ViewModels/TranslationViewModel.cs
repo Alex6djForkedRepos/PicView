@@ -8,326 +8,288 @@ public class TranslationViewModel : ReactiveObject
 {
     public void UpdateLanguage()
     {
-        File = TranslationManager.Translation.File;
-        SelectFile = TranslationManager.Translation.OpenFileDialog;
-        OpenLastFile = TranslationManager.Translation.OpenLastFile;
-        Paste = TranslationManager.Translation.FilePaste;
-        Copy = TranslationManager.Translation.Copy;
-        Reload = TranslationManager.Translation.Reload;
-        Print = TranslationManager.Translation.Print;
-        DeleteFile = TranslationManager.Translation.DeleteFile;
-        PermanentlyDelete = TranslationManager.Translation.PermanentlyDelete;
-        Save = TranslationManager.Translation.Save;
-        CopyFile = TranslationManager.Translation.CopyFile;
-        NewWindow = TranslationManager.Translation.NewWindow;
-        Close = TranslationManager.Translation.Close;
-        CloseGallery = TranslationManager.Translation.CloseGallery;
-        Open = TranslationManager.Translation.Open;
-        OpenFileDialog = TranslationManager.Translation.OpenFileDialog;
-        ShowInFolder = TranslationManager.Translation.ShowInFolder;
-        OpenWith = TranslationManager.Translation.OpenWith;
-        RenameFile = TranslationManager.Translation.RenameFile;
-        DuplicateFile = TranslationManager.Translation.DuplicateFile;
-        RotateLeft = TranslationManager.Translation.RotateLeft;
-        RotateRight = TranslationManager.Translation.RotateRight;
-        Flip = TranslationManager.Translation.Flip;
-        UnFlip = TranslationManager.Translation.Unflip;
-        ShowBottomGallery = TranslationManager.Translation.ShowBottomGallery;
-        HideBottomGallery = TranslationManager.Translation.HideBottomGallery;
-        AutoFitWindow = TranslationManager.Translation.AutoFitWindow;
-        Stretch = TranslationManager.Translation.Stretch;
-        Crop = TranslationManager.Translation.Crop;
-        ResizeImage = TranslationManager.Translation.ResizeImage;
-        GoToImageAtSpecifiedIndex = TranslationManager.Translation.GoToImageAtSpecifiedIndex;
-        ToggleScroll = TranslationManager.Translation.ToggleScroll;
-        ScrollEnabled = TranslationManager.Translation.ScrollingEnabled;
-        ScrollDisabled = TranslationManager.Translation.ScrollingDisabled;
-        ScrollDirection = TranslationManager.Translation.ScrollDirection;
-        Reverse = TranslationManager.Translation.Reverse;
-        Forward = TranslationManager.Translation.Forward;
-        Slideshow = TranslationManager.Translation.Slideshow;
-        Settings = TranslationManager.Translation.Settings;
-        AboutWindow = TranslationManager.Translation.InfoWindow;
-        ImageInfo = TranslationManager.Translation.ImageInfo;
-        About = TranslationManager.Translation.About;
-        ShowAllSettingsWindow = TranslationManager.Translation.ShowAllSettingsWindow;
-        StayTopMost = TranslationManager.Translation.StayTopMost;
-        SearchSubdirectory = TranslationManager.Translation.SearchSubdirectory;
-        ToggleLooping = TranslationManager.Translation.ToggleLooping;
-        ApplicationShortcuts = TranslationManager.Translation.ApplicationShortcuts;
-        BatchResize = TranslationManager.Translation.BatchResize;
-        Effects = TranslationManager.Translation.Effects;
-        EffectsTooltip = TranslationManager.Translation.EffectsTooltip;
-        FileProperties = TranslationManager.Translation.FileProperties;
-        OptimizeImage = TranslationManager.Translation.OptimizeImage;
-        ImageInfo = TranslationManager.Translation.ImageInfo;
-        FileName = TranslationManager.Translation.FileName;
-        FileSize = TranslationManager.Translation.FileSize;
-        Folder = TranslationManager.Translation.Folder;
-        FullPath = TranslationManager.Translation.FullPath;
-        Created = TranslationManager.Translation.Created;
-        Modified = TranslationManager.Translation.Modified;
-        LastAccessTime = TranslationManager.Translation.LastAccessTime;
-        ConvertTo = TranslationManager.Translation.ConvertTo;
-        NoConversion = TranslationManager.Translation.NoConversion;
-        Resize = TranslationManager.Translation.Resize;
-        NoResize = TranslationManager.Translation.NoResize;
-        Apply = TranslationManager.Translation.Apply;
-        Cancel = TranslationManager.Translation.Cancel;
-        BitDepth = TranslationManager.Translation.BitDepth;
-        ReadAbleAspectRatio = TranslationManager.Translation.AspectRatio;
-        Width = TranslationManager.Translation.Width;
-        Height = TranslationManager.Translation.Height;
-        SizeMp = TranslationManager.Translation.SizeMp;
-        Resolution = TranslationManager.Translation.Resolution;
-        PrintSizeIn = TranslationManager.Translation.PrintSizeIn;
-        PrintSizeCm = TranslationManager.Translation.PrintSizeCm;
-        Centimeters = TranslationManager.Translation.Centimeters;
-        Inches = TranslationManager.Translation.Inches;
-        SizeTooltip = TranslationManager.Translation.SizeTooltip;
-        Latitude = TranslationManager.Translation.Latitude;
-        Longitude = TranslationManager.Translation.Longitude;
-        Altitude = TranslationManager.Translation.Altitude;
-        Authors = TranslationManager.Translation.Authors;
-        DateTaken = TranslationManager.Translation.DateTaken;
-        Copyright = TranslationManager.Translation.Copyright;
-        ResolutionUnit = TranslationManager.Translation.ResolutionUnit;
-        ColorRepresentation = TranslationManager.Translation.ColorRepresentation;
-        CompressedBitsPixel = TranslationManager.Translation.CompressedBitsPixel;
-        Compression = TranslationManager.Translation.Compression;
-        ExposureTime = TranslationManager.Translation.ExposureTime;
-        Title = TranslationManager.Translation.Title;
-        Subject = TranslationManager.Translation.Subject;
-        Software = TranslationManager.Translation.Software;
-        CameraMaker = TranslationManager.Translation.CameraMaker;
-        CameraModel = TranslationManager.Translation.CameraModel;
-        FocalLength = TranslationManager.Translation.FocalLength;
-        Fnumber = TranslationManager.Translation.FNumber;
-        Fstop = TranslationManager.Translation.Fstop;
-        MaxAperture = TranslationManager.Translation.MaxAperture;
-        ExposureBias = TranslationManager.Translation.ExposureBias;
-        ExposureProgram = TranslationManager.Translation.ExposureProgram;
-        DigitalZoom = TranslationManager.Translation.DigitalZoom;
-        ISOSpeed = TranslationManager.Translation.ISOSpeed;
-        FocalLength35mm = TranslationManager.Translation.FocalLength35mm;
-        MeteringMode = TranslationManager.Translation.MeteringMode;
-        Contrast = TranslationManager.Translation.Contrast;
-        Saturation = TranslationManager.Translation.Saturation;
-        Sharpness = TranslationManager.Translation.Sharpness;
-        WhiteBalance = TranslationManager.Translation.WhiteBalance;
-        FlashEnergy = TranslationManager.Translation.FlashEnergy;
-        FlashMode = TranslationManager.Translation.FlashMode;
-        LightSource = TranslationManager.Translation.LightSource;
-        Brightness = TranslationManager.Translation.Brightness;
-        PhotometricInterpretation = TranslationManager.Translation.PhotometricInterpretation;
-        Orientation = TranslationManager.Translation.Orientation;
-        ExifVersion = TranslationManager.Translation.ExifVersion;
-        LensMaker = TranslationManager.Translation.LensMaker;
-        LensModel = TranslationManager.Translation.LensModel;
-        SortFilesBy = TranslationManager.Translation.SortFilesBy;
-        FileExtension = TranslationManager.Translation.FileExtension;
-        CreationTime = TranslationManager.Translation.CreationTime;
-        Random = TranslationManager.Translation.Random;
-        Ascending = TranslationManager.Translation.Ascending;
-        Descending = TranslationManager.Translation.Descending;
-        RecentFiles = TranslationManager.Translation.RecentFiles;
-        SetAsWallpaper = TranslationManager.Translation.SetAsWallpaper;
-        SetAsLockScreenImage = TranslationManager.Translation.SetAsLockScreenImage;
-        Image = TranslationManager.Translation.Image;
-        CopyImage = TranslationManager.Translation.CopyImage;
-        FileCopyPath = TranslationManager.Translation.FileCopyPath;
-        FileCut = TranslationManager.Translation.Cut;
-        CtrlToZoom = TranslationManager.Translation.CtrlToZoom;
-        ScrollToZoom = TranslationManager.Translation.ScrollToZoom;
-        GeneralSettings = TranslationManager.Translation.GeneralSettings;
-        Appearance = TranslationManager.Translation.Appearance;
-        Language = TranslationManager.Translation.Language;
-        MouseWheel = TranslationManager.Translation.MouseWheel;
-        MiscSettings = TranslationManager.Translation.MiscSettings;
-        StayCentered = TranslationManager.Translation.StayCentered;
-        ShowFileSavingDialog = TranslationManager.Translation.ShowFileSavingDialog;
-        OpenInSameWindow = TranslationManager.Translation.OpenInSameWindow;
-        ApplicationStartup = TranslationManager.Translation.ApplicationStartup;
-        None = TranslationManager.Translation.None;
-        AdjustTimingForSlideshow = TranslationManager.Translation.AdjustTimingForSlideshow;
-        AdjustTimingForZoom = TranslationManager.Translation.AdjustTimingForZoom;
-        AdjustNavSpeed = TranslationManager.Translation.AdjustNavSpeed;
-        SecAbbreviation = TranslationManager.Translation.SecAbbreviation;
-        ResetButtonText = TranslationManager.Translation.ResetButtonText;
-        ShowBottomToolbar = TranslationManager.Translation.ShowBottomToolbar;
-        ShowBottomGalleryWhenUiIsHidden = TranslationManager.Translation.ShowBottomGalleryWhenUiIsHidden;
-        ChangeKeybindingTooltip = TranslationManager.Translation.ChangeKeybindingTooltip;
-        ToggleTaskbarProgress = TranslationManager.Translation.ToggleTaskbarProgress;
-        ChangeKeybindingText = TranslationManager.Translation.ChangeKeybindingText;
-        Navigation = TranslationManager.Translation.Navigation;
-        NextImage = TranslationManager.Translation.NextImage;
-        PrevImage = TranslationManager.Translation.PrevImage;
-        LastImage = TranslationManager.Translation.LastImage;
-        FirstImage = TranslationManager.Translation.FirstImage;
-        NextFolder = TranslationManager.Translation.NextFolder;
-        PrevFolder = TranslationManager.Translation.PrevFolder;
-        SelectGalleryThumb = TranslationManager.Translation.SelectGalleryThumb;
-        ScrollAndRotate = TranslationManager.Translation.ScrollAndRotate;
-        ScrollUp = TranslationManager.Translation.ScrollUp;
-        ScrollDown = TranslationManager.Translation.ScrollDown;
-        ScrollToTop = TranslationManager.Translation.ScrollToTop;
-        ScrollToBottom = TranslationManager.Translation.ScrollToBottom;
-        Zoom = TranslationManager.Translation.Zoom;
-        ZoomIn = TranslationManager.Translation.ZoomIn;
-        ZoomOut = TranslationManager.Translation.ZoomOut;
-        Pan = TranslationManager.Translation.Pan;
-        ResetZoom = TranslationManager.Translation.ResetZoom;
-        ImageControl = TranslationManager.Translation.ImageControl;
-        ChangeBackground = TranslationManager.Translation.ChangeBackground;
-        InterfaceConfiguration = TranslationManager.Translation.InterfaceConfiguration;
-        FileManagement = TranslationManager.Translation.FileManagement;
-        ToggleFullscreen = TranslationManager.Translation.ToggleFullscreen;
-        Fullscreen = TranslationManager.Translation.Fullscreen;
-        ShowImageGallery = TranslationManager.Translation.ShowImageGallery;
-        WindowManagement = TranslationManager.Translation.WindowManagement;
-        CenterWindow = TranslationManager.Translation.CenterWindow;
-        WindowScaling = TranslationManager.Translation.WindowScaling;
-        NormalWindow = TranslationManager.Translation.NormalWindow;
-        SetStarRating = TranslationManager.Translation.SetStarRating;
-        _1Star = TranslationManager.Translation._1Star;
-        _2Star = TranslationManager.Translation._2Star;
-        _3Star = TranslationManager.Translation._3Star;
-        _4Star = TranslationManager.Translation._4Star;
-        _5Star = TranslationManager.Translation._5Star;
-        RemoveStarRating = TranslationManager.Translation.RemoveStarRating;
-        Theme = TranslationManager.Translation.Theme;
-        DarkTheme = TranslationManager.Translation.DarkTheme;
-        LightTheme = TranslationManager.Translation.LightTheme;
-        MouseDrag = TranslationManager.Translation.MouseDrag;
-        DoubleClick = TranslationManager.Translation.DoubleClick;
-        MoveWindow = TranslationManager.Translation.MoveWindow;
-        GithubRepo = TranslationManager.Translation.GithubRepo;
-        Version = TranslationManager.Translation.Version;
-        ViewLicenseFile = TranslationManager.Translation.ViewLicenseFile;
-        CheckForUpdates = TranslationManager.Translation.CheckForUpdates;
-        Credits = TranslationManager.Translation.Credits;
-        ColorPickerTool = TranslationManager.Translation.ColorPickerTool;
-        ColorPickerToolTooltip = TranslationManager.Translation.ColorPickerToolTooltip;
-        ExpandedGalleryItemSize = TranslationManager.Translation.ExpandedGalleryItemSize;
-        BottomGalleryItemSize = TranslationManager.Translation.BottomGalleryItemSize;
-        Square = TranslationManager.Translation.Square;
-        Uniform = TranslationManager.Translation.Uniform;
-        UniformToFill = TranslationManager.Translation.UniformToFill;
-        FillSquare = TranslationManager.Translation.FillSquare;
-        Fill = TranslationManager.Translation.Fill;
-        GallerySettings = TranslationManager.Translation.GallerySettings;
-        GalleryThumbnailStretch = TranslationManager.Translation.GalleryThumbnailStretch;
-        BottomGalleryThumbnailStretch = TranslationManager.Translation.BottomGalleryThumbnailStretch;
-        RestoreDown = TranslationManager.Translation.RestoreDown;
-        SideBySide = TranslationManager.Translation.SideBySide;
-        SideBySideTooltip = TranslationManager.Translation.SideBySideTooltip;
-        HighlightColor = TranslationManager.Translation.HighlightColor;
-        AllowZoomOut = TranslationManager.Translation.AllowZoomOut;
-        GlassTheme = TranslationManager.Translation.GlassTheme;
-        ChangingThemeRequiresRestart = TranslationManager.Translation.ChangingThemeRequiresRestart;
-        ShowUI = TranslationManager.Translation.ShowUI;
-        HideUI = TranslationManager.Translation.HideUI;
-        HideBottomToolbar = TranslationManager.Translation.HideBottomToolbar;
-        Center = TranslationManager.Translation.Center;
-        Tile = TranslationManager.Translation.Tile;
-        Fit = TranslationManager.Translation.Fit;
-        Pixels = TranslationManager.Translation.Pixels;
-        Percentage = TranslationManager.Translation.Percentage;
-        Quality = TranslationManager.Translation.Quality;
-        SaveAs = TranslationManager.Translation.SaveAs;
-        Reset = TranslationManager.Translation.Reset;
-        AdvanceBy10Images = TranslationManager.Translation.AdvanceBy10Images;
-        AdvanceBy100Images = TranslationManager.Translation.AdvanceBy100Images;
-        GoBackBy10Images = TranslationManager.Translation.GoBackBy10Images;
-        GoBackBy100Images = TranslationManager.Translation.GoBackBy100Images;
-        ShowFadeInButtonsOnHover = TranslationManager.Translation.ShowFadeInButtonsOnHover;
-        DisableFadeInButtonsOnHover = TranslationManager.Translation.DisableFadeInButtonsOnHover;
-        UsingTouchpad = TranslationManager.Translation.UsingTouchpad;
-        UsingMouse = TranslationManager.Translation.UsingMouse;
-        SourceFolder = TranslationManager.Translation.SourceFolder;
-        OutputFolder = TranslationManager.Translation.OutputFolder;
-        GenerateThumbnails = TranslationManager.Translation.GenerateThumbnails;
-        Lossless = TranslationManager.Translation.Lossless;
-        Lossy = TranslationManager.Translation.Lossy;
-        Start = TranslationManager.Translation.Start;
-        Thumbnail = TranslationManager.Translation.Thumbnail;
-        WidthAndHeight = TranslationManager.Translation.WidthAndHeight;
-        CloseWindowPrompt = TranslationManager.Translation.CloseWindowPrompt;
-        ShowConfirmationOnEsc = TranslationManager.Translation.ShowConfirmationOnEsc;
-        ImageAliasing = TranslationManager.Translation.ImageAliasing;
-        HighQuality = TranslationManager.Translation.HighQuality;
-        Lighting = TranslationManager.Translation.Lighting;
-        BlackAndWhite = TranslationManager.Translation.BlackAndWhite;
-        NegativeColors = TranslationManager.Translation.NegativeColors;
-        Blur = TranslationManager.Translation.Blur;
-        PencilSketch = TranslationManager.Translation.PencilSketch;
-        OldMovie = TranslationManager.Translation.OldMovie;
-        Posterize = TranslationManager.Translation.Posterize;
-        ClearEffects = TranslationManager.Translation.ClearEffects;
-        Solarize = TranslationManager.Translation.Solarize;
-        Maximize = TranslationManager.Translation.Maximize;
-        SelectAll = TranslationManager.Translation.SelectAll;
-        Normal = TranslationManager.Translation.Normal;
-        FileAssociations = TranslationManager.Translation.FileAssociations;
-        SelectFileTypesToAssociate = TranslationManager.Translation.SelectFileTypesToAssociate;
-        Filter = TranslationManager.Translation.Filter;
-        UnselectAll = TranslationManager.Translation.UnselectAll;
-        Unassociate = TranslationManager.Translation.Unassociate;
-        ShowConfirmationDialogWhenMovingFileToRecycleBin = TranslationManager.Translation.ShowConfirmationDialogWhenMovingFileToRecycleBin;
-        MoveToRecycleBin = TranslationManager.Translation.MoveToRecycleBin;
-        ShowConfirmationDialogWhenPermanentlyDeletingFile = TranslationManager.Translation.ShowConfirmationDialogWhenPermanentlyDeletingFile;
-        Downloading = TranslationManager.Translation.Downloading;
-        Pinned = TranslationManager.Translation.Pinned;
-        Unpin = TranslationManager.Translation.Unpin;
-        Pin = TranslationManager.Translation.Pin;
-        Clear = TranslationManager.Translation.Clear;
-        OpenFileHistory = TranslationManager.Translation.OpenFileHistory;
-        ConstrainBackgroundToImage = TranslationManager.Translation.ConstrainBackgroundToImage;
+        var t = TranslationManager.Translation;
+        
+        File = t.File;
+        SelectFile = t.OpenFileDialog;
+        OpenLastFile = t.OpenLastFile;
+        Paste = t.FilePaste;
+        Copy = t.Copy;
+        Reload = t.Reload;
+        Print = t.Print;
+        DeleteFile = t.DeleteFile;
+        PermanentlyDelete = t.PermanentlyDelete;
+        Save = t.Save;
+        CopyFile = t.CopyFile;
+        NewWindow = t.NewWindow;
+        Close = t.Close;
+        CloseGallery = t.CloseGallery;
+        Open = t.Open;
+        OpenFileDialog = t.OpenFileDialog;
+        ShowInFolder = t.ShowInFolder;
+        OpenWith = t.OpenWith;
+        RenameFile = t.RenameFile;
+        DuplicateFile = t.DuplicateFile;
+        RotateLeft = t.RotateLeft;
+        RotateRight = t.RotateRight;
+        Flip = t.Flip;
+        UnFlip = t.Unflip;
+        ShowBottomGallery = t.ShowBottomGallery;
+        HideBottomGallery = t.HideBottomGallery;
+        AutoFitWindow = t.AutoFitWindow;
+        Stretch = t.Stretch;
+        Crop = t.Crop;
+        ResizeImage = t.ResizeImage;
+        GoToImageAtSpecifiedIndex = t.GoToImageAtSpecifiedIndex;
+        ToggleScroll = t.ToggleScroll;
+        ScrollEnabled = t.ScrollingEnabled;
+        ScrollDisabled = t.ScrollingDisabled;
+        ScrollDirection = t.ScrollDirection;
+        Reverse = t.Reverse;
+        Forward = t.Forward;
+        Slideshow = t.Slideshow;
+        Settings = t.Settings;
+        AboutWindow = t.InfoWindow;
+        ImageInfo = t.ImageInfo;
+        About = t.About;
+        ShowAllSettingsWindow = t.ShowAllSettingsWindow;
+        StayTopMost = t.StayTopMost;
+        SearchSubdirectory = t.SearchSubdirectory;
+        ToggleLooping = t.ToggleLooping;
+        ApplicationShortcuts = t.ApplicationShortcuts;
+        BatchResize = t.BatchResize;
+        Effects = t.Effects;
+        EffectsTooltip = t.EffectsTooltip;
+        FileProperties = t.FileProperties;
+        OptimizeImage = t.OptimizeImage;
+        ImageInfo = t.ImageInfo;
+        FileName = t.FileName;
+        FileSize = t.FileSize;
+        Folder = t.Folder;
+        FullPath = t.FullPath;
+        Created = t.Created;
+        Modified = t.Modified;
+        LastAccessTime = t.LastAccessTime;
+        ConvertTo = t.ConvertTo;
+        NoConversion = t.NoConversion;
+        Resize = t.Resize;
+        NoResize = t.NoResize;
+        Apply = t.Apply;
+        Cancel = t.Cancel;
+        BitDepth = t.BitDepth;
+        ReadAbleAspectRatio = t.AspectRatio;
+        Width = t.Width;
+        Height = t.Height;
+        SizeMp = t.SizeMp;
+        Resolution = t.Resolution;
+        PrintSizeIn = t.PrintSizeIn;
+        PrintSizeCm = t.PrintSizeCm;
+        Centimeters = t.Centimeters;
+        Inches = t.Inches;
+        SizeTooltip = t.SizeTooltip;
+        Latitude = t.Latitude;
+        Longitude = t.Longitude;
+        Altitude = t.Altitude;
+        Authors = t.Authors;
+        DateTaken = t.DateTaken;
+        Copyright = t.Copyright;
+        ResolutionUnit = t.ResolutionUnit;
+        ColorRepresentation = t.ColorRepresentation;
+        CompressedBitsPixel = t.CompressedBitsPixel;
+        Compression = t.Compression;
+        ExposureTime = t.ExposureTime;
+        Title = t.Title;
+        Subject = t.Subject;
+        Software = t.Software;
+        CameraMaker = t.CameraMaker;
+        CameraModel = t.CameraModel;
+        FocalLength = t.FocalLength;
+        Fnumber = t.FNumber;
+        Fstop = t.Fstop;
+        MaxAperture = t.MaxAperture;
+        ExposureBias = t.ExposureBias;
+        ExposureProgram = t.ExposureProgram;
+        DigitalZoom = t.DigitalZoom;
+        ISOSpeed = t.ISOSpeed;
+        FocalLength35mm = t.FocalLength35mm;
+        MeteringMode = t.MeteringMode;
+        Contrast = t.Contrast;
+        Saturation = t.Saturation;
+        Sharpness = t.Sharpness;
+        WhiteBalance = t.WhiteBalance;
+        FlashEnergy = t.FlashEnergy;
+        FlashMode = t.FlashMode;
+        LightSource = t.LightSource;
+        Brightness = t.Brightness;
+        PhotometricInterpretation = t.PhotometricInterpretation;
+        Orientation = t.Orientation;
+        ExifVersion = t.ExifVersion;
+        LensMaker = t.LensMaker;
+        LensModel = t.LensModel;
+        SortFilesBy = t.SortFilesBy;
+        FileExtension = t.FileExtension;
+        CreationTime = t.CreationTime;
+        Random = t.Random;
+        Ascending = t.Ascending;
+        Descending = t.Descending;
+        RecentFiles = t.RecentFiles;
+        SetAsWallpaper = t.SetAsWallpaper;
+        SetAsLockScreenImage = t.SetAsLockScreenImage;
+        Image = t.Image;
+        CopyImage = t.CopyImage;
+        FileCopyPath = t.FileCopyPath;
+        FileCut = t.Cut;
+        CtrlToZoom = t.CtrlToZoom;
+        ScrollToZoom = t.ScrollToZoom;
+        GeneralSettings = t.GeneralSettings;
+        Appearance = t.Appearance;
+        Language = t.Language;
+        MouseWheel = t.MouseWheel;
+        MiscSettings = t.MiscSettings;
+        StayCentered = t.StayCentered;
+        ShowFileSavingDialog = t.ShowFileSavingDialog;
+        OpenInSameWindow = t.OpenInSameWindow;
+        ApplicationStartup = t.ApplicationStartup;
+        None = t.None;
+        AdjustTimingForSlideshow = t.AdjustTimingForSlideshow;
+        AdjustTimingForZoom = t.AdjustTimingForZoom;
+        AdjustNavSpeed = t.AdjustNavSpeed;
+        SecAbbreviation = t.SecAbbreviation;
+        ResetButtonText = t.ResetButtonText;
+        ShowBottomToolbar = t.ShowBottomToolbar;
+        ShowBottomGalleryWhenUiIsHidden = t.ShowBottomGalleryWhenUiIsHidden;
+        ChangeKeybindingTooltip = t.ChangeKeybindingTooltip;
+        ToggleTaskbarProgress = t.ToggleTaskbarProgress;
+        ChangeKeybindingText = t.ChangeKeybindingText;
+        Navigation = t.Navigation;
+        NextImage = t.NextImage;
+        PrevImage = t.PrevImage;
+        LastImage = t.LastImage;
+        FirstImage = t.FirstImage;
+        NextFolder = t.NextFolder;
+        PrevFolder = t.PrevFolder;
+        SelectGalleryThumb = t.SelectGalleryThumb;
+        ScrollAndRotate = t.ScrollAndRotate;
+        ScrollUp = t.ScrollUp;
+        ScrollDown = t.ScrollDown;
+        ScrollToTop = t.ScrollToTop;
+        ScrollToBottom = t.ScrollToBottom;
+        Zoom = t.Zoom;
+        ZoomIn = t.ZoomIn;
+        ZoomOut = t.ZoomOut;
+        Pan = t.Pan;
+        ResetZoom = t.ResetZoom;
+        ImageControl = t.ImageControl;
+        ChangeBackground = t.ChangeBackground;
+        InterfaceConfiguration = t.InterfaceConfiguration;
+        FileManagement = t.FileManagement;
+        ToggleFullscreen = t.ToggleFullscreen;
+        Fullscreen = t.Fullscreen;
+        ShowImageGallery = t.ShowImageGallery;
+        WindowManagement = t.WindowManagement;
+        CenterWindow = t.CenterWindow;
+        WindowScaling = t.WindowScaling;
+        NormalWindow = t.NormalWindow;
+        SetStarRating = t.SetStarRating;
+        _1Star = t._1Star;
+        _2Star = t._2Star;
+        _3Star = t._3Star;
+        _4Star = t._4Star;
+        _5Star = t._5Star;
+        RemoveStarRating = t.RemoveStarRating;
+        Theme = t.Theme;
+        DarkTheme = t.DarkTheme;
+        LightTheme = t.LightTheme;
+        MouseDrag = t.MouseDrag;
+        DoubleClick = t.DoubleClick;
+        MoveWindow = t.MoveWindow;
+        GithubRepo = t.GithubRepo;
+        Version = t.Version;
+        ViewLicenseFile = t.ViewLicenseFile;
+        CheckForUpdates = t.CheckForUpdates;
+        Credits = t.Credits;
+        ColorPickerTool = t.ColorPickerTool;
+        ColorPickerToolTooltip = t.ColorPickerToolTooltip;
+        ExpandedGalleryItemSize = t.ExpandedGalleryItemSize;
+        BottomGalleryItemSize = t.BottomGalleryItemSize;
+        Square = t.Square;
+        Uniform = t.Uniform;
+        UniformToFill = t.UniformToFill;
+        FillSquare = t.FillSquare;
+        Fill = t.Fill;
+        GallerySettings = t.GallerySettings;
+        GalleryThumbnailStretch = t.GalleryThumbnailStretch;
+        BottomGalleryThumbnailStretch = t.BottomGalleryThumbnailStretch;
+        RestoreDown = t.RestoreDown;
+        SideBySide = t.SideBySide;
+        SideBySideTooltip = t.SideBySideTooltip;
+        HighlightColor = t.HighlightColor;
+        AllowZoomOut = t.AllowZoomOut;
+        GlassTheme = t.GlassTheme;
+        ChangingThemeRequiresRestart = t.ChangingThemeRequiresRestart;
+        ShowUI = t.ShowUI;
+        HideUI = t.HideUI;
+        HideBottomToolbar = t.HideBottomToolbar;
+        Center = t.Center;
+        Tile = t.Tile;
+        Fit = t.Fit;
+        Pixels = t.Pixels;
+        Percentage = t.Percentage;
+        Quality = t.Quality;
+        SaveAs = t.SaveAs;
+        Reset = t.Reset;
+        AdvanceBy10Images = t.AdvanceBy10Images;
+        AdvanceBy100Images = t.AdvanceBy100Images;
+        GoBackBy10Images = t.GoBackBy10Images;
+        GoBackBy100Images = t.GoBackBy100Images;
+        ShowFadeInButtonsOnHover = t.ShowFadeInButtonsOnHover;
+        DisableFadeInButtonsOnHover = t.DisableFadeInButtonsOnHover;
+        UsingTouchpad = t.UsingTouchpad;
+        UsingMouse = t.UsingMouse;
+        SourceFolder = t.SourceFolder;
+        OutputFolder = t.OutputFolder;
+        GenerateThumbnails = t.GenerateThumbnails;
+        Lossless = t.Lossless;
+        Lossy = t.Lossy;
+        Start = t.Start;
+        Thumbnail = t.Thumbnail;
+        WidthAndHeight = t.WidthAndHeight;
+        CloseWindowPrompt = t.CloseWindowPrompt;
+        ShowConfirmationOnEsc = t.ShowConfirmationOnEsc;
+        ImageAliasing = t.ImageAliasing;
+        HighQuality = t.HighQuality;
+        Lighting = t.Lighting;
+        BlackAndWhite = t.BlackAndWhite;
+        NegativeColors = t.NegativeColors;
+        Blur = t.Blur;
+        PencilSketch = t.PencilSketch;
+        OldMovie = t.OldMovie;
+        Posterize = t.Posterize;
+        ClearEffects = t.ClearEffects;
+        Solarize = t.Solarize;
+        Maximize = t.Maximize;
+        SelectAll = t.SelectAll;
+        Normal = t.Normal;
+        FileAssociations = t.FileAssociations;
+        SelectFileTypesToAssociate = t.SelectFileTypesToAssociate;
+        Filter = t.Filter;
+        UnselectAll = t.UnselectAll;
+        Unassociate = t.Unassociate;
+        ShowConfirmationDialogWhenMovingFileToRecycleBin = t.ShowConfirmationDialogWhenMovingFileToRecycleBin;
+        MoveToRecycleBin = t.MoveToRecycleBin;
+        ShowConfirmationDialogWhenPermanentlyDeletingFile = t.ShowConfirmationDialogWhenPermanentlyDeletingFile;
+        Downloading = t.Downloading;
+        Pinned = t.Pinned;
+        Unpin = t.Unpin;
+        Pin = t.Pin;
+        Clear = t.Clear;
+        OpenFileHistory = t.OpenFileHistory;
+        ConstrainBackgroundToImage = t.ConstrainBackgroundToImage;
+        Window = t.Window;
+        WindowMargin = t.WindowMargin;
     }
 
     #region Static Translation Strings
-    
-    public string? ConstrainBackgroundToImage
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-    
-    public string? Pinned
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-    
-    public string? Unpin
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-    
-    public string? Pin
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-    
-    public string? Clear
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-    
-    public string? OpenFileHistory
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-    
-    public string? Downloading
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
 
     public string? _1Star
     {
@@ -563,6 +525,12 @@ public class TranslationViewModel : ReactiveObject
         set => this.RaiseAndSetIfChanged(ref field, value);
     }
 
+    public string? Clear
+    {
+        get;
+        set => this.RaiseAndSetIfChanged(ref field, value);
+    }
+
     public string? ClearEffects
     {
         get;
@@ -574,7 +542,7 @@ public class TranslationViewModel : ReactiveObject
         get;
         set => this.RaiseAndSetIfChanged(ref field, value);
     }
-    
+
     public string? CloseGallery
     {
         get;
@@ -612,6 +580,12 @@ public class TranslationViewModel : ReactiveObject
     }
 
     public string? Compression
+    {
+        get;
+        set => this.RaiseAndSetIfChanged(ref field, value);
+    }
+
+    public string? ConstrainBackgroundToImage
     {
         get;
         set => this.RaiseAndSetIfChanged(ref field, value);
@@ -726,6 +700,12 @@ public class TranslationViewModel : ReactiveObject
     }
 
     public string? DoubleClick
+    {
+        get;
+        set => this.RaiseAndSetIfChanged(ref field, value);
+    }
+
+    public string? Downloading
     {
         get;
         set => this.RaiseAndSetIfChanged(ref field, value);
@@ -1277,6 +1257,12 @@ public class TranslationViewModel : ReactiveObject
         set => this.RaiseAndSetIfChanged(ref field, value);
     }
 
+    public string? OpenFileHistory
+    {
+        get;
+        set => this.RaiseAndSetIfChanged(ref field, value);
+    }
+
     public string? OpenInSameWindow
     {
         get;
@@ -1344,6 +1330,18 @@ public class TranslationViewModel : ReactiveObject
     }
 
     public string? PhotometricInterpretation
+    {
+        get;
+        set => this.RaiseAndSetIfChanged(ref field, value);
+    }
+
+    public string? Pin
+    {
+        get;
+        set => this.RaiseAndSetIfChanged(ref field, value);
+    }
+
+    public string? Pinned
     {
         get;
         set => this.RaiseAndSetIfChanged(ref field, value);
@@ -1672,6 +1670,7 @@ public class TranslationViewModel : ReactiveObject
         get;
         set => this.RaiseAndSetIfChanged(ref field, value);
     }
+
     public string? ShowConfirmationOnEsc
     {
         get;
@@ -1870,11 +1869,18 @@ public class TranslationViewModel : ReactiveObject
         set => this.RaiseAndSetIfChanged(ref field, value);
     }
 
+    public string? Unpin
+    {
+        get;
+        set => this.RaiseAndSetIfChanged(ref field, value);
+    }
+
     public string? UnselectAll
     {
         get;
         set => this.RaiseAndSetIfChanged(ref field, value);
     }
+
     public string? UsingMouse
     {
         get;
@@ -1916,7 +1922,19 @@ public class TranslationViewModel : ReactiveObject
         get;
         set => this.RaiseAndSetIfChanged(ref field, value);
     }
+
+    public string? Window
+    {
+        get;
+        set => this.RaiseAndSetIfChanged(ref field, value);
+    }
     public string? WindowManagement
+    {
+        get;
+        set => this.RaiseAndSetIfChanged(ref field, value);
+    }
+    
+    public string? WindowMargin
     {
         get;
         set => this.RaiseAndSetIfChanged(ref field, value);
