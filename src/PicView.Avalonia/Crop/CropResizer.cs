@@ -4,6 +4,7 @@ using Avalonia.Input;
 using PicView.Avalonia.Input;
 using PicView.Avalonia.ViewModels;
 using PicView.Avalonia.Views.UC;
+using PicView.Core.DebugTools;
 
 namespace PicView.Avalonia.Crop;
 
@@ -98,10 +99,17 @@ public static class CropResizer
         ApplyBoundsConstraints(ref newX, ref newY, ref newWidth, ref newHeight, vm.ImageWidth, vm.ImageHeight);
         
         // Update the view model
-        vm.SelectionX = Convert.ToInt32(newX);
-        vm.SelectionY = Convert.ToInt32(newY);
-        vm.SelectionWidth = Convert.ToInt32(newWidth);
-        vm.SelectionHeight = Convert.ToInt32(newHeight);
+        try
+        {
+            vm.SelectionX = Convert.ToInt32(newX);
+            vm.SelectionY = Convert.ToInt32(newY);
+            vm.SelectionWidth = Convert.ToInt32(newWidth);
+            vm.SelectionHeight = Convert.ToInt32(newHeight);
+        }
+        catch (Exception exception)
+        {
+            DebugHelper.LogDebug(nameof(CropResizer), nameof(Resize), exception);
+        }
         
         // Update the rectangle position on canvas
         Canvas.SetLeft(control.MainRectangle, newX);
