@@ -15,6 +15,7 @@ using PicView.Avalonia.ImageHandling;
 using PicView.Avalonia.Navigation;
 using PicView.Avalonia.UI;
 using PicView.Avalonia.ViewModels;
+using PicView.Core.DebugTools;
 using ReactiveUI;
 using Vector = Avalonia.Vector;
 
@@ -47,7 +48,7 @@ public class PicBox : Control, IDisposable
     public string? InitialAnimatedSource;
     private readonly IDisposable? _imageTypeSubscription;
     private bool _isDisposed;
-    
+
     public static readonly StyledProperty<object?> SourceProperty =
         AvaloniaProperty.Register<PicBox, object?>(nameof(Source));
 
@@ -60,7 +61,7 @@ public class PicBox : Control, IDisposable
         get => GetValue(SourceProperty);
         set => SetValue(SourceProperty, value);
     }
-    
+
     public static readonly StyledProperty<object?> SecondarySourceProperty =
         AvaloniaProperty.Register<PicBox, object?>(nameof(SecondarySource));
 
@@ -177,7 +178,6 @@ public class PicBox : Control, IDisposable
 
     #region Rendering
 
-
     /// <summary>
     ///     Renders the image represented by <see cref="Source" />.
     /// </summary>
@@ -217,9 +217,7 @@ public class PicBox : Control, IDisposable
     {
         if (Source != null)
         {
-#if DEBUG
-            Console.WriteLine("Invalid source type.");
-#endif
+            DebugHelper.LogDebug(nameof(PicBox), nameof(HandleInvalidSource), "Invalid source type.");
         }
     }
 
@@ -266,9 +264,7 @@ public class PicBox : Control, IDisposable
         }
         catch (Exception e)
         {
-#if DEBUG
-            Console.WriteLine(e);
-#endif
+            DebugHelper.LogDebug(nameof(PicBox), nameof(GetImageSize), e);
             return GetSizeFromAlternativeSources();
         }
     }
@@ -362,9 +358,7 @@ public class PicBox : Control, IDisposable
         }
         catch (Exception e)
         {
-#if DEBUG
-            Console.WriteLine(e);
-#endif
+            DebugHelper.LogDebug(nameof(PicBox), nameof(RenderImage), e);
         }
     }
 
@@ -409,9 +403,7 @@ public class PicBox : Control, IDisposable
         }
         catch (Exception e)
         {
-#if DEBUG
-            Console.WriteLine(e);
-#endif
+            DebugHelper.LogDebug(nameof(PicBox), nameof(RenderImageSideBySide), e);
         }
     }
 
@@ -551,10 +543,9 @@ public class PicBox : Control, IDisposable
         DestroyVisual();
     }
 
-    protected override AutomationPeer OnCreateAutomationPeer()
-    {
-        return new ImageAutomationPeer(this);
-    }
+    /// <inheritdoc />
+    protected override AutomationPeer OnCreateAutomationPeer() =>
+        new ImageAutomationPeer(this);
 
     public void Dispose()
     {
