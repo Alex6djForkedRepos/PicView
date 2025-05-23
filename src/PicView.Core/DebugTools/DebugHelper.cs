@@ -23,10 +23,6 @@ public static class DebugHelper
     /// <param name="exception">The exception that was thrown.</param>
     /// <example>
     ///     <code>
-    /// try
-    /// {
-    ///     // Code that might throw
-    /// }
     /// catch (Exception ex)
     /// {
     ///     DebugHelper.LogDebug(nameof(MyClass), nameof(MyMethod), ex);

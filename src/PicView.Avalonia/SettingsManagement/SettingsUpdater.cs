@@ -189,6 +189,22 @@ public static class SettingsUpdater
         });
         await SaveSettingsAsync();
     }
+
+    public static async Task ToggleOpeningInSameWindow(MainViewModel vm)
+    {
+        if (Settings.UIProperties.OpenInSameWindow)
+        {
+            _ = IPC.StartListeningForArguments(vm);
+            Settings.UIProperties.OpenInSameWindow = true;
+        }
+        else
+        {
+            IPC.StopListening();
+            Settings.UIProperties.OpenInSameWindow = false;
+        }
+
+        await SaveSettingsAsync();
+    }
     
     #region Image settings
 

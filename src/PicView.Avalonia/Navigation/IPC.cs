@@ -5,6 +5,7 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Threading;
 using PicView.Avalonia.ViewModels;
 using PicView.Core.DebugTools;
+using PicView.Core.ProcessHandling;
 
 namespace PicView.Avalonia.Navigation;
 
@@ -21,6 +22,8 @@ internal static class IPC
     /// This pipe is used to facilitate communication between instances of the application.
     /// </summary>
     private const string PipeName = "PicViewPipe";
+    
+    private static bool? _isRunning;
 
     /// <summary>
     /// Sends an argument to a running instance of the application via the specified named pipe.
@@ -74,12 +77,19 @@ internal static class IPC
     /// </remarks>
     internal static async Task StartListeningForArguments(MainViewModel vm)
     {
-        while (true) // Continuously listen for incoming connections
+        if (_isRunning.HasValue && !_isRunning.Value)
         {
-            await using var pipeServer = new NamedPipeServerStream(PipeName);
-
+            _isRunning = true;
+            return;
+        }
+        
+        _isRunning = true;
+        do
+        {
             try
             {
+                await using var pipeServer = new NamedPipeServerStream(PipeName);
+                
                 // Wait for a connection from another instance
                 await pipeServer.WaitForConnectionAsync();
 
@@ -88,6 +98,12 @@ internal static class IPC
                 // Read and process incoming arguments
                 while (await reader.ReadLineAsync() is { } line)
                 {
+                    if (!_isRunning.Value)
+                    {
+                        // Setting to open in same window turned off, start new process instead
+                        ProcessHelper.StartNewProcess(line);
+                        return;
+                    }
                     // Log the received argument if in debug mode
 #if DEBUG
                     Trace.WriteLine("Received argument: " + line);
@@ -110,12 +126,14 @@ internal static class IPC
             }
             catch (Exception ex)
             {
-                // Log any exceptions encountered while processing arguments
-#if DEBUG
-                Trace.WriteLine($"{nameof(StartListeningForArguments)} exception: \n{ex}");
-#endif
+                DebugHelper.LogDebug(nameof(IPC), nameof(StartListeningForArguments), ex);
             }
         }
-        // ReSharper disable once FunctionNeverReturns
+        while (true); // Continuously listen for incoming connections
+    }
+
+    public static void StopListening()
+    {
+        _isRunning = false;
     }
 }

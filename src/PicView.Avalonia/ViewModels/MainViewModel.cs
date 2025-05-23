@@ -290,6 +290,8 @@ public class MainViewModel : ReactiveObject
 
         ToggleUsingTouchpadCommand = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.ToggleUsingTouchpad);
         
+        ToggleOpeningInSameWindowCommand = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.ToggleOpeningInSameWindow);
+        
         ShowSettingsFileCommand = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.ShowSettingsFile);
         
         ShowKeybindingsFileCommand = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.ShowKeybindingsFile);
@@ -614,6 +616,7 @@ public class MainViewModel : ReactiveObject
     public ReactiveCommand<Unit, Unit>? ChangeCtrlZoomCommand { get; }
     public ReactiveCommand<Unit, Unit>? ToggleUsingTouchpadCommand { get; }
     public ReactiveCommand<Unit, Unit>? ToggleUICommand { get; }
+    public ReactiveCommand<Unit, Unit>? ToggleOpeningInSameWindowCommand { get; }
     public ReactiveCommand<Unit, Unit>? ChangeBackgroundCommand { get; }
     public ReactiveCommand<Unit, Unit>? ToggleBottomNavBarCommand { get; }
     public ReactiveCommand<Unit, Unit>? ToggleBottomGalleryShownInHiddenUICommand { get; }

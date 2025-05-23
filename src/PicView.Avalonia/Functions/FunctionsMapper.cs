@@ -886,6 +886,9 @@ public static class FunctionsMapper
     /// <inheritdoc cref="SettingsUpdater.ToggleUsingTouchpad(MainViewModel)" />
     public static async Task ToggleUsingTouchpad() =>
         await SettingsUpdater.ToggleUsingTouchpad(Vm).ConfigureAwait(false);
+    
+    public static async Task ToggleOpeningInSameWindow() =>
+        await SettingsUpdater.ToggleOpeningInSameWindow(Vm).ConfigureAwait(false);
 
     #endregion
     
