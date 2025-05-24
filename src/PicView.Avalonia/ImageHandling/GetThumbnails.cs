@@ -62,6 +62,7 @@ public static class GetThumbnails
 
         var profile = magick.GetExifProfile();
         var thumbnail = profile?.CreateThumbnail();
+        thumbnail?.AutoOrient();
         return thumbnail?.ToWriteableBitmap();
     }
 
@@ -76,25 +77,6 @@ public static class GetThumbnails
         fileInfo ??= new FileInfo(path);
         await using var fileStream = FileHelper.GetOptimizedFileStream(fileInfo);
 
-        switch (Path.GetExtension(path).ToLowerInvariant())
-        {
-            case ".webp":
-            case ".png":
-            case ".jpg":
-            case ".jpeg":
-            case ".jpe":
-            case ".bmp":
-            case ".jfif":
-            case ".ico":
-            case ".wbmp":
-                return Bitmap.DecodeToHeight(fileStream, (int)height);
-
-            case ".svg":
-            case ".svgz":
-                return null;
-        }
-        
-
         if (fileInfo.Length >= 2147483648)
         {
             // Fixes "The file is too long. This operation is currently limited to supporting files less than 2 gigabytes in size."
@@ -107,8 +89,8 @@ public static class GetThumbnails
         }
 
         var geometry = new MagickGeometry(0, height);
-        magick.Thumbnail(geometry);
         magick.AutoOrient();
+        magick.Thumbnail(geometry);
         return magick.ToWriteableBitmap();
     }
 }

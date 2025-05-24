@@ -14,7 +14,7 @@ public class ImageModel
     
     public MagickFormat? Format { get; set; }
 
-    public double Rotation
+    public int Rotation
     {
         get
         {

@@ -1,5 +1,6 @@
 using Avalonia.Media.Imaging;
 using ImageMagick;
+using PicView.Core.DebugTools;
 using PicView.Core.ImageDecoding;
 
 namespace PicView.Avalonia.ImageHandling;
@@ -7,76 +8,82 @@ namespace PicView.Avalonia.ImageHandling;
 public static class GetImageModel
 {
     // Group extensions by how they should be handled
-    private static readonly Dictionary<string, ImageHandler> ExtensionHandlers = new()
+    private static readonly Dictionary<string, Func<FileInfo, ImageModel, Task>> ExtensionHandlers = new()
     {
-        { ".webp", new AnimatedWebpHandler() },
-        { ".gif", new AnimatedGifHandler() },
-        { ".png", new StandardBitmapHandler() },
-        { ".jpg", new StandardBitmapHandler() },
-        { ".jpeg", new StandardBitmapHandler() },
-        { ".jpe", new StandardBitmapHandler() },
-        { ".bmp", new StandardBitmapHandler() },
-        { ".jfif", new StandardBitmapHandler() },
-        { ".ico", new StandardBitmapHandler() },
-        { ".wbmp", new StandardBitmapHandler() },
-        { ".svg", new SvgHandler() },
-        { ".svgz", new SvgHandler() },
-        { ".b64", new Base64Handler() }
+        { ".webp", ProcessAnimatedWebpAsync },
+        { ".gif", ProcessAnimatedGifAsync },
+        { ".png", ProcessStandardBitmapAsync },
+        { ".jpg", ProcessStandardBitmapAsync },
+        { ".jpeg", ProcessStandardBitmapAsync },
+        { ".jpe", ProcessStandardBitmapAsync },
+        { ".bmp", ProcessStandardBitmapAsync },
+        { ".jfif", ProcessStandardBitmapAsync },
+        { ".ico", ProcessStandardBitmapAsync },
+        { ".wbmp", ProcessStandardBitmapAsync },
+        { ".svg", ProcessSvgAsync },
+        { ".svgz", ProcessSvgAsync },
+        { ".b64", ProcessBase64Async }
     };
 
     public static async Task<ImageModel> GetImageModelAsync(FileInfo fileInfo, MagickImage? magickImage = null)
     {
         if (fileInfo is null)
         {
-            LogError("fileInfo is null");
+            DebugHelper.LogDebug(nameof(GetImageModel), nameof(GetImageModelAsync), "fileInfo is null");
             return CreateErrorImageModel(null);
         }
 
         var imageModel = new ImageModel { FileInfo = fileInfo };
+        var shouldDisposeMagickImage = magickImage is null;
 
         try
         {
-            // Get extension and prepare MagickImage for metadata
-            var ext = fileInfo.Extension.ToLower();
-            if (magickImage is null)
-            {
-                magickImage = new MagickImage();
-                magickImage.Ping(fileInfo);
-            }
+            // Initialize MagickImage if not provided
+            magickImage ??= CreateAndPingMagickImage(fileInfo);
 
-            // Extract EXIF orientation early
-            imageModel.EXIFOrientation = EXIFHelper.GetImageOrientation(magickImage);
-            imageModel.Format = magickImage.Format;
+            // Extract metadata early
+            ExtractImageMetadata(magickImage, imageModel);
 
             // Process the image based on extension
-            if (ExtensionHandlers.TryGetValue(ext, out var handler))
-            {
-                await handler.ProcessImageAsync(fileInfo, imageModel).ConfigureAwait(false);
-            }
-            else
-            {
-                // Unknown format - try default handler
-                await new DefaultImageHandler().ProcessImageAsync(fileInfo, imageModel).ConfigureAwait(false);
-            }
+            var ext = fileInfo.Extension.ToLowerInvariant();
+            var processor = ExtensionHandlers.GetValueOrDefault(ext, ProcessDefaultImageAsync);
+            await processor(fileInfo, imageModel).ConfigureAwait(false);
 
             return imageModel;
         }
         catch (Exception e)
         {
-            LogError($"Error processing {fileInfo.Name}: {e.Message}");
+            DebugHelper.LogDebug(nameof(GetImageModel), nameof(GetImageModelAsync), e);
             return CreateErrorImageModel(fileInfo);
         }
         finally
         {
-            magickImage.Dispose();
+            if (shouldDisposeMagickImage)
+            {
+                magickImage?.Dispose();
+            }
         }
     }
 
-    private static void LogError(string message)
+    private static MagickImage CreateAndPingMagickImage(FileInfo fileInfo)
     {
-#if DEBUG
-        Console.WriteLine($"Error: {nameof(GetImageModel)}:{nameof(GetImageModelAsync)}: {message}");
-#endif
+        var magickImage = new MagickImage();
+        magickImage.Ping(fileInfo);
+        return magickImage;
+    }
+
+    private static void ExtractImageMetadata(MagickImage magickImage, ImageModel imageModel)
+    {
+        imageModel.EXIFOrientation = EXIFHelper.GetImageOrientation(magickImage);
+        imageModel.Format = magickImage.Format;
+    }
+
+    private static void SetBitmapProperties(Bitmap? bitmap, ImageModel imageModel, ImageType imageType = ImageType.Bitmap)
+    {
+        imageModel.Image = bitmap;
+        imageModel.PixelWidth = bitmap?.PixelSize.Width ?? 0;
+        imageModel.PixelHeight = bitmap?.PixelSize.Height ?? 0;
+        imageModel.ImageType = imageType;
     }
 
     private static ImageModel CreateErrorImageModel(FileInfo? fileInfo)
@@ -92,89 +99,51 @@ public static class GetImageModel
         };
     }
 
-    #region Image Handlers
+    #region Image Processing Methods
 
-    // Base abstract class for all image handlers
-    private abstract class ImageHandler
+    private static async Task ProcessStandardBitmapAsync(FileInfo fileInfo, ImageModel imageModel)
     {
-        public abstract Task ProcessImageAsync(FileInfo fileInfo, ImageModel imageModel);
-
-        protected static void SetBitmapModel(Bitmap bitmap, ImageModel imageModel, ImageType imageType = ImageType.Bitmap)
-        {
-            imageModel.Image = bitmap;
-            imageModel.PixelWidth = bitmap?.PixelSize.Width ?? 0;
-            imageModel.PixelHeight = bitmap?.PixelSize.Height ?? 0;
-            imageModel.ImageType = imageType;
-        }
+        var bitmap = await GetImage.GetStandardBitmapAsync(fileInfo).ConfigureAwait(false);
+        SetBitmapProperties(bitmap, imageModel);
     }
 
-    // Handler for standard bitmap formats
-    private class StandardBitmapHandler : ImageHandler
+    private static async Task ProcessAnimatedWebpAsync(FileInfo fileInfo, ImageModel imageModel)
     {
-        public override async Task ProcessImageAsync(FileInfo fileInfo, ImageModel imageModel)
-        {
-            var bitmap = await GetImage.GetStandardBitmapAsync(fileInfo).ConfigureAwait(false);
-            SetBitmapModel(bitmap, imageModel);
-        }
+        var bitmap = await GetImage.GetStandardBitmapAsync(fileInfo).ConfigureAwait(false);
+        var imageType = ImageAnalyzer.IsAnimated(fileInfo) ? ImageType.AnimatedWebp : ImageType.Bitmap;
+        SetBitmapProperties(bitmap, imageModel, imageType);
     }
 
-    // Handler for animated WebP
-    private class AnimatedWebpHandler : ImageHandler
+    private static async Task ProcessAnimatedGifAsync(FileInfo fileInfo, ImageModel imageModel)
     {
-        public override async Task ProcessImageAsync(FileInfo fileInfo, ImageModel imageModel)
-        {
-            var bitmap = await GetImage.GetStandardBitmapAsync(fileInfo).ConfigureAwait(false);
-            SetBitmapModel(bitmap, imageModel, 
-                ImageAnalyzer.IsAnimated(fileInfo) ? ImageType.AnimatedWebp : ImageType.Bitmap);
-        }
+        var bitmap = await GetImage.GetStandardBitmapAsync(fileInfo).ConfigureAwait(false);
+        var imageType = ImageAnalyzer.IsAnimated(fileInfo) ? ImageType.AnimatedGif : ImageType.Bitmap;
+        SetBitmapProperties(bitmap, imageModel, imageType);
     }
 
-    // Handler for animated GIF
-    private class AnimatedGifHandler : ImageHandler
+    private static Task ProcessSvgAsync(FileInfo fileInfo, ImageModel imageModel)
     {
-        public override async Task ProcessImageAsync(FileInfo fileInfo, ImageModel imageModel)
-        {
-            var bitmap = await GetImage.GetStandardBitmapAsync(fileInfo).ConfigureAwait(false);
-            SetBitmapModel(bitmap, imageModel, 
-                ImageAnalyzer.IsAnimated(fileInfo) ? ImageType.AnimatedGif : ImageType.Bitmap);
-        }
+        using var svg = new MagickImage();
+        svg.Ping(fileInfo.FullName);
+        
+        imageModel.PixelWidth = (int)svg.Width;
+        imageModel.PixelHeight = (int)svg.Height;
+        imageModel.ImageType = ImageType.Svg;
+        imageModel.Image = fileInfo.FullName;
+        
+        return Task.CompletedTask;
     }
 
-    // Handler for SVG images
-    private class SvgHandler : ImageHandler
+    private static async Task ProcessBase64Async(FileInfo fileInfo, ImageModel imageModel)
     {
-        public override Task ProcessImageAsync(FileInfo fileInfo, ImageModel imageModel)
-        {
-            using var svg = new MagickImage();
-            svg.Ping(fileInfo.FullName);
-            
-            imageModel.PixelWidth = (int)svg.Width;
-            imageModel.PixelHeight = (int)svg.Height;
-            imageModel.ImageType = ImageType.Svg;
-            imageModel.Image = fileInfo.FullName;
-            
-            return Task.CompletedTask;
-        }
+        var bitmap = await GetImage.GetBase64ImageAsync(fileInfo).ConfigureAwait(false);
+        SetBitmapProperties(bitmap, imageModel);
     }
 
-    // Handler for Base64 encoded images
-    private class Base64Handler : ImageHandler
+    private static async Task ProcessDefaultImageAsync(FileInfo fileInfo, ImageModel imageModel)
     {
-        public override async Task ProcessImageAsync(FileInfo fileInfo, ImageModel imageModel)
-        {
-            var bitmap = await GetImage.GetBase64ImageAsync(fileInfo).ConfigureAwait(false);
-            SetBitmapModel(bitmap, imageModel);
-        }
-    }
-
-    // Default handler for unknown formats
-    private class DefaultImageHandler : ImageHandler
-    {
-        public override async Task ProcessImageAsync(FileInfo fileInfo, ImageModel imageModel)
-        {
-            var bitmap = await GetImage.GetDefaultBitmapAsync(fileInfo).ConfigureAwait(false);
-            SetBitmapModel(bitmap, imageModel);
-        }
+        var bitmap = await GetImage.GetDefaultBitmapAsync(fileInfo).ConfigureAwait(false);
+        SetBitmapProperties(bitmap, imageModel);
     }
 
     #endregion
