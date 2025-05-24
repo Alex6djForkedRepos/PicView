@@ -112,6 +112,7 @@ public static class QuickLoad
         {
             await Dispatcher.UIThread.InvokeAsync(() =>
             {
+                vm.ImageViewer.SetTransform(EXIFHelper.GetImageOrientation(magickImage), magickImage.Format);
                 WindowResizing.SetSize(magickImage.Width, magickImage.Height, vm);
                 WindowFunctions.CenterWindowOnScreen();
             }, DispatcherPriority.Send);
@@ -166,7 +167,7 @@ public static class QuickLoad
         {
             vm.ImageViewer.MainImage.InitialAnimatedSource = fileInfo.FullName;
         }
-
+        
         vm.PicViewer.ImageSource = imageModel.Image;
         vm.PicViewer.ImageType = imageModel.ImageType;
         vm.ZoomValue = 1;
@@ -193,7 +194,6 @@ public static class QuickLoad
 
         await Dispatcher.UIThread.InvokeAsync(() =>
         {
-            vm.ImageViewer.SetTransform(imageModel.EXIFOrientation, false);
             if (is1To1)
             {
                 var size = WindowResizing.GetSize(imageModel.PixelWidth, imageModel.PixelHeight,

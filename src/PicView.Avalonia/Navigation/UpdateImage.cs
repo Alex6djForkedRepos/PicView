@@ -76,7 +76,8 @@ public static class UpdateImage
                 return;
             }
 
-            vm.ImageViewer.SetTransform(preLoadValue.ImageModel.EXIFOrientation);
+            vm.ImageViewer.SetTransform(preLoadValue.ImageModel.EXIFOrientation, preLoadValue.ImageModel.Format);
+
             if (Settings.ImageScaling.ShowImageSideBySide && nextPreloadValue is { ImageModel: not null })
             {
                 vm.PicViewer.SecondaryImageSource = nextPreloadValue.ImageModel.Image;
@@ -166,7 +167,7 @@ public static class UpdateImage
         {
             WindowResizing.SetSize(preLoadValue.ImageModel.PixelWidth, preLoadValue.ImageModel.PixelHeight,
                 nextPreloadValue?.ImageModel?.PixelWidth ?? 0, nextPreloadValue?.ImageModel?.PixelHeight ?? 0,
-                preLoadValue.ImageModel.Rotation, vm);
+                vm.RotationAngle, vm);
         }
 
     }

@@ -6,6 +6,7 @@ using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
+using ImageMagick;
 using PicView.Avalonia.ImageTransformations;
 using PicView.Avalonia.Navigation;
 using PicView.Avalonia.ViewModels;
@@ -324,7 +325,7 @@ public partial class ImageViewer : UserControl
         }
     }
 
-    public void SetTransform(EXIFHelper.EXIFOrientation? orientation, bool reset = true)
+    public void SetTransform(EXIFHelper.EXIFOrientation? orientation, MagickFormat? format, bool reset = true)
     {
         if (Dispatcher.UIThread.CheckAccess())
         {
@@ -343,6 +344,15 @@ public partial class ImageViewer : UserControl
                 ImageScrollViewer.ScrollToHome();
             }
 
+            if (format is MagickFormat.Heic or MagickFormat.Heif)
+            {
+                if (reset)
+                {
+                    SetTransform(1,0);
+                }
+                return;
+            }
+            
             switch (orientation)
             {
                 case null:

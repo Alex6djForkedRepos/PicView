@@ -46,6 +46,7 @@ public static class GetImageModel
 
             // Extract EXIF orientation early
             imageModel.EXIFOrientation = EXIFHelper.GetImageOrientation(magickImage);
+            imageModel.Format = magickImage.Format;
 
             // Process the image based on extension
             if (ExtensionHandlers.TryGetValue(ext, out var handler))
@@ -98,13 +99,12 @@ public static class GetImageModel
     {
         public abstract Task ProcessImageAsync(FileInfo fileInfo, ImageModel imageModel);
 
-        protected static void SetBitmapModel(Bitmap bitmap, FileInfo fileInfo, ImageModel imageModel, ImageType imageType = ImageType.Bitmap)
+        protected static void SetBitmapModel(Bitmap bitmap, ImageModel imageModel, ImageType imageType = ImageType.Bitmap)
         {
             imageModel.Image = bitmap;
             imageModel.PixelWidth = bitmap?.PixelSize.Width ?? 0;
             imageModel.PixelHeight = bitmap?.PixelSize.Height ?? 0;
             imageModel.ImageType = imageType;
-            imageModel.EXIFOrientation = EXIFHelper.GetImageOrientation(fileInfo);
         }
     }
 
@@ -114,7 +114,7 @@ public static class GetImageModel
         public override async Task ProcessImageAsync(FileInfo fileInfo, ImageModel imageModel)
         {
             var bitmap = await GetImage.GetStandardBitmapAsync(fileInfo).ConfigureAwait(false);
-            SetBitmapModel(bitmap, fileInfo, imageModel);
+            SetBitmapModel(bitmap, imageModel);
         }
     }
 
@@ -124,7 +124,7 @@ public static class GetImageModel
         public override async Task ProcessImageAsync(FileInfo fileInfo, ImageModel imageModel)
         {
             var bitmap = await GetImage.GetStandardBitmapAsync(fileInfo).ConfigureAwait(false);
-            SetBitmapModel(bitmap, fileInfo, imageModel, 
+            SetBitmapModel(bitmap, imageModel, 
                 ImageAnalyzer.IsAnimated(fileInfo) ? ImageType.AnimatedWebp : ImageType.Bitmap);
         }
     }
@@ -135,7 +135,7 @@ public static class GetImageModel
         public override async Task ProcessImageAsync(FileInfo fileInfo, ImageModel imageModel)
         {
             var bitmap = await GetImage.GetStandardBitmapAsync(fileInfo).ConfigureAwait(false);
-            SetBitmapModel(bitmap, fileInfo, imageModel, 
+            SetBitmapModel(bitmap, imageModel, 
                 ImageAnalyzer.IsAnimated(fileInfo) ? ImageType.AnimatedGif : ImageType.Bitmap);
         }
     }
@@ -163,7 +163,7 @@ public static class GetImageModel
         public override async Task ProcessImageAsync(FileInfo fileInfo, ImageModel imageModel)
         {
             var bitmap = await GetImage.GetBase64ImageAsync(fileInfo).ConfigureAwait(false);
-            SetBitmapModel(bitmap, fileInfo, imageModel);
+            SetBitmapModel(bitmap, imageModel);
         }
     }
 
@@ -173,7 +173,7 @@ public static class GetImageModel
         public override async Task ProcessImageAsync(FileInfo fileInfo, ImageModel imageModel)
         {
             var bitmap = await GetImage.GetDefaultBitmapAsync(fileInfo).ConfigureAwait(false);
-            SetBitmapModel(bitmap, fileInfo, imageModel);
+            SetBitmapModel(bitmap, imageModel);
         }
     }
 

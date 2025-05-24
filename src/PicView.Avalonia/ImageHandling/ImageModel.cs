@@ -1,4 +1,5 @@
-﻿using PicView.Core.ImageDecoding;
+﻿using ImageMagick;
+using PicView.Core.ImageDecoding;
 
 namespace PicView.Avalonia.ImageHandling;
 
@@ -10,6 +11,8 @@ public class ImageModel
     public int PixelHeight { get; set; }
     public EXIFHelper.EXIFOrientation? EXIFOrientation { get; set; }
     public ImageType ImageType { get; set; }
+    
+    public MagickFormat? Format { get; set; }
 
     public double Rotation
     {

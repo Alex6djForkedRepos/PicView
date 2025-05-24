@@ -80,7 +80,7 @@ public static class WindowResizing
     }
     
     public static void SetSize(double width, double height, MainViewModel vm) 
-        => SetSize(width, height, 0, 0, 0, vm);
+        => SetSize(width, height, 0, 0, vm.RotationAngle, vm);
 
     public static void SetSize(double width, double height, double secondWidth, double secondHeight, double rotation,
         MainViewModel vm)
