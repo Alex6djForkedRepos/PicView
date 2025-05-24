@@ -56,10 +56,16 @@ public static class StartUpHelper
                         }
                     });
                 }
-                else if (Settings.UIProperties.OpenInSameWindow &&
-                    ProcessHelper.CheckIfAnotherInstanceIsRunning())
+                else
                 {
-                    HandleMultipleInstances(args);
+                    if (!RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                    {
+                        if (Settings.UIProperties.OpenInSameWindow &&
+                            ProcessHelper.CheckIfAnotherInstanceIsRunning())
+                        {
+                            HandleMultipleInstances(args);
+                        }
+                    }
                 }
             }
         }
@@ -160,7 +166,7 @@ public static class StartUpHelper
 
         if (!RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
         {
-            if (Settings.UIProperties.OpenInSameWindow)
+            if (Settings.UIProperties.OpenInSameWindow && !ProcessHelper.CheckIfAnotherInstanceIsRunning())
             {
                 // No other instance is running, create named pipe server
                 _ = IPC.StartListeningForArguments(vm);
