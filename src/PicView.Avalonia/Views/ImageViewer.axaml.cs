@@ -219,20 +219,13 @@ public partial class ImageViewer : UserControl
         {
             return;
         }
-        if (RotationHelper.IsValidRotation(vm.RotationAngle))
+        var nextAngle = RotationHelper.Rotate(vm.RotationAngle, clockWise);
+        vm.RotationAngle = nextAngle switch
         {
-            var nextAngle = RotationHelper.Rotate(vm.RotationAngle, clockWise);
-            vm.RotationAngle = nextAngle switch
-            {
-                360 => 0,
-                -90 => 270,
-                _ => nextAngle
-            };
-        }
-        else
-        {
-            vm.RotationAngle = RotationHelper.NextRotationAngle(vm.RotationAngle, true);
-        }
+            360 => 0,
+            -90 => 270,
+            _ => nextAngle
+        };
 
         var rotateTransform = new RotateTransform(vm.RotationAngle);
 

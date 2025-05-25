@@ -232,7 +232,6 @@ public static class Zoom
         }
         
         vm.ZoomValue = 1;
-        vm.RotationAngle = 0;
         TooltipHelper.StopTooltipMessage();
         TitleManager.SetTitle(vm);
     }
@@ -265,11 +264,36 @@ public static class Zoom
         {
             return;
         }
-
+        
         var dragMousePosition = _start - e.GetPosition(imageViewer);
-    
-        var newXproperty = _origin.X - dragMousePosition.X;
-        var newYproperty = _origin.Y - dragMousePosition.Y;
+
+        // Get the current rotation angle from the ViewModel
+        var vm = imageViewer.DataContext as MainViewModel;
+        var rotationAngle = vm?.RotationAngle ?? 0;
+
+        // Apply rotation transformation to the mouse movement
+        var rotationRadians = rotationAngle * Math.PI / 180.0;
+        var cos = Math.Cos(rotationRadians);
+        var sin = Math.Sin(rotationRadians);
+
+        double rotatedX;
+        double rotatedY;
+
+        switch (rotationAngle)
+        {
+            case 90:
+            case 270:
+                rotatedX = -(dragMousePosition.X * cos - dragMousePosition.Y * sin);
+                rotatedY = -(dragMousePosition.X * sin + dragMousePosition.Y * cos);
+                break;
+            default:
+                rotatedX = dragMousePosition.X * cos - dragMousePosition.Y * sin;
+                rotatedY = dragMousePosition.X * sin + dragMousePosition.Y * cos;
+                break;
+        }
+
+        var newXproperty = _origin.X - rotatedX;
+        var newYproperty = _origin.Y - rotatedY;
         
         // #185
         if (Settings.WindowProperties.Fullscreen || Settings.WindowProperties.Maximized || !Settings.WindowProperties.AutoFit)
