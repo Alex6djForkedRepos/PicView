@@ -113,6 +113,7 @@ public static class Slideshow
         if (!Settings.WindowProperties.Fullscreen)
         {
             await vm.PlatformWindowService.ToggleFullscreen();
+            Settings.WindowProperties.Fullscreen = false;
         }
 
         if (GalleryFunctions.IsFullGalleryOpen || Settings.Gallery.IsBottomGalleryShown)
