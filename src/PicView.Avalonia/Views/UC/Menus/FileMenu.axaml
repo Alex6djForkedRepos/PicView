@@ -71,7 +71,8 @@
                     IsEnabled="{CompiledBinding PicViewer.FileInfo,
                                                 Converter={x:Static ObjectConverters.IsNotNull}}"
                     ToolTip.Tip="{CompiledBinding Translation.Print,
-                                                  Mode=OneWay}" />
+                                                  Mode=OneWay}"
+                    x:Name="PrintButton" />
 
                 <customControls:IconButton
                     Canvas.Left="90"

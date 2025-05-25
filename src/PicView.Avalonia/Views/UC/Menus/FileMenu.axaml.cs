@@ -22,6 +22,7 @@ public partial class FileMenu : AnimatedMenu
             if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
                 OpenWithButton.IsEnabled = false;
+                PrintButton.IsEnabled = false;
             }
         };
     }
