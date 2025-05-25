@@ -104,7 +104,7 @@
                                                    FallbackValue=''}"
                 Header="{CompiledBinding Translation.OpenWith,
                                          Mode=OneWay}"
-                IsEnabled="{CompiledBinding PicViewer.ImageSource,
+                IsEnabled="{CompiledBinding PicViewer.FileInfo,
                                             Converter={x:Static ObjectConverters.IsNotNull}}"
                 x:Name="OpenWithMenuItem">
                 <MenuItem.Icon>
@@ -123,7 +123,9 @@
                 CommandParameter="{CompiledBinding PicViewer.FileInfo.FullName,
                                                    FallbackValue=''}"
                 Header="{CompiledBinding Translation.ShowInFolder,
-                                         Mode=OneWay}">
+                                         Mode=OneWay}"
+                IsEnabled="{CompiledBinding PicViewer.FileInfo,
+                                            Converter={x:Static ObjectConverters.IsNotNull}}">
                 <MenuItem.Icon>
                     <Path
                         Data="{StaticResource ShowInFolderGeometry}"
