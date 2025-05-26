@@ -47,11 +47,8 @@ public static class ErrorHandling
                 }
                 vm.CurrentView = startUpMenu;
             }
-            else
-            {
-                TitleManager.SetNoImageTitle(vm);
-            }
-
+            
+            TitleManager.SetNoImageTitle(vm);
             vm.GalleryMode = GalleryMode.Closed;
             GalleryFunctions.Clear();
             MenuManager.CloseMenus(vm);
