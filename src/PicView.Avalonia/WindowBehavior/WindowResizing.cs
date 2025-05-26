@@ -7,6 +7,7 @@ using ImageMagick;
 using PicView.Avalonia.Navigation;
 using PicView.Avalonia.UI;
 using PicView.Avalonia.ViewModels;
+using PicView.Core.DebugTools;
 using PicView.Core.Sizing;
 
 namespace PicView.Avalonia.WindowBehavior;
@@ -149,10 +150,18 @@ public static class WindowResizing
             }
             else if (vm.PicViewer.FileInfo?.Exists != null)
             {
-                var magickImage = new MagickImage();
-                magickImage.Ping(vm.PicViewer.FileInfo);
-                firstWidth = magickImage.Width;
-                firstHeight = magickImage.Height;
+                try
+                {
+                    var magickImage = new MagickImage();
+                    magickImage.Ping(vm.PicViewer.FileInfo);
+                    firstWidth = magickImage.Width;
+                    firstHeight = magickImage.Height;
+                }
+                catch (Exception e)
+                {
+                    DebugHelper.LogDebug(nameof(WindowBehavior), nameof(GetSize), e);
+                    return null;
+                }
             }
             else
             {
