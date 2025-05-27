@@ -1,4 +1,4 @@
-﻿{
+{
   "About": "Névjegy",
   "ActionProgram": "Program műveletek",
   "AddedToClipboard": "Hozzáadva a vágólaphoz",
@@ -59,6 +59,7 @@
   "ColorTone": "Színtónus",
   "CompressedBitsPixel": "Tömörített bitek pixelenként",
   "Compression": "Tömörítés",
+  "ConstrainBackgroundToImage": "Háttérszín igazítása a képhez",
   "Contrast": "Kontraszt",
   "ConvertTo": "Konvertálás",
   "ConvertedToBase64": "Base64-re konvertálva",
@@ -167,7 +168,6 @@
   "HighQuality": "Kiváló minőségű",
   "HighlightColor": "Kiemelés színe",
   "ISOSpeed": "ISO-érzékenység",
-  "IconsUsed": "Használt ikonok:",
   "Image": "Kép",
   "ImageAliasing": "Képi elszíneződés",
   "ImageControl": "Képvezérlés",
@@ -257,7 +257,7 @@
   "PrevImage": "Előző kép",
   "Print": "Nyomtatás",
   "PrintSizeCm": "Nyomtatási méret (cm)",
-  "PrintSizeIn": "Nyomtatási méret ("")",
+  "PrintSizeIn": "Nyomtatási méret (hüvelyk)",
   "Quality": "Minőség",
   "Random": "Véletlen",
   "RawCamera": "Raw kamera",
@@ -378,7 +378,9 @@
   "WhiteFluorescent": "Fehér fluoreszkáló",
   "Width": "Szélesség",
   "WidthAndHeight": "Szélesség és magasság",
+  "Window": "Ablak",
   "WindowManagement": "Ablakkezelés",
+  "WindowMargin": "Ablaktávolság",
   "WindowScaling": "Ablak méretezése",
   "Zoom": "Nagyítás",
   "ZoomIn": "Nagyítás",
@@ -388,4 +390,4 @@
   "_3Star": "3 csillagos értékelés",
   "_4Star": "4 csillagos értékelés",
   "_5Star": "5 csillagos értékelés"
-  }
+}
