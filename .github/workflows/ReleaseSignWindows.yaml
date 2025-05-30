@@ -45,7 +45,7 @@ jobs:
             /DMyAppVersion="${{steps.get-version.outputs.version}}" `
             /DMyAppOutputDir="${{ github.workspace }}\Build\install" `
             /DMyFileSource="${{ github.workspace }}\Build\PicView-v${{steps.get-version.outputs.version}}-win-x64" `
-            /DMyAppOutputName="PicView-v${{steps.get-version.outputs.version}}-win-x64" `
+            /DMyAppOutputName="Setup-PicView-v${{steps.get-version.outputs.version}}-win-x64" `
             /DLicenseFile="${{ github.workspace }}\src\PicView.Core\Licenses\LICENSE.txt" `
             /DAppIcon="${{ github.workspace }}\src\PicView.Avalonia.Win32\icon.ico" `
             /DVersionInfoVersion="${{steps.get-version.outputs.clean-version}}" `
@@ -73,7 +73,7 @@ jobs:
             /DMyAppVersion="${{steps.get-version.outputs.version}}" `
             /DMyAppOutputDir="${{ github.workspace }}\Build\install" `
             /DMyFileSource="${{ github.workspace }}\Build\PicView-v${{steps.get-version.outputs.version}}-win-arm64" `
-            /DMyAppOutputName="PicView-v${{steps.get-version.outputs.version}}-win-arm64" `
+            /DMyAppOutputName="Setup-PicView-v${{steps.get-version.outputs.version}}-win-arm64" `
             /DLicenseFile="${{ github.workspace }}\src\PicView.Core\Licenses\LICENSE.txt" `
             /DAppIcon="${{ github.workspace }}\src\PicView.Avalonia.Win32\icon.ico" `
             /DVersionInfoVersion="${{steps.get-version.outputs.clean-version}}" `
@@ -89,9 +89,9 @@ jobs:
           if-no-files-found: error
           path: |
             ${{ github.workspace }}\Build\PicView-v${{steps.get-version.outputs.version}}-win-x64\
-            ${{ github.workspace }}\Build\install\PicView-v${{steps.get-version.outputs.version}}-win-x64.exe
+            ${{ github.workspace }}\Build\install\Setup-PicView-v${{steps.get-version.outputs.version}}-win-x64.exe
             ${{ github.workspace }}\Build\\PicView-v${{steps.get-version.outputs.version}}-win-arm64\
-            ${{ github.workspace }}\Build\install\PicView-v${{steps.get-version.outputs.version}}-win-arm64.exe
+            ${{ github.workspace }}\Build\install\Setup-PicView-v${{steps.get-version.outputs.version}}-win-arm64.exe
           retention-days: 1
 
       # Step 11: Sign the binaries
