@@ -3,7 +3,6 @@ using System.Runtime.InteropServices;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using PicView.Core.DebugTools;
-using PicView.Core.FileHandling;
 
 namespace PicView.Core.Config;
 
@@ -16,7 +15,6 @@ internal partial class SettingsGenerationContext : JsonSerializerContext;
 /// </summary>
 public static class SettingsManager
 {
-
     /// <summary>
     /// Gets the file path to the currently loaded settings file, if available.
     /// </summary>
@@ -62,10 +60,11 @@ public static class SettingsManager
                 if (JsonSerializer.Deserialize(
                         jsonString, typeof(AppSettings), SettingsGenerationContext.Default) is not AppSettings settings)
                 {
-                    throw new JsonException("Failed to deserialize settings");
+                    SetDefaults();
+                    return false;
                 }
 
-                Settings = await UpgradeSettingsIfNeededAsync(settings).ConfigureAwait(false);
+                Settings = UpgradeSettingsIfNeeded(settings);
                 return true;
             }
 
@@ -93,7 +92,9 @@ public static class SettingsManager
             return false;
         }
 
-        var saveLocation = await SaveConfigFileAndReturnPathAsync();
+        var saveLocation = await ConfigFileManager.SaveConfigFileAndReturnPathAsync(ConfigFileType.UserSettings,
+            CurrentSettingsPath,
+            Settings, typeof(AppSettings), SettingsGenerationContext.Default).ConfigureAwait(false);
         if (string.IsNullOrWhiteSpace(saveLocation))
         {
             DebugHelper.LogDebug(nameof(SettingsManager), nameof(SaveSettingsAsync), "Empty save location");
@@ -103,51 +104,48 @@ public static class SettingsManager
         CurrentSettingsPath = saveLocation;
         return true;
     }
-    
-    private static async Task<AppSettings> UpgradeSettingsIfNeededAsync(AppSettings settings)
-    {
-        if (settings.Version >= SettingsConfiguration.CurrentSettingsVersion)
-        {
-            return settings.WindowProperties is null ? GetDefaults() : settings;
-        }
 
+    private static AppSettings UpgradeSettingsIfNeeded(AppSettings settings)
+    {
+        if (settings is null)
+        {
+            return GetDefaults();
+        }
         if (settings.WindowProperties is null)
         {
             return GetDefaults();
         }
 
-        await SynchronizeSettingsAsync(settings).ConfigureAwait(false);
-        settings.Version = SettingsConfiguration.CurrentSettingsVersion;
+        if (settings.Version < SettingsConfiguration.CurrentSettingsVersion)
+        {
+            return EnsureSettings(settings);
+        }
+        
+        if (settings.Navigation is null)
+        {
+            return EnsureSettings(settings);
+        }
 
+        settings.Version = SettingsConfiguration.CurrentSettingsVersion;
         return settings;
     }
 
-    /// <summary>
-    /// Synchronizes the settings with defaults, adding missing properties and saving.
-    /// </summary>
-    private static async Task SynchronizeSettingsAsync(AppSettings existingSettings)
+    private static AppSettings EnsureSettings(AppSettings existingSettings)
     {
-        try
-        {
-            var newSettings = GetDefaults();
-            
-            existingSettings.UIProperties ??= newSettings.UIProperties;
-            existingSettings.Gallery ??= newSettings.Gallery;
-            existingSettings.Theme ??= newSettings.Theme;
-            existingSettings.Sorting ??= newSettings.Sorting;
-            existingSettings.ImageScaling ??= newSettings.ImageScaling;
-            existingSettings.WindowProperties ??= newSettings.WindowProperties;
-            existingSettings.Zoom ??= newSettings.Zoom;
-            existingSettings.StartUp ??= newSettings.StartUp;
-            existingSettings.Navigation ??= newSettings.Navigation;
-            
-            Settings = existingSettings;
-            await WriteJsonAsync();
-        }
-        catch (Exception ex)
-        {
-            DebugHelper.LogDebug(nameof(SettingsManager), nameof(SynchronizeSettingsAsync), ex);
-        }
+        var newSettings = GetDefaults();
+
+        existingSettings.UIProperties ??= newSettings.UIProperties;
+        existingSettings.Gallery ??= newSettings.Gallery;
+        existingSettings.Theme ??= newSettings.Theme;
+        existingSettings.Sorting ??= newSettings.Sorting;
+        existingSettings.ImageScaling ??= newSettings.ImageScaling;
+        existingSettings.WindowProperties ??= newSettings.WindowProperties;
+        existingSettings.Zoom ??= newSettings.Zoom;
+        existingSettings.StartUp ??= newSettings.StartUp;
+        existingSettings.Navigation ??= newSettings.Navigation;
+
+        existingSettings.Version = SettingsConfiguration.CurrentSettingsVersion;
+        return existingSettings;
     }
 
     /// <summary>
@@ -232,17 +230,4 @@ public static class SettingsManager
             }
         }
     }
-
-    #region Helpers
-
-    private static async Task WriteJsonAsync() =>
-        await JsonFileHelper
-            .WriteJsonAsync(CurrentSettingsPath, Settings, typeof(AppSettings), SettingsGenerationContext.Default)
-            .ConfigureAwait(false);
-
-    private static async Task<string?> SaveConfigFileAndReturnPathAsync() =>
-        await ConfigFileManager.SaveConfigFileAndReturnPathAsync(ConfigFileType.UserSettings, CurrentSettingsPath,
-            Settings, typeof(AppSettings), SettingsGenerationContext.Default).ConfigureAwait(false);
-
-    #endregion
 }

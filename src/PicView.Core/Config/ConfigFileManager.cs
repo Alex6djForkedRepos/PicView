@@ -36,11 +36,6 @@ public static class ConfigFileManager
 
         try
         {
-            if (string.IsNullOrWhiteSpace(path))
-            {
-                return await TrySaveLocal();
-            }
-
             CleanupOldConfigPath();
             await JsonFileHelper.WriteJsonAsync(path, value, inputType, context).ConfigureAwait(false);
 
@@ -73,23 +68,6 @@ public static class ConfigFileManager
             await JsonFileHelper.WriteJsonAsync(roamingPath, value, inputType, context).ConfigureAwait(false);
 
             return roamingPath;
-        }
-
-        async Task<string> TrySaveLocal()
-        {
-            var localPath = path ??= GetConfigPath(type, ConfigPathKind.Local);
-
-            if (type is ConfigFileType.KeyBindings)
-            {
-                File.Create(localPath);
-            }
-            else
-            {
-                await JsonFileHelper.WriteJsonAsync(localPath, value, inputType, context).ConfigureAwait(false);
-            }
-
-
-            return localPath;
         }
 
         // TODO delete this after next release
@@ -134,28 +112,41 @@ public static class ConfigFileManager
 
     private static string GetConfigPath(ConfigFileType type, ConfigPathKind kind)
     {
-        return kind switch
+        switch (kind)
         {
-            ConfigPathKind.CurrentUser => type switch
-            {
-                ConfigFileType.FileHistory => FileHistoryConfiguration.CurrentUserFileHistoryPath,
-                ConfigFileType.KeyBindings => KeyBindingsConfiguration.CurrentUserKeybindingsPath,
-                _ => SettingsConfiguration.CurrentUserSettingsPath
-            },
-            ConfigPathKind.Roaming => type switch
-            {
-                ConfigFileType.FileHistory => FileHistoryConfiguration.RoamingFileHistoryPath,
-                ConfigFileType.KeyBindings => KeyBindingsConfiguration.RoamingKeybindingsPath,
-                _ => SettingsConfiguration.RoamingSettingsPath
-            },
-            ConfigPathKind.Local => type switch
-            {
-                ConfigFileType.FileHistory => FileHistoryConfiguration.LocalFileHistoryPath,
-                ConfigFileType.KeyBindings => KeyBindingsConfiguration.LocalKeybindingsPath,
-                _ => SettingsConfiguration.LocalSettingsPath
-            },
-            _ => throw new ArgumentOutOfRangeException(nameof(kind), kind, "Invalid configuration path kind.")
-        };
+            case ConfigPathKind.CurrentUser:
+                switch (type)
+                {
+                    case ConfigFileType.FileHistory:
+                        return FileHistoryConfiguration.CurrentUserFileHistoryPath;
+                    case ConfigFileType.KeyBindings:
+                        return KeyBindingsConfiguration.CurrentUserKeybindingsPath;
+                    case ConfigFileType.UserSettings:
+                    default:
+                        if (File.Exists(SettingsConfiguration.OldLocalSettingsPath))
+                        {
+                            return SettingsConfiguration.OldLocalSettingsPath;
+                        }
+                        var currentSettingsPath= SettingsConfiguration.CurrentUserSettingsPath;
+                        return string.IsNullOrWhiteSpace(currentSettingsPath) ? SettingsConfiguration.LocalSettingsPath : currentSettingsPath;
+                }
+            case ConfigPathKind.Roaming:
+                return type switch
+                {
+                    ConfigFileType.FileHistory => FileHistoryConfiguration.RoamingFileHistoryPath,
+                    ConfigFileType.KeyBindings => KeyBindingsConfiguration.RoamingKeybindingsPath,
+                    _ => SettingsConfiguration.RoamingSettingsPath
+                };
+            case ConfigPathKind.Local:
+                return type switch
+                {
+                    ConfigFileType.FileHistory => FileHistoryConfiguration.LocalFileHistoryPath,
+                    ConfigFileType.KeyBindings => KeyBindingsConfiguration.LocalKeybindingsPath,
+                    _ => SettingsConfiguration.LocalSettingsPath
+                };
+            default:
+                throw new ArgumentOutOfRangeException(nameof(kind), kind, "Invalid configuration path kind.");
+        }
     }
 
 
