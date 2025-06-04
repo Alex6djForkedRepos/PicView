@@ -64,7 +64,7 @@ public static class SettingsManager
                     return false;
                 }
 
-                Settings = UpgradeSettingsIfNeeded(settings);
+                Settings = EnsureSettingsIfNeeded(settings);
                 return true;
             }
 
@@ -105,22 +105,20 @@ public static class SettingsManager
         return true;
     }
 
-    private static AppSettings UpgradeSettingsIfNeeded(AppSettings settings)
+    private static AppSettings EnsureSettingsIfNeeded(AppSettings settings)
     {
-        if (settings is null)
-        {
-            return GetDefaults();
-        }
-        if (settings.WindowProperties is null)
+        if (settings?.WindowProperties is null)
         {
             return GetDefaults();
         }
 
-        if (settings.Version < SettingsConfiguration.CurrentSettingsVersion)
+        // ReSharper disable once CompareOfFloatsByEqualityOperator
+        if (settings.Version != SettingsConfiguration.CurrentSettingsVersion)
         {
             return EnsureSettings(settings);
         }
         
+        // If navigation settings is null, it is an upgrade from an old version or the config is otherwise invalid
         if (settings.Navigation is null)
         {
             return EnsureSettings(settings);
