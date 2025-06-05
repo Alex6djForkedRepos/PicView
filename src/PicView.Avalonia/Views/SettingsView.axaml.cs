@@ -4,8 +4,11 @@ using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Input;
 using Avalonia.Media;
+using PicView.Avalonia.Input;
 using PicView.Avalonia.UI;
 using PicView.Avalonia.ViewModels;
+using PicView.Core.Config;
+using PicView.Core.Keybindings;
 using PicView.Core.Sizing;
 using ReactiveUI;
 
@@ -35,6 +38,18 @@ public partial class SettingsView : UserControl
         SetupUI();
         AttachEventHandlers();
         SetupCommands();
+        Task.Run(() =>
+        {
+            if (string.IsNullOrWhiteSpace(SettingsConfiguration.CurrentUserSettingsPath))
+            {
+                _ = SaveSettingsAsync();
+            }
+
+            if (string.IsNullOrWhiteSpace(KeybindingFunctions.CurrentKeybindingsPath))
+            {
+                _ = KeybindingManager.UpdateKeyBindingsFile();
+            }
+        });
     }
 
     private void SetupUI()

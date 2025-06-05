@@ -100,25 +100,22 @@ public static partial class FileHelper
 
 
     /// <summary>
-    ///     Duplicates a file with an incremented number inside parentheses to avoid name conflicts,
-    ///     and returns the path of the new file. If any exception occurs, returns an empty string.
+    /// Determines whether the specified path is writable by attempting to open or create a file with write access.
     /// </summary>
-    /// <param name="currentFile">The path of the file to be duplicated.</param>
-    /// <returns>The path of the new file, or an empty string if any exception occurs.</returns>
-    public static string DuplicateAndReturnFileName(string currentFile)
+    /// <param name="path">The file path to check for write access.</param>
+    /// <returns>
+    /// <c>true</c> if the path is writable; otherwise, <c>false</c>.
+    /// </returns>
+    public static bool IsPathWritable(string path)
     {
         try
         {
-            var newFile = GenerateUniqueFileName(currentFile);
-            File.Copy(currentFile, newFile);
-            return newFile;
+            using var stream = File.Open(path, FileMode.OpenOrCreate, FileAccess.Write);
+            return true;
         }
-        catch (Exception e)
+        catch
         {
-#if DEBUG
-            Trace.WriteLine($"{nameof(DuplicateAndReturnFileName)} {currentFile} exception, \n {e.StackTrace}");
-#endif
-            return string.Empty;
+            return false;
         }
     }
 

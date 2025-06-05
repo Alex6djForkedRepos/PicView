@@ -2,7 +2,9 @@
 using System.Runtime.InteropServices;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using PicView.Core.Config.ConfigFileManagement;
 using PicView.Core.DebugTools;
+using PicView.Core.FileHandling;
 
 namespace PicView.Core.Config;
 
@@ -51,7 +53,7 @@ public static class SettingsManager
     {
         try
         {
-            var path = ConfigFileManager.TryGetConfigFilePath(ConfigFileType.UserSettings);
+            var path = ConfigFileManager.ResolveDefaultConfigPath(ConfigFileType.UserSettings);
             if (!string.IsNullOrEmpty(path))
             {
                 CurrentSettingsPath = path;
@@ -90,6 +92,16 @@ public static class SettingsManager
         if (Settings == null)
         {
             return false;
+        }
+
+        if (string.IsNullOrEmpty(CurrentSettingsPath))
+        {
+            CurrentSettingsPath = ConfigFileManager.ResolveDefaultConfigPath(ConfigFileType.UserSettings);
+        }
+
+        if (!FileHelper.IsPathWritable(CurrentSettingsPath))
+        {
+            CurrentSettingsPath = SettingsConfiguration.RoamingSettingsPath;
         }
 
         var saveLocation = await ConfigFileManager.SaveConfigFileAndReturnPathAsync(ConfigFileType.UserSettings,

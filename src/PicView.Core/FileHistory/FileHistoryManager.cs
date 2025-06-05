@@ -1,7 +1,7 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 using PicView.Core.ArchiveHandling;
-using PicView.Core.Config;
+using PicView.Core.Config.ConfigFileManagement;
 using PicView.Core.DebugTools;
 using PicView.Core.FileHandling;
 
@@ -75,7 +75,7 @@ public static class FileHistoryManager
     /// </summary>
     public static async Task InitializeAsync()
     {
-        _fileLocation = ConfigFileManager.TryGetConfigFilePath(ConfigFileType.FileHistory);
+        _fileLocation = ConfigFileManager.ResolveDefaultConfigPath(ConfigFileType.FileHistory);
         await LoadFromFileAsync().ConfigureAwait(false);
 
         // Set the current index to the most recent entry.
@@ -316,7 +316,12 @@ public static class FileHistoryManager
         {
             if (string.IsNullOrWhiteSpace(_fileLocation))
             {
-                _fileLocation = ConfigFileManager.TryGetConfigFilePath(ConfigFileType.FileHistory);
+                _fileLocation = ConfigFileManager.ResolveDefaultConfigPath(ConfigFileType.FileHistory);
+            }
+            
+            if (!FileHelper.IsPathWritable(_fileLocation))
+            {
+                _fileLocation = FileHistoryConfiguration.RoamingFileHistoryPath;
             }
 
             // Create a new sorted list with pinned entries first (max 5), then unpinned entries (max MaxHistoryEntries)

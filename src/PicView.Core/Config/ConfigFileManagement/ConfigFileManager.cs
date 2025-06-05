@@ -5,14 +5,7 @@ using PicView.Core.FileHandling;
 using PicView.Core.FileHistory;
 using PicView.Core.Keybindings;
 
-namespace PicView.Core.Config;
-
-public enum ConfigFileType
-{
-    UserSettings,
-    FileHistory,
-    KeyBindings
-}
+namespace PicView.Core.Config.ConfigFileManagement;
 
 /// <summary>
 /// Provides functionality to manage configuration files, including saving and retrieving paths for various config file types.
@@ -37,8 +30,13 @@ public static class ConfigFileManager
         try
         {
             CleanupOldConfigPath();
-            await JsonFileHelper.WriteJsonAsync(path, value, inputType, context).ConfigureAwait(false);
+            
+            if (!FileHelper.IsPathWritable(path))
+            {
+                return await TrySaveRoaming();
+            }
 
+            await JsonFileHelper.WriteJsonAsync(path, value, inputType, context).ConfigureAwait(false);
             return path;
         }
         catch (UnauthorizedAccessException)
@@ -98,7 +96,7 @@ public static class ConfigFileManager
         }
     }
 
-    public static string TryGetConfigFilePath(ConfigFileType type)
+    public static string ResolveDefaultConfigPath(ConfigFileType type)
     {
         if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
         {
@@ -118,17 +116,39 @@ public static class ConfigFileManager
                 switch (type)
                 {
                     case ConfigFileType.FileHistory:
-                        return FileHistoryConfiguration.CurrentUserFileHistoryPath;
+                        var currentFileHistoryPath = FileHistoryConfiguration.CurrentUserFileHistoryPath;
+                        if (!string.IsNullOrEmpty(currentFileHistoryPath))
+                        {
+                            return currentFileHistoryPath;
+                        }
+
+                        return FileHelper.IsPathWritable(currentFileHistoryPath) ?
+                            FileHistoryConfiguration.LocalFileHistoryPath : FileHistoryConfiguration.RoamingFileHistoryPath;
+
                     case ConfigFileType.KeyBindings:
-                        return KeyBindingsConfiguration.CurrentUserKeybindingsPath;
+                        var currentKeybindingsPath = KeyBindingsConfiguration.CurrentUserKeybindingsPath;
+                        if (!string.IsNullOrEmpty(currentKeybindingsPath))
+                        {
+                            return currentKeybindingsPath;
+                        }
+                        
+                        return FileHelper.IsPathWritable(currentKeybindingsPath) ?
+                                KeyBindingsConfiguration.LocalKeybindingsPath : KeyBindingsConfiguration.RoamingKeybindingsPath;
                     case ConfigFileType.UserSettings:
                     default:
                         if (File.Exists(SettingsConfiguration.OldLocalSettingsPath))
                         {
                             return SettingsConfiguration.OldLocalSettingsPath;
                         }
-                        var currentSettingsPath= SettingsConfiguration.CurrentUserSettingsPath;
-                        return string.IsNullOrWhiteSpace(currentSettingsPath) ? SettingsConfiguration.LocalSettingsPath : currentSettingsPath;
+
+                        var currentSettingsPath = SettingsConfiguration.CurrentUserSettingsPath;
+                        if (!string.IsNullOrEmpty(currentSettingsPath))
+                        {
+                            return currentSettingsPath;
+                        }
+                        
+                        return FileHelper.IsPathWritable(currentSettingsPath) ?
+                            SettingsConfiguration.LocalSettingsPath : SettingsConfiguration.RoamingSettingsPath;
                 }
             case ConfigPathKind.Roaming:
                 return type switch
@@ -147,13 +167,5 @@ public static class ConfigFileManager
             default:
                 throw new ArgumentOutOfRangeException(nameof(kind), kind, "Invalid configuration path kind.");
         }
-    }
-
-
-    private enum ConfigPathKind
-    {
-        CurrentUser,
-        Roaming,
-        Local
     }
 }
