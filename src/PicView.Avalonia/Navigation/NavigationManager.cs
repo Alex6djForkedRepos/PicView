@@ -32,13 +32,10 @@ public static class NavigationManager
     /// </summary>
     /// <param name="vm">The main view model instance.</param>
     /// <returns>True if navigation is possible, otherwise false.</returns>
-    public static bool CanNavigate(MainViewModel vm)
-    {
-        return ImageIterator?.ImagePaths is not null &&
-               ImageIterator.ImagePaths.Count > 0 && !CropFunctions.IsCropping &&
-               !DialogManager.IsDialogOpen && vm is { IsEditableTitlebarOpen: false, PicViewer.FileInfo: not null };
-        // TODO: should probably turn this into CanExecute observable for ReactiveUI
-    }
+    public static bool CanNavigate(MainViewModel vm) =>
+        ImageIterator?.ImagePaths is not null &&
+        ImageIterator.ImagePaths.Count > 0 && !CropFunctions.IsCropping &&
+        !DialogManager.IsDialogOpen && vm is { IsEditableTitlebarOpen: false, PicViewer.FileInfo: not null };
 
     /// <summary>
     ///     Navigates to the next or previous image based on the <paramref name="next" /> parameter.
@@ -466,31 +463,34 @@ public static class NavigationManager
             var currentFolder = Path.GetDirectoryName(ImageIterator?.ImagePaths[ImageIterator.CurrentIndex]);
             var parentFolder = Path.GetDirectoryName(currentFolder);
             var directories = Directory.GetDirectories(parentFolder, "*", SearchOption.TopDirectoryOnly);
+
+            if (directories.Length == 0 || string.IsNullOrEmpty(currentFolder))
+                return null;
+
             var directoryIndex = Array.IndexOf(directories, currentFolder);
-            if (Settings.UIProperties.Looping)
+
+            if (directoryIndex == -1)
+                return null; // Current folder not found
+
+            var dirCount = directories.Length;
+            var startIndex = directoryIndex;
+            var currentIndex = directoryIndex;
+
+            // Loop until we've come back to the starting directory
+            do
             {
-                directoryIndex = (directoryIndex + indexChange + directories.Length) % directories.Length;
-            }
-            else
-            {
-                directoryIndex += indexChange;
-                if (directoryIndex < 0 || directoryIndex >= directories.Length)
-                {
+                // Move to next/previous directory
+                currentIndex = (currentIndex + indexChange + dirCount) % dirCount;
+
+                // If we've come full circle without finding anything, return null
+                if (currentIndex == startIndex)
                     return null;
-                }
-            }
 
-            for (var i = directoryIndex; i < directories.Length; i++)
-            {
-                var fileInfo = new FileInfo(directories[i]);
-                var fileList = vm.PlatformService.GetFiles(fileInfo);
+                var fileList = vm.PlatformService.GetFiles(new FileInfo(directories[currentIndex]));
                 if (fileList is { Count: > 0 })
-                {
                     return fileList;
-                }
-            }
 
-            return null;
+            } while (true);
         }).ConfigureAwait(false);
     }
 
