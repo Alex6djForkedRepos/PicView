@@ -13,14 +13,15 @@ namespace PicView.Core.Config.ConfigFileManagement;
 public static class ConfigFileManager
 {
     /// <summary>
-    /// Saves a configuration file and returns the file path where it was saved.
+    /// Saves the configuration file to the specified path and returns the resulting file path.
     /// </summary>
-    /// <param name="type">The type of configuration file to save (e.g., user settings, file history, key bindings).</param>
-    /// <param name="path">The target file path to save the configuration. If null, a default path will be used.</param>
-    /// <param name="value">The object containing the configuration data to save.</param>
-    /// <param name="inputType">The type of the object being serialized.</param>
-    /// <param name="context">The serialization context used for JSON operations.</param>
-    /// <returns>The path where the configuration file was saved, or null if the operation failed.</returns>
+    /// <param name="type">The type of configuration file to be saved (e.g., user settings, file history, key bindings).</param>
+    /// <param name="path">The file path where the configuration file should be saved. If null, a default path is resolved based on the configuration type.</param>
+    /// <param name="value">The object containing the configuration data to be saved.</param>
+    /// <param name="inputType">The type of the configuration object to be serialized.</param>
+    /// <param name="context">The JSON serializer context used for serializing the configuration data.</param>
+    /// <returns>The file path where the configuration file was successfully saved, or null if the operation failed.</returns>
+    /// <remarks>If the initial save location is not writable, it attempts to save to the roaming app data directory.</remarks>
     public static async Task<string?> SaveConfigFileAndReturnPathAsync(ConfigFileType type, string? path, object? value,
         Type inputType, JsonSerializerContext context)
     {
@@ -29,7 +30,10 @@ public static class ConfigFileManager
 
         try
         {
-            CleanupOldConfigPath();
+            if (type == ConfigFileType.UserSettings)
+            {
+                CleanupOldConfigPath();
+            }
             
             if (!FileHelper.IsPathWritable(path))
             {
@@ -60,7 +64,7 @@ public static class ConfigFileManager
 
         async Task<string> TrySaveRoaming()
         {
-            var roamingPath = path ??= GetConfigPath(type, ConfigPathKind.Roaming);
+            var roamingPath = path = GetConfigPath(type, ConfigPathKind.Roaming);
 
             FileHelper.EnsureDirectoryExists(roamingPath);
             await JsonFileHelper.WriteJsonAsync(roamingPath, value, inputType, context).ConfigureAwait(false);
@@ -96,6 +100,11 @@ public static class ConfigFileManager
         }
     }
 
+    /// <summary>
+    /// Resolves the default configuration file path based on the specified configuration file type and the operating system in use.
+    /// </summary>
+    /// <param name="type">The type of configuration file for which the default path needs to be resolved (e.g., user settings, file history, key bindings).</param>
+    /// <returns>The resolved default configuration file path as a string.</returns>
     public static string ResolveDefaultConfigPath(ConfigFileType type)
     {
         if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
@@ -116,39 +125,12 @@ public static class ConfigFileManager
                 switch (type)
                 {
                     case ConfigFileType.FileHistory:
-                        var currentFileHistoryPath = FileHistoryConfiguration.CurrentUserFileHistoryPath;
-                        if (!string.IsNullOrEmpty(currentFileHistoryPath))
-                        {
-                            return currentFileHistoryPath;
-                        }
-
-                        return FileHelper.IsPathWritable(currentFileHistoryPath) ?
-                            FileHistoryConfiguration.LocalFileHistoryPath : FileHistoryConfiguration.RoamingFileHistoryPath;
-
+                        return UserPath(ConfigFileType.FileHistory);
                     case ConfigFileType.KeyBindings:
-                        var currentKeybindingsPath = KeyBindingsConfiguration.CurrentUserKeybindingsPath;
-                        if (!string.IsNullOrEmpty(currentKeybindingsPath))
-                        {
-                            return currentKeybindingsPath;
-                        }
-                        
-                        return FileHelper.IsPathWritable(currentKeybindingsPath) ?
-                                KeyBindingsConfiguration.LocalKeybindingsPath : KeyBindingsConfiguration.RoamingKeybindingsPath;
+                        return UserPath(ConfigFileType.KeyBindings);
                     case ConfigFileType.UserSettings:
                     default:
-                        if (File.Exists(SettingsConfiguration.OldLocalSettingsPath))
-                        {
-                            return SettingsConfiguration.OldLocalSettingsPath;
-                        }
-
-                        var currentSettingsPath = SettingsConfiguration.CurrentUserSettingsPath;
-                        if (!string.IsNullOrEmpty(currentSettingsPath))
-                        {
-                            return currentSettingsPath;
-                        }
-                        
-                        return FileHelper.IsPathWritable(currentSettingsPath) ?
-                            SettingsConfiguration.LocalSettingsPath : SettingsConfiguration.RoamingSettingsPath;
+                        return UserPath(ConfigFileType.UserSettings);
                 }
             case ConfigPathKind.Roaming:
                 return type switch
@@ -167,5 +149,27 @@ public static class ConfigFileManager
             default:
                 throw new ArgumentOutOfRangeException(nameof(kind), kind, "Invalid configuration path kind.");
         }
+    }
+
+    private static string UserPath(ConfigFileType type)
+    {
+        var currentUserPath = type switch
+        {
+            ConfigFileType.FileHistory => FileHistoryConfiguration.CurrentUserFileHistoryPath,
+            ConfigFileType.KeyBindings => KeyBindingsConfiguration.CurrentUserKeybindingsPath,
+            _ => SettingsConfiguration.CurrentUserSettingsPath
+        };
+        if (currentUserPath != string.Empty)
+        {
+            return currentUserPath;
+        }
+
+        var localPath = type switch
+        {
+            ConfigFileType.FileHistory => FileHistoryConfiguration.LocalFileHistoryPath,
+            ConfigFileType.KeyBindings => KeyBindingsConfiguration.LocalKeybindingsPath,
+            _ => SettingsConfiguration.LocalSettingsPath
+        };
+        return FileHelper.IsPathWritable(localPath) ? localPath : GetConfigPath(type, ConfigPathKind.Roaming);
     }
 }
