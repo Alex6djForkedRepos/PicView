@@ -175,7 +175,7 @@ public static class UpdateImage
     #endregion
 
     #region TIFF
-
+    
     /// <summary>
     ///     Sets the image displayed in the view to the given TIFF image based on the given navigation info.
     /// </summary>
@@ -183,22 +183,7 @@ public static class UpdateImage
     /// <param name="index">The index of the image to display.</param>
     /// <param name="fileInfo">The FileInfo object representing the file containing the image.</param>
     /// <param name="vm">The main view model instance.</param>
-    public static void SetTiffImage(TiffManager.TiffNavigationInfo tiffNavigationInfo, int index, FileInfo fileInfo,
-        MainViewModel vm)
-    {
-        ExecuteTiffImage(tiffNavigationInfo, index, fileInfo, vm).GetAwaiter().GetResult();
-    }
-    
-    
-    /// <inheritdoc cref="SetTiffImage(TiffManager.TiffNavigationInfo,int,FileInfo,MainViewModel)" />
     public static async Task SetTiffImageAsync(TiffManager.TiffNavigationInfo tiffNavigationInfo, int index, FileInfo fileInfo,
-        MainViewModel vm)
-    {
-        await ExecuteTiffImage(tiffNavigationInfo, index, fileInfo, vm);
-    }
-    
-    /// <inheritdoc cref="SetTiffImage(TiffManager.TiffNavigationInfo,int,FileInfo,MainViewModel)" />
-    private static async Task ExecuteTiffImage(TiffManager.TiffNavigationInfo tiffNavigationInfo, int index, FileInfo fileInfo,
         MainViewModel vm)
     {
         var source = await Task.Run( () => tiffNavigationInfo.Pages[tiffNavigationInfo.CurrentPage].ToWriteableBitmap()).ConfigureAwait(false);
@@ -242,52 +227,19 @@ public static class UpdateImage
     #region Single Image
 
     /// <summary>
-    ///     Sets the given image as the single image displayed in the view.
+    /// Updates the main view model to display a single image, based on the provided parameters, by setting image properties,
+    /// updating window titles, and managing the gallery view and taskbar progress.
     /// </summary>
-    /// <param name="source">The source of the image to display.</param>
-    /// <param name="imageType"></param>
-    /// <param name="name">The name of the image.</param>
-    /// <param name="vm">The main view model instance.</param>
-    public static void SetSingleImage(object source, ImageType imageType, string name, MainViewModel vm)
-    {
-        SetSingleImageAsync(source, imageType, name, vm).GetAwaiter().GetResult();
-    }
-
-    /// <inheritdoc cref="SetSingleImage" />
-    public static async Task SetSingleImageAsync(object source, ImageType imageType, string name, MainViewModel vm)
-    {
-        await ExecuteSetSingleImageAsync(
-            source,
-            imageType,
-            name,
-            vm,
-            async (action, priority) => { await Dispatcher.UIThread.InvokeAsync(action, priority); });
-    }
-
-    /// <summary>
-    ///     Internal method that sets a single image as the source of the image viewer.
-    /// </summary>
-    /// <param name="source">The source of the image to display.</param>
-    /// <param name="imageType">The type of the image.</param>
-    /// <param name="name">The name of the image.</param>
-    /// <param name="vm">The main view model instance.</param>
-    /// <param name="dispatchAction">A function that dispatches an action to the UI thread.</param>
-    /// <returns>A task representing the asynchronous operation.</returns>
-    private static async Task ExecuteSetSingleImageAsync(
+    /// <param name="source">The image source object to be displayed.</param>
+    /// <param name="imageType">The type of the image (e.g., Bitmap, Svg, etc.) being handled.</param>
+    /// <param name="name">The name or file name of the image used for display purposes.</param>
+    /// <param name="vm">The main view model instance to update with the image information.</param>
+    public static async Task SetSingleImageAsync(
         object source,
         ImageType imageType,
         string name,
-        MainViewModel vm,
-        Func<Action, DispatcherPriority, Task> dispatchAction)
+        MainViewModel vm)
     {
-        await dispatchAction(() =>
-        {
-            if (vm.CurrentView != vm.ImageViewer)
-            {
-                vm.CurrentView = vm.ImageViewer;
-            }
-        }, DispatcherPriority.Render);
-
         
         int width, height;
         if (imageType is ImageType.Svg)
@@ -311,7 +263,14 @@ public static class UpdateImage
 
         vm.PicViewer.FileInfo = null;
 
-        await dispatchAction(() => { WindowResizing.SetSize(width, height, 0, 0, 0, vm); }, DispatcherPriority.Send);
+        await Dispatcher.UIThread.InvokeAsync(() =>
+        {
+            if (vm.CurrentView != vm.ImageViewer)
+            {
+                vm.CurrentView = vm.ImageViewer;
+            }
+            WindowResizing.SetSize(width, height, 0, 0, 0, vm);
+        }, DispatcherPriority.Send);
 
         var singeImageWindowTitles = ImageTitleFormatter.GenerateTitleForSingleImage(width, height, name, 1);
         vm.PicViewer.WindowTitle = singeImageWindowTitles.TitleWithAppName;
@@ -330,7 +289,7 @@ public static class UpdateImage
         }
 
         vm.IsSingleImage = true;
-        await dispatchAction(() => { UIHelper.GetGalleryView.IsVisible = false; }, DispatcherPriority.Render);
+        await Dispatcher.UIThread.InvokeAsync(() => { UIHelper.GetGalleryView.IsVisible = false; }, DispatcherPriority.Render);
         await NavigationManager.DisposeImageIteratorAsync();
     }
 
