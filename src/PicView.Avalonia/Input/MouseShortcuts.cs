@@ -6,6 +6,7 @@ using Avalonia.Input;
 using PicView.Avalonia.CustomControls;
 using PicView.Avalonia.Functions;
 using PicView.Avalonia.Navigation;
+using PicView.Avalonia.UI;
 using PicView.Avalonia.ViewModels;
 
 namespace PicView.Avalonia.Input;
@@ -13,25 +14,22 @@ namespace PicView.Avalonia.Input;
 public static class MouseShortcuts
 {
     private static AutoScrollViewer? _imageScrollViewer;
-    private static Func<object?>? _getDataContext;
     private static Func<PointerWheelEventArgs, Task>? _zoomIn;
     private static Func<PointerWheelEventArgs, Task>? _zoomOut;
 
     public static void InitializeMouseShortcuts(
         AutoScrollViewer imageScrollViewer,
-        Func<object?> getDataContext,
         Func<PointerWheelEventArgs, Task> zoomIn,
         Func<PointerWheelEventArgs, Task> zoomOut)
     {
         _imageScrollViewer = imageScrollViewer;
-        _getDataContext = getDataContext;
         _zoomIn = zoomIn;
         _zoomOut = zoomOut;
     }
 
     public static async Task HandlePointerWheelChanged(PointerWheelEventArgs e)
     {
-        if (_getDataContext() is not MainViewModel mainViewModel)
+        if (UIHelper.GetMainView.DataContext is not MainViewModel vm)
         {
             return;
         }
@@ -53,7 +51,7 @@ public static class MouseShortcuts
                         return;
                     }
 
-                    await LoadNextPicAsync(reverse, mainViewModel);
+                    await LoadNextPicAsync(reverse, vm);
                     return;
                 }
 
@@ -63,7 +61,7 @@ public static class MouseShortcuts
                 }
                 else
                 {
-                    await LoadNextPicAsync(reverse, mainViewModel);
+                    await LoadNextPicAsync(reverse, vm);
                 }
 
                 return;
@@ -90,14 +88,14 @@ public static class MouseShortcuts
             }
             else
             {
-                await ScrollOrNavigateAsync(e, reverse, mainViewModel);
+                await ScrollOrNavigateAsync(e, reverse, vm);
             }
         }
         else
         {
             if (ctrl)
             {
-                await ScrollOrNavigateAsync(e, reverse, mainViewModel);
+                await ScrollOrNavigateAsync(e, reverse, vm);
             }
             else
             {

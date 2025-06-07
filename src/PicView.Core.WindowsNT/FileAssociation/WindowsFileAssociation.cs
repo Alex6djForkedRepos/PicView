@@ -1,5 +1,5 @@
 ﻿using Microsoft.Win32;
-using PicView.Core.Navigation;
+using PicView.Core.Titles;
 #if DEBUG
 using System.Diagnostics;
 #endif

@@ -5,7 +5,7 @@ using PicView.Avalonia.ViewModels;
 using PicView.Core.FileHandling;
 using PicView.Core.ImageDecoding;
 using PicView.Core.Localization;
-using PicView.Core.Navigation;
+using PicView.Core.Titles;
 
 namespace PicView.Avalonia.UI;
 

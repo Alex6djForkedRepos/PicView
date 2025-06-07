@@ -5,7 +5,7 @@ using PicView.Core.Extensions;
 using PicView.Core.ImageDecoding;
 using PicView.Core.Localization;
 
-namespace PicView.Core.Navigation;
+namespace PicView.Core.Titles;
 
 /// <summary>
 /// Provides methods for generating window titles for image display,
@@ -14,27 +14,6 @@ namespace PicView.Core.Navigation;
 /// </summary>
 public static class ImageTitleFormatter
 {
-    /// <summary>
-    /// Struct that holds different representations of a window title.
-    /// </summary>
-    public readonly struct WindowTitles
-    {
-        /// <summary>
-        /// The base title containing the image name, index, file count, resolution, and other details.
-        /// </summary>
-        public string BaseTitle { get; init; }
-
-        /// <summary>
-        /// The base title with the application name appended at the end.
-        /// </summary>
-        public string TitleWithAppName { get; init; }
-
-        /// <summary>
-        /// The title with the full file path instead of just the file name.
-        /// </summary>
-        public string FilePathTitle { get; init; }
-    }
-    
     /// <summary>
     /// The name of the application.
     /// </summary>

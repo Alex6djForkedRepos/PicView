@@ -6,6 +6,7 @@ using PicView.Avalonia.UI;
 using PicView.Avalonia.ViewModels;
 using PicView.Avalonia.Views.UC.Menus;
 using PicView.Avalonia.WindowBehavior;
+using PicView.Core.DebugTools;
 using PicView.Core.Gallery;
 
 namespace PicView.Avalonia.ImageTransformations;
@@ -80,14 +81,10 @@ public static class Rotation
                 var p = button.PointToScreen(new Point(10, 15));
                 vm.PlatformService?.SetCursorPos(p.X, p.Y);
             }
-#if DEBUG
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                DebugHelper.LogDebug(nameof(Rotation), nameof(MoveCursorAfterRotation), e);
             }
-            #else
-            catch (Exception) { }
-#endif
         });
     }
             

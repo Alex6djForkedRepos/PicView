@@ -24,38 +24,6 @@ public static class ProcessHelper
         return getAppPath;
     }
 
-    /// <summary>
-    ///     Starts the current process with elevated permissions (administrator rights).
-    /// </summary>
-    /// <param name="arguments">Command line arguments to pass to the elevated process.</param>
-    /// <returns>
-    ///     <c>true</c> if the process was successfully started with elevated permissions;
-    ///     <c>false</c> if the user declined the UAC prompt or if another error occurred.
-    /// </returns>
-    public static bool StartProcessWithElevatedPermission(string arguments)
-    {
-        try
-        {
-            using var process = new Process();
-            process.StartInfo = new ProcessStartInfo
-            {
-                FileName = Process.GetCurrentProcess().MainModule?.FileName,
-                Arguments = arguments,
-                UseShellExecute = true,
-                Verb = "runas"
-            };
-
-            process.Start();
-            return true;
-        }
-        catch (Exception ex)
-        {
-            // User declined the UAC prompt or other error
-            Debug.WriteLine($"Failed to start elevated process: {ex.Message}");
-            return false;
-        }
-    }
-    
     public static async Task<bool> StartProcessWithElevatedPermissionAsync(string arguments)
     {
         try

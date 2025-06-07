@@ -8,7 +8,7 @@ using PicView.Avalonia.Navigation;
 using PicView.Avalonia.Resizing;
 using PicView.Avalonia.ViewModels;
 using PicView.Core.ImageDecoding;
-using PicView.Core.Navigation;
+using PicView.Core.Titles;
 using ReactiveUI;
 
 namespace PicView.Avalonia.Views;

@@ -36,7 +36,7 @@ public static class ImageLoader
         // Starting in new task makes it more responsive and works better
         await Task.Run(async () =>
         {
-            var check = ErrorHelper.CheckIfLoadableString(source);
+            var check = FileTypeResolver.CheckIfLoadableString(source);
 
             if (check == null)
             {
@@ -48,31 +48,31 @@ public static class ImageLoader
 
             switch (check.Value.Type)
             {
-                case ErrorHelper.LoadAbleFileType.File:
+                case FileTypeResolver.LoadAbleFileType.File:
                     vm.CurrentView = vm.ImageViewer;
                     await LoadPicFromFile(check.Value.Data, vm, imageIterator).ConfigureAwait(false);
                     vm.IsLoading = false;
                     ArchiveExtraction.Cleanup();
                     return;
-                case ErrorHelper.LoadAbleFileType.Directory:
+                case FileTypeResolver.LoadAbleFileType.Directory:
                     vm.CurrentView = vm.ImageViewer;
                     await LoadPicFromDirectoryAsync(check.Value.Data, vm).ConfigureAwait(false);
                     vm.IsLoading = false;
                     ArchiveExtraction.Cleanup();
                     return;
-                case ErrorHelper.LoadAbleFileType.Web:
+                case FileTypeResolver.LoadAbleFileType.Web:
                     vm.CurrentView = vm.ImageViewer;
                     await LoadPicFromUrlAsync(check.Value.Data, vm, imageIterator).ConfigureAwait(false);
                     vm.IsLoading = false;
                     ArchiveExtraction.Cleanup();
                     return;
-                case ErrorHelper.LoadAbleFileType.Base64:
+                case FileTypeResolver.LoadAbleFileType.Base64:
                     vm.CurrentView = vm.ImageViewer;
                     await LoadPicFromBase64Async(check.Value.Data, vm, imageIterator).ConfigureAwait(false);
                     vm.IsLoading = false;
                     ArchiveExtraction.Cleanup();
                     return;
-                case ErrorHelper.LoadAbleFileType.Zip:
+                case FileTypeResolver.LoadAbleFileType.Zip:
                     vm.CurrentView = vm.ImageViewer;
                     await LoadPicFromArchiveAsync(check.Value.Data, vm, imageIterator).ConfigureAwait(false);
                     vm.IsLoading = false;

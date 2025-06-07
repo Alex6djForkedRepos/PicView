@@ -14,7 +14,7 @@ using PicView.Core.Extensions;
 using PicView.Core.FileHandling;
 using PicView.Core.ImageDecoding;
 using PicView.Core.Localization;
-using PicView.Core.Navigation;
+using PicView.Core.Titles;
 using ReactiveUI;
 
 namespace PicView.Avalonia.Views;

@@ -44,8 +44,6 @@ public partial class ImageViewer : UserControl
     public static async Task PreviewOnPointerWheelChanged(object? sender, PointerWheelEventArgs e) =>
         await MouseShortcuts.HandlePointerWheelChanged(e);
 
-    #region Initialization
-
     private void InitializeZoom() => _zoom = new Zoom(MainBorder);
 
     private void InitializeImageTransformer()
@@ -66,24 +64,25 @@ public partial class ImageViewer : UserControl
     private void InitializeMouseInputHelper() =>
         MouseShortcuts.InitializeMouseShortcuts(
             ImageScrollViewer,
-            () => DataContext, 
             async e => { await Dispatcher.UIThread.InvokeAsync(() => { ZoomIn(e); }); },
             async e => { await Dispatcher.UIThread.InvokeAsync(() => { ZoomOut(e); }); });
 
-    #endregion
-
     #region Zoom
 
-    public void ZoomIn(PointerWheelEventArgs e) =>
+    /// <inheritdoc cref="Zoom.ZoomIn(MainViewModel)"/>
+    private void ZoomIn(PointerWheelEventArgs e) =>
         _zoom?.ZoomIn(e, this, MainImage, DataContext as MainViewModel);
-
-    public void ZoomOut(PointerWheelEventArgs e) =>
+    
+    /// <inheritdoc cref="Zoom.ZoomOut(MainViewModel)"/>
+    private void ZoomOut(PointerWheelEventArgs e) =>
         _zoom?.ZoomOut(e, this, MainImage, DataContext as MainViewModel);
 
+    /// <inheritdoc cref="Zoom.ZoomIn(MainViewModel)"/>
     public void ZoomIn() => _zoom?.ZoomIn(DataContext as MainViewModel);
 
+    /// <inheritdoc cref="Zoom.ZoomOut(MainViewModel)"/>
     public void ZoomOut() => _zoom?.ZoomOut(DataContext as MainViewModel);
-
+    /// <inheritdoc cref="Zoom.ResetZoom(bool, MainViewModel)"/>
     public void ResetZoom(bool enableAnimations = true) =>
         _zoom?.ResetZoom(enableAnimations, DataContext as MainViewModel);
 

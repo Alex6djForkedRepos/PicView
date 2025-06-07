@@ -3,7 +3,7 @@ using PicView.Core.ImageDecoding;
 
 namespace PicView.Core.Navigation;
 
-public static class ErrorHelper
+public static class FileTypeResolver
 {
     /// <summary>
     /// Represents a structure containing a loadable file type and its associated data.
@@ -60,7 +60,7 @@ public static class ErrorHelper
     /// <param name="s">The string to check.</param>
     /// <returns>
     /// A <see cref="FileTypeStruct"/> containing the type and data of the loadable file if the string is loadable, otherwise null.
-    /// </returns>
+    ///fd </returns>
     public static FileTypeStruct? CheckIfLoadableString(string s)
     {
         if (s.StartsWith('"') && s.EndsWith('"'))
