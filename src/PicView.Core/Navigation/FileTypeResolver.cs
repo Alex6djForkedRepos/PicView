@@ -3,6 +3,10 @@ using PicView.Core.ImageDecoding;
 
 namespace PicView.Core.Navigation;
 
+/// <summary>
+/// Provides methods for determining the type of file or resource from a given input string
+/// and encapsulates logic to classify the resource as a loadable entity.
+/// </summary>
 public static class FileTypeResolver
 {
     /// <summary>

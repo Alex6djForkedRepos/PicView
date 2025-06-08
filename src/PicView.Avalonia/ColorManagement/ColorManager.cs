@@ -92,9 +92,9 @@ public static class ColorManager
         [(int)ColorOptions.Emerald] = new ThemeColors(
             logoLight: Color.FromRgb(255, 253, 42),
             logoDark: Color.FromRgb(255, 253, 42),
-            primary: Color.FromRgb(0, 114, 0), // Changed from (32, 231, 107) to #007200
-            secondary: Color.FromArgb(242, 50, 164, 50), // Updated secondary color to match new primary
-            buttonColor: Color.FromRgb(0, 114, 0) // Button color matches primary
+            primary: Color.FromRgb(0, 114, 0), 
+            secondary: Color.FromArgb(242, 50, 164, 50), 
+            buttonColor: Color.FromRgb(0, 114, 0) 
         )
     };
 

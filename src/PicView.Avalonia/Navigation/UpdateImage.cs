@@ -12,6 +12,8 @@ using PicView.Core.Gallery;
 using PicView.Core.ImageDecoding;
 using PicView.Core.Titles;
 
+// ReSharper disable RedundantAlwaysMatchSubpattern
+
 namespace PicView.Avalonia.Navigation;
 
 public static class UpdateImage
@@ -159,7 +161,7 @@ public static class UpdateImage
             }
         }
         
-        SetStats(vm, index, preLoadValue.ImageModel);
+        SetStats(vm, preLoadValue.ImageModel);
         
         return;
 
@@ -219,7 +221,7 @@ public static class UpdateImage
             PixelWidth = width,
             PixelHeight = height
         };
-        SetStats(vm, index, imageModel);
+        SetStats(vm, imageModel);
     }
 
     #endregion
@@ -297,12 +299,12 @@ public static class UpdateImage
 
     #region Set stats
 
-    public static void SetStats(MainViewModel vm, int index, ImageModel imageModel)
+    public static void SetStats(MainViewModel vm, ImageModel imageModel)
     {
         vm.IsSingleImage = false;
         vm.PicViewer.PixelWidth = imageModel.PixelWidth;
         vm.PicViewer.PixelHeight = imageModel.PixelHeight;
-        vm.GetIndex = index + 1;
+        vm.GetIndex = NavigationManager.GetNonZeroIndex;
         vm.PicViewer.ExifOrientation = imageModel.EXIFOrientation;
         vm.PicViewer.FileInfo = imageModel.FileInfo;
         vm.ZoomValue = 1;

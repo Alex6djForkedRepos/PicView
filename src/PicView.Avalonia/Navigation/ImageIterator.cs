@@ -757,8 +757,10 @@ public class ImageIterator : IAsyncDisposable
                         DispatcherPriority.Render);
                 }
 
-                await PreLoader.PreLoadAsync(index, IsReversed, ImagePaths)
-                    .ConfigureAwait(false);
+                // We shouldn't wait for preloading to finish, since this should complete as soon as image changed. 
+                // Awaiting preloader will cause delay, in E.G., moving the cursor after the image has changed.
+                _ = Task.Run(() => PreLoader.PreLoadAsync(index, IsReversed, ImagePaths)
+                    .ConfigureAwait(false));
             }
 
             PreLoader.Add(index, ImagePaths, preloadValue?.ImageModel);

@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using Avalonia.Media.Imaging;
 using PicView.Avalonia.ImageHandling;
+using PicView.Core.DebugTools;
 using static System.GC;
 
 namespace PicView.Avalonia.Preloading;
@@ -12,9 +13,9 @@ namespace PicView.Avalonia.Preloading;
 public class PreLoader : IAsyncDisposable
 {
 #if DEBUG
-
     // ReSharper disable once ConvertToConstant.Local
-    private static readonly bool ShowAddRemove = false;
+    // ReSharper disable once FieldCanBeMadeReadOnly.Local
+    private static bool _showAddRemove = true;
 #endif
 
     /// <summary>
@@ -72,7 +73,7 @@ public class PreLoader : IAsyncDisposable
             imageModel = await GetImageModel.GetImageModelAsync(fileInfo).ConfigureAwait(false);
             preLoadValue.ImageModel = imageModel;
 #if DEBUG
-            if (ShowAddRemove)
+            if (_showAddRemove)
             {
                 Trace.WriteLine($"{imageModel?.FileInfo?.Name} added at {index}");
             }
@@ -81,9 +82,8 @@ public class PreLoader : IAsyncDisposable
         }
         catch (Exception ex)
         {
-#if DEBUG
-            Trace.WriteLine($"{nameof(AddAsync)} exception: \n{ex}");
-#endif
+            _preLoadList.TryRemove(index, out _); // Remove failed entry
+            DebugHelper.LogDebug(nameof(PreLoader), nameof(AddAsync), ex);
             return false;
         }
         finally
@@ -104,9 +104,7 @@ public class PreLoader : IAsyncDisposable
 
         if (imageModel is null)
         {
-#if DEBUG
-            Trace.WriteLine($"{nameof(PreLoader)}.{nameof(Add)} invalid ImageModel");
-#endif
+            DebugHelper.LogDebug(nameof(PreLoader), nameof(AddAsync), "ImageModel is null");
             return false;
         }
 
@@ -122,26 +120,20 @@ public class PreLoader : IAsyncDisposable
     {
         if (list == null)
         {
-#if DEBUG
-            Trace.WriteLine($"{nameof(PreLoader)}.{nameof(RefreshFileInfo)} list null \n{index}");
-#endif
+            DebugHelper.LogDebug(nameof(PreLoader), nameof(RefreshFileInfo), "list null, index: " + index);
             return;
         }
 
         if (index < 0 || index >= list.Count)
         {
-#if DEBUG
-            Trace.WriteLine($"{nameof(PreLoader)}.{nameof(RefreshFileInfo)} invalid index: \n{index}");
-#endif
+            DebugHelper.LogDebug(nameof(PreLoader), nameof(RefreshFileInfo), "invalid index: " + index);
             return;
         }
 
         var isExisting = _preLoadList.TryGetValue(index, out var value);
         if (!isExisting)
         {
-#if DEBUG
-            Trace.WriteLine($"{nameof(PreLoader)}.{nameof(RefreshFileInfo)} index not found: \n{index}");
-#endif
+            DebugHelper.LogDebug(nameof(PreLoader), nameof(RefreshFileInfo), "index not found: " + index);
             return;
         }
 
@@ -159,9 +151,7 @@ public class PreLoader : IAsyncDisposable
     {
         if (list == null)
         {
-#if DEBUG
-            Trace.WriteLine($"{nameof(PreLoader)}.{nameof(Resynchronize)} list is null");
-#endif
+            DebugHelper.LogDebug(nameof(PreLoader), nameof(Resynchronize), "list is null");
             return;
         }
         
@@ -222,14 +212,14 @@ public class PreLoader : IAsyncDisposable
                 if (!_preLoadList.TryAdd(newIndex, removedValue))
                 {
 #if DEBUG
-                    if (ShowAddRemove)
+                    if (_showAddRemove)
                     {
                         Trace.WriteLine($"Failed to resynchronize {filePath} to index {newIndex}");
                     }
 #endif
                 }
 #if DEBUG
-                else if (ShowAddRemove)
+                else if (_showAddRemove)
                 {
                     Trace.WriteLine($"Resynchronized {filePath} from index {oldIndex} to {newIndex}");
                 }
@@ -254,9 +244,7 @@ public class PreLoader : IAsyncDisposable
         {
             return Contains(key, list) ? _preLoadList[key] : null;
         }
-#if DEBUG
-        Trace.WriteLine($"{nameof(PreLoader)}.{nameof(Get)} invalid parameters: \n{key}");
-#endif
+        DebugHelper.LogDebug(nameof(PreLoader), nameof(Get), "invalid parameters:" + key);
         return null;
     }
 
@@ -288,9 +276,7 @@ public class PreLoader : IAsyncDisposable
     {
         if (list == null || key < 0 || key >= list.Count)
         {
-#if DEBUG
-            Trace.WriteLine($"{nameof(PreLoader)}.{nameof(GetOrLoadAsync)} invalid parameters: \n{key}");
-#endif
+            DebugHelper.LogDebug(nameof(PreLoader), nameof(GetOrLoadAsync), "invalid parameters: " + key);
             return null;
         }
 
@@ -323,18 +309,8 @@ public class PreLoader : IAsyncDisposable
     /// <param name="key">The key to check.</param>
     /// <param name="list">The list of image paths.</param>
     /// <returns>True if the key exists; otherwise, false.</returns>
-    public bool Contains(int key, List<string> list)
-    {
-        return list != null && key >= 0 && key < list.Count && _preLoadList.ContainsKey(key);
-    }
-
-    /// <summary>
-    ///     Checks if an image with the specified file name exists in the preload list.
-    /// </summary>
-    /// <param name="fileName">The full path of the image file to check for existence.</param>
-    /// <returns>True if the image exists in the preload list; otherwise, false.</returns>
-    public bool Contains(string fileName) =>
-        _preLoadList.Values.ToList().FindIndex(x => x.ImageModel.FileInfo.FullName == fileName) != -1;
+    public bool Contains(int key, List<string> list) =>
+        list != null && key >= 0 && key < list.Count && _preLoadList.ContainsKey(key);
 
     #endregion
 
@@ -350,17 +326,13 @@ public class PreLoader : IAsyncDisposable
     {
         if (list == null || key < 0 || key >= list.Count)
         {
-#if DEBUG
-            Trace.WriteLine($"{nameof(PreLoader)}.{nameof(Remove)} invalid parameters: \n{key}");
-#endif
+            DebugHelper.LogDebug(nameof(PreLoader), nameof(Remove), "invalid parameters: " + key);
             return false;
         }
 
         if (!Contains(key, list))
         {
-#if DEBUG
-            Trace.WriteLine($"{nameof(PreLoader)}.{nameof(Remove)} key does not exist: \n{key}");
-#endif
+            DebugHelper.LogDebug(nameof(PreLoader), nameof(Remove), "key does not exist: " + key);
             return false;
         }
 
@@ -384,7 +356,7 @@ public class PreLoader : IAsyncDisposable
 
             var removed = _preLoadList.TryRemove(key, out _);
 #if DEBUG
-            if (removed && ShowAddRemove)
+            if (removed && _showAddRemove)
             {
                 Trace.WriteLine($"{Path.GetFileName(list[key])} removed at {list.IndexOf(list[key])}");
             }
@@ -393,9 +365,7 @@ public class PreLoader : IAsyncDisposable
         }
         catch (Exception e)
         {
-#if DEBUG
-            Trace.WriteLine($"{nameof(Remove)} exception:\n{e.Message}");
-#endif
+            DebugHelper.LogDebug(nameof(PreLoader), nameof(Remove), e);
         }
 
         return false;
@@ -435,7 +405,7 @@ public class PreLoader : IAsyncDisposable
         _preLoadList.Clear();
         
 #if DEBUG
-        if (ShowAddRemove)
+        if (_showAddRemove)
         {
             Trace.WriteLine("Preloader cleared");
         }
@@ -500,7 +470,7 @@ public class PreLoader : IAsyncDisposable
         }
 
 #if DEBUG
-        if (ShowAddRemove)
+        if (_showAddRemove)
         {
             Trace.WriteLine($"\nPreLoading started at {currentIndex}\n");
         }
@@ -525,9 +495,7 @@ public class PreLoader : IAsyncDisposable
         }
         catch (Exception exception)
         {
-#if DEBUG
-            Trace.WriteLine($"{nameof(PreLoadAsync)} exception:\n{exception.Message}");
-#endif
+            DebugHelper.LogDebug(nameof(PreLoader), nameof(PreLoadAsync), exception);
         }
         finally
         {
@@ -641,7 +609,7 @@ public class PreLoader : IAsyncDisposable
         _disposed = true;
         
 #if DEBUG
-        if (ShowAddRemove)
+        if (_showAddRemove)
         {
             Trace.WriteLine("Preloader disposed");
         }

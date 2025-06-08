@@ -128,7 +128,7 @@ public static class NavigationManager
             });
 
             TitleManager.SetSideBySideTitle(vm, imageModel, nextImageModel);
-            UpdateImage.SetStats(vm, index, imageModel);
+            UpdateImage.SetStats(vm, imageModel);
 
             // Fixes incorrect rendering in the side by side view
             // TODO: Improve and fix side by side and remove this hack 
@@ -149,7 +149,7 @@ public static class NavigationManager
                     TitleManager.SetTitle(vm, imageModel);
                 }
 
-                UpdateImage.SetStats(vm, index, imageModel);
+                UpdateImage.SetStats(vm, imageModel);
             }
         }
 
