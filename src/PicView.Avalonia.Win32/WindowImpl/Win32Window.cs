@@ -15,26 +15,28 @@ public static class Win32Window
         // Save window size, so that restoring it will return to the same size and position
         WindowResizing.SaveSize(window);
         
+        MenuManager.CloseMenus(vm);
+
         // Update view model properties
         vm.SizeToContent = SizeToContent.Manual;
         vm.IsFullscreen = true;
         vm.IsMaximized = false;
         vm.CanResize = false;
-        
+
         // Update settings
         Settings.WindowProperties.Fullscreen = true;
-        
+
         // Apply fullscreen state
         await InvokeOnUIThreadAsync(() => window.WindowState = WindowState.FullScreen);
 
         // Hide interface in fullscreen
         HideInterface(vm);
-        
+
         // Center it, to make sure it is positioned correctly
         CenterWindowOnScreen(window);
-        
-        WindowResizing.SetSize(vm);
-        MenuManager.CloseMenus(vm);
+
+        await WindowResizing.SetSizeAsync(vm);
+
         vm.GalleryWidth = double.NaN;
 
         if (saveSettings)
@@ -42,7 +44,7 @@ public static class Win32Window
             await SaveSettingsAsync().ConfigureAwait(false);
         }
     }
-    
+
     /// <summary>
     /// Maximizes the window
     /// </summary>
@@ -54,11 +56,9 @@ public static class Win32Window
             {
                 vm.SizeToContent = SizeToContent.Manual;
             }
-            else
-            {
-                // Save window size, so that restoring it will return to the same size and position
-                WindowResizing.SaveSize(window);
-            }
+            
+            // Save window size, so that restoring it will return to the same size and position
+            WindowResizing.SaveSize(window);
 
             window.WindowState = WindowState.Maximized;
             Settings.WindowProperties.Maximized = true;
@@ -69,7 +69,7 @@ public static class Win32Window
         vm.IsMaximized = true;
         vm.IsFullscreen = false;
         vm.CanResize = false;
-        
+
         if (saveSettings)
         {
             await SaveSettingsAsync().ConfigureAwait(false);
@@ -81,26 +81,48 @@ public static class Win32Window
         // Update settings
         Settings.WindowProperties.Maximized = false;
         Settings.WindowProperties.Fullscreen = false;
-        
+
         // Update UI state
         SetMargin(vm, window);
         vm.IsMaximized = false;
         vm.IsFullscreen = false;
-        
+
         RestoreInterface(vm);
-        
+
         // Update window state
         await InvokeOnUIThreadAsync(() => window.WindowState = WindowState.Normal);
+
+        if (Settings.WindowProperties.AutoFit)
+        {
+            vm.SizeToContent = SizeToContent.WidthAndHeight;
+            vm.CanResize = false;
+            vm.IsAutoFit = true;
+            if (Settings.WindowProperties.KeepCentered)
+            {
+                WindowFunctions.CenterWindowOnScreen();
+            }
+            else
+            {
+                WindowFunctions.InitializeWindowSizeAndPosition(window);
+            }
+
+            await WindowFunctions.ResizeAndFixRenderingError(vm); // Fixes incorrect render size
+        }
+        else
+        {
+            vm.SizeToContent = SizeToContent.Manual;
+            vm.CanResize = true;
+            WindowFunctions.InitializeWindowSizeAndPosition(window);
+        }
         
-        await ConfigureWindowSizing(vm, window);
-        WindowResizing.SetSize(vm);
-        
+        await WindowResizing.SetSizeAsync(vm);
+
         if (saveSettings)
         {
             await SaveSettingsAsync().ConfigureAwait(false);
         }
     }
-    
+
     public static async Task ToggleFullscreen(Window window, MainViewModel vm, bool saveSettings = true)
     {
         if (Settings.WindowProperties.Fullscreen)
@@ -111,7 +133,7 @@ public static class Win32Window
         {
             await Fullscreen(window, vm, saveSettings);
         }
-        
+
         if (saveSettings)
         {
             await SaveSettingsAsync().ConfigureAwait(false);
@@ -122,13 +144,13 @@ public static class Win32Window
     {
         if (Settings.WindowProperties.Maximized)
         {
-            await Restore(window, vm, saveSettings); 
+            await Restore(window, vm, saveSettings);
         }
         else
         {
             await Maximize(window, vm, saveSettings);
         }
-        
+
         if (saveSettings)
         {
             await SaveSettingsAsync().ConfigureAwait(false);
@@ -137,28 +159,7 @@ public static class Win32Window
 
 
     #region Helpers
-    
-    /// <summary>
-    /// Configures window sizing mode based on settings
-    /// </summary>
-    private static async Task ConfigureWindowSizing(MainViewModel vm, Window window)
-    {
-        if (Settings.WindowProperties.AutoFit)
-        {
-            vm.SizeToContent = SizeToContent.WidthAndHeight;
-            vm.CanResize = false;
-            vm.IsAutoFit = true;
-            WindowFunctions.CenterWindowOnScreen();
-            await WindowFunctions.ResizeAndFixRenderingError(vm); // Fixes incorrect render size
-        }
-        else
-        {
-            vm.SizeToContent = SizeToContent.Manual;
-            vm.CanResize = true;
-            WindowFunctions.InitializeWindowSizeAndPosition(window);
-        }
-    }
-    
+
     /// <summary>
     /// Centers the window on the screen
     /// </summary>
@@ -171,7 +172,9 @@ public static class Win32Window
             var screen = screens.ScreenFromVisual(window);
 
             if (screen == null)
+            {
                 return; // No screen found (edge case)
+            }
 
             // Get the scaling factor of the screen (DPI scaling)
             var scalingFactor = screen.Scaling;
@@ -201,18 +204,22 @@ public static class Win32Window
     private static void RestoreInterface(MainViewModel vm)
     {
         vm.IsUIShown = Settings.UIProperties.ShowInterface;
-        
-        if (Settings.UIProperties.ShowInterface)
+
+        if (!Settings.UIProperties.ShowInterface)
         {
-            vm.IsTopToolbarShown = true;
-            vm.TitlebarHeight = SizeDefaults.MainTitlebarHeight;
-            
-            if (Settings.UIProperties.ShowBottomNavBar)
-            {
-                vm.IsBottomToolbarShown = true;
-                vm.BottombarHeight = SizeDefaults.BottombarHeight;
-            }
+            return;
         }
+
+        vm.IsTopToolbarShown = true;
+        vm.TitlebarHeight = SizeDefaults.MainTitlebarHeight;
+
+        if (!Settings.UIProperties.ShowBottomNavBar)
+        {
+            return;
+        }
+
+        vm.IsBottomToolbarShown = true;
+        vm.BottombarHeight = SizeDefaults.BottombarHeight;
     }
 
     /// <summary>
@@ -247,17 +254,21 @@ public static class Win32Window
             vm.BottomScreenMargin = noThickness;
         }
     }
-    
+
     /// <summary>
     /// Invokes an action on the UI thread
     /// </summary>
     private static async Task InvokeOnUIThreadAsync(Action action)
     {
         if (Dispatcher.UIThread.CheckAccess())
+        {
             action();
+        }
         else
+        {
             await Dispatcher.UIThread.InvokeAsync(action);
+        }
     }
-    
+
     #endregion Helpers
 }

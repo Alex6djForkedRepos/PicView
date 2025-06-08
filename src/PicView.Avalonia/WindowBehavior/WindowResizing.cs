@@ -57,7 +57,7 @@ public static class WindowResizing
         {
             return;
         }
-        
+
         if (Dispatcher.UIThread.CheckAccess())
         {
             SetSize(size.Value, vm);
@@ -67,7 +67,7 @@ public static class WindowResizing
             Dispatcher.UIThread.InvokeAsync(() => SetSize(size.Value, vm));
         }
     }
-    
+
     public static async Task SetSizeAsync(MainViewModel vm)
     {
         var size = GetSize(vm);
@@ -76,11 +76,11 @@ public static class WindowResizing
         {
             return;
         }
-        
+
         await Dispatcher.UIThread.InvokeAsync(() => SetSize(size.Value, vm));
     }
-    
-    public static void SetSize(double width, double height, MainViewModel vm) 
+
+    public static void SetSize(double width, double height, MainViewModel vm)
         => SetSize(width, height, 0, 0, vm.RotationAngle, vm);
 
     public static void SetSize(double width, double height, double secondWidth, double secondHeight, double rotation,
@@ -95,7 +95,7 @@ public static class WindowResizing
 
         SetSize(size.Value, vm);
     }
-    
+
     public static void SetSize(ImageSize size, MainViewModel vm)
     {
         vm.TitleMaxWidth = size.TitleMaxWidth;
@@ -103,7 +103,7 @@ public static class WindowResizing
         vm.PicViewer.SecondaryImageWidth = size.SecondaryWidth;
         vm.PicViewer.ImageHeight = size.Height;
         vm.GalleryMargin = new Thickness(0, 0, 0, size.Margin);
-        
+
         vm.PicViewer.ScrollViewerWidth = size.ScrollViewerWidth;
         vm.PicViewer.ScrollViewerHeight = size.ScrollViewerHeight;
 
@@ -126,7 +126,7 @@ public static class WindowResizing
         {
             vm.GalleryWidth = double.NaN;
         }
-        
+
         vm.PicViewer.AspectRatio = size.AspectRatio;
     }
 
@@ -199,11 +199,12 @@ public static class WindowResizing
             secondWidth = 0;
             secondHeight = 0;
         }
-            
+
         return GetSize(firstWidth, firstHeight, secondWidth, secondHeight, vm.RotationAngle, vm);
     }
-    
-    public static ImageSize? GetSize(double width, double height, double secondWidth, double secondHeight, double rotation,
+
+    public static ImageSize? GetSize(double width, double height, double secondWidth, double secondHeight,
+        double rotation,
         MainViewModel vm)
     {
         width = width == 0 ? vm.PicViewer.ImageWidth : width;
@@ -218,7 +219,7 @@ public static class WindowResizing
         {
             return null;
         }
-        
+
         var screenSize = ScreenHelper.ScreenSize;
         var desktopMinWidth = desktop.MainWindow.MinWidth;
         var desktopMinHeight = desktop.MainWindow.MinHeight;
@@ -274,9 +275,11 @@ public static class WindowResizing
 
     public static void SaveSize(Window window)
     {
-        if (Settings.WindowProperties.Maximized || Settings.WindowProperties.Fullscreen || Settings.WindowProperties.AutoFit)
+        if (Settings.WindowProperties.Maximized || Settings.WindowProperties.Fullscreen)
+        {
             return;
-            
+        }
+
         if (Dispatcher.UIThread.CheckAccess())
         {
             Set();
