@@ -329,6 +329,7 @@ public class PreLoader(Func<FileInfo, MagickImage, Task<ImageModel>> imageModelL
             DebugHelper.LogDebug(nameof(PreLoader), nameof(Remove), "key does not exist: " + key);
             return false;
         }
+
         try
         {
             if (_preLoadList.TryGetValue(key, out var item))
@@ -362,8 +363,22 @@ public class PreLoader(Func<FileInfo, MagickImage, Task<ImageModel>> imageModelL
     /// <returns>True if the image was successfully removed; otherwise, false.</returns>
     public bool Remove(string fileName, List<string> list)
     {
-        var index = _preLoadList.Values.ToList().FindIndex(x => x.ImageModel.FileInfo.FullName == fileName);
-        return Remove(index, list);
+        if (string.IsNullOrEmpty(fileName))
+        {
+            return false;
+        }
+
+        // Iterate the dictionary directly to find the matching entry
+        // ReSharper disable once LoopCanBeConvertedToQuery
+        foreach (var kvp in _preLoadList)
+        {
+            if (kvp.Value.ImageModel?.FileInfo?.FullName == fileName)
+            {
+                return Remove(kvp.Key, list);
+            }
+        }
+
+        return false;
     }
 
     /// <summary>
@@ -415,7 +430,7 @@ public class PreLoader(Func<FileInfo, MagickImage, Task<ImageModel>> imageModelL
         }
         catch (Exception e)
         {
-            DebugHelper.LogDebug(nameof(PreLoader), nameof(ClearAsync),  e);
+            DebugHelper.LogDebug(nameof(PreLoader), nameof(ClearAsync), e);
         }
 
         Clear();
@@ -435,7 +450,7 @@ public class PreLoader(Func<FileInfo, MagickImage, Task<ImageModel>> imageModelL
     {
         if (list == null)
         {
-            DebugHelper.LogDebug(nameof(PreLoader), nameof(PreLoadAsync),  $"list null \n{currentIndex}");
+            DebugHelper.LogDebug(nameof(PreLoader), nameof(PreLoadAsync), $"list null \n{currentIndex}");
             return;
         }
 

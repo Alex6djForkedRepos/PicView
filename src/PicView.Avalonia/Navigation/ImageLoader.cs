@@ -434,18 +434,6 @@ public static class ImageLoader
 
     private static CancellationTokenSource? _cancellationTokenSource;
 
-    public static void Cancel()
-    {
-        if (_cancellationTokenSource is not null)
-        {
-            _cancellationTokenSource.Cancel();
-            _cancellationTokenSource.Dispose();
-            _cancellationTokenSource = null;
-        }
-
-        _cancellationTokenSource = new CancellationTokenSource();
-    }
-
     public static async Task CancelAsync()
     {
         if (_cancellationTokenSource is not null)

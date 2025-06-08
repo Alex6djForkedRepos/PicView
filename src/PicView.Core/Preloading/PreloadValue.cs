@@ -29,6 +29,8 @@ public class PreLoadValue
     /// Gets or sets the image model.
     /// </summary>
     public ImageModel ImageModel { get; set; }
+    
+    private readonly Lock _loadingLock = new();
 
     /// <summary>
     /// Gets or sets a value indicating whether the image is loading.
@@ -38,19 +40,24 @@ public class PreLoadValue
         get => _isLoading;
         set
         {
-            var wasLoading = _isLoading;
-            _isLoading = value;
+            lock (_loadingLock) // Ensure atomic operation
+            {
+                var wasLoading = _isLoading;
+                if (wasLoading == value) return; // No change, exit early
+
+                _isLoading = value;
             
-            // Signal completion when loading changes from true to false
-            if (wasLoading && !value && _loadingCompletionSource != null)
-            {
-                _loadingCompletionSource.TrySetResult(true);
-                _loadingCompletionSource = null;
-            }
-            else if (value && !wasLoading)
-            {
+                // Signal completion when loading changes from true to false
+                if (wasLoading && !value && _loadingCompletionSource != null)
+                {
+                    _loadingCompletionSource.TrySetResult(true);
+                    _loadingCompletionSource = null;
+                }
                 // If we're starting to load, create a new completion source
-                _loadingCompletionSource = new TaskCompletionSource<bool>();
+                else if (value && !wasLoading)
+                {
+                    _loadingCompletionSource = new TaskCompletionSource<bool>();
+                }
             }
         }
     }
