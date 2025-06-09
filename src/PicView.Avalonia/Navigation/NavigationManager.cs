@@ -26,57 +26,6 @@ public static class NavigationManager
     // Should be updated to handle multiple iterators in the future when adding tab support
     public static ImageIterator? ImageIterator { get; private set; }
 
-    /// <summary>
-    ///     Gets the list of files in the next or previous folder.
-    /// </summary>
-    /// <param name="next">True to get the next folder, false for the previous folder.</param>
-    /// <param name="vm">The main view model instance.</param>
-    /// <returns>A task representing the asynchronous operation that returns a list of file paths.</returns>
-    private static async Task<List<string>?> GetNextFolderFileList(bool next, MainViewModel vm)
-    {
-        return await Task.Run(() =>
-        {
-            var indexChange = next ? 1 : -1;
-            var currentFolder = Path.GetDirectoryName(ImageIterator?.ImagePaths[ImageIterator.CurrentIndex]);
-            var parentFolder = Path.GetDirectoryName(currentFolder);
-            var directories = Directory.GetDirectories(parentFolder, "*", SearchOption.TopDirectoryOnly);
-
-            if (directories.Length == 0 || string.IsNullOrEmpty(currentFolder))
-            {
-                return null;
-            }
-
-            var directoryIndex = Array.IndexOf(directories, currentFolder);
-
-            if (directoryIndex == -1)
-            {
-                return null; // Current folder not found
-            }
-
-            var dirCount = directories.Length;
-            var currentIndex = directoryIndex;
-
-            // Loop until we've come back to the starting directory
-            do
-            {
-                // Move to next/previous directory
-                currentIndex = (currentIndex + indexChange + dirCount) % dirCount;
-
-                // If we've come full circle without finding anything, return null
-                if (currentIndex == directoryIndex)
-                {
-                    return null;
-                }
-
-                var fileList = vm.PlatformService.GetFiles(new FileInfo(directories[currentIndex]));
-                if (fileList is { Count: > 0 })
-                {
-                    return fileList;
-                }
-            } while (true);
-        }).ConfigureAwait(false);
-    }
-
 
     /// <summary>
     /// Loads a picture from a given file, reloads the ImageIterator and loads the corresponding gallery from the file's
@@ -437,7 +386,7 @@ public static class NavigationManager
     /// <param name="next">True to navigate to the next folder, false for the previous folder.</param>
     /// <param name="vm">The main view model instance.</param>
     /// <returns>A task representing the asynchronous operation.</returns>
-    public static async Task GoToNextFolder(bool next, MainViewModel vm)
+    public static async Task NavigateBetweenDirectories(bool next, MainViewModel vm)
     {
         if (!CanNavigate(vm))
         {
@@ -447,21 +396,124 @@ public static class NavigationManager
         TitleManager.SetLoadingTitle(vm);
         await ImageLoader.CancelAsync().ConfigureAwait(false);
 
-        var fileList = await GetNextFolderFileList(next, vm).ConfigureAwait(false);
+        if (Settings.Sorting.IncludeSubDirectories)
+        {
+            await Task.Run(async () =>
+            {
 
-        if (fileList is null)
-        {
-            TitleManager.SetTitle(vm);
+                // Try to find the first file of the next/previous directory in the file list
+                var imageIterator = ImageIterator;
+                var filePaths = imageIterator?.ImagePaths;
+                if (filePaths is { Count: > 0 })
+                {
+                    // Find current file's directory
+                    var currentIndex = imageIterator.CurrentIndex;
+                    var currentDir = Path.GetDirectoryName(filePaths[currentIndex]) ?? string.Empty;
+
+                    // Scan forward/backward for the first file belonging to a different directory
+                    var step = next ? 1 : -1;
+                    var i = currentIndex + step;
+                    while (i >= 0 && i < filePaths.Count)
+                    {
+                        var nextDir = Path.GetDirectoryName(filePaths[i]) ?? string.Empty;
+                        if (!string.Equals(nextDir, currentDir, StringComparison.OrdinalIgnoreCase))
+                        {
+                            // Found the first file in the next (or previous) directory
+                            await Navigate(i, vm).ConfigureAwait(false);
+                            return;
+                        }
+
+                        i += step;
+                    }
+
+                    if (Settings.UIProperties.Looping)
+                    {
+                        var loopedIndex = next ? 0 : imageIterator.GetCount - 1;
+                        await Navigate(loopedIndex, vm).ConfigureAwait(false);
+                    }
+                    else
+                    {
+                        await NextDirectory();
+                    }
+                }
+            });
+            return;
         }
-        else
+
+        await NextDirectory();
+
+        return;
+
+        async Task NextDirectory()
         {
-            vm.PlatformService.StopTaskbarProgress();
-            await LoadWithoutImageIterator(new FileInfo(fileList[0]), vm, fileList);
-            if (vm.PicViewer.Title == TranslationManager.Translation.Loading)
+            // Get the file list for the next or previous folder (no subdirectory logic)
+            var fileList = await GetNextFolderFileList(next, vm).ConfigureAwait(false);
+
+            if (fileList is null)
             {
                 TitleManager.SetTitle(vm);
             }
+            else
+            {
+                vm.PlatformService.StopTaskbarProgress();
+                await LoadWithoutImageIterator(new FileInfo(fileList[0]), vm, fileList);
+                if (vm.PicViewer.Title == TranslationManager.Translation.Loading)
+                {
+                    TitleManager.SetTitle(vm);
+                }
+            }
         }
+    }
+    
+    /// <summary>
+    ///     Gets the list of files in the next or previous folder.
+    /// </summary>
+    /// <param name="next">True to get the next folder, false for the previous folder.</param>
+    /// <param name="vm">The main view model instance.</param>
+    /// <returns>A task representing the asynchronous operation that returns a list of file paths.</returns>
+    private static async Task<List<string>?> GetNextFolderFileList(bool next, MainViewModel vm)
+    {
+        return await Task.Run(() =>
+        {
+            var indexChange = next ? 1 : -1;
+            var currentFolder = Path.GetDirectoryName(ImageIterator?.ImagePaths[ImageIterator.CurrentIndex]);
+            var parentFolder = Path.GetDirectoryName(currentFolder);
+            var directories = Directory.GetDirectories(parentFolder, "*", SearchOption.TopDirectoryOnly);
+
+            if (directories.Length == 0 || string.IsNullOrEmpty(currentFolder))
+            {
+                return null;
+            }
+
+            var directoryIndex = Array.IndexOf(directories, currentFolder);
+
+            if (directoryIndex == -1)
+            {
+                return null; // Current folder not found
+            }
+
+            var dirCount = directories.Length;
+            var currentIndex = directoryIndex;
+
+            // Loop until we've come back to the starting directory
+            do
+            {
+                // Move to next/previous directory
+                currentIndex = (currentIndex + indexChange + dirCount) % dirCount;
+
+                // If we've come full circle without finding anything, return null
+                if (currentIndex == directoryIndex)
+                {
+                    return null;
+                }
+
+                var fileList = vm.PlatformService.GetFiles(new FileInfo(directories[currentIndex]));
+                if (fileList is { Count: > 0 })
+                {
+                    return fileList;
+                }
+            } while (true);
+        }).ConfigureAwait(false);
     }
 
     #endregion

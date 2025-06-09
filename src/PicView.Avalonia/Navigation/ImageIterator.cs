@@ -819,8 +819,10 @@ public class ImageIterator : IAsyncDisposable
 
             if (!Settings.ImageScaling.ShowImageSideBySide)
             {
-                _vm.PicViewer.ImageSource = thumb;
-                _vm.IsLoading = thumb is null;
+                if (thumb is not null)
+                {
+                    _vm.PicViewer.ImageSource = thumb;
+                }
             }
             else
             {

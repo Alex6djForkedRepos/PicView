@@ -219,9 +219,9 @@ public static class FunctionsMapper
     public static async Task Next() =>
         await NavigationManager.Iterate(next: true, Vm).ConfigureAwait(false);
     
-    /// <inheritdoc cref="NavigationManager.GoToNextFolder(bool, MainViewModel)" />
+    /// <inheritdoc cref="NavigationManager.NavigateBetweenDirectories(bool, MainViewModel)" />
     public static async Task NextFolder() =>
-        await NavigationManager.GoToNextFolder(true, Vm).ConfigureAwait(false);
+        await NavigationManager.NavigateBetweenDirectories(true, Vm).ConfigureAwait(false);
     
     /// <inheritdoc cref="NavigationManager.NavigateFirstOrLast(bool, MainViewModel)" />
     public static async Task Last() =>
@@ -231,9 +231,9 @@ public static class FunctionsMapper
     public static async Task Prev() =>
         await NavigationManager.Iterate(next: false, Vm).ConfigureAwait(false);
     
-    /// <inheritdoc cref="NavigationManager.GoToNextFolder(bool, MainViewModel)" />
+    /// <inheritdoc cref="NavigationManager.NavigateBetweenDirectories(bool, MainViewModel)" />
     public static async Task PrevFolder() =>
-        await NavigationManager.GoToNextFolder(false, Vm).ConfigureAwait(false);
+        await NavigationManager.NavigateBetweenDirectories(false, Vm).ConfigureAwait(false);
 
     /// <inheritdoc cref="NavigationManager.NavigateFirstOrLast(bool, MainViewModel)" />
     public static async Task First() =>
