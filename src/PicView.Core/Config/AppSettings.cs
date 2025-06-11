@@ -103,6 +103,7 @@ public class StartUp
     public bool OpenSpecificFile { get; set; } = false;
     public string OpenSpecificString { get; set; } = "";
     public string? LastFile { get; set; } = "";
+    public string? StartUpDirectory { get; set; } = "";
 }
 
 

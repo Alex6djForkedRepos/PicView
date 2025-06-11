@@ -52,7 +52,23 @@ public class ImageIterator : IAsyncDisposable
         ArgumentNullException.ThrowIfNull(fileInfo);
 #endif
         _vm = vm;
-        ImagePaths = vm.PlatformService.GetFiles(fileInfo);
+        FileInfo initialDirectory;
+        if (Settings.Sorting.IncludeSubDirectories)
+        {
+            if (!string.IsNullOrWhiteSpace(Settings.StartUp.StartUpDirectory))
+            {
+                initialDirectory = new FileInfo(Settings.StartUp.StartUpDirectory);
+            }
+            else
+            {
+                initialDirectory = fileInfo;
+            }
+        }
+        else
+        {
+            initialDirectory = fileInfo;
+        }
+        ImagePaths = vm.PlatformService.GetFiles(initialDirectory);
         CurrentIndex = Directory.Exists(fileInfo.FullName) ? 0 : ImagePaths.IndexOf(fileInfo.FullName);
         InitiateFileSystemWatcher(fileInfo);
     }
@@ -75,6 +91,7 @@ public class ImageIterator : IAsyncDisposable
     private void InitiateFileSystemWatcher(FileInfo fileInfo)
     {
         InitialFileInfo = fileInfo;
+        Settings.StartUp.StartUpDirectory = fileInfo.DirectoryName;
         if (_watcher is not null)
         {
             _watcher.Dispose();

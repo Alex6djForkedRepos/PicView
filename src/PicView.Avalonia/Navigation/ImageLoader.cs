@@ -482,5 +482,8 @@ public static class ImageLoader
         }).ConfigureAwait(false);
     }
 
+    public static async Task IterateToIndexAsync(int index, ImageIterator imageIterator) =>
+        await imageIterator.NextIteration(index, _cancellationTokenSource).ConfigureAwait(false);
+
     #endregion
 }

@@ -419,7 +419,7 @@ public static class NavigationManager
                         if (!string.Equals(nextDir, currentDir, StringComparison.OrdinalIgnoreCase))
                         {
                             // Found the first file in the next (or previous) directory
-                            await Navigate(i, vm).ConfigureAwait(false);
+                            await ImageLoader.IterateToIndexAsync(i, imageIterator).ConfigureAwait(false);
                             return;
                         }
 
@@ -429,7 +429,7 @@ public static class NavigationManager
                     if (Settings.UIProperties.Looping)
                     {
                         var loopedIndex = next ? 0 : imageIterator.GetCount - 1;
-                        await Navigate(loopedIndex, vm).ConfigureAwait(false);
+                        await ImageLoader.IterateToIndexAsync(loopedIndex, imageIterator).ConfigureAwait(false);
                     }
                     else
                     {
