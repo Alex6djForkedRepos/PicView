@@ -630,7 +630,7 @@ public static class FunctionsMapper
 
     /// <inheritdoc cref="CropFunctions.StartCropControl(MainViewModel)" />
     public static async Task Crop() =>
-        await Dispatcher.UIThread.InvokeAsync(() => CropFunctions.StartCropControl(Vm));
+        await CropFunctions.StartCropControlAsync(Vm).ConfigureAwait(false);
 
     public static Task Flip()
     {

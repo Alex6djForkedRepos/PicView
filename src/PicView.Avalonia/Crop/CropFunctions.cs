@@ -1,5 +1,6 @@
 ﻿using Avalonia;
 using Avalonia.Media.Imaging;
+using Avalonia.Threading;
 using PicView.Avalonia.Functions;
 using PicView.Avalonia.UI;
 using PicView.Avalonia.ViewModels;
@@ -25,7 +26,7 @@ public static class CropFunctions
     /// If conditions are met, it configures the crop control with the appropriate dimensions
     /// and updates the view model's title and tooltip to reflect the cropping state.
     /// </remarks>
-    public static void StartCropControl(MainViewModel vm)
+    public static async Task StartCropControlAsync(MainViewModel vm)
     {
         if (!DetermineIfShouldBeEnabled(vm))
         {
@@ -35,36 +36,44 @@ public static class CropFunctions
         {
             return;
         }
+        var isBottomGalleryShown = Settings.Gallery.IsBottomGalleryShown;
         // Hide bottom gallery when entering crop mode
-        if (Settings.Gallery.IsBottomGalleryShown)
+        if (isBottomGalleryShown)
         {
             vm.GalleryMode = GalleryMode.Closed;
             // Reset setting before resizing
             Settings.Gallery.IsBottomGalleryShown = false;
-            WindowResizing.SetSize(vm);
-            Settings.Gallery.IsBottomGalleryShown = true;
+            await WindowResizing.SetSizeAsync(vm);
         }
         var size = new Size(vm.PicViewer.ImageWidth, vm.PicViewer.ImageHeight);
-        vm.Crop = new ImageCropperViewModel(bitmap)
+        await Dispatcher.UIThread.InvokeAsync(() =>
         {
-            ImageWidth = size.Width,
-            ImageHeight = size.Height,
-            AspectRatio = vm.PicViewer.AspectRatio
-        };
-        var cropControl = new CropControl
-        {
-            DataContext = vm,
-            Width = size.Width,
-            Height = size.Height,
-            Margin = new Thickness(0)
-        };
-        vm.CurrentView = cropControl;
+            vm.Crop = new ImageCropperViewModel(bitmap)
+            {
+                ImageWidth = size.Width,
+                ImageHeight = size.Height,
+                AspectRatio = vm.PicViewer.AspectRatio
+            };
+            var cropControl = new CropControl
+            {
+                DataContext = vm,
+                Width = size.Width,
+                Height = size.Height,
+                Margin = new Thickness(0)
+            };
+            vm.CurrentView = cropControl;
+        });
         
         IsCropping = true;
         vm.PicViewer.Title = TranslationManager.Translation.CropMessage;
         vm.PicViewer.TitleTooltip = TranslationManager.Translation.CropMessage;
         
-        FunctionsMapper.CloseMenus();
+        await FunctionsMapper.CloseMenus();
+        
+        if (isBottomGalleryShown)
+        {
+            Settings.Gallery.IsBottomGalleryShown = true;
+        }
     }
     
     public static void CloseCropControl(MainViewModel vm)
