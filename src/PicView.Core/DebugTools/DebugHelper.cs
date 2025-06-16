@@ -35,9 +35,9 @@ public static class DebugHelper
         Debug.WriteLine(exception.StackTrace + Environment.NewLine);
     }
 
-    public static void LogDebug(string appleScriptManagerName, string executeAppleScriptAsyncName, string exceptionMessage)
+    public static void LogDebug(string className, string methodName, string exceptionMessage)
     {
         Debug.WriteLine(
-            $"\n[{DateTime.Now.ToString("T", CultureInfo.CurrentCulture)}] {appleScriptManagerName}.{executeAppleScriptAsyncName} exception: {exceptionMessage}");
+            $"\n[{DateTime.Now.ToString("T", CultureInfo.CurrentCulture)}] {className}.{methodName} exception: {exceptionMessage}");
     }
 }
