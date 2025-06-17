@@ -299,7 +299,11 @@ public static class NavigationManager
             return;
         }
 
-        var index = ImageIterator.ImagePaths.IndexOf(fileInfo);
+        var index = ImageIterator.ImagePaths.FindIndex(x => x.FullName.Equals(fileInfo.FullName));
+        if (index < 0 || index >= ImageIterator.ImagePaths.Count)
+        {
+            return;
+        }
 
         await ImageLoader.CheckCancellationAndStartIterateToIndex(index, ImageIterator).ConfigureAwait(false);
     }
