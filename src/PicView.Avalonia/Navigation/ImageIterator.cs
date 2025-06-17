@@ -9,7 +9,6 @@ using PicView.Core.ArchiveHandling;
 using PicView.Core.DebugTools;
 using PicView.Core.FileHandling;
 using PicView.Core.FileHistory;
-using PicView.Core.FileSorting;
 using PicView.Core.Gallery;
 using PicView.Core.Models;
 using PicView.Core.Navigation;
@@ -58,7 +57,14 @@ public class ImageIterator : IAsyncDisposable
         {
             if (!string.IsNullOrWhiteSpace(Settings.StartUp.StartUpDirectory) && !ArchiveExtraction.IsArchived)
             {
-                initialDirectory = new FileInfo(Settings.StartUp.StartUpDirectory);
+                if (fileInfo.FullName.Contains(Settings.StartUp.StartUpDirectory))
+                {
+                    initialDirectory = new FileInfo(Settings.StartUp.StartUpDirectory);
+                }
+                else
+                {
+                    initialDirectory = fileInfo;
+                }
             }
             else
             {
@@ -348,7 +354,7 @@ public class ImageIterator : IAsyncDisposable
             var sourceFileInfo = Settings.Sorting.IncludeSubDirectories
                 ? new FileInfo(_watcher.Path)
                 : fileInfo;
-            var newList = FileListRetriever.RetrieveFiles(sourceFileInfo).ToList();
+            var newList = _vm.PlatformService.GetFiles(sourceFileInfo);
             if (newList.Count == 0)
             {
                 return;
