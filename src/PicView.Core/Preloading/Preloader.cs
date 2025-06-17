@@ -159,7 +159,6 @@ public class PreLoader(Func<FileInfo, Task<ImageModel>> imageModelLoader) : IAsy
     ///     Resynchronizes the preload list with the given list of image file paths.
     ///     Moves or removes entries as needed to match the new ordering or contents.
     /// </summary>
-    /// <param name="list">The list of image file paths to sync with.</param>
     /// <remarks>
     ///     Call this method after the file watcher detects changes, or the list is resorted.
     /// </remarks>
@@ -179,10 +178,11 @@ public class PreLoader(Func<FileInfo, Task<ImageModel>> imageModelLoader) : IAsy
         _cancellationTokenSource?.Cancel();
 
         // Create a reverse lookup from file path to current index
-        var reverseLookup = new Dictionary<FileInfo, int>(list.Count);
+        var reverseLookup = new Dictionary<string, int>(list.Count);
+        
         for (var i = 0; i < list.Count; i++)
         {
-            reverseLookup[list[i]] = i;
+            reverseLookup[list[i].FullName] = i;
         }
 
         // Snapshot of current keys to avoid modification during iteration
@@ -202,7 +202,7 @@ public class PreLoader(Func<FileInfo, Task<ImageModel>> imageModelLoader) : IAsy
                 continue;
             }
 
-            if (!reverseLookup.TryGetValue(file, out var newIndex))
+            if (!reverseLookup.TryGetValue(file.FullName, out var newIndex))
             {
                 // File no longer exists in the list
                 Remove(oldIndex, list);
@@ -456,10 +456,7 @@ public class PreLoader(Func<FileInfo, Task<ImageModel>> imageModelLoader) : IAsy
         _preLoadList.Clear();
 
 #if DEBUG
-        if (_showAddRemove)
-        {
-            Trace.WriteLine("Preloader cleared");
-        }
+        Trace.WriteLine("Preloader cleared");
 #endif
     }
 

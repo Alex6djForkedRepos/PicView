@@ -329,67 +329,63 @@ public class ImageIterator : IAsyncDisposable
     {
         try
         {
-            var index = ImagePaths.FindIndex(x => x.FullName.Equals(e.FullPath));
-            if (index < 0)
+            if (e.FullPath.IsSupported() == false)
             {
                 return;
             }
-            if (e.FullPath.IsSupported() == false)
+            
+            var oldIndex = ImagePaths.FindIndex(x => x.FullName.Equals(e.OldFullPath));
+            if (oldIndex < 0)
             {
-                ImagePaths.RemoveAt(index);
                 return;
             }
 
             _isRunning = true;
-
-            var oldIndex = ImagePaths.FindIndex(x => x.FullName.Equals(e.OldFullPath));;
-            var currentIndex = CurrentIndex;
-            var sameFile = currentIndex == oldIndex;
-            var fileInfo = new FileInfo(e.FullPath);
-            if (fileInfo.Exists == false)
+            
+            var sameFile = CurrentIndex == oldIndex;
+            var newFileInfo = new FileInfo(e.FullPath);
+            if (newFileInfo.Exists == false)
             {
                 return;
             }
 
-            var sourceFileInfo = Settings.Sorting.IncludeSubDirectories
-                ? new FileInfo(_watcher.Path)
-                : fileInfo;
-            var newList = _vm.PlatformService.GetFiles(sourceFileInfo);
+            var newList = _vm.PlatformService.GetFiles(newFileInfo);
             if (newList.Count == 0)
             {
                 return;
             }
 
-            if (fileInfo.Exists == false)
+            if (newFileInfo.Exists == false)
             {
                 return;
             }
 
             ImagePaths = newList;
-
-            if (fileInfo.Exists == false)
-            {
-                return;
-            }
+            var newIndex = ImagePaths.FindIndex(x => x.FullName.Equals(e.FullPath));
 
             if (sameFile)
             {
-                _vm.PicViewer.FileInfo = fileInfo;
+                _vm.PicViewer.FileInfo = newFileInfo;
+                CurrentIndex = newIndex;
             }
 
             TitleManager.SetTitle(_vm);
-            PreLoader.RefreshFileInfo(oldIndex, fileInfo, ImagePaths);
+
+            PreLoader.RefreshFileInfo(newIndex, newFileInfo, ImagePaths);
             Resynchronize();
+
+
 
             _isRunning = false;
             FileHistoryManager.Rename(e.OldFullPath, e.FullPath);
+
             await Dispatcher.UIThread.InvokeAsync(() =>
-                GalleryFunctions.RenameGalleryItem(oldIndex, index, Path.GetFileNameWithoutExtension(e.Name),
+                GalleryFunctions.RenameGalleryItem(oldIndex, newIndex, Path.GetFileNameWithoutExtension(e.Name),
                     e.FullPath,
                     _vm));
             if (sameFile)
             {
-                _vm.SelectedGalleryItemIndex = index;
+                _vm.SelectedGalleryItemIndex = newIndex;
                 GalleryFunctions.CenterGallery(_vm);
             }
         }

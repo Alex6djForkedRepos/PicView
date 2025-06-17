@@ -122,7 +122,14 @@ public partial class EditableTitlebar : UserControl
                 MainKeyboardShortcuts.IsKeysEnabled = true;
                 if (isFileRenamed)
                 {
-                    await FinalizeRenameAsync(vm, newPath);
+                    vm.IsLoading = false;
+                    vm.IsEditableTitlebarOpen = false;
+                    await Dispatcher.UIThread.InvokeAsync(() =>
+                    {
+                        TextBox.ClearSelection();
+                        Cursor = new Cursor(StandardCursorType.Arrow);
+                        UIHelper.GetMainView.Focus();
+                    });
                 }
             });
         }
@@ -158,19 +165,5 @@ public partial class EditableTitlebar : UserControl
         vm.IsEditableTitlebarOpen = true;
         Cursor = new Cursor(StandardCursorType.Ibeam);
         TextBox.Focus();
-    }
-    
-    private async Task FinalizeRenameAsync(MainViewModel vm, string newPath)
-    {
-        vm.IsLoading = false;
-        vm.IsEditableTitlebarOpen = false;
-        MainKeyboardShortcuts.IsKeysEnabled = true;
-        await Dispatcher.UIThread.InvokeAsync(() =>
-        {
-            TextBox.ClearSelection();
-            Cursor = new Cursor(StandardCursorType.Arrow);
-            UIHelper.GetMainView.Focus();
-        });
-        await NavigationManager.LoadPicFromFile(newPath, vm);
     }
 }

@@ -59,9 +59,19 @@ public static class GalleryFunctions
             }
             galleryItem.FileName.Text = newName;
             galleryItem.FileLocation.Text = newFileLocation;
-            galleryListBox.Items.RemoveAt(oldIndex);
-            galleryListBox.Items.Insert(newIndex, galleryItem);
-            return true;
+            if (oldIndex == newIndex)
+            {
+                galleryListBox.Items[oldIndex] = galleryItem;
+                return true;
+            }
+            if (newIndex >= 0 && newIndex < galleryListBox.Items.Count)
+            {
+                galleryListBox.Items.RemoveAt(oldIndex);
+                galleryListBox.Items.Insert(newIndex, galleryItem);
+                return true;
+            }
+
+            return false;
         }
     }
     
