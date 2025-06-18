@@ -3,6 +3,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Input;
+using Avalonia.Media;
 using Avalonia.Threading;
 using PicView.Avalonia.FileSystem;
 using PicView.Avalonia.Navigation;
@@ -33,6 +34,11 @@ public partial class SingleImageResizeView : UserControl
         if (DataContext is not MainViewModel vm)
         {
             return;
+        }
+        
+        if (!Settings.Theme.Dark || Settings.Theme.GlassTheme)
+        {
+            BgPanel.Background = Brushes.Transparent;
         }
 
         _aspectRatio = (double)vm.PicViewer.PixelWidth / vm.PicViewer.PixelHeight;

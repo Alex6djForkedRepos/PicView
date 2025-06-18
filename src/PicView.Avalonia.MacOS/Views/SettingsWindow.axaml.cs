@@ -25,6 +25,7 @@ public partial class SettingsWindow : Window
         {
             TitleText.Background = Brushes.Transparent;
             XSettingsView.Background = Brushes.Transparent;
+            SettingsButton.Background = Brushes.Transparent;
         }
         Loaded += delegate
         {

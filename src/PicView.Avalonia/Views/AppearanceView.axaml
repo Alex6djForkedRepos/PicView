@@ -34,8 +34,22 @@
             Width="300"
             x:Name="ThemeBox">
             <ComboBoxItem Content="{CompiledBinding Translation.DarkTheme, Mode=OneWay}" x:Name="DarkThemeBox" />
-            <ComboBoxItem Content="{CompiledBinding Translation.LightTheme, Mode=OneWay}" x:Name="LightThemeBox" />
-            <ComboBoxItem Content="{CompiledBinding Translation.GlassTheme, Mode=OneWay}" x:Name="GlassThemeBox" />
+            <ComboBoxItem x:Name="LightThemeBox">
+                <TextBlock Classes="txt">
+                    <TextBlock.Inlines>
+                        <Run Text="{CompiledBinding Translation.LightTheme, Mode=OneWay}" />
+                        <Run FontStyle="Italic" Text=" (beta)" />
+                    </TextBlock.Inlines>
+                </TextBlock>
+            </ComboBoxItem>
+            <ComboBoxItem x:Name="GlassThemeBox">
+                <TextBlock Classes="txt">
+                    <TextBlock.Inlines>
+                        <Run Text="{CompiledBinding Translation.GlassTheme, Mode=OneWay}" />
+                        <Run FontStyle="Italic" Text=" (beta)" />
+                    </TextBlock.Inlines>
+                </TextBlock>
+            </ComboBoxItem>
         </ComboBox>
 
         <Button
@@ -264,8 +278,8 @@
                 x:Name="BlackBgButton" />
 
         </WrapPanel>
-        
-        
+
+
         <ToggleButton
             Background="Transparent"
             BorderThickness="0"
@@ -281,7 +295,7 @@
                 MaxWidth="240"
                 Padding="0,1,5,0"
                 Text="{CompiledBinding Translation.ConstrainBackgroundToImage,
-                                           Mode=OneWay}" />
+                                       Mode=OneWay}" />
         </ToggleButton>
 
         <TextBlock

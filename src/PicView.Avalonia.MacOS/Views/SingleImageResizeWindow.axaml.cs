@@ -1,5 +1,6 @@
 using Avalonia.Controls;
 using Avalonia.Input;
+using Avalonia.Media;
 using PicView.Avalonia.UI;
 using PicView.Core.Localization;
 
@@ -11,6 +12,10 @@ public partial class SingleImageResizeWindow : Window
     {
         InitializeComponent();
         GenericWindowHelper.GenericWindowInitialize(this, TranslationManager.Translation.ResizeImage + " - PicView");
+        if (!Settings.Theme.Dark || Settings.Theme.GlassTheme)
+        {
+            XAboutView.Background = Brushes.Transparent;
+        }
     }
 
     private void MoveWindow(object? sender, PointerPressedEventArgs e)
