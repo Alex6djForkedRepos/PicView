@@ -19,10 +19,10 @@ Enjoy a clean, free, and fast experience with no bloated UI or annoying pop-ups.
 
 # Downloads
 
-[![](https://img.shields.io/badge/Windows-x64-blue?style=flat-square&logo=windows&logoColor=fff)](https://github.com/Ruben2776/PicView/releases/download/3.1.3/PicView-v3.1.3-win-x64.exe) [![](https://img.shields.io/badge/Windows-arm64-blue?style=flat-square&logo=windows&logoColor=fff)](https://github.com/Ruben2776/PicView/releases/download/3.1.3/PicView-v3.1.3-win-arm64.exe)
+[![](https://img.shields.io/badge/Windows-x64-blue?style=flat-square&logo=windows&logoColor=fff)](https://github.com/Ruben2776/PicView/releases/download/3.1.4/Setup-PicView-v3.1.4-win-x64.exe) [![](https://img.shields.io/badge/Windows-arm64-blue?style=flat-square&logo=windows&logoColor=fff)](https://github.com/Ruben2776/PicView/releases/download/3.1.4/Setup-PicView-v3.1.4-win-x64.exe)
 
-[![](https://img.shields.io/badge/macOS-arm64%20(Apple%20Silicon)-blueviolet?style=flat-square&logo=apple&logoColor=fff)](https://github.com/Ruben2776/PicView/releases/download/3.1.3-macOS-beta1/PicView-3.1.3-macOS-arm64.dmg)
-[![](https://img.shields.io/badge/macOS-x64-blueviolet?style=flat-square&logo=apple&logoColor=fff)](https://github.com/Ruben2776/PicView/releases/download/3.1.3-macOS-beta1/PicView-3.1.3-macOS-x64.dmg) _(beta)_
+[![](https://img.shields.io/badge/macOS-arm64%20(Apple%20Silicon)-blueviolet?style=flat-square&logo=apple&logoColor=fff)](https://github.com/Ruben2776/PicView/releases/download/3.1.4-macOS-beta/PicView-3.1.4-macOS-arm64.dmg)
+[![](https://img.shields.io/badge/macOS-x64-blueviolet?style=flat-square&logo=apple&logoColor=fff)](https://github.com/Ruben2776/PicView/releases/download/3.1.4-macOS-beta/PicView-3.1.4-macOS-x64.dmg) _(beta)_
 
 [Latest releases at PicView.org](https://picview.org/download)
 
@@ -211,6 +211,8 @@ Swedish by <a href="https://github.com/sparmark">Stefan Parmark</a> <br>
 Brazilian Portuguese by <a href="https://github.com/andercard0">Anderson Cardoso</a> <br>
 Dutch by <a href="https://github.com/Lien5">Lien5</a> <br>
 Japanese by <a href="https://github.com/coolvitto">coolvitto</a> <br>
+Hebrew by <a href="https://github.com/Y-PLONI">Y-PLONI</a> <br>
+Hungarian by <a href="https://github.com/JohnFowler58">JohnFowler58</a> <br>
 English and Danish by <a href="https://github.com/Ruben2776">Ruben2776</a><br>
 
 **Looking for translators!**
