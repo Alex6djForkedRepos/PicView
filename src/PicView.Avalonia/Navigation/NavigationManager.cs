@@ -467,6 +467,11 @@ public static class NavigationManager
                 {
                     directories.Add(path.DirectoryName);
                 }
+                if (directories.Count <= 1)
+                {
+                    await NextDirectory().ConfigureAwait(false);
+                    return;
+                }
 
                 var index = directories.IndexOf(currentDir);
                 var nextIndex = next
