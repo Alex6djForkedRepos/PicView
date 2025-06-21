@@ -4,7 +4,7 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Threading;
 using PicView.Avalonia.Functions;
 using PicView.Avalonia.Interfaces;
-using PicView.Avalonia.MacOS.Update;
+using PicView.Avalonia.MacOS.PlatformUpdate;
 using PicView.Avalonia.MacOS.Views;
 using PicView.Avalonia.Update;
 using PicView.Avalonia.ViewModels;

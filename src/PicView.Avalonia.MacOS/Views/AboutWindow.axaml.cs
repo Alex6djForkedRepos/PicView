@@ -2,7 +2,7 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
 using PicView.Avalonia.Interfaces;
-using PicView.Avalonia.MacOS.Update;
+using PicView.Avalonia.MacOS.PlatformUpdate;
 using PicView.Avalonia.UI;
 using PicView.Avalonia.Update;
 
@@ -13,6 +13,7 @@ public partial class AboutWindow : Window, IPlatformSpecificUpdate
     public AboutWindow()
     {
         InitializeComponent();
+        XAboutView.PlatformUpdate = this;
         if (!Settings.Theme.Dark || Settings.Theme.GlassTheme)
         {
             XAboutView.Background = Brushes.Transparent;

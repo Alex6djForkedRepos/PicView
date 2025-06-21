@@ -3,7 +3,7 @@ using PicView.Avalonia.Update;
 using PicView.Avalonia.WindowBehavior;
 using PicView.Core.DebugTools;
 
-namespace PicView.Avalonia.MacOS.Update;
+namespace PicView.Avalonia.MacOS.PlatformUpdate;
 
 /// <summary>
 ///     Handles macOS-specific update logic
