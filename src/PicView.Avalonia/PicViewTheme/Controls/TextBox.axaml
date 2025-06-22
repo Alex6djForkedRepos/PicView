@@ -1,6 +1,7 @@
 <ResourceDictionary
     x:ClassModifier="internal"
     xmlns="https://github.com/avaloniaui"
+    xmlns:customControls="clr-namespace:PicView.Avalonia.CustomControls"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <ControlTheme TargetType="TextBox" x:Key="{x:Type TextBox}">
@@ -9,6 +10,7 @@
         <Setter Property="SelectionForegroundBrush" Value="{DynamicResource MainTextColor}" />
         <Setter Property="Padding" Value="8,4,0,4" />
         <Setter Property="ScrollViewer.IsScrollChainingEnabled" Value="True" />
+        <Setter Property="LineHeight" Value="16" />
         <Setter Property="Template">
             <ControlTemplate>
                 <Border
@@ -26,13 +28,14 @@
 
                             <Grid ColumnDefinitions="Auto,*,Auto">
                                 <ContentPresenter Content="{TemplateBinding InnerLeftContent}" Grid.Column="0" />
-                                <ScrollViewer
+                                <customControls:AutoScrollViewer
                                     AllowAutoHide="{TemplateBinding (ScrollViewer.AllowAutoHide)}"
                                     BringIntoViewOnFocusChange="{TemplateBinding (ScrollViewer.BringIntoViewOnFocusChange)}"
                                     Grid.Column="1"
                                     HorizontalScrollBarVisibility="{TemplateBinding (ScrollViewer.HorizontalScrollBarVisibility)}"
                                     IsScrollChainingEnabled="{TemplateBinding (ScrollViewer.IsScrollChainingEnabled)}"
                                     Name="PART_ScrollViewer"
+                                    Theme="{StaticResource Inline}"
                                     VerticalScrollBarVisibility="{TemplateBinding (ScrollViewer.VerticalScrollBarVisibility)}">
                                     <Panel>
                                         <TextBlock
@@ -63,12 +66,12 @@
                                             TextAlignment="{TemplateBinding TextAlignment}"
                                             TextWrapping="{TemplateBinding TextWrapping}" />
                                     </Panel>
-                                    <ScrollViewer.Styles>
+                                    <customControls:AutoScrollViewer.Styles>
                                         <Style Selector="ScrollContentPresenter#PART_ContentPresenter">
                                             <Setter Property="Cursor" Value="IBeam" />
                                         </Style>
-                                    </ScrollViewer.Styles>
-                                </ScrollViewer>
+                                    </customControls:AutoScrollViewer.Styles>
+                                </customControls:AutoScrollViewer>
                                 <ContentPresenter Content="{TemplateBinding InnerRightContent}" Grid.Column="2" />
                             </Grid>
                         </DataValidationErrors>

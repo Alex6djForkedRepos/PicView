@@ -225,20 +225,19 @@
         <Setter Property="Cursor" Value="Arrow" />
 
         <Style Selector="^:horizontal">
-            <Setter Property="Height" Value="18" />
-            <Setter Property="Focusable" Value="False" />
             <Setter Property="Template">
                 <ControlTemplate>
-                    <Border Background="Transparent" UseLayoutRounding="False">
-                        <Track
-                            DeferThumbDrag="{TemplateBinding ScrollViewer.IsDeferredScrollingEnabled}"
-                            Maximum="{TemplateBinding Maximum}"
-                            Minimum="{TemplateBinding Minimum}"
-                            Orientation="{TemplateBinding Orientation}"
-                            Value="{TemplateBinding Value,
-                                                    Mode=TwoWay}"
-                            ViewportSize="{TemplateBinding ViewportSize}" />
-                    </Border>
+                    <Track
+                        DeferThumbDrag="{TemplateBinding ScrollViewer.IsDeferredScrollingEnabled}"
+                        IsDirectionReversed="True"
+                        Maximum="{TemplateBinding Maximum}"
+                        Minimum="{TemplateBinding Minimum}"
+                        Orientation="{TemplateBinding Orientation}"
+                        Value="{TemplateBinding Value,
+                                                Mode=TwoWay}"
+                        ViewportSize="{TemplateBinding ViewportSize}">
+                        <Thumb Name="thumb" />
+                    </Track>
                 </ControlTemplate>
             </Setter>
         </Style>
