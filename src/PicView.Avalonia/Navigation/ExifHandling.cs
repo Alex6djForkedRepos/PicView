@@ -1,8 +1,8 @@
 ﻿using Avalonia.Media.Imaging;
 using ImageMagick;
 using PicView.Avalonia.Resizing;
-using PicView.Avalonia.UI;
 using PicView.Avalonia.ViewModels;
+using PicView.Core.DebugTools;
 using PicView.Core.ImageDecoding;
 using PicView.Core.Localization;
 using PicView.Core.Titles;
@@ -161,10 +161,7 @@ public static class ExifHandling
         }
         catch (Exception e)
         {
-            #if DEBUG
-            Console.WriteLine(e);
-            _ = TooltipHelper.ShowTooltipMessageAsync(e);
-            #endif
+            DebugHelper.LogDebug(nameof(ExifHandling), nameof(UpdateExifValues), e);
         }
     }
 }

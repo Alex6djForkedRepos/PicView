@@ -1,7 +1,10 @@
-﻿using Avalonia;
+﻿using System.Diagnostics.CodeAnalysis;
+using Avalonia;
 using Avalonia.Media;
 using Avalonia.Threading;
 using PicView.Avalonia.ViewModels;
+
+// ReSharper disable PossibleLossOfFraction
 
 namespace PicView.Avalonia.ColorManagement;
 
@@ -28,6 +31,7 @@ public static class BackgroundManager
         NearBlack = 9,
         
         // For cycling purpose
+        [SuppressMessage("Design", "CA1069:Enums values should not be duplicated")] 
         MaxValue = 9
     }
     

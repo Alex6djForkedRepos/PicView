@@ -14,8 +14,8 @@ namespace PicView.Avalonia.Crop;
 
 public static class CropFunctions
 {
-    public static bool IsCropping {get; private set;} 
-    
+    public static bool IsCropping { get; private set; }
+
     /// <summary>
     /// Starts the cropping functionality by setting up the ImageCropperViewModel 
     /// and adding the CropControl to the main view.
@@ -32,10 +32,12 @@ public static class CropFunctions
         {
             return;
         }
+
         if (vm?.PicViewer.ImageSource is not Bitmap bitmap)
         {
             return;
         }
+
         var isBottomGalleryShown = Settings.Gallery.IsBottomGalleryShown;
         // Hide bottom gallery when entering crop mode
         if (isBottomGalleryShown)
@@ -45,6 +47,7 @@ public static class CropFunctions
             Settings.Gallery.IsBottomGalleryShown = false;
             await WindowResizing.SetSizeAsync(vm);
         }
+
         var size = new Size(vm.PicViewer.ImageWidth, vm.PicViewer.ImageHeight);
         await Dispatcher.UIThread.InvokeAsync(() =>
         {
@@ -63,19 +66,19 @@ public static class CropFunctions
             };
             vm.CurrentView = cropControl;
         });
-        
+
         IsCropping = true;
         vm.PicViewer.Title = TranslationManager.Translation.CropMessage;
         vm.PicViewer.TitleTooltip = TranslationManager.Translation.CropMessage;
-        
+
         await FunctionsMapper.CloseMenus();
-        
+
         if (isBottomGalleryShown)
         {
             Settings.Gallery.IsBottomGalleryShown = true;
         }
     }
-    
+
     public static void CloseCropControl(MainViewModel vm)
     {
         if (Settings.Gallery.IsBottomGalleryShown)
@@ -87,7 +90,7 @@ public static class CropFunctions
         vm.CurrentView = vm.ImageViewer;
         IsCropping = false;
         TitleManager.SetTitle(vm);
-        
+
         // Reset image type to fix issue with animated images
         switch (vm.PicViewer.ImageType)
         {
@@ -110,13 +113,8 @@ public static class CropFunctions
         {
             return false;
         }
-        if (vm?.PicViewer.ImageSource is not Bitmap)
-        {
-            vm.ShouldCropBeEnabled = false;
-            return false;
-        }
 
-        if (Settings.ImageScaling.ShowImageSideBySide)
+        if (vm?.PicViewer.ImageSource is not Bitmap || Settings.ImageScaling.ShowImageSideBySide)
         {
             vm.ShouldCropBeEnabled = false;
             return false;
@@ -137,7 +135,7 @@ public static class CropFunctions
             vm.ShouldCropBeEnabled = true;
             return true;
         }
-        
+
         vm.ShouldCropBeEnabled = false;
         return false;
     }
