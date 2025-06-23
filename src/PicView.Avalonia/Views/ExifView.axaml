@@ -22,7 +22,7 @@
                 <Setter Property="Background" Value="{DynamicResource DisabledBackgroundColor}" />
                 <Setter Property="Foreground" Value="{StaticResource SecondaryTextColor}" />
                 <Setter Property="TextWrapping" Value="Wrap" />
-                <Setter Property="MaxHeight" Value="66" />
+                <Setter Property="MaxHeight" Value="80" />
             </Style>
         </Styles>
     </UserControl.Styles>
