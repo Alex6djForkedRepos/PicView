@@ -14,11 +14,11 @@ using ReactiveUI;
 
 namespace PicView.Avalonia.Views;
 
-public partial class ExifView : UserControl
+public partial class ImageInfoView : UserControl
 {
     private IDisposable? _imageUpdateSubscription;
-    
-    public ExifView()
+
+    public ImageInfoView()
     {
         InitializeComponent();
         Loaded += (_, _) =>
@@ -43,29 +43,30 @@ public partial class ExifView : UserControl
                         break;
                 }
             };
-            
-            PixelWidthTextBox.KeyDown += async (s, e) => await SaveImageOnEnter(s,e);
-            PixelHeightTextBox.KeyDown += async (s, e) => await SaveImageOnEnter(s,e);
+
+            PixelWidthTextBox.KeyDown += async (s, e) => await ResizeImageOnEnter(s, e);
+            PixelHeightTextBox.KeyDown += async (s, e) => await ResizeImageOnEnter(s, e);
 
             PixelWidthTextBox.KeyUp += delegate { AdjustAspectRatio(PixelWidthTextBox); };
             PixelHeightTextBox.KeyUp += delegate { AdjustAspectRatio(PixelHeightTextBox); };
-            
+
             if (DataContext is not MainViewModel vm)
             {
                 return;
             }
-            
-            _imageUpdateSubscription = vm.PicViewer.WhenAnyValue(x => x.FileInfo).Select(x => x is not null).Subscribe(_ =>
-            {
-                ExifHandling.UpdateExifValues(vm);
-                Dispatcher.UIThread.InvokeAsync(() =>
+
+            _imageUpdateSubscription = vm.PicViewer.WhenAnyValue(x => x.FileInfo).Select(x => x is not null)
+                .Subscribe(_ =>
                 {
-                    if (DirectoryNameTextBox.Text != vm.PicViewer.FileInfo.DirectoryName)
+                    ExifHandling.UpdateExifValues(vm);
+                    Dispatcher.UIThread.InvokeAsync(() =>
                     {
-                        DirectoryNameTextBox.Text = vm.PicViewer.FileInfo.DirectoryName;
-                    }
+                        if (DirectoryNameTextBox.Text != vm.PicViewer.FileInfo.DirectoryName)
+                        {
+                            DirectoryNameTextBox.Text = vm.PicViewer.FileInfo.DirectoryName;
+                        }
+                    });
                 });
-            });
             ResetButton.Click += (_, _) =>
             {
                 PixelWidthTextBox.Text = vm.PicViewer.PixelWidth.ToString();
@@ -73,28 +74,31 @@ public partial class ExifView : UserControl
                 AdjustAspectRatio(PixelWidthTextBox);
                 FullPathTextBox.Text = vm.PicViewer.FileInfo?.FullName ?? "";
                 DirectoryNameTextBox.Text = vm.PicViewer.FileInfo?.DirectoryName ?? "";
-                FileNameTextBox.Text = vm.PicViewer.FileInfo?.Name ?? ""; 
+                FileNameTextBox.Text = vm.PicViewer.FileInfo?.Name ?? "";
             };
-            
+
             SaveButton.Click += async (_, _) =>
             {
                 var ext = GetExtension();
                 var location = FullPathTextBox.Text; // TODO check if this is a valid path
-                                                     // and sync with file name/directory text boxes
-                await SendToImageSaver(vm.PicViewer.FileInfo?.FullName, location, PixelWidthTextBox.Text, PixelHeightTextBox.Text, ext).ConfigureAwait(false);
+                // and sync with file name/directory text boxes
+                await SendToImageSaver(vm.PicViewer.FileInfo?.FullName, location, PixelWidthTextBox.Text,
+                    PixelHeightTextBox.Text, ext).ConfigureAwait(false);
             };
 
             SaveAsButton.Click += async (_, _) =>
             {
                 var fileInfoFullName = vm.PicViewer.FileInfo.FullName;
                 var ext = DetermineFileExtension(vm, ref fileInfoFullName);
-        
+
                 var file = await FilePicker.PickFileForSavingAsync(vm.PicViewer.FileInfo?.FullName, ext);
                 if (file is null)
                 {
                     return;
                 }
-                await SendToImageSaver( vm.PicViewer.FileInfo?.FullName, file, PixelWidthTextBox.Text, PixelHeightTextBox.Text, ext).ConfigureAwait(false);
+
+                await SendToImageSaver(vm.PicViewer.FileInfo?.FullName, file, PixelWidthTextBox.Text,
+                    PixelHeightTextBox.Text, ext).ConfigureAwait(false);
             };
             FileNameTextBox.KeyDown += async (_, e) =>
             {
@@ -132,7 +136,7 @@ public partial class ExifView : UserControl
                 {
                     return;
                 }
-                
+
                 var oldDirectory = vm.PicViewer.FileInfo.DirectoryName;
                 var newDirectory = DirectoryNameTextBox.Text;
 
@@ -144,16 +148,19 @@ public partial class ExifView : UserControl
         };
     }
 
-    private static async Task SendToImageSaver(string? location, string destination, string? width, string? height, string ext)
+    private static async Task SendToImageSaver(string? location, string destination, string? width, string? height,
+        string ext)
     {
         if (!uint.TryParse(width, out var widthValue) || !uint.TryParse(height, out var heightValue))
         {
             return;
         }
-        await SaveImageFileHelper.SaveImageAsync(null, location, destination, widthValue, heightValue, null, ext).ConfigureAwait(false);
+
+        await SaveImageFileHelper.SaveImageAsync(null, location, destination, widthValue, heightValue, null, ext)
+            .ConfigureAwait(false);
     }
 
-    private string GetExtension () => ConversionComboBox.SelectedIndex switch
+    private string GetExtension() => ConversionComboBox.SelectedIndex switch
     {
         1 => ".png",
         2 => ".jpg",
@@ -176,26 +183,30 @@ public partial class ExifView : UserControl
         {
             return;
         }
+
         var aspectRatio = (double)vm.PicViewer.PixelWidth / vm.PicViewer.PixelHeight;
         AspectRatioHelper.SetAspectRatioForTextBox(PixelWidthTextBox, PixelHeightTextBox, sender == PixelWidthTextBox,
             aspectRatio, DataContext as MainViewModel);
-        
-        if (!int.TryParse(PixelWidthTextBox.Text, out var width) || !int.TryParse(PixelHeightTextBox.Text, out var height))
+
+        if (!int.TryParse(PixelWidthTextBox.Text, out var width) ||
+            !int.TryParse(PixelHeightTextBox.Text, out var height))
         {
             return;
         }
 
-        if (width <=0 || height <= 0)
+        if (width <= 0 || height <= 0)
         {
             return;
         }
+
         var printSizes = AspectRatioHelper.GetPrintSizes(width, height, vm.Exif.DpiX, vm.Exif.DpiY);
         PrintSizeInchTextBox.Text = printSizes.PrintSizeInch;
         PrintSizeCmTextBox.Text = printSizes.PrintSizeCm;
         SizeMpTextBox.Text = printSizes.SizeMp;
 
         var gcd = ImageTitleFormatter.GCD(width, height);
-        AspectRatioTextBox.Text = AspectRatioHelper.GetFormattedAspectRatio(gcd, vm.PicViewer.PixelWidth, vm.PicViewer.PixelHeight);
+        AspectRatioTextBox.Text =
+            AspectRatioHelper.GetFormattedAspectRatio(gcd, vm.PicViewer.PixelWidth, vm.PicViewer.PixelHeight);
     }
 
     private static async Task DoResize(MainViewModel vm, bool isWidth, object width, object height)
@@ -206,9 +217,11 @@ public partial class ExifView : UserControl
             {
                 return;
             }
+
             if (widthValue > 0)
             {
-                var success = await ConversionHelper.ResizeByWidth(vm.PicViewer.FileInfo, widthValue).ConfigureAwait(false);
+                var success = await ConversionHelper.ResizeByWidth(vm.PicViewer.FileInfo, widthValue)
+                    .ConfigureAwait(false);
                 if (success)
                 {
                     await NavigationManager.QuickReload().ConfigureAwait(false);
@@ -221,9 +234,11 @@ public partial class ExifView : UserControl
             {
                 return;
             }
+
             if (heightValue > 0)
             {
-                var success = await ConversionHelper.ResizeByHeight(vm.PicViewer.FileInfo, heightValue).ConfigureAwait(false);
+                var success = await ConversionHelper.ResizeByHeight(vm.PicViewer.FileInfo, heightValue)
+                    .ConfigureAwait(false);
                 if (success)
                 {
                     await NavigationManager.QuickReload().ConfigureAwait(false);
@@ -231,8 +246,8 @@ public partial class ExifView : UserControl
             }
         }
     }
-    
-    private async Task SaveImageOnEnter(object? sender, KeyEventArgs e)
+
+    private async Task ResizeImageOnEnter(object? sender, KeyEventArgs e)
     {
         if (e.Key == Key.Enter)
         {
@@ -241,10 +256,11 @@ public partial class ExifView : UserControl
                 return;
             }
 
-            await DoResize(vm, Equals(sender, PixelWidthTextBox), PixelWidthTextBox.Text, PixelHeightTextBox.Text).ConfigureAwait(false);
+            await DoResize(vm, Equals(sender, PixelWidthTextBox), PixelWidthTextBox.Text, PixelHeightTextBox.Text)
+                .ConfigureAwait(false);
         }
     }
-    
+
     private string DetermineFileExtension(MainViewModel vm, ref string destination)
     {
         var ext = vm.PicViewer.FileInfo.Extension;
@@ -277,6 +293,7 @@ public partial class ExifView : UserControl
         {
             ext = ".jxl";
         }
+
         destination = Path.ChangeExtension(destination, ext);
         return ext;
     }

@@ -2,7 +2,7 @@
     Background="Transparent"
     Foreground="{StaticResource SecondaryTextColor}"
     mc:Ignorable="d"
-    x:Class="PicView.Avalonia.Views.ExifView"
+    x:Class="PicView.Avalonia.Views.ImageInfoView"
     x:DataType="vm:MainViewModel"
     xmlns="https://github.com/avaloniaui"
     xmlns:customControls="clr-namespace:PicView.Avalonia.CustomControls"

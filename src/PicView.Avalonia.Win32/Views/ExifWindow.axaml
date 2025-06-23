@@ -248,7 +248,7 @@
                 Height="1"
                 Width="899"
                 x:Name="BorderRectangle" />
-            <views:ExifView Background="{StaticResource NoisyTexture}" x:Name="ExifView" />
+            <views:ImageInfoView Background="{StaticResource NoisyTexture}" x:Name="ExifView" />
         </DockPanel>
     </Border>
 </Window>

@@ -133,7 +133,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Views\ExifView.axaml.cs">
+    <Compile Update="Views\ImageInfoView.axaml.cs">
       <DependentUpon>ExifView.axaml</DependentUpon>
     </Compile>
     <Compile Update="Views\AppearanceView.axaml.cs">
