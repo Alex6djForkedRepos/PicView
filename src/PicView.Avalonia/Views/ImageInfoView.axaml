@@ -773,6 +773,7 @@
 
             <StackPanel HorizontalAlignment="Center" Margin="0,10,0,0">
 
+                <!--  Latitude  -->
                 <StackPanel Orientation="Horizontal">
                     <StackPanel Margin="0,10,10,10" Orientation="Horizontal">
                         <TextBlock
@@ -802,6 +803,7 @@
                         </customControls:CopyButton>
                     </StackPanel>
 
+                    <!--  Longitude  -->
                     <StackPanel Margin="10,10,0,10" Orientation="Horizontal">
                         <TextBlock
                             Classes="txt"
@@ -831,6 +833,7 @@
                     </StackPanel>
                 </StackPanel>
 
+                <!--  Altitude  -->
                 <StackPanel Margin="0,10,10,10" Orientation="Horizontal">
                     <TextBlock
                         Classes="txt"
@@ -888,6 +891,7 @@
                 </StackPanel>
             </StackPanel>
 
+            <!--  Color  -->
             <StackPanel
                 Height="20"
                 Margin="15,15,15,10"
@@ -910,6 +914,7 @@
 
             <StackPanel HorizontalAlignment="Center" Margin="0,10,0,0">
 
+                <!--  Resolution unit  -->
                 <StackPanel Orientation="Horizontal">
                     <StackPanel Margin="0,10,10,10" Orientation="Horizontal">
                         <TextBlock
@@ -939,11 +944,12 @@
                         </customControls:CopyButton>
                     </StackPanel>
 
+                    <!--  Color representation  -->
                     <StackPanel Margin="10,10,0,10" Orientation="Horizontal">
                         <TextBlock
                             Classes="txt"
                             Margin="0,8,2,0"
-                            Text="{CompiledBinding Exif.ColorRepresentation,
+                            Text="{CompiledBinding Translation.ColorRepresentation,
                                                    Mode=OneWay}"
                             Width="100" />
                         <customControls:FuncTextBox
@@ -968,6 +974,7 @@
                     </StackPanel>
                 </StackPanel>
 
+                <!--  Compression  -->
                 <StackPanel Orientation="Horizontal">
                     <StackPanel Orientation="Horizontal">
                         <StackPanel Margin="0,10,10,10" Orientation="Horizontal">
