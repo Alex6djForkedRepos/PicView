@@ -44,6 +44,19 @@ public partial class ImageInfoView : UserControl
                 }
             };
 
+            PointerPressed += (_, e) =>
+            {
+                if (!e.GetCurrentPoint(this).Properties.IsRightButtonPressed)
+                {
+                    return;
+                }
+
+                // Context menu doesn't want to be opened normally
+                MainContextMenu.Open();
+            };
+            
+            CloseItem.Click += (_, _) => (VisualRoot as Window)?.Close();
+
             PixelWidthTextBox.KeyDown += async (s, e) => await ResizeImageOnEnter(s, e);
             PixelHeightTextBox.KeyDown += async (s, e) => await ResizeImageOnEnter(s, e);
 
