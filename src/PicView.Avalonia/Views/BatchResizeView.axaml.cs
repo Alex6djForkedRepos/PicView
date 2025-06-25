@@ -295,7 +295,7 @@ public partial class BatchResizeView : UserControl
             Percentage? percentage = null;
             if (PercentageResizeBox.IsSelected)
             {
-                if (int.TryParse(PercentageValueBox.Text, out var percentageValue))
+                if (double.TryParse(PercentageValueBox.Text, out var percentageValue))
                 {
                     percentage = new Percentage(percentageValue);
                 }
