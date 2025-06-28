@@ -1,3 +1,4 @@
+using System.Reactive.Linq;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
@@ -5,6 +6,7 @@ using Avalonia.Media;
 using PicView.Avalonia.DragAndDrop;
 using PicView.Avalonia.ViewModels;
 using PicView.Avalonia.WindowBehavior;
+using ReactiveUI;
 
 namespace PicView.Avalonia.Win32.Views;
 
@@ -85,6 +87,55 @@ public partial class WinTitleBar : UserControl
             {
                 DragAndDropHelper.RemoveDragDropView();
             };
+
+            if (DataContext is not MainViewModel vm)
+            {
+                return;
+            }
+
+            this.WhenAnyValue(x => x.RotationContextMenu.IsOpen).Skip(1).Subscribe(_ =>
+            {
+                Rotation0Item.IsChecked = false;
+                Rotation90Item.IsChecked = false;
+                Rotation180Item.IsChecked = false;
+                Rotation270Item.IsChecked = false;
+                switch (vm.RotationAngle)
+                {
+                    case 0:
+                        Rotation0Item.IsChecked = true;
+                        break;
+                    case 90:
+                        Rotation90Item.IsChecked = true;
+                        break;
+                    case 180:
+                        Rotation180Item.IsChecked = true;
+                        break;
+                    case 270:
+                        Rotation270Item.IsChecked = true;
+                        break;
+                    
+                }
+            });
+
+            RotateLeftButton.PointerPressed += (_, e) =>
+            {
+                if (e.GetCurrentPoint(this).Properties.IsRightButtonPressed)
+                {
+                    // Context menu doesn't want to be opened normally
+                    RotationContextMenu.Open();
+                    return;
+                }
+            };
+            FlipButton.PointerPressed += (_, e) =>
+            {
+                if (e.GetCurrentPoint(this).Properties.IsRightButtonPressed)
+                {
+                    // Context menu doesn't want to be opened normally
+                    RotationContextMenu.Open();
+                    return;
+                }
+            };
+            
         };
 
     }

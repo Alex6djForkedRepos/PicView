@@ -147,6 +147,7 @@ public class MainViewModel : ReactiveObject
         {
             await RotationNavigation.RotateRight(this, RotationButton.RotateRightButton);
         });
+        RotateToCommand = FunctionsHelper.CreateReactiveCommand<string>(RotateToTask);
 
         RotateRightWindowBorderButtonCommand = FunctionsHelper.CreateReactiveCommand(async () =>
         {
@@ -605,6 +606,7 @@ public class MainViewModel : ReactiveObject
     public ReactiveCommand<Unit, Unit>? RotateLeftCommand { get; }
     public ReactiveCommand<Unit, Unit>? RotateLeftButtonCommand { get; }
     public ReactiveCommand<Unit, Unit>? RotateRightCommand { get; }
+    public ReactiveCommand<string, Unit>? RotateToCommand { get; }
     public ReactiveCommand<Unit, Unit>? RotateRightButtonCommand { get; }
     public ReactiveCommand<Unit, Unit>? RotateRightWindowBorderButtonCommand { get; }
     public ReactiveCommand<Unit, Unit>? FlipCommand { get; }
@@ -1160,6 +1162,15 @@ public class MainViewModel : ReactiveObject
 
     public async Task StartSlideShowTask(int milliseconds) =>
         await Slideshow.StartSlideshow(this, milliseconds);
+
+    public async Task RotateToTask(string angle)
+    {
+        if (int.TryParse(angle, out var result))
+        {
+            await RotationNavigation.RotateTo(this, result);
+        }
+    }
+        
     
     #endregion
 

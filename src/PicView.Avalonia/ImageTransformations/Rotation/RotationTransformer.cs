@@ -72,8 +72,6 @@ public class RotationTransformer(
         }
 
         var prevScaleX = vm.PicViewer.ScaleX;
-        vm.PicViewer.ScaleX = vm.PicViewer.ScaleX == -1 ? 1 : -1;
-        vm.Translation.IsFlipped = vm.PicViewer.ScaleX == 1 ? vm.Translation.UnFlip : vm.Translation.Flip;
 
         if (animate)
         {

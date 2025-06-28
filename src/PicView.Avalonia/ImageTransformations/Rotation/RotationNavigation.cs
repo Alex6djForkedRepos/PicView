@@ -5,6 +5,7 @@ using PicView.Avalonia.Gallery;
 using PicView.Avalonia.UI;
 using PicView.Avalonia.ViewModels;
 using PicView.Avalonia.Views.UC.Menus;
+using PicView.Avalonia.WindowBehavior;
 using PicView.Core.DebugTools;
 using PicView.Core.Gallery;
 
@@ -38,6 +39,16 @@ public static class RotationNavigation
         }
 
         await MoveCursorAfterRotation(vm, rotationButton);
+    }
+    
+    public static async Task RotateTo(MainViewModel? vm, int angle)
+    {
+        await Dispatcher.UIThread.InvokeAsync(() =>
+        {
+            vm.ImageViewer.Rotate(angle);
+        });
+        vm.RotationAngle = angle;
+        await WindowResizing.SetSizeAsync(vm);
     }
 
     private static async Task MoveCursorAfterRotation(MainViewModel? vm, RotationButton rotationButton)
