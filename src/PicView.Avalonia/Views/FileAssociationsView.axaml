@@ -149,7 +149,8 @@
             <DockPanel Margin="0,15,0,0">
 
                 <Button
-                    Classes="altHover"
+                    Background="Transparent"
+                    Classes="altHover mainBtn"
                     Command="{CompiledBinding AssociationsViewModel.ResetCommand}"
                     DockPanel.Dock="Left"
                     HorizontalAlignment="Left"
