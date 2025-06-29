@@ -32,7 +32,7 @@
             Foreground="{DynamicResource MainTextColor}"
             IconHeight="12"
             IconWidth="12"
-            IsEnabled="{CompiledBinding PicViewer.FileInfo,
+            IsEnabled="{CompiledBinding PicViewer.FileInfo.Value,
                                         Converter={x:Static ObjectConverters.IsNotNull}}"
             IsRepeatEnabled="False"
             IsTabStop="False"
@@ -42,7 +42,7 @@
             Width="30"
             x:Name="FlipButton">
             <Button.RenderTransform>
-                <ScaleTransform ScaleX="{CompiledBinding PicViewer.ScaleX}" />
+                <ScaleTransform ScaleX="{CompiledBinding PicViewer.ScaleX.Value}" />
             </Button.RenderTransform>
         </customControls:IconButton>
 
