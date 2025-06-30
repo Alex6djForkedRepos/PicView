@@ -39,7 +39,7 @@
                 <TextBlock
                     Classes="txt"
                     Foreground="{DynamicResource MainTextColor}"
-                    Text="{CompiledBinding Translation.Cancel}" />
+                    Text="{CompiledBinding Translation.Cancel.Value}" />
             </Button>
             <Button
                 Background="{DynamicResource AccentColor}"

@@ -53,7 +53,7 @@
                 <MenuItem
                     Command="{CompiledBinding ResetSettingsCommand}"
                     Foreground="{DynamicResource MainTextColor}"
-                    Header="{CompiledBinding Translation.ResetButtonText,
+                    Header="{CompiledBinding Translation.ResetButtonText.Value,
                                              Mode=OneWay}">
                     <MenuItem.Icon>
                         <Image

@@ -32,7 +32,7 @@
             Height="{CompiledBinding TitlebarHeight,
                                      Mode=OneWay}"
             Padding="7"
-            Text="{CompiledBinding Translation.OpenWith,
+            Text="{CompiledBinding Translation.OpenWith.Value,
                                    Mode=OneWay}"
             TextAlignment="Center"
             VerticalAlignment="Top" />
@@ -48,7 +48,7 @@
             x:Name="CancelButton">
             <TextBlock
                 Classes="txt"
-                Text="{CompiledBinding Translation.Cancel,
+                Text="{CompiledBinding Translation.Cancel.Value,
                                        Mode=OneWay}"
                 TextAlignment="Center" />
         </Button>

@@ -34,7 +34,8 @@
                 <TextBlock
                     Classes="txt"
                     Foreground="{DynamicResource MainTextColor}"
-                    Text="{CompiledBinding Translation.ApplicationShortcuts}"
+                    Text="{CompiledBinding Translation.ApplicationShortcuts.Value,
+                                           Mode=OneWay}"
                     TextAlignment="Center" />
             </Panel>
 

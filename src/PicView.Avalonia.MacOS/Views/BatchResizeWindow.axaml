@@ -31,7 +31,7 @@
                 VerticalAlignment="Top">
                 <TextBlock
                     Classes="txt"
-                    Text="{CompiledBinding Translation.ResizeImage,
+                    Text="{CompiledBinding Translation.ResizeImage.Value,
                                            Mode=OneWay}"
                     TextAlignment="Center" />
             </DockPanel>

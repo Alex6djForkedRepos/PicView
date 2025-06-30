@@ -127,12 +127,12 @@ public static class RotationNavigation
         if (vm.PicViewer.ScaleX.CurrentValue == 1)
         {
             vm.PicViewer.ScaleX.Value = -1;
-            vm.Translation.IsFlipped = vm.Translation.UnFlip;
+            vm.Translation.IsFlipped.Value = vm.Translation.UnFlip.CurrentValue;
         }
         else
         {
             vm.PicViewer.ScaleX.Value = 1;
-            vm.Translation.IsFlipped = vm.Translation.Flip;
+            vm.Translation.IsFlipped.Value = vm.Translation.Flip.CurrentValue;
         }
     }
 

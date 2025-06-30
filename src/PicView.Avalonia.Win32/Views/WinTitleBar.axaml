@@ -43,7 +43,7 @@
                 ToggleType="Radio"
                 x:Name="Rotation270Item" />
             <Separator />
-            <MenuItem Command="{CompiledBinding FlipCommand}" Header="{CompiledBinding Translation.IsFlipped}">
+            <MenuItem Command="{CompiledBinding FlipCommand}" Header="{CompiledBinding Translation.IsFlipped.Value}">
                 <MenuItem.Icon>
                     <Path
                         Data="{StaticResource FlipGeometry}"
@@ -52,7 +52,7 @@
                         Stretch="Fill"
                         Width="12">
                         <Path.RenderTransform>
-                            <ScaleTransform ScaleX="{CompiledBinding PicViewer.ScaleX}" />
+                            <ScaleTransform ScaleX="{CompiledBinding PicViewer.ScaleX.Value}" />
                         </Path.RenderTransform>
                     </Path>
                 </MenuItem.Icon>
@@ -92,7 +92,7 @@
                 Foreground="{DynamicResource MainTextColor}"
                 IconHeight="17"
                 IconWidth="17"
-                IsEnabled="{CompiledBinding PicViewer.FileInfo,
+                IsEnabled="{CompiledBinding PicViewer.FileInfo.Value,
                                             Converter={x:Static ObjectConverters.IsNotNull}}"
                 IsRepeatEnabled="False"
                 Width="30"
@@ -107,12 +107,12 @@
                 Icon="{StaticResource RefreshCcwDot}"
                 IconHeight="16"
                 IconWidth="16"
-                IsEnabled="{CompiledBinding PicViewer.ImageSource,
+                IsEnabled="{CompiledBinding PicViewer.ImageSource.Value,
                                             Converter={x:Static ObjectConverters.IsNotNull}}"
                 IsRepeatEnabled="False"
                 Margin="0"
                 Name="RotateRightButton"
-                ToolTip.Tip="{CompiledBinding Translation.RotateRight,
+                ToolTip.Tip="{CompiledBinding Translation.RotateRight.Value,
                                               Mode=OneWay}"
                 Width="30"
                 x:Name="RotateLeftButton" />
@@ -128,16 +128,16 @@
                 Foreground="{DynamicResource MainTextColor}"
                 IconHeight="16"
                 IconWidth="16"
-                IsEnabled="{CompiledBinding PicViewer.ImageSource,
+                IsEnabled="{CompiledBinding PicViewer.ImageSource.Value,
                                             Converter={x:Static ObjectConverters.IsNotNull}}"
                 IsRepeatEnabled="False"
                 Margin="0"
-                ToolTip.Tip="{CompiledBinding Translation.IsFlipped,
+                ToolTip.Tip="{CompiledBinding Translation.IsFlipped.Value,
                                               Mode=OneWay}"
                 Width="30"
                 x:Name="FlipButton">
                 <Button.RenderTransform>
-                    <ScaleTransform ScaleX="{CompiledBinding PicViewer.ScaleX}" />
+                    <ScaleTransform ScaleX="{CompiledBinding PicViewer.ScaleX.Value}" />
                 </Button.RenderTransform>
             </customControls:IconButton>
 

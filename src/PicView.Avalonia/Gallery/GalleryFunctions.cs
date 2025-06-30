@@ -343,7 +343,7 @@ public static class GalleryFunctions
         if (Settings.Gallery.IsBottomGalleryShown)
         {
             vm.GalleryMode = GalleryMode.BottomToClosed;
-            vm.Translation.IsShowingBottomGallery = TranslationManager.Translation.ShowBottomGallery;
+            vm.Translation.IsShowingBottomGallery.Value = TranslationManager.Translation.ShowBottomGallery;
             Settings.Gallery.IsBottomGalleryShown = false;
             IsFullGalleryOpen = false;
             return;
@@ -356,7 +356,7 @@ public static class GalleryFunctions
             vm.GalleryMode = GalleryMode.ClosedToBottom;
         }
 
-        vm.Translation.IsShowingBottomGallery = TranslationManager.Translation.HideBottomGallery;
+        vm.Translation.IsShowingBottomGallery.Value = TranslationManager.Translation.HideBottomGallery;
         vm.IsBottomGalleryShown = true;
         if (!NavigationManager.CanNavigate(vm))
         {

@@ -21,7 +21,7 @@
                 FontSize="14"
                 Foreground="{StaticResource SecondaryTextColor}"
                 Margin="0,20,0,20"
-                Text="{CompiledBinding Translation.ApplicationStartup,
+                Text="{CompiledBinding Translation.ApplicationStartup.Value,
                                        Mode=OneWay}" />
             <ComboBox
                 Background="{DynamicResource SecondaryBackgroundColor}"
@@ -32,8 +32,8 @@
                 Padding="5,7,0,7"
                 Width="300"
                 x:Name="ApplicationStartupBox">
-                <ComboBoxItem Content="{CompiledBinding Translation.None, Mode=OneWay}" />
-                <ComboBoxItem Content="{CompiledBinding Translation.OpenLastFile, Mode=OneWay}" />
+                <ComboBoxItem Content="{CompiledBinding Translation.None.Value, Mode=OneWay}" />
+                <ComboBoxItem Content="{CompiledBinding Translation.OpenLastFile.Value, Mode=OneWay}" />
             </ComboBox>
 
             <TextBlock
@@ -42,7 +42,7 @@
                 FontSize="14"
                 Foreground="{StaticResource SecondaryTextColor}"
                 Margin="0,20,0,20"
-                Text="{CompiledBinding Translation.FileManagement,
+                Text="{CompiledBinding Translation.FileManagement.Value,
                                        Mode=OneWay}" />
 
             <ToggleButton
@@ -58,7 +58,7 @@
                     Margin="0"
                     MaxWidth="240"
                     Padding="0,1,5,0"
-                    Text="{CompiledBinding Translation.ShowConfirmationDialogWhenPermanentlyDeletingFile,
+                    Text="{CompiledBinding Translation.ShowConfirmationDialogWhenPermanentlyDeletingFile.Value,
                                            Mode=OneWay}" />
             </ToggleButton>
 
@@ -75,7 +75,7 @@
                     Margin="0"
                     MaxWidth="240"
                     Padding="0,1,5,0"
-                    Text="{CompiledBinding Translation.ShowConfirmationDialogWhenMovingFileToRecycleBin,
+                    Text="{CompiledBinding Translation.ShowConfirmationDialogWhenMovingFileToRecycleBin.Value,
                                            Mode=OneWay}" />
             </ToggleButton>
 
@@ -93,7 +93,7 @@
                     Margin="0"
                     MaxWidth="240"
                     Padding="0,1,5,0"
-                    Text="{CompiledBinding Translation.SearchSubdirectory,
+                    Text="{CompiledBinding Translation.SearchSubdirectory.Value,
                                            Mode=OneWay}" />
             </ToggleButton>
 

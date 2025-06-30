@@ -13,7 +13,7 @@
     <Panel>
         <Button
             Background="Transparent"
-            ToolTip.Tip="{CompiledBinding Translation.Pin,
+            ToolTip.Tip="{CompiledBinding Translation.Pin.Value,
                                           Mode=OneWay}"
             x:Name="PinBtn">
             <Image
@@ -23,7 +23,7 @@
         </Button>
         <Button
             Background="Transparent"
-            ToolTip.Tip="{CompiledBinding Translation.Unpin,
+            ToolTip.Tip="{CompiledBinding Translation.Unpin.Value,
                                           Mode=OneWay}"
             x:Name="UnPinBtn">
             <Image

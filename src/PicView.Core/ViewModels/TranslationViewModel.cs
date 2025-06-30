@@ -1,2046 +1,887 @@
-﻿using PicView.Core.Extensions;
-using PicView.Core.Localization;
-using ReactiveUI;
+﻿using PicView.Core.Localization;
+using R3;
 
 namespace PicView.Core.ViewModels;
 
-public class TranslationViewModel : ReactiveObject
+public class TranslationViewModel : IDisposable
 {
+    public void Dispose()
+    {
+        Disposable.Dispose(File, SelectFile, OpenLastFile);
+    }
+    
     public void UpdateLanguage()
     {
         var t = TranslationManager.Translation;
         
-        File = t.File;
-        SelectFile = t.OpenFileDialog;
-        OpenLastFile = t.OpenLastFile;
-        Paste = t.FilePaste;
-        Copy = t.Copy;
-        Reload = t.Reload;
-        Print = t.Print;
-        DeleteFile = t.DeleteFile;
-        PermanentlyDelete = t.PermanentlyDelete;
-        Save = t.Save;
-        CopyFile = t.CopyFile;
-        NewWindow = t.NewWindow;
-        Close = t.Close;
-        CloseGallery = t.CloseGallery;
-        Open = t.Open;
-        OpenFileDialog = t.OpenFileDialog;
-        ShowInFolder = t.ShowInFolder;
-        OpenWith = t.OpenWith;
-        RenameFile = t.RenameFile;
-        DuplicateFile = t.DuplicateFile;
-        RotateLeft = t.RotateLeft;
-        RotateRight = t.RotateRight;
-        Flip = t.Flip;
-        UnFlip = t.Unflip;
-        ShowBottomGallery = t.ShowBottomGallery;
-        HideBottomGallery = t.HideBottomGallery;
-        AutoFitWindow = t.AutoFitWindow;
-        Stretch = t.Stretch;
-        Crop = t.Crop;
-        ResizeImage = t.ResizeImage;
-        GoToImageAtSpecifiedIndex = t.GoToImageAtSpecifiedIndex;
-        ToggleScroll = t.ToggleScroll;
-        ScrollEnabled = t.ScrollingEnabled;
-        ScrollDisabled = t.ScrollingDisabled;
-        ScrollDirection = t.ScrollDirection;
-        Reverse = t.Reverse;
-        Forward = t.Forward;
-        Slideshow = t.Slideshow;
-        Settings = t.Settings;
-        AboutWindow = t.InfoWindow;
-        ImageInfo = t.ImageInfo;
-        About = t.About;
-        ShowAllSettingsWindow = t.ShowAllSettingsWindow;
-        StayTopMost = t.StayTopMost;
-        SearchSubdirectory = t.SearchSubdirectory;
-        ToggleLooping = t.ToggleLooping;
-        ApplicationShortcuts = t.ApplicationShortcuts;
-        BatchResize = t.BatchResize;
-        Effects = t.Effects;
-        EffectsTooltip = t.EffectsTooltip;
-        FileProperties = t.FileProperties;
-        OptimizeImage = t.OptimizeImage;
-        ImageInfo = t.ImageInfo;
-        FileName = t.FileName;
-        FileSize = t.FileSize;
-        Folder = t.Folder;
-        FullPath = t.FullPath;
-        Created = t.Created;
-        Modified = t.Modified;
-        LastAccessTime = t.LastAccessTime;
-        ConvertTo = t.ConvertTo;
-        NoConversion = t.NoConversion;
-        Resize = t.Resize;
-        NoResize = t.NoResize;
-        Apply = t.Apply;
-        Cancel = t.Cancel;
-        BitDepth = t.BitDepth;
-        ReadAbleAspectRatio = t.AspectRatio;
-        Width = t.Width;
-        Height = t.Height;
-        SizeMp = t.SizeMp;
-        Resolution = t.Resolution;
-        PrintSizeIn = t.PrintSizeIn;
-        PrintSizeCm = t.PrintSizeCm;
-        Centimeters = t.Centimeters;
-        Inches = t.Inches;
-        SizeTooltip = t.SizeTooltip;
-        Latitude = t.Latitude;
-        Longitude = t.Longitude;
-        Altitude = t.Altitude;
-        Authors = t.Authors;
-        DateTaken = t.DateTaken;
-        Copyright = t.Copyright;
-        ResolutionUnit = t.ResolutionUnit;
-        ColorRepresentation = t.ColorRepresentation;
-        CompressedBitsPixel = t.CompressedBitsPixel;
-        Compression = t.Compression;
-        ExposureTime = t.ExposureTime;
-        Title = t.Title;
-        Subject = t.Subject;
-        Software = t.Software;
-        CameraMaker = t.CameraMaker;
-        CameraModel = t.CameraModel;
-        FocalLength = t.FocalLength;
-        Fnumber = t.FNumber;
-        Fstop = t.Fstop;
-        MaxAperture = t.MaxAperture;
-        ExposureBias = t.ExposureBias;
-        ExposureProgram = t.ExposureProgram;
-        DigitalZoom = t.DigitalZoom;
-        ISOSpeed = t.ISOSpeed;
-        FocalLength35mm = t.FocalLength35mm;
-        MeteringMode = t.MeteringMode;
-        Contrast = t.Contrast;
-        Saturation = t.Saturation;
-        Sharpness = t.Sharpness;
-        WhiteBalance = t.WhiteBalance;
-        FlashEnergy = t.FlashEnergy;
-        FlashMode = t.FlashMode;
-        LightSource = t.LightSource;
-        Brightness = t.Brightness;
-        PhotometricInterpretation = t.PhotometricInterpretation;
-        Orientation = t.Orientation;
-        ExifVersion = t.ExifVersion;
-        LensMaker = t.LensMaker;
-        LensModel = t.LensModel;
-        SortFilesBy = t.SortFilesBy;
-        FileExtension = t.FileExtension;
-        CreationTime = t.CreationTime;
-        Random = t.Random;
-        Ascending = t.Ascending;
-        Descending = t.Descending;
-        RecentFiles = t.RecentFiles;
-        SetAsWallpaper = t.SetAsWallpaper;
-        SetAsLockScreenImage = t.SetAsLockScreenImage;
-        Image = t.Image;
-        CopyImage = t.CopyImage;
-        FileCopyPath = t.FileCopyPath;
-        FileCut = t.Cut;
-        CtrlToZoom = t.CtrlToZoom;
-        ScrollToZoom = t.ScrollToZoom;
-        GeneralSettings = t.GeneralSettings;
-        Appearance = t.Appearance;
-        Language = t.Language;
-        MouseWheel = t.MouseWheel;
-        MiscSettings = t.MiscSettings;
-        StayCentered = t.StayCentered;
-        ShowFileSavingDialog = t.ShowFileSavingDialog;
-        OpenInSameWindow = t.OpenInSameWindow;
-        ApplicationStartup = t.ApplicationStartup;
-        None = t.None;
-        AdjustTimingForSlideshow = t.AdjustTimingForSlideshow;
-        AdjustTimingForZoom = t.AdjustTimingForZoom;
-        AdjustNavSpeed = t.AdjustNavSpeed;
-        SecAbbreviation = t.SecAbbreviation;
-        ResetButtonText = t.ResetButtonText;
-        ShowBottomToolbar = t.ShowBottomToolbar;
-        ShowBottomGalleryWhenUiIsHidden = t.ShowBottomGalleryWhenUiIsHidden;
-        ChangeKeybindingTooltip = t.ChangeKeybindingTooltip;
-        ToggleTaskbarProgress = t.ToggleTaskbarProgress;
-        ChangeKeybindingText = t.ChangeKeybindingText;
-        Navigation = t.Navigation;
-        NextImage = t.NextImage;
-        PrevImage = t.PrevImage;
-        LastImage = t.LastImage;
-        FirstImage = t.FirstImage;
-        NextFolder = t.NextFolder;
-        PrevFolder = t.PrevFolder;
-        SelectGalleryThumb = t.SelectGalleryThumb;
-        ScrollAndRotate = t.ScrollAndRotate;
-        ScrollUp = t.ScrollUp;
-        ScrollDown = t.ScrollDown;
-        ScrollToTop = t.ScrollToTop;
-        ScrollToBottom = t.ScrollToBottom;
-        Zoom = t.Zoom;
-        ZoomIn = t.ZoomIn;
-        ZoomOut = t.ZoomOut;
-        Pan = t.Pan;
-        ResetZoom = t.ResetZoom;
-        ImageControl = t.ImageControl;
-        ChangeBackground = t.ChangeBackground;
-        InterfaceConfiguration = t.InterfaceConfiguration;
-        FileManagement = t.FileManagement;
-        ToggleFullscreen = t.ToggleFullscreen;
-        Fullscreen = t.Fullscreen;
-        ShowImageGallery = t.ShowImageGallery;
-        WindowManagement = t.WindowManagement;
-        CenterWindow = t.CenterWindow;
-        WindowScaling = t.WindowScaling;
-        NormalWindow = t.NormalWindow;
-        SetStarRating = t.SetStarRating;
-        _1Star = t._1Star;
-        _2Star = t._2Star;
-        _3Star = t._3Star;
-        _4Star = t._4Star;
-        _5Star = t._5Star;
-        RemoveStarRating = t.RemoveStarRating;
-        Theme = t.Theme;
-        DarkTheme = t.DarkTheme;
-        LightTheme = t.LightTheme;
-        MouseDrag = t.MouseDrag;
-        DoubleClick = t.DoubleClick;
-        MoveWindow = t.MoveWindow;
-        GithubRepo = t.GithubRepo;
-        Version = t.Version;
-        ViewLicenseFile = t.ViewLicenseFile;
-        CheckForUpdates = t.CheckForUpdates;
-        Credits = t.Credits;
-        ColorPickerTool = t.ColorPickerTool;
-        ColorPickerToolTooltip = t.ColorPickerToolTooltip;
-        ExpandedGalleryItemSize = t.ExpandedGalleryItemSize;
-        BottomGalleryItemSize = t.BottomGalleryItemSize;
-        Square = t.Square;
-        Uniform = t.Uniform;
-        UniformToFill = t.UniformToFill;
-        FillSquare = t.FillSquare;
-        Fill = t.Fill;
-        GallerySettings = t.GallerySettings;
-        GalleryThumbnailStretch = t.GalleryThumbnailStretch;
-        BottomGalleryThumbnailStretch = t.BottomGalleryThumbnailStretch;
-        RestoreDown = t.RestoreDown;
-        SideBySide = t.SideBySide;
-        SideBySideTooltip = t.SideBySideTooltip;
-        HighlightColor = t.HighlightColor;
-        AllowZoomOut = t.AllowZoomOut;
-        GlassTheme = t.GlassTheme;
-        ChangingThemeRequiresRestart = t.ChangingThemeRequiresRestart;
-        ShowUI = t.ShowUI;
-        HideUI = t.HideUI;
-        HideBottomToolbar = t.HideBottomToolbar;
-        Center = t.Center;
-        Tile = t.Tile;
-        Fit = t.Fit;
-        Pixels = t.Pixels;
-        Percentage = t.Percentage;
-        Quality = t.Quality;
-        SaveAs = t.SaveAs;
-        Reset = t.Reset;
-        AdvanceBy10Images = t.AdvanceBy10Images;
-        AdvanceBy100Images = t.AdvanceBy100Images;
-        GoBackBy10Images = t.GoBackBy10Images;
-        GoBackBy100Images = t.GoBackBy100Images;
-        ShowFadeInButtonsOnHover = t.ShowFadeInButtonsOnHover;
-        DisableFadeInButtonsOnHover = t.DisableFadeInButtonsOnHover;
-        UsingTouchpad = t.UsingTouchpad;
-        UsingMouse = t.UsingMouse;
-        SourceFolder = t.SourceFolder;
-        OutputFolder = t.OutputFolder;
-        GenerateThumbnails = t.GenerateThumbnails;
-        Lossless = t.Lossless;
-        Lossy = t.Lossy;
-        Start = t.Start;
-        Thumbnail = t.Thumbnail;
-        WidthAndHeight = t.WidthAndHeight;
-        CloseWindowPrompt = t.CloseWindowPrompt;
-        ShowConfirmationOnEsc = t.ShowConfirmationOnEsc;
-        ImageAliasing = t.ImageAliasing;
-        HighQuality = t.HighQuality;
-        Lighting = t.Lighting;
-        BlackAndWhite = t.BlackAndWhite;
-        NegativeColors = t.NegativeColors;
-        Blur = t.Blur;
-        PencilSketch = t.PencilSketch;
-        OldMovie = t.OldMovie;
-        Posterize = t.Posterize;
-        ClearEffects = t.ClearEffects;
-        Solarize = t.Solarize;
-        Maximize = t.Maximize;
-        SelectAll = t.SelectAll;
-        Normal = t.Normal;
-        FileAssociations = t.FileAssociations;
-        SelectFileTypesToAssociate = t.SelectFileTypesToAssociate;
-        Filter = t.Filter;
-        UnselectAll = t.UnselectAll;
-        Unassociate = t.Unassociate;
-        ShowConfirmationDialogWhenMovingFileToRecycleBin = t.ShowConfirmationDialogWhenMovingFileToRecycleBin;
-        MoveToRecycleBin = t.MoveToRecycleBin;
-        ShowConfirmationDialogWhenPermanentlyDeletingFile = t.ShowConfirmationDialogWhenPermanentlyDeletingFile;
-        Downloading = t.Downloading;
-        Pinned = t.Pinned;
-        Unpin = t.Unpin;
-        Pin = t.Pin;
-        Clear = t.Clear;
-        OpenFileHistory = t.OpenFileHistory;
-        ConstrainBackgroundToImage = t.ConstrainBackgroundToImage;
-        Window = t.Window;
-        WindowMargin = t.WindowMargin;
-        Mouse = t.Mouse;
-        MouseSideButtons = t.MouseSideButtons;
-        NavigateFileHistory = t.NavigateFileHistory;
-        NavigateBetweenDirectories = t.NavigateBetweenDirectories;
-        Comment = t.Comment;
+        File .Value = t.File;
+        SelectFile .Value = t.OpenFileDialog;
+        OpenLastFile .Value = t.OpenLastFile;
+        Paste .Value = t.FilePaste;
+        Copy .Value = t.Copy;
+        Reload .Value = t.Reload;
+        Print .Value = t.Print;
+        DeleteFile .Value = t.DeleteFile;
+        PermanentlyDelete .Value = t.PermanentlyDelete;
+        Save .Value = t.Save;
+        CopyFile .Value = t.CopyFile;
+        NewWindow .Value = t.NewWindow;
+        Close .Value = t.Close;
+        CloseGallery .Value = t.CloseGallery;
+        Open .Value = t.Open;
+        OpenFileDialog .Value = t.OpenFileDialog;
+        ShowInFolder .Value = t.ShowInFolder;
+        OpenWith .Value = t.OpenWith;
+        RenameFile .Value = t.RenameFile;
+        DuplicateFile .Value = t.DuplicateFile;
+        RotateLeft .Value = t.RotateLeft;
+        RotateRight .Value = t.RotateRight;
+        Flip .Value = t.Flip;
+        UnFlip .Value = t.Unflip;
+        ShowBottomGallery .Value = t.ShowBottomGallery;
+        HideBottomGallery .Value = t.HideBottomGallery;
+        AutoFitWindow .Value = t.AutoFitWindow;
+        Stretch .Value = t.Stretch;
+        Crop .Value = t.Crop;
+        ResizeImage .Value = t.ResizeImage;
+        GoToImageAtSpecifiedIndex .Value = t.GoToImageAtSpecifiedIndex;
+        ToggleScroll .Value = t.ToggleScroll;
+        ScrollEnabled .Value = t.ScrollingEnabled;
+        ScrollDisabled .Value = t.ScrollingDisabled;
+        ScrollDirection .Value = t.ScrollDirection;
+        Reverse .Value = t.Reverse;
+        Forward .Value = t.Forward;
+        Slideshow .Value = t.Slideshow;
+        Settings .Value = t.Settings;
+        AboutWindow .Value = t.InfoWindow;
+        ImageInfo .Value = t.ImageInfo;
+        About .Value = t.About;
+        ShowAllSettingsWindow .Value = t.ShowAllSettingsWindow;
+        StayTopMost .Value = t.StayTopMost;
+        SearchSubdirectory .Value = t.SearchSubdirectory;
+        ToggleLooping .Value = t.ToggleLooping;
+        ApplicationShortcuts .Value = t.ApplicationShortcuts;
+        BatchResize .Value = t.BatchResize;
+        Effects .Value = t.Effects;
+        EffectsTooltip .Value = t.EffectsTooltip;
+        FileProperties .Value = t.FileProperties;
+        OptimizeImage .Value = t.OptimizeImage;
+        ImageInfo .Value = t.ImageInfo;
+        FileName .Value = t.FileName;
+        FileSize .Value = t.FileSize;
+        Folder .Value = t.Folder;
+        FullPath .Value = t.FullPath;
+        Created .Value = t.Created;
+        Modified .Value = t.Modified;
+        LastAccessTime .Value = t.LastAccessTime;
+        ConvertTo .Value = t.ConvertTo;
+        NoConversion .Value = t.NoConversion;
+        Resize .Value = t.Resize;
+        NoResize .Value = t.NoResize;
+        Apply .Value = t.Apply;
+        Cancel .Value = t.Cancel;
+        BitDepth .Value = t.BitDepth;
+        ReadAbleAspectRatio .Value = t.AspectRatio;
+        Width .Value = t.Width;
+        Height .Value = t.Height;
+        SizeMp .Value = t.SizeMp;
+        Resolution .Value = t.Resolution;
+        PrintSizeIn .Value = t.PrintSizeIn;
+        PrintSizeCm .Value = t.PrintSizeCm;
+        Centimeters .Value = t.Centimeters;
+        Inches .Value = t.Inches;
+        SizeTooltip .Value = t.SizeTooltip;
+        Latitude .Value = t.Latitude;
+        Longitude .Value = t.Longitude;
+        Altitude .Value = t.Altitude;
+        Authors .Value = t.Authors;
+        DateTaken .Value = t.DateTaken;
+        Copyright .Value = t.Copyright;
+        ResolutionUnit .Value = t.ResolutionUnit;
+        ColorRepresentation .Value = t.ColorRepresentation;
+        CompressedBitsPixel .Value = t.CompressedBitsPixel;
+        Compression .Value = t.Compression;
+        ExposureTime .Value = t.ExposureTime;
+        Title .Value = t.Title;
+        Subject .Value = t.Subject;
+        Software .Value = t.Software;
+        CameraMaker .Value = t.CameraMaker;
+        CameraModel .Value = t.CameraModel;
+        FocalLength .Value = t.FocalLength;
+        Fnumber .Value = t.FNumber;
+        Fstop .Value = t.Fstop;
+        MaxAperture .Value = t.MaxAperture;
+        ExposureBias .Value = t.ExposureBias;
+        ExposureProgram .Value = t.ExposureProgram;
+        DigitalZoom .Value = t.DigitalZoom;
+        ISOSpeed .Value = t.ISOSpeed;
+        FocalLength35mm .Value = t.FocalLength35mm;
+        MeteringMode .Value = t.MeteringMode;
+        Contrast .Value = t.Contrast;
+        Saturation .Value = t.Saturation;
+        Sharpness .Value = t.Sharpness;
+        WhiteBalance .Value = t.WhiteBalance;
+        FlashEnergy .Value = t.FlashEnergy;
+        FlashMode .Value = t.FlashMode;
+        LightSource .Value = t.LightSource;
+        Brightness .Value = t.Brightness;
+        PhotometricInterpretation .Value = t.PhotometricInterpretation;
+        Orientation .Value = t.Orientation;
+        ExifVersion .Value = t.ExifVersion;
+        LensMaker .Value = t.LensMaker;
+        LensModel .Value = t.LensModel;
+        SortFilesBy .Value = t.SortFilesBy;
+        FileExtension .Value = t.FileExtension;
+        CreationTime .Value = t.CreationTime;
+        Random .Value = t.Random;
+        Ascending .Value = t.Ascending;
+        Descending .Value = t.Descending;
+        RecentFiles .Value = t.RecentFiles;
+        SetAsWallpaper .Value = t.SetAsWallpaper;
+        SetAsLockScreenImage .Value = t.SetAsLockScreenImage;
+        Image .Value = t.Image;
+        CopyImage .Value = t.CopyImage;
+        FileCopyPath .Value = t.FileCopyPath;
+        FileCut .Value = t.Cut;
+        CtrlToZoom .Value = t.CtrlToZoom;
+        ScrollToZoom .Value = t.ScrollToZoom;
+        GeneralSettings .Value = t.GeneralSettings;
+        Appearance .Value = t.Appearance;
+        Language .Value = t.Language;
+        MouseWheel .Value = t.MouseWheel;
+        MiscSettings .Value = t.MiscSettings;
+        StayCentered .Value = t.StayCentered;
+        ShowFileSavingDialog .Value = t.ShowFileSavingDialog;
+        OpenInSameWindow .Value = t.OpenInSameWindow;
+        ApplicationStartup .Value = t.ApplicationStartup;
+        None .Value = t.None;
+        AdjustTimingForSlideshow .Value = t.AdjustTimingForSlideshow;
+        AdjustTimingForZoom .Value = t.AdjustTimingForZoom;
+        AdjustNavSpeed .Value = t.AdjustNavSpeed;
+        SecAbbreviation .Value = t.SecAbbreviation;
+        ResetButtonText .Value = t.ResetButtonText;
+        ShowBottomToolbar .Value = t.ShowBottomToolbar;
+        ShowBottomGalleryWhenUiIsHidden .Value = t.ShowBottomGalleryWhenUiIsHidden;
+        ChangeKeybindingTooltip .Value = t.ChangeKeybindingTooltip;
+        ToggleTaskbarProgress .Value = t.ToggleTaskbarProgress;
+        ChangeKeybindingText .Value = t.ChangeKeybindingText;
+        Navigation .Value = t.Navigation;
+        NextImage .Value = t.NextImage;
+        PrevImage .Value = t.PrevImage;
+        LastImage .Value = t.LastImage;
+        FirstImage .Value = t.FirstImage;
+        NextFolder .Value = t.NextFolder;
+        PrevFolder .Value = t.PrevFolder;
+        SelectGalleryThumb .Value = t.SelectGalleryThumb;
+        ScrollAndRotate .Value = t.ScrollAndRotate;
+        ScrollUp .Value = t.ScrollUp;
+        ScrollDown .Value = t.ScrollDown;
+        ScrollToTop .Value = t.ScrollToTop;
+        ScrollToBottom .Value = t.ScrollToBottom;
+        Zoom .Value = t.Zoom;
+        ZoomIn .Value = t.ZoomIn;
+        ZoomOut .Value = t.ZoomOut;
+        Pan .Value = t.Pan;
+        ResetZoom .Value = t.ResetZoom;
+        ImageControl .Value = t.ImageControl;
+        ChangeBackground .Value = t.ChangeBackground;
+        InterfaceConfiguration .Value = t.InterfaceConfiguration;
+        FileManagement .Value = t.FileManagement;
+        ToggleFullscreen .Value = t.ToggleFullscreen;
+        Fullscreen .Value = t.Fullscreen;
+        ShowImageGallery .Value = t.ShowImageGallery;
+        WindowManagement .Value = t.WindowManagement;
+        CenterWindow .Value = t.CenterWindow;
+        WindowScaling .Value = t.WindowScaling;
+        NormalWindow .Value = t.NormalWindow;
+        SetStarRating .Value = t.SetStarRating;
+        _1Star .Value = t._1Star;
+        _2Star .Value = t._2Star;
+        _3Star .Value = t._3Star;
+        _4Star .Value = t._4Star;
+        _5Star .Value = t._5Star;
+        RemoveStarRating .Value = t.RemoveStarRating;
+        Theme .Value = t.Theme;
+        DarkTheme .Value = t.DarkTheme;
+        LightTheme .Value = t.LightTheme;
+        MouseDrag .Value = t.MouseDrag;
+        DoubleClick .Value = t.DoubleClick;
+        MoveWindow .Value = t.MoveWindow;
+        GithubRepo .Value = t.GithubRepo;
+        Version .Value = t.Version;
+        ViewLicenseFile .Value = t.ViewLicenseFile;
+        CheckForUpdates .Value = t.CheckForUpdates;
+        Credits .Value = t.Credits;
+        ColorPickerTool .Value = t.ColorPickerTool;
+        ColorPickerToolTooltip .Value = t.ColorPickerToolTooltip;
+        ExpandedGalleryItemSize .Value = t.ExpandedGalleryItemSize;
+        BottomGalleryItemSize .Value = t.BottomGalleryItemSize;
+        Square .Value = t.Square;
+        Uniform .Value = t.Uniform;
+        UniformToFill .Value = t.UniformToFill;
+        FillSquare .Value = t.FillSquare;
+        Fill .Value = t.Fill;
+        GallerySettings .Value = t.GallerySettings;
+        GalleryThumbnailStretch .Value = t.GalleryThumbnailStretch;
+        BottomGalleryThumbnailStretch .Value = t.BottomGalleryThumbnailStretch;
+        RestoreDown .Value = t.RestoreDown;
+        SideBySide .Value = t.SideBySide;
+        SideBySideTooltip .Value = t.SideBySideTooltip;
+        HighlightColor .Value = t.HighlightColor;
+        AllowZoomOut .Value = t.AllowZoomOut;
+        GlassTheme .Value = t.GlassTheme;
+        ChangingThemeRequiresRestart .Value = t.ChangingThemeRequiresRestart;
+        ShowUI .Value = t.ShowUI;
+        HideUI .Value = t.HideUI;
+        HideBottomToolbar .Value = t.HideBottomToolbar;
+        Center .Value = t.Center;
+        Tile .Value = t.Tile;
+        Fit .Value = t.Fit;
+        Pixels .Value = t.Pixels;
+        Percentage .Value = t.Percentage;
+        Quality .Value = t.Quality;
+        SaveAs .Value = t.SaveAs;
+        Reset .Value = t.Reset;
+        AdvanceBy10Images .Value = t.AdvanceBy10Images;
+        AdvanceBy100Images .Value = t.AdvanceBy100Images;
+        GoBackBy10Images .Value = t.GoBackBy10Images;
+        GoBackBy100Images .Value = t.GoBackBy100Images;
+        ShowFadeInButtonsOnHover .Value = t.ShowFadeInButtonsOnHover;
+        DisableFadeInButtonsOnHover .Value = t.DisableFadeInButtonsOnHover;
+        UsingTouchpad .Value = t.UsingTouchpad;
+        UsingMouse .Value = t.UsingMouse;
+        SourceFolder .Value = t.SourceFolder;
+        OutputFolder .Value = t.OutputFolder;
+        GenerateThumbnails .Value = t.GenerateThumbnails;
+        Lossless .Value = t.Lossless;
+        Lossy .Value = t.Lossy;
+        Start .Value = t.Start;
+        Thumbnail .Value = t.Thumbnail;
+        WidthAndHeight .Value = t.WidthAndHeight;
+        CloseWindowPrompt .Value = t.CloseWindowPrompt;
+        ShowConfirmationOnEsc .Value = t.ShowConfirmationOnEsc;
+        ImageAliasing .Value = t.ImageAliasing;
+        HighQuality .Value = t.HighQuality;
+        Lighting .Value = t.Lighting;
+        BlackAndWhite .Value = t.BlackAndWhite;
+        NegativeColors .Value = t.NegativeColors;
+        Blur .Value = t.Blur;
+        PencilSketch .Value = t.PencilSketch;
+        OldMovie .Value = t.OldMovie;
+        Posterize .Value = t.Posterize;
+        ClearEffects .Value = t.ClearEffects;
+        Solarize .Value = t.Solarize;
+        Maximize .Value = t.Maximize;
+        SelectAll .Value = t.SelectAll;
+        Normal .Value = t.Normal;
+        FileAssociations .Value = t.FileAssociations;
+        SelectFileTypesToAssociate .Value = t.SelectFileTypesToAssociate;
+        Filter .Value = t.Filter;
+        UnselectAll .Value = t.UnselectAll;
+        Unassociate .Value = t.Unassociate;
+        ShowConfirmationDialogWhenMovingFileToRecycleBin .Value = t.ShowConfirmationDialogWhenMovingFileToRecycleBin;
+        MoveToRecycleBin .Value = t.MoveToRecycleBin;
+        ShowConfirmationDialogWhenPermanentlyDeletingFile .Value = t.ShowConfirmationDialogWhenPermanentlyDeletingFile;
+        Downloading .Value = t.Downloading;
+        Pinned .Value = t.Pinned;
+        Unpin .Value = t.Unpin;
+        Pin .Value = t.Pin;
+        Clear .Value = t.Clear;
+        OpenFileHistory .Value = t.OpenFileHistory;
+        ConstrainBackgroundToImage .Value = t.ConstrainBackgroundToImage;
+        Window .Value = t.Window;
+        WindowMargin .Value = t.WindowMargin;
+        Mouse .Value = t.Mouse;
+        MouseSideButtons .Value = t.MouseSideButtons;
+        NavigateFileHistory .Value = t.NavigateFileHistory;
+        NavigateBetweenDirectories .Value = t.NavigateBetweenDirectories;
+        Comment .Value = t.Comment;
     }
 
     #region Static Translation Strings
 
-    public string? _1Star
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? _2Star
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? _3Star
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? _4Star
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? _5Star
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? About
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? AboutWindow
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? AdjustNavSpeed
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? AdjustTimingForSlideshow
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? AdjustTimingForZoom
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? AdvanceBy100Images
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? AdvanceBy10Images
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? AllowZoomOut
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? Altitude
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? Appearance
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? ApplicationShortcuts
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? ApplicationStartup
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? Apply
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? Ascending
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? Authors
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? AutoFitWindow
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? BatchResize
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? BitDepth
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? BlackAndWhite
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? Blur
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? BottomGalleryItemSize
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? BottomGalleryThumbnailStretch
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? Brightness
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? CameraMaker
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? CameraModel
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? Cancel
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? Center
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? CenterWindow
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? Centimeters
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? ChangeBackground
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? ChangeKeybindingText
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? ChangeKeybindingTooltip
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? ChangingThemeRequiresRestart
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? CheckForUpdates
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? Clear
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? ClearEffects
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? Close
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? CloseGallery
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? CloseWindowPrompt
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? ColorPickerTool
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? ColorPickerToolTooltip
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? ColorRepresentation
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? Comment
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? CompressedBitsPixel
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? Compression
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? ConstrainBackgroundToImage
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? Contrast
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? ConvertTo
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? Copy
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? CopyFile
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? CopyImage
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? Copyright
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? Created
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? CreationTime
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? Credits
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? Crop
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? CtrlToZoom
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? DarkTheme
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? DateTaken
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? DeleteFile
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? Descending
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? DigitalZoom
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? DirectionalBlur
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? DisableFadeInButtonsOnHover
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? DoubleClick
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? Downloading
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? DuplicateFile
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? Effects
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? EffectsTooltip
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? ExifVersion
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? ExpandedGalleryItemSize
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? ExposureBias
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? ExposureProgram
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? ExposureTime
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? File
-    {
-        get => field.FirstCharToUpper();
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? FileAssociations
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? FileCopyPath
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? FileCut
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? FileExtension
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? FileManagement
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? FileName
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? FileProperties
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? FileSize
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? Fill
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? FillSquare
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? Filter
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? FirstImage
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? Fit
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? FlashEnergy
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? FlashMode
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? Flip
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? Fnumber
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? FocalLength
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? FocalLength35mm
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? Folder
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? Forward
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? Fstop
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? FullPath
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? Fullscreen
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? GallerySettings
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? GalleryThumbnailStretch
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? GeneralSettings
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? GenerateThumbnails
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? GithubRepo
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? GlassTheme
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? GoBackBy100Images
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? GoBackBy10Images
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? GoToImageAtSpecifiedIndex
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? Height
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? HideBottomGallery
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? HideBottomToolbar
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? HideUI
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? HighlightColor
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? HighQuality
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? Image
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? ImageAliasing
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? ImageControl
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? ImageInfo
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? Inches
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? InterfaceConfiguration
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? ISOSpeed
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? Language
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? LastAccessTime
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? LastImage
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? Latitude
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? LensMaker
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? LensModel
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? Lighting
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? LightSource
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? LightTheme
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? Longitude
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? Lossless
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? Lossy
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? MaxAperture
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? Maximize
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? MeteringMode
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? MiscSettings
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? Modified
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
+    public BindableReactiveProperty<string?> _1Star { get; } = new();
+
+    public BindableReactiveProperty<string?> _2Star { get; } = new();
+
+    public BindableReactiveProperty<string?> _3Star { get; } = new();
+
+    public BindableReactiveProperty<string?> _4Star { get; } = new();
+
+    public BindableReactiveProperty<string?> _5Star { get; } = new();
+
+    public BindableReactiveProperty<string?> About { get; } = new();
+
+    public BindableReactiveProperty<string?> AboutWindow { get; } = new();
+
+    public BindableReactiveProperty<string?> AdjustNavSpeed { get; } = new();
+
+    public BindableReactiveProperty<string?> AdjustTimingForSlideshow { get; } = new();
+
+    public BindableReactiveProperty<string?> AdjustTimingForZoom { get; } = new();
+
+    public BindableReactiveProperty<string?> AdvanceBy100Images { get; } = new();
+
+    public BindableReactiveProperty<string?> AdvanceBy10Images { get; } = new();
+
+    public BindableReactiveProperty<string?> AllowZoomOut { get; } = new();
+
+    public BindableReactiveProperty<string?> Altitude { get; } = new();
+
+    public BindableReactiveProperty<string?> Appearance { get; } = new();
+
+    public BindableReactiveProperty<string?> ApplicationShortcuts { get; } = new();
+
+    public BindableReactiveProperty<string?> ApplicationStartup { get; } = new();
+
+    public BindableReactiveProperty<string?> Apply { get; } = new();
+
+    public BindableReactiveProperty<string?> Ascending { get; } = new();
+
+    public BindableReactiveProperty<string?> Authors { get; } = new();
+
+    public BindableReactiveProperty<string?> AutoFitWindow { get; } = new();
+
+    public BindableReactiveProperty<string?> BatchResize { get; } = new();
+
+    public BindableReactiveProperty<string?> BitDepth { get; } = new();
+
+    public BindableReactiveProperty<string?> BlackAndWhite { get; } = new();
+
+    public BindableReactiveProperty<string?> Blur { get; } = new();
+
+    public BindableReactiveProperty<string?> BottomGalleryItemSize { get; } = new();
+
+    public BindableReactiveProperty<string?> BottomGalleryThumbnailStretch { get; } = new();
+
+    public BindableReactiveProperty<string?> Brightness { get; } = new();
+
+    public BindableReactiveProperty<string?> CameraMaker { get; } = new();
+
+    public BindableReactiveProperty<string?> CameraModel { get; } = new();
+
+    public BindableReactiveProperty<string?> Cancel { get; } = new();
+
+    public BindableReactiveProperty<string?> Center { get; } = new();
+
+    public BindableReactiveProperty<string?> CenterWindow { get; } = new();
+
+    public BindableReactiveProperty<string?> Centimeters { get; } = new();
+
+    public BindableReactiveProperty<string?> ChangeBackground { get; } = new();
+
+    public BindableReactiveProperty<string?> ChangeKeybindingText { get; } = new();
+
+    public BindableReactiveProperty<string?> ChangeKeybindingTooltip { get; } = new();
+
+    public BindableReactiveProperty<string?> ChangingThemeRequiresRestart { get; } = new();
+
+    public BindableReactiveProperty<string?> CheckForUpdates { get; } = new();
+
+    public BindableReactiveProperty<string?> Clear { get; } = new();
+
+    public BindableReactiveProperty<string?> ClearEffects { get; } = new();
+
+    public BindableReactiveProperty<string?> Close { get; } = new();
+
+    public BindableReactiveProperty<string?> CloseGallery { get; } = new();
+
+    public BindableReactiveProperty<string?> CloseWindowPrompt { get; } = new();
+
+    public BindableReactiveProperty<string?> ColorPickerTool { get; } = new();
+
+    public BindableReactiveProperty<string?> ColorPickerToolTooltip { get; } = new();
+
+    public BindableReactiveProperty<string?> ColorRepresentation { get; } = new();
+
+    public BindableReactiveProperty<string?> Comment { get; } = new();
+
+    public BindableReactiveProperty<string?> CompressedBitsPixel { get; } = new();
+
+    public BindableReactiveProperty<string?> Compression { get; } = new();
+
+    public BindableReactiveProperty<string?> ConstrainBackgroundToImage { get; } = new();
+
+    public BindableReactiveProperty<string?> Contrast { get; } = new();
+
+    public BindableReactiveProperty<string?> ConvertTo { get; } = new();
+
+    public BindableReactiveProperty<string?> Copy { get; } = new();
+
+    public BindableReactiveProperty<string?> CopyFile { get; } = new();
+
+    public BindableReactiveProperty<string?> CopyImage { get; } = new();
+
+    public BindableReactiveProperty<string?> Copyright { get; } = new();
+
+    public BindableReactiveProperty<string?> Created { get; } = new();
+
+    public BindableReactiveProperty<string?> CreationTime { get; } = new();
+
+    public BindableReactiveProperty<string?> Credits { get; } = new();
+
+    public BindableReactiveProperty<string?> Crop { get; } = new();
+
+    public BindableReactiveProperty<string?> CtrlToZoom { get; } = new();
+
+    public BindableReactiveProperty<string?> DarkTheme { get; } = new();
+
+    public BindableReactiveProperty<string?> DateTaken { get; } = new();
+
+    public BindableReactiveProperty<string?> DeleteFile { get; } = new();
+
+    public BindableReactiveProperty<string?> Descending { get; } = new();
+
+    public BindableReactiveProperty<string?> DigitalZoom { get; } = new();
+
+    public BindableReactiveProperty<string?> DirectionalBlur { get; } = new();
+
+    public BindableReactiveProperty<string?> DisableFadeInButtonsOnHover { get; } = new();
+
+    public BindableReactiveProperty<string?> DoubleClick { get; } = new();
+
+    public BindableReactiveProperty<string?> Downloading { get; } = new();
+
+    public BindableReactiveProperty<string?> DuplicateFile { get; } = new();
+
+    public BindableReactiveProperty<string?> Effects { get; } = new();
+
+    public BindableReactiveProperty<string?> EffectsTooltip { get; } = new();
+
+    public BindableReactiveProperty<string?> ExifVersion { get; } = new();
+
+    public BindableReactiveProperty<string?> ExpandedGalleryItemSize { get; } = new();
+
+    public BindableReactiveProperty<string?> ExposureBias { get; } = new();
+
+    public BindableReactiveProperty<string?> ExposureProgram { get; } = new();
+
+    public BindableReactiveProperty<string?> ExposureTime { get; } = new();
+
+    public BindableReactiveProperty<string?> File { get; } = new();
+
+    public BindableReactiveProperty<string?> FileAssociations { get; } = new();
+
+    public BindableReactiveProperty<string?> FileCopyPath { get; } = new();
+
+    public BindableReactiveProperty<string?> FileCut { get; } = new();
+
+    public BindableReactiveProperty<string?> FileExtension { get; } = new();
+
+    public BindableReactiveProperty<string?> FileManagement { get; } = new();
+
+    public BindableReactiveProperty<string?> FileName { get; } = new();
+
+    public BindableReactiveProperty<string?> FileProperties { get; } = new();
+
+    public BindableReactiveProperty<string?> FileSize { get; } = new();
+
+    public BindableReactiveProperty<string?> Fill { get; } = new();
+
+    public BindableReactiveProperty<string?> FillSquare { get; } = new();
+
+    public BindableReactiveProperty<string?> Filter { get; } = new();
+
+    public BindableReactiveProperty<string?> FirstImage { get; } = new();
+
+    public BindableReactiveProperty<string?> Fit { get; } = new();
+
+    public BindableReactiveProperty<string?> FlashEnergy { get; } = new();
+
+    public BindableReactiveProperty<string?> FlashMode { get; } = new();
+
+    public BindableReactiveProperty<string?> Flip { get; } = new();
+
+    public BindableReactiveProperty<string?> Fnumber { get; } = new();
+
+    public BindableReactiveProperty<string?> FocalLength { get; } = new();
+
+    public BindableReactiveProperty<string?> FocalLength35mm { get; } = new();
+
+    public BindableReactiveProperty<string?> Folder { get; } = new();
+
+    public BindableReactiveProperty<string?> Forward { get; } = new();
+
+    public BindableReactiveProperty<string?> Fstop { get; } = new();
+
+    public BindableReactiveProperty<string?> FullPath { get; } = new();
+
+    public BindableReactiveProperty<string?> Fullscreen { get; } = new();
+
+    public BindableReactiveProperty<string?> GallerySettings { get; } = new();
+
+    public BindableReactiveProperty<string?> GalleryThumbnailStretch { get; } = new();
+
+    public BindableReactiveProperty<string?> GeneralSettings { get; } = new();
+
+    public BindableReactiveProperty<string?> GenerateThumbnails { get; } = new();
+
+    public BindableReactiveProperty<string?> GithubRepo { get; } = new();
+
+    public BindableReactiveProperty<string?> GlassTheme { get; } = new();
+
+    public BindableReactiveProperty<string?> GoBackBy100Images { get; } = new();
+
+    public BindableReactiveProperty<string?> GoBackBy10Images { get; } = new();
+
+    public BindableReactiveProperty<string?> GoToImageAtSpecifiedIndex { get; } = new();
+
+    public BindableReactiveProperty<string?> Height { get; } = new();
+
+    public BindableReactiveProperty<string?> HideBottomGallery { get; } = new();
+
+    public BindableReactiveProperty<string?> HideBottomToolbar { get; } = new();
+
+    public BindableReactiveProperty<string?> HideUI { get; } = new();
+
+    public BindableReactiveProperty<string?> HighlightColor { get; } = new();
+
+    public BindableReactiveProperty<string?> HighQuality { get; } = new();
+
+    public BindableReactiveProperty<string?> Image { get; } = new();
+
+    public BindableReactiveProperty<string?> ImageAliasing { get; } = new();
+
+    public BindableReactiveProperty<string?> ImageControl { get; } = new();
+
+    public BindableReactiveProperty<string?> ImageInfo { get; } = new();
+
+    public BindableReactiveProperty<string?> Inches { get; } = new();
+
+    public BindableReactiveProperty<string?> InterfaceConfiguration { get; } = new();
+
+    public BindableReactiveProperty<string?> ISOSpeed { get; } = new();
+
+    public BindableReactiveProperty<string?> Language { get; } = new();
+
+    public BindableReactiveProperty<string?> LastAccessTime { get; } = new();
+
+    public BindableReactiveProperty<string?> LastImage { get; } = new();
+
+    public BindableReactiveProperty<string?> Latitude { get; } = new();
+
+    public BindableReactiveProperty<string?> LensMaker { get; } = new();
+
+    public BindableReactiveProperty<string?> LensModel { get; } = new();
+
+    public BindableReactiveProperty<string?> Lighting { get; } = new();
+
+    public BindableReactiveProperty<string?> LightSource { get; } = new();
+
+    public BindableReactiveProperty<string?> LightTheme { get; } = new();
+
+    public BindableReactiveProperty<string?> Longitude { get; } = new();
+
+    public BindableReactiveProperty<string?> Lossless { get; } = new();
+
+    public BindableReactiveProperty<string?> Lossy { get; } = new();
+
+    public BindableReactiveProperty<string?> MaxAperture { get; } = new();
+
+    public BindableReactiveProperty<string?> Maximize { get; } = new();
+
+    public BindableReactiveProperty<string?> MeteringMode { get; } = new();
+
+    public BindableReactiveProperty<string?> MiscSettings { get; } = new();
+
+    public BindableReactiveProperty<string?> Modified { get; } = new();
     
-    public string? Mouse
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
+    public BindableReactiveProperty<string?> Mouse { get; } = new();
 
-    public string? MouseDrag
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
+    public BindableReactiveProperty<string?> MouseDrag { get; } = new();
     
-    public string? MouseSideButtons
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? MouseWheel
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? MoveToRecycleBin
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? MoveWindow
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? NavigateBetweenDirectories
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? NavigateFileHistory
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? Navigation
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? NegativeColors
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? NewWindow
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? NextFolder
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? NextImage
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? NoConversion
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? None
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? NoResize
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? Normal
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? NormalWindow
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? OldMovie
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? Open
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? OpenFileDialog
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? OpenFileHistory
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? OpenInSameWindow
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? OpenLastFile
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? OpenWith
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? OptimizeImage
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? Orientation
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? OutputFolder
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? Pan
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? Paste
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? PencilSketch
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? Percentage
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? PermanentlyDelete
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? PhotometricInterpretation
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? Pin
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? Pinned
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? Pixels
-    {
-        get => field.FirstCharToUpper();
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? Posterize
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? PrevFolder
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? PrevImage
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? Print
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? PrintSizeCm
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? PrintSizeIn
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? Quality
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? Random
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? ReadAbleAspectRatio
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? RecentFiles
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? Reload
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? RemoveStarRating
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? RenameFile
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? Reset
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? ResetButtonText
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? ResetZoom
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? Resize
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? ResizeImage
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? Resolution
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? ResolutionUnit
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? RestoreDown
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? Reverse
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? RotateLeft
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? RotateRight
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? Saturation
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? Save
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? SaveAs
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? ScrollAndRotate
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? ScrollDirection
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? ScrollDisabled
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? ScrollDown
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? ScrollEnabled
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? ScrollToBottom
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? ScrollToTop
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? ScrollToZoom
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? ScrollUp
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? SearchSubdirectory
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? SecAbbreviation
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? SelectAll
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? SelectFile
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? SelectFileTypesToAssociate
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? SelectGalleryThumb
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? SetAsLockScreenImage
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? SetAsWallpaper
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? SetStarRating
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? Settings
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? Sharpness
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? ShowAllSettingsWindow
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? ShowBottomGallery
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? ShowBottomGalleryWhenUiIsHidden
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? ShowBottomToolbar
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? ShowConfirmationDialogWhenMovingFileToRecycleBin
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? ShowConfirmationDialogWhenPermanentlyDeletingFile
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? ShowConfirmationOnEsc
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? ShowFadeInButtonsOnHover
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? ShowFileSavingDialog
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? ShowImageGallery
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? ShowInFolder
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? ShowUI
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? SideBySide
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? SideBySideTooltip
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? SizeMp
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? SizeTooltip
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? Slideshow
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? Software
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? Solarize
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? SortFilesBy
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? SourceFolder
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? Square
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? Start
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? StayCentered
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? StayTopMost
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? Stretch
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? Subject
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? Theme
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? Thumbnail
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? Tile
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? Title
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? ToggleFullscreen
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? ToggleLooping
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? ToggleScroll
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? ToggleTaskbarProgress
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? Unassociate
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? UnFlip
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? Uniform
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? UniformToFill
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? Unpin
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? UnselectAll
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? UsingMouse
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? UsingTouchpad
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? Version
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? ViewLicenseFile
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? WhiteBalance
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? Width
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? WidthAndHeight
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public string? Window
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-    public string? WindowManagement
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
+    public BindableReactiveProperty<string?> MouseSideButtons { get; } = new();
+
+    public BindableReactiveProperty<string?> MouseWheel { get; } = new();
+
+    public BindableReactiveProperty<string?> MoveToRecycleBin { get; } = new();
+
+    public BindableReactiveProperty<string?> MoveWindow { get; } = new();
+
+    public BindableReactiveProperty<string?> NavigateBetweenDirectories { get; } = new();
+
+    public BindableReactiveProperty<string?> NavigateFileHistory { get; } = new();
+
+    public BindableReactiveProperty<string?> Navigation { get; } = new();
+
+    public BindableReactiveProperty<string?> NegativeColors { get; } = new();
+
+    public BindableReactiveProperty<string?> NewWindow { get; } = new();
+
+    public BindableReactiveProperty<string?> NextFolder { get; } = new();
+
+    public BindableReactiveProperty<string?> NextImage { get; } = new();
+
+    public BindableReactiveProperty<string?> NoConversion { get; } = new();
+
+    public BindableReactiveProperty<string?> None { get; } = new();
+
+    public BindableReactiveProperty<string?> NoResize { get; } = new();
+
+    public BindableReactiveProperty<string?> Normal { get; } = new();
+
+    public BindableReactiveProperty<string?> NormalWindow { get; } = new();
+
+    public BindableReactiveProperty<string?> OldMovie { get; } = new();
+
+    public BindableReactiveProperty<string?> Open { get; } = new();
+
+    public BindableReactiveProperty<string?> OpenFileDialog { get; } = new();
+
+    public BindableReactiveProperty<string?> OpenFileHistory { get; } = new();
+
+    public BindableReactiveProperty<string?> OpenInSameWindow { get; } = new();
+
+    public BindableReactiveProperty<string?> OpenLastFile { get; } = new();
+
+    public BindableReactiveProperty<string?> OpenWith { get; } = new();
+
+    public BindableReactiveProperty<string?> OptimizeImage { get; } = new();
+
+    public BindableReactiveProperty<string?> Orientation { get; } = new();
+
+    public BindableReactiveProperty<string?> OutputFolder { get; } = new();
+
+    public BindableReactiveProperty<string?> Pan { get; } = new();
+
+    public BindableReactiveProperty<string?> Paste { get; } = new();
+
+    public BindableReactiveProperty<string?> PencilSketch { get; } = new();
+
+    public BindableReactiveProperty<string?> Percentage { get; } = new();
+
+    public BindableReactiveProperty<string?> PermanentlyDelete { get; } = new();
+
+    public BindableReactiveProperty<string?> PhotometricInterpretation { get; } = new();
+
+    public BindableReactiveProperty<string?> Pin { get; } = new();
+
+    public BindableReactiveProperty<string?> Pinned { get; } = new();
+
+    public BindableReactiveProperty<string?> Pixels { get; } = new();
+
+    public BindableReactiveProperty<string?> Posterize { get; } = new();
+
+    public BindableReactiveProperty<string?> PrevFolder { get; } = new();
+
+    public BindableReactiveProperty<string?> PrevImage { get; } = new();
+
+    public BindableReactiveProperty<string?> Print { get; } = new();
+
+    public BindableReactiveProperty<string?> PrintSizeCm { get; } = new();
+
+    public BindableReactiveProperty<string?> PrintSizeIn { get; } = new();
+
+    public BindableReactiveProperty<string?> Quality { get; } = new();
+
+    public BindableReactiveProperty<string?> Random { get; } = new();
+
+    public BindableReactiveProperty<string?> ReadAbleAspectRatio { get; } = new();
+
+    public BindableReactiveProperty<string?> RecentFiles { get; } = new();
+
+    public BindableReactiveProperty<string?> Reload { get; } = new();
+
+    public BindableReactiveProperty<string?> RemoveStarRating { get; } = new();
+
+    public BindableReactiveProperty<string?> RenameFile { get; } = new();
+
+    public BindableReactiveProperty<string?> Reset { get; } = new();
+
+    public BindableReactiveProperty<string?> ResetButtonText { get; } = new();
+
+    public BindableReactiveProperty<string?> ResetZoom { get; } = new();
+
+    public BindableReactiveProperty<string?> Resize { get; } = new();
+
+    public BindableReactiveProperty<string?> ResizeImage { get; } = new();
+
+    public BindableReactiveProperty<string?> Resolution { get; } = new();
+
+    public BindableReactiveProperty<string?> ResolutionUnit { get; } = new();
+
+    public BindableReactiveProperty<string?> RestoreDown { get; } = new();
+
+    public BindableReactiveProperty<string?> Reverse { get; } = new();
+
+    public BindableReactiveProperty<string?> RotateLeft { get; } = new();
+
+    public BindableReactiveProperty<string?> RotateRight { get; } = new();
+
+    public BindableReactiveProperty<string?> Saturation { get; } = new();
+
+    public BindableReactiveProperty<string?> Save { get; } = new();
+
+    public BindableReactiveProperty<string?> SaveAs { get; } = new();
+
+    public BindableReactiveProperty<string?> ScrollAndRotate { get; } = new();
+
+    public BindableReactiveProperty<string?> ScrollDirection { get; } = new();
+
+    public BindableReactiveProperty<string?> ScrollDisabled { get; } = new();
+
+    public BindableReactiveProperty<string?> ScrollDown { get; } = new();
+
+    public BindableReactiveProperty<string?> ScrollEnabled { get; } = new();
+
+    public BindableReactiveProperty<string?> ScrollToBottom { get; } = new();
+
+    public BindableReactiveProperty<string?> ScrollToTop { get; } = new();
+
+    public BindableReactiveProperty<string?> ScrollToZoom { get; } = new();
+
+    public BindableReactiveProperty<string?> ScrollUp { get; } = new();
+
+    public BindableReactiveProperty<string?> SearchSubdirectory { get; } = new();
+
+    public BindableReactiveProperty<string?> SecAbbreviation { get; } = new();
+
+    public BindableReactiveProperty<string?> SelectAll { get; } = new();
+
+    public BindableReactiveProperty<string?> SelectFile { get; } = new();
+
+    public BindableReactiveProperty<string?> SelectFileTypesToAssociate { get; } = new();
+
+    public BindableReactiveProperty<string?> SelectGalleryThumb { get; } = new();
+
+    public BindableReactiveProperty<string?> SetAsLockScreenImage { get; } = new();
+
+    public BindableReactiveProperty<string?> SetAsWallpaper { get; } = new();
+
+    public BindableReactiveProperty<string?> SetStarRating { get; } = new();
+
+    public BindableReactiveProperty<string?> Settings { get; } = new();
+
+    public BindableReactiveProperty<string?> Sharpness { get; } = new();
+
+    public BindableReactiveProperty<string?> ShowAllSettingsWindow { get; } = new();
+
+    public BindableReactiveProperty<string?> ShowBottomGallery { get; } = new();
+
+    public BindableReactiveProperty<string?> ShowBottomGalleryWhenUiIsHidden { get; } = new();
+
+    public BindableReactiveProperty<string?> ShowBottomToolbar { get; } = new();
+
+    public BindableReactiveProperty<string?> ShowConfirmationDialogWhenMovingFileToRecycleBin { get; } = new();
+
+    public BindableReactiveProperty<string?> ShowConfirmationDialogWhenPermanentlyDeletingFile { get; } = new();
+
+    public BindableReactiveProperty<string?> ShowConfirmationOnEsc { get; } = new();
+
+    public BindableReactiveProperty<string?> ShowFadeInButtonsOnHover { get; } = new();
+
+    public BindableReactiveProperty<string?> ShowFileSavingDialog { get; } = new();
+
+    public BindableReactiveProperty<string?> ShowImageGallery { get; } = new();
+
+    public BindableReactiveProperty<string?> ShowInFolder { get; } = new();
+
+    public BindableReactiveProperty<string?> ShowUI { get; } = new();
+
+    public BindableReactiveProperty<string?> SideBySide { get; } = new();
+
+    public BindableReactiveProperty<string?> SideBySideTooltip { get; } = new();
+
+    public BindableReactiveProperty<string?> SizeMp { get; } = new();
+
+    public BindableReactiveProperty<string?> SizeTooltip { get; } = new();
+
+    public BindableReactiveProperty<string?> Slideshow { get; } = new();
+
+    public BindableReactiveProperty<string?> Software { get; } = new();
+
+    public BindableReactiveProperty<string?> Solarize { get; } = new();
+
+    public BindableReactiveProperty<string?> SortFilesBy { get; } = new();
+
+    public BindableReactiveProperty<string?> SourceFolder { get; } = new();
+
+    public BindableReactiveProperty<string?> Square { get; } = new();
+
+    public BindableReactiveProperty<string?> Start { get; } = new();
+
+    public BindableReactiveProperty<string?> StayCentered { get; } = new();
+
+    public BindableReactiveProperty<string?> StayTopMost { get; } = new();
+
+    public BindableReactiveProperty<string?> Stretch { get; } = new();
+
+    public BindableReactiveProperty<string?> Subject { get; } = new();
+
+    public BindableReactiveProperty<string?> Theme { get; } = new();
+
+    public BindableReactiveProperty<string?> Thumbnail { get; } = new();
+
+    public BindableReactiveProperty<string?> Tile { get; } = new();
+
+    public BindableReactiveProperty<string?> Title { get; } = new();
+
+    public BindableReactiveProperty<string?> ToggleFullscreen { get; } = new();
+
+    public BindableReactiveProperty<string?> ToggleLooping { get; } = new();
+
+    public BindableReactiveProperty<string?> ToggleScroll { get; } = new();
+
+    public BindableReactiveProperty<string?> ToggleTaskbarProgress { get; } = new();
+
+    public BindableReactiveProperty<string?> Unassociate { get; } = new();
+
+    public BindableReactiveProperty<string?> UnFlip { get; } = new();
+
+    public BindableReactiveProperty<string?> Uniform { get; } = new();
+
+    public BindableReactiveProperty<string?> UniformToFill { get; } = new();
+
+    public BindableReactiveProperty<string?> Unpin { get; } = new();
+
+    public BindableReactiveProperty<string?> UnselectAll { get; } = new();
+
+    public BindableReactiveProperty<string?> UsingMouse { get; } = new();
+
+    public BindableReactiveProperty<string?> UsingTouchpad { get; } = new();
+
+    public BindableReactiveProperty<string?> Version { get; } = new();
+
+    public BindableReactiveProperty<string?> ViewLicenseFile { get; } = new();
+
+    public BindableReactiveProperty<string?> WhiteBalance { get; } = new();
+
+    public BindableReactiveProperty<string?> Width { get; } = new();
+
+    public BindableReactiveProperty<string?> WidthAndHeight { get; } = new();
+
+    public BindableReactiveProperty<string?> Window { get; } = new();
+    public BindableReactiveProperty<string?> WindowManagement { get; } = new();
     
-    public string? WindowMargin
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
+    public BindableReactiveProperty<string?> WindowMargin { get; } = new();
 
-    public string? WindowScaling
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-    public string? Zoom
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
+    public BindableReactiveProperty<string?> WindowScaling { get; } = new();
+    public BindableReactiveProperty<string?> Zoom { get; } = new();
 
-    public string? ZoomIn
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
+    public BindableReactiveProperty<string?> ZoomIn { get; } = new();
 
-    public string? ZoomOut
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
+    public BindableReactiveProperty<string?> ZoomOut { get; } = new();
+    
     #endregion strings
 
     #region Dynamic Translation strings
 
-    public string? IsCtrlToZoom
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
+    public BindableReactiveProperty<string?> IsCtrlToZoom { get; } = new();
 
-    public string? IsFlipped
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
+    public BindableReactiveProperty<string?> IsFlipped { get; } = new();
 
-    public string? IsLooping
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
+    public BindableReactiveProperty<string?> IsLooping { get; } = new();
 
-    public string? IsScrolling
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
+    public BindableReactiveProperty<string?> IsScrolling { get; } = new();
 
-    public string? IsShowingBottomGallery
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
+    public BindableReactiveProperty<string?> IsShowingBottomGallery { get; } = new();
 
-    public string? IsShowingBottomToolbar
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
+    public BindableReactiveProperty<string?> IsShowingBottomToolbar { get; } = new();
 
-    public string? IsShowingFadingUIButtons
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
+    public BindableReactiveProperty<string?> IsShowingFadingUIButtons { get; } = new();
 
-    public string? IsShowingUI
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-    public string? IsUsingTouchpad
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
+    public BindableReactiveProperty<string?> IsShowingUI { get; } = new();
+    public BindableReactiveProperty<string?> IsUsingTouchpad { get; } = new();
     
     #endregion
 }

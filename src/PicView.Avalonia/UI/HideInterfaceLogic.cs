@@ -24,7 +24,7 @@ public static class HideInterfaceLogic
             Settings.UIProperties.ShowInterface = false;
             vm.IsTopToolbarShown = false;
             vm.IsBottomToolbarShown = false;
-            vm.Translation.IsShowingUI = TranslationManager.Translation.ShowUI;
+            vm.Translation.IsShowingUI.Value = TranslationManager.Translation.ShowUI;
             if (!GalleryFunctions.IsFullGalleryOpen)
             {
                 if (!Settings.Gallery.ShowBottomGalleryInHiddenUI)
@@ -49,7 +49,7 @@ public static class HideInterfaceLogic
         {
             vm.IsUIShown = true;
             vm.IsTopToolbarShown = true;
-            vm.Translation.IsShowingUI = TranslationManager.Translation.HideUI;
+            vm.Translation.IsShowingUI.Value = TranslationManager.Translation.HideUI;
             if (Settings.UIProperties.ShowBottomNavBar)
             {
                 vm.IsBottomToolbarShown = true;
@@ -99,14 +99,14 @@ public static class HideInterfaceLogic
         {
             vm.IsBottomToolbarShown = false;
             Settings.UIProperties.ShowBottomNavBar = false;
-            vm.Translation.IsShowingBottomToolbar = TranslationManager.Translation.ShowBottomToolbar;
+            vm.Translation.IsShowingBottomToolbar.Value = TranslationManager.Translation.ShowBottomToolbar;
         }
         else
         {
             vm.IsBottomToolbarShown = true;
             Settings.UIProperties.ShowBottomNavBar = true;
             vm.BottombarHeight = SizeDefaults.BottombarHeight;
-            vm.Translation.IsShowingBottomToolbar = TranslationManager.Translation.HideBottomToolbar;
+            vm.Translation.IsShowingBottomToolbar.Value = TranslationManager.Translation.HideBottomToolbar;
         }
         await Dispatcher.UIThread.InvokeAsync(() =>
         {
@@ -145,7 +145,7 @@ public static class HideInterfaceLogic
         Settings.UIProperties.ShowAltInterfaceButtons = !Settings
             .UIProperties.ShowAltInterfaceButtons;
         
-        vm.Translation.IsShowingFadingUIButtons = Settings.UIProperties.ShowAltInterfaceButtons
+        vm.Translation.IsShowingFadingUIButtons.Value = Settings.UIProperties.ShowAltInterfaceButtons
             ? TranslationManager.Translation.DisableFadeInButtonsOnHover
             : TranslationManager.Translation.ShowFadeInButtonsOnHover;
         

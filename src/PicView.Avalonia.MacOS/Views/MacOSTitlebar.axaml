@@ -37,7 +37,7 @@
             IsRepeatEnabled="False"
             IsTabStop="False"
             Margin="0"
-            ToolTip.Tip="{CompiledBinding Translation.IsFlipped,
+            ToolTip.Tip="{CompiledBinding Translation.IsFlipped.Value,
                                           Mode=OneWay}"
             Width="30"
             x:Name="FlipButton">
@@ -57,12 +57,13 @@
             Icon="{StaticResource RefreshCcwDot}"
             IconHeight="13"
             IconWidth="13"
-            IsEnabled="{CompiledBinding PicViewer.FileInfo,
+            IsEnabled="{CompiledBinding PicViewer.FileInfo.Value,
                                         Converter={x:Static ObjectConverters.IsNotNull}}"
             IsRepeatEnabled="False"
             IsTabStop="False"
             Margin="0"
-            ToolTip.Tip="{CompiledBinding Translation.RotateRight}"
+            ToolTip.Tip="{CompiledBinding Translation.RotateRight.Value,
+                                          Mode=OneWay}"
             Width="30"
             x:Name="RotateRightButton" />
 
@@ -77,7 +78,7 @@
             Foreground="{DynamicResource MainTextColor}"
             IconHeight="17"
             IconWidth="17"
-            IsEnabled="{CompiledBinding PicViewer.FileInfo,
+            IsEnabled="{CompiledBinding PicViewer.FileInfo.Value,
                                         Converter={x:Static ObjectConverters.IsNotNull}}"
             IsRepeatEnabled="False"
             IsTabStop="False"

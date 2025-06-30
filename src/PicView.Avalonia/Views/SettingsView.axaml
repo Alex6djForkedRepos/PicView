@@ -725,7 +725,7 @@
             <MenuItem
                 Command="{CompiledBinding ResetSettingsCommand}"
                 Foreground="{DynamicResource MainTextColor}"
-                Header="{CompiledBinding Translation.ResetButtonText,
+                Header="{CompiledBinding Translation.ResetButtonText.Value,
                                          Mode=OneWay}">
                 <MenuItem.Icon>
                     <Image
@@ -735,7 +735,7 @@
                 </MenuItem.Icon>
             </MenuItem>
             <Separator />
-            <MenuItem Header="{CompiledBinding Translation.Close}" x:Name="CloseItem">
+            <MenuItem Header="{CompiledBinding Translation.Close.Value, Mode=OneWay}" x:Name="CloseItem">
                 <MenuItem.Icon>
                     <Path
                         Data="{StaticResource CloseGeometry}"
@@ -787,7 +787,7 @@
                         <TextBlock
                             Classes="txt txtShadow"
                             Foreground="{StaticResource SecondaryTextColor}"
-                            Text="{Binding Translation.GeneralSettings, Mode=OneWay}" />
+                            Text="{Binding Translation.GeneralSettings.Value, Mode=OneWay}" />
                     </StackPanel>
                 </TabItem.Header>
                 <customControls:AutoScrollViewer Background="Transparent" Height="{Binding Path=Bounds.Height, ElementName=MainTabControl}">
@@ -803,7 +803,7 @@
                         <TextBlock
                             Classes="txt txtShadow"
                             Foreground="{StaticResource SecondaryTextColor}"
-                            Text="{Binding Translation.Appearance, Mode=OneWay}" />
+                            Text="{Binding Translation.Appearance.Value, Mode=OneWay}" />
                     </StackPanel>
                 </TabItem.Header>
                 <customControls:AutoScrollViewer Background="Transparent" Height="{Binding Path=Bounds.Height, ElementName=MainTabControl}">
@@ -822,7 +822,7 @@
                         <TextBlock
                             Classes="txt txtShadow"
                             Foreground="{StaticResource SecondaryTextColor}"
-                            Text="{Binding Translation.Image, Mode=OneWay}" />
+                            Text="{Binding Translation.Image.Value, Mode=OneWay}" />
                     </StackPanel>
                 </TabItem.Header>
                 <customControls:AutoScrollViewer Background="Transparent" Height="{Binding Path=Bounds.Height, ElementName=MainTabControl}">
@@ -841,7 +841,7 @@
                         <TextBlock
                             Classes="txt txtShadow"
                             Foreground="{StaticResource SecondaryTextColor}"
-                            Text="{Binding Translation.Window, Mode=OneWay}" />
+                            Text="{Binding Translation.Window.Value, Mode=OneWay}" />
                     </StackPanel>
                 </TabItem.Header>
                 <customControls:AutoScrollViewer Background="Transparent" Height="{Binding Path=Bounds.Height, ElementName=MainTabControl}">
@@ -860,7 +860,7 @@
                         <TextBlock
                             Classes="txt txtShadow"
                             Foreground="{StaticResource SecondaryTextColor}"
-                            Text="{CompiledBinding Translation.GallerySettings,
+                            Text="{CompiledBinding Translation.GallerySettings.Value,
                                                    Mode=OneWay}" />
                     </StackPanel>
                 </TabItem.Header>
@@ -880,7 +880,7 @@
                         <TextBlock
                             Classes="txt txtShadow"
                             Foreground="{StaticResource SecondaryTextColor}"
-                            Text="{CompiledBinding Translation.Slideshow,
+                            Text="{CompiledBinding Translation.Slideshow.Value,
                                                    Mode=OneWay}" />
                     </StackPanel>
                 </TabItem.Header>
@@ -900,7 +900,8 @@
                         <TextBlock
                             Classes="txt txtShadow"
                             Foreground="{StaticResource SecondaryTextColor}"
-                            Text="{CompiledBinding Translation.Navigation}" />
+                            Text="{CompiledBinding Translation.Navigation.Value,
+                                                   Mode=OneWay}" />
                     </StackPanel>
                 </TabItem.Header>
 
@@ -920,7 +921,8 @@
                         <TextBlock
                             Classes="txt txtShadow"
                             Foreground="{StaticResource SecondaryTextColor}"
-                            Text="{CompiledBinding Translation.Zoom}" />
+                            Text="{CompiledBinding Translation.Zoom.Value,
+                                                   Mode=OneWay}" />
                     </StackPanel>
                 </TabItem.Header>
                 <customControls:AutoScrollViewer Background="Transparent" Height="{Binding Path=Bounds.Height, ElementName=MainTabControl}">
@@ -939,7 +941,8 @@
                         <TextBlock
                             Classes="txt txtShadow"
                             Foreground="{StaticResource SecondaryTextColor}"
-                            Text="{CompiledBinding Translation.Mouse}" />
+                            Text="{CompiledBinding Translation.Mouse.Value,
+                                                   Mode=OneWay}" />
                     </StackPanel>
                 </TabItem.Header>
                 <customControls:AutoScrollViewer Background="Transparent" Height="{Binding Path=Bounds.Height, ElementName=MainTabControl}">
@@ -958,7 +961,8 @@
                         <TextBlock
                             Classes="txt txtShadow"
                             Foreground="{StaticResource SecondaryTextColor}"
-                            Text="{CompiledBinding Translation.Language}" />
+                            Text="{CompiledBinding Translation.Language.Value,
+                                                   Mode=OneWay}" />
                     </StackPanel>
                 </TabItem.Header>
                 <customControls:AutoScrollViewer Background="Transparent" Height="{Binding Path=Bounds.Height, ElementName=MainTabControl}">
@@ -977,7 +981,8 @@
                         <TextBlock
                             Classes="txt txtShadow"
                             Foreground="{StaticResource SecondaryTextColor}"
-                            Text="{CompiledBinding Translation.ApplicationShortcuts}" />
+                            Text="{CompiledBinding Translation.ApplicationShortcuts.Value,
+                                                   Mode=OneWay}" />
                     </StackPanel>
                 </TabItem.Header>
                 <Button
@@ -988,7 +993,7 @@
                     HorizontalAlignment="Left"
                     Margin="65,50,0,20"
                     Padding="0,0,7,0"
-                    ToolTip.Tip="{CompiledBinding Translation.ApplicationShortcuts,
+                    ToolTip.Tip="{CompiledBinding Translation.ApplicationShortcuts.Value,
                                                   Mode=OneWay}"
                     VerticalAlignment="Top"
                     Width="NaN">
@@ -1001,7 +1006,7 @@
                         <TextBlock
                             Classes="txt"
                             Foreground="{StaticResource SecondaryTextColor}"
-                            Text="{CompiledBinding Translation.ApplicationShortcuts,
+                            Text="{CompiledBinding Translation.ApplicationShortcuts.Value,
                                                    Mode=OneWay}" />
                     </StackPanel>
                 </Button>
@@ -1015,7 +1020,7 @@
                         <TextBlock
                             Classes="txt"
                             Foreground="{StaticResource SecondaryTextColor}"
-                            Text="{CompiledBinding Translation.FileAssociations,
+                            Text="{CompiledBinding Translation.FileAssociations.Value,
                                                    Mode=OneWay}" />
                     </StackPanel>
                 </TabItem.Header>

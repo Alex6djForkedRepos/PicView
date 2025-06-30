@@ -29,9 +29,9 @@
             <!--  Save  -->
             <MenuItem
                 Command="{CompiledBinding SaveFileCommand}"
-                Header="{CompiledBinding Translation.Save,
+                Header="{CompiledBinding Translation.Save.Value,
                                          Mode=OneWay}"
-                IsEnabled="{CompiledBinding PicViewer.ImageSource,
+                IsEnabled="{CompiledBinding PicViewer.ImageSource.Value,
                                             Converter={x:Static ObjectConverters.IsNotNull}}">
                 <MenuItem.Icon>
                     <Path
@@ -46,9 +46,9 @@
             <!--  Save as  -->
             <MenuItem
                 Command="{CompiledBinding SaveFileAsCommand}"
-                Header="{CompiledBinding Translation.SaveAs,
+                Header="{CompiledBinding Translation.SaveAs.Value,
                                          Mode=OneWay}"
-                IsEnabled="{CompiledBinding PicViewer.ImageSource,
+                IsEnabled="{CompiledBinding PicViewer.ImageSource.Value,
                                             Converter={x:Static ObjectConverters.IsNotNull}}">
                 <MenuItem.Icon>
                     <Path
@@ -64,11 +64,11 @@
             <!--  Print  -->
             <MenuItem
                 Command="{CompiledBinding PrintCommand}"
-                CommandParameter="{CompiledBinding PicViewer.FileInfo.CurrentValue.FullName,
+                CommandParameter="{CompiledBinding PicViewer.FileInfo.Value.FullName,
                                                    FallbackValue=''}"
-                Header="{CompiledBinding Translation.Print,
+                Header="{CompiledBinding Translation.Print.Value,
                                          Mode=OneWay}"
-                IsEnabled="{CompiledBinding PicViewer.ImageSource,
+                IsEnabled="{CompiledBinding PicViewer.ImageSource.Value,
                                             Converter={x:Static ObjectConverters.IsNotNull}}"
                 x:Name="PrintMenuItem">
                 <MenuItem.Icon>
@@ -84,11 +84,11 @@
             <!--  Open with  -->
             <MenuItem
                 Command="{CompiledBinding OpenWithCommand}"
-                CommandParameter="{CompiledBinding PicViewer.FileInfo.CurrentValue.FullName,
+                CommandParameter="{CompiledBinding PicViewer.FileInfo.Value.FullName,
                                                    FallbackValue=''}"
-                Header="{CompiledBinding Translation.OpenWith,
+                Header="{CompiledBinding Translation.OpenWith.Value,
                                          Mode=OneWay}"
-                IsEnabled="{CompiledBinding PicViewer.FileInfo,
+                IsEnabled="{CompiledBinding PicViewer.FileInfo.Value,
                                             Converter={x:Static ObjectConverters.IsNotNull}}"
                 x:Name="OpenWithMenuItem">
                 <MenuItem.Icon>
@@ -104,11 +104,11 @@
             <!--  Locate on disk  -->
             <MenuItem
                 Command="{CompiledBinding LocateOnDiskCommand}"
-                CommandParameter="{CompiledBinding PicViewer.FileInfo.CurrentValue.FullName,
+                CommandParameter="{CompiledBinding PicViewer.FileInfo.Value.FullName,
                                                    FallbackValue=''}"
-                Header="{CompiledBinding Translation.ShowInFolder,
+                Header="{CompiledBinding Translation.ShowInFolder.Value,
                                          Mode=OneWay}"
-                IsEnabled="{CompiledBinding PicViewer.FileInfo,
+                IsEnabled="{CompiledBinding PicViewer.FileInfo.Value,
                                             Converter={x:Static ObjectConverters.IsNotNull}}">
                 <MenuItem.Icon>
                     <Path
@@ -122,9 +122,9 @@
 
             <!--  Set as wallpaper  -->
             <MenuItem
-                Header="{CompiledBinding Translation.SetAsWallpaper,
+                Header="{CompiledBinding Translation.SetAsWallpaper.Value,
                                          Mode=OneWay}"
-                IsEnabled="{CompiledBinding PicViewer.ImageSource,
+                IsEnabled="{CompiledBinding PicViewer.ImageSource.Value,
                                             Converter={x:Static ObjectConverters.IsNotNull}}"
                 x:Name="WallpaperMenuItem">
                 <MenuItem.Icon>
@@ -139,11 +139,11 @@
                 <!--  Set as wallpaper filled  -->
                 <MenuItem
                     Command="{CompiledBinding SetAsWallpaperFilledCommand}"
-                    CommandParameter="{CompiledBinding PicViewer.FileInfo.CurrentValue.FullName,
+                    CommandParameter="{CompiledBinding PicViewer.FileInfo.Value.FullName,
                                                        FallbackValue=''}"
-                    Header="{CompiledBinding Translation.Fill,
+                    Header="{CompiledBinding Translation.Fill.Value,
                                              Mode=OneWay}"
-                    IsEnabled="{CompiledBinding PicViewer.ImageSource,
+                    IsEnabled="{CompiledBinding PicViewer.ImageSource.Value,
                                                 Converter={x:Static ObjectConverters.IsNotNull}}">
                     <MenuItem.Icon>
                         <Path
@@ -158,11 +158,11 @@
                 <!--  Set as wallpaper fit  -->
                 <MenuItem
                     Command="{CompiledBinding SetAsWallpaperFittedTask}"
-                    CommandParameter="{CompiledBinding PicViewer.FileInfo.CurrentValue.FullName,
+                    CommandParameter="{CompiledBinding PicViewer.FileInfo.Value.FullName,
                                                        FallbackValue=''}"
-                    Header="{CompiledBinding Translation.Fit,
+                    Header="{CompiledBinding Translation.Fit.Value,
                                              Mode=OneWay}"
-                    IsEnabled="{CompiledBinding PicViewer.ImageSource,
+                    IsEnabled="{CompiledBinding PicViewer.ImageSource.Value,
                                                 Converter={x:Static ObjectConverters.IsNotNull}}">
                     <MenuItem.Icon>
                         <Path
@@ -177,11 +177,11 @@
                 <!--  Set as wallpaper stretched  -->
                 <MenuItem
                     Command="{CompiledBinding SetAsWallpaperStretchedCommand}"
-                    CommandParameter="{CompiledBinding PicViewer.FileInfo.CurrentValue.FullName,
+                    CommandParameter="{CompiledBinding PicViewer.FileInfo.Value.FullName,
                                                        FallbackValue=''}"
-                    Header="{CompiledBinding Translation.Stretch,
+                    Header="{CompiledBinding Translation.Stretch.Value,
                                              Mode=OneWay}"
-                    IsEnabled="{CompiledBinding PicViewer.ImageSource,
+                    IsEnabled="{CompiledBinding PicViewer.ImageSource.Value,
                                                 Converter={x:Static ObjectConverters.IsNotNull}}">
                     <MenuItem.Icon>
                         <Path
@@ -198,11 +198,11 @@
                 <!--  Set as wallpaper centered  -->
                 <MenuItem
                     Command="{CompiledBinding SetAsWallpaperCenteredCommand}"
-                    CommandParameter="{CompiledBinding PicViewer.FileInfo.CurrentValue.FullName,
+                    CommandParameter="{CompiledBinding PicViewer.FileInfo.Value.FullName,
                                                        FallbackValue=''}"
-                    Header="{CompiledBinding Translation.Center,
+                    Header="{CompiledBinding Translation.Center.Value,
                                              Mode=OneWay}"
-                    IsEnabled="{CompiledBinding PicViewer.ImageSource,
+                    IsEnabled="{CompiledBinding PicViewer.ImageSource.Value,
                                                 Converter={x:Static ObjectConverters.IsNotNull}}">
                     <MenuItem.Icon>
                         <Path
@@ -217,11 +217,11 @@
                 <!--  Set as wallpaper tiled  -->
                 <MenuItem
                     Command="{CompiledBinding SetAsWallpaperTiledCommand}"
-                    CommandParameter="{CompiledBinding PicViewer.FileInfo.CurrentValue.FullName,
+                    CommandParameter="{CompiledBinding PicViewer.FileInfo.Value.FullName,
                                                        FallbackValue=''}"
-                    Header="{CompiledBinding Translation.Tile,
+                    Header="{CompiledBinding Translation.Tile.Value,
                                              Mode=OneWay}"
-                    IsEnabled="{CompiledBinding PicViewer.ImageSource,
+                    IsEnabled="{CompiledBinding PicViewer.ImageSource.Value,
                                                 Converter={x:Static ObjectConverters.IsNotNull}}">
                     <MenuItem.Icon>
                         <Path
@@ -237,11 +237,11 @@
             <!--  File properties  -->
             <MenuItem
                 Command="{CompiledBinding FilePropertiesCommand}"
-                CommandParameter="{CompiledBinding PicViewer.FileInfo.CurrentValue.FullName,
+                CommandParameter="{CompiledBinding PicViewer.FileInfo.Value.FullName,
                                                    FallbackValue=''}"
-                Header="{CompiledBinding Translation.FileProperties,
+                Header="{CompiledBinding Translation.FileProperties.Value,
                                          Mode=OneWay}"
-                IsEnabled="{CompiledBinding PicViewer.FileInfo,
+                IsEnabled="{CompiledBinding PicViewer.FileInfo.Value,
                                             Converter={x:Static ObjectConverters.IsNotNull}}">
                 <MenuItem.Icon>
                     <Path
@@ -256,7 +256,7 @@
             <!--  Optimize image  -->
             <MenuItem
                 Command="{CompiledBinding OptimizeImageCommand}"
-                Header="{CompiledBinding Translation.OptimizeImage,
+                Header="{CompiledBinding Translation.OptimizeImage.Value,
                                          Mode=OneWay}"
                 IsEnabled="{CompiledBinding ShouldOptimizeImageBeEnabled,
                                             Mode=OneWay}">
@@ -273,11 +273,11 @@
             <!--  Delete file  -->
             <MenuItem
                 Command="{CompiledBinding RecycleFileCommand}"
-                CommandParameter="{CompiledBinding PicViewer.FileInfo.CurrentValue.FullName,
+                CommandParameter="{CompiledBinding PicViewer.FileInfo.Value.FullName,
                                                    FallbackValue=''}"
-                Header="{CompiledBinding Translation.DeleteFile,
+                Header="{CompiledBinding Translation.DeleteFile.Value,
                                          Mode=OneWay}"
-                IsEnabled="{CompiledBinding PicViewer.FileInfo,
+                IsEnabled="{CompiledBinding PicViewer.FileInfo.Value,
                                             Converter={x:Static ObjectConverters.IsNotNull}}">
                 <MenuItem.Icon>
                     <Path
@@ -294,9 +294,9 @@
             <!--  Copy  -->
             <MenuItem
                 Command="{CompiledBinding CopyFileCommand}"
-                CommandParameter="{CompiledBinding PicViewer.FileInfo.CurrentValue.FullName,
+                CommandParameter="{CompiledBinding PicViewer.FileInfo.Value.FullName,
                                                    FallbackValue=''}"
-                Header="{CompiledBinding Translation.Copy,
+                Header="{CompiledBinding Translation.Copy.Value,
                                          Mode=OneWay}">
                 <MenuItem.Icon>
                     <Path
@@ -310,11 +310,11 @@
                 <!--  Copy file  -->
                 <MenuItem
                     Command="{CompiledBinding CopyFileCommand}"
-                    CommandParameter="{CompiledBinding PicViewer.FileInfo.CurrentValue.FullName,
+                    CommandParameter="{CompiledBinding PicViewer.FileInfo.Value.FullName,
                                                        FallbackValue=''}"
-                    Header="{CompiledBinding Translation.CopyFile,
+                    Header="{CompiledBinding Translation.CopyFile.Value,
                                              Mode=OneWay}"
-                    IsEnabled="{CompiledBinding PicViewer.FileInfo,
+                    IsEnabled="{CompiledBinding PicViewer.FileInfo.Value,
                                                 Converter={x:Static ObjectConverters.IsNotNull}}">
                     <MenuItem.Icon>
                         <Path
@@ -329,9 +329,9 @@
                 <!--  Copy image  -->
                 <MenuItem
                     Command="{CompiledBinding CopyImageCommand}"
-                    Header="{CompiledBinding Translation.CopyImage,
+                    Header="{CompiledBinding Translation.CopyImage.Value,
                                              Mode=OneWay}"
-                    IsEnabled="{CompiledBinding PicViewer.ImageSource,
+                    IsEnabled="{CompiledBinding PicViewer.ImageSource.Value,
                                                 Converter={x:Static ObjectConverters.IsNotNull}}">
                     <MenuItem.Icon>
                         <Path
@@ -346,10 +346,10 @@
                 <!--  Copy file path  -->
                 <MenuItem
                     Command="{CompiledBinding CopyFilePathCommand}"
-                    CommandParameter="{CompiledBinding PicViewer.FileInfo.CurrentValue.FullName,
+                    CommandParameter="{CompiledBinding PicViewer.FileInfo.Value.FullName,
                                                        FallbackValue=''}"
                     Header="{Binding Translation.FileCopyPath, Mode=OneWay}"
-                    IsEnabled="{CompiledBinding PicViewer.FileInfo,
+                    IsEnabled="{CompiledBinding PicViewer.FileInfo.Value,
                                                 Converter={x:Static ObjectConverters.IsNotNull}}">
                     <MenuItem.Icon>
                         <Path
@@ -364,9 +364,9 @@
                 <!--  Copy base64  -->
                 <MenuItem
                     Command="{CompiledBinding CopyBase64Command}"
-                    CommandParameter="{CompiledBinding PicViewer.FileInfo.CurrentValue.FullName,
+                    CommandParameter="{CompiledBinding PicViewer.FileInfo.Value.FullName,
                                                        FallbackValue=''}"
-                    IsEnabled="{CompiledBinding PicViewer.FileInfo,
+                    IsEnabled="{CompiledBinding PicViewer.FileInfo.Value,
                                                 Converter={x:Static ObjectConverters.IsNotNull}}">
                     <MenuItem.Header>
                         <TextBlock>
@@ -389,11 +389,11 @@
                 <!--  Duplicate file  -->
                 <MenuItem
                     Command="{CompiledBinding DuplicateFileCommand}"
-                    CommandParameter="{CompiledBinding PicViewer.FileInfo.CurrentValue.FullName,
+                    CommandParameter="{CompiledBinding PicViewer.FileInfo.Value.FullName,
                                                        FallbackValue=''}"
                     Header="{CompiledBinding Translation.DuplicateFile,
                                              Mode=OneWay}"
-                    IsEnabled="{CompiledBinding PicViewer.FileInfo,
+                    IsEnabled="{CompiledBinding PicViewer.FileInfo.Value,
                                                 Converter={x:Static ObjectConverters.IsNotNull}}">
                     <MenuItem.Icon>
                         <Path
@@ -405,30 +405,12 @@
                     </MenuItem.Icon>
                 </MenuItem>
 
-                <!--  Cut  -->
-                <!--  <MenuItem  -->
-                <!--  Command="{CompiledBinding CutCommand}"  -->
-                <!--  CommandParameter="{CompiledBinding PicViewer.FileInfo.FullName,  -->
-                <!--  FallbackValue=''}"  -->
-                <!--  Header="{CompiledBinding Translation.FileCut,  -->
-                <!--  Mode=OneWay}"  -->
-                <!--  IsEnabled="False">  -->
-                <!--     <MenuItem.Icon> -->
-                <!--  <Path  -->
-                <!--  Data="{StaticResource CutGeometry}"  -->
-                <!--  Fill="{StaticResource Brush0}"  -->
-                <!--  Height="12"  -->
-                <!--  Stretch="Fill"  -->
-                <!--  Width="12" />  -->
-                <!--     </MenuItem.Icon> -->
-                <!-- </MenuItem> -->
-
             </MenuItem>
 
             <Separator />
 
             <!--  Close  -->
-            <MenuItem Header="{CompiledBinding Translation.Close, Mode=OneWay}" x:Name="CloseItem">
+            <MenuItem Header="{CompiledBinding Translation.Close.Value, Mode=OneWay}" x:Name="CloseItem">
                 <MenuItem.Icon>
                     <Path
                         Data="{StaticResource CloseGeometry}"
@@ -458,20 +440,20 @@
                         <TextBlock
                             Classes="txt"
                             Margin="0,8,0,0"
-                            Text="{CompiledBinding Translation.FileName,
+                            Text="{CompiledBinding Translation.FileName.Value,
                                                    Mode=OneWay}"
                             Width="100" />
                         <customControls:FuncTextBox
                             Background="{DynamicResource SecondaryBackgroundColor}"
                             Classes="hover TStyle x"
                             Foreground="{StaticResource SecondaryTextColor}"
-                            Text="{Binding PicViewer.FileInfo.CurrentValue.Name, FallbackValue=''}"
+                            Text="{Binding PicViewer.FileInfo.Value.Name, FallbackValue=''}"
                             x:Name="FileNameTextBox" />
                         <customControls:CopyButton
                             Classes="altHover BorderStyle"
-                            CopyText="{CompiledBinding PicViewer.FileInfo.CurrentValue.Name,
+                            CopyText="{CompiledBinding PicViewer.FileInfo.Value.Name,
                                                        FallbackValue=''}"
-                            ToolTip.Tip="{CompiledBinding Translation.Copy,
+                            ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                           Mode=OneWay}">
                             <Path
                                 Data="{StaticResource CopyGeometry}"
@@ -487,21 +469,22 @@
                         <TextBlock
                             Classes="txt"
                             Margin="0,8,0,0"
-                            Text="{CompiledBinding Translation.Folder,
+                            Text="{CompiledBinding Translation.Folder.Value,
                                                    Mode=OneWay}"
                             Width="100" />
                         <customControls:FuncTextBox
                             Background="{DynamicResource SecondaryBackgroundColor}"
                             Classes="hover TStyle x"
                             Foreground="{StaticResource SecondaryTextColor}"
-                            Text="{CompiledBinding PicViewer.FileInfo.CurrentValue.DirectoryName,
+                            Text="{CompiledBinding PicViewer.FileInfo.Value.DirectoryName,
                                                    FallbackValue=''}"
                             x:Name="DirectoryNameTextBox" />
                         <customControls:CopyButton
                             Classes="altHover BorderStyle"
-                            CopyText="{CompiledBinding PicViewer.FileInfo.CurrentValue.DirectoryName,
+                            CopyText="{CompiledBinding PicViewer.FileInfo.Value.DirectoryName,
                                                        FallbackValue=''}"
-                            ToolTip.Tip="{CompiledBinding Translation.Copy}">
+                            ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
+                                                          Mode=OneWay}">
                             <Path
                                 Data="{StaticResource CopyGeometry}"
                                 Fill="{StaticResource SecondaryTextColor}"
@@ -516,21 +499,21 @@
                         <TextBlock
                             Classes="txt"
                             Margin="0,8,0,0"
-                            Text="{CompiledBinding Translation.FullPath,
+                            Text="{CompiledBinding Translation.FullPath.Value,
                                                    Mode=OneWay}"
                             Width="100" />
                         <customControls:FuncTextBox
                             Background="{DynamicResource SecondaryBackgroundColor}"
                             Classes="hover TStyle x"
                             Foreground="{StaticResource SecondaryTextColor}"
-                            Text="{CompiledBinding PicViewer.FileInfo.CurrentValue.FullName,
+                            Text="{CompiledBinding PicViewer.FileInfo.Value.FullName,
                                                    FallbackValue=''}"
                             x:Name="FullPathTextBox" />
                         <customControls:CopyButton
                             Classes="altHover BorderStyle"
-                            CopyText="{CompiledBinding PicViewer.FileInfo.CurrentValue.FullName,
+                            CopyText="{CompiledBinding PicViewer.FileInfo.Value.FullName,
                                                        FallbackValue=''}"
-                            ToolTip.Tip="{CompiledBinding Translation.Copy,
+                            ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                           Mode=OneWay}">
                             <Path
                                 Data="{StaticResource CopyGeometry}"
@@ -546,19 +529,19 @@
                         <TextBlock
                             Classes="txt"
                             Margin="0,8,0,0"
-                            Text="{CompiledBinding Translation.Created,
+                            Text="{CompiledBinding Translation.Created.Value,
                                                    Mode=OneWay}"
                             Width="100" />
                         <customControls:FuncTextBox
                             Classes=" TStyle x"
                             IsReadOnly="True"
-                            Text="{CompiledBinding PicViewer.FileInfo.CurrentValue.CreationTime,
+                            Text="{CompiledBinding PicViewer.FileInfo.Value.CreationTime,
                                                    FallbackValue=''}" />
                         <customControls:CopyButton
                             Classes="altHover BorderStyle"
-                            CopyText="{CompiledBinding PicViewer.FileInfo.CurrentValue.CreationTime,
+                            CopyText="{CompiledBinding PicViewer.FileInfo.Value.CreationTime,
                                                        FallbackValue=''}"
-                            ToolTip.Tip="{CompiledBinding Translation.Copy,
+                            ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                           Mode=OneWay}">
                             <Path
                                 Data="{StaticResource CopyGeometry}"
@@ -574,19 +557,20 @@
                         <TextBlock
                             Classes="txt"
                             Margin="0,8,0,0"
-                            Text="{CompiledBinding Translation.Modified,
+                            Text="{CompiledBinding Translation.Modified.Value,
                                                    Mode=OneWay}"
                             Width="100" />
                         <customControls:FuncTextBox
                             Classes=" TStyle x"
                             IsReadOnly="True"
-                            Text="{CompiledBinding PicViewer.FileInfo.CurrentValue.LastWriteTime,
+                            Text="{CompiledBinding PicViewer.FileInfo.Value.LastWriteTime,
                                                    FallbackValue=''}" />
                         <customControls:CopyButton
                             Classes="altHover BorderStyle"
-                            CopyText="{CompiledBinding PicViewer.FileInfo.CurrentValue.LastWriteTime,
+                            CopyText="{CompiledBinding PicViewer.FileInfo.Value.LastWriteTime,
                                                        FallbackValue=''}"
-                            ToolTip.Tip="{CompiledBinding Translation.Copy}">
+                            ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
+                                                          Mode=OneWay}">
                             <Path
                                 Data="{StaticResource CopyGeometry}"
                                 Fill="{StaticResource SecondaryTextColor}"
@@ -601,19 +585,19 @@
                         <TextBlock
                             Classes="txt"
                             Margin="0,8,0,0"
-                            Text="{CompiledBinding Translation.LastAccessTime,
+                            Text="{CompiledBinding Translation.LastAccessTime.Value,
                                                    Mode=OneWay}"
                             Width="100" />
                         <customControls:FuncTextBox
                             Classes=" TStyle x"
                             IsReadOnly="True"
-                            Text="{CompiledBinding PicViewer.FileInfo.CurrentValue.LastAccessTime,
+                            Text="{CompiledBinding PicViewer.FileInfo.Value.LastAccessTime,
                                                    FallbackValue=''}" />
                         <customControls:CopyButton
                             Classes="altHover BorderStyle"
-                            CopyText="{CompiledBinding PicViewer.FileInfo.CurrentValue.LastAccessTime,
+                            CopyText="{CompiledBinding PicViewer.FileInfo.Value.LastAccessTime,
                                                        FallbackValue=''}"
-                            ToolTip.Tip="{CompiledBinding Translation.Copy,
+                            ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                           Mode=OneWay}">
                             <Path
                                 Data="{StaticResource CopyGeometry}"
@@ -629,7 +613,7 @@
                         <TextBlock
                             Classes="txt"
                             Margin="0,8,0,0"
-                            Text="{CompiledBinding Translation.BitDepth,
+                            Text="{CompiledBinding Translation.BitDepth.Value,
                                                    Mode=OneWay}"
                             Width="100" />
                         <customControls:FuncTextBox
@@ -641,7 +625,7 @@
                             Classes="altHover BorderStyle"
                             CopyText="{CompiledBinding Exif.BitDepth,
                                                        Mode=OneWay}"
-                            ToolTip.Tip="{CompiledBinding Translation.Copy,
+                            ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                           Mode=OneWay}">
                             <Path
                                 Data="{StaticResource CopyGeometry}"
@@ -660,21 +644,21 @@
                         <TextBlock
                             Classes="txt"
                             Margin="0,8,0,0"
-                            Text="{CompiledBinding Translation.Width,
+                            Text="{CompiledBinding Translation.Width.Value,
                                                    Mode=OneWay}"
                             Width="100" />
                         <customControls:NumTextBox
                             Background="{DynamicResource SecondaryBackgroundColor}"
                             Classes="hover TStyle x"
                             Foreground="{StaticResource SecondaryTextColor}"
-                            Text="{CompiledBinding PicViewer.PixelWidth,
+                            Text="{CompiledBinding PicViewer.PixelWidth.Value,
                                                    Mode=OneWay}"
-                            ToolTip.Tip="{CompiledBinding Translation.SizeTooltip,
+                            ToolTip.Tip="{CompiledBinding Translation.SizeTooltip.Value,
                                                           Mode=OneWay}"
                             x:Name="PixelWidthTextBox" />
                         <customControls:CopyButton
                             Classes="altHover BorderStyle"
-                            CopyText="{CompiledBinding PicViewer.PixelWidth,
+                            CopyText="{CompiledBinding PicViewer.PixelWidth.Value,
                                                        Mode=OneWay}"
                             ToolTip.Tip="{CompiledBinding Translation.Copy,
                                                           Mode=OneWay}">
@@ -692,23 +676,24 @@
                         <TextBlock
                             Classes="txt"
                             Margin="0,8,0,0"
-                            Text="{CompiledBinding Translation.Height,
+                            Text="{CompiledBinding Translation.Height.Value,
                                                    Mode=OneWay}"
                             Width="100" />
                         <customControls:NumTextBox
                             Background="{DynamicResource SecondaryBackgroundColor}"
                             Classes="hover TStyle x"
                             Foreground="{StaticResource SecondaryTextColor}"
-                            Text="{CompiledBinding PicViewer.PixelHeight,
+                            Text="{CompiledBinding PicViewer.PixelHeight.Value,
                                                    Mode=OneWay}"
-                            ToolTip.Tip="{CompiledBinding Translation.SizeTooltip,
+                            ToolTip.Tip="{CompiledBinding Translation.SizeTooltip.Value,
                                                           Mode=OneWay}"
                             x:Name="PixelHeightTextBox" />
                         <customControls:CopyButton
                             Classes="altHover BorderStyle"
-                            CopyText="{CompiledBinding PicViewer.PixelHeight,
+                            CopyText="{CompiledBinding PicViewer.PixelHeight.Value,
                                                        Mode=OneWay}"
-                            ToolTip.Tip="{CompiledBinding Translation.Copy}">
+                            ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
+                                                          Mode=OneWay}">
                             <Path
                                 Data="{StaticResource CopyGeometry}"
                                 Fill="{StaticResource SecondaryTextColor}"
@@ -723,7 +708,7 @@
                         <TextBlock
                             Classes="txt"
                             Margin="0,8,0,0"
-                            Text="{CompiledBinding Translation.SizeMp,
+                            Text="{CompiledBinding Translation.SizeMp.Value,
                                                    Mode=OneWay}"
                             Width="100" />
                         <customControls:FuncTextBox
@@ -736,7 +721,7 @@
                             Classes="altHover BorderStyle"
                             CopyText="{CompiledBinding Exif.SizeMp,
                                                        Mode=OneWay}"
-                            ToolTip.Tip="{CompiledBinding Translation.Copy,
+                            ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                           Mode=OneWay}">
                             <Path
                                 Data="{StaticResource CopyGeometry}"
@@ -752,7 +737,7 @@
                         <TextBlock
                             Classes="txt"
                             Margin="0,8,0,0"
-                            Text="{CompiledBinding Translation.Resolution,
+                            Text="{CompiledBinding Translation.Resolution.Value,
                                                    Mode=OneWay}"
                             Width="100"
                             x:Name="ResolutionTextBlock" />
@@ -781,7 +766,7 @@
                         <TextBlock
                             Classes="txt"
                             Margin="0,8,0,0"
-                            Text="{CompiledBinding Translation.PrintSizeCm,
+                            Text="{CompiledBinding Translation.PrintSizeCm.Value,
                                                    Mode=OneWay}"
                             Width="100" />
                         <customControls:FuncTextBox
@@ -794,7 +779,7 @@
                             Classes="altHover BorderStyle"
                             CopyText="{CompiledBinding Exif.PrintSizeCm,
                                                        Mode=OneWay}"
-                            ToolTip.Tip="{CompiledBinding Translation.Copy,
+                            ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                           Mode=OneWay}">
                             <Path
                                 Data="{StaticResource CopyGeometry}"
@@ -810,7 +795,7 @@
                         <TextBlock
                             Classes="txt"
                             Margin="0,8,0,0"
-                            Text="{CompiledBinding Translation.PrintSizeIn,
+                            Text="{CompiledBinding Translation.PrintSizeIn.Value,
                                                    Mode=OneWay}"
                             Width="100" />
                         <customControls:FuncTextBox
@@ -823,7 +808,7 @@
                             Classes="altHover BorderStyle"
                             CopyText="{CompiledBinding Exif.PrintSizeInch,
                                                        Mode=OneWay}"
-                            ToolTip.Tip="{CompiledBinding Translation.Copy,
+                            ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                           Mode=OneWay}">
                             <Path
                                 Data="{StaticResource CopyGeometry}"
@@ -839,7 +824,7 @@
                         <TextBlock
                             Classes="txt"
                             Margin="0,8,0,0"
-                            Text="{CompiledBinding Translation.ReadAbleAspectRatio,
+                            Text="{CompiledBinding Translation.ReadAbleAspectRatio.Value,
                                                    Mode=OneWay}"
                             Width="100" />
                         <customControls:FuncTextBox
@@ -852,7 +837,7 @@
                             Classes="altHover BorderStyle"
                             CopyText="{CompiledBinding Exif.AspectRatio,
                                                        Mode=OneWay}"
-                            ToolTip.Tip="{CompiledBinding Translation.Copy,
+                            ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                           Mode=OneWay}">
                             <Path
                                 Data="{StaticResource CopyGeometry}"
@@ -870,7 +855,7 @@
                         Classes="txt"
                         FontSize="16"
                         Margin="0,25,0,10"
-                        Text="{CompiledBinding Translation.ConvertTo,
+                        Text="{CompiledBinding Translation.ConvertTo.Value,
                                                Mode=OneWay}"
                         TextAlignment="Center" />
                     <ComboBox
@@ -883,7 +868,7 @@
                         SelectedIndex="0"
                         Width="140"
                         x:Name="ConversionComboBox">
-                        <ComboBoxItem Content="{CompiledBinding Translation.NoConversion, Mode=OneWay}" x:Name="NoConversion" />
+                        <ComboBoxItem Content="{CompiledBinding Translation.NoConversion.Value, Mode=OneWay}" x:Name="NoConversion" />
                         <ComboBoxItem Content=".png" x:Name="PngItem" />
                         <ComboBoxItem Content=".jpg" x:Name="JpgItem" />
                         <ComboBoxItem Content=".webp" x:Name="WebpItem" />
@@ -902,7 +887,7 @@
                         x:Name="SaveButton">
                         <TextBlock
                             Classes="txt"
-                            Text="{CompiledBinding Translation.Save,
+                            Text="{CompiledBinding Translation.Save.Value,
                                                    Mode=OneWay}"
                             TextAlignment="Center" />
                         <SplitButton.Flyout>
@@ -914,7 +899,7 @@
                                     <TextBlock
                                         Classes="txt"
                                         Foreground="{DynamicResource MainTextColor}"
-                                        Text="{CompiledBinding Translation.SaveAs,
+                                        Text="{CompiledBinding Translation.SaveAs.Value,
                                                                Mode=OneWay}"
                                         TextAlignment="Center" />
                                 </Button>
@@ -931,7 +916,7 @@
                         x:Name="ResetButton">
                         <TextBlock
                             Classes="txt"
-                            Text="{CompiledBinding Translation.Reset,
+                            Text="{CompiledBinding Translation.Reset.Value,
                                                    Mode=OneWay}"
                             TextAlignment="Center" />
                     </Button>
@@ -965,7 +950,7 @@
                         <TextBlock
                             Classes="txt"
                             Margin="0,8,2,0"
-                            Text="{CompiledBinding Translation.DateTaken,
+                            Text="{CompiledBinding Translation.DateTaken.Value,
                                                    Mode=OneWay}"
                             Width="100" />
                         <customControls:FuncTextBox
@@ -978,7 +963,7 @@
                             Classes="altHover BorderStyle"
                             CopyText="{CompiledBinding Exif.DateTaken,
                                                        Mode=OneWay}"
-                            ToolTip.Tip="{CompiledBinding Translation.Copy,
+                            ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                           Mode=OneWay}">
                             <Path
                                 Data="{StaticResource CopyGeometry}"
@@ -993,7 +978,7 @@
                         <TextBlock
                             Classes="txt"
                             Margin="0,8,2,0"
-                            Text="{CompiledBinding Translation.Authors,
+                            Text="{CompiledBinding Translation.Authors.Value,
                                                    Mode=OneWay}"
                             Width="100" />
                         <customControls:FuncTextBox
@@ -1006,7 +991,7 @@
                             Classes="altHover BorderStyle"
                             CopyText="{CompiledBinding Exif.Authors,
                                                        Mode=OneWay}"
-                            ToolTip.Tip="{CompiledBinding Translation.Copy,
+                            ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                           Mode=OneWay}">
                             <Path
                                 Data="{StaticResource CopyGeometry}"
@@ -1023,7 +1008,7 @@
                         <TextBlock
                             Classes="txt"
                             Margin="0,8,2,0"
-                            Text="{CompiledBinding Translation.Copyright,
+                            Text="{CompiledBinding Translation.Copyright.Value,
                                                    Mode=OneWay}"
                             Width="100" />
                         <customControls:FuncTextBox
@@ -1036,7 +1021,7 @@
                             Classes="altHover BorderStyle"
                             CopyText="{CompiledBinding Exif.Copyright,
                                                        Mode=OneWay}"
-                            ToolTip.Tip="{CompiledBinding Translation.Copy,
+                            ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                           Mode=OneWay}">
                             <Path
                                 Data="{StaticResource CopyGeometry}"
@@ -1051,7 +1036,7 @@
                         <TextBlock
                             Classes="txt"
                             Margin="0,8,2,0"
-                            Text="{CompiledBinding Translation.Software,
+                            Text="{CompiledBinding Translation.Software.Value,
                                                    Mode=OneWay}"
                             Width="100" />
                         <customControls:FuncTextBox
@@ -1064,7 +1049,7 @@
                             Classes="altHover BorderStyle"
                             CopyText="{CompiledBinding Exif.Software,
                                                        Mode=OneWay}"
-                            ToolTip.Tip="{CompiledBinding Translation.Copy,
+                            ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                           Mode=OneWay}">
                             <Path
                                 Data="{StaticResource CopyGeometry}"
@@ -1082,7 +1067,7 @@
                             <TextBlock
                                 Classes="txt"
                                 Margin="0,8,2,0"
-                                Text="{CompiledBinding Translation.Title,
+                                Text="{CompiledBinding Translation.Title.Value,
                                                        Mode=OneWay}"
                                 Width="100" />
                             <customControls:FuncTextBox
@@ -1095,7 +1080,7 @@
                                 Classes="altHover BorderStyle"
                                 CopyText="{CompiledBinding Exif.Title,
                                                            Mode=OneWay}"
-                                ToolTip.Tip="{CompiledBinding Translation.Copy,
+                                ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                               Mode=OneWay}">
                                 <Path
                                     Data="{StaticResource CopyGeometry}"
@@ -1110,7 +1095,7 @@
                             <TextBlock
                                 Classes="txt"
                                 Margin="0,8,2,0"
-                                Text="{CompiledBinding Translation.Subject,
+                                Text="{CompiledBinding Translation.Subject.Value,
                                                        Mode=OneWay}"
                                 Width="100" />
                             <customControls:FuncTextBox
@@ -1123,7 +1108,7 @@
                                 Classes="altHover BorderStyle"
                                 CopyText="{CompiledBinding Exif.Subject,
                                                            Mode=OneWay}"
-                                ToolTip.Tip="{CompiledBinding Translation.Copy,
+                                ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                               Mode=OneWay}">
                                 <Path
                                     Data="{StaticResource CopyGeometry}"
@@ -1154,7 +1139,7 @@
                         Classes="altHover BorderStyle"
                         CopyText="{CompiledBinding Exif.Comment,
                                                    Mode=OneWay}"
-                        ToolTip.Tip="{CompiledBinding Translation.Copy,
+                        ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                       Mode=OneWay}">
                         <Path
                             Data="{StaticResource CopyGeometry}"
@@ -1194,7 +1179,7 @@
                         <TextBlock
                             Classes="txt"
                             Margin="0,8,2,0"
-                            Text="{CompiledBinding Translation.Latitude,
+                            Text="{CompiledBinding Translation.Latitude.Value,
                                                    Mode=OneWay}"
                             Width="100" />
                         <customControls:FuncTextBox
@@ -1207,7 +1192,7 @@
                             Classes="altHover BorderStyle"
                             CopyText="{CompiledBinding Exif.Latitude,
                                                        Mode=OneWay}"
-                            ToolTip.Tip="{CompiledBinding Translation.Copy,
+                            ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                           Mode=OneWay}">
                             <Path
                                 Data="{StaticResource CopyGeometry}"
@@ -1223,7 +1208,7 @@
                         <TextBlock
                             Classes="txt"
                             Margin="0,8,2,0"
-                            Text="{CompiledBinding Translation.Longitude,
+                            Text="{CompiledBinding Translation.Longitude.Value,
                                                    Mode=OneWay}"
                             Width="100" />
                         <customControls:FuncTextBox
@@ -1236,7 +1221,7 @@
                             Classes="altHover BorderStyle"
                             CopyText="{CompiledBinding Exif.Longitude,
                                                        Mode=OneWay}"
-                            ToolTip.Tip="{CompiledBinding Translation.Copy,
+                            ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                           Mode=OneWay}">
                             <Path
                                 Data="{StaticResource CopyGeometry}"
@@ -1266,7 +1251,7 @@
                         Classes="altHover BorderStyle"
                         CopyText="{CompiledBinding Exif.Altitude,
                                                    Mode=OneWay}"
-                        ToolTip.Tip="{CompiledBinding Translation.Copy,
+                        ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                       Mode=OneWay}">
                         <Path
                             Data="{StaticResource CopyGeometry}"
@@ -1335,7 +1320,7 @@
                         <TextBlock
                             Classes="txt"
                             Margin="0,8,2,0"
-                            Text="{CompiledBinding Translation.ResolutionUnit,
+                            Text="{CompiledBinding Translation.ResolutionUnit.Value,
                                                    Mode=OneWay}"
                             Width="100" />
                         <customControls:FuncTextBox
@@ -1348,7 +1333,7 @@
                             Classes="altHover BorderStyle"
                             CopyText="{CompiledBinding Exif.ResolutionUnit,
                                                        Mode=OneWay}"
-                            ToolTip.Tip="{CompiledBinding Translation.Copy,
+                            ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                           Mode=OneWay}">
                             <Path
                                 Data="{StaticResource CopyGeometry}"
@@ -1364,7 +1349,7 @@
                         <TextBlock
                             Classes="txt"
                             Margin="0,8,2,0"
-                            Text="{CompiledBinding Translation.ColorRepresentation,
+                            Text="{CompiledBinding Translation.ColorRepresentation.Value,
                                                    Mode=OneWay}"
                             Width="100" />
                         <customControls:FuncTextBox
@@ -1377,7 +1362,7 @@
                             Classes="altHover BorderStyle"
                             CopyText="{CompiledBinding Exif.ColorRepresentation,
                                                        Mode=OneWay}"
-                            ToolTip.Tip="{CompiledBinding Translation.Copy,
+                            ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                           Mode=OneWay}">
                             <Path
                                 Data="{StaticResource CopyGeometry}"
@@ -1396,7 +1381,7 @@
                             <TextBlock
                                 Classes="txt"
                                 Margin="0,8,2,0"
-                                Text="{CompiledBinding Translation.Compression,
+                                Text="{CompiledBinding Translation.Compression.Value,
                                                        Mode=OneWay}"
                                 Width="100" />
                             <customControls:FuncTextBox
@@ -1409,7 +1394,7 @@
                                 Classes="altHover BorderStyle"
                                 CopyText="{CompiledBinding Exif.Compression,
                                                            Mode=OneWay}"
-                                ToolTip.Tip="{CompiledBinding Translation.Copy,
+                                ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                               Mode=OneWay}">
                                 <Path
                                     Data="{StaticResource CopyGeometry}"
@@ -1424,7 +1409,7 @@
                             <TextBlock
                                 Classes="txt"
                                 Margin="0,8,2,0"
-                                Text="{CompiledBinding Translation.CompressedBitsPixel,
+                                Text="{CompiledBinding Translation.CompressedBitsPixel.Value,
                                                        Mode=OneWay}"
                                 Width="100" />
                             <customControls:FuncTextBox
@@ -1437,7 +1422,7 @@
                                 Classes="altHover BorderStyle"
                                 CopyText="{CompiledBinding Exif.CompressedBitsPixel,
                                                            Mode=OneWay}"
-                                ToolTip.Tip="{CompiledBinding Translation.Copy,
+                                ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                               Mode=OneWay}">
                                 <Path
                                     Data="{StaticResource CopyGeometry}"
@@ -1485,7 +1470,7 @@
                         <TextBlock
                             Classes="txt"
                             Margin="0,8,2,0"
-                            Text="{CompiledBinding Translation.CameraMaker,
+                            Text="{CompiledBinding Translation.CameraMaker.Value,
                                                    Mode=OneWay}"
                             Width="100" />
                         <customControls:FuncTextBox
@@ -1513,7 +1498,7 @@
                         <TextBlock
                             Classes="txt"
                             Margin="0,8,2,0"
-                            Text="{CompiledBinding Translation.CameraModel,
+                            Text="{CompiledBinding Translation.CameraModel.Value,
                                                    Mode=OneWay}"
                             Width="100" />
                         <customControls:FuncTextBox
@@ -1526,7 +1511,7 @@
                             Classes="altHover BorderStyle"
                             CopyText="{CompiledBinding Exif.CameraModel,
                                                        Mode=OneWay}"
-                            ToolTip.Tip="{CompiledBinding Translation.Copy,
+                            ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                           Mode=OneWay}">
                             <Path
                                 Data="{StaticResource CopyGeometry}"
@@ -1544,7 +1529,7 @@
                             <TextBlock
                                 Classes="txt"
                                 Margin="0,8,2,0"
-                                Text="{CompiledBinding Translation.Fstop,
+                                Text="{CompiledBinding Translation.Fstop.Value,
                                                        Mode=OneWay}"
                                 Width="100" />
                             <customControls:FuncTextBox
@@ -1557,7 +1542,7 @@
                                 Classes="altHover BorderStyle"
                                 CopyText="{CompiledBinding Exif.FNumber,
                                                            Mode=OneWay}"
-                                ToolTip.Tip="{CompiledBinding Translation.Copy,
+                                ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                               Mode=OneWay}">
                                 <Path
                                     Data="{StaticResource CopyGeometry}"
@@ -1572,7 +1557,7 @@
                             <TextBlock
                                 Classes="txt"
                                 Margin="0,8,2,0"
-                                Text="{CompiledBinding Translation.MaxAperture,
+                                Text="{CompiledBinding Translation.MaxAperture.Value,
                                                        Mode=OneWay}"
                                 Width="100" />
                             <customControls:FuncTextBox
@@ -1585,7 +1570,7 @@
                                 Classes="altHover BorderStyle"
                                 CopyText="{CompiledBinding Exif.LensMaker,
                                                            Mode=OneWay}"
-                                ToolTip.Tip="{CompiledBinding Translation.Copy,
+                                ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                               Mode=OneWay}">
                                 <Path
                                     Data="{StaticResource CopyGeometry}"
@@ -1604,7 +1589,7 @@
                             <TextBlock
                                 Classes="txt"
                                 Margin="0,8,2,0"
-                                Text="{CompiledBinding Translation.ExposureBias,
+                                Text="{CompiledBinding Translation.ExposureBias.Value,
                                                        Mode=OneWay}"
                                 Width="100" />
                             <customControls:FuncTextBox
@@ -1617,7 +1602,7 @@
                                 Classes="altHover BorderStyle"
                                 CopyText="{CompiledBinding Exif.ExposureBias,
                                                            Mode=OneWay}"
-                                ToolTip.Tip="{CompiledBinding Translation.Copy,
+                                ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                               Mode=OneWay}">
                                 <Path
                                     Data="{StaticResource CopyGeometry}"
@@ -1632,7 +1617,7 @@
                             <TextBlock
                                 Classes="txt"
                                 Margin="0,8,2,0"
-                                Text="{CompiledBinding Translation.ExposureTime,
+                                Text="{CompiledBinding Translation.ExposureTime.Value,
                                                        Mode=OneWay}"
                                 Width="100" />
                             <customControls:FuncTextBox
@@ -1645,7 +1630,7 @@
                                 Classes="altHover BorderStyle"
                                 CopyText="{CompiledBinding Exif.ExposureTime,
                                                            Mode=OneWay}"
-                                ToolTip.Tip="{CompiledBinding Translation.Copy,
+                                ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                               Mode=OneWay}">
                                 <Path
                                     Data="{StaticResource CopyGeometry}"
@@ -1664,7 +1649,7 @@
                             <TextBlock
                                 Classes="txt"
                                 Margin="0,8,2,0"
-                                Text="{CompiledBinding Translation.ExposureProgram,
+                                Text="{CompiledBinding Translation.ExposureProgram.Value,
                                                        Mode=OneWay}"
                                 Width="100" />
                             <customControls:FuncTextBox
@@ -1677,7 +1662,7 @@
                                 Classes="altHover BorderStyle"
                                 CopyText="{CompiledBinding Exif.ExposureProgram,
                                                            Mode=OneWay}"
-                                ToolTip.Tip="{CompiledBinding Translation.Copy,
+                                ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                               Mode=OneWay}">
                                 <Path
                                     Data="{StaticResource CopyGeometry}"
@@ -1692,7 +1677,7 @@
                             <TextBlock
                                 Classes="txt"
                                 Margin="0,8,2,0"
-                                Text="{Binding Translation.DigitalZoom, Mode=OneWay}"
+                                Text="{Binding Translation.DigitalZoom.Value, Mode=OneWay}"
                                 Width="100" />
                             <customControls:FuncTextBox
                                 Classes=" TStyle x"
@@ -1704,7 +1689,7 @@
                                 Classes="altHover BorderStyle"
                                 CopyText="{CompiledBinding Exif.DigitalZoom,
                                                            Mode=OneWay}"
-                                ToolTip.Tip="{CompiledBinding Translation.Copy,
+                                ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                               Mode=OneWay}">
                                 <Path
                                     Data="{StaticResource CopyGeometry}"
@@ -1723,7 +1708,7 @@
                             <TextBlock
                                 Classes="txt"
                                 Margin="0,8,2,0"
-                                Text="{CompiledBinding Translation.FocalLength,
+                                Text="{CompiledBinding Translation.FocalLength.Value,
                                                        Mode=OneWay}"
                                 Width="100" />
                             <customControls:FuncTextBox
@@ -1736,7 +1721,7 @@
                                 Classes="altHover BorderStyle"
                                 CopyText="{CompiledBinding Exif.FocalLength,
                                                            Mode=OneWay}"
-                                ToolTip.Tip="{CompiledBinding Translation.Copy,
+                                ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                               Mode=OneWay}">
                                 <Path
                                     Data="{StaticResource CopyGeometry}"
@@ -1764,7 +1749,7 @@
                                 Classes="altHover BorderStyle"
                                 CopyText="{CompiledBinding Exif.FocalLength35Mm,
                                                            Mode=OneWay}"
-                                ToolTip.Tip="{CompiledBinding Translation.Copy,
+                                ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                               Mode=OneWay}">
                                 <Path
                                     Data="{StaticResource CopyGeometry}"
@@ -1783,7 +1768,7 @@
                             <TextBlock
                                 Classes="txt"
                                 Margin="0,8,2,0"
-                                Text="{CompiledBinding Translation.ISOSpeed,
+                                Text="{CompiledBinding Translation.ISOSpeed.Value,
                                                        Mode=OneWay}"
                                 Width="100" />
                             <customControls:FuncTextBox
@@ -1796,7 +1781,7 @@
                                 Classes="altHover BorderStyle"
                                 CopyText="{CompiledBinding Exif.ISOSpeed,
                                                            Mode=OneWay}"
-                                ToolTip.Tip="{CompiledBinding Translation.Copy,
+                                ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                               Mode=OneWay}">
                                 <Path
                                     Data="{StaticResource CopyGeometry}"
@@ -1811,7 +1796,7 @@
                             <TextBlock
                                 Classes="txt"
                                 Margin="0,8,2,0"
-                                Text="{CompiledBinding Translation.MeteringMode,
+                                Text="{CompiledBinding Translation.MeteringMode.Value,
                                                        Mode=OneWay}"
                                 Width="100" />
                             <customControls:FuncTextBox
@@ -1824,7 +1809,7 @@
                                 Classes="altHover BorderStyle"
                                 CopyText="{CompiledBinding Exif.MeteringMode,
                                                            Mode=OneWay}"
-                                ToolTip.Tip="{CompiledBinding Translation.Copy,
+                                ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                               Mode=OneWay}">
                                 <Path
                                     Data="{StaticResource CopyGeometry}"
@@ -1843,7 +1828,7 @@
                             <TextBlock
                                 Classes="txt"
                                 Margin="0,8,2,0"
-                                Text="{CompiledBinding Translation.Contrast,
+                                Text="{CompiledBinding Translation.Contrast.Value,
                                                        Mode=OneWay}"
                                 Width="100" />
                             <customControls:FuncTextBox
@@ -1856,7 +1841,7 @@
                                 Classes="altHover BorderStyle"
                                 CopyText="{CompiledBinding Exif.Contrast,
                                                            Mode=OneWay}"
-                                ToolTip.Tip="{CompiledBinding Translation.Copy,
+                                ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                               Mode=OneWay}">
                                 <Path
                                     Data="{StaticResource CopyGeometry}"
@@ -1871,7 +1856,7 @@
                             <TextBlock
                                 Classes="txt"
                                 Margin="0,8,2,0"
-                                Text="{CompiledBinding Translation.Saturation,
+                                Text="{CompiledBinding Translation.Saturation.Value,
                                                        Mode=OneWay}"
                                 Width="100" />
                             <customControls:FuncTextBox
@@ -1884,7 +1869,7 @@
                                 Classes="altHover BorderStyle"
                                 CopyText="{CompiledBinding Exif.Saturation,
                                                            Mode=OneWay}"
-                                ToolTip.Tip="{CompiledBinding Translation.Copy,
+                                ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                               Mode=OneWay}">
                                 <Path
                                     Data="{StaticResource CopyGeometry}"
@@ -1903,7 +1888,7 @@
                             <TextBlock
                                 Classes="txt"
                                 Margin="0,8,2,0"
-                                Text="{CompiledBinding Translation.Sharpness,
+                                Text="{CompiledBinding Translation.Sharpness.Value,
                                                        Mode=OneWay}"
                                 Width="100" />
                             <customControls:FuncTextBox
@@ -1916,7 +1901,7 @@
                                 Classes="altHover BorderStyle"
                                 CopyText="{CompiledBinding Exif.Sharpness,
                                                            Mode=OneWay}"
-                                ToolTip.Tip="{CompiledBinding Translation.Copy,
+                                ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                               Mode=OneWay}">
                                 <Path
                                     Data="{StaticResource CopyGeometry}"
@@ -1931,7 +1916,7 @@
                             <TextBlock
                                 Classes="txt"
                                 Margin="0,8,2,0"
-                                Text="{CompiledBinding Translation.WhiteBalance,
+                                Text="{CompiledBinding Translation.WhiteBalance.Value,
                                                        Mode=OneWay}"
                                 Width="100" />
                             <customControls:FuncTextBox
@@ -1944,7 +1929,7 @@
                                 Classes="altHover BorderStyle"
                                 CopyText="{CompiledBinding Exif.WhiteBalance,
                                                            Mode=OneWay}"
-                                ToolTip.Tip="{CompiledBinding Translation.Copy,
+                                ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                               Mode=OneWay}">
                                 <Path
                                     Data="{StaticResource CopyGeometry}"
@@ -1963,7 +1948,7 @@
                             <TextBlock
                                 Classes="txt"
                                 Margin="0,8,2,0"
-                                Text="{CompiledBinding Translation.FlashEnergy,
+                                Text="{CompiledBinding Translation.FlashEnergy.Value,
                                                        Mode=OneWay}"
                                 Width="100" />
                             <customControls:FuncTextBox
@@ -1976,7 +1961,7 @@
                                 Classes="altHover BorderStyle"
                                 CopyText="{CompiledBinding Exif.FlashEnergy,
                                                            Mode=OneWay}"
-                                ToolTip.Tip="{CompiledBinding Translation.Copy,
+                                ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                               Mode=OneWay}">
                                 <Path
                                     Data="{StaticResource CopyGeometry}"
@@ -1991,7 +1976,7 @@
                             <TextBlock
                                 Classes="txt"
                                 Margin="0,8,2,0"
-                                Text="{CompiledBinding Translation.FlashMode,
+                                Text="{CompiledBinding Translation.FlashMode.Value,
                                                        Mode=OneWay}"
                                 Width="100" />
                             <customControls:FuncTextBox
@@ -2004,7 +1989,7 @@
                                 Classes="altHover BorderStyle"
                                 CopyText="{CompiledBinding Exif.FlashMode,
                                                            Mode=OneWay}"
-                                ToolTip.Tip="{CompiledBinding Translation.Copy,
+                                ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                               Mode=OneWay}">
                                 <Path
                                     Data="{StaticResource CopyGeometry}"
@@ -2023,7 +2008,7 @@
                             <TextBlock
                                 Classes="txt"
                                 Margin="0,8,2,0"
-                                Text="{CompiledBinding Translation.LightSource,
+                                Text="{CompiledBinding Translation.LightSource.Value,
                                                        Mode=OneWay}"
                                 Width="100" />
                             <customControls:FuncTextBox
@@ -2036,7 +2021,7 @@
                                 Classes="altHover BorderStyle"
                                 CopyText="{CompiledBinding Exif.LightSource,
                                                            Mode=OneWay}"
-                                ToolTip.Tip="{CompiledBinding Translation.Copy,
+                                ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                               Mode=OneWay}">
                                 <Path
                                     Data="{StaticResource CopyGeometry}"
@@ -2051,7 +2036,7 @@
                             <TextBlock
                                 Classes="txt"
                                 Margin="0,8,2,0"
-                                Text="{CompiledBinding Translation.Brightness,
+                                Text="{CompiledBinding Translation.Brightness.Value,
                                                        Mode=OneWay}"
                                 Width="100" />
                             <customControls:FuncTextBox
@@ -2064,7 +2049,7 @@
                                 Classes="altHover BorderStyle"
                                 CopyText="{CompiledBinding Exif.Brightness,
                                                            Mode=OneWay}"
-                                ToolTip.Tip="{CompiledBinding Translation.Copy,
+                                ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                               Mode=OneWay}">
                                 <Path
                                     Data="{StaticResource CopyGeometry}"
@@ -2083,7 +2068,7 @@
                             <TextBlock
                                 Classes="txt"
                                 Margin="0,8,2,0"
-                                Text="{CompiledBinding Translation.PhotometricInterpretation,
+                                Text="{CompiledBinding Translation.PhotometricInterpretation.Value,
                                                        Mode=OneWay}"
                                 Width="100" />
                             <customControls:FuncTextBox
@@ -2096,7 +2081,7 @@
                                 Classes="altHover BorderStyle"
                                 CopyText="{CompiledBinding Exif.PhotometricInterpretation,
                                                            Mode=OneWay}"
-                                ToolTip.Tip="{CompiledBinding Translation.Copy,
+                                ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                               Mode=OneWay}">
                                 <Path
                                     Data="{StaticResource CopyGeometry}"
@@ -2111,7 +2096,7 @@
                             <TextBlock
                                 Classes="txt"
                                 Margin="0,8,2,0"
-                                Text="{CompiledBinding Translation.Orientation,
+                                Text="{CompiledBinding Translation.Orientation.Value,
                                                        Mode=OneWay}"
                                 Width="100" />
                             <customControls:FuncTextBox
@@ -2124,7 +2109,7 @@
                                 Classes="altHover BorderStyle"
                                 CopyText="{CompiledBinding Exif.Orientation,
                                                            Mode=OneWay}"
-                                ToolTip.Tip="{CompiledBinding Translation.Copy,
+                                ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                               Mode=OneWay}">
                                 <Path
                                     Data="{StaticResource CopyGeometry}"
@@ -2143,7 +2128,7 @@
                             <TextBlock
                                 Classes="txt"
                                 Margin="0,8,2,0"
-                                Text="{CompiledBinding Translation.LensMaker,
+                                Text="{CompiledBinding Translation.LensMaker.Value,
                                                        Mode=OneWay}"
                                 Width="100" />
                             <customControls:FuncTextBox
@@ -2156,7 +2141,7 @@
                                 Classes="altHover BorderStyle"
                                 CopyText="{CompiledBinding Exif.LensMaker,
                                                            Mode=OneWay}"
-                                ToolTip.Tip="{CompiledBinding Translation.Copy,
+                                ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                               Mode=OneWay}">
                                 <Path
                                     Data="{StaticResource CopyGeometry}"
@@ -2171,7 +2156,7 @@
                             <TextBlock
                                 Classes="txt"
                                 Margin="0,8,2,0"
-                                Text="{CompiledBinding Translation.LensModel,
+                                Text="{CompiledBinding Translation.LensModel.Value,
                                                        Mode=OneWay}"
                                 Width="100" />
                             <customControls:FuncTextBox
@@ -2184,7 +2169,7 @@
                                 Classes="altHover BorderStyle"
                                 CopyText="{CompiledBinding Exif.LensModel,
                                                            Mode=OneWay}"
-                                ToolTip.Tip="{CompiledBinding Translation.Copy,
+                                ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                               Mode=OneWay}">
                                 <Path
                                     Data="{StaticResource CopyGeometry}"
@@ -2202,7 +2187,7 @@
                         <TextBlock
                             Classes="txt"
                             Margin="0,8,2,0"
-                            Text="{CompiledBinding Translation.ExifVersion,
+                            Text="{CompiledBinding Translation.ExifVersion.Value,
                                                    Mode=OneWay}"
                             Width="100" />
                         <customControls:FuncTextBox
@@ -2215,7 +2200,7 @@
                             Classes="altHover BorderStyle"
                             CopyText="{CompiledBinding Exif.ExifVersion,
                                                        Mode=OneWay}"
-                            ToolTip.Tip="{CompiledBinding Translation.Copy,
+                            ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                           Mode=OneWay}">
                             <Path
                                 Data="{StaticResource CopyGeometry}"

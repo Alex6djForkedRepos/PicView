@@ -20,7 +20,7 @@
             FontSize="14"
             Foreground="{StaticResource SecondaryTextColor}"
             Margin="0,20,0,20"
-            Text="{CompiledBinding Translation.Theme,
+            Text="{CompiledBinding Translation.Theme.Value,
                                    Mode=OneWay}" />
 
         <ComboBox
@@ -33,11 +33,11 @@
             Padding="5,7,0,7"
             Width="300"
             x:Name="ThemeBox">
-            <ComboBoxItem Content="{CompiledBinding Translation.DarkTheme, Mode=OneWay}" x:Name="DarkThemeBox" />
+            <ComboBoxItem Content="{CompiledBinding Translation.DarkTheme.Value, Mode=OneWay}" x:Name="DarkThemeBox" />
             <ComboBoxItem x:Name="LightThemeBox">
                 <TextBlock Classes="txt">
                     <TextBlock.Inlines>
-                        <Run Text="{CompiledBinding Translation.LightTheme, Mode=OneWay}" />
+                        <Run Text="{CompiledBinding Translation.LightTheme.Value, Mode=OneWay}" />
                         <Run FontStyle="Italic" Text=" (beta)" />
                     </TextBlock.Inlines>
                 </TextBlock>
@@ -45,7 +45,7 @@
             <ComboBoxItem x:Name="GlassThemeBox">
                 <TextBlock Classes="txt">
                     <TextBlock.Inlines>
-                        <Run Text="{CompiledBinding Translation.GlassTheme, Mode=OneWay}" />
+                        <Run Text="{CompiledBinding Translation.GlassTheme.Value, Mode=OneWay}" />
                         <Run FontStyle="Italic" Text=" (beta)" />
                     </TextBlock.Inlines>
                 </TextBlock>
@@ -61,7 +61,7 @@
                 FontFamily="/Assets/Fonts/Roboto-Bold.ttf#Roboto"
                 Foreground="{StaticResource SecondaryTextColor}"
                 Padding="5"
-                Text="{CompiledBinding Translation.ChangingThemeRequiresRestart,
+                Text="{CompiledBinding Translation.ChangingThemeRequiresRestart.Value,
                                        Mode=OneWay}" />
         </Button>
 
@@ -71,7 +71,7 @@
             FontSize="14"
             Foreground="{StaticResource SecondaryTextColor}"
             Margin="0,5,0,20"
-            Text="{CompiledBinding Translation.HighlightColor,
+            Text="{CompiledBinding Translation.HighlightColor.Value,
                                    Mode=OneWay}" />
 
         <WrapPanel
@@ -178,7 +178,7 @@
             FontSize="14"
             Foreground="{StaticResource SecondaryTextColor}"
             Margin="0,20,0,10"
-            Text="{CompiledBinding Translation.ChangeBackground,
+            Text="{CompiledBinding Translation.ChangeBackground.Value,
                                    Mode=OneWay}" />
 
         <WrapPanel
@@ -294,7 +294,7 @@
                 Margin="0"
                 MaxWidth="240"
                 Padding="0,1,5,0"
-                Text="{CompiledBinding Translation.ConstrainBackgroundToImage,
+                Text="{CompiledBinding Translation.ConstrainBackgroundToImage.Value,
                                        Mode=OneWay}" />
         </ToggleButton>
 
@@ -304,7 +304,7 @@
             FontSize="14"
             Foreground="{StaticResource SecondaryTextColor}"
             Margin="0,20,0,10"
-            Text="{CompiledBinding Translation.InterfaceConfiguration,
+            Text="{CompiledBinding Translation.InterfaceConfiguration.Value,
                                    Mode=OneWay}" />
         <Button
             Background="Transparent"
@@ -361,7 +361,7 @@
                     Margin="0"
                     MaxWidth="240"
                     Padding="0,1,5,0"
-                    Text="{CompiledBinding Translation.IsShowingBottomToolbar,
+                    Text="{CompiledBinding Translation.IsShowingBottomToolbar.Value,
                                            Mode=OneWay}" />
             </StackPanel>
         </Button>
@@ -469,7 +469,7 @@
                     Margin="0"
                     MaxWidth="240"
                     Padding="0,1,5,0"
-                    Text="{CompiledBinding Translation.IsShowingUI,
+                    Text="{CompiledBinding Translation.IsShowingUI.Value,
                                            Mode=OneWay}" />
             </StackPanel>
         </Button>
@@ -521,7 +521,7 @@
                     Margin="0"
                     MaxWidth="240"
                     Padding="0,1,5,0"
-                    Text="{CompiledBinding Translation.IsShowingFadingUIButtons,
+                    Text="{CompiledBinding Translation.IsShowingFadingUIButtons.Value,
                                            Mode=OneWay}" />
             </StackPanel>
         </Button>

@@ -8,7 +8,10 @@ public class PicViewerModel : IDisposable
 {
     public void Dispose()
     {
-        Disposable.Dispose(FileInfo);
+        Disposable.Dispose(FileInfo, PixelWidth, PixelHeight, ImageSource, SecondaryImageSource, ImageType);
+        Disposable.Dispose(ImageType, ImageWidth, ImageHeight, SecondaryImageWidth, IsShowingSideBySide, ScrollViewerHeight);
+        Disposable.Dispose(ScrollViewerHeight, AspectRatio, EffectConfig, ExifOrientation, ScaleX, Title);
+        Disposable.Dispose(TitleTooltip, WindowTitle);
     }
     
     public BindableReactiveProperty<FileInfo?> FileInfo { get; } = new();

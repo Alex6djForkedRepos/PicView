@@ -72,7 +72,7 @@
                     Height="{StaticResource TopBorderHeight}"
                     LineHeight="{StaticResource TopBorderHeight}"
                     Padding="30,0,0,0"
-                    Text="{CompiledBinding Translation.BatchResize,
+                    Text="{CompiledBinding Translation.BatchResize.Value,
                                            Mode=OneWay}"
                     TextAlignment="Center"
                     x:Name="TitleText" />
