@@ -1,5 +1,4 @@
-﻿using Avalonia;
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Input;
 using PicView.Avalonia.Converters;
 using PicView.Avalonia.FileSystem;
@@ -15,8 +14,6 @@ namespace PicView.Avalonia.Views;
 
 public partial class ImageInfoView : UserControl
 {
-    private IDisposable? _imageUpdateSubscription;
-
     public ImageInfoView()
     {
         InitializeComponent();
@@ -179,12 +176,6 @@ public partial class ImageInfoView : UserControl
         6 => ".jxl",
         _ => ""
     };
-
-    protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
-    {
-        base.OnDetachedFromVisualTree(e);
-        _imageUpdateSubscription.Dispose();
-    }
 
     private void AdjustAspectRatio(TextBox sender)
     {

@@ -1,8 +1,8 @@
-﻿using System.Reactive.Linq;
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Controls;
 using PicView.Avalonia.Animations;
-using ReactiveUI;
+using PicView.Avalonia.UI;
+using R3;
 
 namespace PicView.Avalonia.CustomControls;
 
@@ -20,7 +20,7 @@ public class AnimatedMenu : UserControl
     protected AnimatedMenu()
     {
         // Subscribe to changes in the IsOpen property
-        this.WhenAnyValue(x => x.IsOpen)
+        Observable.EveryValueChanged(this, x => x.IsOpen, UIHelper.GetFrameProvider)
             .Select(async isOpen =>
             {
                 // Make sure it is visible before starting the animation

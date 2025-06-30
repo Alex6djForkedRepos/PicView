@@ -14,6 +14,7 @@ public partial class ExifWindow : Window
     public ExifWindow()
     {
         InitializeComponent();
+        
         if (Settings.Theme.GlassTheme)
         {
             BorderRectangle.Height = 0;
