@@ -107,7 +107,7 @@ public static class ExifHandling
                 vm.Exif.AspectRatio.Value = string.Empty; // Handle cases where gcd is 0
             }
 
-            vm.EXIFRating = profile?.GetValue(ExifTag.Rating)?.Value ?? 0;
+            vm.Exif.ExifRating.Value = profile?.GetValue(ExifTag.Rating)?.Value ?? 0;
 
             var gpsValues = EXIFHelper.GetGPSValues(profile);
 

@@ -96,13 +96,18 @@ public class WindowManager : IPlatformSpecificUpdate
 
             if (_exifWindow is null)
             {
+                vm.Exif = new ExifViewModel();
                 _exifWindow = new ExifWindow
                 {
                     DataContext = vm,
                     WindowStartupLocation = WindowStartupLocation.CenterOwner
                 };
                 _exifWindow.Show(desktop.MainWindow);
-                _exifWindow.Closing += (s, e) => _exifWindow = null;
+                _exifWindow.Closing += (_, _) =>
+                {
+                    _exifWindow = null;
+                    vm.Exif.Dispose();
+                };
             }
             else
             {

@@ -179,7 +179,7 @@
                 BorderBrush="{DynamicResource MainBorderColor}"
                 BorderThickness="0,0,1,0"
                 Classes="noBorderHover"
-                Command="{CompiledBinding SetExifRating0Command}"
+                Command="{CompiledBinding Exif.SetExifRating0Command}"
                 CommandParameter="{CompiledBinding PicViewer.FileInfo.Value.FullName,
                                                    FallbackValue=''}"
                 DockPanel.Dock="Right"

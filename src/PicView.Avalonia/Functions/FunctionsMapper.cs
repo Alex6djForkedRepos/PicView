@@ -698,7 +698,10 @@ public static class FunctionsMapper
         }
 
         await Task.Run(() => { EXIFHelper.SetEXIFRating(Vm.PicViewer.FileInfo.CurrentValue.FullName, 0); });
-        Vm.EXIFRating = 0;
+        if (Vm.Exif is not null)
+        {
+            Vm.Exif.ExifRating.Value = 0;
+        }
     }
 
     public static async Task Set1Star()
@@ -710,7 +713,10 @@ public static class FunctionsMapper
         }
 
         await Task.Run(() => { EXIFHelper.SetEXIFRating(Vm.PicViewer.FileInfo.CurrentValue.FullName, 1); });
-        Vm.EXIFRating = 1;
+        if (Vm.Exif is not null)
+        {
+            Vm.Exif.ExifRating.Value = 1;
+        }
     }
 
     public static async Task Set2Star()
@@ -721,7 +727,10 @@ public static class FunctionsMapper
             return;
         }
         await Task.Run(() => { EXIFHelper.SetEXIFRating(Vm.PicViewer.FileInfo.CurrentValue.FullName, 2); });
-        Vm.EXIFRating = 2;
+        if (Vm.Exif is not null)
+        {
+            Vm.Exif.ExifRating.Value = 2;
+        }
     }
 
     public static async Task Set3Star()
@@ -732,7 +741,10 @@ public static class FunctionsMapper
             return;
         }
         await Task.Run(() => { EXIFHelper.SetEXIFRating(Vm.PicViewer.FileInfo.CurrentValue.FullName, 3); });
-        Vm.EXIFRating = 3;
+        if (Vm.Exif is not null)
+        {
+            Vm.Exif.ExifRating.Value = 3;
+        }
     }
 
     public static async Task Set4Star()
@@ -743,7 +755,10 @@ public static class FunctionsMapper
             return;
         }
         await Task.Run(() => { EXIFHelper.SetEXIFRating(Vm.PicViewer.FileInfo.CurrentValue.FullName, 4); });
-        Vm.EXIFRating = 4;
+        if (Vm.Exif is not null)
+        {
+            Vm.Exif.ExifRating.Value = 4;
+        }
     }
 
     public static async Task Set5Star()
@@ -754,7 +769,10 @@ public static class FunctionsMapper
             return;
         }
         await Task.Run(() => { EXIFHelper.SetEXIFRating(Vm.PicViewer.FileInfo.CurrentValue.FullName, 5); });
-        Vm.EXIFRating = 5;
+        if (Vm.Exif is not null)
+        {
+            Vm.Exif.ExifRating.Value = 5;
+        }
     }
 
     #endregion

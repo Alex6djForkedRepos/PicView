@@ -1,12 +1,64 @@
-﻿using R3;
+﻿using PicView.Core.ImageDecoding;
+using PicView.Core.ProcessHandling;
+using R3;
 
 namespace PicView.Core.ViewModels;
 
 public class ExifViewModel : IDisposable
 {
+    public ExifViewModel()
+    {
+        OpenGoogleLinkCommand = new ReactiveCommand(OpenGoogleMaps);
+        OpenBingLinkCommand = new ReactiveCommand(OpenBingMaps);
+
+        SetExifRating0Command = new ReactiveCommand<string>(Set0Star);
+        SetExifRating1Command = new ReactiveCommand<string>(Set1Star);
+        SetExifRating2Command = new ReactiveCommand<string>(Set2Star);
+        SetExifRating3Command = new ReactiveCommand<string>(Set3Star);
+        SetExifRating4Command = new ReactiveCommand<string>(Set4Star);
+        SetExifRating5Command = new ReactiveCommand<string>(Set5Star);            
+    }
+
+    private void Set0Star(string value)
+    {
+        EXIFHelper.SetEXIFRating(value, 0);
+        ExifRating.Value = 0;
+    }
+
+    private void Set1Star(string value)
+    {
+        EXIFHelper.SetEXIFRating(value, 1);
+        ExifRating.Value = 1;
+    }
+
+    private void Set2Star(string value)
+    {
+        EXIFHelper.SetEXIFRating(value, 2);
+        ExifRating.Value = 2;
+    }
+
+    private void Set3Star(string value)
+    {
+        EXIFHelper.SetEXIFRating(value, 3);
+        ExifRating.Value = 3;
+    }
+
+    private void Set4Star(string value)
+    {
+        EXIFHelper.SetEXIFRating(value, 4);
+        ExifRating.Value = 4;
+    }
+
+    private void Set5Star(string value)
+    {
+        EXIFHelper.SetEXIFRating(value, 5);
+        ExifRating.Value = 5;
+    }
+
     public void Dispose()
     {
-        Disposable.Dispose(DpiX,
+        Disposable.Dispose(
+            DpiX,
             DpiY,
             PrintSizeCm,
             PrintSizeCm,
@@ -56,7 +108,20 @@ public class ExifViewModel : IDisposable
             LensMaker,
             LensModel);
     }
+    public ReactiveCommand? OpenGoogleLinkCommand { get; set; }
+    public ReactiveCommand? OpenBingLinkCommand { get; set; }
     
+    public ReactiveCommand<string>? SetExifRating0Command { get; set; }
+    public ReactiveCommand<string>? SetExifRating1Command { get; set; }
+    public ReactiveCommand<string>? SetExifRating2Command { get; set; }
+    public ReactiveCommand<string>? SetExifRating3Command { get; set; }
+    public ReactiveCommand<string>? SetExifRating4Command { get; set; }
+    public ReactiveCommand<string>? SetExifRating5Command { get; set; }
+    
+    public void OpenGoogleMaps(Unit unit) => ProcessHelper.OpenLink(GoogleLink.CurrentValue);
+    public void OpenBingMaps(Unit unit) => ProcessHelper.OpenLink(BingLink.CurrentValue);
+    
+    public BindableReactiveProperty<uint> ExifRating { get; } = new();
     public BindableReactiveProperty<double> DpiX { get; } = new();
 
     public BindableReactiveProperty<double> DpiY { get; } = new();

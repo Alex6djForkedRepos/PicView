@@ -35,8 +35,7 @@ public class MainViewModel : ReactiveObject
     public SettingsViewModel? SettingsViewModel { get; set; }
     public ImageCropperViewModel? Crop { get; set; }
     public PicViewerModel PicViewer { get; } = new();
-    
-    public ExifViewModel Exif { get; } = new();
+    public ExifViewModel? Exif { get; set;  }
     
     public FileAssociationsViewModel? AssociationsViewModel { get; set; }
 
@@ -220,20 +219,6 @@ public class MainViewModel : ReactiveObject
         SetAsLockScreenCommand = FunctionsHelper.CreateReactiveCommand<string>(SetAsLockScreenTask);
 
         #endregion File commands
-
-        #region EXIF commands
-
-        SetExifRating0Command = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.Set0Star);
-        SetExifRating1Command = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.Set1Star);
-        SetExifRating2Command = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.Set2Star);
-        SetExifRating3Command = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.Set3Star);
-        SetExifRating4Command = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.Set4Star);
-        SetExifRating5Command = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.Set5Star);
-
-        OpenGoogleLinkCommand = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.OpenGoogleMaps);
-        OpenBingLinkCommand = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.OpenBingMaps);
-
-        #endregion EXIF commands
 
         #region Gallery Commands
 
@@ -631,14 +616,6 @@ public class MainViewModel : ReactiveObject
     public ReactiveCommand<Unit, Unit>? ShowBatchResizeWindowCommand { get; }
     public ReactiveCommand<Unit, Unit>? ShowSingleImageResizeWindowCommand { get; }
     public ReactiveCommand<Unit, Unit>? ShowEffectsWindowCommand { get; }
-    public ReactiveCommand<Unit, Unit>? SetExifRating0Command { get; }
-    public ReactiveCommand<Unit, Unit>? SetExifRating1Command { get; }
-    public ReactiveCommand<Unit, Unit>? SetExifRating2Command { get; }
-    public ReactiveCommand<Unit, Unit>? SetExifRating3Command { get; }
-    public ReactiveCommand<Unit, Unit>? SetExifRating4Command { get; }
-    public ReactiveCommand<Unit, Unit>? SetExifRating5Command { get; }
-    public ReactiveCommand<Unit, Unit>? OpenGoogleLinkCommand { get; }
-    public ReactiveCommand<Unit, Unit>? OpenBingLinkCommand { get; }
 
     public ReactiveCommand<Unit, Unit>? OptimizeImageCommand { get; }
     public ReactiveCommand<int, Unit>? ResizeCommand { get; }
@@ -968,12 +945,6 @@ public class MainViewModel : ReactiveObject
     }
 
     public ImageViewer? ImageViewer;
-
-    public uint EXIFRating
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
 
     public int GetIndex
     {

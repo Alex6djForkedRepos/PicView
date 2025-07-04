@@ -22,7 +22,30 @@ public class ImageCropperViewModel : IDisposable
         CloseCropCommand = new ReactiveCommand(HandleCloseCrop);
         Bitmap.Value = bitmap;
     }
-    
+
+    public ReactiveCommand CropImageCommand { get; private set; }
+    public ReactiveCommand CopyCropImageCommand { get; private set; }
+    public ReactiveCommand CloseCropCommand { get; private set; }
+
+    public BindableReactiveProperty<Bitmap> Bitmap { get; } = new();
+
+    public BindableReactiveProperty<int> SelectionX { get; } = new();
+
+    public BindableReactiveProperty<int> SelectionY { get; } = new();
+
+    public BindableReactiveProperty<double> SelectionWidth { get; } = new();
+
+    public BindableReactiveProperty<uint> PixelSelectionWidth { get; } = new();
+
+    public BindableReactiveProperty<double> SelectionHeight { get; } = new();
+
+    public BindableReactiveProperty<uint> PixelSelectionHeight { get; } = new();
+
+    public BindableReactiveProperty<double> ImageWidth { get; } = new();
+    public BindableReactiveProperty<double> ImageHeight { get; } = new();
+
+    public BindableReactiveProperty<double> AspectRatio { get; } = new();
+
     public void Dispose()
     {
         Disposable.Dispose();
@@ -39,29 +62,6 @@ public class ImageCropperViewModel : IDisposable
         SelectionHeight.Value = value;
         PixelSelectionHeight.Value = Convert.ToUInt32(value / AspectRatio.Value);
     }
-    
-    public ReactiveCommand CropImageCommand { get; private set; }
-    public ReactiveCommand CopyCropImageCommand { get; private set; }
-    public ReactiveCommand CloseCropCommand { get; private set; }
-
-    public BindableReactiveProperty< Bitmap> Bitmap { get; } = new();
-
-    public BindableReactiveProperty< int> SelectionX { get; } = new();
-
-    public BindableReactiveProperty< int >SelectionY { get; } = new();
-
-    public BindableReactiveProperty< double> SelectionWidth { get; } = new();
-    
-    public BindableReactiveProperty< uint >PixelSelectionWidth { get; } = new();
-
-    public BindableReactiveProperty< double> SelectionHeight { get; } = new();
-
-    public BindableReactiveProperty< uint >PixelSelectionHeight { get; } = new();
-    
-    public BindableReactiveProperty< double> ImageWidth { get; } = new();
-    public BindableReactiveProperty< double> ImageHeight { get; } = new();
-    
-    public BindableReactiveProperty< double >AspectRatio { get; } = new();
 
     private static void HandleCloseCrop(Unit unit)
     {
@@ -73,15 +73,21 @@ public class ImageCropperViewModel : IDisposable
 
     private async ValueTask SaveCroppedImageAsync(Unit unit, CancellationToken cancellationToken)
     {
-        if (UIHelper.GetMainView.DataContext is not MainViewModel vm) return;
+        if (UIHelper.GetMainView.DataContext is not MainViewModel vm)
+        {
+            return;
+        }
 
         var (fileName, fileInfo, bitmap) = PrepareCropData(vm);
-        
+
         var saveFileDialog = await FilePicker.PickFileForSavingAsync(fileName);
-        if (saveFileDialog == null) return;
+        if (saveFileDialog == null)
+        {
+            return;
+        }
 
         await SaveImage(saveFileDialog, fileInfo, bitmap);
-        
+
         CropFunctions.CloseCropControl(vm);
 
         if (vm.PicViewer.FileInfo.CurrentValue.FullName == saveFileDialog)
@@ -89,13 +95,16 @@ public class ImageCropperViewModel : IDisposable
             await ErrorHandling.ReloadAsync(vm);
         }
     }
-    
+
     public async Task SaveCroppedImageAsync() => await SaveCroppedImageAsync(Unit.Default, CancellationToken.None);
-    
+
     private async ValueTask CopyCroppedImageAsync(Unit unit, CancellationToken cancellationToken)
     {
-        if (UIHelper.GetMainView.DataContext is not MainViewModel vm) return;
-        if (vm.PicViewer.ImageSource.CurrentValue is not Bitmap sourceBitmap) return;
+        if (UIHelper.TryGetMainViewModel(out var vm) ||
+            vm.PicViewer.ImageSource.CurrentValue is not Bitmap sourceBitmap)
+        {
+            return;
+        }
 
         var x = Convert.ToInt32(SelectionX.CurrentValue / AspectRatio.CurrentValue);
         var y = Convert.ToInt32(SelectionY.CurrentValue / AspectRatio.CurrentValue);
@@ -113,7 +122,9 @@ public class ImageCropperViewModel : IDisposable
     public async Task CopyCroppedImageAsync() => await CopyCroppedImageAsync(Unit.Default, CancellationToken.None);
 
     private (string fileName, FileInfo fileInfo, Bitmap? bitmap) PrepareCropData(MainViewModel vm)
-      => NavigationManager.IsCollectionEmpty ? CreateNewCroppedImage() : (vm.PicViewer.FileInfo.Value.FullName, vm.PicViewer.FileInfo.Value, null);
+        => NavigationManager.IsCollectionEmpty
+            ? CreateNewCroppedImage()
+            : (vm.PicViewer.FileInfo.Value.FullName, vm.PicViewer.FileInfo.Value, null);
 
     private (string fileName, FileInfo fileInfo, Bitmap bitmap) CreateNewCroppedImage()
     {
@@ -146,7 +157,7 @@ public class ImageCropperViewModel : IDisposable
         var width = PixelSelectionWidth.CurrentValue;
         var height = PixelSelectionHeight.CurrentValue;
         var geometry = new MagickGeometry(x, y, width, height);
-        
+
         image.Crop(geometry);
         await image.WriteAsync(saveFilePath);
     }
