@@ -80,8 +80,6 @@
                     BorderThickness="0,0,1,0"
                     Classes="noBorderHover"
                     Command="{CompiledBinding SetExifRating0Command}"
-                    CommandParameter="{CompiledBinding PicViewer.FileInfo.FullName,
-                                                       FallbackValue=''}"
                     DockPanel.Dock="Right"
                     Foreground="{DynamicResource MainTextColor}"
                     Icon="{StaticResource StarOffImage}"
