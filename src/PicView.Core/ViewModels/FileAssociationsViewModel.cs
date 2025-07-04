@@ -1,8 +1,6 @@
 ﻿using PicView.Core.FileAssociations;
 using R3;
 
-// For ToArray, FirstOrDefault, etc
-
 namespace PicView.Core.ViewModels;
 
 /// <summary>
