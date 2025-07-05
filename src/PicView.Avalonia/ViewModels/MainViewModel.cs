@@ -35,6 +35,7 @@ public class MainViewModel : ReactiveObject
     public SettingsViewModel? SettingsViewModel { get; set; }
     public ImageCropperViewModel? Crop { get; set; }
     public PicViewerModel PicViewer { get; } = new();
+    public GalleryViewModel? Gallery { get; set; }
     public ExifViewModel? Exif { get; set;  }
     
     public FileAssociationsViewModel? AssociationsViewModel { get; set; }

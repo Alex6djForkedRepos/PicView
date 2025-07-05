@@ -1,14 +1,17 @@
-﻿using PicView.Core.Gallery;
+﻿using Avalonia;
+using PicView.Avalonia.Functions;
+using PicView.Avalonia.Gallery;
+using PicView.Core.Gallery;
 using PicView.Core.Models;
 using R3;
 
-namespace PicView.Core.ViewModels;
+namespace PicView.Avalonia.ViewModels;
 
 public class GalleryViewModel : IDisposable
 {
     public GalleryItemViewModel GalleryItem { get; } = new();
 
-    public BindableReactiveProperty<double> BottomGalleryMargin { get; } = new(0);
+    public BindableReactiveProperty<Thickness> GalleryMargin { get; } = new();
 
     public BindableReactiveProperty<double> GalleryWidth { get; } = new(0);
 
@@ -17,53 +20,14 @@ public class GalleryViewModel : IDisposable
     public BindableReactiveProperty<bool> IsBottomGalleryShownInHiddenUI { get; } =
         new(Settings.Gallery.ShowBottomGalleryInHiddenUI);
 
-    public BindableReactiveProperty<GalleryMode> GalleryMode { get; } = new(Gallery.GalleryMode.Closed);
+    public BindableReactiveProperty<GalleryMode> GalleryMode { get; } = new(Core.Gallery.GalleryMode.Closed);
 
     public BindableReactiveProperty<CommonModels.Stretch> GalleryStretch { get; } = new();
     public BindableReactiveProperty<CommonModels.VerticalAlignment> GalleryVerticalAlignment { get; } = new();
     public BindableReactiveProperty<CommonModels.Orientation> GalleryOrientation { get; } = new();
 
     public BindableReactiveProperty<bool> IsGalleryExpanded { get; } = new();
-
-    public ReactiveCommand? ToggleBottomGalleryCommand { get; set; }
-    public ReactiveCommand? CloseGalleryCommand { get; set; }
-    public ReactiveCommand? GalleryItemStretchCommand { get; set; }
-
-    public void Dispose()
-    {
-        Disposable.Dispose(BottomGalleryMargin,
-            GalleryWidth,
-            IsBottomGalleryShown,
-            IsBottomGalleryShownInHiddenUI,
-            GalleryMode,
-            GalleryStretch,
-            GalleryVerticalAlignment,
-            GalleryOrientation,
-            IsGalleryExpanded,
-            ToggleBottomGalleryCommand,
-            CloseGalleryCommand,
-            GalleryItemStretchCommand,
-            IsUniformBottomChecked,
-            IsUniformFullChecked,
-            IsUniformMenuChecked,
-            IsUniformToFillBottomChecked,
-            IsUniformToFillFullChecked,
-            IsUniformToFillMenuChecked,
-            IsFillBottomChecked,
-            IsFillFullChecked,
-            IsFillMenuChecked,
-            IsNoneBottomChecked,
-            IsNoneFullChecked,
-            IsNoneMenuChecked,
-            IsSquareBottomChecked,
-            IsSquareFullChecked,
-            IsSquareMenuChecked,
-            IsFillSquareBottomChecked,
-            IsFillSquareFullChecked,
-            IsFillSquareMenuChecked
-            );
-    }
-
+    
     #region Gallery Stretch IsChecked
 
     public BindableReactiveProperty<bool> IsUniformBottomChecked { get; } = new();
@@ -103,4 +67,54 @@ public class GalleryViewModel : IDisposable
     public BindableReactiveProperty<bool> IsFillSquareMenuChecked { get; } = new();
 
     #endregion
+
+    #region Commands
+    public required ReactiveCommand ToggleGalleryCommand { get; init; } = new(ToggleGallery);
+    public required ReactiveCommand ToggleBottomGalleryCommand { get; init; } = new(ToggleBottomGallery);
+    public required ReactiveCommand CloseGalleryCommand { get; init; } = new(CloseGallery);
+    public required ReactiveCommand<string> GalleryItemStretchCommand { get; init; } = new(GalleryItemStretch);
+
+    private static void ToggleGallery(Unit unit) => FunctionsMapper.ToggleGallery();
+    private static void ToggleBottomGallery(Unit unit) => FunctionsMapper.OpenCloseBottomGallery();
+    private static void CloseGallery(Unit unit) => FunctionsMapper.CloseGallery();
+    private static void GalleryItemStretch(string value) => GalleryHelper.SetGalleryItemStretch(value);
+    
+    #endregion
+
+    public void Dispose()
+    {
+        Disposable.Dispose(GalleryItem,
+            GalleryMargin,
+            GalleryWidth,
+            IsBottomGalleryShown,
+            IsBottomGalleryShownInHiddenUI,
+            GalleryMode,
+            GalleryStretch,
+            GalleryVerticalAlignment,
+            GalleryOrientation,
+            IsGalleryExpanded,
+            ToggleGalleryCommand,
+            ToggleBottomGalleryCommand,
+            CloseGalleryCommand,
+            GalleryItemStretchCommand,
+            IsUniformBottomChecked,
+            IsUniformFullChecked,
+            IsUniformMenuChecked,
+            IsUniformToFillBottomChecked,
+            IsUniformToFillFullChecked,
+            IsUniformToFillMenuChecked,
+            IsFillBottomChecked,
+            IsFillFullChecked,
+            IsFillMenuChecked,
+            IsNoneBottomChecked,
+            IsNoneFullChecked,
+            IsNoneMenuChecked,
+            IsSquareBottomChecked,
+            IsSquareFullChecked,
+            IsSquareMenuChecked,
+            IsFillSquareBottomChecked,
+            IsFillSquareFullChecked,
+            IsFillSquareMenuChecked
+            );
+    }
 }
