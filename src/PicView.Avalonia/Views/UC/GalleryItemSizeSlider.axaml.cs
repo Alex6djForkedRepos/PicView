@@ -4,6 +4,7 @@ using PicView.Avalonia.Gallery;
 using PicView.Avalonia.UI;
 using PicView.Avalonia.ViewModels;
 using PicView.Avalonia.WindowBehavior;
+using PicView.Core.Gallery;
 
 namespace PicView.Avalonia.Views.UC;
 
@@ -12,7 +13,6 @@ public partial class GalleryItemSizeSlider : UserControl
     public GalleryItemSizeSlider()
     {
         InitializeComponent();
-        
     }
     
     public void SetMaxAndMin()
@@ -21,15 +21,17 @@ public partial class GalleryItemSizeSlider : UserControl
         {
             return;
         }
+
+        vm.Gallery ??= new GalleryViewModel();
         if (GalleryFunctions.IsFullGalleryOpen)
         {
-            CustomSlider.Maximum = vm.MaxFullGalleryItemHeight;
-            CustomSlider.Minimum = vm.MinFullGalleryItemHeight;
+            CustomSlider.Maximum = GalleryDefaults.MaxFullGalleryItemHeight;
+            CustomSlider.Minimum = GalleryDefaults.MinBottomGalleryItemHeight;
         }
         else
         {
-            CustomSlider.Maximum = vm.MaxBottomGalleryItemHeight;
-            CustomSlider.Minimum = vm.MinBottomGalleryItemHeight;
+            CustomSlider.Maximum = GalleryDefaults.MaxBottomGalleryItemHeight;
+            CustomSlider.Minimum = GalleryDefaults.MinBottomGalleryItemHeight;
         }
     }
 
@@ -40,17 +42,19 @@ public partial class GalleryItemSizeSlider : UserControl
             return;
         }
 
+        vm.Gallery ??= new GalleryViewModel();
+
         if (GalleryFunctions.IsFullGalleryOpen)
         {
             // ReSharper disable once CompareOfFloatsByEqualityOperator
-            if (vm.GetFullGalleryItemHeight == e.NewValue)
+            if (vm.Gallery.GalleryItem.ItemHeight.CurrentValue == e.NewValue)
             {
                 return;
             }
-            vm.GetFullGalleryItemHeight = e.NewValue;
-            vm.GetGalleryItemHeight = vm.GetFullGalleryItemHeight;
+            vm.Gallery.GalleryItem.ExpandedGalleryItemHeight.Value = e.NewValue;
+            
             WindowResizing.SetSize(vm);
-            // Binding to height depends on timing of the update. Maybe find a cleaner mvvm solution one day
+            // TODO: Binding to height depends on timing of the update. Maybe find a cleaner mvvm solution one day
         
             // Maybe save this on close or some other way
             Settings.Gallery.ExpandedGalleryItemSize = e.NewValue;
@@ -59,20 +63,21 @@ public partial class GalleryItemSizeSlider : UserControl
         else if (Settings.Gallery.IsBottomGalleryShown)
         {
             // ReSharper disable once CompareOfFloatsByEqualityOperator
-            if (vm.GetBottomGalleryItemHeight == e.NewValue)
+            if (vm.Gallery.GalleryItem.BottomGalleryItemHeight.CurrentValue == e.NewValue)
             {
                 return;
             }
-            vm.GetBottomGalleryItemHeight = e.NewValue;
-        
-            vm.GetGalleryItemHeight = e.NewValue;
-            UIHelper.GetGalleryView.Height = vm.GalleryHeight;
+            vm.Gallery.GalleryItem.BottomGalleryItemHeight.Value = e.NewValue;
+            
+            UIHelper.GetGalleryView.Height = GalleryFunctions.GetGalleryHeight(vm);
             WindowResizing.SetSize(vm);
         
             // Binding to height depends on timing of the update. Maybe find a cleaner mvvm solution one day
             // Maybe save this on close or some other way
             Settings.Gallery.BottomGalleryItemSize = e.NewValue;
         }
+        
+        vm.Gallery.GalleryItem.ItemHeight.Value = e.NewValue;
        
         _ = SaveSettingsAsync();
     }

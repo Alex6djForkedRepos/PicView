@@ -20,6 +20,8 @@ public static class GalleryLoad
         // TODO: When list larger than 500, lazy load this when scrolling instead.
         // Figure out how to support virtualization. 
 
+        vm.Gallery ??= new GalleryViewModel();
+
         if (IsLoading || !NavigationManager.CanNavigate(vm) || string.IsNullOrEmpty(currentDirectory))
         {
             return;
@@ -61,14 +63,14 @@ public static class GalleryLoad
         // Make sure height is set
         if (Settings.Gallery.IsBottomGalleryShown && !GalleryFunctions.IsFullGalleryOpen)
         {
-            vm.GetGalleryItemHeight = vm.GetBottomGalleryItemHeight;
+            vm.Gallery.GalleryItem.ItemHeight.Value = vm.Gallery.GalleryItem.BottomGalleryItemHeight.CurrentValue;
         }
 
         _cancellationTokenSource = new CancellationTokenSource();
         _currentDirectory = currentDirectory;
         IsLoading = true;
         var index = NavigationManager.GetCurrentIndex;
-        var galleryItemSize = Math.Max(vm.GetBottomGalleryItemHeight, vm.GetFullGalleryItemHeight);
+        var galleryItemSize = Math.Max(vm.Gallery.GalleryItem.BottomGalleryItemHeight.CurrentValue, vm.Gallery.GalleryItem.ExpandedGalleryItemHeight.CurrentValue);
 
         var endIndex = NavigationManager.GetCount;
         // Set priority low when loading excess images to ensure app responsiveness
@@ -119,8 +121,7 @@ public static class GalleryLoad
                     {
                         return;
                     }
-
-                    vm.SelectedGalleryItemIndex = i;
+                    
                     galleryListBox.SelectedItem = galleryItem;
                 }, priority, _cancellationTokenSource.Token);
             }
@@ -295,10 +296,10 @@ public static class GalleryLoad
             // Check if the bottom gallery should be shown
             if (!GalleryFunctions.IsFullGalleryOpen)
             {
-                if (vm.GalleryMode is GalleryMode.BottomToClosed or GalleryMode.FullToClosed or GalleryMode.Closed)
+                if (vm.Gallery.GalleryMode.CurrentValue is GalleryMode.BottomToClosed or GalleryMode.FullToClosed or GalleryMode.Closed)
                 {
                     // Trigger animation to show it
-                    vm.GalleryMode = GalleryMode.ClosedToBottom;
+                    vm.Gallery.GalleryMode.Value = GalleryMode.ClosedToBottom;
                 }
             }
 

@@ -18,25 +18,29 @@ public static class SettingsUpdater
 {
     public static void ValidateGallerySettings(MainViewModel vm, bool settingsExists)
     {
-        vm.GetFullGalleryItemHeight = Settings.Gallery.ExpandedGalleryItemSize;
-        vm.GetBottomGalleryItemHeight = Settings.Gallery.BottomGalleryItemSize;
+        if (vm.Gallery is not {} gallery)
+        {
+            return;
+        }
+        vm.Gallery.GalleryItem.ExpandedGalleryItemHeight.Value  = Settings.Gallery.ExpandedGalleryItemSize;
+        vm.Gallery.GalleryItem.BottomGalleryItemHeight.Value = Settings.Gallery.BottomGalleryItemSize;
         if (!settingsExists)
         {
-            vm.GetBottomGalleryItemHeight = GalleryDefaults.DefaultBottomGalleryHeight;
-            vm.GetFullGalleryItemHeight = GalleryDefaults.DefaultFullGalleryHeight;
+            vm.Gallery.GalleryItem.BottomGalleryItemHeight.Value = GalleryDefaults.DefaultBottomGalleryHeight;
+            vm.Gallery.GalleryItem.ExpandedGalleryItemHeight.Value = GalleryDefaults.DefaultFullGalleryHeight;
         }
 
         // Set default gallery sizes if they are out of range or upgrading from an old version
-        if (vm.GetBottomGalleryItemHeight < vm.MinBottomGalleryItemHeight ||
-            vm.GetBottomGalleryItemHeight > vm.MaxBottomGalleryItemHeight)
+        if (vm.Gallery.GalleryItem.BottomGalleryItemHeight.CurrentValue < GalleryDefaults.MinBottomGalleryItemHeight ||
+            vm.Gallery.GalleryItem.BottomGalleryItemHeight.CurrentValue > GalleryDefaults.MaxBottomGalleryItemHeight)
         {
-            vm.GetBottomGalleryItemHeight = GalleryDefaults.DefaultBottomGalleryHeight;
+            vm.Gallery.GalleryItem.BottomGalleryItemHeight.Value = GalleryDefaults.DefaultBottomGalleryHeight;
         }
 
-        if (vm.GetFullGalleryItemHeight < vm.MinFullGalleryItemHeight ||
-            vm.GetFullGalleryItemHeight > vm.MaxFullGalleryItemHeight)
+        if (vm.Gallery.GalleryItem.ExpandedGalleryItemHeight.CurrentValue < GalleryDefaults.MinFullGalleryItemHeight ||
+            vm.Gallery.GalleryItem.ExpandedGalleryItemHeight.CurrentValue > GalleryDefaults.MaxFullGalleryItemHeight)
         {
-            vm.GetFullGalleryItemHeight = GalleryDefaults.DefaultFullGalleryHeight;
+            vm.Gallery.GalleryItem.ExpandedGalleryItemHeight.Value = GalleryDefaults.DefaultFullGalleryHeight;
         }
 
         if (settingsExists)
@@ -75,8 +79,6 @@ public static class SettingsUpdater
         vm.GetSlideshowSpeed = Settings.UIProperties.SlideShowTimer;
         vm.GetZoomSpeed = Settings.Zoom.ZoomSpeed;
         vm.PicViewer.IsShowingSideBySide.Value = Settings.ImageScaling.ShowImageSideBySide;
-        vm.IsBottomGalleryShown = Settings.Gallery.IsBottomGalleryShown;
-        vm.IsBottomGalleryShownInHiddenUI = Settings.Gallery.ShowBottomGalleryInHiddenUI;
         vm.IsAvoidingZoomingOut  = Settings.Zoom.AvoidZoomingOut;
         vm.IsUIShown  = Settings.UIProperties.ShowInterface;
         vm.IsTopToolbarShown  = Settings.UIProperties.ShowInterface;
@@ -116,10 +118,13 @@ public static class SettingsUpdater
             {
                 TurnOffUsingTouchpad(vm);
             }
-        
-            vm.GetBottomGalleryItemHeight = GalleryDefaults.DefaultBottomGalleryHeight;
-            vm.GetFullGalleryItemHeight = GalleryDefaults.DefaultFullGalleryHeight;
-        
+
+            if (vm.Gallery is not null)
+            {
+                vm.Gallery.GalleryItem.BottomGalleryItemHeight.Value = GalleryDefaults.DefaultBottomGalleryHeight;
+                vm.Gallery.GalleryItem.ExpandedGalleryItemHeight.Value = GalleryDefaults.DefaultFullGalleryHeight;
+            }
+            
             if (string.IsNullOrWhiteSpace(Settings.Gallery.BottomGalleryStretchMode))
             {
                 Settings.Gallery.BottomGalleryStretchMode = "UniformToFill";

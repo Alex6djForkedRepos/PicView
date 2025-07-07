@@ -1,7 +1,7 @@
 ﻿<UserControl
     Background="Transparent"
     Height="210"
-    IsEnabled="{CompiledBinding !IsBottomGalleryShown}"
+    IsEnabled="{CompiledBinding !Gallery.IsBottomGalleryShown.Value}"
     IsVisible="{CompiledBinding !IsUIShown}"
     Width="210"
     d:DesignHeight="450"

@@ -232,9 +232,9 @@ public class ImageIterator : IAsyncDisposable
             {
                 if (Settings.Gallery.IsBottomGalleryShown && ImagePaths.Count > 1)
                 {
-                    if (_vm.GalleryMode is GalleryMode.BottomToClosed or GalleryMode.FullToClosed)
+                    if (_vm.Gallery.GalleryMode.CurrentValue is GalleryMode.BottomToClosed or GalleryMode.FullToClosed)
                     {
-                        _vm.GalleryMode = GalleryMode.ClosedToBottom;
+                        _vm.Gallery.GalleryMode.Value = GalleryMode.ClosedToBottom;
                     }
                 }
 
@@ -299,12 +299,12 @@ public class ImageIterator : IAsyncDisposable
                 {
                     if (ImagePaths.Count == 1)
                     {
-                        _vm.GalleryMode = GalleryMode.BottomToClosed;
+                        _vm.Gallery.GalleryMode.Value = GalleryMode.BottomToClosed;
                     }
                 }
 
                 var indexOf = ImagePaths.FindIndex(x => x.FullName.Equals(_vm.PicViewer.FileInfo.CurrentValue.FullName));
-                _vm.SelectedGalleryItemIndex = indexOf; // Fixes deselection bug 
+                _vm.PicViewer.Index.Value = indexOf; // Fixes deselection bug 
                 CurrentIndex = indexOf;
                 if (isSameFile)
                 {
@@ -389,7 +389,7 @@ public class ImageIterator : IAsyncDisposable
                     _vm));
             if (sameFile)
             {
-                _vm.SelectedGalleryItemIndex = newIndex;
+                _vm.PicViewer.Index.Value = newIndex;
                 GalleryFunctions.CenterGallery(_vm);
             }
         }
@@ -798,7 +798,7 @@ public class ImageIterator : IAsyncDisposable
         {
             TitleManager.SetLoadingTitle(_vm);
 
-            _vm.SelectedGalleryItemIndex = index;
+            _vm.PicViewer.Index.Value = index;
             if (Settings.Gallery.IsBottomGalleryShown)
             {
                 GalleryNavigation.CenterScrollToSelectedItem(_vm);

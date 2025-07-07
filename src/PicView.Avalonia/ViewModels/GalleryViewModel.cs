@@ -1,8 +1,9 @@
 ﻿using Avalonia;
+using Avalonia.Layout;
+using Avalonia.Media;
 using PicView.Avalonia.Functions;
 using PicView.Avalonia.Gallery;
 using PicView.Core.Gallery;
-using PicView.Core.Models;
 using R3;
 
 namespace PicView.Avalonia.ViewModels;
@@ -13,8 +14,6 @@ public class GalleryViewModel : IDisposable
 
     public BindableReactiveProperty<Thickness> GalleryMargin { get; } = new();
 
-    public BindableReactiveProperty<double> GalleryWidth { get; } = new(0);
-
     public BindableReactiveProperty<bool> IsBottomGalleryShown { get; } = new(Settings.Gallery.IsBottomGalleryShown);
 
     public BindableReactiveProperty<bool> IsBottomGalleryShownInHiddenUI { get; } =
@@ -22,9 +21,9 @@ public class GalleryViewModel : IDisposable
 
     public BindableReactiveProperty<GalleryMode> GalleryMode { get; } = new(Core.Gallery.GalleryMode.Closed);
 
-    public BindableReactiveProperty<CommonModels.Stretch> GalleryStretch { get; } = new();
-    public BindableReactiveProperty<CommonModels.VerticalAlignment> GalleryVerticalAlignment { get; } = new();
-    public BindableReactiveProperty<CommonModels.Orientation> GalleryOrientation { get; } = new();
+    public BindableReactiveProperty<Stretch> GalleryStretch { get; } = new();
+    public BindableReactiveProperty<VerticalAlignment> GalleryVerticalAlignment { get; } = new();
+    public BindableReactiveProperty<Orientation> GalleryOrientation { get; } = new();
 
     public BindableReactiveProperty<bool> IsGalleryExpanded { get; } = new();
     
@@ -69,10 +68,10 @@ public class GalleryViewModel : IDisposable
     #endregion
 
     #region Commands
-    public required ReactiveCommand ToggleGalleryCommand { get; init; } = new(ToggleGallery);
-    public required ReactiveCommand ToggleBottomGalleryCommand { get; init; } = new(ToggleBottomGallery);
-    public required ReactiveCommand CloseGalleryCommand { get; init; } = new(CloseGallery);
-    public required ReactiveCommand<string> GalleryItemStretchCommand { get; init; } = new(GalleryItemStretch);
+    public ReactiveCommand ToggleGalleryCommand { get; init; } = new(ToggleGallery);
+    public ReactiveCommand ToggleBottomGalleryCommand { get; init; } = new(ToggleBottomGallery);
+    public ReactiveCommand CloseGalleryCommand { get; init; } = new(CloseGallery);
+    public ReactiveCommand<string> GalleryItemStretchCommand { get; init; } = new(GalleryItemStretch);
 
     private static void ToggleGallery(Unit unit) => FunctionsMapper.ToggleGallery();
     private static void ToggleBottomGallery(Unit unit) => FunctionsMapper.OpenCloseBottomGallery();
@@ -85,7 +84,6 @@ public class GalleryViewModel : IDisposable
     {
         Disposable.Dispose(GalleryItem,
             GalleryMargin,
-            GalleryWidth,
             IsBottomGalleryShown,
             IsBottomGalleryShownInHiddenUI,
             GalleryMode,

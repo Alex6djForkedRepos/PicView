@@ -4,6 +4,7 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using ImageMagick;
+using PicView.Avalonia.Gallery;
 using PicView.Avalonia.Navigation;
 using PicView.Avalonia.UI;
 using PicView.Avalonia.ViewModels;
@@ -102,32 +103,36 @@ public static class WindowResizing
         vm.PicViewer.ImageWidth.Value = size.Width;
         vm.PicViewer.SecondaryImageWidth.Value = size.SecondaryWidth;
         vm.PicViewer.ImageHeight.Value = size.Height;
-        vm.GalleryMargin = new Thickness(0, 0, 0, size.Margin);
 
         vm.PicViewer.ScrollViewerWidth.Value = size.ScrollViewerWidth;
         vm.PicViewer.ScrollViewerHeight.Value = size.ScrollViewerHeight;
+        
+        vm.PicViewer.AspectRatio.Value = size.AspectRatio;
 
+        if (vm.Gallery is not { } gallery)
+        {
+            return;
+        }
+        gallery.GalleryMargin.Value = new Thickness(0, 0, 0, size.Margin);
         if (Settings.WindowProperties.AutoFit)
         {
             if (Settings.WindowProperties.Fullscreen ||
                 Settings.WindowProperties.Maximized)
             {
-                vm.GalleryWidth = double.NaN;
+                vm.PicViewer.GalleryWidth.Value = double.NaN;
             }
             else
             {
                 var scrollbarSize = Settings.Zoom.ScrollEnabled ? SizeDefaults.ScrollbarSize : 0;
-                vm.GalleryWidth = vm.RotationAngle is 90 or 270
+                vm.PicViewer.GalleryWidth.Value = vm.RotationAngle is 90 or 270
                     ? Math.Max(size.Height + scrollbarSize, SizeDefaults.WindowMinSize + scrollbarSize)
                     : Math.Max(size.Width + scrollbarSize, SizeDefaults.WindowMinSize + scrollbarSize);
             }
         }
         else
         {
-            vm.GalleryWidth = double.NaN;
+            vm.PicViewer.GalleryWidth.Value = double.NaN;
         }
-
-        vm.PicViewer.AspectRatio.Value = size.AspectRatio;
     }
 
     public static ImageSize? GetSize(MainViewModel vm)
@@ -248,7 +253,7 @@ public static class WindowResizing
                 screenSize.Scaling,
                 vm.TitlebarHeight,
                 vm.BottombarHeight,
-                vm.GalleryHeight,
+                GalleryFunctions.GetGalleryHeight(vm),
                 containerWidth,
                 containerHeight);
         }
@@ -265,7 +270,7 @@ public static class WindowResizing
                 screenSize.Scaling,
                 vm.TitlebarHeight,
                 vm.BottombarHeight,
-                vm.GalleryHeight,
+                GalleryFunctions.GetGalleryHeight(vm),
                 containerWidth,
                 containerHeight);
         }

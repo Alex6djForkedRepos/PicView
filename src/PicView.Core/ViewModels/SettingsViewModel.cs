@@ -38,6 +38,10 @@ public class SettingsViewModel : IDisposable
 
     public BindableReactiveProperty<bool> IsShowingPermanentDeletionDialog { get; } =
         new(Settings.UIProperties.ShowPermanentDeletionConfirmation);
+    
+    public BindableReactiveProperty<bool> IsBottomGalleryShownInHiddenUI { get; } =
+        new(Settings.Gallery.ShowBottomGalleryInHiddenUI);
+    
 
     #endregion
 }

@@ -41,20 +41,16 @@ public static class ErrorHandling
                 {
                     startUpMenu.Width = SizeDefaults.WindowMinSize;
                     startUpMenu.Height = SizeDefaults.WindowMinSize;
-                    if (Settings.Gallery.IsBottomGalleryShown)
-                    {
-                        vm.GalleryWidth = SizeDefaults.WindowMinSize;
-                    }
+                    vm.PicViewer.GalleryWidth.Value = SizeDefaults.WindowMinSize;
                 }
+
                 vm.CurrentView = startUpMenu;
             }
             
             TitleManager.SetNoImageTitle(vm);
-
-            vm.GalleryMode = GalleryMode.Closed;
             GalleryFunctions.Clear();
             MenuManager.CloseMenus(vm);
-            vm.GalleryMargin = new Thickness(0, 0, 0, 0);
+
             vm.GetIndex = 0;
             vm.PlatformService.StopTaskbarProgress();
             vm.IsLoading = false;
@@ -64,6 +60,12 @@ public static class ErrorHandling
             {
                 UIHelper.GetEditableTitlebar.TextBlock.TextAlignment = TextAlignment.Center;
             }
+            if (vm.Gallery is null)
+            {
+                return;
+            }
+            vm.Gallery.GalleryMode.Value = GalleryMode.Closed;
+            vm.Gallery.GalleryMargin.Value = new Thickness(0, 0, 0, 0);
         }
     }
 

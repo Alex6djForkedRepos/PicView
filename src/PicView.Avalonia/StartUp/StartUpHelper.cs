@@ -127,7 +127,6 @@ public static class StartUpHelper
         HandleThemeUpdates(vm);
         
         UIHelper.SetControls(desktop);
-
         SettingsUpdater.ValidateGallerySettings(vm, settingsExists);
         
         // Need to delay setting fullscreen or maximized until after the window is shown to select the correct monitor

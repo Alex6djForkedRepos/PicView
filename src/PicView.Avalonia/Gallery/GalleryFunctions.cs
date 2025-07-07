@@ -8,12 +8,41 @@ using PicView.Avalonia.ViewModels;
 using PicView.Avalonia.Views.UC;
 using PicView.Core.Gallery;
 using PicView.Core.Localization;
+using PicView.Core.Sizing;
 
 namespace PicView.Avalonia.Gallery;
 
 public static class GalleryFunctions
 {
-    public static bool RenameGalleryItem(int oldIndex, int newIndex, string newFileLocation, string newName, MainViewModel? vm)
+    public static double GetGalleryHeight(MainViewModel vm)
+    {
+        if (vm?.Gallery is not { } gallery)
+        {
+            return 0;
+        }
+
+        if (!Settings.Gallery.IsBottomGalleryShown || vm.IsSingleImage || Slideshow.IsRunning)
+        {
+            return 0;
+        }
+
+        if (Settings.WindowProperties.Fullscreen)
+        {
+            return Settings.Gallery.IsBottomGalleryShown
+                ? gallery.GalleryItem.BottomGalleryItemHeight.CurrentValue + (SizeDefaults.ScrollbarSize - 1)
+                : 0;
+        }
+
+        if (!Settings.Gallery.ShowBottomGalleryInHiddenUI && !vm.IsUIShown)
+        {
+            return 0;
+        }
+
+        return gallery.GalleryItem.BottomGalleryItemHeight.CurrentValue + (SizeDefaults.ScrollbarSize - 1);
+    }
+
+    public static bool RenameGalleryItem(int oldIndex, int newIndex, string newFileLocation, string newName,
+        MainViewModel? vm)
     {
         var mainView = UIHelper.GetMainView;
 
@@ -42,12 +71,8 @@ public static class GalleryFunctions
         {
             return Rename();
         }
-        Dispatcher.UIThread.InvokeAsync(Rename);
 
-        if (vm != null)
-        {
-            vm.SelectedGalleryItemIndex = NavigationManager.GetCurrentIndex;
-        }
+        Dispatcher.UIThread.InvokeAsync(Rename);
 
         return true;
 
@@ -57,6 +82,7 @@ public static class GalleryFunctions
             {
                 return false;
             }
+
             galleryItem.FileName.Text = newName;
             galleryItem.FileLocation.Text = newFileLocation;
             if (oldIndex == newIndex)
@@ -64,6 +90,7 @@ public static class GalleryFunctions
                 galleryListBox.Items[oldIndex] = galleryItem;
                 return true;
             }
+
             if (newIndex >= 0 && newIndex < galleryListBox.Items.Count)
             {
                 galleryListBox.Items.RemoveAt(oldIndex);
@@ -74,7 +101,7 @@ public static class GalleryFunctions
             return false;
         }
     }
-    
+
     public static bool RemoveGalleryItem(int index, MainViewModel? vm)
     {
         var mainView = UIHelper.GetMainView;
@@ -94,11 +121,6 @@ public static class GalleryFunctions
             Dispatcher.UIThread.InvokeAsync(Removal);
         }
 
-        if (vm != null)
-        {
-            vm.SelectedGalleryItemIndex = NavigationManager.GetCurrentIndex;
-        }
-
         return true;
 
         void Removal()
@@ -108,10 +130,12 @@ public static class GalleryFunctions
             {
                 return;
             }
+
             if (galleryListBox.Items[removalIndex] is not GalleryItem galleryItem)
             {
                 return;
             }
+
             galleryListBox.Items.Remove(galleryItem);
             if (galleryItem.GalleryImage.Source is IDisposable galleryImage)
             {
@@ -120,7 +144,8 @@ public static class GalleryFunctions
         }
     }
 
-    public static async Task<bool> AddGalleryItem(int index, FileInfo fileInfo, MainViewModel? vm, DispatcherPriority? priority = null)
+    public static async Task<bool> AddGalleryItem(int index, FileInfo fileInfo, MainViewModel? vm,
+        DispatcherPriority? priority = null)
     {
         var mainView = UIHelper.GetMainView;
 
@@ -131,7 +156,7 @@ public static class GalleryFunctions
         }
 
         GalleryItem? galleryItem;
-        var thumb = await GetThumbnails.GetThumbAsync(fileInfo, (uint)vm.GetGalleryItemHeight);
+        var thumb = await GetThumbnails.GetThumbAsync(fileInfo, (uint)vm.Gallery.GalleryItem.ItemHeight.Value);
         var galleryThumbInfo = GalleryThumbInfo.GalleryThumbHolder.GetThumbData(fileInfo);
         try
         {
@@ -173,7 +198,7 @@ public static class GalleryFunctions
                 {
                     galleryListBox.Items.Add(galleryItem);
                 }
-                
+
                 var isSvg = fileInfo.Extension.Equals(".svg", StringComparison.OrdinalIgnoreCase) ||
                             fileInfo.Extension.Equals(".svgz", StringComparison.OrdinalIgnoreCase);
                 if (isSvg)
@@ -262,7 +287,7 @@ public static class GalleryFunctions
         {
             Dispatcher.UIThread.Post(Center);
         }
-        
+
         return;
 
         void Center()
@@ -270,11 +295,12 @@ public static class GalleryFunctions
             var mainView = UIHelper.GetMainView;
 
             var galleryListBox = mainView.GalleryView.GalleryListBox;
-            if (vm.SelectedGalleryItemIndex < 0 || vm.SelectedGalleryItemIndex >= galleryListBox.Items.Count)
+            if (vm.PicViewer.Index.Value < 0 || vm.PicViewer.Index.Value >= galleryListBox.Items.Count)
             {
                 return;
             }
-            if (galleryListBox.Items[vm.SelectedGalleryItemIndex] is GalleryItem centerItem)
+
+            if (galleryListBox.Items[vm.PicViewer.Index.CurrentValue] is GalleryItem centerItem)
             {
                 galleryListBox.ScrollToCenterOfItem(centerItem);
             }
@@ -293,21 +319,22 @@ public static class GalleryFunctions
         }
 
         MenuManager.CloseMenus(vm);
+        vm.Gallery ??= new GalleryViewModel();
         if (Settings.Gallery.IsBottomGalleryShown)
         {
             if (IsFullGalleryOpen)
             {
                 // Switch to bottom gallery
                 IsFullGalleryOpen = false;
-                vm.GalleryMode = GalleryMode.FullToBottom;
-                vm.GetGalleryItemHeight = vm.GetBottomGalleryItemHeight;
+                vm.Gallery.GalleryMode.Value = GalleryMode.FullToBottom;
+                vm.Gallery.GalleryItem.ItemHeight.Value = vm.Gallery.GalleryItem.BottomGalleryItemHeight.CurrentValue;
             }
             else
             {
                 // Switch to full gallery
                 IsFullGalleryOpen = true;
-                vm.GalleryMode = GalleryMode.BottomToFull;
-                vm.GetGalleryItemHeight = vm.GetFullGalleryItemHeight;
+                vm.Gallery.GalleryMode.Value = GalleryMode.BottomToFull;
+                vm.Gallery.GalleryItem.ItemHeight.Value = vm.Gallery.GalleryItem.ExpandedGalleryItemHeight.CurrentValue;;
             }
         }
         else
@@ -316,18 +343,18 @@ public static class GalleryFunctions
             {
                 // close full gallery
                 IsFullGalleryOpen = false;
-                vm.GalleryMode = GalleryMode.FullToClosed;
+                vm.Gallery.GalleryMode.Value = GalleryMode.FullToClosed;
             }
             else
             {
                 // open full gallery
                 IsFullGalleryOpen = true;
-                vm.GalleryMode = GalleryMode.ClosedToFull;
-                vm.GetGalleryItemHeight = vm.GetFullGalleryItemHeight;
+                vm.Gallery.GalleryMode.Value = GalleryMode.ClosedToFull;
+                vm.Gallery.GalleryItem.ItemHeight.Value = vm.Gallery.GalleryItem.ExpandedGalleryItemHeight.CurrentValue;
             }
         }
 
-        
+
         _ = Task.Run(() => GalleryLoad.LoadGallery(vm, NavigationManager.GetInitialFileInfo?.DirectoryName));
     }
 
@@ -342,22 +369,23 @@ public static class GalleryFunctions
 
         if (Settings.Gallery.IsBottomGalleryShown)
         {
-            vm.GalleryMode = GalleryMode.BottomToClosed;
+            vm.Gallery.GalleryMode.Value = GalleryMode.BottomToClosed;
             vm.Translation.IsShowingBottomGallery.Value = TranslationManager.Translation.ShowBottomGallery;
             Settings.Gallery.IsBottomGalleryShown = false;
             IsFullGalleryOpen = false;
             return;
         }
 
+        vm.Gallery ??= new GalleryViewModel();
         IsFullGalleryOpen = false;
         Settings.Gallery.IsBottomGalleryShown = true;
         if (NavigationManager.CanNavigate(vm))
         {
-            vm.GalleryMode = GalleryMode.ClosedToBottom;
+            vm.Gallery.GalleryMode.Value = GalleryMode.ClosedToBottom;
         }
 
         vm.Translation.IsShowingBottomGallery.Value = TranslationManager.Translation.HideBottomGallery;
-        vm.IsBottomGalleryShown = true;
+        vm.Gallery.IsBottomGalleryShown.Value = true;
         if (!NavigationManager.CanNavigate(vm))
         {
             return;
@@ -368,8 +396,9 @@ public static class GalleryFunctions
 
     public static void OpenBottomGallery(MainViewModel vm)
     {
-        vm.GalleryMode = GalleryMode.ClosedToBottom;
-        vm.GalleryVerticalAlignment = VerticalAlignment.Bottom;
+        vm.Gallery ??= new GalleryViewModel();
+        vm.Gallery.GalleryMode.Value = GalleryMode.ClosedToBottom;
+        vm.Gallery.GalleryVerticalAlignment.Value = VerticalAlignment.Bottom;
     }
 
     public static void CloseGallery(MainViewModel vm)

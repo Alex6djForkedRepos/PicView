@@ -11,7 +11,10 @@ public class GalleryItemViewModel : IDisposable
         Disposable.Dispose(ItemWidth,
             ItemHeight,
             ItemMargin,
-            ExpandedGalleryItemWidth);
+            ExpandedGalleryItemWidth,
+            ExpandedGalleryItemHeight,
+            BottomGalleryItemWidth,
+            BottomGalleryItemHeight);
     }
 
     public BindableReactiveProperty<double> ItemWidth { get; } = new(0);
@@ -20,6 +23,10 @@ public class GalleryItemViewModel : IDisposable
     public BindableReactiveProperty<Thickness> ItemMargin { get; } = new();
 
     public BindableReactiveProperty<double> ExpandedGalleryItemWidth { get; } = new(0);
+    public BindableReactiveProperty<double> ExpandedGalleryItemHeight { get; } = new(0);
+    
+    public BindableReactiveProperty<double> BottomGalleryItemWidth { get; } = new(0);
+    public BindableReactiveProperty<double> BottomGalleryItemHeight { get; } = new(0);
 
     public double MaxExpandedGalleryItemHeight => GalleryDefaults.MaxFullGalleryItemHeight;
     public double MinExpandedGalleryItemHeight => GalleryDefaults.MinFullGalleryItemHeight;

@@ -15,11 +15,11 @@
         HorizontalAlignment="Center"
         IsSnapToTickEnabled="True"
         Margin="0,1,0,1"
-        Maximum="{CompiledBinding MaxFullGalleryItemHeight}"
-        Minimum="{CompiledBinding MinFullGalleryItemHeight}"
+        Maximum="{CompiledBinding Gallery.GalleryItem.MaxExpandedGalleryItemHeight}"
+        Minimum="{CompiledBinding Gallery.GalleryItem.MinExpandedGalleryItemHeight}"
         TickFrequency="1"
         TickPlacement="BottomRight"
-        Value="{CompiledBinding GetFullGalleryItemHeight,
+        Value="{CompiledBinding Gallery.GalleryItem.ExpandedGalleryItemHeight.Value,
                                 Mode=OneWay}"
         ValueChanged="FullGallery_OnValueChanged"
         Width="300" />

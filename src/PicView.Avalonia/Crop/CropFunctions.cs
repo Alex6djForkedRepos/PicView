@@ -42,7 +42,7 @@ public static class CropFunctions
         // Hide bottom gallery when entering crop mode
         if (isBottomGalleryShown)
         {
-            vm.GalleryMode = GalleryMode.Closed;
+            vm.Gallery.GalleryMode.Value = GalleryMode.Closed;
             // Reset setting before resizing
             Settings.Gallery.IsBottomGalleryShown = false;
             await WindowResizing.SetSizeAsync(vm);
@@ -82,7 +82,11 @@ public static class CropFunctions
     {
         if (Settings.Gallery.IsBottomGalleryShown)
         {
-            vm.GalleryMode = GalleryMode.ClosedToBottom;
+            if (vm.Gallery is {} gallery)
+            {
+                gallery.GalleryMode.Value = GalleryMode.ClosedToBottom;
+            }
+            
             WindowResizing.SetSize(vm);
         }
 

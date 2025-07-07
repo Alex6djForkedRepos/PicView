@@ -460,7 +460,7 @@
                     Command="{CompiledBinding ToggleBottomGalleryCommand}"
                     Header="{CompiledBinding Translation.IsShowingBottomGallery.Value,
                                              Mode=OneWay}"
-                    IsChecked="{CompiledBinding IsBottomGalleryShown}">
+                    IsChecked="{CompiledBinding GLobalSettings.IsBottomGalleryShown}">
                     <MenuItem.Icon>
                         <Image Height="12" Width="12">
                             <DrawingImage>
@@ -1091,7 +1091,7 @@
             ClipToBounds="True"
             Content="{CompiledBinding CurrentView,
                                       Mode=OneWay}"
-            Margin="{CompiledBinding GalleryMargin}" />
+            Margin="{CompiledBinding Gallery.GalleryMargin.Value}" />
         <buttons:ClickArrowRight
             HorizontalAlignment="Right"
             Margin="{CompiledBinding RightControlOffSetMargin}"
@@ -1123,14 +1123,14 @@
             VerticalAlignment="Bottom"
             x:Name="GalleryShortcut" />
         <views:GalleryAnimationControlView
-            GalleryMode="{CompiledBinding GalleryMode,
+            GalleryMode="{CompiledBinding Gallery.GalleryMode.Value,
                                           Mode=OneWay}"
             Height="NaN"
-            IsVisible="{CompiledBinding IsBottomGalleryShown,
+            IsVisible="{CompiledBinding GLobalSettings.IsBottomGalleryShown.Value,
                                         Mode=OneWay}"
-            VerticalAlignment="{CompiledBinding GalleryVerticalAlignment,
+            VerticalAlignment="{CompiledBinding Gallery.GalleryVerticalAlignment.Value,
                                                 Mode=OneWay}"
-            Width="{CompiledBinding GalleryWidth,
+            Width="{CompiledBinding PicViewer.GalleryWidth.Value,
                                     Mode=OneWay}"
             x:Name="GalleryView" />
         <uc:ToolTipMessage

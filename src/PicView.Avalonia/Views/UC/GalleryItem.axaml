@@ -14,17 +14,17 @@
     <Border
         Background="Transparent"
         BorderThickness="2"
-        Height="{CompiledBinding GetGalleryItemHeight,
+        Height="{CompiledBinding Gallery.GalleryItem.ItemHeight.Value,
                                  Mode=OneWay}"
         MinWidth="25"
         ToolTip.HorizontalOffset="0"
         ToolTip.Placement="TopEdgeAlignedLeft"
         ToolTip.VerticalOffset="0"
-        Width="{CompiledBinding GetGalleryItemWidth,
+        Width="{CompiledBinding Gallery.GalleryItem.ItemWidth.Value,
                                 Mode=OneWay}"
         x:DataType="viewModels:MainViewModel"
         x:Name="ImageBorder">
-        <customControls:ThumbImage Stretch="{CompiledBinding GalleryStretch, Mode=OneWay}" x:Name="GalleryImage" />
+        <customControls:ThumbImage Stretch="{CompiledBinding Gallery.GalleryStretch.Value, Mode=OneWay}" x:Name="GalleryImage" />
         <ToolTip.Tip>
             <StackPanel MaxWidth="600">
                 <TextBlock
@@ -207,42 +207,42 @@
                         CommandParameter="Uniform"
                         Header="{CompiledBinding Translation.Uniform.Value,
                                                  Mode=OneWay}"
-                        IsChecked="{CompiledBinding IsUniformMenuChecked}"
+                        IsChecked="{CompiledBinding Gallery.IsUniformMenuChecked.Value}"
                         ToggleType="Radio" />
                     <MenuItem
                         Command="{CompiledBinding GalleryItemStretchCommand}"
                         CommandParameter="UniformToFill"
                         Header="{CompiledBinding Translation.UniformToFill.Value,
                                                  Mode=OneWay}"
-                        IsChecked="{CompiledBinding IsUniformToFillMenuChecked}"
+                        IsChecked="{CompiledBinding Gallery.IsUniformToFillMenuChecked.Value}"
                         ToggleType="Radio" />
                     <MenuItem
                         Command="{CompiledBinding GalleryItemStretchCommand}"
                         CommandParameter="Fill"
                         Header="{CompiledBinding Translation.Fill.Value,
                                                  Mode=OneWay}"
-                        IsChecked="{CompiledBinding IsFillMenuChecked}"
+                        IsChecked="{CompiledBinding Gallery.IsFillMenuChecked.Value}"
                         ToggleType="Radio" />
                     <MenuItem
                         Command="{CompiledBinding GalleryItemStretchCommand}"
                         CommandParameter="None"
                         Header="{CompiledBinding Translation.None.Value,
                                                  Mode=OneWay}"
-                        IsChecked="{CompiledBinding IsNoneMenuChecked}"
+                        IsChecked="{CompiledBinding Gallery.IsNoneMenuChecked.Value}"
                         ToggleType="Radio" />
                     <MenuItem
                         Command="{CompiledBinding GalleryItemStretchCommand}"
                         CommandParameter="Square"
                         Header="{CompiledBinding Translation.Square.Value,
                                                  Mode=OneWay}"
-                        IsChecked="{CompiledBinding IsSquareMenuChecked}"
+                        IsChecked="{CompiledBinding Gallery.IsSquareMenuChecked.Value}"
                         ToggleType="Radio" />
                     <MenuItem
                         Command="{CompiledBinding GalleryItemStretchCommand}"
                         CommandParameter="FillSquare"
                         Header="{CompiledBinding Translation.FillSquare.Value,
                                                  Mode=OneWay}"
-                        IsChecked="{CompiledBinding IsFillSquareMenuChecked}"
+                        IsChecked="{CompiledBinding Gallery.IsFillSquareMenuChecked.Value}"
                         ToggleType="Radio" />
                 </MenuItem>
                 <MenuItem
@@ -274,7 +274,7 @@
                     Command="{CompiledBinding CloseGalleryCommand}"
                     Header="{CompiledBinding Translation.HideBottomGallery.Value,
                                              Mode=OneWay}"
-                    IsVisible="{CompiledBinding !IsFullGalleryOpen}">
+                    IsVisible="{CompiledBinding !Gallery.IsGalleryExpanded.Value}">
                     <MenuItem.Icon>
                         <Path
                             Data="{StaticResource CloseGeometry}"
@@ -288,7 +288,7 @@
                     Command="{CompiledBinding ToggleGalleryCommand}"
                     Header="{CompiledBinding Translation.CloseGallery.Value,
                                              Mode=OneWay}"
-                    IsVisible="{CompiledBinding IsFullGalleryOpen}">
+                    IsVisible="{CompiledBinding Gallery.IsGalleryExpanded.Value}">
                     <MenuItem.Icon>
                         <Path
                             Data="{StaticResource CloseGeometry}"

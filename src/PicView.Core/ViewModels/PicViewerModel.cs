@@ -11,7 +11,7 @@ public class PicViewerModel : IDisposable
         Disposable.Dispose(FileInfo, PixelWidth, PixelHeight, ImageSource, SecondaryImageSource, ImageType);
         Disposable.Dispose(ImageType, ImageWidth, ImageHeight, SecondaryImageWidth, IsShowingSideBySide, ScrollViewerHeight);
         Disposable.Dispose(ScrollViewerHeight, AspectRatio, EffectConfig, ExifOrientation, ScaleX, Title);
-        Disposable.Dispose(TitleTooltip, WindowTitle);
+        Disposable.Dispose(TitleTooltip, WindowTitle, Index);
     }
     
     public BindableReactiveProperty<FileInfo?> FileInfo { get; } = new();
@@ -49,6 +49,8 @@ public class PicViewerModel : IDisposable
     public BindableReactiveProperty<double> ScrollViewerWidth { get; } = new(0);
 
     public BindableReactiveProperty<double> ScrollViewerHeight { get; } = new(0);
+    
+    public BindableReactiveProperty<double> GalleryWidth { get; } = new(0);
 
     public BindableReactiveProperty<double> AspectRatio { get; } = new();
 
@@ -59,9 +61,11 @@ public class PicViewerModel : IDisposable
     // Used to flip the flip button
     public BindableReactiveProperty<int> ScaleX { get; } = new();
 
-    public BindableReactiveProperty<string?> Title { get; } = new();
+    public BindableReactiveProperty<string> Title { get; } = new();
 
-    public BindableReactiveProperty<string?> TitleTooltip { get; } = new();
+    public BindableReactiveProperty<string> TitleTooltip { get; } = new();
 
-    public BindableReactiveProperty<string?> WindowTitle { get; } = new();
+    public BindableReactiveProperty<string> WindowTitle { get; } = new();
+    
+    public BindableReactiveProperty<int> Index { get; } = new();
 }

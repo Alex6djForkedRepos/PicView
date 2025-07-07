@@ -121,7 +121,7 @@ public static class ImageLoader
                     await NavigationManager.CheckIfTiffAndUpdate(vm, fileInfo, index);
                     if (Settings.Gallery.IsBottomGalleryShown && NavigationManager.GetCount > 0)
                     {
-                        vm.GalleryMode = GalleryMode.ClosedToBottom;
+                        vm.Gallery.GalleryMode.Value = GalleryMode.ClosedToBottom;
                     }
                 }
                 else

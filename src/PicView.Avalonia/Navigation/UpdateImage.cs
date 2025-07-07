@@ -153,13 +153,10 @@ public static class UpdateImage
             await Dispatcher.UIThread.InvokeAsync(() => { WindowFunctions.CenterWindowOnScreen(); });
         }
 
-        if (vm.SelectedGalleryItemIndex != index)
+        vm.PicViewer.Index.Value = index;
+        if (Settings.Gallery.IsBottomGalleryShown)
         {
-            vm.SelectedGalleryItemIndex = index;
-            if (Settings.Gallery.IsBottomGalleryShown)
-            {
-                GalleryNavigation.CenterScrollToSelectedItem(vm);
-            }
+            GalleryNavigation.CenterScrollToSelectedItem(vm);
         }
         
         SetStats(vm, preLoadValue.ImageModel);
@@ -287,8 +284,8 @@ public static class UpdateImage
 
         if (Settings.Gallery.IsBottomGalleryShown)
         {
-            vm.GalleryMode = GalleryMode.Closed;
-            vm.GalleryMargin = new Thickness(0);
+            vm.Gallery.GalleryMode.Value = GalleryMode.Closed;
+            vm.Gallery.GalleryMargin.Value = new Thickness(0);
         }
 
         vm.IsSingleImage = true;

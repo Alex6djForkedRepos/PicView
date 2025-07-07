@@ -277,6 +277,7 @@ public static class QuickLoad
 
         if (Settings.Gallery.IsBottomGalleryShown)
         {
+            vm.Gallery = new GalleryViewModel();
             bool loadGallery;
             if (!vm.IsUIShown)
             {
@@ -289,7 +290,7 @@ public static class QuickLoad
 
             if (loadGallery)
             {
-                vm.GalleryMode = GalleryMode.BottomNoAnimation;
+                vm.Gallery.GalleryMode.Value = GalleryMode.BottomNoAnimation;
                 tasks.Add(GalleryLoad.LoadGallery(vm, fileInfo.DirectoryName));
             }
         }

@@ -63,14 +63,14 @@ public static class GalleryNavigation
         {
             var listbox = UIHelper.GetGalleryView.GalleryListBox;
 
-            if (listbox is null || vm.SelectedGalleryItemIndex < 0 || vm.SelectedGalleryItemIndex >= listbox.Items.Count)
+            if (listbox is null || vm.PicViewer.Index.CurrentValue < 0 || vm.PicViewer.Index.CurrentValue >= listbox.Items.Count)
             {
                 return;
             }
 
             try
             {
-                listbox.ScrollToCenterOfItem(listbox.Items[vm.SelectedGalleryItemIndex] as GalleryItem);
+                listbox.ScrollToCenterOfItem(listbox.Items[vm.PicViewer.Index.CurrentValue] as GalleryItem);
             }
             catch (Exception e)
             {
@@ -83,7 +83,7 @@ public static class GalleryNavigation
     
     public static void NavigateGallery(Direction direction, MainViewModel vm)
     {
-        var highlightedGalleryItem = vm.SelectedGalleryItemIndex;
+        var highlightedGalleryItem = vm.PicViewer.Index.CurrentValue;
         var galleryItems = GetGalleryItems();
 
         if (highlightedGalleryItem < 0 || highlightedGalleryItem >= galleryItems.Count)
@@ -110,7 +110,7 @@ public static class GalleryNavigation
     
     public static void NavigateGallery(bool last, MainViewModel vm)
     {
-        var highlightedGalleryItem = vm.SelectedGalleryItemIndex;
+        var highlightedGalleryItem = vm.PicViewer.Index.CurrentValue;
         var galleryItems = GetGalleryItems();
         
         if (highlightedGalleryItem < 0 || highlightedGalleryItem >= galleryItems.Count)
@@ -159,7 +159,7 @@ public static class GalleryNavigation
 
     public static void SetHighlightedGalleryItem(MainViewModel vm, int index)
     {
-        vm.SelectedGalleryItemIndex = index;
+        vm.PicViewer.Index.Value = index;
         CenterScrollToSelectedItem(vm); // Ensure the selected item is in view
     }
 
@@ -176,9 +176,9 @@ public static class GalleryNavigation
             return;
         }
         GalleryFunctions.ToggleGallery(vm);
-        if (vm.SelectedGalleryItemIndex != NavigationManager.GetCurrentIndex) 
+        if (vm.PicViewer.Index.CurrentValue != NavigationManager.GetCurrentIndex) 
         {
-            await NavigationManager.Navigate(vm.SelectedGalleryItemIndex, vm).ConfigureAwait(false);
+            await NavigationManager.Navigate(vm.PicViewer.Index.CurrentValue, vm).ConfigureAwait(false);
         }
     }
     
