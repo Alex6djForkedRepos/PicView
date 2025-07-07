@@ -20,8 +20,6 @@ public static class GalleryLoad
         // TODO: When list larger than 500, lazy load this when scrolling instead.
         // Figure out how to support virtualization. 
 
-        vm.Gallery ??= new GalleryViewModel();
-
         if (IsLoading || !NavigationManager.CanNavigate(vm) || string.IsNullOrEmpty(currentDirectory))
         {
             return;

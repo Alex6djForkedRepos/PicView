@@ -319,7 +319,6 @@ public static class GalleryFunctions
         }
 
         MenuManager.CloseMenus(vm);
-        vm.Gallery ??= new GalleryViewModel();
         if (Settings.Gallery.IsBottomGalleryShown)
         {
             if (IsFullGalleryOpen)
@@ -376,7 +375,6 @@ public static class GalleryFunctions
             return;
         }
 
-        vm.Gallery ??= new GalleryViewModel();
         IsFullGalleryOpen = false;
         Settings.Gallery.IsBottomGalleryShown = true;
         if (NavigationManager.CanNavigate(vm))
@@ -396,7 +394,6 @@ public static class GalleryFunctions
 
     public static void OpenBottomGallery(MainViewModel vm)
     {
-        vm.Gallery ??= new GalleryViewModel();
         vm.Gallery.GalleryMode.Value = GalleryMode.ClosedToBottom;
         vm.Gallery.GalleryVerticalAlignment.Value = VerticalAlignment.Bottom;
     }

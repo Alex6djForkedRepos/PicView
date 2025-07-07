@@ -36,8 +36,8 @@ public static class Win32Window
         CenterWindowOnScreen(window);
 
         await WindowResizing.SetSizeAsync(vm);
-
-        vm.GalleryWidth = double.NaN;
+        
+        vm.PicViewer.GalleryWidth.Value = double.NaN;
 
         if (saveSettings)
         {

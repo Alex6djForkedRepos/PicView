@@ -22,7 +22,6 @@ public partial class GalleryItemSizeSlider : UserControl
             return;
         }
 
-        vm.Gallery ??= new GalleryViewModel();
         if (GalleryFunctions.IsFullGalleryOpen)
         {
             CustomSlider.Maximum = GalleryDefaults.MaxFullGalleryItemHeight;
@@ -41,8 +40,6 @@ public partial class GalleryItemSizeSlider : UserControl
         {
             return;
         }
-
-        vm.Gallery ??= new GalleryViewModel();
 
         if (GalleryFunctions.IsFullGalleryOpen)
         {

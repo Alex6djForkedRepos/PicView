@@ -27,7 +27,6 @@ public static class HideInterfaceLogic
             vm.Translation.IsShowingUI.Value = TranslationManager.Translation.ShowUI;
             if (!GalleryFunctions.IsFullGalleryOpen)
             {
-                vm.Gallery ??= new GalleryViewModel();
                 if (!Settings.Gallery.ShowBottomGalleryInHiddenUI)
                 {
                     vm.Gallery.GalleryMode.Value = GalleryMode.Closed;
@@ -123,7 +122,7 @@ public static class HideInterfaceLogic
     {
         Settings.Gallery.ShowBottomGalleryInHiddenUI = !Settings.Gallery
             .ShowBottomGalleryInHiddenUI;
-        vm.GLobalSettings.ShowBottomGalleryInHiddenUI.Value = Settings.Gallery.ShowBottomGalleryInHiddenUI;
+        vm.Gallery.IsBottomGalleryShownInHiddenUI.Value = Settings.Gallery.ShowBottomGalleryInHiddenUI;
 
         if (!GalleryFunctions.IsFullGalleryOpen && vm.Gallery is not null)
         {

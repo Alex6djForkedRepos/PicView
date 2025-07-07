@@ -150,6 +150,7 @@ public class GalleryAnimationControl : UserControl
             Opacity = FullOpacity;
             Height = double.NaN;
             ViewModel.Gallery.GalleryOrientation.Value = Orientation.Horizontal;
+            ViewModel.Gallery.GalleryVerticalAlignment.Value = VerticalAlignment.Bottom;
         });
     }
 

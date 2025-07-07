@@ -14,11 +14,6 @@ public class GalleryViewModel : IDisposable
 
     public BindableReactiveProperty<Thickness> GalleryMargin { get; } = new();
 
-    public BindableReactiveProperty<bool> IsBottomGalleryShown { get; } = new(Settings.Gallery.IsBottomGalleryShown);
-
-    public BindableReactiveProperty<bool> IsBottomGalleryShownInHiddenUI { get; } =
-        new(Settings.Gallery.ShowBottomGalleryInHiddenUI);
-
     public BindableReactiveProperty<GalleryMode> GalleryMode { get; } = new(Core.Gallery.GalleryMode.Closed);
 
     public BindableReactiveProperty<Stretch> GalleryStretch { get; } = new();
@@ -26,6 +21,10 @@ public class GalleryViewModel : IDisposable
     public BindableReactiveProperty<Orientation> GalleryOrientation { get; } = new();
 
     public BindableReactiveProperty<bool> IsGalleryExpanded { get; } = new();
+    
+    public BindableReactiveProperty<bool> IsBottomGalleryShown { get; } = new(Settings.Gallery.IsBottomGalleryShown);
+    public BindableReactiveProperty<bool> IsBottomGalleryShownInHiddenUI { get; } =
+        new(Settings.Gallery.ShowBottomGalleryInHiddenUI);
     
     #region Gallery Stretch IsChecked
 
@@ -68,10 +67,10 @@ public class GalleryViewModel : IDisposable
     #endregion
 
     #region Commands
-    public ReactiveCommand ToggleGalleryCommand { get; init; } = new(ToggleGallery);
-    public ReactiveCommand ToggleBottomGalleryCommand { get; init; } = new(ToggleBottomGallery);
-    public ReactiveCommand CloseGalleryCommand { get; init; } = new(CloseGallery);
-    public ReactiveCommand<string> GalleryItemStretchCommand { get; init; } = new(GalleryItemStretch);
+    public ReactiveCommand ToggleGalleryCommand { get; } = new(ToggleGallery);
+    public ReactiveCommand ToggleBottomGalleryCommand { get; } = new(ToggleBottomGallery);
+    public ReactiveCommand CloseGalleryCommand { get; } = new(CloseGallery);
+    public ReactiveCommand<string> GalleryItemStretchCommand { get; } = new(GalleryItemStretch);
 
     private static void ToggleGallery(Unit unit) => FunctionsMapper.ToggleGallery();
     private static void ToggleBottomGallery(Unit unit) => FunctionsMapper.OpenCloseBottomGallery();

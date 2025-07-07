@@ -2,7 +2,6 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
-using Avalonia.Layout;
 using Avalonia.Media;
 using PicView.Avalonia.Clipboard;
 using PicView.Avalonia.Converters;
@@ -17,7 +16,6 @@ using PicView.Avalonia.UI;
 using PicView.Avalonia.Wallpaper;
 using PicView.Avalonia.WindowBehavior;
 using PicView.Core.FileSorting;
-using PicView.Core.Gallery;
 using PicView.Core.ProcessHandling;
 using PicView.Core.Sizing;
 using PicView.Core.ViewModels;
@@ -36,7 +34,7 @@ public class MainViewModel : ReactiveObject
     public SettingsViewModel? SettingsViewModel { get; set; }
     public ImageCropperViewModel? Crop { get; set; }
     public PicViewerModel PicViewer { get; } = new();
-    public GalleryViewModel? Gallery { get; set; }
+    public GalleryViewModel? Gallery { get; } = new();
     public ExifViewModel? Exif { get; set;  }
     
     public FileAssociationsViewModel? AssociationsViewModel { get; set; }

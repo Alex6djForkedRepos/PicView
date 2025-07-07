@@ -277,7 +277,6 @@ public static class QuickLoad
 
         if (Settings.Gallery.IsBottomGalleryShown)
         {
-            vm.Gallery = new GalleryViewModel();
             bool loadGallery;
             if (!vm.IsUIShown)
             {
