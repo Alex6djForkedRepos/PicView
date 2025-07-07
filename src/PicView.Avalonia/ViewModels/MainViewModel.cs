@@ -33,6 +33,7 @@ public class MainViewModel : ReactiveObject
     public GlobalSettingsViewModel? GLobalSettings { get; } = new();
     public SettingsViewModel? SettingsViewModel { get; set; }
     public ImageCropperViewModel? Crop { get; set; }
+    public NavigationViewModel Navigation { get; } = new();
     public PicViewerModel PicViewer { get; } = new();
     public GalleryViewModel? Gallery { get; } = new();
     public ExifViewModel? Exif { get; set;  }
@@ -64,40 +65,6 @@ public class MainViewModel : ReactiveObject
         ShowEffectsWindowCommand = FunctionsHelper.CreateReactiveCommand(PlatformWindowService.ShowEffectsWindow);
 
         #endregion Window commands
-
-        #region Navigation Commands
-
-        NextCommand = FunctionsHelper.CreateReactiveCommand(() => { Task.Run(FunctionsMapper.Next); });
-
-        NextButtonCommand = FunctionsHelper.CreateReactiveCommand(() => { UIHelper.NextButtonNavigation(this); });
-
-        NextArrowButtonCommand = FunctionsHelper.CreateReactiveCommand(() => { UIHelper.NextArrowButtonNavigation(this); });
-
-        NextFolderCommand = FunctionsHelper.CreateReactiveCommand(() => { Task.Run(FunctionsMapper.NextFolder); });
-
-        PreviousCommand = FunctionsHelper.CreateReactiveCommand(() => { Task.Run(FunctionsMapper.Prev); });
-
-        PreviousButtonCommand = FunctionsHelper.CreateReactiveCommand(() => { UIHelper.PreviousButtonNavigation(this); });
-
-        PreviousArrowButtonCommand = FunctionsHelper.CreateReactiveCommand(() => { UIHelper.PreviousArrowButtonNavigation(this); });
-
-        PreviousFolderCommand = FunctionsHelper.CreateReactiveCommand(() => { Task.Run(FunctionsMapper.PrevFolder); });
-
-        Skip10Command = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.Next10);
-
-        Skip100Command = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.Next100);
-
-        Prev10Command = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.Prev10);
-
-        Prev100Command = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.Prev100);
-
-        FirstCommand = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.First);
-
-        LastCommand = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.Last);
-
-        ReloadCommand = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.Reload);
-
-        #endregion Navigation Commands
 
         #region Sort Commands
 
@@ -216,21 +183,7 @@ public class MainViewModel : ReactiveObject
         SetAsWallpaperCenteredCommand = FunctionsHelper.CreateReactiveCommand<string>(SetAsWallpaperCenteredTask);
         SetAsWallpaperFilledCommand = FunctionsHelper.CreateReactiveCommand<string>(SetAsWallpaperFilledTask);
 
-        SetAsLockScreenCommand = FunctionsHelper.CreateReactiveCommand<string>(SetAsLockScreenTask);
-
         #endregion File commands
-
-        #region Gallery Commands
-
-        ToggleGalleryCommand = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.ToggleGallery);
-
-        ToggleBottomGalleryCommand = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.OpenCloseBottomGallery);
-
-        CloseGalleryCommand = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.CloseGallery);
-
-        GalleryItemStretchCommand = FunctionsHelper.CreateReactiveCommand<string>(SetGalleryItemStretch);
-
-        #endregion Gallery Commands
 
         #region UI Commands
 
@@ -294,23 +247,8 @@ public class MainViewModel : ReactiveObject
     public ReactiveCommand<Unit, Unit>? ExitCommand { get; }
     public ReactiveCommand<Unit, Unit>? MinimizeCommand { get; }
     public ReactiveCommand<Unit, Unit>? MaximizeCommand { get; }
-
     public ReactiveCommand<Unit, Unit>? RestoreCommand { get; }
     public ReactiveCommand<Unit, Unit>? ToggleFullscreenCommand { get; }
-    public ReactiveCommand<Unit, Unit>? NextCommand { get; }
-    public ReactiveCommand<Unit, Unit>? NextButtonCommand { get; }
-    public ReactiveCommand<Unit, Unit>? NextArrowButtonCommand { get; }
-    public ReactiveCommand<Unit, Unit>? PreviousCommand { get; }
-    public ReactiveCommand<Unit, Unit>? PreviousButtonCommand { get; }
-    public ReactiveCommand<Unit, Unit>? PreviousArrowButtonCommand { get; }
-    public ReactiveCommand<Unit, Unit>? NextFolderCommand { get; }
-    public ReactiveCommand<Unit, Unit>? PreviousFolderCommand { get; }
-    public ReactiveCommand<Unit, Unit>? FirstCommand { get; }
-    public ReactiveCommand<Unit, Unit>? LastCommand { get; }
-    public ReactiveCommand<Unit, Unit>? Skip10Command { get; }
-    public ReactiveCommand<Unit, Unit>? Prev10Command { get; }
-    public ReactiveCommand<Unit, Unit>? Skip100Command { get; }
-    public ReactiveCommand<Unit, Unit>? Prev100Command { get; }
     public ReactiveCommand<Unit, Unit>? OpenFileCommand { get; }
     public ReactiveCommand<Unit, Unit>? SaveFileCommand { get; }
     public ReactiveCommand<Unit, Unit>? SaveFileAsCommand { get; }
@@ -322,7 +260,6 @@ public class MainViewModel : ReactiveObject
     public ReactiveCommand<string, Unit>? FilePropertiesCommand { get; }
     public ReactiveCommand<Unit, Unit>? CopyImageCommand { get; }
     public ReactiveCommand<string, Unit>? CutCommand { get; }
-    public ReactiveCommand<Unit, Unit>? ReloadCommand { get; }
     public ReactiveCommand<string, Unit>? PrintCommand { get; }
     public ReactiveCommand<string, Unit>? DeleteFileCommand { get; }
     public ReactiveCommand<string, Unit>? RecycleFileCommand { get; }
@@ -379,10 +316,6 @@ public class MainViewModel : ReactiveObject
     public ReactiveCommand<Unit, Unit>? SortFilesAscendingCommand { get; }
     public ReactiveCommand<Unit, Unit>? SortFilesDescendingCommand { get; }
 
-    public ReactiveCommand<Unit, Unit>? ToggleGalleryCommand { get; }
-    public ReactiveCommand<Unit, Unit>? ToggleBottomGalleryCommand { get; }
-    public ReactiveCommand<Unit, Unit>? CloseGalleryCommand { get; }
-
     public ReactiveCommand<Unit, Unit>? ToggleScrollCommand { get; }
 
     public ReactiveCommand<Unit, Unit>? ToggleSubdirectoriesCommand { get; }
@@ -396,10 +329,6 @@ public class MainViewModel : ReactiveObject
     public ReactiveCommand<string, Unit>? SetAsWallpaperStretchedCommand { get; }
     public ReactiveCommand<string, Unit>? SetAsWallpaperTiledCommand { get; }
     public ReactiveCommand<string, Unit>? SetAsWallpaperCenteredCommand { get; }
-
-    public ReactiveCommand<string, Unit>? SetAsLockScreenCommand { get; }
-
-    public ReactiveCommand<string, Unit>? GalleryItemStretchCommand { get; }
 
     public ReactiveCommand<Unit, Unit>? ResetSettingsCommand { get; }
 

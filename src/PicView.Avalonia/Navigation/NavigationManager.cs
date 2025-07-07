@@ -311,8 +311,11 @@ public static class NavigationManager
 
         await ImageLoader.CheckCancellationAndStartIterateToIndex(index, ImageIterator).ConfigureAwait(false);
     }
+    
+    public static async Task NavigateIncrements(bool next, bool is10, bool is100) =>
+        await NavigateIncrements(UIHelper.GetMainView.DataContext as MainViewModel, next, is10, is100).ConfigureAwait(false);
 
-    private static async Task NavigateIncrements(MainViewModel vm, bool next, bool is10, bool is100)
+    public static async Task NavigateIncrements(MainViewModel vm, bool next, bool is10, bool is100)
     {
         if (!CanNavigate(vm))
         {
@@ -362,6 +365,10 @@ public static class NavigationManager
             await UIHelper.ScrollToEndIfNecessary(last);
         }
     }
+    
+    /// <inheritdoc cref="NavigateBetweenDirectories(bool last, MainViewModel vm)"/>
+    public static async Task NavigateFirstOrLast(bool last) =>
+        await NavigateBetweenDirectories(last, UIHelper.GetMainView.DataContext as MainViewModel);
 
     /// <summary>
     ///     Iterates to the next or previous image based on the <paramref name="next" /> parameter.
@@ -380,6 +387,7 @@ public static class NavigationManager
             await Navigate(next, vm);
         }
     }
+    public static async Task Iterate(bool next) => await Iterate(next, UIHelper.GetMainView.DataContext as MainViewModel).ConfigureAwait(false);
 
     /// <summary>
     ///     Navigates and moves the cursor to the corresponding button.
@@ -484,6 +492,11 @@ public static class NavigationManager
             });
         }
     }
+    
+    /// <inheritdoc cref="NavigateBetweenDirectories(bool, next, MainViewModel vm)"/>
+    public static async Task NavigateBetweenDirectories(bool next) =>
+        await NavigateBetweenDirectories(next, UIHelper.GetMainView.DataContext as MainViewModel);
+        
 
     /// <summary>
     ///     Gets the list of files in the next or previous folder.

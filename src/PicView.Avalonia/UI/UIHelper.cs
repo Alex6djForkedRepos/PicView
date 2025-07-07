@@ -143,24 +143,34 @@ public static class UIHelper
     /// </summary>
     public static async Task NextButtonNavigation(MainViewModel vm) =>
         await SetButtonIntervalAndNavigate(GetBottomBar?.NextButton, true, false, vm);
+    /// <inheritdoc cref="NextButtonNavigation(MainViewModel vm)"/>
+    public static async Task NextButtonNavigation() =>
+        await SetButtonIntervalAndNavigate(GetBottomBar?.NextButton, true, false, GetMainView.DataContext as MainViewModel);
 
     /// <summary>
     /// Navigates to the previous image using the bottom navigation button
     /// </summary>
     public static async Task PreviousButtonNavigation(MainViewModel vm) =>
         await SetButtonIntervalAndNavigate(GetBottomBar?.PreviousButton, false, false, vm);
+    /// <inheritdoc cref="PreviousButtonNavigation(MainViewModel vm)"/>
+    public static async Task PreviousButtonNavigation() =>
+        await SetButtonIntervalAndNavigate(GetBottomBar?.PreviousButton, false, false, GetMainView.DataContext as MainViewModel);
 
     /// <summary>
     /// Navigates to the next image using the arrow button
     /// </summary>
     public static async Task NextArrowButtonNavigation(MainViewModel vm) =>
         await SetButtonIntervalAndNavigate(GetMainView?.ClickArrowRight?.PolyButton, true, true, vm);
+    /// <inheritdoc cref="NextArrowButtonNavigation(MainViewModel vm)"/>
+    public static async Task NextArrowButtonNavigation() =>
+        await SetButtonIntervalAndNavigate(GetMainView?.ClickArrowRight?.PolyButton, true, true, GetMainView.DataContext as MainViewModel);
 
-    /// <summary>
-    /// Navigates to the previous image using the arrow button
-    /// </summary>
+    /// <inheritdoc cref="NextArrowButtonNavigation(MainViewModel vm)"/>
     public static async Task PreviousArrowButtonNavigation(MainViewModel vm) =>
         await SetButtonIntervalAndNavigate(GetMainView?.ClickArrowLeft?.PolyButton, false, true, vm);
+    /// <inheritdoc cref="NextArrowButtonNavigation(MainViewModel vm)"/>
+    public static async Task PreviousArrowButtonNavigation() =>
+        await SetButtonIntervalAndNavigate(GetMainView?.ClickArrowLeft?.PolyButton, false, true, GetMainView.DataContext as MainViewModel);
 
     private static async Task SetButtonIntervalAndNavigate(RepeatButton? button, bool isNext, bool isArrow,
         MainViewModel vm)

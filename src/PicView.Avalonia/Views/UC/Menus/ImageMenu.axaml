@@ -403,7 +403,7 @@
                     Canvas.Left="7"
                     Canvas.Top="155"
                     Classes="ButtonBorder altHover"
-                    Command="{CompiledBinding ToggleBottomGalleryCommand}"
+                    Command="{CompiledBinding Gallery.ToggleBottomGalleryCommand}"
                     Foreground="{DynamicResource MainTextColor}"
                     Height="46"
                     IsEnabled="{CompiledBinding !IsSingleImage}"

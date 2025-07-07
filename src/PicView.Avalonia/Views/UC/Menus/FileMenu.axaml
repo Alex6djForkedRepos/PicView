@@ -49,7 +49,7 @@
 
                 <customControls:IconButton
                     Classes="hover btn"
-                    Command="{Binding ReloadCommand}"
+                    Command="{Binding Navigation.ReloadCommand}"
                     CornerRadius="8,0,0,0"
                     Data="{StaticResource ReloadGeometry}"
                     IconHeight="17"

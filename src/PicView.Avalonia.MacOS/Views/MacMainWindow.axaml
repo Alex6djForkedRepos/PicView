@@ -60,7 +60,7 @@
                                                     Converter={x:Static ObjectConverters.IsNotNull}}" />
                     <NativeMenuItemSeparator />
                     <NativeMenuItem
-                        Command="{CompiledBinding ReloadCommand}"
+                        Command="{CompiledBinding Navigation.ReloadCommand}"
                         CommandParameter="{CompiledBinding PicViewer.FileInfo.Value.FullName,
                                                            FallbackValue=''}"
                         Header="{CompiledBinding Translation.Reload.Value,
@@ -186,16 +186,16 @@
                 <NativeMenu>
                     <NativeMenuItem Command="{CompiledBinding SlideshowCommand}" Header="{CompiledBinding Translation.Slideshow.Value, Mode=OneWay}" />
                     <NativeMenuItemSeparator />
-                    <NativeMenuItem Command="{CompiledBinding FirstCommand}" Header="{CompiledBinding Translation.FirstImage.Value, Mode=OneWay}" />
-                    <NativeMenuItem Command="{CompiledBinding LastCommand}" Header="{CompiledBinding Translation.LastImage.Value, Mode=OneWay}" />
+                    <NativeMenuItem Command="{CompiledBinding Navigation.FirstCommand}" Header="{CompiledBinding Translation.FirstImage.Value, Mode=OneWay}" />
+                    <NativeMenuItem Command="{CompiledBinding Navigation.LastCommand}" Header="{CompiledBinding Translation.LastImage.Value, Mode=OneWay}" />
                     <NativeMenuItemSeparator />
-                    <NativeMenuItem Command="{CompiledBinding Skip10Command}" Header="{CompiledBinding Translation.AdvanceBy10Images.Value, Mode=OneWay}" />
-                    <NativeMenuItem Command="{CompiledBinding Skip100Command}" Header="{CompiledBinding Translation.AdvanceBy100Images.Value, Mode=OneWay}" />
-                    <NativeMenuItem Command="{CompiledBinding Prev10Command}" Header="{CompiledBinding Translation.GoBackBy10Images.Value, Mode=OneWay}" />
-                    <NativeMenuItem Command="{CompiledBinding Prev100Command}" Header="{CompiledBinding Translation.GoBackBy100Images.Value, Mode=OneWay}" />
+                    <NativeMenuItem Command="{CompiledBinding Navigation.Skip10Command}" Header="{CompiledBinding Translation.AdvanceBy10Images.Value, Mode=OneWay}" />
+                    <NativeMenuItem Command="{CompiledBinding Navigation.Skip100Command}" Header="{CompiledBinding Translation.AdvanceBy100Images.Value, Mode=OneWay}" />
+                    <NativeMenuItem Command="{CompiledBinding Navigation.Prev10Command}" Header="{CompiledBinding Translation.GoBackBy10Images.Value, Mode=OneWay}" />
+                    <NativeMenuItem Command="{CompiledBinding Navigation.Prev100Command}" Header="{CompiledBinding Translation.GoBackBy100Images.Value, Mode=OneWay}" />
                     <NativeMenuItemSeparator />
-                    <NativeMenuItem Command="{CompiledBinding NextFolderCommand}" Header="{CompiledBinding Translation.NextFolder.Value, Mode=OneWay}" />
-                    <NativeMenuItem Command="{CompiledBinding PreviousFolderCommand}" Header="{CompiledBinding Translation.PrevFolder.Value, Mode=OneWay}" />
+                    <NativeMenuItem Command="{CompiledBinding Navigation.NextFolderCommand}" Header="{CompiledBinding Translation.NextFolder.Value, Mode=OneWay}" />
+                    <NativeMenuItem Command="{CompiledBinding Navigation.PreviousFolderCommand}" Header="{CompiledBinding Translation.PrevFolder.Value, Mode=OneWay}" />
                 </NativeMenu>
             </NativeMenuItem>
 
@@ -210,7 +210,7 @@
                         IsChecked="{CompiledBinding IsAutoFit}"
                         ToggleType="CheckBox" />
                     <NativeMenuItem Command="{CompiledBinding ToggleUICommand}" Header="{CompiledBinding Translation.IsShowingUI.Value, Mode=OneWay}" />
-                    <NativeMenuItem Command="{CompiledBinding ToggleGalleryCommand}" Header="{CompiledBinding Translation.ShowImageGallery.Value, Mode=OneWay}" />
+                    <NativeMenuItem Command="{CompiledBinding Gallery.ToggleGalleryCommand}" Header="{CompiledBinding Translation.ShowImageGallery.Value, Mode=OneWay}" />
 
                 </NativeMenu>
             </NativeMenuItem>

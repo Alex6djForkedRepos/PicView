@@ -72,7 +72,7 @@
             BorderBrush="{DynamicResource MainBorderColor}"
             BorderThickness="0"
             Classes="hover"
-            Command="{CompiledBinding ToggleGalleryCommand}"
+            Command="{CompiledBinding Gallery.ToggleGalleryCommand}"
             Data="{StaticResource GalleryGeometry}"
             DockPanel.Dock="Right"
             Foreground="{DynamicResource MainTextColor}"

@@ -19,7 +19,7 @@
         BorderBrush="{DynamicResource MainBorderColor}"
         BorderThickness="1,0,0,0"
         Classes="hover"
-        Command="{CompiledBinding ToggleGalleryCommand}"
+        Command="{CompiledBinding Gallery.ToggleGalleryCommand}"
         CornerRadius="45,0,0,0"
         Height="47"
         HorizontalAlignment="Right"

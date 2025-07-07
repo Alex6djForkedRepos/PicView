@@ -15,7 +15,7 @@
 
             <!--  Next  -->
             <MenuItem
-                Command="{CompiledBinding NextCommand}"
+                Command="{CompiledBinding Navigation.NextCommand}"
                 Header="{CompiledBinding Translation.NextImage,
                                          Mode=OneWay}"
                 IsEnabled="{CompiledBinding PicViewer.FileInfo.Value,
@@ -31,7 +31,7 @@
 
             <!--  Prev  -->
             <MenuItem
-                Command="{CompiledBinding PreviousCommand}"
+                Command="{CompiledBinding Navigation.PreviousCommand}"
                 Header="{CompiledBinding Translation.PrevImage,
                                          Mode=OneWay}"
                 IsEnabled="{CompiledBinding PicViewer.FileInfo.Value,
@@ -50,7 +50,7 @@
 
             <!--  Next 10  -->
             <MenuItem
-                Command="{CompiledBinding Skip10Command}"
+                Command="{CompiledBinding Navigation.Skip10Command}"
                 Header="{CompiledBinding Translation.AdvanceBy10Images,
                                          Mode=OneWay}"
                 IsEnabled="{CompiledBinding PicViewer.FileInfo.Value,
@@ -66,7 +66,7 @@
 
             <!--  Next 100  -->
             <MenuItem
-                Command="{CompiledBinding Skip100Command}"
+                Command="{CompiledBinding Navigation.Skip100Command}"
                 Header="{CompiledBinding Translation.AdvanceBy100Images.Value,
                                          Mode=OneWay}"
                 IsEnabled="{CompiledBinding PicViewer.FileInfo.Value,
@@ -82,7 +82,7 @@
 
             <!--  Prev 10  -->
             <MenuItem
-                Command="{CompiledBinding Prev10Command}"
+                Command="{CompiledBinding Navigation.Prev10Command}"
                 Header="{CompiledBinding Translation.GoBackBy10Images.Value,
                                          Mode=OneWay}"
                 IsEnabled="{CompiledBinding PicViewer.FileInfo.Value,
@@ -98,7 +98,7 @@
 
             <!--  Prev 100  -->
             <MenuItem
-                Command="{CompiledBinding Prev100Command}"
+                Command="{CompiledBinding Navigation.Prev100Command}"
                 Header="{CompiledBinding Translation.GoBackBy100Images.Value,
                                          Mode=OneWay}"
                 IsEnabled="{CompiledBinding PicViewer.FileInfo.Value,
@@ -116,7 +116,7 @@
 
             <!--  First Image  -->
             <MenuItem
-                Command="{CompiledBinding FirstCommand}"
+                Command="{CompiledBinding Navigation.FirstCommand}"
                 Header="{CompiledBinding Translation.FirstImage.Value,
                                          Mode=OneWay}"
                 IsEnabled="{CompiledBinding PicViewer.FileInfo.Value,
@@ -131,7 +131,7 @@
 
             <!--  Last Image  -->
             <MenuItem
-                Command="{CompiledBinding LastCommand}"
+                Command="{CompiledBinding Navigation.LastCommand}"
                 Header="{CompiledBinding Translation.LastImage.Value,
                                          Mode=OneWay}"
                 IsEnabled="{CompiledBinding PicViewer.FileInfo.Value,
@@ -148,7 +148,7 @@
 
             <!--  Next folder  -->
             <MenuItem
-                Command="{CompiledBinding NextFolderCommand}"
+                Command="{CompiledBinding Navigation.NextFolderCommand}"
                 Header="{CompiledBinding Translation.NextFolder.Value,
                                          Mode=OneWay}"
                 IsEnabled="{CompiledBinding PicViewer.FileInfo.Value,
@@ -163,7 +163,7 @@
 
             <!--  Prev folder  -->
             <MenuItem
-                Command="{CompiledBinding PreviousFolderCommand}"
+                Command="{CompiledBinding Navigation.PreviousFolderCommand}"
                 Header="{CompiledBinding Translation.PrevFolder.Value,
                                          Mode=OneWay}"
                 IsEnabled="{CompiledBinding PicViewer.FileInfo.Value,
@@ -264,7 +264,7 @@
                     BorderBrush="{DynamicResource MainBorderColor}"
                     BorderThickness="0,0,1,0"
                     Classes="hover"
-                    Command="{CompiledBinding PreviousButtonCommand}"
+                    Command="{CompiledBinding Navigation.PreviousButtonCommand}"
                     Data="{StaticResource FilledArrowLeftGeometry}"
                     Focusable="False"
                     Foreground="{DynamicResource MainTextColor}"
@@ -283,7 +283,7 @@
                     BorderBrush="{DynamicResource MainBorderColor}"
                     BorderThickness="0,0,1,0"
                     Classes="hover"
-                    Command="{CompiledBinding NextButtonCommand}"
+                    Command="{CompiledBinding Navigation.NextButtonCommand}"
                     Data="{StaticResource FilledArrowRightGeometry}"
                     Focusable="False"
                     Foreground="{DynamicResource MainTextColor}"

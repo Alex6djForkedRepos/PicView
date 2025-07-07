@@ -203,42 +203,42 @@
                             Width="12" />
                     </MenuItem.Icon>
                     <MenuItem
-                        Command="{CompiledBinding GalleryItemStretchCommand}"
+                        Command="{CompiledBinding Gallery.GalleryItemStretchCommand}"
                         CommandParameter="Uniform"
                         Header="{CompiledBinding Translation.Uniform.Value,
                                                  Mode=OneWay}"
                         IsChecked="{CompiledBinding Gallery.IsUniformMenuChecked.Value}"
                         ToggleType="Radio" />
                     <MenuItem
-                        Command="{CompiledBinding GalleryItemStretchCommand}"
+                        Command="{CompiledBinding Gallery.GalleryItemStretchCommand}"
                         CommandParameter="UniformToFill"
                         Header="{CompiledBinding Translation.UniformToFill.Value,
                                                  Mode=OneWay}"
                         IsChecked="{CompiledBinding Gallery.IsUniformToFillMenuChecked.Value}"
                         ToggleType="Radio" />
                     <MenuItem
-                        Command="{CompiledBinding GalleryItemStretchCommand}"
+                        Command="{CompiledBinding Gallery.GalleryItemStretchCommand}"
                         CommandParameter="Fill"
                         Header="{CompiledBinding Translation.Fill.Value,
                                                  Mode=OneWay}"
                         IsChecked="{CompiledBinding Gallery.IsFillMenuChecked.Value}"
                         ToggleType="Radio" />
                     <MenuItem
-                        Command="{CompiledBinding GalleryItemStretchCommand}"
+                        Command="{CompiledBinding Gallery.GalleryItemStretchCommand}"
                         CommandParameter="None"
                         Header="{CompiledBinding Translation.None.Value,
                                                  Mode=OneWay}"
                         IsChecked="{CompiledBinding Gallery.IsNoneMenuChecked.Value}"
                         ToggleType="Radio" />
                     <MenuItem
-                        Command="{CompiledBinding GalleryItemStretchCommand}"
+                        Command="{CompiledBinding Gallery.GalleryItemStretchCommand}"
                         CommandParameter="Square"
                         Header="{CompiledBinding Translation.Square.Value,
                                                  Mode=OneWay}"
                         IsChecked="{CompiledBinding Gallery.IsSquareMenuChecked.Value}"
                         ToggleType="Radio" />
                     <MenuItem
-                        Command="{CompiledBinding GalleryItemStretchCommand}"
+                        Command="{CompiledBinding Gallery.GalleryItemStretchCommand}"
                         CommandParameter="FillSquare"
                         Header="{CompiledBinding Translation.FillSquare.Value,
                                                  Mode=OneWay}"
@@ -271,7 +271,7 @@
                 </MenuItem>
                 <Separator />
                 <MenuItem
-                    Command="{CompiledBinding CloseGalleryCommand}"
+                    Command="{CompiledBinding Gallery.CloseGalleryCommand}"
                     Header="{CompiledBinding Translation.HideBottomGallery.Value,
                                              Mode=OneWay}"
                     IsVisible="{CompiledBinding !Gallery.IsGalleryExpanded.Value}">
@@ -285,7 +285,7 @@
                     </MenuItem.Icon>
                 </MenuItem>
                 <MenuItem
-                    Command="{CompiledBinding ToggleGalleryCommand}"
+                    Command="{CompiledBinding Gallery.ToggleGalleryCommand}"
                     Header="{CompiledBinding Translation.CloseGallery.Value,
                                              Mode=OneWay}"
                     IsVisible="{CompiledBinding Gallery.IsGalleryExpanded.Value}">
