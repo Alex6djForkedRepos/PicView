@@ -251,8 +251,8 @@ public static class WindowResizing
                 vm.PlatformWindowService.CombinedTitleButtonsWidth,
                 rotation,
                 screenSize.Scaling,
-                vm.TitlebarHeight,
-                vm.BottombarHeight,
+                vm.MainWindow.TitlebarHeight.CurrentValue,
+                vm.MainWindow.BottombarHeight.CurrentValue,
                 GalleryFunctions.GetGalleryHeight(vm),
                 containerWidth,
                 containerHeight);
@@ -268,8 +268,8 @@ public static class WindowResizing
                 vm.PlatformWindowService.CombinedTitleButtonsWidth,
                 rotation,
                 screenSize.Scaling,
-                vm.TitlebarHeight,
-                vm.BottombarHeight,
+                vm.MainWindow.TitlebarHeight.CurrentValue,
+                vm.MainWindow.BottombarHeight.CurrentValue,
                 GalleryFunctions.GetGalleryHeight(vm),
                 containerWidth,
                 containerHeight);

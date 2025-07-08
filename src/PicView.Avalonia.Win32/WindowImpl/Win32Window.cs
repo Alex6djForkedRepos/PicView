@@ -18,10 +18,10 @@ public static class Win32Window
         MenuManager.CloseMenus(vm);
 
         // Update view model properties
-        vm.SizeToContent = SizeToContent.Manual;
+        vm.MainWindow.SizeToContent.Value = SizeToContent.Manual;
         vm.IsFullscreen = true;
         vm.IsMaximized = false;
-        vm.CanResize = false;
+        vm.MainWindow.CanResize.Value = false;
 
         // Update settings
         Settings.WindowProperties.Fullscreen = true;
@@ -54,7 +54,7 @@ public static class Win32Window
         {
             if (Settings.WindowProperties.AutoFit)
             {
-                vm.SizeToContent = SizeToContent.Manual;
+                vm.MainWindow.SizeToContent.Value = SizeToContent.Manual;
             }
             
             // Save window size, so that restoring it will return to the same size and position
@@ -68,7 +68,7 @@ public static class Win32Window
 
         vm.IsMaximized = true;
         vm.IsFullscreen = false;
-        vm.CanResize = false;
+        vm.MainWindow.CanResize.Value = false;
 
         if (saveSettings)
         {
@@ -94,8 +94,8 @@ public static class Win32Window
 
         if (Settings.WindowProperties.AutoFit)
         {
-            vm.SizeToContent = SizeToContent.WidthAndHeight;
-            vm.CanResize = false;
+            vm.MainWindow.SizeToContent.Value = SizeToContent.WidthAndHeight;
+            vm.MainWindow.CanResize.Value = false;
             vm.IsAutoFit = true;
             if (Settings.WindowProperties.KeepCentered)
             {
@@ -110,8 +110,8 @@ public static class Win32Window
         }
         else
         {
-            vm.SizeToContent = SizeToContent.Manual;
-            vm.CanResize = true;
+            vm.MainWindow.SizeToContent.Value = SizeToContent.Manual;
+            vm.MainWindow.CanResize.Value = true;
             WindowFunctions.InitializeWindowSizeAndPosition(window);
         }
         
@@ -211,7 +211,7 @@ public static class Win32Window
         }
 
         vm.IsTopToolbarShown = true;
-        vm.TitlebarHeight = SizeDefaults.MainTitlebarHeight;
+        vm.MainWindow.TitlebarHeight.Value = SizeDefaults.MainTitlebarHeight;
 
         if (!Settings.UIProperties.ShowBottomNavBar)
         {
@@ -219,7 +219,7 @@ public static class Win32Window
         }
 
         vm.IsBottomToolbarShown = true;
-        vm.BottombarHeight = SizeDefaults.BottombarHeight;
+        vm.MainWindow.BottombarHeight.Value = SizeDefaults.BottombarHeight;
     }
 
     /// <summary>
@@ -244,14 +244,14 @@ public static class Win32Window
             var top = window.OffScreenMargin.Top is 0 ? 7 : window.OffScreenMargin.Top;
             var right = window.OffScreenMargin.Right is 0 ? 7 : window.OffScreenMargin.Right;
             var bottom = window.OffScreenMargin.Bottom is 0 ? 7 : window.OffScreenMargin.Bottom;
-            vm.TopScreenMargin = new Thickness(left, top, right, 0);
-            vm.BottomScreenMargin = new Thickness(left, 0, right, bottom);
+            vm.MainWindow.TopScreenMargin.Value = new Thickness(left, top, right, 0);
+            vm.MainWindow.BottomScreenMargin.Value = new Thickness(left, 0, right, bottom);
         }
         else
         {
             var noThickness = new Thickness(0);
-            vm.TopScreenMargin = noThickness;
-            vm.BottomScreenMargin = noThickness;
+            vm.MainWindow.TopScreenMargin.Value = noThickness;
+            vm.MainWindow.BottomScreenMargin.Value = noThickness;
         }
     }
 

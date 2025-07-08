@@ -1,9 +1,9 @@
 <UserControl
-    Height="{CompiledBinding TitlebarHeight,
+    Height="{CompiledBinding MainWindow.TitlebarHeight.Value,
                              Mode=OneWay}"
     IsVisible="{CompiledBinding IsTopToolbarShown,
                                 Mode=OneWay}"
-    Margin="{CompiledBinding TopScreenMargin,
+    Margin="{CompiledBinding MainWindow.TopScreenMargin.Value,
                              Mode=OneWay}"
     x:Class="PicView.Avalonia.Win32.Views.WinTitleBar"
     x:DataType="vm:MainViewModel"

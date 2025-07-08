@@ -167,15 +167,15 @@ public static class WindowFunctions
     {
         if (Settings.WindowProperties.AutoFit)
         {
-            vm.SizeToContent = SizeToContent.Manual;
-            vm.CanResize = true;
+            vm.MainWindow.SizeToContent.Value = SizeToContent.Manual;
+            vm.MainWindow.CanResize.Value = true;
             Settings.WindowProperties.AutoFit = false;
             vm.IsAutoFit = false;
         }
         else
         {
-            vm.SizeToContent = SizeToContent.WidthAndHeight;
-            vm.CanResize = false;
+            vm.MainWindow.SizeToContent.Value = SizeToContent.WidthAndHeight;
+            vm.MainWindow.CanResize.Value = false;
             Settings.WindowProperties.AutoFit = true;
             vm.IsAutoFit = true;
         }
@@ -187,8 +187,8 @@ public static class WindowFunctions
     {
         if (Settings.WindowProperties.AutoFit)
         {
-            vm.SizeToContent = SizeToContent.Manual;
-            vm.CanResize = true;
+            vm.MainWindow.SizeToContent.Value = SizeToContent.Manual;
+            vm.MainWindow.CanResize.Value = true;
             Settings.WindowProperties.AutoFit = false;
             Settings.ImageScaling.StretchImage = false;
             vm.IsStretched = false;
@@ -196,8 +196,8 @@ public static class WindowFunctions
         }
         else
         {
-            vm.SizeToContent = SizeToContent.WidthAndHeight;
-            vm.CanResize = false;
+            vm.MainWindow.SizeToContent.Value = SizeToContent.WidthAndHeight;
+            vm.MainWindow.CanResize.Value = false;
             Settings.WindowProperties.AutoFit = true;
             Settings.ImageScaling.StretchImage = true;
             vm.IsAutoFit = true;
@@ -210,8 +210,8 @@ public static class WindowFunctions
 
     public static async Task NormalWindow(MainViewModel vm)
     {
-        vm.SizeToContent = SizeToContent.Manual;
-        vm.CanResize = true;
+        vm.MainWindow.SizeToContent.Value = SizeToContent.Manual;
+        vm.MainWindow.CanResize.Value = true;
         Settings.WindowProperties.AutoFit = false;
         await WindowResizing.SetSizeAsync(vm);
         vm.ImageViewer.MainImage.InvalidateVisual();
@@ -220,8 +220,8 @@ public static class WindowFunctions
 
     public static async Task NormalWindowStretch(MainViewModel vm)
     {
-        vm.SizeToContent = SizeToContent.Manual;
-        vm.CanResize = true;
+        vm.MainWindow.SizeToContent.Value = SizeToContent.Manual;
+        vm.MainWindow.CanResize.Value = true;
         Settings.WindowProperties.AutoFit = false;
         Settings.ImageScaling.StretchImage = true;
         vm.IsStretched = true;

@@ -63,7 +63,7 @@ public static class CropFunctions
                 Height = size.Height,
                 Margin = new Thickness(0)
             };
-            vm.CurrentView = cropControl;
+            vm.MainWindow.CurrentView.Value = cropControl;
         });
 
         IsCropping = true;
@@ -90,7 +90,7 @@ public static class CropFunctions
             WindowResizing.SetSize(vm);
         }
 
-        vm.CurrentView = vm.ImageViewer;
+        vm.MainWindow.CurrentView.Value = vm.ImageViewer;
         IsCropping = false;
         TitleManager.SetTitle(vm);
 

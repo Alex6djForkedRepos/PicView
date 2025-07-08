@@ -54,14 +54,14 @@ public static class MacOSWindow
 
         if (Settings.WindowProperties.AutoFit)
         {
-            vm.SizeToContent = SizeToContent.WidthAndHeight;
-            vm.CanResize = false;
+            vm.MainWindow.SizeToContent.Value = SizeToContent.WidthAndHeight;
+            vm.MainWindow.CanResize.Value = false;
             await WindowResizing.SetSizeAsync(vm);
         }
         else
         {
-            vm.SizeToContent = SizeToContent.Manual;
-            vm.CanResize = true;
+            vm.MainWindow.SizeToContent.Value = SizeToContent.Manual;
+            vm.MainWindow.CanResize.Value = true;
             WindowFunctions.InitializeWindowSizeAndPosition(window);
         }
         
@@ -83,7 +83,7 @@ public static class MacOSWindow
         
         vm.IsFullscreen = true;
         vm.IsMaximized = false;
-        vm.CanResize = false;
+        vm.MainWindow.CanResize.Value = false;
         await WindowResizing.SetSizeAsync(vm);
         
         if (saveSettings)
@@ -107,10 +107,10 @@ public static class MacOSWindow
         Settings.WindowProperties.Maximized = true;
         Settings.WindowProperties.Fullscreen = false;
         
-        vm.SizeToContent = SizeToContent.Manual;
+        vm.MainWindow.SizeToContent.Value = SizeToContent.Manual;
         vm.IsMaximized = true;
         vm.IsFullscreen = false;
-        vm.CanResize = false;
+        vm.MainWindow.CanResize.Value = false;
         
         window.WindowState = WindowState.Maximized;
         

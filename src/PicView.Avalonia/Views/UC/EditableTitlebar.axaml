@@ -1,5 +1,5 @@
 ﻿<UserControl
-    Height="{CompiledBinding TitlebarHeight,
+    Height="{CompiledBinding MainWindow.TitlebarHeight.Value,
                              Mode=OneWay}"
     ToolTip.Tip="{Binding PicViewer.TitleTooltip.Value, Mode=OneWay}"
     Width="{CompiledBinding TitleMaxWidth,
@@ -20,7 +20,7 @@
             FontFamily="avares://PicView.Avalonia/Assets/Fonts/Roboto-Medium.ttf#Roboto"
             FontSize="13"
             FontWeight="Medium"
-            Height="{CompiledBinding TitlebarHeight,
+            Height="{CompiledBinding MainWindow.TitlebarHeight.Value,
                                      Mode=OneWay}"
             IsTabStop="False"
             IsVisible="{CompiledBinding !IsEditableTitlebarOpen}"
@@ -39,7 +39,7 @@
                 FontFamily="avares://PicView.Avalonia/Assets/Fonts/Roboto-Medium.ttf#Roboto"
                 FontSize="13"
                 FontWeight="Medium"
-                Height="{CompiledBinding TitlebarHeight,
+                Height="{CompiledBinding MainWindow.TitlebarHeight.Value,
                                          Mode=OneWay}"
                 IsTabStop="False"
                 Padding="0,7,0,5"

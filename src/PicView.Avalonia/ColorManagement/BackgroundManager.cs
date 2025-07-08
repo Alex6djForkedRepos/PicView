@@ -72,11 +72,6 @@ public static class BackgroundManager
     /// <param name="vm">The main view model where the background is updated.</param>
     public static void ChangeBackground(MainViewModel vm)
     {
-        if (vm.CurrentView != vm.ImageViewer)
-        {
-            return;
-        }
-
         // Cycle to the next background choice
         var nextChoice = (Settings.UIProperties.BgColorChoice + 1) % ((int)BackgroundType.MaxValue + 1);
         SetBackground(vm, nextChoice);
@@ -109,16 +104,16 @@ public static class BackgroundManager
         Settings.UIProperties.BgColorChoice = choice;
         if (Settings.UIProperties.IsConstrainBackgroundColorEnabled)
         {
-            vm.ImageBackground = new SolidColorBrush(Colors.Transparent);
-            vm.ConstrainedImageBackground = GetBackgroundBrush((BackgroundType)choice);
+            vm.MainWindow.ImageBackground.Value = new SolidColorBrush(Colors.Transparent);
+            vm.MainWindow.ConstrainedImageBackground.Value = GetBackgroundBrush((BackgroundType)choice);
         }
         else
         {
-            vm.ImageBackground = GetBackgroundBrush((BackgroundType)choice);
-            vm.ConstrainedImageBackground = new SolidColorBrush(Colors.Transparent);
+            vm.MainWindow.ImageBackground.Value = GetBackgroundBrush((BackgroundType)choice);
+            vm.MainWindow.ConstrainedImageBackground.Value = new SolidColorBrush(Colors.Transparent);
         }
         
-        vm.BackgroundChoice = choice;
+        vm.MainWindow.BackgroundChoice.Value = choice;
     }
 
     /// <summary>

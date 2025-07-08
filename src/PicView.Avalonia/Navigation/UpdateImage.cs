@@ -195,9 +195,9 @@ public static class UpdateImage
         
         await Dispatcher.UIThread.InvokeAsync(() =>
         {
-            if (vm.CurrentView != vm.ImageViewer)
+            if (vm.MainWindow.CurrentView.CurrentValue != vm.ImageViewer)
             {
-                vm.CurrentView = vm.ImageViewer;
+                vm.MainWindow.CurrentView.Value = vm.ImageViewer;
             }
             
             WindowResizing.SetSize(width, height, 0, 0, 0, vm);
@@ -265,9 +265,9 @@ public static class UpdateImage
 
         await Dispatcher.UIThread.InvokeAsync(() =>
         {
-            if (vm.CurrentView != vm.ImageViewer)
+            if (vm.MainWindow.CurrentView.CurrentValue != vm.ImageViewer)
             {
-                vm.CurrentView = vm.ImageViewer;
+                vm.MainWindow.CurrentView.Value = vm.ImageViewer;
             }
             WindowResizing.SetSize(width, height, 0, 0, 0, vm);
         }, DispatcherPriority.Send);

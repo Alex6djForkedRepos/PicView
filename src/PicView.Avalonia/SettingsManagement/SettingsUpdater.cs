@@ -64,15 +64,15 @@ public static class SettingsUpdater
         // Set corner radius on macOS
         if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
         {
-            vm.BottomCornerRadius = new CornerRadius(0, 0, 8, 8);
+            vm.MainWindow.BottomCornerRadius.Value = new CornerRadius(0, 0, 8, 8);
         }
         
-        vm.TitlebarHeight = Settings.WindowProperties.Fullscreen
-            || !Settings.UIProperties.ShowInterface
+        vm.MainWindow.TitlebarHeight.Value = Settings.WindowProperties.Fullscreen
+                                       || !Settings.UIProperties.ShowInterface
             ? 0
             : SizeDefaults.MainTitlebarHeight;
-        vm.BottombarHeight = Settings.WindowProperties.Fullscreen
-                             || !Settings.UIProperties.ShowInterface
+        vm.MainWindow.BottombarHeight.Value = Settings.WindowProperties.Fullscreen
+                                              || !Settings.UIProperties.ShowInterface
             ? 0
             : SizeDefaults.BottombarHeight;
         vm.GetNavSpeed = Settings.UIProperties.NavSpeed;
@@ -96,7 +96,7 @@ public static class SettingsUpdater
         vm.IsShowingConfirmationOnEsc  = Settings.UIProperties.ShowConfirmationOnEsc;   
         vm.IsUsingTouchpad  = Settings.Zoom.IsUsingTouchPad;
         vm.IsAscending  = Settings.Sorting.Ascending;
-        vm.BackgroundChoice = Settings.UIProperties.BgColorChoice;
+        vm.MainWindow.BackgroundChoice.Value = Settings.UIProperties.BgColorChoice;
         vm.IsConstrainingBackgroundColor = Settings.UIProperties.IsConstrainBackgroundColorEnabled;
     }
     
@@ -392,7 +392,7 @@ public static class SettingsUpdater
         vm.Translation.IsScrolling.Value = TranslationManager.Translation.ScrollingDisabled;
         vm.IsScrollingEnabled = false;
         Settings.Zoom.ScrollEnabled = false;
-        vm.RightControlOffSetMargin = new Thickness(0);
+        vm.MainWindow.RightControlOffSetMargin.Value = new Thickness(0);
     }
     
     public static void TurnOnScroll(MainViewModel vm)
@@ -401,7 +401,7 @@ public static class SettingsUpdater
         vm.Translation.IsScrolling.Value = TranslationManager.Translation.ScrollingEnabled;
         vm.IsScrollingEnabled = true;
         Settings.Zoom.ScrollEnabled = true;
-        vm.RightControlOffSetMargin = new Thickness(0,0,30,0);
+        vm.MainWindow.RightControlOffSetMargin.Value = new Thickness(0,0,30,0);
     }
     
     public static async Task ToggleCtrlZoom(MainViewModel vm)

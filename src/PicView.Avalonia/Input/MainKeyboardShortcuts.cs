@@ -172,7 +172,7 @@ public static class MainKeyboardShortcuts
         // Handle cropping mode
         if (CropFunctions.IsCropping)
         {
-            if (UIHelper.GetMainView.MainGrid.DataContext is MainViewModel { CurrentView: CropControl cropControl })
+            if (UIHelper.GetMainView.MainGrid.DataContext is MainViewModel { MainWindow.CurrentView.CurrentValue: CropControl cropControl })
             {
                 await cropControl.KeyDownHandler(null, e);
             }

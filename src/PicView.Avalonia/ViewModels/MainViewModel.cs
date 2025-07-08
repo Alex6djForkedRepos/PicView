@@ -1,6 +1,4 @@
 ﻿using System.Reactive;
-using Avalonia;
-using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Media;
 using PicView.Avalonia.Functions;
@@ -10,7 +8,6 @@ using PicView.Avalonia.UI;
 using PicView.Avalonia.WindowBehavior;
 using PicView.Core.FileSorting;
 using PicView.Core.ProcessHandling;
-using PicView.Core.Sizing;
 using PicView.Core.ViewModels;
 using ReactiveUI;
 using ImageViewer = PicView.Avalonia.Views.ImageViewer;
@@ -23,13 +20,14 @@ public class MainViewModel : ReactiveObject
     public readonly IPlatformWindowService? PlatformWindowService;
     
     public TranslationViewModel Translation { get; } = new();
-    public ToolsViewModel? GLobalSettings { get; } = new();
+    public MainWindowViewModel MainWindow { get; } = new();
+    public GlobalSettingsViewModel GlobalSettings { get; } = new();
     public SettingsViewModel? SettingsViewModel { get; set; }
     public ImageCropperViewModel? Crop { get; set; }
     public NavigationViewModel Navigation { get; } = new();
     public PicViewerModel PicViewer { get; } = new();
-    public GalleryViewModel? Gallery { get; } = new();
-    public ToolsViewModel? Tools { get; } = new();
+    public GalleryViewModel Gallery { get; } = new();
+    public ToolsViewModel Tools { get; } = new();
     public ExifViewModel? Exif { get; set;  }
     
     public FileAssociationsViewModel? AssociationsViewModel { get; set; }
@@ -471,71 +469,6 @@ public class MainViewModel : ReactiveObject
 
     #endregion Booleans
     
-    public Brush? ImageBackground
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-    
-    public Brush? ConstrainedImageBackground
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-    
-    public Thickness RightControlOffSetMargin
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public Thickness TopScreenMargin
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public Thickness BottomScreenMargin
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public CornerRadius BottomCornerRadius
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public int BackgroundChoice
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public double WindowMinSize
-    {
-        get { return SizeDefaults.WindowMinSize; }
-    }
-
-    public double TitlebarHeight
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public double BottombarHeight
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public UserControl? CurrentView
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
     public ImageViewer? ImageViewer;
 
     public int GetIndex
@@ -575,22 +508,6 @@ public class MainViewModel : ReactiveObject
             Settings.Zoom.ZoomSpeed = roundedValue;
         }
     }
-    
-    #region Window Properties
-
-    public SizeToContent SizeToContent
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public bool CanResize
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    #endregion Window Properties
 
     #region Size
 

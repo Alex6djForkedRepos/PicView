@@ -34,7 +34,7 @@ public static class ErrorHandling
         return;
         void Start()
         {
-            if (vm.CurrentView is not StartUpMenu)
+            if (vm.MainWindow.CurrentView.CurrentValue is not StartUpMenu)
             {
                 var startUpMenu = new StartUpMenu();
                 if (Settings.WindowProperties.AutoFit)
@@ -44,7 +44,7 @@ public static class ErrorHandling
                     vm.PicViewer.GalleryWidth.Value = SizeDefaults.WindowMinSize;
                 }
 
-                vm.CurrentView = startUpMenu;
+                vm.MainWindow.CurrentView.Value = startUpMenu;
             }
             
             TitleManager.SetNoImageTitle(vm);

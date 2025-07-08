@@ -1089,12 +1089,12 @@
             ZIndex="3" />
         <ContentControl
             ClipToBounds="True"
-            Content="{CompiledBinding CurrentView,
+            Content="{CompiledBinding MainWindow.CurrentView.Value,
                                       Mode=OneWay}"
             Margin="{CompiledBinding Gallery.GalleryMargin.Value}" />
         <buttons:ClickArrowRight
             HorizontalAlignment="Right"
-            Margin="{CompiledBinding RightControlOffSetMargin}"
+            Margin="{CompiledBinding MainWindow.RightControlOffSetMargin.Value}"
             Opacity="0"
             VerticalAlignment="Center"
             x:Name="ClickArrowRight" />
@@ -1108,7 +1108,7 @@
             Height="150"
             HorizontalAlignment="Right"
             IsVisible="{CompiledBinding !IsUIShown}"
-            Margin="{CompiledBinding RightControlOffSetMargin}"
+            Margin="{CompiledBinding MainWindow.RightControlOffSetMargin.Value}"
             Opacity="0"
             Orientation="Horizontal"
             VerticalAlignment="Top"

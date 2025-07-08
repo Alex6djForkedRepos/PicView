@@ -203,7 +203,7 @@ public static class StartUpHelper
         
         if (args.Length > 1)
         {
-            vm.CurrentView = vm.ImageViewer;
+            vm.MainWindow.CurrentView.Value = vm.ImageViewer;
             Task.Run(() => QuickLoad.QuickLoadAsync(vm, args[1]));
         }
         else StartUpMenuOrLastFile(vm);
@@ -215,7 +215,7 @@ public static class StartUpHelper
         
         if (arg is not null)
         {
-            vm.CurrentView = vm.ImageViewer;
+            vm.MainWindow.CurrentView.Value = vm.ImageViewer;
             Task.Run(() => QuickLoad.QuickLoadAsync(vm, arg));
         }
         else StartUpMenuOrLastFile(vm);
@@ -231,7 +231,7 @@ public static class StartUpHelper
             }
             else
             {
-                vm.CurrentView = vm.ImageViewer;
+                vm.MainWindow.CurrentView.Value = vm.ImageViewer;
                 Task.Run(() => QuickLoad.QuickLoadAsync(vm, Settings.StartUp.LastFile));
             }
         }
@@ -255,7 +255,7 @@ public static class StartUpHelper
 
     private static void HandleNormalWindow(MainViewModel vm, Window window)
     {
-        vm.CanResize = true;
+        vm.MainWindow.CanResize.Value = true;
         vm.IsAutoFit = false;
         if (Settings.UIProperties.ShowInterface)
         {
@@ -267,8 +267,8 @@ public static class StartUpHelper
 
     private static void HandleAutoFit(MainViewModel vm, Window window)
     {
-        vm.SizeToContent = SizeToContent.WidthAndHeight;
-        vm.CanResize = false;
+        vm.MainWindow.SizeToContent.Value = SizeToContent.WidthAndHeight;
+        vm.MainWindow.CanResize.Value = false;
         vm.IsAutoFit = true;
         if (Settings.UIProperties.ShowInterface)
         {

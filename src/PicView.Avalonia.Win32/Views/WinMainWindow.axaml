@@ -1,10 +1,10 @@
 <Window
-    CanResize="{CompiledBinding CanResize}"
+    CanResize="{CompiledBinding MainWindow.CanResize.Value}"
     Icon="/icon.ico"
-    MinHeight="{CompiledBinding WindowMinSize}"
-    MinWidth="{CompiledBinding WindowMinSize}"
+    MinHeight="{CompiledBinding MainWindow.WindowMinSize.Value}"
+    MinWidth="{CompiledBinding MainWindow.WindowMinSize.Value}"
     SizeChanged="Control_OnSizeChanged"
-    SizeToContent="{CompiledBinding SizeToContent}"
+    SizeToContent="{CompiledBinding MainWindow.SizeToContent.Value}"
     Title="{CompiledBinding PicViewer.WindowTitle.Value,
                             Mode=OneWay}"
     TransparencyLevelHint="AcrylicBlur"

@@ -376,9 +376,9 @@ public static class DragAndDropHelper
 
     private static async Task EnsureImageViewerDisplayed(MainViewModel vm)
     {
-        if (vm.CurrentView != vm.ImageViewer)
+        if (vm.MainWindow.CurrentView.CurrentValue != vm.ImageViewer)
         {
-            await Dispatcher.UIThread.InvokeAsync(() => vm.CurrentView = vm.ImageViewer);
+            await Dispatcher.UIThread.InvokeAsync(() => vm.MainWindow.CurrentView.Value = vm.ImageViewer);
         }
     }
 

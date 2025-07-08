@@ -53,10 +53,10 @@ public static class HideInterfaceLogic
             if (Settings.UIProperties.ShowBottomNavBar)
             {
                 vm.IsBottomToolbarShown = true;
-                vm.BottombarHeight = SizeDefaults.BottombarHeight;
+                vm.MainWindow.BottombarHeight.Value = SizeDefaults.BottombarHeight;
             }
             Settings.UIProperties.ShowInterface = true;
-            vm.TitlebarHeight = SizeDefaults.MainTitlebarHeight;
+            vm.MainWindow.TitlebarHeight.Value = SizeDefaults.MainTitlebarHeight;
             if (!GalleryFunctions.IsFullGalleryOpen)
             {
                 if (Settings.Gallery.IsBottomGalleryShown)
@@ -105,7 +105,7 @@ public static class HideInterfaceLogic
         {
             vm.IsBottomToolbarShown = true;
             Settings.UIProperties.ShowBottomNavBar = true;
-            vm.BottombarHeight = SizeDefaults.BottombarHeight;
+            vm.MainWindow.BottombarHeight.Value = SizeDefaults.BottombarHeight;
             vm.Translation.IsShowingBottomToolbar.Value = TranslationManager.Translation.HideBottomToolbar;
         }
         await Dispatcher.UIThread.InvokeAsync(() =>

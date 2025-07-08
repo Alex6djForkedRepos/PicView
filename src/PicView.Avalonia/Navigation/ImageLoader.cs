@@ -50,31 +50,31 @@ public static class ImageLoader
             switch (check.Value.Type)
             {
                 case FileTypeResolver.LoadAbleFileType.File:
-                    vm.CurrentView = vm.ImageViewer;
+                    vm.MainWindow.CurrentView.Value = vm.ImageViewer;
                     await LoadPicFromFile(check.Value.Data, vm, imageIterator).ConfigureAwait(false);
                     vm.IsLoading = false;
                     ArchiveExtraction.Cleanup();
                     return;
                 case FileTypeResolver.LoadAbleFileType.Directory:
-                    vm.CurrentView = vm.ImageViewer;
+                    vm.MainWindow.CurrentView.Value = vm.ImageViewer;
                     await LoadPicFromDirectoryAsync(check.Value.Data, vm).ConfigureAwait(false);
                     vm.IsLoading = false;
                     ArchiveExtraction.Cleanup();
                     return;
                 case FileTypeResolver.LoadAbleFileType.Web:
-                    vm.CurrentView = vm.ImageViewer;
+                    vm.MainWindow.CurrentView.Value = vm.ImageViewer;
                     await LoadPicFromUrlAsync(check.Value.Data, vm, imageIterator).ConfigureAwait(false);
                     vm.IsLoading = false;
                     ArchiveExtraction.Cleanup();
                     return;
                 case FileTypeResolver.LoadAbleFileType.Base64:
-                    vm.CurrentView = vm.ImageViewer;
+                    vm.MainWindow.CurrentView.Value = vm.ImageViewer;
                     await LoadPicFromBase64Async(check.Value.Data, vm, imageIterator).ConfigureAwait(false);
                     vm.IsLoading = false;
                     ArchiveExtraction.Cleanup();
                     return;
                 case FileTypeResolver.LoadAbleFileType.Zip:
-                    vm.CurrentView = vm.ImageViewer;
+                    vm.MainWindow.CurrentView.Value = vm.ImageViewer;
                     await LoadPicFromArchiveAsync(check.Value.Data, vm, imageIterator).ConfigureAwait(false);
                     vm.IsLoading = false;
                     return;

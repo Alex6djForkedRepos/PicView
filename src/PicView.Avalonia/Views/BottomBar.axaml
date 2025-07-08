@@ -1,7 +1,7 @@
 <UserControl
-    Height="{CompiledBinding BottombarHeight}"
+    Height="{CompiledBinding MainWindow.BottombarHeight.Value}"
     IsVisible="{CompiledBinding IsBottomToolbarShown}"
-    Margin="{CompiledBinding BottomScreenMargin,
+    Margin="{CompiledBinding MainWindow.BottomScreenMargin.Value,
                              Mode=OneWay}"
     x:Class="PicView.Avalonia.Views.BottomBar"
     x:DataType="viewModels:MainViewModel"
@@ -195,8 +195,8 @@
         Background="{DynamicResource WindowBackgroundColor}"
         BorderBrush="{DynamicResource MainBorderColor}"
         BorderThickness="0,1,0,0"
-        CornerRadius="{CompiledBinding BottomCornerRadius}"
-        Height="{CompiledBinding BottombarHeight,
+        CornerRadius="{CompiledBinding MainWindow.BottomCornerRadius.Value}"
+        Height="{CompiledBinding MainWindow.BottombarHeight.Value,
                                  Mode=OneWay}"
         x:Name="MainBottomBorder">
         <Panel>
@@ -359,7 +359,7 @@
                 Fill="{DynamicResource MainTextColor}"
                 Height="12"
                 HorizontalAlignment="Right"
-                IsVisible="{CompiledBinding CanResize,
+                IsVisible="{CompiledBinding MainWindow.CanResize.Value,
                                             Mode=OneWay}"
                 Margin="0,0,5,5"
                 Stretch="Fill"
