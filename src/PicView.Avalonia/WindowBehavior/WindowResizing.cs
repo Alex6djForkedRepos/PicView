@@ -82,7 +82,7 @@ public static class WindowResizing
     }
 
     public static void SetSize(double width, double height, MainViewModel vm)
-        => SetSize(width, height, 0, 0, vm.RotationAngle, vm);
+        => SetSize(width, height, 0, 0, vm.GlobalSettings.RotationAngle.CurrentValue, vm);
 
     public static void SetSize(double width, double height, double secondWidth, double secondHeight, double rotation,
         MainViewModel vm)
@@ -124,7 +124,7 @@ public static class WindowResizing
             else
             {
                 var scrollbarSize = Settings.Zoom.ScrollEnabled ? SizeDefaults.ScrollbarSize : 0;
-                vm.PicViewer.GalleryWidth.Value = vm.RotationAngle is 90 or 270
+                vm.PicViewer.GalleryWidth.Value = vm.GlobalSettings.RotationAngle.CurrentValue is 90 or 270
                     ? Math.Max(size.Height + scrollbarSize, SizeDefaults.WindowMinSize + scrollbarSize)
                     : Math.Max(size.Width + scrollbarSize, SizeDefaults.WindowMinSize + scrollbarSize);
             }
@@ -181,7 +181,7 @@ public static class WindowResizing
 
         if (!Settings.ImageScaling.ShowImageSideBySide)
         {
-            return GetSize(firstWidth, firstHeight, 0, 0, vm.RotationAngle, vm);
+            return GetSize(firstWidth, firstHeight, 0, 0, vm.GlobalSettings.RotationAngle.CurrentValue, vm);
         }
 
         var secondaryPreloadValue = NavigationManager.GetNextPreLoadValue();
@@ -205,7 +205,7 @@ public static class WindowResizing
             secondHeight = 0;
         }
 
-        return GetSize(firstWidth, firstHeight, secondWidth, secondHeight, vm.RotationAngle, vm);
+        return GetSize(firstWidth, firstHeight, secondWidth, secondHeight, vm.GlobalSettings.RotationAngle.CurrentValue, vm);
     }
 
     public static ImageSize? GetSize(double width, double height, double secondWidth, double secondHeight,

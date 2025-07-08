@@ -52,7 +52,7 @@ public static class NavigationManager
             await Dispatcher.UIThread.InvokeAsync(() =>
             {
                 vm.ImageViewer.SetTransform(imageModel.EXIFOrientation, imageModel.Format);
-                WindowResizing.SetSize(imageModel.PixelWidth, imageModel.PixelHeight, 0, 0, vm.RotationAngle,
+                WindowResizing.SetSize(imageModel.PixelWidth, imageModel.PixelHeight, 0, 0, vm.GlobalSettings.RotationAngle.CurrentValue,
                     vm);
             });
         }

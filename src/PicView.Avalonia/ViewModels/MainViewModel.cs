@@ -477,29 +477,13 @@ public class MainViewModel : ReactiveObject
         set => this.RaiseAndSetIfChanged(ref field, value);
     }
 
-    #region Size
-
     public double TitleMaxWidth
     {
         get;
         set => this.RaiseAndSetIfChanged(ref field, value);
     }
 
-    #endregion Size
 
-    #region Zoom
-
-    public double RotationAngle
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public double ZoomValue
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
 
     public ScrollBarVisibility ToggleScrollBarVisibility
     {
@@ -507,35 +491,7 @@ public class MainViewModel : ReactiveObject
         set => this.RaiseAndSetIfChanged(ref field, value);
     }
 
-    #endregion Zoom
 
-    #region Menus
-
-    public bool IsFileMenuVisible
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public bool IsImageMenuVisible
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public bool IsSettingsMenuVisible
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public bool IsToolsMenuVisible
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    #endregion Menus
 
     #endregion Fields
 }

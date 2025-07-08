@@ -47,7 +47,7 @@ public static class RotationNavigation
         {
             vm.ImageViewer.Rotate(angle);
         });
-        vm.RotationAngle = angle;
+        vm.GlobalSettings.RotationAngle.Value = angle;
         await WindowResizing.SetSizeAsync(vm);
     }
 

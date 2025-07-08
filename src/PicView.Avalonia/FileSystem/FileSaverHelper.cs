@@ -65,7 +65,7 @@ public static class FileSaverHelper
                 null,
                 null,
                 Path.GetExtension(destination),
-                vm.RotationAngle);
+                vm.GlobalSettings.RotationAngle.CurrentValue);
         }
         
         async Task SaveImageFromBitmap()
@@ -99,7 +99,7 @@ public static class FileSaverHelper
                                 height: null,
                                 quality,
                                 ext,
-                                vm.RotationAngle);
+                                vm.GlobalSettings.RotationAngle.CurrentValue);
                         }
                     
                         break;

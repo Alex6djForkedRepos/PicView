@@ -1,5 +1,5 @@
 <customControls:AnimatedMenu
-    IsOpen="{CompiledBinding IsSettingsMenuVisible}"
+    IsOpen="{CompiledBinding MainWindow.IsSettingsMenuVisible.Value}"
     mc:Ignorable="d"
     x:Class="PicView.Avalonia.Views.UC.Menus.SettingsMenu"
     x:DataType="viewModels:MainViewModel"

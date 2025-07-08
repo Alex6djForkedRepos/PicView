@@ -126,7 +126,7 @@ public partial class StartUpMenu : UserControl
                 break;
         }
 
-        var titleMaxWidth = ImageSizeCalculationHelper.GetTitleMaxWidth(vm.RotationAngle, width, height,
+        var titleMaxWidth = ImageSizeCalculationHelper.GetTitleMaxWidth(vm.GlobalSettings.RotationAngle.CurrentValue, width, height,
             desktop.MainWindow.MinWidth, desktop.MainWindow.MinHeight, vm.PlatformWindowService.CombinedTitleButtonsWidth,
             desktop.MainWindow.Width);
 

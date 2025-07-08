@@ -167,7 +167,7 @@ public static class UpdateImage
         {
             WindowResizing.SetSize(preLoadValue.ImageModel.PixelWidth, preLoadValue.ImageModel.PixelHeight,
                 nextPreloadValue?.ImageModel?.PixelWidth ?? 0, nextPreloadValue?.ImageModel?.PixelHeight ?? 0,
-                vm.RotationAngle, vm);
+                vm.GlobalSettings.RotationAngle.CurrentValue, vm);
         }
 
     }
@@ -202,9 +202,9 @@ public static class UpdateImage
             
             WindowResizing.SetSize(width, height, 0, 0, 0, vm);
             
-            if (vm.RotationAngle != 0)
+            if (vm.GlobalSettings.RotationAngle.CurrentValue != 0)
             {
-                vm.ImageViewer.Rotate(vm.RotationAngle);
+                vm.ImageViewer.Rotate(vm.GlobalSettings.RotationAngle.CurrentValue);
             }
         }, DispatcherPriority.Render);
         
@@ -305,7 +305,7 @@ public static class UpdateImage
         vm.GetIndex = NavigationManager.GetNonZeroIndex;
         vm.PicViewer.ExifOrientation.Value = imageModel.EXIFOrientation;
         vm.PicViewer.FileInfo.Value = imageModel.FileInfo;
-        vm.ZoomValue = 1;
+        vm.GlobalSettings.RotationAngle.Value = 1;
 
         if (Settings.ImageScaling.ShowImageSideBySide)
         {

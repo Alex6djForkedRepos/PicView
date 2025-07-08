@@ -171,7 +171,7 @@ public static class QuickLoad
         
         vm.PicViewer.ImageSource.Value = imageModel.Image;
         vm.PicViewer.ImageType.Value = imageModel.ImageType;
-        vm.ZoomValue = 1;
+        vm.GlobalSettings.RotationAngle.Value = 1;
         vm.PicViewer.PixelWidth.Value = imageModel.PixelWidth;
         vm.PicViewer.PixelHeight.Value = imageModel.PixelHeight;
 
@@ -198,7 +198,7 @@ public static class QuickLoad
             if (is1To1)
             {
                 var size = WindowResizing.GetSize(imageModel.PixelWidth, imageModel.PixelHeight,
-                    secondaryModel?.PixelWidth ?? 0, secondaryModel?.PixelHeight ?? 0, vm.RotationAngle, vm);
+                    secondaryModel?.PixelWidth ?? 0, secondaryModel?.PixelHeight ?? 0, vm.GlobalSettings.RotationAngle.CurrentValue, vm);
                 if (!size.HasValue)
                 {
                     DebugHelper.LogDebug(nameof(QuickLoadAsync), nameof(RenderingFixes), "Size is null");
@@ -300,7 +300,7 @@ public static class QuickLoad
     private static void SetSize(MainViewModel vm, ImageModel imageModel, ImageModel? secondaryModel)
     {
         var size = WindowResizing.GetSize(imageModel.PixelWidth, imageModel.PixelHeight,
-            secondaryModel?.PixelWidth ?? 0, secondaryModel?.PixelHeight ?? 0, vm.RotationAngle, vm);
+            secondaryModel?.PixelWidth ?? 0, secondaryModel?.PixelHeight ?? 0, vm.GlobalSettings.RotationAngle.CurrentValue, vm);
         if (!size.HasValue)
         {
             DebugHelper.LogDebug(nameof(QuickLoadAsync), nameof(SetSize), "Size is null");

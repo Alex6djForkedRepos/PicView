@@ -33,6 +33,14 @@ public class MainWindowViewModel : IDisposable
 
     public BindableReactiveProperty<UserControl?> CurrentView { get; } = new();
 
+    public BindableReactiveProperty<bool> IsFileMenuVisible { get; } = new();
+
+    public BindableReactiveProperty<bool> IsImageMenuVisible { get; } = new();
+
+    public BindableReactiveProperty<bool> IsSettingsMenuVisible { get; } = new();
+
+    public BindableReactiveProperty<bool> IsToolsMenuVisible { get; } = new();
+
     public void Dispose()
     {
         Disposable.Dispose(ImageBackground,

@@ -133,7 +133,7 @@ public partial class WinTitleBar : UserControl
         Rotation90Item.IsChecked = false;
         Rotation180Item.IsChecked = false;
         Rotation270Item.IsChecked = false;
-        switch (vm.RotationAngle)
+        switch (vm.GlobalSettings.RotationAngle.CurrentValue)
         {
             case 0:
                 Rotation0Item.IsChecked = true;
