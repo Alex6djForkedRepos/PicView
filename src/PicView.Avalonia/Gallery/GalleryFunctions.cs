@@ -33,7 +33,7 @@ public static class GalleryFunctions
                 : 0;
         }
 
-        if (!Settings.Gallery.ShowBottomGalleryInHiddenUI && !vm.IsUIShown)
+        if (!Settings.Gallery.ShowBottomGalleryInHiddenUI && !vm.MainWindow.IsUIShown.CurrentValue)
         {
             return 0;
         }

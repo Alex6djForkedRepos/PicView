@@ -42,14 +42,14 @@ public static class MacOSWindow
 
         if (Settings.UIProperties.ShowInterface)
         {
-            vm.IsTopToolbarShown = true;
-            vm.IsBottomToolbarShown = Settings.UIProperties.ShowBottomNavBar;
-            vm.IsUIShown = true;
+            vm.MainWindow.IsTopToolbarShown.Value = true;
+            vm.MainWindow.IsBottomToolbarShown.Value = Settings.UIProperties.ShowBottomNavBar;
+            vm.MainWindow.IsUIShown.Value = true;
         }
         else
         {
-            vm.IsTopToolbarShown = false;
-            vm.IsUIShown = false;
+            vm.MainWindow.IsTopToolbarShown.Value = false;
+            vm.MainWindow.IsUIShown.Value = false;
         }
 
         if (Settings.WindowProperties.AutoFit)
@@ -78,11 +78,11 @@ public static class MacOSWindow
         
         window.WindowState = WindowState.FullScreen;
         
-        vm.IsTopToolbarShown = false;
-        vm.IsBottomToolbarShown = false;
+        vm.MainWindow.IsTopToolbarShown.Value = false;
+        vm.MainWindow.IsBottomToolbarShown.Value = false;
         
-        vm.IsFullscreen = true;
-        vm.IsMaximized = false;
+        vm.MainWindow.IsFullscreen.Value = true;
+        vm.MainWindow.IsMaximized.Value = false;
         vm.MainWindow.CanResize.Value = false;
         await WindowResizing.SetSizeAsync(vm);
         
@@ -108,8 +108,8 @@ public static class MacOSWindow
         Settings.WindowProperties.Fullscreen = false;
         
         vm.MainWindow.SizeToContent.Value = SizeToContent.Manual;
-        vm.IsMaximized = true;
-        vm.IsFullscreen = false;
+        vm.MainWindow.IsMaximized.Value = true;
+        vm.MainWindow.IsFullscreen.Value = false;
         vm.MainWindow.CanResize.Value = false;
         
         window.WindowState = WindowState.Maximized;

@@ -20,10 +20,10 @@ public static class HideInterfaceLogic
     {
         if (Settings.UIProperties.ShowInterface)
         {
-            vm.IsUIShown = false;
+            vm.MainWindow.IsUIShown.Value = false;
             Settings.UIProperties.ShowInterface = false;
-            vm.IsTopToolbarShown = false;
-            vm.IsBottomToolbarShown = false;
+            vm.MainWindow.IsTopToolbarShown.Value = false;
+            vm.MainWindow.IsBottomToolbarShown.Value = false;
             vm.Translation.IsShowingUI.Value = TranslationManager.Translation.ShowUI;
             if (!GalleryFunctions.IsFullGalleryOpen)
             {
@@ -47,12 +47,12 @@ public static class HideInterfaceLogic
         }
         else
         {
-            vm.IsUIShown = true;
-            vm.IsTopToolbarShown = true;
+            vm.MainWindow.IsUIShown.Value = true;
+            vm.MainWindow.IsTopToolbarShown.Value = true;
             vm.Translation.IsShowingUI.Value = TranslationManager.Translation.HideUI;
             if (Settings.UIProperties.ShowBottomNavBar)
             {
-                vm.IsBottomToolbarShown = true;
+                vm.MainWindow.IsBottomToolbarShown.Value = true;
                 vm.MainWindow.BottombarHeight.Value = SizeDefaults.BottombarHeight;
             }
             Settings.UIProperties.ShowInterface = true;
@@ -97,13 +97,13 @@ public static class HideInterfaceLogic
     {
         if (Settings.UIProperties.ShowBottomNavBar)
         {
-            vm.IsBottomToolbarShown = false;
+            vm.MainWindow.IsBottomToolbarShown.Value = false;
             Settings.UIProperties.ShowBottomNavBar = false;
             vm.Translation.IsShowingBottomToolbar.Value = TranslationManager.Translation.ShowBottomToolbar;
         }
         else
         {
-            vm.IsBottomToolbarShown = true;
+            vm.MainWindow.IsBottomToolbarShown.Value = true;
             Settings.UIProperties.ShowBottomNavBar = true;
             vm.MainWindow.BottombarHeight.Value = SizeDefaults.BottombarHeight;
             vm.Translation.IsShowingBottomToolbar.Value = TranslationManager.Translation.HideBottomToolbar;

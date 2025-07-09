@@ -378,7 +378,7 @@
             <StackPanel Orientation="Horizontal">
                 <Image
                     Height="18"
-                    IsVisible="{CompiledBinding IsUIShown}"
+                    IsVisible="{CompiledBinding MainWindow.IsUIShown.Value}"
                     Margin="10,0,10,0"
                     Width="18">
                     <Image.Source>
@@ -435,7 +435,7 @@
                 </Image>
                 <Image
                     Height="18"
-                    IsVisible="{CompiledBinding !IsUIShown}"
+                    IsVisible="{CompiledBinding !MainWindow.IsUIShown.Value}"
                     Margin="10,0,10,0"
                     Width="18">
                     <DrawingImage>

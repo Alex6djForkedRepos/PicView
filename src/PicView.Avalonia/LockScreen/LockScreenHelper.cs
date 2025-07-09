@@ -19,7 +19,7 @@ public static class LockScreenHelper
             return;
         }
         
-        vm.IsLoading = true;
+        vm.MainWindow.IsLoadingIndicatorShown.Value = true;
 
         try
         {
@@ -49,7 +49,7 @@ public static class LockScreenHelper
         }
         finally
         {
-            vm.IsLoading = false;
+            vm.MainWindow.IsLoadingIndicatorShown.Value = false;
         }
     }
 }

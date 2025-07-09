@@ -93,7 +93,6 @@ public partial class SettingsView : UserControl
                     0, vm.GlobalSettings.RotationAngle.CurrentValue, vm);
                 WindowFunctions.CenterWindowOnScreen();
             }).AddTo(_marginSubscription);
-        
     }
 
     private void LoadInitialSettings()

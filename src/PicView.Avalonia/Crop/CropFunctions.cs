@@ -128,7 +128,7 @@ public static class CropFunctions
             return false;
         }
 
-        if (vm.IsEditableTitlebarOpen)
+        if (vm.MainWindow.IsEditableTitlebarOpen.CurrentValue)
         {
             return false;
         }

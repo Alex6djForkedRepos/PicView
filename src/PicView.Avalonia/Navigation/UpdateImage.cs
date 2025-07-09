@@ -113,7 +113,7 @@ public static class UpdateImage
             UIHelper.GetToolTipMessage.IsVisible = false;
         }, DispatcherPriority.Send);
 
-        vm.IsLoading = false;
+        vm.MainWindow.IsLoadingIndicatorShown.Value = false;
 
         if (Settings.ImageScaling.ShowImageSideBySide)
         {

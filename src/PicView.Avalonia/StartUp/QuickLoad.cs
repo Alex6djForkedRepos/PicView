@@ -35,14 +35,14 @@ public static class QuickLoad
         var fileInfo = new FileInfo(file);
         if (!fileInfo.Exists) // If not file, try to load if URL, base64 or directory
         {
-            vm.IsLoading = true;
+            vm.MainWindow.IsLoadingIndicatorShown.Value = true;
             await NavigationManager.LoadPicFromStringAsync(file, vm).ConfigureAwait(false);
             return;
         }
 
         if (file.IsArchive()) // Handle if file exist and is an archive
         {
-            vm.IsLoading = true;
+            vm.MainWindow.IsLoadingIndicatorShown.Value = true;
             await NavigationManager.LoadPicFromArchiveAsync(file, vm).ConfigureAwait(false);
             return;
         }
@@ -54,7 +54,7 @@ public static class QuickLoad
         if (isLargeImage || Settings.ImageScaling.ShowImageSideBySide)
         {
             // Don't show loading indicator if image is too small
-            vm.IsLoading = true;
+            vm.MainWindow.IsLoadingIndicatorShown.Value = true;
         }
 
         if (Settings.ImageScaling.ShowImageSideBySide)
@@ -66,7 +66,7 @@ public static class QuickLoad
             await SingeImageLoadingAsync(vm, fileInfo, magickImage).ConfigureAwait(false);
         }
 
-        vm.IsLoading = false;
+        vm.MainWindow.IsLoadingIndicatorShown.Value = false;
         vm.GetIndex = NavigationManager.GetNonZeroIndex;
     }
 
@@ -121,7 +121,7 @@ public static class QuickLoad
 
         var imageModel = await GetImageModel.GetImageModelAsync(fileInfo, magickImage).ConfigureAwait(false);
         SetPicViewerValues(vm, imageModel, fileInfo);
-        vm.IsLoading = false;
+        vm.MainWindow.IsLoadingIndicatorShown.Value = false;
         if (!Settings.WindowProperties.AutoFit)
         {
             await Dispatcher.UIThread.InvokeAsync(
@@ -278,7 +278,7 @@ public static class QuickLoad
         if (Settings.Gallery.IsBottomGalleryShown)
         {
             bool loadGallery;
-            if (!vm.IsUIShown)
+            if (!vm.MainWindow.IsLoadingIndicatorShown.CurrentValue)
             {
                 loadGallery = Settings.Gallery.ShowBottomGalleryInHiddenUI;
             }

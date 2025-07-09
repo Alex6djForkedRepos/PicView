@@ -240,7 +240,7 @@ public partial class EffectsView : UserControl
         MainViewModel? vm = null;
         await Dispatcher.UIThread.InvokeAsync(() => { vm = DataContext as MainViewModel; });
 
-        vm.IsLoading = true;
+        vm.MainWindow.IsLoadingIndicatorShown.Value = true;
 
         try
         {
@@ -254,7 +254,7 @@ public partial class EffectsView : UserControl
         }
         finally
         {
-            vm.IsLoading = false;
+            vm.MainWindow.IsLoadingIndicatorShown.Value = false;
         }
     }
 
@@ -387,7 +387,7 @@ public partial class EffectsView : UserControl
     {
         if (DataContext is MainViewModel vm)
         {
-            vm.IsLoading = false;
+            vm.MainWindow.IsLoadingIndicatorShown.Value = false;
         }
 
         _disposables.Dispose();

@@ -58,7 +58,7 @@ public partial class MacMainWindow : Window
             });
             
             // Hide macOS buttons when interface is hidden
-            Observable.EveryValueChanged(vm, x => x.IsTopToolbarShown, _frameProvider).Subscribe(shown =>
+            Observable.EveryValueChanged(vm, x => x.MainWindow.IsTopToolbarShown.CurrentValue, _frameProvider).Subscribe(shown =>
             {
                 SystemDecorations = shown ? SystemDecorations.Full : SystemDecorations.None;
             });

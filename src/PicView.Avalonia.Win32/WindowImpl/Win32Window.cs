@@ -19,8 +19,8 @@ public static class Win32Window
 
         // Update view model properties
         vm.MainWindow.SizeToContent.Value = SizeToContent.Manual;
-        vm.IsFullscreen = true;
-        vm.IsMaximized = false;
+        vm.MainWindow.IsFullscreen.Value = true;
+        vm.MainWindow.IsMaximized.Value = false;
         vm.MainWindow.CanResize.Value = false;
 
         // Update settings
@@ -66,8 +66,8 @@ public static class Win32Window
             SetMargin(vm, window);
         });
 
-        vm.IsMaximized = true;
-        vm.IsFullscreen = false;
+        vm.MainWindow.IsMaximized.Value = true;
+        vm.MainWindow.IsFullscreen.Value = false;
         vm.MainWindow.CanResize.Value = false;
 
         if (saveSettings)
@@ -84,8 +84,8 @@ public static class Win32Window
 
         // Update UI state
         SetMargin(vm, window);
-        vm.IsMaximized = false;
-        vm.IsFullscreen = false;
+        vm.MainWindow.IsMaximized.Value = false;
+        vm.MainWindow.IsFullscreen.Value = false;
 
         RestoreInterface(vm);
 
@@ -203,14 +203,14 @@ public static class Win32Window
     /// </summary>
     private static void RestoreInterface(MainViewModel vm)
     {
-        vm.IsUIShown = Settings.UIProperties.ShowInterface;
+        vm.MainWindow.IsUIShown.Value = Settings.UIProperties.ShowInterface;
 
         if (!Settings.UIProperties.ShowInterface)
         {
             return;
         }
 
-        vm.IsTopToolbarShown = true;
+        vm.MainWindow.IsTopToolbarShown.Value = true;
         vm.MainWindow.TitlebarHeight.Value = SizeDefaults.MainTitlebarHeight;
 
         if (!Settings.UIProperties.ShowBottomNavBar)
@@ -218,7 +218,7 @@ public static class Win32Window
             return;
         }
 
-        vm.IsBottomToolbarShown = true;
+        vm.MainWindow.IsBottomToolbarShown.Value = true;
         vm.MainWindow.BottombarHeight.Value = SizeDefaults.BottombarHeight;
     }
 
@@ -227,9 +227,9 @@ public static class Win32Window
     /// </summary>
     private static void HideInterface(MainViewModel vm)
     {
-        vm.IsTopToolbarShown = false;
-        vm.IsBottomToolbarShown = false;
-        vm.IsUIShown = false;
+        vm.MainWindow.IsTopToolbarShown.Value = false;
+        vm.MainWindow.IsBottomToolbarShown.Value = false;
+        vm.MainWindow.IsUIShown.Value = false;
     }
 
     /// <summary>

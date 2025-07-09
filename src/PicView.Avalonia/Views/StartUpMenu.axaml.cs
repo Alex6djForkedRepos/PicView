@@ -112,7 +112,7 @@ public partial class StartUpMenu : UserControl
         else if (Settings.WindowProperties.AutoFit)
         {
             ShowIcon();
-            vm.TitleMaxWidth = logoWidth;
+            vm.MainWindow.TitleMaxWidth.Value = logoWidth;
             return;
         }
 
@@ -132,11 +132,11 @@ public partial class StartUpMenu : UserControl
 
         if (Settings.Zoom.ScrollEnabled)
         {
-            vm.TitleMaxWidth = titleMaxWidth - SizeDefaults.ScrollbarSize;
+            vm.MainWindow.TitleMaxWidth.Value = titleMaxWidth - SizeDefaults.ScrollbarSize;
         }
         else
         {
-            vm.TitleMaxWidth = titleMaxWidth;
+            vm.MainWindow.TitleMaxWidth.Value = titleMaxWidth;
         }
         
         return;

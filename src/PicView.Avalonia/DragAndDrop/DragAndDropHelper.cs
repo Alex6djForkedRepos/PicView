@@ -142,7 +142,7 @@ public static class DragAndDropHelper
     {
         // Remove preview first and show loading
         RemoveDragDropView();
-        vm.IsLoading = true;
+        vm.MainWindow.IsLoadingIndicatorShown.Value = true;
         if (vm.ImageViewer?.MainImage != null)
         {
             vm.ImageViewer.MainImage.Source = null;

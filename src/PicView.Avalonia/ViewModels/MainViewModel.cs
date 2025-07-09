@@ -288,29 +288,7 @@ public class MainViewModel : ReactiveObject
         set => this.RaiseAndSetIfChanged(ref field, value);
     }
 
-    public bool IsLoading
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
 
-    public bool IsUIShown
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public bool IsTopToolbarShown
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public bool IsBottomToolbarShown
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
 
     public bool IsShowingTaskbarProgress
     {
@@ -318,51 +296,7 @@ public class MainViewModel : ReactiveObject
         set => this.RaiseAndSetIfChanged(ref field, value);
     }
 
-    public bool IsFullscreen
-    {
-        get;
-        set
-        {
-            this.RaiseAndSetIfChanged(ref field, value);
-            ShouldRestore = IsFullscreen || IsMaximized;
-            ShouldMaximizeBeShown = !IsFullscreen && !IsMaximized;
-        }
-    }
-
-    public bool IsMaximized
-    {
-        get;
-        set
-        {
-            this.RaiseAndSetIfChanged(ref field, value);
-            ShouldRestore = IsFullscreen || IsMaximized;
-            ShouldMaximizeBeShown = !IsFullscreen && !IsMaximized;
-        }
-    }
-
-    public bool ShouldRestore
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public bool ShouldMaximizeBeShown
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    } = true;
-
-
-
-
-
-
-
-    public bool IsEditableTitlebarOpen
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
+ 
 
 
 
@@ -382,11 +316,7 @@ public class MainViewModel : ReactiveObject
         set => this.RaiseAndSetIfChanged(ref field, value);
     }
 
-    public double TitleMaxWidth
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
+
 
 
 

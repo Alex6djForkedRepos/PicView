@@ -155,7 +155,7 @@ public partial class WinTitleBar : UserControl
     {
         if (VisualRoot is null || DataContext is not MainViewModel vm) { return; }
         
-        if (vm.IsEditableTitlebarOpen)
+        if (vm.MainWindow.IsEditableTitlebarOpen.Value)
         {
             return;
         }

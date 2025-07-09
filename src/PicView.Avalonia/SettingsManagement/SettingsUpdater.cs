@@ -76,19 +76,19 @@ public static class SettingsUpdater
             ? 0
             : SizeDefaults.BottombarHeight;
         vm.PicViewer.IsShowingSideBySide.Value = Settings.ImageScaling.ShowImageSideBySide;
-        vm.IsUIShown  = Settings.UIProperties.ShowInterface;
-        vm.IsTopToolbarShown  = Settings.UIProperties.ShowInterface;
-        vm.IsBottomToolbarShown   = Settings.UIProperties.ShowBottomNavBar &&
+        vm.MainWindow.IsUIShown.Value  = Settings.UIProperties.ShowInterface;
+        vm.MainWindow.IsTopToolbarShown.Value  = Settings.UIProperties.ShowInterface;
+        vm.MainWindow.IsBottomToolbarShown.Value   = Settings.UIProperties.ShowBottomNavBar &&
                                     Settings.UIProperties.ShowInterface;
         vm.IsShowingTaskbarProgress  = Settings.UIProperties.IsTaskbarProgressEnabled;
-        vm.IsFullscreen  = Settings.WindowProperties.Fullscreen;
+        vm.MainWindow.IsFullscreen.Value  = Settings.WindowProperties.Fullscreen;
         vm.IsAscending  = Settings.Sorting.Ascending;
         vm.MainWindow.BackgroundChoice.Value = Settings.UIProperties.BgColorChoice;
     }
     
     public static async Task ResetSettings(MainViewModel vm)
     {
-        vm.IsLoading = true;
+        vm.MainWindow.IsLoadingIndicatorShown.Value = true;
 
         try
         {
@@ -144,7 +144,7 @@ public static class SettingsUpdater
         finally
         {
             TitleManager.SetTitle(vm);
-            vm.IsLoading = false;
+            vm.MainWindow.IsLoadingIndicatorShown.Value = false;
         }
     }
 

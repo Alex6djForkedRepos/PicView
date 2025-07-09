@@ -2,7 +2,7 @@
     Background="Transparent"
     Height="210"
     IsEnabled="{CompiledBinding !Gallery.IsBottomGalleryShown.Value}"
-    IsVisible="{CompiledBinding !IsUIShown}"
+    IsVisible="{CompiledBinding !MainWindow.IsUIShown.Value}"
     Width="210"
     d:DesignHeight="450"
     d:DesignWidth="800"

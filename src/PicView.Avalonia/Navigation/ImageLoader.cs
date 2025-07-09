@@ -31,7 +31,7 @@ public static class ImageLoader
         }
 
         MenuManager.CloseMenus(vm);
-        vm.IsLoading = true;
+        vm.MainWindow.IsLoadingIndicatorShown.Value = true;
         TitleManager.SetLoadingTitle(vm);
 
         // Starting in new task makes it more responsive and works better
@@ -42,7 +42,7 @@ public static class ImageLoader
             if (check == null)
             {
                 await ErrorHandling.ReloadAsync(vm).ConfigureAwait(false);
-                vm.IsLoading = false;
+                vm.MainWindow.IsLoadingIndicatorShown.Value = false;
                 ArchiveExtraction.Cleanup();
                 return;
             }
@@ -52,35 +52,35 @@ public static class ImageLoader
                 case FileTypeResolver.LoadAbleFileType.File:
                     vm.MainWindow.CurrentView.Value = vm.ImageViewer;
                     await LoadPicFromFile(check.Value.Data, vm, imageIterator).ConfigureAwait(false);
-                    vm.IsLoading = false;
+                    vm.MainWindow.IsLoadingIndicatorShown.Value = false;
                     ArchiveExtraction.Cleanup();
                     return;
                 case FileTypeResolver.LoadAbleFileType.Directory:
                     vm.MainWindow.CurrentView.Value = vm.ImageViewer;
                     await LoadPicFromDirectoryAsync(check.Value.Data, vm).ConfigureAwait(false);
-                    vm.IsLoading = false;
+                    vm.MainWindow.IsLoadingIndicatorShown.Value = false;
                     ArchiveExtraction.Cleanup();
                     return;
                 case FileTypeResolver.LoadAbleFileType.Web:
                     vm.MainWindow.CurrentView.Value = vm.ImageViewer;
                     await LoadPicFromUrlAsync(check.Value.Data, vm, imageIterator).ConfigureAwait(false);
-                    vm.IsLoading = false;
+                    vm.MainWindow.IsLoadingIndicatorShown.Value = false;
                     ArchiveExtraction.Cleanup();
                     return;
                 case FileTypeResolver.LoadAbleFileType.Base64:
                     vm.MainWindow.CurrentView.Value = vm.ImageViewer;
                     await LoadPicFromBase64Async(check.Value.Data, vm, imageIterator).ConfigureAwait(false);
-                    vm.IsLoading = false;
+                    vm.MainWindow.IsLoadingIndicatorShown.Value = false;
                     ArchiveExtraction.Cleanup();
                     return;
                 case FileTypeResolver.LoadAbleFileType.Zip:
                     vm.MainWindow.CurrentView.Value = vm.ImageViewer;
                     await LoadPicFromArchiveAsync(check.Value.Data, vm, imageIterator).ConfigureAwait(false);
-                    vm.IsLoading = false;
+                    vm.MainWindow.IsLoadingIndicatorShown.Value = false;
                     return;
                 default:
                     await ErrorHandling.ReloadAsync(vm).ConfigureAwait(false);
-                    vm.IsLoading = false;
+                    vm.MainWindow.IsLoadingIndicatorShown.Value = false;
                     ArchiveExtraction.Cleanup();
                     return;
             }
@@ -164,7 +164,7 @@ public static class ImageLoader
     /// <param name="fileInfo">Optional: FileInfo object for the directory.</param>
     public static async Task LoadPicFromDirectoryAsync(string file, MainViewModel vm, FileInfo? fileInfo = null)
     {
-        vm.IsLoading = true;
+        vm.MainWindow.IsLoadingIndicatorShown.Value = true;
         TitleManager.SetLoadingTitle(vm);
 
         if (_cancellationTokenSource is not null)
@@ -233,7 +233,7 @@ public static class ImageLoader
             await _cancellationTokenSource.CancelAsync().ConfigureAwait(false);
         }
 
-        vm.IsLoading = true;
+        vm.MainWindow.IsLoadingIndicatorShown.Value = true;
         TitleManager.SetLoadingTitle(vm);
 
         string? prevArchiveLocation = null;
@@ -368,7 +368,7 @@ public static class ImageLoader
         var imageModel = await GetImageModel.GetImageModelAsync(fileInfo).ConfigureAwait(false);
         await UpdateImage.SetSingleImageAsync(imageModel.Image, imageModel.ImageType, url, vm);
 
-        vm.IsLoading = false;
+        vm.MainWindow.IsLoadingIndicatorShown.Value = false;
         vm.PicViewer.FileInfo.Value = fileInfo;
         vm.PicViewer.ExifOrientation.Value = imageModel.EXIFOrientation;
         FileHistoryManager.Add(url);
@@ -390,7 +390,7 @@ public static class ImageLoader
     public static async Task LoadPicFromBase64Async(string base64, MainViewModel vm, ImageIterator imageIterator)
     {
         TitleManager.SetLoadingTitle(vm);
-        vm.IsLoading = true;
+        vm.MainWindow.IsLoadingIndicatorShown.Value = true;
         vm.PicViewer.ImageSource.Value = null;
         vm.PicViewer.FileInfo.Value = null;
 
@@ -425,7 +425,7 @@ public static class ImageLoader
                 await ErrorHandling.ReloadAsync(vm);
             }
         });
-        vm.IsLoading = false;
+        vm.MainWindow.IsLoadingIndicatorShown.Value = false;
     }
 
     #endregion

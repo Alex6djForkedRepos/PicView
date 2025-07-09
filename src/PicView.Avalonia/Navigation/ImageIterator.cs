@@ -130,7 +130,7 @@ public class ImageIterator : IAsyncDisposable
                 return; // Early exit
             }
 
-            if (_vm.IsEditableTitlebarOpen)
+            if (_vm.MainWindow.IsEditableTitlebarOpen.CurrentValue)
             {
                 // Don't react to changes when renaming
                 return;
@@ -153,7 +153,7 @@ public class ImageIterator : IAsyncDisposable
                 return; // Early exit
             }
 
-            if (_vm.IsEditableTitlebarOpen)
+            if (_vm.MainWindow.IsEditableTitlebarOpen.Value)
             {
                 // Don't react to changes when renaming
                 return;
@@ -176,7 +176,7 @@ public class ImageIterator : IAsyncDisposable
                 return; // Early exit
             }
 
-            if (_vm.IsEditableTitlebarOpen)
+            if (_vm.MainWindow.IsEditableTitlebarOpen.CurrentValue)
             {
                 // Don't react to changes when renaming
                 return;
@@ -788,7 +788,7 @@ public class ImageIterator : IAsyncDisposable
         {
             if (index == CurrentIndex)
             {
-                _vm.IsLoading = false;
+                _vm.MainWindow.IsLoadingIndicatorShown.Value = false;
             }
         }
 
@@ -828,7 +828,7 @@ public class ImageIterator : IAsyncDisposable
 
                 _vm.PicViewer.ImageSource.Value = thumb;
                 _vm.PicViewer.SecondaryImageSource.Value = secondaryThumb;
-                _vm.IsLoading = thumb is null || secondaryThumb is null;
+                _vm.MainWindow.IsLoadingIndicatorShown.Value = thumb is null || secondaryThumb is null;
             }
         }
     }

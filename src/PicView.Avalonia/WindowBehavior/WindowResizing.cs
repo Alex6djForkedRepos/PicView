@@ -99,7 +99,7 @@ public static class WindowResizing
 
     public static void SetSize(ImageSize size, MainViewModel vm)
     {
-        vm.TitleMaxWidth = size.TitleMaxWidth;
+        vm.MainWindow.TitleMaxWidth.Value = size.TitleMaxWidth;
         vm.PicViewer.ImageWidth.Value = size.Width;
         vm.PicViewer.SecondaryImageWidth.Value = size.SecondaryWidth;
         vm.PicViewer.ImageHeight.Value = size.Height;

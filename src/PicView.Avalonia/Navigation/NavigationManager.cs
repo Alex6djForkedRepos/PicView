@@ -110,7 +110,7 @@ public static class NavigationManager
             await WindowFunctions.ResizeAndFixRenderingError(vm);
         }
 
-        vm.IsLoading = false;
+        vm.MainWindow.IsLoadingIndicatorShown.Value = false;
         FileHistoryManager.Add(ImageIterator.ImagePaths[index].FullName);
         if (Settings.ImageScaling.ShowImageSideBySide)
         {
@@ -130,7 +130,7 @@ public static class NavigationManager
     public static bool CanNavigate(MainViewModel vm) =>
         ImageIterator?.ImagePaths is not null &&
         ImageIterator.ImagePaths.Count > 0 && !CropFunctions.IsCropping &&
-        !DialogManager.IsDialogOpen && vm is { IsEditableTitlebarOpen: false, PicViewer.FileInfo: not null };
+        !DialogManager.IsDialogOpen && vm is { MainWindow.IsLoadingIndicatorShown.Value: false, PicViewer.FileInfo: not null };
 
     /// <summary>
     ///     Navigates to the next or previous image based on the <paramref name="next" /> parameter.

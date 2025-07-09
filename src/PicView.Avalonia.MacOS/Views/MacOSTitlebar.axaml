@@ -1,5 +1,5 @@
 <UserControl
-    IsVisible="{CompiledBinding IsTopToolbarShown,
+    IsVisible="{CompiledBinding MainWindow.IsTopToolbarShown.Value,
                                 Mode=OneWay}"
     mc:Ignorable="d"
     x:Class="PicView.Avalonia.MacOS.Views.MacOSTitlebar"

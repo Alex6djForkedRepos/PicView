@@ -53,7 +53,7 @@ public static class ErrorHandling
 
             vm.GetIndex = 0;
             vm.PlatformService.StopTaskbarProgress();
-            vm.IsLoading = false;
+            vm.MainWindow.IsLoadingIndicatorShown.Value = false;
 
             _ = NavigationManager.DisposeImageIteratorAsync();
             if (UIHelper.GetEditableTitlebar is not null)
@@ -71,7 +71,7 @@ public static class ErrorHandling
 
     public static async Task ReloadAsync(MainViewModel vm)
     {
-        vm.IsLoading = true;
+        vm.MainWindow.IsLoadingIndicatorShown.Value = true;
         
         if (vm.PicViewer.ImageSource is null)
         {
@@ -125,7 +125,7 @@ public static class ErrorHandling
         }
         finally
         {
-            vm.IsLoading = false;
+            vm.MainWindow.IsLoadingIndicatorShown.Value = false;
         }
     }
 }

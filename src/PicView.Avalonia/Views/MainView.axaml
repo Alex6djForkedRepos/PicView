@@ -417,7 +417,7 @@
                     Command="{CompiledBinding ToggleUICommand}"
                     Header="{CompiledBinding Translation.IsShowingUI.Value,
                                              Mode=OneWay}"
-                    IsVisible="{CompiledBinding IsUIShown,
+                    IsVisible="{CompiledBinding MainWindow.IsUIShown.Value,
                                                 Mode=OneWay}">
                     <MenuItem.Icon>
                         <Image
@@ -431,7 +431,7 @@
                     Command="{CompiledBinding ToggleUICommand}"
                     Header="{CompiledBinding Translation.IsShowingUI.Value,
                                              Mode=OneWay}"
-                    IsVisible="{CompiledBinding !IsUIShown,
+                    IsVisible="{CompiledBinding !MainWindow.IsUIShown.Value,
                                                 Mode=OneWay}">
                     <MenuItem.Icon>
                         <Image
@@ -480,8 +480,8 @@
                     Command="{CompiledBinding ToggleBottomNavBarCommand}"
                     Header="{CompiledBinding Translation.ShowBottomToolbar.Value,
                                              Mode=OneWay}"
-                    IsChecked="{CompiledBinding IsBottomToolbarShown}"
-                    IsVisible="{CompiledBinding !IsBottomToolbarShown}"
+                    IsChecked="{CompiledBinding MainWindow.IsBottomToolbarShown.Value}"
+                    IsVisible="{CompiledBinding !MainWindow.IsBottomToolbarShown.Value}"
                     ToggleType="CheckBox">
                     <MenuItem.Icon>
                         <Image
@@ -1019,7 +1019,7 @@
                 Command="{CompiledBinding ToggleFullscreenCommand}"
                 Header="{CompiledBinding Translation.Fullscreen.Value,
                                          Mode=OneWay}"
-                IsVisible="{CompiledBinding !IsFullscreen,
+                IsVisible="{CompiledBinding !MainWindow.IsFullscreen.Value,
                                             Mode=OneWay}">
                 <MenuItem.Icon>
                     <Path
@@ -1036,7 +1036,7 @@
                 Command="{CompiledBinding MaximizeCommand}"
                 Header="{CompiledBinding Translation.Maximize.Value,
                                          Mode=OneWay}"
-                IsVisible="{CompiledBinding ShouldMaximizeBeShown,
+                IsVisible="{CompiledBinding MainWindow.ShouldMaximizeBeShown.Value,
                                             Mode=OneWay}"
                 x:Name="MaximizeMenuItem">
                 <MenuItem.Icon>
@@ -1053,7 +1053,7 @@
                 Command="{CompiledBinding RestoreCommand}"
                 Header="{CompiledBinding Translation.RestoreDown.Value,
                                          Mode=OneWay}"
-                IsVisible="{CompiledBinding ShouldRestore,
+                IsVisible="{CompiledBinding MainWindow.ShouldRestore.Value,
                                             Mode=OneWay}">
                 <MenuItem.Icon>
                     <Path
@@ -1083,7 +1083,7 @@
     <Panel x:Name="MainGrid">
         <uc:SpinWaiter
             HorizontalAlignment="Center"
-            IsVisible="{CompiledBinding IsLoading,
+            IsVisible="{CompiledBinding MainWindow.IsLoadingIndicatorShown.Value,
                                         Mode=OneWay}"
             VerticalAlignment="Center"
             ZIndex="3" />
@@ -1107,7 +1107,7 @@
             Background="Transparent"
             Height="150"
             HorizontalAlignment="Right"
-            IsVisible="{CompiledBinding !IsUIShown}"
+            IsVisible="{CompiledBinding !MainWindow.IsUIShown.Value}"
             Margin="{CompiledBinding MainWindow.RightControlOffSetMargin.Value}"
             Opacity="0"
             Orientation="Horizontal"

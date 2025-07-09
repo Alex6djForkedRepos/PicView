@@ -20,7 +20,7 @@
         DockPanel.Dock="Right"
         Height="30"
         HorizontalAlignment="Right"
-        IsVisible="{CompiledBinding !IsUIShown}"
+        IsVisible="{CompiledBinding !MainWindow.IsUIShown.Value}"
         ToolTip.Tip="{CompiledBinding Translation.Close.Value,
                                       Mode=OneWay}"
         VerticalAlignment="Top"

@@ -137,12 +137,12 @@ public partial class MainView : UserControl
             return;
         }
 
-        if (!vm.IsEditableTitlebarOpen)
+        if (!vm.MainWindow.IsEditableTitlebarOpen.Value)
         {
             return;
         }
 
-        vm.IsEditableTitlebarOpen = false;
+        vm.MainWindow.IsEditableTitlebarOpen.Value = false;
         MainKeyboardShortcuts.IsKeysEnabled = true;
         Focus();
     }

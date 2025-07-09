@@ -133,6 +133,8 @@ public static class StartUpHelper
             SettingsUpdater.ValidateGallerySettings(vm, settingsExists);
         });
         
+        vm.MainWindow.LayoutButtonSubscription();
+        
         // Need to delay setting fullscreen or maximized until after the window is shown to select the correct monitor
         if (Settings.WindowProperties.Maximized && !Settings.WindowProperties.Fullscreen)
         {
@@ -263,8 +265,8 @@ public static class StartUpHelper
         vm.GlobalSettings.IsAutoFit.Value = false;
         if (Settings.UIProperties.ShowInterface)
         {
-            vm.IsTopToolbarShown = true;
-            vm.IsBottomToolbarShown = Settings.UIProperties.ShowBottomNavBar;
+            vm.MainWindow.IsTopToolbarShown.Value = true;
+            vm.MainWindow.IsBottomToolbarShown.Value = Settings.UIProperties.ShowBottomNavBar;
         }
         WindowFunctions.InitializeWindowSizeAndPosition(window);
     }
@@ -276,8 +278,8 @@ public static class StartUpHelper
         vm.GlobalSettings.IsAutoFit.Value = true;
         if (Settings.UIProperties.ShowInterface)
         {
-            vm.IsTopToolbarShown = true;
-            vm.IsBottomToolbarShown = Settings.UIProperties.ShowBottomNavBar;
+            vm.MainWindow.IsTopToolbarShown.Value = true;
+            vm.MainWindow.IsBottomToolbarShown.Value = Settings.UIProperties.ShowBottomNavBar;
         }
         window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
     }
