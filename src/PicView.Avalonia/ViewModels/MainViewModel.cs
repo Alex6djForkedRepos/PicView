@@ -5,7 +5,6 @@ using PicView.Avalonia.Functions;
 using PicView.Avalonia.ImageTransformations.Rotation;
 using PicView.Avalonia.Interfaces;
 using PicView.Avalonia.UI;
-using PicView.Avalonia.WindowBehavior;
 using PicView.Core.ProcessHandling;
 using PicView.Core.ViewModels;
 using ReactiveUI;
@@ -39,9 +38,6 @@ public class MainViewModel : ReactiveObject
 
         #region Window commands
 
-        ExitCommand = FunctionsHelper.CreateReactiveCommand(WindowFunctions.Close);
-        MinimizeCommand = FunctionsHelper.CreateReactiveCommand(WindowFunctions.Minimize);
-        MaximizeCommand = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.Maximize);
         RestoreCommand = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.Restore);
         ToggleFullscreenCommand = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.ToggleFullscreen);
         NewWindowCommand = FunctionsHelper.CreateReactiveCommand(ProcessHelper.StartNewProcess);
@@ -57,19 +53,7 @@ public class MainViewModel : ReactiveObject
 
         #endregion Window commands
 
-        #region Menus
 
-        CloseMenuCommand = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.CloseMenus);
-
-        ToggleFileMenuCommand = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.ToggleFileMenu);
-
-        ToggleImageMenuCommand = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.ToggleImageMenu);
-
-        ToggleSettingsMenuCommand = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.ToggleSettingsMenu);
-
-        ToggleToolsMenuCommand = FunctionsHelper.CreateReactiveCommand(FunctionsMapper.ToggleToolsMenu);
-
-        #endregion Menus
 
         #region Image commands
 
@@ -159,17 +143,8 @@ public class MainViewModel : ReactiveObject
     }
 
     #region Commands
-
-    public ReactiveCommand<Unit, Unit>? ExitCommand { get; }
-    public ReactiveCommand<Unit, Unit>? MinimizeCommand { get; }
-    public ReactiveCommand<Unit, Unit>? MaximizeCommand { get; }
     public ReactiveCommand<Unit, Unit>? RestoreCommand { get; }
     public ReactiveCommand<Unit, Unit>? ToggleFullscreenCommand { get; }
-    public ReactiveCommand<Unit, Unit>? CloseMenuCommand { get; }
-    public ReactiveCommand<Unit, Unit>? ToggleFileMenuCommand { get; }
-    public ReactiveCommand<Unit, Unit>? ToggleImageMenuCommand { get; }
-    public ReactiveCommand<Unit, Unit>? ToggleSettingsMenuCommand { get; }
-    public ReactiveCommand<Unit, Unit>? ToggleToolsMenuCommand { get; }
     public ReactiveCommand<Unit, Unit>? NewWindowCommand { get; }
     public ReactiveCommand<Unit, Unit>? ToggleLoopingCommand { get; }
     public ReactiveCommand<Unit, Unit>? RotateLeftCommand { get; }

@@ -1,7 +1,9 @@
 ﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
+using PicView.Avalonia.Functions;
 using PicView.Avalonia.UI;
+using PicView.Avalonia.WindowBehavior;
 using R3;
 
 namespace PicView.Avalonia.ViewModels;
@@ -68,6 +70,40 @@ public class MainWindowViewModel : IDisposable
         Observable.EveryValueChanged(this, x => x.IsFullscreen.CurrentValue, UIHelper.GetFrameProvider)
             .Subscribe(_ => SetButtonValues());
     }
+    
+    #region Menus
+    
+    public ReactiveCommand CloseMenuCommand { get; } = new(CloseMenus);
+    
+    public ReactiveCommand ToggleFileMenuCommand { get; } = new(ToggleFileMenu);
+    public ReactiveCommand ToggleImageMenuCommand { get; } = new(ToggleImageMenu);
+    public ReactiveCommand ToggleSettingsMenuCommand { get; } = new(ToggleSettingsMenu);
+    public ReactiveCommand ToggleToolsMenuCommand { get; } = new(ToggleToolsMenu);
+
+    private static void CloseMenus(Unit unit) => MenuManager.CloseMenus(UIHelper.GetMainView.DataContext as MainViewModel);
+    
+    private static void ToggleFileMenu(Unit unit) => MenuManager.ToggleFileMenu(UIHelper.GetMainView.DataContext as MainViewModel);
+    private static void ToggleImageMenu(Unit unit) => MenuManager.ToggleImageMenu(UIHelper.GetMainView.DataContext as MainViewModel);
+    private static void ToggleSettingsMenu(Unit unit) => MenuManager.ToggleSettingsMenu(UIHelper.GetMainView.DataContext as MainViewModel);
+    private static void ToggleToolsMenu(Unit unit) => MenuManager.ToggleToolsMenu(UIHelper.GetMainView.DataContext as MainViewModel);
+
+    #endregion Menus
+    
+    public ReactiveCommand ExitCommand { get; } = new(async (_, _) =>
+    {
+        await FunctionsMapper.Close();
+    });
+    
+    public ReactiveCommand MaximizeCommand { get; } = new(async (_, _) =>
+    {
+        await FunctionsMapper.Maximize();
+    });
+    
+    public ReactiveCommand MinimizeCommand { get; } = new(async (_, _) =>
+    {
+        await WindowFunctions.Minimize();
+    });
+    
 
     private void SetButtonValues()
     {

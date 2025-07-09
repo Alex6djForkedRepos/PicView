@@ -113,7 +113,7 @@
                     Canvas.Top="-1"
                     Classes="hover"
                     ClickMode="Release"
-                    Command="{CompiledBinding CloseMenuCommand}"
+                    Command="{CompiledBinding MainWindow.CloseMenuCommand}"
                     CornerRadius="0,8,0,0"
                     Data="{StaticResource CloseGeometry}"
                     Foreground="{DynamicResource MainTextColor}"

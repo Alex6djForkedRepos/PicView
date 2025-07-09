@@ -148,7 +148,7 @@ public partial class EffectsView : UserControl
 
         sliderValueChanges
             .Debounce(TimeSpan.FromMilliseconds(300))
-            .ObserveOn(UIHelper.GetFrameProvider) // Ensure we're on the UI thread to access UI properties
+            .ObserveOn(UIHelper.GetFrameProvider)
             .Select(_ =>
             {
                 // Update the config with the latest slider values
@@ -180,7 +180,6 @@ public partial class EffectsView : UserControl
 
                 return (magick, vm);
             })
-            .ObserveOn(UIHelper.GetFrameProvider) // Switch back to the UI thread to update the UI
             .Subscribe(result =>
             {
                 var (magick, viewModel) = result;

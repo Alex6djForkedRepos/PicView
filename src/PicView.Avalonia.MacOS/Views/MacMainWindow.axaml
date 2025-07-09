@@ -324,7 +324,7 @@
                 <NativeMenu>
                     <NativeMenuItem Command="{CompiledBinding NewWindowCommand}" Header="{CompiledBinding Translation.NewWindow.Value, Mode=OneWay, Mode=OneWay}" />
                     <NativeMenuItemSeparator />
-                    <NativeMenuItem Command="{CompiledBinding MaximizeCommand}" Header="{CompiledBinding Translation.Maximize.Value, Mode=OneWay}" />
+                    <NativeMenuItem Command="{CompiledBinding MainWindow.MaximizeCommand}" Header="{CompiledBinding Translation.Maximize.Value, Mode=OneWay}" />
                     <NativeMenuItem Command="{CompiledBinding ToggleFullscreenCommand}" Header="{CompiledBinding Translation.Fullscreen.Value, Mode=OneWay}" />
                 </NativeMenu>
             </NativeMenuItem>

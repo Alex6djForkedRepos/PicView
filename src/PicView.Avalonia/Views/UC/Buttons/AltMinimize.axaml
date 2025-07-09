@@ -16,7 +16,7 @@
         BorderThickness="1,0,0,0"
         Classes="ButtonBorder hover"
         ClickMode="Release"
-        Command="{CompiledBinding MinimizeCommand}"
+        Command="{CompiledBinding MainWindow.MinimizeCommand}"
         CornerRadius="0,0,0,10"
         DockPanel.Dock="Right"
         Height="30"

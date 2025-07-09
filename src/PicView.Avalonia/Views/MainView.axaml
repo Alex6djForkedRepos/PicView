@@ -1034,7 +1034,7 @@
 
             <!--  Maximize  -->
             <MenuItem
-                Command="{CompiledBinding MaximizeCommand}"
+                Command="{CompiledBinding MainWindow.MaximizeCommand}"
                 Header="{CompiledBinding Translation.Maximize.Value,
                                          Mode=OneWay}"
                 IsVisible="{CompiledBinding MainWindow.ShouldMaximizeBeShown.Value,
@@ -1067,7 +1067,7 @@
             </MenuItem>
 
             <!--  Close  -->
-            <MenuItem Command="{CompiledBinding ExitCommand}" Header="{CompiledBinding Translation.Close.Value, Mode=OneWay}">
+            <MenuItem Command="{CompiledBinding MainWindow.ExitCommand}" Header="{CompiledBinding Translation.Close.Value, Mode=OneWay}">
                 <MenuItem.Icon>
                     <Path
                         Data="{StaticResource CloseGeometry}"
