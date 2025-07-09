@@ -1,5 +1,6 @@
 ﻿using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Media;
 using PicView.Avalonia.Functions;
 using PicView.Avalonia.UI;
@@ -31,6 +32,8 @@ public class MainWindowViewModel : IDisposable
     public BindableReactiveProperty<double> BottombarHeight { get; } = new();
     
     public BindableReactiveProperty<SizeToContent> SizeToContent { get; } = new();
+    
+    public BindableReactiveProperty<ScrollBarVisibility> ToggleScrollBarVisibility { get; } = new();
 
     public BindableReactiveProperty<bool> CanResize { get; } = new();
 
@@ -62,6 +65,8 @@ public class MainWindowViewModel : IDisposable
     public BindableReactiveProperty<bool> IsBottomToolbarShown { get; } = new();
 
     public BindableReactiveProperty<bool> IsEditableTitlebarOpen { get; } = new();
+    
+    public BindableReactiveProperty<IImage?> ChangeCtrlZoomImage { get; } = new();
 
     public void LayoutButtonSubscription()
     {

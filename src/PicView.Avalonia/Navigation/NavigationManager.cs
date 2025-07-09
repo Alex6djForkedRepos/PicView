@@ -88,7 +88,7 @@ public static class NavigationManager
         }
         else
         {
-            vm.IsSingleImage = false;
+            vm.PicViewer.IsSingleImage.Value = false;
             var isTiffUpdated = await CheckIfTiffAndUpdate(vm, fileInfo, index);
             if (!isTiffUpdated)
             {

@@ -119,26 +119,26 @@
             <NativeMenuItem Header="{CompiledBinding Translation.Image.Value, Mode=OneWay}">
                 <NativeMenu>
                     <NativeMenuItem
-                        Command="{CompiledBinding RotateLeftCommand}"
+                        Command="{CompiledBinding Tools.RotateLeftCommand}"
                         Header="{CompiledBinding Translation.RotateLeft.Value,
                                                  Mode=OneWay}"
                         IsEnabled="{CompiledBinding PicViewer.FileInfo.Value,
                                                     Converter={x:Static ObjectConverters.IsNotNull}}" />
                     <NativeMenuItem
-                        Command="{CompiledBinding RotateRightCommand}"
+                        Command="{CompiledBinding Tools.RotateRightCommand}"
                         Header="{CompiledBinding Translation.RotateRight.Value,
                                                  Mode=OneWay}"
                         IsEnabled="{CompiledBinding PicViewer.FileInfo.Value,
                                                     Converter={x:Static ObjectConverters.IsNotNull}}" />
                     <NativeMenuItem
-                        Command="{CompiledBinding FlipCommand}"
+                        Command="{CompiledBinding Tools.FlipCommand}"
                         Header="{CompiledBinding Translation.Flip.Value,
                                                  Mode=OneWay}"
                         IsEnabled="{CompiledBinding PicViewer.FileInfo.Value,
                                                     Converter={x:Static ObjectConverters.IsNotNull}}" />
                     <NativeMenuItemSeparator />
                     <NativeMenuItem
-                        Command="{CompiledBinding CropCommand}"
+                        Command="{CompiledBinding Tools.CropCommand}"
                         CommandParameter="{CompiledBinding PicViewer.FileInfo.Value.FullName,
                                                            FallbackValue=''}"
                         Header="{CompiledBinding Translation.Crop.Value,
@@ -169,7 +169,7 @@
                     <NativeMenuItem Command="{CompiledBinding Window.ShowBatchResizeWindow}" Header="{CompiledBinding Translation.BatchResize.Value, Mode=OneWay}" />
                     <NativeMenuItemSeparator />
                     <NativeMenuItem
-                        Command="{CompiledBinding OptimizeImageCommand}"
+                        Command="{CompiledBinding Tools.OptimizeImageCommand}"
                         CommandParameter="{CompiledBinding PicViewer.FileInfo.Value.FullName,
                                                            FallbackValue=''}"
                         Header="{CompiledBinding Translation.OptimizeImage.Value,
@@ -208,12 +208,12 @@
                 <NativeMenu>
                     <NativeMenuItem Command="{CompiledBinding MainWindow.ToggleFullscreenCommand}" Header="{CompiledBinding Translation.ToggleFullscreen.Value, Mode=OneWay}" />
                     <NativeMenuItem
-                        Command="{CompiledBinding ChangeAutoFitCommand}"
+                        Command="{CompiledBinding Tools.ChangeAutoFitCommand}"
                         Header="{CompiledBinding Translation.AutoFitWindow.Value,
                                                  Mode=OneWay}"
                         IsChecked="{CompiledBinding GlobalSettings.IsAutoFit.Value}"
                         ToggleType="CheckBox" />
-                    <NativeMenuItem Command="{CompiledBinding ToggleUICommand}" Header="{CompiledBinding Translation.IsShowingUI.Value, Mode=OneWay}" />
+                    <NativeMenuItem Command="{CompiledBinding Tools.ToggleUICommand}" Header="{CompiledBinding Translation.IsShowingUI.Value, Mode=OneWay}" />
                     <NativeMenuItem Command="{CompiledBinding Gallery.ToggleGalleryCommand}" Header="{CompiledBinding Translation.ShowImageGallery.Value, Mode=OneWay}" />
 
                 </NativeMenu>
@@ -276,36 +276,36 @@
             <!--  Settings  -->
             <NativeMenuItem Header="{CompiledBinding Translation.Settings.Value, Mode=OneWay}">
                 <NativeMenu>
-                    <NativeMenuItem Command="{CompiledBinding ChangeBackgroundCommand}" Header="{CompiledBinding Translation.ChangeBackground.Value, Mode=OneWay}" />
+                    <NativeMenuItem Command="{CompiledBinding Tools.ChangeBackgroundCommand}" Header="{CompiledBinding Translation.ChangeBackground.Value, Mode=OneWay}" />
                     <NativeMenuItemSeparator />
                     <NativeMenuItem
-                        Command="{CompiledBinding ToggleLoopingCommand}"
+                        Command="{CompiledBinding Tools.ToggleLoopingCommand}"
                         Header="{CompiledBinding Translation.IsLooping.Value,
                                                  Mode=OneWay}"
                         IsChecked="{CompiledBinding GlobalSettings.IsLooping.Value}"
                         ToggleType="CheckBox" />
                     <NativeMenuItem
-                        Command="{CompiledBinding StretchCommand}"
+                        Command="{CompiledBinding Tools.StretchCommand}"
                         Header="{CompiledBinding Translation.Stretch.Value,
                                                  Mode=OneWay}"
                         IsChecked="{CompiledBinding GlobalSettings.IsStretched.Value}"
                         ToggleType="CheckBox" />
                     <NativeMenuItem
-                        Command="{CompiledBinding ToggleScrollCommand}"
+                        Command="{CompiledBinding Tools.ToggleScrollCommand}"
                         Header="{CompiledBinding Translation.ToggleScroll.Value,
                                                  Mode=OneWay}"
                         IsChecked="{CompiledBinding GlobalSettings.IsScrollingEnabled.Value}"
                         ToggleType="CheckBox" />
                     <NativeMenuItemSeparator />
                     <NativeMenuItem
-                        Command="{CompiledBinding ChangeTopMostCommand}"
+                        Command="{CompiledBinding Tools.ChangeTopMostCommand}"
                         Header="{CompiledBinding Translation.StayTopMost.Value,
                                                  Mode=OneWay}"
                         IsChecked="{CompiledBinding GlobalSettings.IsTopMost.Value}"
                         ToggleType="CheckBox" />
                     <NativeMenuItemSeparator />
                     <NativeMenuItem
-                        Command="{CompiledBinding ToggleSubdirectoriesCommand}"
+                        Command="{CompiledBinding Tools.ToggleSubdirectoriesCommand}"
                         Header="{CompiledBinding Translation.SearchSubdirectory.Value,
                                                  Mode=OneWay}"
                         IsChecked="{CompiledBinding GlobalSettings.IsIncludingSubdirectories.Value}"

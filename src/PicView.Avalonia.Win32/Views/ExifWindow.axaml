@@ -112,7 +112,7 @@
                     BorderBrush="{DynamicResource MainBorderColor}"
                     BorderThickness="0,0,1,0"
                     Classes="noBorderHover"
-                    Command="{Binding OptimizeImageCommand}"
+                    Command="{Binding Tools.OptimizeImageCommand}"
                     CommandParameter="{CompiledBinding PicViewer.FileInfo.Value.FullName,
                                                        FallbackValue=''}"
                     DockPanel.Dock="Right"

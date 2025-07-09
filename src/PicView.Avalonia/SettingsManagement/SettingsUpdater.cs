@@ -80,7 +80,6 @@ public static class SettingsUpdater
         vm.MainWindow.IsTopToolbarShown.Value  = Settings.UIProperties.ShowInterface;
         vm.MainWindow.IsBottomToolbarShown.Value   = Settings.UIProperties.ShowBottomNavBar &&
                                     Settings.UIProperties.ShowInterface;
-        vm.IsShowingTaskbarProgress  = Settings.UIProperties.IsTaskbarProgressEnabled;
         vm.MainWindow.IsFullscreen.Value  = Settings.WindowProperties.Fullscreen;
         vm.MainWindow.BackgroundChoice.Value = Settings.UIProperties.BgColorChoice;
     }
@@ -400,7 +399,7 @@ public static class SettingsUpdater
     
     public static void TurnOffScroll(MainViewModel vm)
     {
-        vm.ToggleScrollBarVisibility = ScrollBarVisibility.Disabled;
+        vm.MainWindow.ToggleScrollBarVisibility.Value = ScrollBarVisibility.Disabled;
         vm.Translation.IsScrolling.Value = TranslationManager.Translation.ScrollingDisabled;
         vm.GlobalSettings.IsScrollingEnabled.Value = false;
         Settings.Zoom.ScrollEnabled = false;
@@ -409,7 +408,7 @@ public static class SettingsUpdater
     
     public static void TurnOnScroll(MainViewModel vm)
     {
-        vm.ToggleScrollBarVisibility = ScrollBarVisibility.Visible;
+        vm.MainWindow.ToggleScrollBarVisibility.Value = ScrollBarVisibility.Visible;
         vm.Translation.IsScrolling.Value = TranslationManager.Translation.ScrollingEnabled;
         vm.GlobalSettings.IsScrollingEnabled.Value = true;
         Settings.Zoom.ScrollEnabled = true;
@@ -438,7 +437,7 @@ public static class SettingsUpdater
             return;
         }
         var isNavigatingWithCtrl = Settings.Zoom.CtrlZoom;
-        vm.ChangeCtrlZoomImage = isNavigatingWithCtrl ? leftRightArrowsImage as DrawingImage : scanEyeImage as DrawingImage;
+        vm.MainWindow.ChangeCtrlZoomImage.Value = isNavigatingWithCtrl ? leftRightArrowsImage as DrawingImage : scanEyeImage as DrawingImage;
         await SaveSettingsAsync().ConfigureAwait(false);
     }
     
@@ -450,7 +449,7 @@ public static class SettingsUpdater
         {
             return;
         }
-        vm.ChangeCtrlZoomImage = scanEyeImage as DrawingImage;
+        vm.MainWindow.ChangeCtrlZoomImage.Value = scanEyeImage as DrawingImage;
     }
     
     public static async Task ToggleLooping(MainViewModel vm)

@@ -255,10 +255,10 @@
 
             <!--  Optimize image  -->
             <MenuItem
-                Command="{CompiledBinding OptimizeImageCommand}"
+                Command="{CompiledBinding Tools.OptimizeImageCommand}"
                 Header="{CompiledBinding Translation.OptimizeImage.Value,
                                          Mode=OneWay}"
-                IsEnabled="{CompiledBinding ShouldOptimizeImageBeEnabled,
+                IsEnabled="{CompiledBinding GlobalSettings.ShouldOptimizeImageBeEnabled.Value,
                                             Mode=OneWay}">
                 <MenuItem.Icon>
                     <Image

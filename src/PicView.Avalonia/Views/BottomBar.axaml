@@ -179,7 +179,7 @@
             <Separator />
 
             <!--  Hide bottom bar  -->
-            <MenuItem Command="{CompiledBinding ToggleBottomNavBarCommand}" Header="{CompiledBinding Translation.HideBottomToolbar.Value, Mode=OneWay}">
+            <MenuItem Command="{CompiledBinding Tools.ToggleBottomNavBarCommand}" Header="{CompiledBinding Translation.HideBottomToolbar.Value, Mode=OneWay}">
                 <MenuItem.Icon>
                     <Image
                         Height="12"

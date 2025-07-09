@@ -20,4 +20,10 @@ public class GlobalSettingsViewModel
     public BindableReactiveProperty<double> RotationAngle { get; } = new(0);
 
     public BindableReactiveProperty<double> ZoomValue { get; } = new();
+    
+    public BindableReactiveProperty<bool> ShouldCropBeEnabled { get; } = new();
+    
+    public BindableReactiveProperty<bool> ShouldOptimizeImageBeEnabled { get; } = new();
+    
+    public BindableReactiveProperty<bool> IsShowingTaskbarProgress { get; } = new(Settings.UIProperties.IsTaskbarProgressEnabled);
 }

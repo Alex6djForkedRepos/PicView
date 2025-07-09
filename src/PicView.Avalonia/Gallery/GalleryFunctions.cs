@@ -21,7 +21,7 @@ public static class GalleryFunctions
             return 0;
         }
 
-        if (!Settings.Gallery.IsBottomGalleryShown || vm.IsSingleImage || Slideshow.IsRunning)
+        if (!Settings.Gallery.IsBottomGalleryShown || vm.PicViewer.IsSingleImage.CurrentValue || Slideshow.IsRunning)
         {
             return 0;
         }

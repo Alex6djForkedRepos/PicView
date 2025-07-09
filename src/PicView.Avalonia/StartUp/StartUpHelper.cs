@@ -193,7 +193,7 @@ public static class StartUpHelper
         }
         else
         {
-            vm.ToggleScrollBarVisibility = ScrollBarVisibility.Disabled;
+            vm.MainWindow.ToggleScrollBarVisibility.Value = ScrollBarVisibility.Disabled;
             vm.GlobalSettings.IsScrollingEnabled.Value = false;
         }
 

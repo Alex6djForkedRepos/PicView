@@ -54,7 +54,7 @@
 
         <Button
             Classes="errorHover"
-            Command="{Binding RestartCommand}"
+            Command="{Binding Tools.RestartCommand}"
             Margin="0,0,0,20">
             <TextBlock
                 Classes="txt"
@@ -284,7 +284,7 @@
             Background="Transparent"
             BorderThickness="0"
             Classes="altHover"
-            Command="{CompiledBinding ToggleConstrainBackgroundColorCommand}"
+            Command="{CompiledBinding Tools.ToggleConstrainBackgroundColorCommand}"
             IsChecked="{CompiledBinding SettingsViewModel.IsConstrainingBackgroundColor.Value}"
             Margin="0,0,0,10"
             Width="300">
@@ -310,7 +310,7 @@
             Background="Transparent"
             BorderThickness="0"
             Classes="altHover"
-            Command="{CompiledBinding ToggleBottomNavBarCommand}"
+            Command="{CompiledBinding Tools.ToggleBottomNavBarCommand}"
             Foreground="{StaticResource SecondaryTextColor}"
             Margin="0,0,0,10"
             Padding="0,10,0,10"
@@ -371,7 +371,7 @@
             Background="Transparent"
             BorderThickness="0"
             Classes="altHover"
-            Command="{CompiledBinding ToggleUICommand}"
+            Command="{CompiledBinding Tools.ToggleUICommand}"
             Margin="0,0,0,10"
             Padding="0,10,0,10"
             Width="300">
@@ -478,7 +478,7 @@
             Background="Transparent"
             BorderThickness="0"
             Classes="altHover"
-            Command="{CompiledBinding ToggleFadeInButtonsOnHoverCommand}"
+            Command="{CompiledBinding Tools.ToggleFadeInButtonsOnHoverCommand}"
             Foreground="{StaticResource SecondaryTextColor}"
             Margin="0,0,0,10"
             Padding="0,10,0,10"

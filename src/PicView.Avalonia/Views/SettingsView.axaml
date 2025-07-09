@@ -723,7 +723,7 @@
                 </MenuItem.Icon>
             </MenuItem>
             <MenuItem
-                Command="{CompiledBinding ResetSettingsCommand}"
+                Command="{CompiledBinding Tools.ResetSettingsCommand}"
                 Foreground="{DynamicResource MainTextColor}"
                 Header="{CompiledBinding Translation.ResetButtonText.Value,
                                          Mode=OneWay}">

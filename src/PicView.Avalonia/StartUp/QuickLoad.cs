@@ -67,7 +67,7 @@ public static class QuickLoad
         }
 
         vm.MainWindow.IsLoadingIndicatorShown.Value = false;
-        vm.GetIndex = NavigationManager.GetNonZeroIndex;
+        vm.PicViewer.GetIndex.Value = NavigationManager.GetNonZeroIndex;
     }
 
     /// <summary>

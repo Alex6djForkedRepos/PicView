@@ -341,7 +341,7 @@
 
                 <!--  Toggle Subdirectories  -->
                 <MenuItem
-                    Command="{CompiledBinding ToggleSubdirectoriesCommand}"
+                    Command="{CompiledBinding Tools.ToggleSubdirectoriesCommand}"
                     Header="{CompiledBinding Translation.SearchSubdirectory.Value,
                                              Mode=OneWay}"
                     IsChecked="{Binding GlobalSettings.IsIncludingSubdirectories.Value}"
@@ -367,7 +367,7 @@
 
                 <!--  Toggle stretching  -->
                 <MenuItem
-                    Command="{CompiledBinding StretchCommand}"
+                    Command="{CompiledBinding Tools.StretchCommand}"
                     Header="{CompiledBinding Translation.Stretch.Value,
                                              Mode=OneWay}"
                     IsChecked="{CompiledBinding GlobalSettings.IsStretched.Value}"
@@ -375,7 +375,7 @@
 
                 <!--  Toggle side-by-side  -->
                 <MenuItem
-                    Command="{CompiledBinding ShowSideBySideCommand}"
+                    Command="{CompiledBinding Tools.ShowSideBySideCommand}"
                     Header="{CompiledBinding Translation.SideBySide.Value,
                                              Mode=OneWay}"
                     IsChecked="{CompiledBinding PicViewer.IsShowingSideBySide}"
@@ -385,7 +385,7 @@
 
                 <!--  Toggle topmost  -->
                 <MenuItem
-                    Command="{CompiledBinding ChangeTopMostCommand}"
+                    Command="{CompiledBinding Tools.ChangeTopMostCommand}"
                     Header="{CompiledBinding Translation.StayTopMost.Value,
                                              Mode=OneWay}"
                     IsChecked="{CompiledBinding GlobalSettings.IsTopMost.Value}"
@@ -393,7 +393,7 @@
 
                 <!--  Toggle auto fit  -->
                 <MenuItem
-                    Command="{CompiledBinding ChangeAutoFitCommand}"
+                    Command="{CompiledBinding Tools.ChangeAutoFitCommand}"
                     Header="{CompiledBinding Translation.AutoFitWindow.Value,
                                              Mode=OneWay}"
                     IsChecked="{CompiledBinding GlobalSettings.IsAutoFit.Value}"
@@ -402,11 +402,11 @@
                 <Separator />
 
                 <!--  Toggle ctrl zoom  -->
-                <MenuItem Command="{CompiledBinding ChangeCtrlZoomCommand}" Header="{CompiledBinding Translation.IsCtrlToZoom.Value, Mode=OneWay}">
+                <MenuItem Command="{CompiledBinding Tools.ChangeCtrlZoomCommand}" Header="{CompiledBinding Translation.IsCtrlToZoom.Value, Mode=OneWay}">
                     <MenuItem.Icon>
                         <Image
                             Height="12"
-                            Source="{CompiledBinding ChangeCtrlZoomImage}"
+                            Source="{CompiledBinding MainWindow.ChangeCtrlZoomImage}"
                             Width="12" />
                     </MenuItem.Icon>
                 </MenuItem>
@@ -415,7 +415,7 @@
 
                 <!--  Toggle UI  -->
                 <MenuItem
-                    Command="{CompiledBinding ToggleUICommand}"
+                    Command="{CompiledBinding Tools.ToggleUICommand}"
                     Header="{CompiledBinding Translation.IsShowingUI.Value,
                                              Mode=OneWay}"
                     IsVisible="{CompiledBinding MainWindow.IsUIShown.Value,
@@ -429,7 +429,7 @@
                 </MenuItem>
 
                 <MenuItem
-                    Command="{CompiledBinding ToggleUICommand}"
+                    Command="{CompiledBinding Tools.ToggleUICommand}"
                     Header="{CompiledBinding Translation.IsShowingUI.Value,
                                              Mode=OneWay}"
                     IsVisible="{CompiledBinding !MainWindow.IsUIShown.Value,
@@ -444,7 +444,7 @@
 
                 <!--  Change background  -->
                 <MenuItem
-                    Command="{CompiledBinding ChangeBackgroundCommand}"
+                    Command="{CompiledBinding Tools.ChangeBackgroundCommand}"
                     Header="{CompiledBinding Translation.ChangeBackground.Value,
                                              Mode=OneWay}"
                     StaysOpenOnClick="True">
@@ -478,7 +478,7 @@
 
                 <!--  Toggle bottom bar  -->
                 <MenuItem
-                    Command="{CompiledBinding ToggleBottomNavBarCommand}"
+                    Command="{CompiledBinding Tools.ToggleBottomNavBarCommand}"
                     Header="{CompiledBinding Translation.ShowBottomToolbar.Value,
                                              Mode=OneWay}"
                     IsChecked="{CompiledBinding MainWindow.IsBottomToolbarShown.Value}"
@@ -768,10 +768,10 @@
 
                 <!--  Optimize image  -->
                 <MenuItem
-                    Command="{CompiledBinding OptimizeImageCommand}"
+                    Command="{CompiledBinding Tools.OptimizeImageCommand}"
                     Header="{CompiledBinding Translation.OptimizeImage.Value,
                                              Mode=OneWay}"
-                    IsEnabled="{CompiledBinding ShouldOptimizeImageBeEnabled,
+                    IsEnabled="{CompiledBinding GlobalSettings.ShouldOptimizeImageBeEnabled.Value,
                                                 Mode=OneWay}">
                     <MenuItem.Icon>
                         <Image
@@ -785,10 +785,10 @@
 
                 <!--  Crop  -->
                 <MenuItem
-                    Command="{CompiledBinding CropCommand}"
+                    Command="{CompiledBinding Tools.CropCommand}"
                     Header="{CompiledBinding Translation.Crop.Value,
                                              Mode=OneWay}"
-                    IsEnabled="{CompiledBinding ShouldCropBeEnabled,
+                    IsEnabled="{CompiledBinding GlobalSettings.ShouldCropBeEnabled.Value,
                                                 Mode=OneWay}"
                     x:Name="CropMenuItem">
                     <MenuItem.Icon>
@@ -805,7 +805,7 @@
 
                 <!--  Flip  -->
                 <MenuItem
-                    Command="{CompiledBinding FlipCommand}"
+                    Command="{CompiledBinding Tools.FlipCommand}"
                     Header="{CompiledBinding Translation.IsFlipped.Value,
                                              Mode=OneWay}"
                     IsEnabled="{CompiledBinding PicViewer.ImageSource.Value,
@@ -827,7 +827,7 @@
 
                 <!--  Rotate left  -->
                 <MenuItem
-                    Command="{CompiledBinding RotateLeftCommand}"
+                    Command="{CompiledBinding Tools.RotateLeftCommand}"
                     Header="{CompiledBinding Translation.RotateLeft.Value,
                                              Mode=OneWay}"
                     IsEnabled="{CompiledBinding PicViewer.ImageSource.Value,
@@ -845,7 +845,7 @@
 
                 <!--  Rotate right  -->
                 <MenuItem
-                    Command="{CompiledBinding RotateRightCommand}"
+                    Command="{CompiledBinding Tools.RotateRightCommand}"
                     Header="{CompiledBinding Translation.RotateRight.Value,
                                              Mode=OneWay}"
                     IsEnabled="{CompiledBinding PicViewer.ImageSource.Value,

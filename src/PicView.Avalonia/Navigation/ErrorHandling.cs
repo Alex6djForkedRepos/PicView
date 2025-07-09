@@ -51,7 +51,7 @@ public static class ErrorHandling
             GalleryFunctions.Clear();
             MenuManager.CloseMenus(vm);
 
-            vm.GetIndex = 0;
+            vm.PicViewer.GetIndex.Value = 0;
             vm.PlatformService.StopTaskbarProgress();
             vm.MainWindow.IsLoadingIndicatorShown.Value = false;
 

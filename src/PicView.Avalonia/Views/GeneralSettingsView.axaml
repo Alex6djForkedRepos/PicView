@@ -83,7 +83,7 @@
                 Background="Transparent"
                 BorderThickness="0"
                 Classes="altHover changeColor"
-                Command="{CompiledBinding ToggleSubdirectoriesCommand}"
+                Command="{CompiledBinding Tools.ToggleSubdirectoriesCommand}"
                 IsChecked="{CompiledBinding GlobalSettings.IsIncludingSubdirectories.Value}"
                 Margin="0,0,0,10"
                 Width="300">

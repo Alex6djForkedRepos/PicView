@@ -288,7 +288,7 @@ public static class UpdateImage
             vm.Gallery.GalleryMargin.Value = new Thickness(0);
         }
 
-        vm.IsSingleImage = true;
+        vm.PicViewer.IsSingleImage.Value = true;
         await Dispatcher.UIThread.InvokeAsync(() => { UIHelper.GetGalleryView.IsVisible = false; }, DispatcherPriority.Render);
         await NavigationManager.DisposeImageIteratorAsync();
     }
@@ -299,10 +299,10 @@ public static class UpdateImage
 
     public static void SetStats(MainViewModel vm, ImageModel imageModel)
     {
-        vm.IsSingleImage = false;
+        vm.PicViewer.IsSingleImage.Value = false;
         vm.PicViewer.PixelWidth.Value = imageModel.PixelWidth;
         vm.PicViewer.PixelHeight.Value = imageModel.PixelHeight;
-        vm.GetIndex = NavigationManager.GetNonZeroIndex;
+        vm.PicViewer.GetIndex.Value = NavigationManager.GetNonZeroIndex;
         vm.PicViewer.ExifOrientation.Value = imageModel.EXIFOrientation;
         vm.PicViewer.FileInfo.Value = imageModel.FileInfo;
         vm.GlobalSettings.RotationAngle.Value = 1;

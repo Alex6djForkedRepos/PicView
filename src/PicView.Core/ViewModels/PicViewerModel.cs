@@ -68,4 +68,7 @@ public class PicViewerModel : IDisposable
     public BindableReactiveProperty<string> WindowTitle { get; } = new();
     
     public BindableReactiveProperty<int> Index { get; } = new();
+    public BindableReactiveProperty<int> GetIndex { get; } = new();
+    
+    public BindableReactiveProperty<bool> IsSingleImage { get; } = new();
 }

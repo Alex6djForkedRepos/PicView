@@ -21,7 +21,7 @@
                                      Mode=OneWay}"
             ScrollChanged="ImageScrollViewer_OnScrollChanged"
             Theme="{StaticResource Main}"
-            VerticalScrollBarVisibility="{CompiledBinding ToggleScrollBarVisibility}"
+            VerticalScrollBarVisibility="{CompiledBinding MainWindow.ToggleScrollBarVisibility.Value}"
             Width="{CompiledBinding PicViewer.ScrollViewerWidth.Value,
                                     Mode=OneWay}"
             x:Name="ImageScrollViewer">

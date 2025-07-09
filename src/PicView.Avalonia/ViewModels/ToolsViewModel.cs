@@ -138,13 +138,141 @@ public class ToolsViewModel : IDisposable
         }
     });
     
+    // Settings
+    public ReactiveCommand ChangeAutoFitCommand { get; } = new(async (_, _) =>
+    {
+        await FunctionsMapper.AutoFitWindow().ConfigureAwait(false);
+    });
     
+    public ReactiveCommand ChangeTopMostCommand { get; } = new(async (_, _) =>
+    {
+        await FunctionsMapper.SetTopMost().ConfigureAwait(false);
+    });
+    
+    public ReactiveCommand ToggleSubdirectoriesCommand { get; } = new(async (_, _) =>
+    {
+        await FunctionsMapper.ToggleSubdirectories().ConfigureAwait(false);
+    });
+
+    public ReactiveCommand ToggleLoopingCommand { get; } = new(async (_, _) =>
+    {
+        await FunctionsMapper.ToggleLooping().ConfigureAwait(false);
+    });
+    
+    public ReactiveCommand ResetSettingsCommand { get; } = new(async (_, _) =>
+    {
+        await FunctionsMapper.ResetSettings().ConfigureAwait(false);
+    });
+    
+    public ReactiveCommand RestartCommand { get; } = new(async (_, _) =>
+    {
+        await FunctionsMapper.Restart().ConfigureAwait(false);
+    });
+    
+    public ReactiveCommand ToggleOpeningInSameWindowCommand { get; } = new(async (_, _) =>
+    {
+        await FunctionsMapper.ToggleOpeningInSameWindow().ConfigureAwait(false);
+    });
     
     public ReactiveCommand ToggleUsingTouchPadCommand { get; } = new(async (_, _) =>
     {
         await SettingsUpdater.ToggleUsingTouchpad(UIHelper.GetMainView.DataContext as MainViewModel);
     });
     
+    // UI
+    public ReactiveCommand ToggleUICommand { get; } = new(async (_, _) =>
+    {
+        await FunctionsMapper.ToggleInterface();
+    });
+    
+    public ReactiveCommand ToggleBottomNavBarCommand { get; } = new(async (_, _) =>
+    {
+        await FunctionsMapper.ToggleBottomToolbar();
+    });
+    
+    public ReactiveCommand ToggleBottomGalleryShownInHiddenUICommand { get; } = new(async (_, _) =>
+    {
+        await HideInterfaceLogic.ToggleBottomGalleryShownInHiddenUI(UIHelper.GetMainView.DataContext as MainViewModel);
+    });
+    
+    public ReactiveCommand ToggleFadeInButtonsOnHoverCommand { get; } = new(async (_, _) =>
+    {
+        await HideInterfaceLogic.ToggleFadeInButtonsOnHover(UIHelper.GetMainView.DataContext as MainViewModel);
+    });
+    
+    public ReactiveCommand ChangeCtrlZoomCommand { get; } = new(async (_, _) =>
+    {
+        await FunctionsMapper.ChangeCtrlZoom();
+    });
+    
+    public ReactiveCommand ToggleTaskbarProgressCommand { get; } = new(async (_, _) =>
+    {
+        await FunctionsMapper.ToggleTaskbarProgress();
+    });
+    
+    public ReactiveCommand ToggleConstrainBackgroundColorCommand { get; } = new(async (_, _) =>
+    {
+        await FunctionsMapper.ToggleConstrainBackgroundColor();
+    });
+    
+    // Image related
+    public ReactiveCommand RotateLeftCommand { get; } = new(async (_, _) =>
+    {
+        await FunctionsMapper.RotateLeft();
+    });
+    public ReactiveCommand RotateLeftButtonCommand { get; } = new(async (_, _) =>
+    {
+        await RotationNavigation.RotateLeft(UIHelper.GetMainView.DataContext as MainViewModel, RotationButton.RotateLeftButton);
+    });
+    
+    public ReactiveCommand RotateRightCommand { get; } = new(async (_, _) =>
+    {
+        await FunctionsMapper.RotateRight();
+    });
+    public ReactiveCommand RotateRightButtonCommand { get; } = new(async (_, _) =>
+    {
+        await RotationNavigation.RotateRight(UIHelper.GetMainView.DataContext as MainViewModel, RotationButton.RotateLeftButton);
+    });
+    
+    public ReactiveCommand RotateRightWindowBorderButtonCommand { get; } = new(async (_, _) =>
+    {
+        await RotationNavigation.RotateRight(UIHelper.GetMainView.DataContext as MainViewModel, RotationButton.WindowBorderButton);
+    });
+    
+    public ReactiveCommand FlipCommand { get; } = new(async (_, _) =>
+    {
+        await FunctionsMapper.Flip();
+    });
+    
+    public ReactiveCommand StretchCommand { get; } = new(async (_, _) =>
+    {
+        await FunctionsMapper.Stretch();
+    });
+    
+    public ReactiveCommand CropCommand { get; } = new(async (_, _) =>
+    {
+        await FunctionsMapper.Crop();
+    });
+    
+    public ReactiveCommand ToggleScrollCommand { get; } = new(async (_, _) =>
+    {
+        await FunctionsMapper.ToggleScroll();
+    });
+    
+    public ReactiveCommand OptimizeImageCommand { get; } = new(async (_, _) =>
+    {
+        await FunctionsMapper.OptimizeImage();
+    });
+    
+    public ReactiveCommand ChangeBackgroundCommand { get; } = new(async (_, _) =>
+    {
+        await FunctionsMapper.ChangeBackground();
+    });
+    
+    public ReactiveCommand ShowSideBySideCommand { get; } = new(async (_, _) =>
+    {
+        await FunctionsMapper.SideBySide();
+    });
     
     public async Task StartSlideShowTask(int milliseconds) =>
         await Slideshow.StartSlideshow(UIHelper.GetMainView.DataContext as MainViewModel, milliseconds);

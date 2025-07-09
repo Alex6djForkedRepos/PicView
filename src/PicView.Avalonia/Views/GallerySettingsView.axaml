@@ -51,7 +51,7 @@
             Background="Transparent"
             BorderThickness="0"
             Classes="altHover changeColor"
-            Command="{CompiledBinding ToggleBottomGalleryShownInHiddenUICommand}"
+            Command="{CompiledBinding Tools.ToggleBottomGalleryShownInHiddenUICommand}"
             IsChecked="{CompiledBinding SettingsViewModel.IsBottomGalleryShownInHiddenUI.Value}"
             Margin="0,0,0,10"
             Width="300">
