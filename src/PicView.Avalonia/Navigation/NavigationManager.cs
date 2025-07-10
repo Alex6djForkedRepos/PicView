@@ -410,7 +410,7 @@ public static class NavigationManager
         else
         {
             await Navigate(next, vm);
-            await UIHelper.MoveCursorOnButtonClick(next, arrow, vm);
+            UIHelper.MoveCursorOnButtonClick(next, arrow, vm);
         }
     }
 
