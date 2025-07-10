@@ -1,4 +1,5 @@
-﻿using Avalonia.Controls;
+﻿using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Input;
 using PicView.Avalonia.Converters;
 using PicView.Avalonia.FileSystem;
@@ -14,6 +15,7 @@ namespace PicView.Avalonia.Views;
 
 public partial class ImageInfoView : UserControl
 {
+    private readonly CompositeDisposable _disposables = new();
     public ImageInfoView()
     {
         InitializeComponent();
@@ -71,7 +73,7 @@ public partial class ImageInfoView : UserControl
                 {
                     DirectoryNameTextBox.Text = x.DirectoryName;
                 }
-            });
+            }).AddTo(_disposables);
             
             ResetButton.Click += (_, _) =>
             {
@@ -297,5 +299,11 @@ public partial class ImageInfoView : UserControl
 
         destination = Path.ChangeExtension(destination, ext);
         return ext;
+    }
+
+    protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnDetachedFromVisualTree(e);
+        Disposable.Dispose(_disposables);
     }
 }
