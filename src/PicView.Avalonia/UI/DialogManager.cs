@@ -15,7 +15,7 @@ public static class DialogManager
     /// <summary>
     /// Handles close action based on current application state
     /// </summary>
-    public static async Task Close(MainViewModel vm)
+    public static async Task HandleShouldClosing(MainViewModel vm)
     {
         // Handle open menus
         if (MenuManager.IsAnyMenuOpen(vm))
@@ -46,21 +46,26 @@ public static class DialogManager
         }
         
         // Handle window close
-        if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop)
-        {
-            return;
-        }
+        await Dispatcher.UIThread.InvokeAsync(CloseWithOptionalDialog);
+    }
 
-        await Dispatcher.UIThread.InvokeAsync(() =>
+    public static void CloseWithOptionalDialog()
+    {
+        if (Settings.UIProperties.ShowConfirmationOnEsc)
         {
-            if (Settings.UIProperties.ShowConfirmationOnEsc)
-            {
-                UIHelper.GetMainView?.MainGrid.Children.Add(new CloseDialog());
-            }
-            else
-            {
-                desktop.MainWindow?.Close();
-            }
-        });
+            UIHelper.GetMainView?.MainGrid.Children.Add(new CloseDialog());
+        }
+        else
+        {
+            Close();
+        }
+    }
+
+    public static void Close()
+    {
+        if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+        {
+            desktop.MainWindow?.Close();
+        }
     }
 }

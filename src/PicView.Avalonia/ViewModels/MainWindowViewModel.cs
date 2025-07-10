@@ -93,11 +93,9 @@ public class MainWindowViewModel : IDisposable
     private static void ToggleToolsMenu(Unit unit) => MenuManager.ToggleToolsMenu(UIHelper.GetMainView.DataContext as MainViewModel);
 
     #endregion Menus
-    
-    public ReactiveCommand ExitCommand { get; } = new(async (_, _) =>
-    {
-        await FunctionsMapper.Close();
-    });
+
+    public ReactiveCommand ExitCommand { get; } = new(Close);
+    private static void Close(Unit unit) => DialogManager.Close();
     
     public ReactiveCommand MaximizeCommand { get; } = new(async (_, _) =>
     {

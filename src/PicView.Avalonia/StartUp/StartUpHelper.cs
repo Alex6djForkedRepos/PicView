@@ -135,23 +135,6 @@ public static class StartUpHelper
         
         vm.MainWindow.LayoutButtonSubscription();
         
-        // Need to delay setting fullscreen or maximized until after the window is shown to select the correct monitor
-        if (Settings.WindowProperties.Maximized && !Settings.WindowProperties.Fullscreen)
-        {
-            Dispatcher.UIThread.InvokeAsync(() =>
-            {
-                vm.PlatformWindowService.Maximize(false);
-            }, DispatcherPriority.Normal).Wait();
-        }
-        else if (Settings.WindowProperties.Fullscreen)
-        {
-            Dispatcher.UIThread.InvokeAsync(() =>
-            {
-                vm.PlatformWindowService.Fullscreen(false);
-            }, DispatcherPriority.Normal).Wait();
-        }
-        
-
         SetWindowEventHandlers(window);
         MenuManager.AddMenus();
         
@@ -160,6 +143,22 @@ public static class StartUpHelper
             // Need to update the screen size after the window is shown,
             // to avoid rendering error when switching between auto-fit
             ScreenHelper.UpdateScreenSize(window);
+        }
+        
+        // Need to delay setting fullscreen or maximized until after the window is shown to select the correct monitor
+        if (Settings.WindowProperties.Maximized && !Settings.WindowProperties.Fullscreen)
+        {
+            Dispatcher.UIThread.InvokeAsync(() =>
+            {
+                vm.PlatformWindowService.Maximize(false);
+            }, DispatcherPriority.Background).Wait();
+        }
+        else if (Settings.WindowProperties.Fullscreen)
+        {
+            Dispatcher.UIThread.InvokeAsync(() =>
+            {
+                vm.PlatformWindowService.Fullscreen(false);
+            }, DispatcherPriority.Background).Wait();
         }
 
         Application.Current.Name = "PicView";
