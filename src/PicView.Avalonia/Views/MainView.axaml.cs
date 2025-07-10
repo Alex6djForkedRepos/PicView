@@ -137,12 +137,12 @@ public partial class MainView : UserControl
             return;
         }
 
-        if (!vm.IsEditableTitlebarOpen)
+        if (!vm.MainWindow.IsEditableTitlebarOpen.Value)
         {
             return;
         }
 
-        vm.IsEditableTitlebarOpen = false;
+        vm.MainWindow.IsEditableTitlebarOpen.Value = false;
         MainKeyboardShortcuts.IsKeysEnabled = true;
         Focus();
     }
@@ -174,7 +174,7 @@ public partial class MainView : UserControl
                 return;
             }
             var isNavigatingWithCtrl = Settings.Zoom.CtrlZoom;
-            vm.ChangeCtrlZoomImage = isNavigatingWithCtrl ? leftRightArrowsImage as DrawingImage : scanEyeImage as DrawingImage;
+            vm.MainWindow.ChangeCtrlZoomImage.Value = isNavigatingWithCtrl ? leftRightArrowsImage as DrawingImage : scanEyeImage as DrawingImage;
         });
         
         // Update file history menu items in Dispatcher with low priority to avoid slowdown

@@ -210,7 +210,7 @@ public class Zoom
             return;
         }
 
-        vm.ZoomValue = zoomValue;
+        vm.GlobalSettings.ZoomValue.Value = zoomValue;
         if (!IsZoomed)
         {
             return;
@@ -270,7 +270,7 @@ public class Zoom
             return;
         }
 
-        vm.ZoomValue = 1;
+        vm.GlobalSettings.ZoomValue.Value = 1;
         TooltipHelper.StopTooltipMessage();
         TitleManager.SetTitle(vm);
     }
@@ -317,7 +317,7 @@ public class Zoom
 
         // Get the current rotation angle from the ViewModel
         var vm = imageViewer.DataContext as MainViewModel;
-        var rotationAngle = vm?.RotationAngle ?? 0;
+        var rotationAngle = vm?.GlobalSettings.RotationAngle.CurrentValue ?? 0;
 
         // Apply rotation transformation to the mouse movement
         var rotationRadians = rotationAngle * Math.PI / 180.0;

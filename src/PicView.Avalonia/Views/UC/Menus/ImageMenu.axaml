@@ -1,5 +1,5 @@
 <customControls:AnimatedMenu
-    IsOpen="{CompiledBinding IsImageMenuVisible}"
+    IsOpen="{CompiledBinding MainWindow.IsImageMenuVisible.Value}"
     x:Class="PicView.Avalonia.Views.UC.Menus.ImageMenu"
     x:DataType="viewModels:MainViewModel"
     xmlns="https://github.com/avaloniaui"
@@ -45,14 +45,14 @@
                     BorderBrush="{DynamicResource MainBorderColor}"
                     BorderThickness="0,0,1,0"
                     Classes="hover"
-                    Command="{CompiledBinding RotateLeftButtonCommand}"
+                    Command="{CompiledBinding Tools.RotateLeftButtonCommand}"
                     CornerRadius="8,0,0,0"
                     Data="{StaticResource RotateLeftGeometry}"
                     Foreground="{DynamicResource MainTextColor}"
                     Height="45"
                     IconHeight="15"
                     IconWidth="15"
-                    IsEnabled="{CompiledBinding PicViewer.ImageSource,
+                    IsEnabled="{CompiledBinding PicViewer.ImageSource.Value,
                                                 Converter={x:Static ObjectConverters.IsNotNull}}"
                     ToolTip.Tip="{CompiledBinding Translation.RotateLeft,
                                                   Mode=OneWay}"
@@ -63,13 +63,13 @@
                     Background="Transparent"
                     Canvas.Left="45"
                     Classes="hover"
-                    Command="{CompiledBinding RotateRightButtonCommand}"
+                    Command="{CompiledBinding Tools.RotateRightButtonCommand}"
                     Data="{StaticResource RotateRightGeometry}"
                     Foreground="{DynamicResource MainTextColor}"
                     Height="45"
                     IconHeight="15"
                     IconWidth="15"
-                    IsEnabled="{CompiledBinding PicViewer.ImageSource,
+                    IsEnabled="{CompiledBinding PicViewer.ImageSource.Value,
                                                 Converter={x:Static ObjectConverters.IsNotNull}}"
                     ToolTip.Tip="{CompiledBinding Translation.RotateRight,
                                                   Mode=OneWay}"
@@ -82,19 +82,19 @@
                     BorderThickness="1,0,1,0"
                     Canvas.Left="90"
                     Classes="hover"
-                    Command="{CompiledBinding FlipCommand}"
+                    Command="{CompiledBinding Tools.FlipCommand}"
                     Data="{StaticResource FlipGeometry}"
                     Foreground="{DynamicResource MainTextColor}"
                     Height="45"
                     IconHeight="15"
                     IconWidth="15"
-                    IsEnabled="{CompiledBinding PicViewer.ImageSource,
+                    IsEnabled="{CompiledBinding PicViewer.ImageSource.Value,
                                                 Converter={x:Static ObjectConverters.IsNotNull}}"
-                    ToolTip.Tip="{CompiledBinding Translation.IsFlipped,
+                    ToolTip.Tip="{CompiledBinding Translation.IsFlipped.Value,
                                                   Mode=OneWay}"
                     Width="45">
                     <customControls:IconButton.RenderTransform>
-                        <ScaleTransform ScaleX="{CompiledBinding PicViewer.ScaleX}" />
+                        <ScaleTransform ScaleX="{CompiledBinding PicViewer.ScaleX.Value}" />
                     </customControls:IconButton.RenderTransform>
                 </customControls:IconButton>
 
@@ -122,9 +122,9 @@
                     Canvas.Left="180"
                     Classes="noBorderHover"
                     Height="45"
-                    IsEnabled="{CompiledBinding PicViewer.FileInfo,
+                    IsEnabled="{CompiledBinding PicViewer.FileInfo.Value,
                                                 Converter={x:Static ObjectConverters.IsNotNull}}"
-                    ToolTip.Tip="{CompiledBinding Translation.GoToImageAtSpecifiedIndex,
+                    ToolTip.Tip="{CompiledBinding Translation.GoToImageAtSpecifiedIndex.Value,
                                                   Mode=OneWay}"
                     Width="90"
                     x:Name="GoToPicButton">
@@ -162,7 +162,7 @@
                             IsTabStop="False"
                             Margin="5,0,0,0"
                             Padding="5,4,0,2"
-                            Text="{CompiledBinding GetIndex,
+                            Text="{CompiledBinding PicViewer.GetIndex.Value,
                                                    Mode=OneWay}"
                             VerticalAlignment="Center"
                             Width="55"
@@ -175,14 +175,14 @@
                     Canvas.Left="270"
                     Classes="hover"
                     ClickMode="Release"
-                    Command="{CompiledBinding CloseMenuCommand}"
+                    Command="{CompiledBinding MainWindow.CloseMenuCommand}"
                     CornerRadius="0,8,0,0"
                     Data="{StaticResource CloseGeometry}"
                     Foreground="{DynamicResource MainTextColor}"
                     Height="45"
                     IconHeight="10"
                     IconWidth="10"
-                    ToolTip.Tip="{CompiledBinding Translation.Close,
+                    ToolTip.Tip="{CompiledBinding Translation.Close.Value,
                                                   Mode=OneWay}"
                     Width="45" />
 
@@ -191,11 +191,11 @@
                     Canvas.Left="7"
                     Canvas.Top="53"
                     Classes="ButtonBorder altHover"
-                    Command="{CompiledBinding ShowSingleImageResizeWindowCommand}"
+                    Command="{CompiledBinding Window.ShowSingleImageResizeWindow}"
                     Height="46"
                     IsEnabled="{CompiledBinding PicViewer.FileInfo,
                                                 Converter={x:Static ObjectConverters.IsNotNull}}"
-                    ToolTip.Tip="{CompiledBinding Translation.ResizeImage,
+                    ToolTip.Tip="{CompiledBinding Translation.ResizeImage.Value,
                                                   Mode=OneWay}">
                     <StackPanel Orientation="Horizontal">
                         <Canvas Height="54" Width="45">
@@ -232,7 +232,7 @@
                         <TextBlock
                             Classes="txt btnTxt"
                             Margin="-3,0,0,0"
-                            Text="{CompiledBinding Translation.Resize,
+                            Text="{CompiledBinding Translation.Resize.Value,
                                                    Mode=OneWay}" />
                     </StackPanel>
                 </Button>
@@ -242,9 +242,9 @@
                     Canvas.Left="160"
                     Canvas.Top="53"
                     Classes="ButtonBorder altHover"
-                    Command="{CompiledBinding CropCommand}"
+                    Command="{CompiledBinding Tools.CropCommand}"
                     Height="46"
-                    IsEnabled="{CompiledBinding ShouldCropBeEnabled,
+                    IsEnabled="{CompiledBinding GlobalSettings.ShouldCropBeEnabled.Value,
                                                 Mode=OneWay}"
                     ToolTip.Tip="{CompiledBinding Translation.Crop,
                                                   Mode=OneWay}">
@@ -256,7 +256,7 @@
                             Margin="9,0,9,0"
                             Stretch="Fill"
                             Width="17" />
-                        <TextBlock Classes="txt btnTxt" Text="{CompiledBinding Translation.Crop, Mode=OneWay}" />
+                        <TextBlock Classes="txt btnTxt" Text="{CompiledBinding Translation.Crop.Value, Mode=OneWay}" />
                     </StackPanel>
                 </Button>
 
@@ -266,11 +266,11 @@
                     Canvas.Left="7"
                     Canvas.Top="104"
                     Classes="ButtonBorder altHover up"
-                    Command="{CompiledBinding StartSlideShowTask}"
+                    Command="{CompiledBinding Tools.StartSlideShowTask}"
                     CommandParameter="0"
                     Foreground="{DynamicResource MainTextColor}"
                     Height="46"
-                    ToolTip.Tip="{CompiledBinding Translation.Slideshow,
+                    ToolTip.Tip="{CompiledBinding Translation.Slideshow.Value,
                                                   Mode=OneWay}"
                     x:Name="SlideShowButton">
                     <StackPanel Orientation="Horizontal">
@@ -282,99 +282,99 @@
                         <TextBlock
                             Classes="txt btnTxt"
                             Margin="0,2,0,0"
-                            Text="{CompiledBinding Translation.Slideshow,
+                            Text="{CompiledBinding Translation.Slideshow.Value,
                                                    Mode=OneWay}" />
                     </StackPanel>
                     <SplitButton.Flyout>
                         <MenuFlyout Placement="Top" ShowMode="Transient">
                             <Button
                                 Background="Transparent"
-                                Command="{CompiledBinding StartSlideShowTask}"
+                                Command="{CompiledBinding Tools.StartSlideShowTask}"
                                 CommandParameter="2000"
                                 Width="86">
                                 <TextBlock Classes="txt" Foreground="{DynamicResource MainTextColor}">
                                     <Run Text="2 " />
-                                    <Run Text="{CompiledBinding Translation.SecAbbreviation, Mode=OneWay}" />
+                                    <Run Text="{CompiledBinding Translation.SecAbbreviation.Value, Mode=OneWay}" />
                                 </TextBlock>
                             </Button>
                             <Button
                                 Background="Transparent"
-                                Command="{CompiledBinding StartSlideShowTask}"
+                                Command="{CompiledBinding Tools.StartSlideShowTask}"
                                 CommandParameter="5000"
                                 Width="86">
                                 <TextBlock Classes="txt" Foreground="{DynamicResource MainTextColor}">
                                     <Run Text="5 " />
-                                    <Run Text="{CompiledBinding Translation.SecAbbreviation, Mode=OneWay}" />
+                                    <Run Text="{CompiledBinding Translation.SecAbbreviation.Value, Mode=OneWay}" />
                                 </TextBlock>
                             </Button>
                             <Button
                                 Background="Transparent"
-                                Command="{CompiledBinding StartSlideShowTask}"
+                                Command="{CompiledBinding Tools.StartSlideShowTask}"
                                 CommandParameter="10000"
                                 Width="86">
                                 <TextBlock Classes="txt" Foreground="{DynamicResource MainTextColor}">
                                     <Run Text="10 " />
-                                    <Run Text="{CompiledBinding Translation.SecAbbreviation, Mode=OneWay}" />
+                                    <Run Text="{CompiledBinding Translation.SecAbbreviation.Value, Mode=OneWay}" />
                                 </TextBlock>
                             </Button>
                             <Button
                                 Background="Transparent"
-                                Command="{CompiledBinding StartSlideShowTask}"
+                                Command="{CompiledBinding Tools.StartSlideShowTask}"
                                 CommandParameter="20000"
                                 Width="86">
                                 <TextBlock Classes="txt" Foreground="{DynamicResource MainTextColor}">
                                     <Run Text="20 " />
-                                    <Run Text="{CompiledBinding Translation.SecAbbreviation, Mode=OneWay}" />
+                                    <Run Text="{CompiledBinding Translation.SecAbbreviation.Value, Mode=OneWay}" />
                                 </TextBlock>
                             </Button>
                             <Button
                                 Background="Transparent"
-                                Command="{CompiledBinding StartSlideShowTask}"
+                                Command="{CompiledBinding Tools.StartSlideShowTask}"
                                 CommandParameter="30000"
                                 Width="86">
                                 <TextBlock Classes="txt" Foreground="{DynamicResource MainTextColor}">
                                     <Run Text="30 " />
-                                    <Run Text="{CompiledBinding Translation.SecAbbreviation, Mode=OneWay}" />
+                                    <Run Text="{CompiledBinding Translation.SecAbbreviation.Value, Mode=OneWay}" />
                                 </TextBlock>
                             </Button>
                             <Button
                                 Background="Transparent"
-                                Command="{CompiledBinding StartSlideShowTask}"
+                                Command="{CompiledBinding Tools.StartSlideShowTask}"
                                 CommandParameter="60000"
                                 Width="86">
                                 <TextBlock Classes="txt" Foreground="{DynamicResource MainTextColor}">
                                     <Run Text="60 " />
-                                    <Run Text="{CompiledBinding Translation.SecAbbreviation, Mode=OneWay}" />
+                                    <Run Text="{CompiledBinding Translation.SecAbbreviation.Value, Mode=OneWay}" />
                                 </TextBlock>
                             </Button>
                             <Button
                                 Background="Transparent"
-                                Command="{CompiledBinding StartSlideShowTask}"
+                                Command="{CompiledBinding Tools.StartSlideShowTask}"
                                 CommandParameter="120000"
                                 Width="86">
                                 <TextBlock Classes="txt" Foreground="{DynamicResource MainTextColor}">
                                     <Run Text="120 " />
-                                    <Run Text="{CompiledBinding Translation.SecAbbreviation, Mode=OneWay}" />
+                                    <Run Text="{CompiledBinding Translation.SecAbbreviation.Value, Mode=OneWay}" />
                                 </TextBlock>
                             </Button>
                             <Button
                                 Background="Transparent"
-                                Command="{CompiledBinding StartSlideShowTask}"
+                                Command="{CompiledBinding Tools.StartSlideShowTask}"
                                 CommandParameter="180000"
                                 Width="86">
                                 <TextBlock Classes="txt" Foreground="{DynamicResource MainTextColor}">
                                     <Run Text="180 " />
-                                    <Run Text="{CompiledBinding Translation.SecAbbreviation, Mode=OneWay}" />
+                                    <Run Text="{CompiledBinding Translation.SecAbbreviation.Value, Mode=OneWay}" />
                                 </TextBlock>
                             </Button>
                             <Button
                                 Background="Transparent"
-                                Command="{CompiledBinding StartSlideShowTask}"
+                                Command="{CompiledBinding Tools.StartSlideShowTask}"
                                 CommandParameter="300000"
                                 Width="86">
                                 <TextBlock Classes="txt" Foreground="{DynamicResource MainTextColor}">
                                     <Run Text="300 " />
-                                    <Run Text="{CompiledBinding Translation.SecAbbreviation, Mode=OneWay}" />
+                                    <Run Text="{CompiledBinding Translation.SecAbbreviation.Value, Mode=OneWay}" />
                                 </TextBlock>
                             </Button>
                         </MenuFlyout>
@@ -386,16 +386,16 @@
                     Canvas.Left="160"
                     Canvas.Top="104"
                     Classes="ButtonBorder altHover"
-                    Command="{CompiledBinding ShowSideBySideCommand}"
+                    Command="{CompiledBinding Tools.ShowSideBySideCommand}"
                     Foreground="{DynamicResource MainTextColor}"
                     Height="46"
-                    IsChecked="{CompiledBinding PicViewer.IsShowingSideBySide}"
-                    IsEnabled="{CompiledBinding !IsSingleImage}"
-                    ToolTip.Tip="{CompiledBinding Translation.SideBySideTooltip}">
+                    IsChecked="{CompiledBinding PicViewer.IsShowingSideBySide.Value}"
+                    IsEnabled="{CompiledBinding !PicViewer.IsSingleImage.Value}"
+                    ToolTip.Tip="{CompiledBinding Translation.SideBySideTooltip.Value}">
                     <TextBlock
                         Classes="txt btnTxt"
                         Margin="1,0,6,0"
-                        Text="{CompiledBinding Translation.SideBySide}" />
+                        Text="{CompiledBinding Translation.SideBySide.Value}" />
                 </ToggleButton>
 
                 <Button
@@ -403,11 +403,11 @@
                     Canvas.Left="7"
                     Canvas.Top="155"
                     Classes="ButtonBorder altHover"
-                    Command="{CompiledBinding ToggleBottomGalleryCommand}"
+                    Command="{CompiledBinding Gallery.ToggleBottomGalleryCommand}"
                     Foreground="{DynamicResource MainTextColor}"
                     Height="46"
-                    IsEnabled="{CompiledBinding !IsSingleImage}"
-                    ToolTip.Tip="{CompiledBinding Translation.IsShowingBottomGallery,
+                    IsEnabled="{CompiledBinding !PicViewer.IsSingleImage.Value}"
+                    ToolTip.Tip="{CompiledBinding Translation.IsShowingBottomGallery.Value,
                                                   Mode=OneWay}"
                     Width="300">
                     <StackPanel Orientation="Horizontal">
@@ -420,7 +420,7 @@
                             Classes="txt btnTxt"
                             Margin="0,0,6,0"
                             MaxWidth="175"
-                            Text="{CompiledBinding Translation.IsShowingBottomGallery,
+                            Text="{CompiledBinding Translation.IsShowingBottomGallery.Value,
                                                    Mode=OneWay}" />
                     </StackPanel>
                 </Button>

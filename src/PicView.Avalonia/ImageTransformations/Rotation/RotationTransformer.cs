@@ -24,10 +24,10 @@ public class RotationTransformer(
             return;
         }
 
-        if (RotationHelper.IsValidRotation(vm.RotationAngle))
+        if (RotationHelper.IsValidRotation(vm.GlobalSettings.RotationAngle.CurrentValue))
         {
-            var nextAngle = RotationHelper.Rotate(vm.RotationAngle, clockWise);
-            vm.RotationAngle = nextAngle switch
+            var nextAngle = RotationHelper.Rotate(vm.GlobalSettings.RotationAngle.CurrentValue, clockWise);
+            vm.GlobalSettings.RotationAngle.Value = nextAngle switch
             {
                 360 => 0,
                 -90 => 270,
@@ -36,10 +36,10 @@ public class RotationTransformer(
         }
         else
         {
-            vm.RotationAngle = RotationHelper.NextRotationAngle(vm.RotationAngle, true);
+            vm.GlobalSettings.RotationAngle.Value = RotationHelper.NextRotationAngle(vm.GlobalSettings.RotationAngle.CurrentValue, true);
         }
 
-        SetImageLayoutTransform(new RotateTransform(vm.RotationAngle));
+        SetImageLayoutTransform(new RotateTransform(vm.GlobalSettings.RotationAngle.CurrentValue));
         WindowResizing.SetSize(vm);
         mainImage.InvalidateVisual();
     }
@@ -74,7 +74,7 @@ public class RotationTransformer(
         
         _scaleTransform ??= new ScaleTransform();
 
-        var prevScaleX = vm.PicViewer.ScaleX;
+        var prevScaleX = vm.PicViewer.ScaleX.CurrentValue;
         var newScaleX = prevScaleX == -1 ? 1 : -1;
 
         if (animate)
@@ -103,9 +103,9 @@ public class RotationTransformer(
             return;
         }
 
-        vm.PicViewer.ScaleX = scaleX;
-        vm.RotationAngle = rotationAngle;
-        imageLayoutTransformControl.RenderTransform = new ScaleTransform(vm.PicViewer.ScaleX, 1);
+        vm.PicViewer.ScaleX.Value = scaleX;
+        vm.GlobalSettings.RotationAngle.Value = rotationAngle;
+        imageLayoutTransformControl.RenderTransform = new ScaleTransform(vm.PicViewer.ScaleX.CurrentValue, 1);
         imageLayoutTransformControl.LayoutTransform = new RotateTransform(rotationAngle);
 
         resetZoom?.Invoke();

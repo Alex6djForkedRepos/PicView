@@ -1,7 +1,4 @@
-﻿using System.Reactive.Disposables;
-using System.Reactive.Linq;
-using System.Reactive.Subjects;
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Metadata;
 using Avalonia.Controls.Primitives;
@@ -9,7 +6,9 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.VisualTree;
-using ReactiveUI;
+using PicView.Avalonia.UI;
+using R3;
+using CompositeDisposable = R3.CompositeDisposable;
 
 namespace PicView.Avalonia.CustomControls;
 
@@ -101,7 +100,7 @@ public class AutoScrollViewer : ScrollViewer
         var autoScrollSign = e.NameScope.Find<AutoScrollSign>("PART_AutoScrollSign");
 
         _autoScrollingSubject
-            .ObserveOn(RxApp.MainThreadScheduler)
+            .ObserveOn(UIHelper.GetFrameProvider)
             .Subscribe(isAutoScrolling =>
             {
                 var canScroll = CanScroll();
@@ -125,7 +124,7 @@ public class AutoScrollViewer : ScrollViewer
                         break;
                 }
             })
-            .DisposeWith(_disposables);
+            .AddTo(_disposables);
 
         // Handle all types of focus loss events to end auto-scrolling
         LostFocus += (_, _) => IsAutoScrolling = false;
@@ -180,9 +179,9 @@ public class AutoScrollViewer : ScrollViewer
 
         Observable.Interval(TimeSpan.FromMilliseconds(16))
             .TakeUntil(_autoScrollingSubject.Where(isScrolling => !isScrolling))
-            .ObserveOn(RxApp.MainThreadScheduler)
+            .ObserveOn(UIHelper.GetFrameProvider)
             .Subscribe(_ => PerformAutoScroll())
-            .DisposeWith(_disposables);
+            .AddTo(_disposables);
     }
 
     /// <summary>

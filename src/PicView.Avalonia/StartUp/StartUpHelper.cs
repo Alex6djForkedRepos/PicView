@@ -17,7 +17,6 @@ using PicView.Avalonia.WindowBehavior;
 using PicView.Core.FileAssociations;
 using PicView.Core.FileHistory;
 using PicView.Core.ProcessHandling;
-using PicView.Core.ViewModels;
 
 namespace PicView.Avalonia.StartUp;
 
@@ -128,8 +127,13 @@ public static class StartUpHelper
         HandleThemeUpdates(vm);
         
         UIHelper.SetControls(desktop);
-
-        SettingsUpdater.ValidateGallerySettings(vm, settingsExists);
+        Task.Run(() =>
+        {
+            HandleWindowControlSettings(vm, desktop);
+            SettingsUpdater.ValidateGallerySettings(vm, settingsExists);
+        });
+        
+        vm.MainWindow.LayoutButtonSubscription();
         
         // Need to delay setting fullscreen or maximized until after the window is shown to select the correct monitor
         if (Settings.WindowProperties.Maximized && !Settings.WindowProperties.Fullscreen)
@@ -147,7 +151,7 @@ public static class StartUpHelper
             }, DispatcherPriority.Normal).Wait();
         }
         
-        HandleWindowControlSettings(vm, desktop);
+
         SetWindowEventHandlers(window);
         MenuManager.AddMenus();
         
@@ -159,8 +163,6 @@ public static class StartUpHelper
         }
 
         Application.Current.Name = "PicView";
-        
-        vm.AssociationsViewModel ??= new FileAssociationsViewModel();
 
         if (!RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
         {
@@ -191,8 +193,8 @@ public static class StartUpHelper
         }
         else
         {
-            vm.ToggleScrollBarVisibility = ScrollBarVisibility.Disabled;
-            vm.IsScrollingEnabled = false;
+            vm.MainWindow.ToggleScrollBarVisibility.Value = ScrollBarVisibility.Disabled;
+            vm.GlobalSettings.IsScrollingEnabled.Value = false;
         }
 
         if (Settings.WindowProperties.TopMost)
@@ -207,7 +209,7 @@ public static class StartUpHelper
         
         if (args.Length > 1)
         {
-            vm.CurrentView = vm.ImageViewer;
+            vm.MainWindow.CurrentView.Value = vm.ImageViewer;
             Task.Run(() => QuickLoad.QuickLoadAsync(vm, args[1]));
         }
         else StartUpMenuOrLastFile(vm);
@@ -219,7 +221,7 @@ public static class StartUpHelper
         
         if (arg is not null)
         {
-            vm.CurrentView = vm.ImageViewer;
+            vm.MainWindow.CurrentView.Value = vm.ImageViewer;
             Task.Run(() => QuickLoad.QuickLoadAsync(vm, arg));
         }
         else StartUpMenuOrLastFile(vm);
@@ -235,7 +237,7 @@ public static class StartUpHelper
             }
             else
             {
-                vm.CurrentView = vm.ImageViewer;
+                vm.MainWindow.CurrentView.Value = vm.ImageViewer;
                 Task.Run(() => QuickLoad.QuickLoadAsync(vm, Settings.StartUp.LastFile));
             }
         }
@@ -250,34 +252,37 @@ public static class StartUpHelper
         {
             // Starting it in Dispatcher with post fixes occurrences where the text is not centered or the text is missing
             Dispatcher.UIThread.Post(() => { ErrorHandling.ShowStartUpMenu(vm); });
-            if (Settings.WindowProperties.AutoFit)
+            Dispatcher.UIThread.Post(() =>
             {
-                WindowFunctions.CenterWindowOnScreen();
-            }
+                if (Settings.WindowProperties.AutoFit)
+                {
+                    WindowFunctions.CenterWindowOnScreen();
+                }
+            }, DispatcherPriority.Background);
         }
     }
 
     private static void HandleNormalWindow(MainViewModel vm, Window window)
     {
-        vm.CanResize = true;
-        vm.IsAutoFit = false;
+        vm.MainWindow.CanResize.Value = true;
+        vm.GlobalSettings.IsAutoFit.Value = false;
         if (Settings.UIProperties.ShowInterface)
         {
-            vm.IsTopToolbarShown = true;
-            vm.IsBottomToolbarShown = Settings.UIProperties.ShowBottomNavBar;
+            vm.MainWindow.IsTopToolbarShown.Value = true;
+            vm.MainWindow.IsBottomToolbarShown.Value = Settings.UIProperties.ShowBottomNavBar;
         }
         WindowFunctions.InitializeWindowSizeAndPosition(window);
     }
 
     private static void HandleAutoFit(MainViewModel vm, Window window)
     {
-        vm.SizeToContent = SizeToContent.WidthAndHeight;
-        vm.CanResize = false;
-        vm.IsAutoFit = true;
+        vm.MainWindow.SizeToContent.Value = SizeToContent.WidthAndHeight;
+        vm.MainWindow.CanResize.Value = false;
+        vm.GlobalSettings.IsAutoFit.Value = true;
         if (Settings.UIProperties.ShowInterface)
         {
-            vm.IsTopToolbarShown = true;
-            vm.IsBottomToolbarShown = Settings.UIProperties.ShowBottomNavBar;
+            vm.MainWindow.IsTopToolbarShown.Value = true;
+            vm.MainWindow.IsBottomToolbarShown.Value = Settings.UIProperties.ShowBottomNavBar;
         }
         window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
     }

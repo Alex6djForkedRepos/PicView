@@ -142,7 +142,7 @@ public static class DragAndDropHelper
     {
         // Remove preview first and show loading
         RemoveDragDropView();
-        vm.IsLoading = true;
+        vm.MainWindow.IsLoadingIndicatorShown.Value = true;
         if (vm.ImageViewer?.MainImage != null)
         {
             vm.ImageViewer.MainImage.Source = null;
@@ -376,9 +376,9 @@ public static class DragAndDropHelper
 
     private static async Task EnsureImageViewerDisplayed(MainViewModel vm)
     {
-        if (vm.CurrentView != vm.ImageViewer)
+        if (vm.MainWindow.CurrentView.CurrentValue != vm.ImageViewer)
         {
-            await Dispatcher.UIThread.InvokeAsync(() => vm.CurrentView = vm.ImageViewer);
+            await Dispatcher.UIThread.InvokeAsync(() => vm.MainWindow.CurrentView.Value = vm.ImageViewer);
         }
     }
 

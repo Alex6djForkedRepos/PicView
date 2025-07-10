@@ -112,7 +112,7 @@ public partial class StartUpMenu : UserControl
         else if (Settings.WindowProperties.AutoFit)
         {
             ShowIcon();
-            vm.TitleMaxWidth = logoWidth;
+            vm.MainWindow.TitleMaxWidth.Value = logoWidth;
             return;
         }
 
@@ -126,17 +126,17 @@ public partial class StartUpMenu : UserControl
                 break;
         }
 
-        var titleMaxWidth = ImageSizeCalculationHelper.GetTitleMaxWidth(vm.RotationAngle, width, height,
+        var titleMaxWidth = ImageSizeCalculationHelper.GetTitleMaxWidth(vm.GlobalSettings.RotationAngle.CurrentValue, width, height,
             desktop.MainWindow.MinWidth, desktop.MainWindow.MinHeight, vm.PlatformWindowService.CombinedTitleButtonsWidth,
             desktop.MainWindow.Width);
 
         if (Settings.Zoom.ScrollEnabled)
         {
-            vm.TitleMaxWidth = titleMaxWidth - SizeDefaults.ScrollbarSize;
+            vm.MainWindow.TitleMaxWidth.Value = titleMaxWidth - SizeDefaults.ScrollbarSize;
         }
         else
         {
-            vm.TitleMaxWidth = titleMaxWidth;
+            vm.MainWindow.TitleMaxWidth.Value = titleMaxWidth;
         }
         
         return;

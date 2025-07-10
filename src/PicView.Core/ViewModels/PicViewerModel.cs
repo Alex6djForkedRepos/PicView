@@ -1,136 +1,74 @@
 ﻿using PicView.Core.ImageDecoding;
 using PicView.Core.ImageEffects;
-using ReactiveUI;
+using R3;
 
 namespace PicView.Core.ViewModels;
 
-public class PicViewerModel : ReactiveObject
+public class PicViewerModel : IDisposable
 {
-    public FileInfo? FileInfo
+    public void Dispose()
     {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
+        Disposable.Dispose(FileInfo, PixelWidth, PixelHeight, ImageSource, SecondaryImageSource, ImageType);
+        Disposable.Dispose(ImageType, ImageWidth, ImageHeight, SecondaryImageWidth, IsShowingSideBySide, ScrollViewerHeight);
+        Disposable.Dispose(ScrollViewerHeight, AspectRatio, EffectConfig, ExifOrientation, ScaleX, Title);
+        Disposable.Dispose(TitleTooltip, WindowTitle, Index);
     }
     
+    public BindableReactiveProperty<FileInfo?> FileInfo { get; } = new();
+
     /// <summary>
     /// The image's pixel width
     /// </summary>
-    public int PixelWidth
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
+    public BindableReactiveProperty<int> PixelWidth { get; } = new(0);
 
     /// <summary>
     /// The image's pixel height
     /// </summary>
-    public int PixelHeight
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
+    public BindableReactiveProperty<int> PixelHeight { get; } = new(0);
     
-    
-    public object? ImageSource
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
+    public BindableReactiveProperty<object?> ImageSource  { get; } = new();
 
-    public object? SecondaryImageSource
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
+    public BindableReactiveProperty<object?> SecondaryImageSource { get; } = new();
 
-    public ImageType ImageType
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
+    public BindableReactiveProperty<ImageType> ImageType { get; } = new();
 
     /// <summary>
     /// The width to scale the image to
     /// </summary>
-    public double ImageWidth
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
+    public BindableReactiveProperty<double> ImageWidth { get; } = new(0);
 
     /// <summary>
     /// The height to scale the image to
     /// </summary>
-    public double ImageHeight
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
+    public BindableReactiveProperty<double> ImageHeight { get; } = new(0);
 
-    public double SecondaryImageWidth
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
+    public BindableReactiveProperty<double> SecondaryImageWidth { get; } = new(0);
 
-    public bool IsShowingSideBySide
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
+    public BindableReactiveProperty<bool> IsShowingSideBySide { get; } = new();
 
-    public double ScrollViewerWidth
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    } = double.NaN;
+    public BindableReactiveProperty<double> ScrollViewerWidth { get; } = new(0);
 
-    public double ScrollViewerHeight
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    } = double.NaN;
-
-    public double AspectRatio
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public ImageEffectConfig? EffectConfig
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-
-    public EXIFHelper.EXIFOrientation? ExifOrientation
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    }
+    public BindableReactiveProperty<double> ScrollViewerHeight { get; } = new(0);
     
+    public BindableReactiveProperty<double> GalleryWidth { get; } = new(0);
+
+    public BindableReactiveProperty<double> AspectRatio { get; } = new();
+
+    public BindableReactiveProperty<ImageEffectConfig?> EffectConfig { get; } = new();
+
+    public BindableReactiveProperty<EXIFHelper.EXIFOrientation?> ExifOrientation { get; } = new();
+
     // Used to flip the flip button
-    public int ScaleX
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    } = 1;
+    public BindableReactiveProperty<int> ScaleX { get; } = new(1);
+
+    public BindableReactiveProperty<string> Title { get; } = new();
+
+    public BindableReactiveProperty<string> TitleTooltip { get; } = new();
+
+    public BindableReactiveProperty<string> WindowTitle { get; } = new();
     
-    public string? Title
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    } = "Loading...";
-
-    public string? TitleTooltip
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    } = "Loading...";
-
-    public string? WindowTitle
-    {
-        get;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    } = "PicView";
+    public BindableReactiveProperty<int> Index { get; } = new();
+    public BindableReactiveProperty<int> GetIndex { get; } = new();
+    
+    public BindableReactiveProperty<bool> IsSingleImage { get; } = new();
 }

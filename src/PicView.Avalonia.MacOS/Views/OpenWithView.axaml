@@ -29,10 +29,10 @@
             FontFamily="avares://PicView.Avalonia/Assets/Fonts/Roboto-Medium.ttf#Roboto"
             FontSize="13"
             FontWeight="Medium"
-            Height="{CompiledBinding TitlebarHeight,
+            Height="{CompiledBinding MainWindow.TitlebarHeight.Value,
                                      Mode=OneWay}"
             Padding="7"
-            Text="{CompiledBinding Translation.OpenWith,
+            Text="{CompiledBinding Translation.OpenWith.Value,
                                    Mode=OneWay}"
             TextAlignment="Center"
             VerticalAlignment="Top" />
@@ -41,14 +41,14 @@
         </customControls:AutoScrollViewer>
         <Button
             Classes=" altHover"
-            Height="{CompiledBinding TitlebarHeight,
+            Height="{CompiledBinding MainWindow.TitlebarHeight.Value,
                                      Mode=OneWay}"
             Padding="7"
             VerticalAlignment="Bottom"
             x:Name="CancelButton">
             <TextBlock
                 Classes="txt"
-                Text="{CompiledBinding Translation.Cancel,
+                Text="{CompiledBinding Translation.Cancel.Value,
                                        Mode=OneWay}"
                 TextAlignment="Center" />
         </Button>

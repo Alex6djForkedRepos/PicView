@@ -41,10 +41,10 @@ public static class MenuManager
     /// </summary>
     public static void CloseMenus(MainViewModel vm)
     {
-        vm.IsFileMenuVisible = false;
-        vm.IsImageMenuVisible = false;
-        vm.IsSettingsMenuVisible = false;
-        vm.IsToolsMenuVisible = false;
+        vm.MainWindow.IsFileMenuVisible.Value = false;
+        vm.MainWindow.IsImageMenuVisible.Value = false;
+        vm.MainWindow.IsSettingsMenuVisible.Value = false;
+        vm.MainWindow.IsToolsMenuVisible.Value = false;
     }
 
     /// <summary>
@@ -52,10 +52,10 @@ public static class MenuManager
     /// </summary>
     public static bool IsAnyMenuOpen(MainViewModel vm)
     {
-        return vm.IsFileMenuVisible ||
-               vm.IsImageMenuVisible ||
-               vm.IsSettingsMenuVisible ||
-               vm.IsToolsMenuVisible;
+        return vm.MainWindow.IsFileMenuVisible.CurrentValue ||
+               vm.MainWindow.IsImageMenuVisible.CurrentValue ||
+               vm.MainWindow.IsSettingsMenuVisible.CurrentValue ||
+               vm.MainWindow.IsToolsMenuVisible.CurrentValue;
     }
 
     /// <summary>
@@ -103,10 +103,10 @@ public static class MenuManager
     {
         return menuType switch
         {
-            MenuType.File => vm.IsFileMenuVisible,
-            MenuType.Image => vm.IsImageMenuVisible,
-            MenuType.Settings => vm.IsSettingsMenuVisible,
-            MenuType.Tools => vm.IsToolsMenuVisible,
+            MenuType.File => vm.MainWindow.IsFileMenuVisible.CurrentValue,
+            MenuType.Image => vm.MainWindow.IsImageMenuVisible.CurrentValue,
+            MenuType.Settings => vm.MainWindow.IsSettingsMenuVisible.CurrentValue,
+            MenuType.Tools => vm.MainWindow.IsToolsMenuVisible.CurrentValue,
             _ => false
         };
     }
@@ -116,16 +116,16 @@ public static class MenuManager
         switch (menuType)
         {
             case MenuType.File:
-                vm.IsFileMenuVisible = state;
+                vm.MainWindow.IsFileMenuVisible.Value = state;
                 break;
             case MenuType.Image:
-                vm.IsImageMenuVisible = state;
+                vm.MainWindow.IsImageMenuVisible.Value = state;
                 break;
             case MenuType.Settings:
-                vm.IsSettingsMenuVisible = state;
+                vm.MainWindow.IsSettingsMenuVisible.Value = state;
                 break;
             case MenuType.Tools:
-                vm.IsToolsMenuVisible = state;
+                vm.MainWindow.IsToolsMenuVisible.Value = state;
                 break;
         }
     }

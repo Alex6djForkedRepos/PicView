@@ -45,7 +45,7 @@
                     IconHeight="10"
                     IconWidth="10"
                     IsRepeatEnabled="False"
-                    ToolTip.Tip="{CompiledBinding Translation.Close,
+                    ToolTip.Tip="{CompiledBinding Translation.Close.Value,
                                                   Mode=OneWay}"
                     Width="30"
                     x:Name="CloseButton" />
@@ -72,7 +72,8 @@
                     Foreground="{DynamicResource MainTextColor}"
                     LineHeight="28"
                     Padding="30,0,0,0"
-                    Text="{CompiledBinding Translation.ApplicationShortcuts}"
+                    Text="{CompiledBinding Translation.ApplicationShortcuts.Value,
+                                           Mode=OneWay}"
                     TextAlignment="Center"
                     x:Name="TitleText" />
             </DockPanel>

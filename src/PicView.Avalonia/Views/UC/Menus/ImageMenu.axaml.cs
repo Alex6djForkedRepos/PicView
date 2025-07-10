@@ -1,11 +1,11 @@
-using System.Reactive.Linq;
 using Avalonia.Input;
 using Avalonia.Media;
 using PicView.Avalonia.Crop;
 using PicView.Avalonia.CustomControls;
 using PicView.Avalonia.Navigation;
+using PicView.Avalonia.UI;
 using PicView.Avalonia.ViewModels;
-using ReactiveUI;
+using R3;
 
 namespace PicView.Avalonia.Views.UC.Menus;
 
@@ -27,9 +27,20 @@ public partial class ImageMenu  : AnimatedMenu
                 TopBorder.Background = Brushes.White;
             }
             GoToPicBox.KeyDown += async (_, e) => await GoToPicBox_OnKeyDown(e);
-            this.WhenAnyValue(x => x.IsVisible)
-                .Where(isVisible => !isVisible).Subscribe(_ => SlideShowButton.Flyout.Hide());
-            this.WhenAnyValue(x => x.IsOpen).Subscribe(_ => DetermineIfCropShouldBeEnabled());
+            Observable.EveryValueChanged(this, x => x.IsVisible, UIHelper.GetFrameProvider)
+                .Skip(1)
+                .Where(isVisible => !isVisible)
+                .Subscribe(_ =>
+                {
+                    SlideShowButton.Flyout.Hide();
+                });
+            // Determine if crop should be enabled every time it opens
+            Observable.EveryValueChanged(this, x => x.IsOpen, UIHelper.GetFrameProvider)
+                .Where(x => x)
+                .Subscribe(_ =>
+                {
+                    DetermineIfCropShouldBeEnabled();
+                });
         };
     }
 

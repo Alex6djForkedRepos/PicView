@@ -18,34 +18,34 @@ public static class LanguageUpdater
 
         translationViewModel.UpdateLanguage();
 
-        translationViewModel.IsFlipped = picViewerModel.ScaleX == 1 ? translationViewModel.Flip : translationViewModel.UnFlip;
+        translationViewModel.IsFlipped.Value = picViewerModel.ScaleX.CurrentValue == 1 ? translationViewModel.Flip.CurrentValue : translationViewModel.UnFlip.CurrentValue;
         
-        translationViewModel.IsShowingUI = !Settings.UIProperties.ShowInterface ? translationViewModel.ShowUI : translationViewModel.HideUI;
+        translationViewModel.IsShowingUI.Value = !Settings.UIProperties.ShowInterface ? translationViewModel.ShowUI.CurrentValue : translationViewModel.HideUI.CurrentValue;
         
-        translationViewModel.IsScrolling = Settings.Zoom.ScrollEnabled ?
+        translationViewModel.IsScrolling.Value = Settings.Zoom.ScrollEnabled ?
             TranslationManager.Translation.ScrollingEnabled : TranslationManager.Translation.ScrollingDisabled;
         
-        translationViewModel.IsShowingBottomGallery = Settings.Gallery.IsBottomGalleryShown ?
+        translationViewModel.IsShowingBottomGallery.Value = Settings.Gallery.IsBottomGalleryShown ?
             TranslationManager.Translation.HideBottomGallery :
             TranslationManager.Translation.ShowBottomGallery;
         
-        translationViewModel.IsLooping = Settings.UIProperties.Looping
+        translationViewModel.IsLooping.Value = Settings.UIProperties.Looping
             ? TranslationManager.Translation.LoopingEnabled
             : TranslationManager.Translation.LoopingDisabled;
         
-        translationViewModel.IsCtrlToZoom = Settings.Zoom.CtrlZoom
+        translationViewModel.IsCtrlToZoom.Value = Settings.Zoom.CtrlZoom
             ? TranslationManager.Translation.CtrlToZoom
             : TranslationManager.Translation.ScrollToZoom;
         
-        translationViewModel.IsShowingBottomToolbar = Settings.UIProperties.ShowBottomNavBar
+        translationViewModel.IsShowingBottomToolbar.Value = Settings.UIProperties.ShowBottomNavBar
             ? TranslationManager.Translation.HideBottomToolbar
             : TranslationManager.Translation.ShowBottomToolbar;
         
-        translationViewModel.IsShowingFadingUIButtons = Settings.UIProperties.ShowAltInterfaceButtons
+        translationViewModel.IsShowingFadingUIButtons.Value = Settings.UIProperties.ShowAltInterfaceButtons
             ? TranslationManager.Translation.DisableFadeInButtonsOnHover
             : TranslationManager.Translation.ShowFadeInButtonsOnHover;
         
-        translationViewModel.IsUsingTouchpad = Settings.Zoom.IsUsingTouchPad
+        translationViewModel.IsUsingTouchpad.Value = Settings.Zoom.IsUsingTouchPad
             ? TranslationManager.Translation.UsingTouchpad
             : TranslationManager.Translation.UsingMouse;
     }

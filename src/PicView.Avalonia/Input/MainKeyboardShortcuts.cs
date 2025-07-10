@@ -172,7 +172,7 @@ public static class MainKeyboardShortcuts
         // Handle cropping mode
         if (CropFunctions.IsCropping)
         {
-            if (UIHelper.GetMainView.MainGrid.DataContext is MainViewModel { CurrentView: CropControl cropControl })
+            if (UIHelper.GetMainView.MainGrid.DataContext is MainViewModel { MainWindow.CurrentView.CurrentValue: CropControl cropControl })
             {
                 await cropControl.KeyDownHandler(null, e);
             }
@@ -192,7 +192,7 @@ public static class MainKeyboardShortcuts
         // Handle escape key
         if (e.Key == Key.Escape)
         {
-            if (UIHelper.GetMainView.DataContext as MainViewModel is { IsEditableTitlebarOpen: true })
+            if (UIHelper.GetMainView.DataContext as MainViewModel is { MainWindow.IsEditableTitlebarOpen.CurrentValue: true })
             {
                 return true;
             }

@@ -34,42 +34,44 @@ public static class ErrorHandling
         return;
         void Start()
         {
-            if (vm.CurrentView is not StartUpMenu)
+            if (vm.MainWindow.CurrentView.CurrentValue is not StartUpMenu)
             {
                 var startUpMenu = new StartUpMenu();
                 if (Settings.WindowProperties.AutoFit)
                 {
                     startUpMenu.Width = SizeDefaults.WindowMinSize;
                     startUpMenu.Height = SizeDefaults.WindowMinSize;
-                    if (Settings.Gallery.IsBottomGalleryShown)
-                    {
-                        vm.GalleryWidth = SizeDefaults.WindowMinSize;
-                    }
+                    vm.PicViewer.GalleryWidth.Value = SizeDefaults.WindowMinSize;
                 }
-                vm.CurrentView = startUpMenu;
+
+                vm.MainWindow.CurrentView.Value = startUpMenu;
             }
             
             TitleManager.SetNoImageTitle(vm);
-
-            vm.GalleryMode = GalleryMode.Closed;
             GalleryFunctions.Clear();
             MenuManager.CloseMenus(vm);
-            vm.GalleryMargin = new Thickness(0, 0, 0, 0);
-            vm.GetIndex = 0;
+
+            vm.PicViewer.GetIndex.Value = 0;
             vm.PlatformService.StopTaskbarProgress();
-            vm.IsLoading = false;
+            vm.MainWindow.IsLoadingIndicatorShown.Value = false;
 
             _ = NavigationManager.DisposeImageIteratorAsync();
             if (UIHelper.GetEditableTitlebar is not null)
             {
                 UIHelper.GetEditableTitlebar.TextBlock.TextAlignment = TextAlignment.Center;
             }
+            if (vm.Gallery is null)
+            {
+                return;
+            }
+            vm.Gallery.GalleryMode.Value = GalleryMode.Closed;
+            vm.Gallery.GalleryMargin.Value = new Thickness(0, 0, 0, 0);
         }
     }
 
     public static async Task ReloadAsync(MainViewModel vm)
     {
-        vm.IsLoading = true;
+        vm.MainWindow.IsLoadingIndicatorShown.Value = true;
         
         if (vm.PicViewer.ImageSource is null)
         {
@@ -99,7 +101,7 @@ public static class ErrorHandling
         {
             if (!NavigationManager.CanNavigate(vm))
             {
-                var url = vm.PicViewer.Title.GetURL();
+                var url = vm.PicViewer.Title.CurrentValue.GetURL();
                 if (!string.IsNullOrEmpty(url))
                 {
                     await NavigationManager.LoadPicFromUrlAsync(url, vm).ConfigureAwait(false);
@@ -123,7 +125,7 @@ public static class ErrorHandling
         }
         finally
         {
-            vm.IsLoading = false;
+            vm.MainWindow.IsLoadingIndicatorShown.Value = false;
         }
     }
 }

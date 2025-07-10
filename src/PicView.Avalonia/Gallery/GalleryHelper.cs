@@ -1,10 +1,12 @@
 ﻿using Avalonia.Media;
+using PicView.Avalonia.UI;
 using PicView.Avalonia.ViewModels;
 
 namespace PicView.Avalonia.Gallery;
 
 public static class GalleryHelper
 {
+    public static void SetGalleryItemStretch(string value) => SetGalleryItemStretch(value, UIHelper.GetMainView.DataContext as MainViewModel);
     public static void SetGalleryItemStretch(string value, MainViewModel vm)
     {
         if (value.Equals("Square", StringComparison.OrdinalIgnoreCase))

@@ -1,9 +1,9 @@
 <UserControl
-    Height="{CompiledBinding TitlebarHeight,
+    Height="{CompiledBinding MainWindow.TitlebarHeight.Value,
                              Mode=OneWay}"
-    IsVisible="{CompiledBinding IsTopToolbarShown,
+    IsVisible="{CompiledBinding MainWindow.IsTopToolbarShown.Value,
                                 Mode=OneWay}"
-    Margin="{CompiledBinding TopScreenMargin,
+    Margin="{CompiledBinding MainWindow.TopScreenMargin.Value,
                              Mode=OneWay}"
     x:Class="PicView.Avalonia.Win32.Views.WinTitleBar"
     x:DataType="vm:MainViewModel"
@@ -15,35 +15,35 @@
     <UserControl.ContextMenu>
         <ContextMenu x:Name="RotationContextMenu">
             <MenuItem
-                Command="{CompiledBinding RotateToCommand}"
+                Command="{CompiledBinding Tools.RotateTask}"
                 CommandParameter="0"
                 GroupName="RotationGroup"
                 Header="0°"
                 ToggleType="Radio"
                 x:Name="Rotation0Item" />
             <MenuItem
-                Command="{CompiledBinding RotateToCommand}"
+                Command="{CompiledBinding Tools.RotateTask}"
                 CommandParameter="90"
                 GroupName="RotationGroup"
                 Header="90°"
                 ToggleType="Radio"
                 x:Name="Rotation90Item" />
             <MenuItem
-                Command="{CompiledBinding RotateToCommand}"
+                Command="{CompiledBinding Tools.RotateTask}"
                 CommandParameter="180"
                 GroupName="RotationGroup"
                 Header="180°"
                 ToggleType="Radio"
                 x:Name="Rotation180Item" />
             <MenuItem
-                Command="{CompiledBinding RotateToCommand}"
+                Command="{CompiledBinding Tools.RotateTask}"
                 CommandParameter="270"
                 GroupName="RotationGroup"
                 Header="270°"
                 ToggleType="Radio"
                 x:Name="Rotation270Item" />
             <Separator />
-            <MenuItem Command="{CompiledBinding FlipCommand}" Header="{CompiledBinding Translation.IsFlipped}">
+            <MenuItem Command="{CompiledBinding Tools.FlipCommand}" Header="{CompiledBinding Translation.IsFlipped.Value}">
                 <MenuItem.Icon>
                     <Path
                         Data="{StaticResource FlipGeometry}"
@@ -52,7 +52,7 @@
                         Stretch="Fill"
                         Width="12">
                         <Path.RenderTransform>
-                            <ScaleTransform ScaleX="{CompiledBinding PicViewer.ScaleX}" />
+                            <ScaleTransform ScaleX="{CompiledBinding PicViewer.ScaleX.Value}" />
                         </Path.RenderTransform>
                     </Path>
                 </MenuItem.Icon>
@@ -86,13 +86,13 @@
                 BorderBrush="{DynamicResource MainBorderColor}"
                 BorderThickness="0,0,1,0"
                 Classes="hover"
-                Command="{CompiledBinding ToggleGalleryCommand}"
+                Command="{CompiledBinding Gallery.ToggleGalleryCommand}"
                 Data="{StaticResource GalleryGeometry}"
                 DockPanel.Dock="Left"
                 Foreground="{DynamicResource MainTextColor}"
                 IconHeight="17"
                 IconWidth="17"
-                IsEnabled="{CompiledBinding PicViewer.FileInfo,
+                IsEnabled="{CompiledBinding PicViewer.FileInfo.Value,
                                             Converter={x:Static ObjectConverters.IsNotNull}}"
                 IsRepeatEnabled="False"
                 Width="30"
@@ -101,18 +101,18 @@
             <customControls:IconButton
                 Background="{DynamicResource WindowButtonBackgroundColor}"
                 Classes="hover"
-                Command="{CompiledBinding RotateRightWindowBorderButtonCommand}"
+                Command="{CompiledBinding Tools.RotateRightWindowBorderButtonCommand}"
                 DockPanel.Dock="Left"
                 Foreground="{DynamicResource MainTextColor}"
                 Icon="{StaticResource RefreshCcwDot}"
                 IconHeight="16"
                 IconWidth="16"
-                IsEnabled="{CompiledBinding PicViewer.ImageSource,
+                IsEnabled="{CompiledBinding PicViewer.ImageSource.Value,
                                             Converter={x:Static ObjectConverters.IsNotNull}}"
                 IsRepeatEnabled="False"
                 Margin="0"
                 Name="RotateRightButton"
-                ToolTip.Tip="{CompiledBinding Translation.RotateRight,
+                ToolTip.Tip="{CompiledBinding Translation.RotateRight.Value,
                                               Mode=OneWay}"
                 Width="30"
                 x:Name="RotateLeftButton" />
@@ -122,22 +122,22 @@
                 BorderBrush="{DynamicResource MainBorderColor}"
                 BorderThickness="1,0,1,0"
                 Classes="hover"
-                Command="{CompiledBinding FlipCommand}"
+                Command="{CompiledBinding Tools.FlipCommand}"
                 Data="{StaticResource FlipGeometry}"
                 DockPanel.Dock="Left"
                 Foreground="{DynamicResource MainTextColor}"
                 IconHeight="16"
                 IconWidth="16"
-                IsEnabled="{CompiledBinding PicViewer.ImageSource,
+                IsEnabled="{CompiledBinding PicViewer.ImageSource.Value,
                                             Converter={x:Static ObjectConverters.IsNotNull}}"
                 IsRepeatEnabled="False"
                 Margin="0"
-                ToolTip.Tip="{CompiledBinding Translation.IsFlipped,
+                ToolTip.Tip="{CompiledBinding Translation.IsFlipped.Value,
                                               Mode=OneWay}"
                 Width="30"
                 x:Name="FlipButton">
                 <Button.RenderTransform>
-                    <ScaleTransform ScaleX="{CompiledBinding PicViewer.ScaleX}" />
+                    <ScaleTransform ScaleX="{CompiledBinding PicViewer.ScaleX.Value}" />
                 </Button.RenderTransform>
             </customControls:IconButton>
 
@@ -146,7 +146,7 @@
                 BorderBrush="{DynamicResource MainBorderColor}"
                 Classes="hover"
                 ClickMode="Release"
-                Command="{CompiledBinding ExitCommand}"
+                Command="{CompiledBinding MainWindow.ExitCommand}"
                 Data="{StaticResource CloseGeometry}"
                 DockPanel.Dock="Right"
                 Foreground="{DynamicResource MainTextColor}"
@@ -162,14 +162,14 @@
                 BorderThickness="0,0,1,0"
                 Classes="hover"
                 ClickMode="Release"
-                Command="{CompiledBinding ToggleFullscreenCommand}"
+                Command="{CompiledBinding MainWindow.ToggleFullscreenCommand}"
                 Data="{StaticResource FullscreenGeometry}"
                 DockPanel.Dock="Right"
                 Foreground="{DynamicResource MainTextColor}"
                 IconHeight="12"
                 IconWidth="12"
                 IsRepeatEnabled="False"
-                IsVisible="{CompiledBinding ShouldMaximizeBeShown,
+                IsVisible="{CompiledBinding MainWindow.ShouldMaximizeBeShown.Value,
                                             Mode=OneWay}"
                 Width="30"
                 x:Name="FullscreenButton" />
@@ -179,14 +179,14 @@
                 BorderBrush="{DynamicResource MainBorderColor}"
                 BorderThickness="0,0,1,0"
                 Classes="hover"
-                Command="{CompiledBinding RestoreCommand}"
+                Command="{CompiledBinding MainWindow.RestoreCommand}"
                 Data="{StaticResource RestoreGeometry}"
                 DockPanel.Dock="Right"
                 Foreground="{DynamicResource MainTextColor}"
                 IconHeight="12"
                 IconWidth="12"
                 IsRepeatEnabled="False"
-                IsVisible="{CompiledBinding !ShouldMaximizeBeShown,
+                IsVisible="{CompiledBinding !MainWindow.ShouldMaximizeBeShown.Value,
                                             Mode=OneWay}"
                 Width="30"
                 x:Name="RestoreButton" />
@@ -197,7 +197,7 @@
                 BorderThickness="1,0,1,0"
                 Classes="hover "
                 ClickMode="Release"
-                Command="{CompiledBinding MinimizeCommand}"
+                Command="{CompiledBinding MainWindow.MinimizeCommand}"
                 Data="{StaticResource MinimizeGeometry}"
                 DockPanel.Dock="Right"
                 Foreground="{DynamicResource MainTextColor}"

@@ -2,234 +2,99 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.LogicalTree;
 using Avalonia.Media;
-using Avalonia.Threading;
+using PicView.Avalonia.UI;
 using PicView.Avalonia.ViewModels;
+using R3;
 
 namespace PicView.Avalonia.Views.UC.Buttons;
 
 public partial class StarOutlineButtons : UserControl
 {
+    private DrawingImage? _filledStar;
+    private DrawingImage? _outlinedStar;
+    private Image[]? _starIcons;
+    
+    private readonly CompositeDisposable _disposables = new();
+
     public StarOutlineButtons()
     {
         InitializeComponent();
-        Loaded += delegate
-        {
-            if (DataContext == null)
-            {
-                return;
-            }
-            var vm = (MainViewModel)DataContext;
-            vm.PropertyChanged += (_, x) =>
-            {
-                if (x.PropertyName != nameof(MainViewModel.EXIFRating))
-                {
-                    return;
-                }
-                SetStars(vm.EXIFRating);
-            };
-            SetStars(vm.EXIFRating);
-        };
+        Loaded += OnLoaded;
     }
 
-    public void SetStars(uint stars)
+    protected override void OnDetachedFromLogicalTree(LogicalTreeAttachmentEventArgs e)
     {
-        Dispatcher.UIThread.InvokeAsync(() =>
-        {
-            switch (stars)
-            {
-                case 1:
-                    FillStar1();
-                    break;
-
-                case 2:
-                    FillStar2();
-                    break;
-
-                case 3:
-                    FillStar3();
-                    break;
-
-                case 4:
-                    FillStar4();
-                    break;
-
-                case 5:
-                    FillStar5();
-                    break;
-
-                default:
-                    OutlineStars();
-                    break;
-            }
-        });
+        base.OnDetachedFromLogicalTree(e);
+        Disposable.Dispose(_disposables);
     }
 
-    public void FillStar1()
+    private void OnLoaded(object? sender, RoutedEventArgs e)
     {
-        if (!this.TryFindResource("StarFilledDrawingImage", Application.Current.RequestedThemeVariant, out var resourceValue1))
+        _starIcons = [Star1Icon, Star2Icon, Star3Icon, Star4Icon, Star5Icon];
+
+        if (this.TryFindResource("StarFilledDrawingImage", Application.Current.RequestedThemeVariant, out var filled) &&
+            this.TryFindResource("StarOutlineDrawingImage", Application.Current.RequestedThemeVariant,
+                out var outlined))
         {
+            _filledStar = filled as DrawingImage;
+            _outlinedStar = outlined as DrawingImage;
+        }
+
+        if (DataContext is not MainViewModel vm || vm.Exif is null)
+        {
+            SetStars(0); // Ensure stars are outlined if no data context
             return;
         }
-        if (!this.TryFindResource("StarOutlineDrawingImage", Application.Current.RequestedThemeVariant, out var resourceValue2))
-        {
-            return;
-        }
-        var filledStar = resourceValue1 as DrawingImage;
-        var outlinedStar = resourceValue2 as DrawingImage;
-        Star1Icon.Source = filledStar;
-        Star2Icon.Source = outlinedStar;
-        Star3Icon.Source = outlinedStar;
-        Star4Icon.Source = outlinedStar;
-        Star5Icon.Source = outlinedStar;
+
+        Observable.EveryValueChanged(vm.Exif, x => x.ExifRating.Value, UIHelper.GetFrameProvider)
+            .Subscribe(SetStars)
+            .AddTo(_disposables);
     }
 
-    public void FillStar2()
+    private void SetStars(uint rating)
     {
-        if (!this.TryFindResource("StarFilledDrawingImage", Application.Current.RequestedThemeVariant, out var resourceValue1))
+        if (_starIcons is null || _filledStar is null || _outlinedStar is null)
         {
             return;
         }
 
-        if (!this.TryFindResource("StarOutlineDrawingImage", Application.Current.RequestedThemeVariant, out var resourceValue2))
+        for (var i = 0; i < _starIcons.Length; i++)
         {
-            return;
+            _starIcons[i].Source = i < rating ? _filledStar : _outlinedStar;
         }
-        var filledStar = resourceValue1 as DrawingImage;
-        Star1Icon.Source = filledStar;
-        Star2Icon.Source = filledStar;
-        Star3Icon.Source = resourceValue2 as DrawingImage;
-        Star4Icon.Source = resourceValue2 as DrawingImage;
-        Star5Icon.Source = resourceValue2 as DrawingImage;
     }
 
-    public void FillStar3()
+    private void UpdateRating(uint newRating)
     {
-        if (!this.TryFindResource("StarFilledDrawingImage", Application.Current.RequestedThemeVariant, out var resourceValue1))
+        if (DataContext is MainViewModel { Exif: not null } vm)
         {
-            return;
+            vm.Exif.ExifRating.Value = newRating;
         }
-
-        if (!this.TryFindResource("StarOutlineDrawingImage", Application.Current.RequestedThemeVariant, out var resourceValue2))
-        {
-            return;
-        }
-        var filledStar = resourceValue1 as DrawingImage;
-        Star1Icon.Source = filledStar;
-        Star2Icon.Source = filledStar;
-        Star3Icon.Source = filledStar;
-        Star4Icon.Source = resourceValue2 as DrawingImage;
-        Star5Icon.Source = resourceValue2 as DrawingImage;
-    }
-
-    public void FillStar4()
-    {
-        if (!this.TryFindResource("StarFilledDrawingImage", Application.Current.RequestedThemeVariant, out var resourceValue1))
-        {
-            return;
-        }
-
-        if (!this.TryFindResource("StarOutlineDrawingImage", Application.Current.RequestedThemeVariant, out var resourceValue2))
-        {
-            return;
-        }
-        var filledStar = resourceValue1 as DrawingImage;
-        Star1Icon.Source = filledStar;
-        Star2Icon.Source = filledStar;
-        Star3Icon.Source = filledStar;
-        Star4Icon.Source = filledStar;
-        Star5Icon.Source = resourceValue2 as DrawingImage;
-    }
-
-    public void FillStar5()
-    {
-        if (!this.TryFindResource("StarFilledDrawingImage", Application.Current.RequestedThemeVariant, out var resourceValue))
-        {
-            return;
-        }
-        var filledStar = resourceValue as DrawingImage;
-        Star1Icon.Source = filledStar;
-        Star2Icon.Source = filledStar;
-        Star3Icon.Source = filledStar;
-        Star4Icon.Source = filledStar;
-        Star5Icon.Source = filledStar;
-    }
-
-    public void OutlineStars()
-    {
-        if (!this.TryFindResource("StarOutlineDrawingImage", Application.Current.RequestedThemeVariant,
-                out var resourceValue))
-        {
-            return;
-        }
-
-        var drawingImage = resourceValue as DrawingImage;
-        Star1Icon.Source = drawingImage;
-        Star2Icon.Source = drawingImage;
-        Star3Icon.Source = drawingImage;
-        Star4Icon.Source = drawingImage;
-        Star5Icon.Source = drawingImage;
-            
-    }
-
-    private void Star1_OnPointerEntered(object? sender, PointerEventArgs e)
-    {
-        FillStar1();
     }
 
     private void Stars_OnPointerExited(object? sender, PointerEventArgs e)
     {
-        if (DataContext is null)
+        if (DataContext is MainViewModel { Exif: not null } vm)
         {
-            OutlineStars();
-            return;
+            SetStars(vm.Exif.ExifRating.CurrentValue);
         }
-        var vm = (MainViewModel)DataContext;
-        SetStars(vm.EXIFRating);
+        else
+        {
+            SetStars(0);
+        }
     }
 
-    private void Star2_OnPointerEntered(object? sender, PointerEventArgs e)
-    {
-        FillStar2();
-    }
+    private void Star1_OnPointerEntered(object? sender, PointerEventArgs e) => SetStars(1);
+    private void Star2_OnPointerEntered(object? sender, PointerEventArgs e) => SetStars(2);
+    private void Star3_OnPointerEntered(object? sender, PointerEventArgs e) => SetStars(3);
+    private void Star4_OnPointerEntered(object? sender, PointerEventArgs e) => SetStars(4);
+    private void Star5_OnPointerEntered(object? sender, PointerEventArgs e) => SetStars(5);
 
-    private void Star3_OnPointerEntered(object? sender, PointerEventArgs e)
-    {
-        FillStar3();
-    }
-
-    private void Star4_OnPointerEntered(object? sender, PointerEventArgs e)
-    {
-        FillStar4();
-    }
-
-    private void Star5_OnPointerEntered(object? sender, PointerEventArgs e)
-    {
-        FillStar5();
-    }
-
-    private void FiveStarCLick(object? sender, RoutedEventArgs e)
-    {
-        FillStar5();
-    }
-
-    private void FourStarCLick(object? sender, RoutedEventArgs e)
-    {
-        FillStar4();
-    }
-
-    private void ThreeStarCLick(object? sender, RoutedEventArgs e)
-    {
-        FillStar3();
-    }
-
-    private void TwoStarCLick(object? sender, RoutedEventArgs e)
-    {
-        FillStar2();
-    }
-
-    private void OneStarCLick(object? sender, RoutedEventArgs e)
-    {
-        FillStar1();
-    }
+    private void OneStarCLick(object? sender, RoutedEventArgs e) => UpdateRating(1);
+    private void TwoStarCLick(object? sender, RoutedEventArgs e) => UpdateRating(2);
+    private void ThreeStarCLick(object? sender, RoutedEventArgs e) => UpdateRating(3);
+    private void FourStarCLick(object? sender, RoutedEventArgs e) => UpdateRating(4);
+    private void FiveStarCLick(object? sender, RoutedEventArgs e) => UpdateRating(5);
 }

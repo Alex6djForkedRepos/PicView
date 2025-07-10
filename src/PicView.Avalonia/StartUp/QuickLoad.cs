@@ -35,26 +35,26 @@ public static class QuickLoad
         var fileInfo = new FileInfo(file);
         if (!fileInfo.Exists) // If not file, try to load if URL, base64 or directory
         {
-            vm.IsLoading = true;
+            vm.MainWindow.IsLoadingIndicatorShown.Value = true;
             await NavigationManager.LoadPicFromStringAsync(file, vm).ConfigureAwait(false);
             return;
         }
 
         if (file.IsArchive()) // Handle if file exist and is an archive
         {
-            vm.IsLoading = true;
+            vm.MainWindow.IsLoadingIndicatorShown.Value = true;
             await NavigationManager.LoadPicFromArchiveAsync(file, vm).ConfigureAwait(false);
             return;
         }
 
         var magickImage = new MagickImage();
         magickImage.Ping(fileInfo);
-        vm.PicViewer.FileInfo = fileInfo;
+        vm.PicViewer.FileInfo.Value = fileInfo;
         var isLargeImage = magickImage.Width * magickImage.Height > 5000000; // ~5 megapixels threshold
         if (isLargeImage || Settings.ImageScaling.ShowImageSideBySide)
         {
             // Don't show loading indicator if image is too small
-            vm.IsLoading = true;
+            vm.MainWindow.IsLoadingIndicatorShown.Value = true;
         }
 
         if (Settings.ImageScaling.ShowImageSideBySide)
@@ -66,8 +66,8 @@ public static class QuickLoad
             await SingeImageLoadingAsync(vm, fileInfo, magickImage).ConfigureAwait(false);
         }
 
-        vm.IsLoading = false;
-        vm.GetIndex = NavigationManager.GetNonZeroIndex;
+        vm.MainWindow.IsLoadingIndicatorShown.Value = false;
+        vm.PicViewer.GetIndex.Value = NavigationManager.GetNonZeroIndex;
     }
 
     /// <summary>
@@ -121,7 +121,7 @@ public static class QuickLoad
 
         var imageModel = await GetImageModel.GetImageModelAsync(fileInfo, magickImage).ConfigureAwait(false);
         SetPicViewerValues(vm, imageModel, fileInfo);
-        vm.IsLoading = false;
+        vm.MainWindow.IsLoadingIndicatorShown.Value = false;
         if (!Settings.WindowProperties.AutoFit)
         {
             await Dispatcher.UIThread.InvokeAsync(
@@ -144,7 +144,7 @@ public static class QuickLoad
         NavigationManager.InitializeImageIterator(vm);
         var imageModel = await GetImageModel.GetImageModelAsync(fileInfo, magickImage);
         var secondaryPreloadValue = await NavigationManager.GetNextPreLoadValueAsync();
-        vm.PicViewer.SecondaryImageSource = secondaryPreloadValue?.ImageModel?.Image;
+        vm.PicViewer.SecondaryImageSource.Value = secondaryPreloadValue?.ImageModel?.Image;
         SetPicViewerValues(vm, imageModel, fileInfo);
         await RenderingFixes(vm, imageModel, secondaryPreloadValue.ImageModel);
         TitleManager.SetSideBySideTitle(vm, imageModel, secondaryPreloadValue?.ImageModel);
@@ -169,13 +169,13 @@ public static class QuickLoad
             vm.ImageViewer.MainImage.InitialAnimatedSource = fileInfo.FullName;
         }
         
-        vm.PicViewer.ImageSource = imageModel.Image;
-        vm.PicViewer.ImageType = imageModel.ImageType;
-        vm.ZoomValue = 1;
-        vm.PicViewer.PixelWidth = imageModel.PixelWidth;
-        vm.PicViewer.PixelHeight = imageModel.PixelHeight;
+        vm.PicViewer.ImageSource.Value = imageModel.Image;
+        vm.PicViewer.ImageType.Value = imageModel.ImageType;
+        vm.GlobalSettings.RotationAngle.Value = 0;
+        vm.PicViewer.PixelWidth.Value = imageModel.PixelWidth;
+        vm.PicViewer.PixelHeight.Value = imageModel.PixelHeight;
 
-        vm.PicViewer.ExifOrientation = imageModel.EXIFOrientation;
+        vm.PicViewer.ExifOrientation.Value = imageModel.EXIFOrientation;
     }
 
     /// <summary>
@@ -198,7 +198,7 @@ public static class QuickLoad
             if (is1To1)
             {
                 var size = WindowResizing.GetSize(imageModel.PixelWidth, imageModel.PixelHeight,
-                    secondaryModel?.PixelWidth ?? 0, secondaryModel?.PixelHeight ?? 0, vm.RotationAngle, vm);
+                    secondaryModel?.PixelWidth ?? 0, secondaryModel?.PixelHeight ?? 0, vm.GlobalSettings.RotationAngle.CurrentValue, vm);
                 if (!size.HasValue)
                 {
                     DebugHelper.LogDebug(nameof(QuickLoadAsync), nameof(RenderingFixes), "Size is null");
@@ -278,7 +278,7 @@ public static class QuickLoad
         if (Settings.Gallery.IsBottomGalleryShown)
         {
             bool loadGallery;
-            if (!vm.IsUIShown)
+            if (!vm.MainWindow.IsUIShown.CurrentValue)
             {
                 loadGallery = Settings.Gallery.ShowBottomGalleryInHiddenUI;
             }
@@ -289,7 +289,7 @@ public static class QuickLoad
 
             if (loadGallery)
             {
-                vm.GalleryMode = GalleryMode.BottomNoAnimation;
+                vm.Gallery.GalleryMode.Value = GalleryMode.BottomNoAnimation;
                 tasks.Add(GalleryLoad.LoadGallery(vm, fileInfo.DirectoryName));
             }
         }
@@ -300,7 +300,7 @@ public static class QuickLoad
     private static void SetSize(MainViewModel vm, ImageModel imageModel, ImageModel? secondaryModel)
     {
         var size = WindowResizing.GetSize(imageModel.PixelWidth, imageModel.PixelHeight,
-            secondaryModel?.PixelWidth ?? 0, secondaryModel?.PixelHeight ?? 0, vm.RotationAngle, vm);
+            secondaryModel?.PixelWidth ?? 0, secondaryModel?.PixelHeight ?? 0, vm.GlobalSettings.RotationAngle.CurrentValue, vm);
         if (!size.HasValue)
         {
             DebugHelper.LogDebug(nameof(QuickLoadAsync), nameof(SetSize), "Size is null");

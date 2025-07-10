@@ -130,7 +130,7 @@ public class ImageIterator : IAsyncDisposable
                 return; // Early exit
             }
 
-            if (_vm.IsEditableTitlebarOpen)
+            if (_vm.MainWindow.IsEditableTitlebarOpen.CurrentValue)
             {
                 // Don't react to changes when renaming
                 return;
@@ -153,7 +153,7 @@ public class ImageIterator : IAsyncDisposable
                 return; // Early exit
             }
 
-            if (_vm.IsEditableTitlebarOpen)
+            if (_vm.MainWindow.IsEditableTitlebarOpen.Value)
             {
                 // Don't react to changes when renaming
                 return;
@@ -176,7 +176,7 @@ public class ImageIterator : IAsyncDisposable
                 return; // Early exit
             }
 
-            if (_vm.IsEditableTitlebarOpen)
+            if (_vm.MainWindow.IsEditableTitlebarOpen.CurrentValue)
             {
                 // Don't react to changes when renaming
                 return;
@@ -232,9 +232,9 @@ public class ImageIterator : IAsyncDisposable
             {
                 if (Settings.Gallery.IsBottomGalleryShown && ImagePaths.Count > 1)
                 {
-                    if (_vm.GalleryMode is GalleryMode.BottomToClosed or GalleryMode.FullToClosed)
+                    if (_vm.Gallery.GalleryMode.CurrentValue is GalleryMode.BottomToClosed or GalleryMode.FullToClosed)
                     {
-                        _vm.GalleryMode = GalleryMode.ClosedToBottom;
+                        _vm.Gallery.GalleryMode.Value = GalleryMode.ClosedToBottom;
                     }
                 }
 
@@ -283,7 +283,7 @@ public class ImageIterator : IAsyncDisposable
                 PreLoader.Resynchronize(ImagePaths);
                 var newIndex = GetIteration(index, NavigateTo.Previous);
                 CurrentIndex = newIndex;
-                _vm.PicViewer.FileInfo = ImagePaths[CurrentIndex];
+                _vm.PicViewer.FileInfo.Value = ImagePaths[CurrentIndex];
                 await IterateToIndex(CurrentIndex, new CancellationTokenSource());
             }
             else
@@ -299,12 +299,12 @@ public class ImageIterator : IAsyncDisposable
                 {
                     if (ImagePaths.Count == 1)
                     {
-                        _vm.GalleryMode = GalleryMode.BottomToClosed;
+                        _vm.Gallery.GalleryMode.Value = GalleryMode.BottomToClosed;
                     }
                 }
 
-                var indexOf = ImagePaths.FindIndex(x => x.FullName.Equals(_vm.PicViewer.FileInfo.FullName));
-                _vm.SelectedGalleryItemIndex = indexOf; // Fixes deselection bug 
+                var indexOf = ImagePaths.FindIndex(x => x.FullName.Equals(_vm.PicViewer.FileInfo.CurrentValue.FullName));
+                _vm.PicViewer.Index.Value = indexOf; // Fixes deselection bug 
                 CurrentIndex = indexOf;
                 if (isSameFile)
                 {
@@ -369,7 +369,7 @@ public class ImageIterator : IAsyncDisposable
 
             if (sameFile)
             {
-                _vm.PicViewer.FileInfo = newFileInfo;
+                _vm.PicViewer.FileInfo.Value = newFileInfo;
                 CurrentIndex = newIndex;
             }
 
@@ -389,7 +389,7 @@ public class ImageIterator : IAsyncDisposable
                     _vm));
             if (sameFile)
             {
-                _vm.SelectedGalleryItemIndex = newIndex;
+                _vm.PicViewer.Index.Value = newIndex;
                 GalleryFunctions.CenterGallery(_vm);
             }
         }
@@ -449,12 +449,12 @@ public class ImageIterator : IAsyncDisposable
 
     public PreLoadValue? GetCurrentPreLoadValue() =>
         _isRunning
-            ? PreLoader.Get(_vm.PicViewer.FileInfo, ImagePaths)
+            ? PreLoader.Get(_vm.PicViewer.FileInfo.CurrentValue, ImagePaths)
             : PreLoader.Get(CurrentIndex, ImagePaths);
 
     public async Task<PreLoadValue?> GetCurrentPreLoadValueAsync() =>
         _isRunning
-            ? await PreLoader.GetOrLoadAsync(_vm.PicViewer.FileInfo, ImagePaths)
+            ? await PreLoader.GetOrLoadAsync(_vm.PicViewer.FileInfo.CurrentValue, ImagePaths)
             : await PreLoader.GetOrLoadAsync(CurrentIndex, ImagePaths);
 
     public PreLoadValue? GetNextPreLoadValue()
@@ -487,11 +487,11 @@ public class ImageIterator : IAsyncDisposable
         try
         {
             _isRunning = true;
-            var fileList = await Task.FromResult(_vm.PlatformService.GetFiles(_vm.PicViewer.FileInfo))
+            var fileList = await Task.FromResult(_vm.PlatformService.GetFiles(_vm.PicViewer.FileInfo.CurrentValue))
                 .ConfigureAwait(false);
             var oldList = ImagePaths;
             ImagePaths = fileList;
-            CurrentIndex = ImagePaths.FindIndex(x => x.FullName.Equals(_vm.PicViewer.FileInfo.FullName));
+            CurrentIndex = ImagePaths.FindIndex(x => x.FullName.Equals(_vm.PicViewer.FileInfo.CurrentValue.FullName));
             TitleManager.SetTitle(_vm);
             await ClearAsync().ConfigureAwait(false);
             await PreloadAsync().ConfigureAwait(false);
@@ -788,7 +788,7 @@ public class ImageIterator : IAsyncDisposable
         {
             if (index == CurrentIndex)
             {
-                _vm.IsLoading = false;
+                _vm.MainWindow.IsLoadingIndicatorShown.Value = false;
             }
         }
 
@@ -798,7 +798,7 @@ public class ImageIterator : IAsyncDisposable
         {
             TitleManager.SetLoadingTitle(_vm);
 
-            _vm.SelectedGalleryItemIndex = index;
+            _vm.PicViewer.Index.Value = index;
             if (Settings.Gallery.IsBottomGalleryShown)
             {
                 GalleryNavigation.CenterScrollToSelectedItem(_vm);
@@ -815,7 +815,7 @@ public class ImageIterator : IAsyncDisposable
             {
                 if (thumb is not null)
                 {
-                    _vm.PicViewer.ImageSource = thumb;
+                    _vm.PicViewer.ImageSource.Value = thumb;
                 }
             }
             else
@@ -826,9 +826,9 @@ public class ImageIterator : IAsyncDisposable
                     return;
                 }
 
-                _vm.PicViewer.ImageSource = thumb;
-                _vm.PicViewer.SecondaryImageSource = secondaryThumb;
-                _vm.IsLoading = thumb is null || secondaryThumb is null;
+                _vm.PicViewer.ImageSource.Value = thumb;
+                _vm.PicViewer.SecondaryImageSource.Value = secondaryThumb;
+                _vm.MainWindow.IsLoadingIndicatorShown.Value = thumb is null || secondaryThumb is null;
             }
         }
     }

@@ -31,7 +31,7 @@ public static class ImageLoader
         }
 
         MenuManager.CloseMenus(vm);
-        vm.IsLoading = true;
+        vm.MainWindow.IsLoadingIndicatorShown.Value = true;
         TitleManager.SetLoadingTitle(vm);
 
         // Starting in new task makes it more responsive and works better
@@ -42,7 +42,7 @@ public static class ImageLoader
             if (check == null)
             {
                 await ErrorHandling.ReloadAsync(vm).ConfigureAwait(false);
-                vm.IsLoading = false;
+                vm.MainWindow.IsLoadingIndicatorShown.Value = false;
                 ArchiveExtraction.Cleanup();
                 return;
             }
@@ -50,37 +50,37 @@ public static class ImageLoader
             switch (check.Value.Type)
             {
                 case FileTypeResolver.LoadAbleFileType.File:
-                    vm.CurrentView = vm.ImageViewer;
+                    vm.MainWindow.CurrentView.Value = vm.ImageViewer;
                     await LoadPicFromFile(check.Value.Data, vm, imageIterator).ConfigureAwait(false);
-                    vm.IsLoading = false;
+                    vm.MainWindow.IsLoadingIndicatorShown.Value = false;
                     ArchiveExtraction.Cleanup();
                     return;
                 case FileTypeResolver.LoadAbleFileType.Directory:
-                    vm.CurrentView = vm.ImageViewer;
+                    vm.MainWindow.CurrentView.Value = vm.ImageViewer;
                     await LoadPicFromDirectoryAsync(check.Value.Data, vm).ConfigureAwait(false);
-                    vm.IsLoading = false;
+                    vm.MainWindow.IsLoadingIndicatorShown.Value = false;
                     ArchiveExtraction.Cleanup();
                     return;
                 case FileTypeResolver.LoadAbleFileType.Web:
-                    vm.CurrentView = vm.ImageViewer;
+                    vm.MainWindow.CurrentView.Value = vm.ImageViewer;
                     await LoadPicFromUrlAsync(check.Value.Data, vm, imageIterator).ConfigureAwait(false);
-                    vm.IsLoading = false;
+                    vm.MainWindow.IsLoadingIndicatorShown.Value = false;
                     ArchiveExtraction.Cleanup();
                     return;
                 case FileTypeResolver.LoadAbleFileType.Base64:
-                    vm.CurrentView = vm.ImageViewer;
+                    vm.MainWindow.CurrentView.Value = vm.ImageViewer;
                     await LoadPicFromBase64Async(check.Value.Data, vm, imageIterator).ConfigureAwait(false);
-                    vm.IsLoading = false;
+                    vm.MainWindow.IsLoadingIndicatorShown.Value = false;
                     ArchiveExtraction.Cleanup();
                     return;
                 case FileTypeResolver.LoadAbleFileType.Zip:
-                    vm.CurrentView = vm.ImageViewer;
+                    vm.MainWindow.CurrentView.Value = vm.ImageViewer;
                     await LoadPicFromArchiveAsync(check.Value.Data, vm, imageIterator).ConfigureAwait(false);
-                    vm.IsLoading = false;
+                    vm.MainWindow.IsLoadingIndicatorShown.Value = false;
                     return;
                 default:
                     await ErrorHandling.ReloadAsync(vm).ConfigureAwait(false);
-                    vm.IsLoading = false;
+                    vm.MainWindow.IsLoadingIndicatorShown.Value = false;
                     ArchiveExtraction.Cleanup();
                     return;
             }
@@ -121,7 +121,7 @@ public static class ImageLoader
                     await NavigationManager.CheckIfTiffAndUpdate(vm, fileInfo, index);
                     if (Settings.Gallery.IsBottomGalleryShown && NavigationManager.GetCount > 0)
                     {
-                        vm.GalleryMode = GalleryMode.ClosedToBottom;
+                        vm.Gallery.GalleryMode.Value = GalleryMode.ClosedToBottom;
                     }
                 }
                 else
@@ -164,7 +164,7 @@ public static class ImageLoader
     /// <param name="fileInfo">Optional: FileInfo object for the directory.</param>
     public static async Task LoadPicFromDirectoryAsync(string file, MainViewModel vm, FileInfo? fileInfo = null)
     {
-        vm.IsLoading = true;
+        vm.MainWindow.IsLoadingIndicatorShown.Value = true;
         TitleManager.SetLoadingTitle(vm);
 
         if (_cancellationTokenSource is not null)
@@ -233,7 +233,7 @@ public static class ImageLoader
             await _cancellationTokenSource.CancelAsync().ConfigureAwait(false);
         }
 
-        vm.IsLoading = true;
+        vm.MainWindow.IsLoadingIndicatorShown.Value = true;
         TitleManager.SetLoadingTitle(vm);
 
         string? prevArchiveLocation = null;
@@ -333,9 +333,9 @@ public static class ImageLoader
                 var displayProgress = HttpManager.GetProgressDisplay(totalFileSize, totalBytesDownloaded,
                     progressPercentage);
                 var title = $"{fileName} {TranslationManager.Translation.Downloading} {displayProgress}";
-                vm.PicViewer.Title = title;
-                vm.PicViewer.TitleTooltip = title;
-                vm.PicViewer.WindowTitle = title;
+                vm.PicViewer.Title.Value = title;
+                vm.PicViewer.TitleTooltip.Value = title;
+                vm.PicViewer.WindowTitle.Value = title;
                 if (Settings.UIProperties.IsTaskbarProgressEnabled)
                 {
                     vm.PlatformService.SetTaskbarProgress((ulong)totalBytesDownloaded, (ulong)totalFileSize);
@@ -368,9 +368,9 @@ public static class ImageLoader
         var imageModel = await GetImageModel.GetImageModelAsync(fileInfo).ConfigureAwait(false);
         await UpdateImage.SetSingleImageAsync(imageModel.Image, imageModel.ImageType, url, vm);
 
-        vm.IsLoading = false;
-        vm.PicViewer.FileInfo = fileInfo;
-        vm.PicViewer.ExifOrientation = imageModel.EXIFOrientation;
+        vm.MainWindow.IsLoadingIndicatorShown.Value = false;
+        vm.PicViewer.FileInfo.Value = fileInfo;
+        vm.PicViewer.ExifOrientation.Value = imageModel.EXIFOrientation;
         FileHistoryManager.Add(url);
 
         await NavigationManager.DisposeImageIteratorAsync();
@@ -390,9 +390,9 @@ public static class ImageLoader
     public static async Task LoadPicFromBase64Async(string base64, MainViewModel vm, ImageIterator imageIterator)
     {
         TitleManager.SetLoadingTitle(vm);
-        vm.IsLoading = true;
-        vm.PicViewer.ImageSource = null;
-        vm.PicViewer.FileInfo = null;
+        vm.MainWindow.IsLoadingIndicatorShown.Value = true;
+        vm.PicViewer.ImageSource.Value = null;
+        vm.PicViewer.FileInfo.Value = null;
 
         if (_cancellationTokenSource is not null)
         {
@@ -425,7 +425,7 @@ public static class ImageLoader
                 await ErrorHandling.ReloadAsync(vm);
             }
         });
-        vm.IsLoading = false;
+        vm.MainWindow.IsLoadingIndicatorShown.Value = false;
     }
 
     #endregion

@@ -21,7 +21,7 @@
 
         <Panel.ContextMenu>
             <ContextMenu Opened="MenuBase_OnOpened">
-                <MenuItem Header="{CompiledBinding Translation.Stretch, Mode=OneWay}">
+                <MenuItem Header="{CompiledBinding Translation.Stretch.Value, Mode=OneWay}">
                     <MenuItem.Icon>
                         <Image
                             Height="12"
@@ -29,50 +29,50 @@
                             Width="12" />
                     </MenuItem.Icon>
                     <MenuItem
-                        Command="{CompiledBinding GalleryItemStretchCommand}"
+                        Command="{CompiledBinding Gallery.GalleryItemStretchCommand}"
                         CommandParameter="Uniform"
-                        Header="{CompiledBinding Translation.Uniform,
+                        Header="{CompiledBinding Translation.Uniform.Value,
                                                  Mode=OneWay}"
-                        IsChecked="{CompiledBinding IsUniformMenuChecked}"
+                        IsChecked="{CompiledBinding Gallery.IsUniformMenuChecked.Value}"
                         ToggleType="Radio" />
                     <MenuItem
-                        Command="{CompiledBinding GalleryItemStretchCommand}"
+                        Command="{CompiledBinding Gallery.GalleryItemStretchCommand}"
                         CommandParameter="UniformToFill"
-                        Header="{CompiledBinding Translation.UniformToFill,
+                        Header="{CompiledBinding Translation.UniformToFill.Value,
                                                  Mode=OneWay}"
-                        IsChecked="{CompiledBinding IsUniformToFillMenuChecked}"
+                        IsChecked="{CompiledBinding Gallery.IsUniformToFillMenuChecked.Value}"
                         ToggleType="Radio" />
                     <MenuItem
-                        Command="{CompiledBinding GalleryItemStretchCommand}"
+                        Command="{CompiledBinding Gallery.GalleryItemStretchCommand}"
                         CommandParameter="Fill"
-                        Header="{CompiledBinding Translation.Fill,
+                        Header="{CompiledBinding Translation.Fill.Value,
                                                  Mode=OneWay}"
-                        IsChecked="{CompiledBinding IsFillMenuChecked}"
+                        IsChecked="{CompiledBinding Gallery.IsFillMenuChecked.Value}"
                         ToggleType="Radio" />
                     <MenuItem
-                        Command="{CompiledBinding GalleryItemStretchCommand}"
+                        Command="{CompiledBinding Gallery.GalleryItemStretchCommand}"
                         CommandParameter="None"
-                        Header="{CompiledBinding Translation.None,
+                        Header="{CompiledBinding Translation.None.Value,
                                                  Mode=OneWay}"
-                        IsChecked="{CompiledBinding IsNoneMenuChecked}"
+                        IsChecked="{CompiledBinding Gallery.IsNoneMenuChecked.Value}"
                         ToggleType="Radio" />
                     <MenuItem
-                        Command="{CompiledBinding GalleryItemStretchCommand}"
+                        Command="{CompiledBinding Gallery.GalleryItemStretchCommand}"
                         CommandParameter="Square"
-                        Header="{CompiledBinding Translation.Square,
+                        Header="{CompiledBinding Translation.Square.Value,
                                                  Mode=OneWay}"
-                        IsChecked="{CompiledBinding IsSquareMenuChecked}"
+                        IsChecked="{CompiledBinding Gallery.IsSquareMenuChecked.Value}"
                         ToggleType="Radio" />
                     <MenuItem
-                        Command="{CompiledBinding GalleryItemStretchCommand}"
+                        Command="{CompiledBinding Gallery.GalleryItemStretchCommand}"
                         CommandParameter="FillSquare"
-                        Header="{CompiledBinding Translation.FillSquare,
+                        Header="{CompiledBinding Translation.FillSquare.Value,
                                                  Mode=OneWay}"
-                        IsChecked="{CompiledBinding IsFillSquareMenuChecked}"
+                        IsChecked="{CompiledBinding Gallery.IsFillSquareMenuChecked.Value}"
                         ToggleType="Radio" />
                 </MenuItem>
                 <MenuItem
-                    Header="{CompiledBinding Translation.ExpandedGalleryItemSize,
+                    Header="{CompiledBinding Translation.ExpandedGalleryItemSize.Value,
                                              Mode=OneWay}"
                     PointerPressed="Flyout_OnPointerPressed"
                     StaysOpenOnClick="True">
@@ -97,10 +97,10 @@
                 </MenuItem>
                 <Separator />
                 <MenuItem
-                    Command="{CompiledBinding CloseGalleryCommand}"
-                    Header="{CompiledBinding Translation.HideBottomGallery,
+                    Command="{CompiledBinding Gallery.CloseGalleryCommand}"
+                    Header="{CompiledBinding Translation.HideBottomGallery.Value,
                                              Mode=OneWay}"
-                    IsVisible="{CompiledBinding !IsFullGalleryOpen}">
+                    IsVisible="{CompiledBinding !Gallery.IsGalleryExpanded.Value}">
                     <MenuItem.Icon>
                         <Path
                             Data="{StaticResource CloseGeometry}"
@@ -111,10 +111,10 @@
                     </MenuItem.Icon>
                 </MenuItem>
                 <MenuItem
-                    Command="{CompiledBinding ToggleGalleryCommand}"
-                    Header="{CompiledBinding Translation.CloseGallery,
+                    Command="{CompiledBinding Gallery.ToggleGalleryCommand}"
+                    Header="{CompiledBinding Translation.CloseGallery.Value,
                                              Mode=OneWay}"
-                    IsVisible="{CompiledBinding IsFullGalleryOpen}">
+                    IsVisible="{CompiledBinding Gallery.IsGalleryExpanded.Value}">
                     <MenuItem.Icon>
                         <Path
                             Data="{StaticResource CloseGeometry}"
@@ -130,12 +130,12 @@
         <Button
             BorderThickness="1,0,0,0"
             Classes="ButtonBorder hover"
-            Command="{CompiledBinding ToggleGalleryCommand}"
+            Command="{CompiledBinding Gallery.ToggleGalleryCommand}"
             CornerRadius="0,0,0,45"
             DockPanel.Dock="Right"
             Height="60"
             HorizontalAlignment="Right"
-            IsVisible="{CompiledBinding IsFullGalleryOpen}"
+            IsVisible="{CompiledBinding Gallery.IsGalleryExpanded.Value}"
             VerticalAlignment="Top"
             Width="50"
             ZIndex="99">
@@ -158,21 +158,21 @@
             ScrollViewer.HorizontalScrollBarVisibility="Visible"
             ScrollViewer.IsScrollInertiaEnabled="True"
             ScrollViewer.VerticalScrollBarVisibility="Disabled"
-            SelectedIndex="{CompiledBinding SelectedGalleryItemIndex}"
-            VerticalAlignment="{CompiledBinding GalleryVerticalAlignment}"
+            SelectedIndex="{CompiledBinding PicViewer.Index.Value}"
+            VerticalAlignment="{CompiledBinding Gallery.GalleryVerticalAlignment.Value}"
             x:Name="GalleryListBox">
             <ListBox.ItemsPanel>
                 <ItemsPanelTemplate>
                     <WrapPanel
                         HorizontalAlignment="Left"
-                        Orientation="{CompiledBinding GalleryOrientation,
+                        Orientation="{CompiledBinding Gallery.GalleryOrientation.Value,
                                                       Mode=OneWay}"
                         VerticalAlignment="Center" />
                 </ItemsPanelTemplate>
             </ListBox.ItemsPanel>
             <ListBox.Styles>
                 <Style Selector="ListBoxItem">
-                    <Setter Property="Margin" Value="{CompiledBinding GalleryItemMargin}" />
+                    <Setter Property="Margin" Value="{CompiledBinding Gallery.GalleryItem.ItemMargin.Value}" />
                 </Style>
             </ListBox.Styles>
         </customControls:GalleryListBox>

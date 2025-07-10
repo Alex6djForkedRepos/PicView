@@ -17,7 +17,7 @@
     </UserControl.Styles>
     <UserControl.ContextMenu>
         <ContextMenu x:Name="ContextMenu">
-            <MenuItem Command="{CompiledBinding SaveFileCommand}" Header="{CompiledBinding Translation.Save, Mode=OneWay}">
+            <MenuItem Command="{CompiledBinding Tools.SaveFileCommand}" Header="{CompiledBinding Translation.Save.Value, Mode=OneWay}">
                 <MenuItem.Icon>
                     <Path
                         Data="{StaticResource SaveGeometry}"
@@ -27,7 +27,7 @@
                         Width="12" />
                 </MenuItem.Icon>
             </MenuItem>
-            <MenuItem Command="{CompiledBinding SaveFileAsCommand}" Header="{CompiledBinding Translation.SaveAs}">
+            <MenuItem Command="{CompiledBinding Tools.SaveFileAsCommand}" Header="{CompiledBinding Translation.SaveAs.Value}">
                 <MenuItem.Icon>
                     <Path
                         Data="{StaticResource SaveGeometry}"
@@ -37,7 +37,7 @@
                         Width="12" />
                 </MenuItem.Icon>
             </MenuItem>
-            <MenuItem Command="{CompiledBinding CopyImageCommand}" Header="{CompiledBinding Translation.CopyImage, Mode=OneWay}">
+            <MenuItem Command="{CompiledBinding Tools.CopyImageCommand}" Header="{CompiledBinding Translation.CopyImage.Value, Mode=OneWay}">
                 <MenuItem.Icon>
                     <Path
                         Data="{StaticResource CopyGeometry}"
@@ -49,10 +49,10 @@
             </MenuItem>
             <Separator />
             <MenuItem
-                Command="{CompiledBinding SetAsWallpaperFilledCommand}"
-                CommandParameter="{CompiledBinding PicViewer.FileInfo.FullName,
+                Command="{CompiledBinding Tools.SetAsWallpaperFilledCommand}"
+                CommandParameter="{CompiledBinding PicViewer.FileInfo.CurrentValue.FullName,
                                                    FallbackValue=''}"
-                Header="{CompiledBinding Translation.SetAsWallpaper,
+                Header="{CompiledBinding Translation.SetAsWallpaper.Value,
                                          Mode=OneWay}">
                 <MenuItem.Icon>
                     <Path
@@ -64,7 +64,7 @@
                 </MenuItem.Icon>
             </MenuItem>
             <Separator />
-            <MenuItem Header="{CompiledBinding Translation.ClearEffects}" x:Name="ClearEffectsItem">
+            <MenuItem Header="{CompiledBinding Translation.ClearEffects.Value, Mode=OneWay}" x:Name="ClearEffectsItem">
                 <MenuItem.Icon>
                     <Image
                         Height="12"
@@ -73,7 +73,7 @@
                 </MenuItem.Icon>
             </MenuItem>
             <Separator />
-            <MenuItem Header="{CompiledBinding Translation.Close}" x:Name="CloseItem">
+            <MenuItem Header="{CompiledBinding Translation.Close.Value, Mode=OneWay}" x:Name="CloseItem">
                 <MenuItem.Icon>
                     <Path
                         Data="{StaticResource CloseGeometry}"
@@ -89,7 +89,7 @@
     <Panel>
         <uc:SpinWaiter
             HorizontalAlignment="Center"
-            IsVisible="{CompiledBinding IsLoading,
+            IsVisible="{CompiledBinding MainWindow.IsLoadingIndicatorShown.Value,
                                         Mode=OneWay}"
             VerticalAlignment="Center"
             x:Name="SpinWaiter" />
@@ -101,7 +101,8 @@
                 FontSize="14"
                 Margin="10,15,0,10"
                 Padding="10,5"
-                Text="{CompiledBinding Translation.Lighting}" />
+                Text="{CompiledBinding Translation.Lighting.Value,
+                                       Mode=OneWay}" />
             <StackPanel Margin="20,20">
 
                 <!--  Brightness  -->
@@ -109,7 +110,8 @@
                     <TextBlock
                         Classes="txt"
                         HorizontalAlignment="Left"
-                        Text="{CompiledBinding Translation.Brightness}"
+                        Text="{CompiledBinding Translation.Brightness.Value,
+                                               Mode=OneWay}"
                         VerticalAlignment="Center" />
 
                     <Rectangle
@@ -167,7 +169,8 @@
                     <TextBlock
                         Classes="txt"
                         HorizontalAlignment="Left"
-                        Text="{CompiledBinding Translation.Contrast}"
+                        Text="{CompiledBinding Translation.Contrast.Value,
+                                               Mode=OneWay}"
                         VerticalAlignment="Center" />
 
                     <Rectangle
@@ -234,7 +237,8 @@
                 FontSize="14"
                 Margin="10,0,0,10"
                 Padding="10,5"
-                Text="{CompiledBinding Translation.Effects}" />
+                Text="{CompiledBinding Translation.Effects.Value,
+                                       Mode=OneWay}" />
             <StackPanel Margin="20,0">
 
                 <!--  Blur  -->
@@ -242,7 +246,8 @@
                     <TextBlock
                         Classes="txt"
                         HorizontalAlignment="Left"
-                        Text="{CompiledBinding Translation.Blur}"
+                        Text="{CompiledBinding Translation.Blur.Value,
+                                               Mode=OneWay}"
                         VerticalAlignment="Center" />
                 </Panel>
 
@@ -284,7 +289,8 @@
                     <TextBlock
                         Classes="txt"
                         HorizontalAlignment="Left"
-                        Text="{CompiledBinding Translation.PencilSketch}"
+                        Text="{CompiledBinding Translation.PencilSketch.Value,
+                                               Mode=OneWay}"
                         VerticalAlignment="Center" />
                 </Panel>
 
@@ -327,7 +333,8 @@
                     <TextBlock
                         Classes="txt"
                         HorizontalAlignment="Left"
-                        Text="{CompiledBinding Translation.Posterize}"
+                        Text="{CompiledBinding Translation.Posterize.Value,
+                                               Mode=OneWay}"
                         VerticalAlignment="Center" />
                 </Panel>
 
@@ -370,7 +377,8 @@
                     <TextBlock
                         Classes="txt"
                         HorizontalAlignment="Left"
-                        Text="{CompiledBinding Translation.Solarize}"
+                        Text="{CompiledBinding Translation.Solarize.Value,
+                                               Mode=OneWay}"
                         VerticalAlignment="Center" />
                 </Panel>
 
@@ -418,7 +426,8 @@
                     <TextBlock
                         Classes="txt"
                         HorizontalAlignment="Left"
-                        Text="{CompiledBinding Translation.BlackAndWhite}"
+                        Text="{CompiledBinding Translation.BlackAndWhite.Value,
+                                               Mode=OneWay}"
                         VerticalAlignment="Center" />
                 </ToggleButton>
 
@@ -430,7 +439,8 @@
                     <TextBlock
                         Classes="txt"
                         HorizontalAlignment="Left"
-                        Text="{CompiledBinding Translation.NegativeColors}"
+                        Text="{CompiledBinding Translation.NegativeColors.Value,
+                                               Mode=OneWay}"
                         VerticalAlignment="Center" />
                 </ToggleButton>
 
@@ -442,7 +452,8 @@
                     <TextBlock
                         Classes="txt"
                         HorizontalAlignment="Left"
-                        Text="{CompiledBinding Translation.OldMovie}"
+                        Text="{CompiledBinding Translation.OldMovie.Value,
+                                               Mode=OneWay}"
                         VerticalAlignment="Center" />
                 </ToggleButton>
 
@@ -462,7 +473,7 @@
                     x:Name="ResetButton">
                     <TextBlock
                         Classes="txt"
-                        Text="{CompiledBinding Translation.ClearEffects,
+                        Text="{CompiledBinding Translation.ClearEffects.Value,
                                                Mode=OneWay}"
                         TextAlignment="Center" />
                 </Button>
@@ -475,7 +486,7 @@
                     x:Name="CancelButton">
                     <TextBlock
                         Classes="txt"
-                        Text="{CompiledBinding Translation.Cancel,
+                        Text="{CompiledBinding Translation.Cancel.Value,
                                                Mode=OneWay}"
                         TextAlignment="Center" />
                 </Button>
@@ -488,7 +499,7 @@
                     x:Name="SaveButton">
                     <TextBlock
                         Classes="txt"
-                        Text="{CompiledBinding Translation.Save,
+                        Text="{CompiledBinding Translation.Save.Value,
                                                Mode=OneWay}"
                         TextAlignment="Center" />
                     <SplitButton.Flyout>
@@ -500,7 +511,7 @@
                                 <TextBlock
                                     Classes="txt"
                                     Foreground="{DynamicResource MainTextColor}"
-                                    Text="{CompiledBinding Translation.SaveAs,
+                                    Text="{CompiledBinding Translation.SaveAs.Value,
                                                            Mode=OneWay}"
                                     TextAlignment="Center" />
                             </Button>

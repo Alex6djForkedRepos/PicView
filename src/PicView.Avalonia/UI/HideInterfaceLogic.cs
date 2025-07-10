@@ -20,43 +20,43 @@ public static class HideInterfaceLogic
     {
         if (Settings.UIProperties.ShowInterface)
         {
-            vm.IsUIShown = false;
+            vm.MainWindow.IsUIShown.Value = false;
             Settings.UIProperties.ShowInterface = false;
-            vm.IsTopToolbarShown = false;
-            vm.IsBottomToolbarShown = false;
-            vm.Translation.IsShowingUI = TranslationManager.Translation.ShowUI;
+            vm.MainWindow.IsTopToolbarShown.Value = false;
+            vm.MainWindow.IsBottomToolbarShown.Value = false;
+            vm.Translation.IsShowingUI.Value = TranslationManager.Translation.ShowUI;
             if (!GalleryFunctions.IsFullGalleryOpen)
             {
                 if (!Settings.Gallery.ShowBottomGalleryInHiddenUI)
                 {
-                    vm.GalleryMode = GalleryMode.Closed;
+                    vm.Gallery.GalleryMode.Value = GalleryMode.Closed;
                     await Dispatcher.UIThread.InvokeAsync(() =>
                     {
                         if (UIHelper.GetGalleryView.Bounds.Height > 0)
                         {
-                            vm.GalleryMode = GalleryMode.BottomToClosed;
+                            vm.Gallery.GalleryMode.Value = GalleryMode.BottomToClosed;
                         }
                     });
-                    vm.IsBottomGalleryShown = false;
+                    vm.Gallery.IsBottomGalleryShown.Value = false;
                 }
                 else
                 {
-                    vm.IsBottomGalleryShown = Settings.Gallery.ShowBottomGalleryInHiddenUI;
+                    vm.Gallery.IsBottomGalleryShown.Value = Settings.Gallery.ShowBottomGalleryInHiddenUI;
                 }
             }
         }
         else
         {
-            vm.IsUIShown = true;
-            vm.IsTopToolbarShown = true;
-            vm.Translation.IsShowingUI = TranslationManager.Translation.HideUI;
+            vm.MainWindow.IsUIShown.Value = true;
+            vm.MainWindow.IsTopToolbarShown.Value = true;
+            vm.Translation.IsShowingUI.Value = TranslationManager.Translation.HideUI;
             if (Settings.UIProperties.ShowBottomNavBar)
             {
-                vm.IsBottomToolbarShown = true;
-                vm.BottombarHeight = SizeDefaults.BottombarHeight;
+                vm.MainWindow.IsBottomToolbarShown.Value = true;
+                vm.MainWindow.BottombarHeight.Value = SizeDefaults.BottombarHeight;
             }
             Settings.UIProperties.ShowInterface = true;
-            vm.TitlebarHeight = SizeDefaults.MainTitlebarHeight;
+            vm.MainWindow.TitlebarHeight.Value = SizeDefaults.MainTitlebarHeight;
             if (!GalleryFunctions.IsFullGalleryOpen)
             {
                 if (Settings.Gallery.IsBottomGalleryShown)
@@ -67,18 +67,18 @@ public static class HideInterfaceLogic
                         {
                             if (UIHelper.GetGalleryView.Bounds.Height <= 0)
                             {
-                                vm.GalleryMode = GalleryMode.Closed;
+                                vm.Gallery.GalleryMode.Value = GalleryMode.Closed;
                                 GalleryFunctions.OpenBottomGallery(vm);
                             }
                         });
-                        _ = GalleryLoad.LoadGallery(vm, vm.PicViewer.FileInfo.DirectoryName);
+                        _ = GalleryLoad.LoadGallery(vm, vm.PicViewer.FileInfo.CurrentValue.DirectoryName);
                     }
 
-                    vm.IsBottomGalleryShown = true;
+                    vm.Gallery.IsBottomGalleryShown.Value = true;
                 }
                 else
                 {
-                    vm.IsBottomGalleryShown = false;
+                    vm.Gallery.IsBottomGalleryShown.Value = false;
                 }
             }
         }
@@ -97,16 +97,16 @@ public static class HideInterfaceLogic
     {
         if (Settings.UIProperties.ShowBottomNavBar)
         {
-            vm.IsBottomToolbarShown = false;
+            vm.MainWindow.IsBottomToolbarShown.Value = false;
             Settings.UIProperties.ShowBottomNavBar = false;
-            vm.Translation.IsShowingBottomToolbar = TranslationManager.Translation.ShowBottomToolbar;
+            vm.Translation.IsShowingBottomToolbar.Value = TranslationManager.Translation.ShowBottomToolbar;
         }
         else
         {
-            vm.IsBottomToolbarShown = true;
+            vm.MainWindow.IsBottomToolbarShown.Value = true;
             Settings.UIProperties.ShowBottomNavBar = true;
-            vm.BottombarHeight = SizeDefaults.BottombarHeight;
-            vm.Translation.IsShowingBottomToolbar = TranslationManager.Translation.HideBottomToolbar;
+            vm.MainWindow.BottombarHeight.Value = SizeDefaults.BottombarHeight;
+            vm.Translation.IsShowingBottomToolbar.Value = TranslationManager.Translation.HideBottomToolbar;
         }
         await Dispatcher.UIThread.InvokeAsync(() =>
         {
@@ -122,18 +122,18 @@ public static class HideInterfaceLogic
     {
         Settings.Gallery.ShowBottomGalleryInHiddenUI = !Settings.Gallery
             .ShowBottomGalleryInHiddenUI;
-        vm.IsBottomGalleryShownInHiddenUI = Settings.Gallery.ShowBottomGalleryInHiddenUI;
+        vm.Gallery.IsBottomGalleryShownInHiddenUI.Value = Settings.Gallery.ShowBottomGalleryInHiddenUI;
 
-        if (!GalleryFunctions.IsFullGalleryOpen)
+        if (!GalleryFunctions.IsFullGalleryOpen && vm.Gallery is not null)
         {
             if (!Settings.UIProperties.ShowInterface && !Settings.Gallery
                     .ShowBottomGalleryInHiddenUI)
             {
-                vm.IsBottomGalleryShown = false;
+                vm.Gallery.IsBottomGalleryShown.Value = false;
             }
             else
             {
-                vm.IsBottomGalleryShown = Settings.Gallery.IsBottomGalleryShown;
+                vm.Gallery.IsBottomGalleryShown.Value = Settings.Gallery.IsBottomGalleryShown;
             }
         }
         
@@ -145,7 +145,7 @@ public static class HideInterfaceLogic
         Settings.UIProperties.ShowAltInterfaceButtons = !Settings
             .UIProperties.ShowAltInterfaceButtons;
         
-        vm.Translation.IsShowingFadingUIButtons = Settings.UIProperties.ShowAltInterfaceButtons
+        vm.Translation.IsShowingFadingUIButtons.Value = Settings.UIProperties.ShowAltInterfaceButtons
             ? TranslationManager.Translation.DisableFadeInButtonsOnHover
             : TranslationManager.Translation.ShowFadeInButtonsOnHover;
         

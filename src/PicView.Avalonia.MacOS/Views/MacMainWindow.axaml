@@ -1,14 +1,14 @@
 <Window
     BorderBrush="{DynamicResource SecondaryBackgroundColor}"
     BorderThickness="1"
-    CanResize="{Binding CanResize}"
+    CanResize="{Binding MainWindow.CanResize.Value}"
     ExtendClientAreaChromeHints="SystemChrome"
     ExtendClientAreaTitleBarHeightHint="-1"
-    MinHeight="{CompiledBinding WindowMinSize}"
-    MinWidth="{CompiledBinding WindowMinSize}"
+    MinHeight="{CompiledBinding MainWindow.WindowMinSize.Value}"
+    MinWidth="{CompiledBinding MainWindow.WindowMinSize.Value}"
     SizeChanged="Control_OnSizeChanged"
-    SizeToContent="{CompiledBinding SizeToContent}"
-    Title="{CompiledBinding PicViewer.WindowTitle}"
+    SizeToContent="{CompiledBinding MainWindow.SizeToContent.Value}"
+    Title="{CompiledBinding PicViewer.WindowTitle.Value}"
     x:Class="PicView.Avalonia.MacOS.Views.MacMainWindow"
     x:DataType="viewModels:MainViewModel"
     xmlns="https://github.com/avaloniaui"
@@ -22,246 +22,251 @@
     </Window.Resources>
     <NativeMenu.Menu>
         <NativeMenu>
-            <NativeMenuItem Header="{CompiledBinding Translation.File}">
+            <NativeMenuItem Header="{CompiledBinding Translation.File.Value}">
                 <NativeMenu>
-                    <NativeMenuItem Command="{CompiledBinding OpenFileCommand}" Header="{CompiledBinding Translation.Open, Mode=OneWay}" />
-                    <!--  <NativeMenuItem  -->
-                    <!--  Command="{CompiledBinding OpenWithCommand}"  -->
-                    <!--  CommandParameter="{CompiledBinding PicViewer.FileInfo.FullName,  -->
-                    <!--  FallbackValue=''}"  -->
-                    <!--  Header="{CompiledBinding Translation.OpenWith,  -->
-                    <!--  Mode=OneWay}" />  -->
-                    <NativeMenuItem Command="{CompiledBinding SaveFileCommand}" Header="{CompiledBinding Translation.Save, Mode=OneWay}" />
-                    <NativeMenuItem Command="{CompiledBinding SaveFileAsCommand}" Header="{CompiledBinding Translation.SaveAs, Mode=OneWay}" />
+                    <NativeMenuItem Command="{CompiledBinding Tools.OpenFileCommand}" Header="{CompiledBinding Translation.Open.Value, Mode=OneWay}" />
                     <NativeMenuItem
-                        Command="{CompiledBinding PrintCommand}"
-                        CommandParameter="{CompiledBinding PicViewer.FileInfo,
+                        Command="{CompiledBinding Tools.OpenWithCommand}"
+                        CommandParameter="{CompiledBinding PicViewer.FileInfo.Value.FullName,
                                                            FallbackValue=''}"
-                        Header="{CompiledBinding Translation.Print,
+                        Header="{CompiledBinding Translation.OpenWith,
+                                                 Mode=OneWay}" />
+                    <NativeMenuItem Command="{CompiledBinding Tools.SaveFileCommand}" Header="{CompiledBinding Translation.Save.Value, Mode=OneWay}" />
+                    <NativeMenuItem Command="{CompiledBinding Tools.SaveFileAsCommand}" Header="{CompiledBinding Translation.SaveAs.Value, Mode=OneWay}" />
+                    <NativeMenuItem
+                        Command="{CompiledBinding Tools.PrintCommand}"
+                        CommandParameter="{CompiledBinding PicViewer.FileInfo.Value,
+                                                           FallbackValue=''}"
+                        Header="{CompiledBinding Translation.Print.Value,
                                                  Mode=OneWay}"
-                        IsEnabled="{CompiledBinding PicViewer.ImageSource,
+                        IsEnabled="{CompiledBinding PicViewer.ImageSource.Value,
                                                     Converter={x:Static ObjectConverters.IsNotNull}}" />
                     <NativeMenuItem
-                        Command="{CompiledBinding LocateOnDiskCommand}"
-                        CommandParameter="{CompiledBinding PicViewer.FileInfo.FullName,
+                        Command="{CompiledBinding Tools.LocateOnDiskCommand}"
+                        CommandParameter="{CompiledBinding PicViewer.FileInfo.Value.FullName,
                                                            FallbackValue=''}"
-                        Header="{CompiledBinding Translation.ShowInFolder,
+                        Header="{CompiledBinding Translation.ShowInFolder.Value,
+                                                 Mode=OneWay}"
+                        IsEnabled="{CompiledBinding PicViewer.FileInfo.Value,
+                                                    Converter={x:Static ObjectConverters.IsNotNull}}" />
+                    <NativeMenuItemSeparator />
+                    <NativeMenuItem
+                        Command="{CompiledBinding Tools.DeleteFilePermanentlyCommand}"
+                        CommandParameter="{CompiledBinding PicViewer.FileInfo.Value.FullName,
+                                                           FallbackValue=''}"
+                        Header="{CompiledBinding Translation.DeleteFile.Value,
+                                                 Mode=OneWay}"
+                        IsEnabled="{CompiledBinding PicViewer.FileInfo.Value,
+                                                    Converter={x:Static ObjectConverters.IsNotNull}}" />
+                    <NativeMenuItemSeparator />
+                    <NativeMenuItem
+                        Command="{CompiledBinding Navigation.ReloadCommand}"
+                        CommandParameter="{CompiledBinding PicViewer.FileInfo.Value.FullName,
+                                                           FallbackValue=''}"
+                        Header="{CompiledBinding Translation.Reload.Value,
+                                                 Mode=OneWay}"
+                        IsEnabled="{CompiledBinding PicViewer.ImageSource.Value,
+                                                    Converter={x:Static ObjectConverters.IsNotNull}}" />
+                    <NativeMenuItem Command="{CompiledBinding Window.NewWindow}" Header="{CompiledBinding Translation.NewWindow.Value, Mode=OneWay}" />
+                    <NativeMenuItemSeparator />
+                    <NativeMenuItem
+                        Command="{CompiledBinding Tools.RenameCommand}"
+                        CommandParameter="{CompiledBinding PicViewer.FileInfo.Value.FullName,
+                                                           FallbackValue=''}"
+                        Header="{CompiledBinding Translation.RenameFile.Value,
                                                  Mode=OneWay}"
                         IsEnabled="{CompiledBinding PicViewer.FileInfo,
                                                     Converter={x:Static ObjectConverters.IsNotNull}}" />
                     <NativeMenuItemSeparator />
-                    <NativeMenuItem
-                        Command="{CompiledBinding DeleteFileCommand}"
-                        CommandParameter="{CompiledBinding PicViewer.FileInfo.FullName,
-                                                           FallbackValue=''}"
-                        Header="{CompiledBinding Translation.DeleteFile,
-                                                 Mode=OneWay}"
-                        IsEnabled="{CompiledBinding PicViewer.FileInfo,
-                                                    Converter={x:Static ObjectConverters.IsNotNull}}" />
+                    <NativeMenuItem Command="{CompiledBinding Tools.PasteCommand}" Header="{CompiledBinding Translation.Paste.Value, Mode=OneWay}" />
                     <NativeMenuItemSeparator />
                     <NativeMenuItem
-                        Command="{CompiledBinding ReloadCommand}"
-                        CommandParameter="{CompiledBinding PicViewer.FileInfo.FullName,
+                        Command="{CompiledBinding Tools.CopyFileCommand}"
+                        CommandParameter="{CompiledBinding PicViewer.FileInfo.Value.FullName,
                                                            FallbackValue=''}"
-                        Header="{CompiledBinding Translation.Reload,
+                        Header="{CompiledBinding Translation.CopyFile.Value,
                                                  Mode=OneWay}"
-                        IsEnabled="{CompiledBinding PicViewer.ImageSource,
-                                                    Converter={x:Static ObjectConverters.IsNotNull}}" />
-                    <NativeMenuItem Command="{CompiledBinding NewWindowCommand}" Header="{CompiledBinding Translation.NewWindow, Mode=OneWay}" />
-                    <NativeMenuItemSeparator />
-                    <NativeMenuItem
-                        Command="{CompiledBinding RenameCommand}"
-                        CommandParameter="{CompiledBinding PicViewer.FileInfo.FullName,
-                                                           FallbackValue=''}"
-                        Header="{CompiledBinding Translation.RenameFile,
-                                                 Mode=OneWay}"
-                        IsEnabled="{CompiledBinding PicViewer.FileInfo,
-                                                    Converter={x:Static ObjectConverters.IsNotNull}}" />
-                    <NativeMenuItemSeparator />
-                    <NativeMenuItem Command="{CompiledBinding PasteCommand}" Header="{CompiledBinding Translation.Paste, Mode=OneWay}" />
-                    <NativeMenuItemSeparator />
-                    <NativeMenuItem
-                        Command="{CompiledBinding CopyFileCommand}"
-                        CommandParameter="{CompiledBinding PicViewer.FileInfo.FullName,
-                                                           FallbackValue=''}"
-                        Header="{CompiledBinding Translation.CopyFile,
-                                                 Mode=OneWay}"
-                        IsEnabled="{CompiledBinding PicViewer.FileInfo,
+                        IsEnabled="{CompiledBinding PicViewer.FileInfo.Value,
                                                     Converter={x:Static ObjectConverters.IsNotNull}}" />
                     <NativeMenuItem
-                        Command="{CompiledBinding CopyImageCommand}"
-                        CommandParameter="{CompiledBinding PicViewer.FileInfo.FullName,
+                        Command="{CompiledBinding Tools.CopyImageCommand}"
+                        CommandParameter="{CompiledBinding PicViewer.FileInfo.Value.FullName,
                                                            FallbackValue=''}"
-                        Header="{CompiledBinding Translation.CopyImage,
+                        Header="{CompiledBinding Translation.CopyImage.Value,
                                                  Mode=OneWay}"
-                        IsEnabled="{CompiledBinding PicViewer.ImageSource,
+                        IsEnabled="{CompiledBinding PicViewer.ImageSource.Value,
                                                     Converter={x:Static ObjectConverters.IsNotNull}}" />
                     <NativeMenuItem
-                        Command="{CompiledBinding CopyFilePathCommand}"
-                        CommandParameter="{CompiledBinding PicViewer.FileInfo.FullName,
+                        Command="{CompiledBinding Tools.CopyFilePathCommand}"
+                        CommandParameter="{CompiledBinding PicViewer.FileInfo.Value.FullName,
                                                            FallbackValue=''}"
-                        Header="{CompiledBinding Translation.FileCopyPath,
+                        Header="{CompiledBinding Translation.FileCopyPath.Value,
                                                  Mode=OneWay}"
-                        IsEnabled="{CompiledBinding PicViewer.FileInfo,
+                        IsEnabled="{CompiledBinding PicViewer.FileInfo.Value,
                                                     Converter={x:Static ObjectConverters.IsNotNull}}" />
                     <NativeMenuItem
-                        Command="{CompiledBinding DuplicateFileCommand}"
-                        CommandParameter="{CompiledBinding PicViewer.FileInfo.FullName,
+                        Command="{CompiledBinding Tools.DuplicateFileCommand}"
+                        CommandParameter="{CompiledBinding PicViewer.FileInfo.Value.FullName,
                                                            FallbackValue=''}"
-                        Header="{CompiledBinding Translation.DuplicateFile,
+                        Header="{CompiledBinding Translation.DuplicateFile.Value,
                                                  Mode=OneWay}"
-                        IsEnabled="{CompiledBinding PicViewer.FileInfo,
+                        IsEnabled="{CompiledBinding PicViewer.FileInfo.Value,
                                                     Converter={x:Static ObjectConverters.IsNotNull}}" />
                 </NativeMenu>
             </NativeMenuItem>
 
             <!--  Image  -->
-            <NativeMenuItem Header="{CompiledBinding Translation.Image, Mode=OneWay}">
+            <NativeMenuItem Header="{CompiledBinding Translation.Image.Value, Mode=OneWay}">
                 <NativeMenu>
                     <NativeMenuItem
-                        Command="{CompiledBinding RotateLeftCommand}"
-                        Header="{CompiledBinding Translation.RotateLeft,
+                        Command="{CompiledBinding Tools.RotateLeftCommand}"
+                        Header="{CompiledBinding Translation.RotateLeft.Value,
                                                  Mode=OneWay}"
-                        IsEnabled="{CompiledBinding PicViewer.FileInfo,
+                        IsEnabled="{CompiledBinding PicViewer.FileInfo.Value,
                                                     Converter={x:Static ObjectConverters.IsNotNull}}" />
                     <NativeMenuItem
-                        Command="{CompiledBinding RotateRightCommand}"
-                        Header="{CompiledBinding Translation.RotateRight,
+                        Command="{CompiledBinding Tools.RotateRightCommand}"
+                        Header="{CompiledBinding Translation.RotateRight.Value,
                                                  Mode=OneWay}"
-                        IsEnabled="{CompiledBinding PicViewer.FileInfo,
+                        IsEnabled="{CompiledBinding PicViewer.FileInfo.Value,
                                                     Converter={x:Static ObjectConverters.IsNotNull}}" />
                     <NativeMenuItem
-                        Command="{CompiledBinding FlipCommand}"
-                        Header="{CompiledBinding Translation.Flip,
+                        Command="{CompiledBinding Tools.FlipCommand}"
+                        Header="{CompiledBinding Translation.Flip.Value,
                                                  Mode=OneWay}"
-                        IsEnabled="{CompiledBinding PicViewer.FileInfo,
+                        IsEnabled="{CompiledBinding PicViewer.FileInfo.Value,
                                                     Converter={x:Static ObjectConverters.IsNotNull}}" />
                     <NativeMenuItemSeparator />
                     <NativeMenuItem
-                        Command="{CompiledBinding CropCommand}"
-                        CommandParameter="{CompiledBinding PicViewer.FileInfo.FullName,
+                        Command="{CompiledBinding Tools.CropCommand}"
+                        CommandParameter="{CompiledBinding PicViewer.FileInfo.Value.FullName,
                                                            FallbackValue=''}"
-                        Header="{CompiledBinding Translation.Crop,
+                        Header="{CompiledBinding Translation.Crop.Value,
                                                  Mode=OneWay}"
-                        IsEnabled="{CompiledBinding PicViewer.FileInfo,
+                        IsEnabled="{CompiledBinding PicViewer.FileInfo.Value,
                                                     Converter={x:Static ObjectConverters.IsNotNull}}" />
                     <NativeMenuItemSeparator />
                     <NativeMenuItem
-                        Command="{CompiledBinding SetAsWallpaperCommand}"
-                        CommandParameter="{CompiledBinding PicViewer.FileInfo.FullName,
+                        Command="{CompiledBinding Tools.SetAsWallpaperCommand}"
+                        CommandParameter="{CompiledBinding PicViewer.FileInfo.Value.FullName,
                                                            FallbackValue=''}"
-                        Header="{CompiledBinding Translation.SetAsWallpaper,
+                        Header="{CompiledBinding Translation.SetAsWallpaper.Value,
                                                  Mode=OneWay}"
-                        IsEnabled="{CompiledBinding PicViewer.FileInfo,
+                        IsEnabled="{CompiledBinding PicViewer.FileInfo.Value,
                                                     Converter={x:Static ObjectConverters.IsNotNull}}" />
                     <NativeMenuItemSeparator />
-                    <NativeMenuItem Command="{CompiledBinding ShowExifWindowCommand}" Header="{CompiledBinding Translation.ImageInfo, Mode=OneWay}" />
+                    <NativeMenuItem Command="{CompiledBinding Window.ShowExifWindow}" Header="{CompiledBinding Translation.ImageInfo.Value, Mode=OneWay}" />
                     <NativeMenuItem
-                        Command="{CompiledBinding FilePropertiesCommand}"
-                        CommandParameter="{CompiledBinding PicViewer.FileInfo.FullName,
+                        Command="{CompiledBinding Tools.FilePropertiesCommand}"
+                        CommandParameter="{CompiledBinding PicViewer.FileInfo.Value.FullName,
                                                            FallbackValue=''}"
-                        Header="{CompiledBinding Translation.FileProperties,
+                        Header="{CompiledBinding Translation.FileProperties.Value,
                                                  Mode=OneWay}"
-                        IsEnabled="{CompiledBinding PicViewer.FileInfo,
+                        IsEnabled="{CompiledBinding PicViewer.FileInfo.Value,
                                                     Converter={x:Static ObjectConverters.IsNotNull}}" />
                     <NativeMenuItemSeparator />
-                    <NativeMenuItem Command="{CompiledBinding ShowSingleImageResizeWindowCommand}" Header="{CompiledBinding Translation.ResizeImage}" />
-                    <NativeMenuItem Command="{CompiledBinding ShowBatchResizeWindowCommand}" Header="{CompiledBinding Translation.BatchResize}" />
+                    <NativeMenuItem Command="{CompiledBinding Window.ShowSingleImageResizeWindow}" Header="{CompiledBinding Translation.ResizeImage.Value, Mode=OneWay}" />
+                    <NativeMenuItem Command="{CompiledBinding Window.ShowBatchResizeWindow}" Header="{CompiledBinding Translation.BatchResize.Value, Mode=OneWay}" />
                     <NativeMenuItemSeparator />
                     <NativeMenuItem
-                        Command="{CompiledBinding OptimizeImageCommand}"
-                        CommandParameter="{CompiledBinding PicViewer.FileInfo.FullName,
+                        Command="{CompiledBinding Tools.OptimizeImageCommand}"
+                        CommandParameter="{CompiledBinding PicViewer.FileInfo.Value.FullName,
                                                            FallbackValue=''}"
-                        Header="{CompiledBinding Translation.OptimizeImage,
+                        Header="{CompiledBinding Translation.OptimizeImage.Value,
                                                  Mode=OneWay}"
-                        IsEnabled="{CompiledBinding PicViewer.FileInfo,
+                        IsEnabled="{CompiledBinding PicViewer.FileInfo.Value,
                                                     Converter={x:Static ObjectConverters.IsNotNull}}" />
                     <NativeMenuItemSeparator />
-                    <NativeMenuItem Command="{CompiledBinding ShowEffectsWindowCommand}" Header="{CompiledBinding Translation.Effects, Mode=OneWay}" />
+                    <NativeMenuItem Command="{CompiledBinding Window.ShowEffectsWindow}" Header="{CompiledBinding Translation.Effects.Value, Mode=OneWay}" />
                 </NativeMenu>
             </NativeMenuItem>
 
             <!--  Navigation  -->
-            <NativeMenuItem Header="{CompiledBinding Translation.Navigation}">
+            <NativeMenuItem Header="{CompiledBinding Translation.Navigation.Value, Mode=OneWay}">
                 <NativeMenu>
-                    <NativeMenuItem Command="{CompiledBinding SlideshowCommand}" Header="{CompiledBinding Translation.Slideshow}" />
+                    <NativeMenuItem
+                        Command="{CompiledBinding Tools.StartSlideShowTask}"
+                        CommandParameter="-1"
+                        Header="{CompiledBinding Translation.Slideshow.Value,
+                                                 Mode=OneWay}" />
                     <NativeMenuItemSeparator />
-                    <NativeMenuItem Command="{CompiledBinding FirstCommand}" Header="{CompiledBinding Translation.FirstImage}" />
-                    <NativeMenuItem Command="{CompiledBinding LastCommand}" Header="{CompiledBinding Translation.LastImage}" />
+                    <NativeMenuItem Command="{CompiledBinding Navigation.FirstCommand}" Header="{CompiledBinding Translation.FirstImage.Value, Mode=OneWay}" />
+                    <NativeMenuItem Command="{CompiledBinding Navigation.LastCommand}" Header="{CompiledBinding Translation.LastImage.Value, Mode=OneWay}" />
                     <NativeMenuItemSeparator />
-                    <NativeMenuItem Command="{CompiledBinding Skip10Command}" Header="{CompiledBinding Translation.AdvanceBy10Images}" />
-                    <NativeMenuItem Command="{CompiledBinding Skip100Command}" Header="{CompiledBinding Translation.AdvanceBy100Images}" />
-                    <NativeMenuItem Command="{CompiledBinding Prev10Command}" Header="{CompiledBinding Translation.GoBackBy10Images}" />
-                    <NativeMenuItem Command="{CompiledBinding Prev100Command}" Header="{CompiledBinding Translation.GoBackBy100Images}" />
+                    <NativeMenuItem Command="{CompiledBinding Navigation.Skip10Command}" Header="{CompiledBinding Translation.AdvanceBy10Images.Value, Mode=OneWay}" />
+                    <NativeMenuItem Command="{CompiledBinding Navigation.Skip100Command}" Header="{CompiledBinding Translation.AdvanceBy100Images.Value, Mode=OneWay}" />
+                    <NativeMenuItem Command="{CompiledBinding Navigation.Prev10Command}" Header="{CompiledBinding Translation.GoBackBy10Images.Value, Mode=OneWay}" />
+                    <NativeMenuItem Command="{CompiledBinding Navigation.Prev100Command}" Header="{CompiledBinding Translation.GoBackBy100Images.Value, Mode=OneWay}" />
                     <NativeMenuItemSeparator />
-                    <NativeMenuItem Command="{CompiledBinding NextFolderCommand}" Header="{CompiledBinding Translation.NextFolder}" />
-                    <NativeMenuItem Command="{CompiledBinding PreviousFolderCommand}" Header="{CompiledBinding Translation.PrevFolder}" />
+                    <NativeMenuItem Command="{CompiledBinding Navigation.NextFolderCommand}" Header="{CompiledBinding Translation.NextFolder.Value, Mode=OneWay}" />
+                    <NativeMenuItem Command="{CompiledBinding Navigation.PreviousFolderCommand}" Header="{CompiledBinding Translation.PrevFolder.Value, Mode=OneWay}" />
                 </NativeMenu>
             </NativeMenuItem>
 
             <!--  Interface configuration  -->
-            <NativeMenuItem Header="{CompiledBinding Translation.InterfaceConfiguration}">
+            <NativeMenuItem Header="{CompiledBinding Translation.InterfaceConfiguration.Value, Mode=OneWay}">
                 <NativeMenu>
-                    <NativeMenuItem Command="{CompiledBinding ToggleFullscreenCommand}" Header="{CompiledBinding Translation.ToggleFullscreen, Mode=OneWay}" />
+                    <NativeMenuItem Command="{CompiledBinding MainWindow.ToggleFullscreenCommand}" Header="{CompiledBinding Translation.ToggleFullscreen.Value, Mode=OneWay}" />
                     <NativeMenuItem
-                        Command="{CompiledBinding ChangeAutoFitCommand}"
-                        Header="{CompiledBinding Translation.AutoFitWindow}"
-                        IsChecked="{CompiledBinding IsAutoFit}"
+                        Command="{CompiledBinding Tools.ChangeAutoFitCommand}"
+                        Header="{CompiledBinding Translation.AutoFitWindow.Value,
+                                                 Mode=OneWay}"
+                        IsChecked="{CompiledBinding GlobalSettings.IsAutoFit.Value}"
                         ToggleType="CheckBox" />
-                    <NativeMenuItem Command="{CompiledBinding ToggleUICommand}" Header="{CompiledBinding Translation.IsShowingUI, Mode=OneWay}" />
-                    <NativeMenuItem Command="{CompiledBinding ToggleGalleryCommand}" Header="{CompiledBinding Translation.ShowImageGallery, Mode=OneWay}" />
+                    <NativeMenuItem Command="{CompiledBinding Tools.ToggleUICommand}" Header="{CompiledBinding Translation.IsShowingUI.Value, Mode=OneWay}" />
+                    <NativeMenuItem Command="{CompiledBinding Gallery.ToggleGalleryCommand}" Header="{CompiledBinding Translation.ShowImageGallery.Value, Mode=OneWay}" />
 
                 </NativeMenu>
             </NativeMenuItem>
 
             <!--  Sort files  -->
-            <NativeMenuItem Header="{CompiledBinding Translation.SortFilesBy, Mode=OneWay}">
+            <NativeMenuItem Header="{CompiledBinding Translation.SortFilesBy.Value, Mode=OneWay}">
                 <NativeMenu>
                     <NativeMenuItem
-                        Command="{CompiledBinding SortFilesByNameCommand}"
-                        Header="{CompiledBinding Translation.FileName,
+                        Command="{CompiledBinding Sorting.SortFilesByNameCommand}"
+                        Header="{CompiledBinding Translation.FileName.Value,
                                                  Mode=OneWay}"
-                        IsChecked="{CompiledBinding SortOrder,
+                        IsChecked="{CompiledBinding Sorting.SortOrder.Value,
                                                     Converter={StaticResource EnumToBoolConverter},
                                                     ConverterParameter=Name}"
                         ToggleType="Radio" />
                     <NativeMenuItem
-                        Command="{CompiledBinding SortFilesBySizeCommand}"
-                        Header="{CompiledBinding Translation.FileSize,
+                        Command="{CompiledBinding Sorting.SortFilesBySizeCommand}"
+                        Header="{CompiledBinding Translation.FileSize.Value,
                                                  Mode=OneWay}"
-                        IsChecked="{CompiledBinding SortOrder,
+                        IsChecked="{CompiledBinding Sorting.SortOrder.Value,
                                                     Converter={StaticResource EnumToBoolConverter},
                                                     ConverterParameter=FileSize}"
                         ToggleType="Radio" />
                     <NativeMenuItem
-                        Command="{CompiledBinding SortFilesByExtensionCommand}"
-                        Header="{CompiledBinding Translation.FileExtension,
+                        Command="{CompiledBinding Sorting.SortFilesByExtensionCommand}"
+                        Header="{CompiledBinding Translation.FileExtension.Value,
                                                  Mode=OneWay}"
-                        IsChecked="{CompiledBinding SortOrder,
+                        IsChecked="{CompiledBinding Sorting.SortOrder.Value,
                                                     Converter={StaticResource EnumToBoolConverter},
                                                     ConverterParameter=FileExtension}"
                         ToggleType="Radio" />
                     <NativeMenuItem
-                        Command="{CompiledBinding SortFilesByCreationTimeCommand}"
-                        Header="{CompiledBinding Translation.Created,
+                        Command="{CompiledBinding Sorting.SortFilesByCreationTimeCommand}"
+                        Header="{CompiledBinding Translation.Created.Value,
                                                  Mode=OneWay}"
-                        IsChecked="{CompiledBinding SortOrder,
+                        IsChecked="{CompiledBinding Sorting.SortOrder.Value,
                                                     Converter={StaticResource EnumToBoolConverter},
                                                     ConverterParameter=Created}"
                         ToggleType="Radio" />
                     <NativeMenuItem
-                        Command="{CompiledBinding SortFilesByLastAccessTimeCommand}"
-                        Header="{CompiledBinding Translation.LastAccessTime,
+                        Command="{CompiledBinding Sorting.SortFilesByLastAccessTimeCommand}"
+                        Header="{CompiledBinding Translation.LastAccessTime.Value,
                                                  Mode=OneWay}"
-                        IsChecked="{CompiledBinding SortOrder,
+                        IsChecked="{CompiledBinding Sorting.SortOrder.Value,
                                                     Converter={StaticResource EnumToBoolConverter},
                                                     ConverterParameter=LastAccessTime}"
                         ToggleType="Radio" />
                     <NativeMenuItem
-                        Command="{CompiledBinding SortFilesRandomlyCommand}"
-                        Header="{CompiledBinding Translation.Random,
+                        Command="{CompiledBinding Sorting.SortFilesRandomlyCommand}"
+                        Header="{CompiledBinding Translation.Random.Value,
                                                  Mode=OneWay}"
-                        IsChecked="{CompiledBinding SortOrder,
+                        IsChecked="{CompiledBinding Sorting.SortOrder.Value,
                                                     Converter={StaticResource EnumToBoolConverter},
                                                     ConverterParameter=Random}"
                         ToggleType="Radio" />
@@ -269,53 +274,58 @@
             </NativeMenuItem>
 
             <!--  Settings  -->
-            <NativeMenuItem Header="{CompiledBinding Translation.Settings}">
+            <NativeMenuItem Header="{CompiledBinding Translation.Settings.Value, Mode=OneWay}">
                 <NativeMenu>
-                    <NativeMenuItem Command="{CompiledBinding ChangeBackgroundCommand}" Header="{CompiledBinding Translation.ChangeBackground, Mode=OneWay}" />
+                    <NativeMenuItem Command="{CompiledBinding Tools.ChangeBackgroundCommand}" Header="{CompiledBinding Translation.ChangeBackground.Value, Mode=OneWay}" />
                     <NativeMenuItemSeparator />
                     <NativeMenuItem
-                        Command="{CompiledBinding ToggleLoopingCommand}"
-                        Header="{CompiledBinding Translation.IsLooping}"
-                        IsChecked="{CompiledBinding IsLooping}"
+                        Command="{CompiledBinding Tools.ToggleLoopingCommand}"
+                        Header="{CompiledBinding Translation.IsLooping.Value,
+                                                 Mode=OneWay}"
+                        IsChecked="{CompiledBinding GlobalSettings.IsLooping.Value}"
                         ToggleType="CheckBox" />
                     <NativeMenuItem
-                        Command="{CompiledBinding StretchCommand}"
-                        Header="{CompiledBinding Translation.Stretch}"
-                        IsChecked="{CompiledBinding IsStretched}"
+                        Command="{CompiledBinding Tools.StretchCommand}"
+                        Header="{CompiledBinding Translation.Stretch.Value,
+                                                 Mode=OneWay}"
+                        IsChecked="{CompiledBinding GlobalSettings.IsStretched.Value}"
                         ToggleType="CheckBox" />
                     <NativeMenuItem
-                        Command="{CompiledBinding ToggleScrollCommand}"
-                        Header="{CompiledBinding Translation.ToggleScroll}"
-                        IsChecked="{CompiledBinding IsScrollingEnabled}"
-                        ToggleType="CheckBox" />
-                    <NativeMenuItemSeparator />
-                    <NativeMenuItem
-                        Command="{CompiledBinding ChangeTopMostCommand}"
-                        Header="{CompiledBinding Translation.StayTopMost}"
-                        IsChecked="{CompiledBinding IsTopMost}"
+                        Command="{CompiledBinding Tools.ToggleScrollCommand}"
+                        Header="{CompiledBinding Translation.ToggleScroll.Value,
+                                                 Mode=OneWay}"
+                        IsChecked="{CompiledBinding GlobalSettings.IsScrollingEnabled.Value}"
                         ToggleType="CheckBox" />
                     <NativeMenuItemSeparator />
                     <NativeMenuItem
-                        Command="{CompiledBinding ToggleSubdirectoriesCommand}"
-                        Header="{CompiledBinding Translation.SearchSubdirectory}"
-                        IsChecked="{CompiledBinding IsIncludingSubdirectories}"
+                        Command="{CompiledBinding Tools.ChangeTopMostCommand}"
+                        Header="{CompiledBinding Translation.StayTopMost.Value,
+                                                 Mode=OneWay}"
+                        IsChecked="{CompiledBinding GlobalSettings.IsTopMost.Value}"
                         ToggleType="CheckBox" />
                     <NativeMenuItemSeparator />
-                    <NativeMenuItem Command="{CompiledBinding ShowKeybindingsWindowCommand}" Header="{CompiledBinding Translation.ApplicationShortcuts}" />
+                    <NativeMenuItem
+                        Command="{CompiledBinding Tools.ToggleSubdirectoriesCommand}"
+                        Header="{CompiledBinding Translation.SearchSubdirectory.Value,
+                                                 Mode=OneWay}"
+                        IsChecked="{CompiledBinding GlobalSettings.IsIncludingSubdirectories.Value}"
+                        ToggleType="CheckBox" />
                     <NativeMenuItemSeparator />
-                    <NativeMenuItem Command="{CompiledBinding ShowAboutWindowCommand}" Header="{CompiledBinding Translation.About}" />
+                    <NativeMenuItem Command="{CompiledBinding Window.ShowKeybindingsWindow}" Header="{CompiledBinding Translation.ApplicationShortcuts.Value, Mode=OneWay}" />
                     <NativeMenuItemSeparator />
-                    <NativeMenuItem Command="{CompiledBinding ShowSettingsWindowCommand}" Header="{CompiledBinding Translation.ShowAllSettingsWindow}" />
+                    <NativeMenuItem Command="{CompiledBinding Window.ShowAboutWindow}" Header="{CompiledBinding Translation.About.Value, Mode=OneWay}" />
+                    <NativeMenuItemSeparator />
+                    <NativeMenuItem Command="{CompiledBinding Window.ShowSettingsWindow}" Header="{CompiledBinding Translation.ShowAllSettingsWindow.Value, Mode=OneWay}" />
                 </NativeMenu>
             </NativeMenuItem>
 
             <!--  Window  -->
-            <NativeMenuItem Header="{CompiledBinding Translation.Window}">
+            <NativeMenuItem Header="{CompiledBinding Translation.Window.Value, Mode=OneWay}">
                 <NativeMenu>
-                    <NativeMenuItem Command="{CompiledBinding NewWindowCommand}" Header="{CompiledBinding Translation.NewWindow, Mode=OneWay}" />
+                    <NativeMenuItem Command="{CompiledBinding Window.NewWindow}" Header="{CompiledBinding Translation.NewWindow.Value, Mode=OneWay, Mode=OneWay}" />
                     <NativeMenuItemSeparator />
-                    <NativeMenuItem Command="{CompiledBinding MaximizeCommand}" Header="{CompiledBinding Translation.Maximize, Mode=OneWay}" />
-                    <NativeMenuItem Command="{CompiledBinding ToggleFullscreenCommand}" Header="{CompiledBinding Translation.Fullscreen, Mode=OneWay}" />
+                    <NativeMenuItem Command="{CompiledBinding MainWindow.MaximizeCommand}" Header="{CompiledBinding Translation.Maximize.Value, Mode=OneWay}" />
+                    <NativeMenuItem Command="{CompiledBinding MainWindow.ToggleFullscreenCommand}" Header="{CompiledBinding Translation.Fullscreen.Value, Mode=OneWay}" />
                 </NativeMenu>
             </NativeMenuItem>
 

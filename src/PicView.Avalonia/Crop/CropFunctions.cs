@@ -33,7 +33,7 @@ public static class CropFunctions
             return;
         }
 
-        if (vm?.PicViewer.ImageSource is not Bitmap bitmap)
+        if (vm?.PicViewer.ImageSource.CurrentValue is not Bitmap bitmap)
         {
             return;
         }
@@ -42,21 +42,20 @@ public static class CropFunctions
         // Hide bottom gallery when entering crop mode
         if (isBottomGalleryShown)
         {
-            vm.GalleryMode = GalleryMode.Closed;
+            vm.Gallery.GalleryMode.Value = GalleryMode.Closed;
             // Reset setting before resizing
             Settings.Gallery.IsBottomGalleryShown = false;
             await WindowResizing.SetSizeAsync(vm);
         }
 
-        var size = new Size(vm.PicViewer.ImageWidth, vm.PicViewer.ImageHeight);
+        var size = new Size(vm.PicViewer.ImageWidth.CurrentValue, vm.PicViewer.ImageHeight.CurrentValue);
         await Dispatcher.UIThread.InvokeAsync(() =>
         {
-            vm.Crop = new ImageCropperViewModel(bitmap)
-            {
-                ImageWidth = size.Width,
-                ImageHeight = size.Height,
-                AspectRatio = vm.PicViewer.AspectRatio
-            };
+            vm.Crop = new ImageCropperViewModel(bitmap);
+            vm.Crop.ImageWidth.Value = size.Width;
+            vm.Crop.ImageHeight.Value = size.Height;
+            vm.Crop.AspectRatio.Value = vm.PicViewer.AspectRatio.CurrentValue;
+            
             var cropControl = new CropControl
             {
                 DataContext = vm,
@@ -64,12 +63,12 @@ public static class CropFunctions
                 Height = size.Height,
                 Margin = new Thickness(0)
             };
-            vm.CurrentView = cropControl;
+            vm.MainWindow.CurrentView.Value = cropControl;
         });
 
         IsCropping = true;
-        vm.PicViewer.Title = TranslationManager.Translation.CropMessage;
-        vm.PicViewer.TitleTooltip = TranslationManager.Translation.CropMessage;
+        vm.PicViewer.Title.Value = TranslationManager.Translation.CropMessage;
+        vm.PicViewer.TitleTooltip.Value = TranslationManager.Translation.CropMessage;
 
         await FunctionsMapper.CloseMenus();
 
@@ -83,24 +82,28 @@ public static class CropFunctions
     {
         if (Settings.Gallery.IsBottomGalleryShown)
         {
-            vm.GalleryMode = GalleryMode.ClosedToBottom;
+            if (vm.Gallery is {} gallery)
+            {
+                gallery.GalleryMode.Value = GalleryMode.ClosedToBottom;
+            }
+            
             WindowResizing.SetSize(vm);
         }
 
-        vm.CurrentView = vm.ImageViewer;
+        vm.MainWindow.CurrentView.Value = vm.ImageViewer;
         IsCropping = false;
         TitleManager.SetTitle(vm);
 
         // Reset image type to fix issue with animated images
-        switch (vm.PicViewer.ImageType)
+        switch (vm.PicViewer.ImageType.CurrentValue)
         {
             case ImageType.AnimatedWebp:
-                vm.PicViewer.ImageType = ImageType.Bitmap;
-                vm.PicViewer.ImageType = ImageType.AnimatedWebp;
+                vm.PicViewer.ImageType.Value = ImageType.Bitmap;
+                vm.PicViewer.ImageType.Value = ImageType.AnimatedWebp;
                 break;
             case ImageType.AnimatedGif:
-                vm.PicViewer.ImageType = ImageType.Bitmap;
-                vm.PicViewer.ImageType = ImageType.AnimatedGif;
+                vm.PicViewer.ImageType.Value = ImageType.Bitmap;
+                vm.PicViewer.ImageType.Value = ImageType.AnimatedGif;
                 break;
         }
 
@@ -114,9 +117,9 @@ public static class CropFunctions
             return false;
         }
 
-        if (vm?.PicViewer.ImageSource is not Bitmap || Settings.ImageScaling.ShowImageSideBySide)
+        if (vm?.PicViewer.ImageSource.CurrentValue is not Bitmap || Settings.ImageScaling.ShowImageSideBySide)
         {
-            vm.ShouldCropBeEnabled = false;
+            vm.GlobalSettings.ShouldCropBeEnabled.Value = false;
             return false;
         }
 
@@ -125,18 +128,18 @@ public static class CropFunctions
             return false;
         }
 
-        if (vm.IsEditableTitlebarOpen)
+        if (vm.MainWindow.IsEditableTitlebarOpen.CurrentValue)
         {
             return false;
         }
 
-        if (vm.RotationAngle is 0 && vm.PicViewer.ScaleX is 1)
+        if (vm.GlobalSettings.RotationAngle.CurrentValue is 0 && vm.PicViewer.ScaleX.CurrentValue is 1)
         {
-            vm.ShouldCropBeEnabled = true;
+            vm.GlobalSettings.ShouldCropBeEnabled.Value = true;
             return true;
         }
 
-        vm.ShouldCropBeEnabled = false;
+        vm.GlobalSettings.ShouldCropBeEnabled.Value = false;
         return false;
     }
 }

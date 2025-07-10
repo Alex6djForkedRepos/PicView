@@ -45,14 +45,14 @@ public static class NavigationManager
     {
         var imageModel = await GetImageModel.GetImageModelAsync(fileInfo).ConfigureAwait(false);
         ImageModel? nextImageModel = null;
-        vm.PicViewer.ImageSource = imageModel.Image;
-        vm.PicViewer.ImageType = imageModel.ImageType;
+        vm.PicViewer.ImageSource.Value = imageModel.Image;
+        vm.PicViewer.ImageType.Value = imageModel.ImageType;
         if (!Settings.ImageScaling.ShowImageSideBySide)
         {
             await Dispatcher.UIThread.InvokeAsync(() =>
             {
                 vm.ImageViewer.SetTransform(imageModel.EXIFOrientation, imageModel.Format);
-                WindowResizing.SetSize(imageModel.PixelWidth, imageModel.PixelHeight, 0, 0, vm.RotationAngle,
+                WindowResizing.SetSize(imageModel.PixelWidth, imageModel.PixelHeight, 0, 0, vm.GlobalSettings.RotationAngle.CurrentValue,
                     vm);
             });
         }
@@ -72,7 +72,7 @@ public static class NavigationManager
         if (Settings.ImageScaling.ShowImageSideBySide)
         {
             nextImageModel = (await ImageIterator.GetNextPreLoadValueAsync()).ImageModel;
-            vm.PicViewer.SecondaryImageSource = nextImageModel.Image;
+            vm.PicViewer.SecondaryImageSource.Value = nextImageModel.Image;
             await Dispatcher.UIThread.InvokeAsync(() =>
             {
                 WindowResizing.SetSize(imageModel.PixelWidth, imageModel.PixelHeight, nextImageModel.PixelWidth,
@@ -88,7 +88,7 @@ public static class NavigationManager
         }
         else
         {
-            vm.IsSingleImage = false;
+            vm.PicViewer.IsSingleImage.Value = false;
             var isTiffUpdated = await CheckIfTiffAndUpdate(vm, fileInfo, index);
             if (!isTiffUpdated)
             {
@@ -110,7 +110,7 @@ public static class NavigationManager
             await WindowFunctions.ResizeAndFixRenderingError(vm);
         }
 
-        vm.IsLoading = false;
+        vm.MainWindow.IsLoadingIndicatorShown.Value = false;
         FileHistoryManager.Add(ImageIterator.ImagePaths[index].FullName);
         if (Settings.ImageScaling.ShowImageSideBySide)
         {
@@ -130,7 +130,7 @@ public static class NavigationManager
     public static bool CanNavigate(MainViewModel vm) =>
         ImageIterator?.ImagePaths is not null &&
         ImageIterator.ImagePaths.Count > 0 && !CropFunctions.IsCropping &&
-        !DialogManager.IsDialogOpen && vm is { IsEditableTitlebarOpen: false, PicViewer.FileInfo: not null };
+        !DialogManager.IsDialogOpen && vm is { MainWindow.IsLoadingIndicatorShown.Value: false, PicViewer.FileInfo: not null };
 
     /// <summary>
     ///     Navigates to the next or previous image based on the <paramref name="next" /> parameter.
@@ -145,7 +145,7 @@ public static class NavigationManager
             if (vm.PicViewer.FileInfo is null && ImageIterator is not null)
             {
                 // Fixes issue that shouldn't happen. Should investigate.
-                vm.PicViewer.FileInfo = ImageIterator.ImagePaths[0];
+                vm.PicViewer.FileInfo.Value = ImageIterator.ImagePaths[0];
             }
             else
             {
@@ -167,7 +167,7 @@ public static class NavigationManager
             if (vm.PicViewer.FileInfo is not null)
             {
                 var newIndex =
-                    ImageIterator.ImagePaths.FindIndex(x => x.FullName.Equals(vm.PicViewer.FileInfo.FullName));
+                    ImageIterator.ImagePaths.FindIndex(x => x.FullName.Equals(vm.PicViewer.FileInfo.CurrentValue.FullName));
                 if (newIndex == -1)
                 {
                     ErrorHandling.ShowStartUpMenu(vm);
@@ -248,7 +248,7 @@ public static class NavigationManager
             else
             {
                 await UpdateImage.SetTiffImageAsync(TiffNavigationInfo, ImageIterator.CurrentIndex,
-                    vm.PicViewer.FileInfo, vm);
+                    vm.PicViewer.FileInfo.CurrentValue, vm);
             }
         }
 
@@ -311,8 +311,11 @@ public static class NavigationManager
 
         await ImageLoader.CheckCancellationAndStartIterateToIndex(index, ImageIterator).ConfigureAwait(false);
     }
+    
+    public static async Task NavigateIncrements(bool next, bool is10, bool is100) =>
+        await NavigateIncrements(UIHelper.GetMainView.DataContext as MainViewModel, next, is10, is100).ConfigureAwait(false);
 
-    private static async Task NavigateIncrements(MainViewModel vm, bool next, bool is10, bool is100)
+    public static async Task NavigateIncrements(MainViewModel vm, bool next, bool is10, bool is100)
     {
         if (!CanNavigate(vm))
         {
@@ -362,6 +365,10 @@ public static class NavigationManager
             await UIHelper.ScrollToEndIfNecessary(last);
         }
     }
+    
+    /// <inheritdoc cref="NavigateBetweenDirectories(bool last, MainViewModel vm)"/>
+    public static async Task NavigateFirstOrLast(bool last) =>
+        await NavigateBetweenDirectories(last, UIHelper.GetMainView.DataContext as MainViewModel);
 
     /// <summary>
     ///     Iterates to the next or previous image based on the <paramref name="next" /> parameter.
@@ -380,6 +387,7 @@ public static class NavigationManager
             await Navigate(next, vm);
         }
     }
+    public static async Task Iterate(bool next) => await Iterate(next, UIHelper.GetMainView.DataContext as MainViewModel).ConfigureAwait(false);
 
     /// <summary>
     ///     Navigates and moves the cursor to the corresponding button.
@@ -402,7 +410,7 @@ public static class NavigationManager
         else
         {
             await Navigate(next, vm);
-            await UIHelper.MoveCursorOnButtonClick(next, arrow, vm);
+            UIHelper.MoveCursorOnButtonClick(next, arrow, vm);
         }
     }
 
@@ -446,7 +454,7 @@ public static class NavigationManager
             {
                 vm.PlatformService.StopTaskbarProgress();
                 await LoadWithoutImageIterator(fileList[0], vm, fileList);
-                if (vm.PicViewer.Title == TranslationManager.Translation.Loading)
+                if (vm.PicViewer.Title.CurrentValue == TranslationManager.Translation.Loading)
                 {
                     TitleManager.SetTitle(vm);
                 }
@@ -484,6 +492,11 @@ public static class NavigationManager
             });
         }
     }
+    
+    /// <inheritdoc cref="NavigateBetweenDirectories(bool next, MainViewModel vm)"/>
+    public static async Task NavigateBetweenDirectories(bool next) =>
+        await NavigateBetweenDirectories(next, UIHelper.GetMainView.DataContext as MainViewModel);
+        
 
     /// <summary>
     ///     Gets the list of files in the next or previous folder.
@@ -570,7 +583,7 @@ public static class NavigationManager
 
     public static void InitializeImageIterator(MainViewModel vm)
     {
-        ImageIterator ??= new ImageIterator(vm.PicViewer.FileInfo, vm);
+        ImageIterator ??= new ImageIterator(vm.PicViewer.FileInfo.CurrentValue, vm);
     }
 
     public static async Task DisposeImageIteratorAsync()

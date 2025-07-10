@@ -1,43 +1,50 @@
 using Avalonia.Controls;
 using PicView.Avalonia.MacOS.WindowImpl;
+using PicView.Avalonia.UI;
 using PicView.Avalonia.ViewModels;
 using PicView.Avalonia.WindowBehavior;
-using ReactiveUI;
+using R3;
+using R3.Avalonia;
 
 namespace PicView.Avalonia.MacOS.Views;
 
 public partial class MacMainWindow : Window
 {
+    private readonly AvaloniaRenderingFrameProvider _frameProvider;
+
     public MacMainWindow()
     {
         InitializeComponent();
 
+        _frameProvider = new AvaloniaRenderingFrameProvider(GetTopLevel(this));
+        UIHelper.SetFrameProvider(_frameProvider);
+
         Loaded += delegate
         {
             // Keep window position when resizing
-            ClientSizeProperty.Changed.Subscribe(size =>
-            {
-                WindowResizing.HandleWindowResize(this, size);
-            });
+            ClientSizeProperty.Changed.ToObservable()
+                .Subscribe(size => { WindowResizing.HandleWindowResize(this, size); });
             if (DataContext is not MainViewModel vm)
             {
                 return;
             }
-            this.WhenAnyValue(x => x.WindowState).Subscribe(async state =>
+            Observable.EveryValueChanged(this, x => x.WindowState, _frameProvider).SubscribeAwait(async (state, _) =>
             {
                 switch (state)
                 {
                     case WindowState.FullScreen:
                         if (!Settings.WindowProperties.Fullscreen)
                         {
-                            await MacOSWindow.Fullscreen(this, vm); 
+                            await MacOSWindow.Fullscreen(this, vm);
                         }
+
                         break;
                     case WindowState.Maximized:
                         if (!Settings.WindowProperties.Maximized)
                         {
-                            await MacOSWindow.Maximize(this, vm); 
+                            await MacOSWindow.Maximize(this, vm);
                         }
+
                         break;
                     case WindowState.Normal:
                         if (Settings.WindowProperties.Maximized || Settings.WindowProperties.Fullscreen)
@@ -47,8 +54,9 @@ public partial class MacMainWindow : Window
                         break;
                 }
             });
+            
             // Hide macOS buttons when interface is hidden
-            vm.WhenAnyValue(x => x.IsTopToolbarShown).Subscribe(shown =>
+            Observable.EveryValueChanged(vm, x => x.MainWindow.IsTopToolbarShown.CurrentValue, _frameProvider).Subscribe(shown =>
             {
                 SystemDecorations = shown ? SystemDecorations.Full : SystemDecorations.None;
             });
@@ -75,5 +83,10 @@ public partial class MacMainWindow : Window
         e.Cancel = true;
         await WindowFunctions.WindowClosingBehavior(this);
         base.OnClosing(e);
+    }
+
+    protected override void OnClosed(EventArgs e)
+    {
+        _frameProvider?.Dispose();
     }
 }

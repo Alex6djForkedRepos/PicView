@@ -1,8 +1,8 @@
 ﻿<UserControl
-    Height="{CompiledBinding TitlebarHeight,
+    Height="{CompiledBinding MainWindow.TitlebarHeight.Value,
                              Mode=OneWay}"
-    ToolTip.Tip="{Binding PicViewer.TitleTooltip, Mode=OneWay}"
-    Width="{CompiledBinding TitleMaxWidth,
+    ToolTip.Tip="{Binding PicViewer.TitleTooltip.Value, Mode=OneWay}"
+    Width="{CompiledBinding MainWindow.TitleMaxWidth.Value,
                             Mode=OneWay}"
     d:DesignHeight="450"
     d:DesignWidth="800"
@@ -20,12 +20,12 @@
             FontFamily="avares://PicView.Avalonia/Assets/Fonts/Roboto-Medium.ttf#Roboto"
             FontSize="13"
             FontWeight="Medium"
-            Height="{CompiledBinding TitlebarHeight,
+            Height="{CompiledBinding MainWindow.TitlebarHeight.Value,
                                      Mode=OneWay}"
             IsTabStop="False"
-            IsVisible="{CompiledBinding !IsEditableTitlebarOpen}"
+            IsVisible="{CompiledBinding !MainWindow.IsEditableTitlebarOpen.Value}"
             Padding="0,7,0,5"
-            Text="{CompiledBinding PicViewer.Title,
+            Text="{CompiledBinding PicViewer.Title.Value,
                                    Mode=OneWay}"
             TextAlignment="Center"
             TextTrimming="CharacterEllipsis"
@@ -34,12 +34,12 @@
         <Border
             BorderBrush="{DynamicResource AccentColor}"
             BorderThickness="1"
-            IsVisible="{CompiledBinding IsEditableTitlebarOpen}">
+            IsVisible="{CompiledBinding MainWindow.IsEditableTitlebarOpen.Value}">
             <customControls:FuncTextBox
                 FontFamily="avares://PicView.Avalonia/Assets/Fonts/Roboto-Medium.ttf#Roboto"
                 FontSize="13"
                 FontWeight="Medium"
-                Height="{CompiledBinding TitlebarHeight,
+                Height="{CompiledBinding MainWindow.TitlebarHeight.Value,
                                          Mode=OneWay}"
                 IsTabStop="False"
                 Padding="0,7,0,5"

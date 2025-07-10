@@ -7,45 +7,45 @@ public static class GalleryStretchMode
     public static void DetermineStretchMode(MainViewModel vm)
     {
         // Reset all boolean properties
-        vm.IsUniformMenuChecked = false;
-        vm.IsUniformBottomChecked = false;
-        vm.IsUniformFullChecked = false;
+        vm.Gallery.IsUniformMenuChecked.Value = false;
+        vm.Gallery.IsUniformBottomChecked.Value = false;
+        vm.Gallery.IsUniformFullChecked.Value = false;
         
-        vm.IsUniformToFillMenuChecked = false;
-        vm.IsUniformToFillBottomChecked = false;
-        vm.IsUniformToFillFullChecked = false;
+        vm.Gallery.IsUniformToFillMenuChecked.Value = false;
+        vm.Gallery.IsUniformToFillBottomChecked.Value = false;
+        vm.Gallery.IsUniformToFillFullChecked.Value = false;
         
-        vm.IsFillMenuChecked = false;
-        vm.IsFillBottomChecked = false;
-        vm.IsFillFullChecked = false;
+        vm.Gallery.IsFillMenuChecked.Value = false;
+        vm.Gallery.IsFillBottomChecked.Value = false;
+        vm.Gallery.IsFillFullChecked.Value = false;
         
-        vm.IsNoneMenuChecked = false;
-        vm.IsNoneBottomChecked = false;
-        vm.IsNoneFullChecked = false;
+        vm.Gallery.IsNoneMenuChecked.Value = false;
+        vm.Gallery.IsNoneBottomChecked.Value = false;
+        vm.Gallery.IsNoneFullChecked.Value = false;
         
-        vm.IsSquareMenuChecked = false;
-        vm.IsSquareBottomChecked = false;
-        vm.IsSquareFullChecked = false;
+        vm.Gallery.IsSquareMenuChecked.Value = false;
+        vm.Gallery.IsSquareBottomChecked.Value = false;
+        vm.Gallery.IsSquareFullChecked.Value = false;
         
-        vm.IsFillSquareMenuChecked = false;
-        vm.IsFillSquareBottomChecked = false;
-        vm.IsFillSquareFullChecked = false;
+        vm.Gallery.IsFillSquareMenuChecked.Value = false;
+        vm.Gallery.IsFillSquareBottomChecked.Value = false;
+        vm.Gallery.IsFillSquareFullChecked.Value = false;
 
         if (Settings.Gallery.FullGalleryStretchMode.Equals("Square", StringComparison.OrdinalIgnoreCase))
         {
-            vm.IsSquareFullChecked = true;
+            vm.Gallery.IsSquareFullChecked.Value = true;
             if (GalleryFunctions.IsFullGalleryOpen)
             {
-                vm.IsSquareMenuChecked = true;
+                vm.Gallery.IsSquareMenuChecked.Value = true;
                 SetSquareStretch(vm);
             }
         }
         else if (Settings.Gallery.FullGalleryStretchMode.Equals("FillSquare", StringComparison.OrdinalIgnoreCase))
         {
-            vm.IsFillSquareFullChecked = true;
+            vm.Gallery.IsFillSquareFullChecked.Value = true;
             if (GalleryFunctions.IsFullGalleryOpen)
             {
-                vm.IsFillSquareMenuChecked = true;
+                vm.Gallery.IsFillSquareMenuChecked.Value = true;
                 SetSquareFillStretch(vm);
             }
         }
@@ -59,31 +59,31 @@ public static class GalleryStretchMode
         }
         else
         {
-            vm.GetGalleryItemWidth = double.NaN;
+            vm.Gallery.GalleryItem.ItemWidth.Value = double.NaN;
             if (GalleryFunctions.IsFullGalleryOpen)
             {
-                vm.IsUniformMenuChecked = true;
+                vm.Gallery.IsUniformMenuChecked.Value = true;
                 SetGalleryStretch(vm, Stretch.Uniform);
             }
-            vm.IsUniformFullChecked = true;
+            vm.Gallery.IsUniformFullChecked.Value = true;
         }
         
 
         if (Settings.Gallery.BottomGalleryStretchMode.Equals("Square", StringComparison.OrdinalIgnoreCase))
         {
-            vm.IsSquareBottomChecked = true;
+            vm.Gallery.IsSquareBottomChecked.Value = true;
             if (!GalleryFunctions.IsFullGalleryOpen)
             {
-                vm.IsSquareMenuChecked = true;
+                vm.Gallery.IsSquareMenuChecked.Value = true;
                 SetSquareStretch(vm);
             }
         }
         else if (Settings.Gallery.BottomGalleryStretchMode.Equals("FillSquare", StringComparison.OrdinalIgnoreCase))
         {
-            vm.IsFillSquareBottomChecked = true;
+            vm.Gallery.IsFillSquareBottomChecked.Value = true;
             if (!GalleryFunctions.IsFullGalleryOpen)
             {
-                vm.IsFillSquareMenuChecked = true;
+                vm.Gallery.IsFillSquareMenuChecked.Value = true;
                 SetSquareFillStretch(vm);
             }
         }
@@ -97,10 +97,10 @@ public static class GalleryStretchMode
         }
         else
         {
-            vm.IsUniformBottomChecked = true;
+            vm.Gallery.IsUniformBottomChecked.Value = true;
             if (!GalleryFunctions.IsFullGalleryOpen)
             {
-                vm.IsUniformMenuChecked = true;
+                vm.Gallery.IsUniformMenuChecked.Value = true;
                 SetGalleryStretch(vm, Stretch.Uniform);
             }
         }
@@ -115,82 +115,82 @@ public static class GalleryStretchMode
                 case Stretch.Uniform:
                     if (GalleryFunctions.IsFullGalleryOpen)
                     {
-                        vm.IsUniformFullChecked = true;
+                        vm.Gallery.IsUniformFullChecked.Value = true;
                         if (isFullGallery)
                         {
-                            vm.IsUniformMenuChecked = true;
+                            vm.Gallery.IsUniformMenuChecked.Value = true;
                         }
                     }
                     else
                     {
-                        vm.IsUniformBottomChecked = true;
+                        vm.Gallery.IsUniformBottomChecked.Value = true;
                         if (!isFullGallery)
                         {
-                            vm.IsUniformMenuChecked = true;
+                            vm.Gallery.IsUniformMenuChecked.Value = true;
                         }
                     }
                     break;
                 case Stretch.UniformToFill:
                     if (GalleryFunctions.IsFullGalleryOpen)
                     {
-                        vm.IsUniformToFillFullChecked = true;
+                        vm.Gallery.IsUniformToFillFullChecked.Value = true;
                         if (isFullGallery)
                         {
-                            vm.IsUniformToFillMenuChecked = true;
+                            vm.Gallery.IsUniformToFillMenuChecked.Value = true;
                         }
                     }
                     else
                     {
-                        vm.IsUniformToFillBottomChecked = true;
+                        vm.Gallery.IsUniformToFillBottomChecked.Value = true;
                         if (!isFullGallery)
                         {
-                            vm.IsUniformToFillMenuChecked = true;
+                            vm.Gallery.IsUniformToFillMenuChecked.Value = true;
                         }
                     }
                     break;
                 case Stretch.Fill:
                     if (GalleryFunctions.IsFullGalleryOpen)
                     {
-                        vm.IsFillFullChecked = true;
+                        vm.Gallery.IsFillFullChecked.Value = true;
                         if (isFullGallery)
                         {
-                            vm.IsFillMenuChecked = true;
+                            vm.Gallery.IsFillMenuChecked.Value = true;
                         }
                     }
                     else
                     {
-                        vm.IsFillBottomChecked = true;
+                        vm.Gallery.IsFillBottomChecked.Value = true;
                         if (!isFullGallery)
                         {
-                            vm.IsFillMenuChecked = true;
+                            vm.Gallery.IsFillMenuChecked.Value = true;
                         }
                     }
                     break;
                 case Stretch.None:
                     if (GalleryFunctions.IsFullGalleryOpen)
                     {
-                        vm.IsNoneFullChecked = true;
+                        vm.Gallery.IsNoneFullChecked.Value = true;
                         if (isFullGallery)
                         {
-                            vm.IsNoneMenuChecked = true;
+                            vm.Gallery.IsNoneMenuChecked.Value = true;
                         }
                     }
                     else
                     {
-                        vm.IsNoneBottomChecked = true;
+                        vm.Gallery.IsNoneBottomChecked.Value = true;
                         if (!isFullGallery)
                         {
-                            vm.IsNoneMenuChecked = true;
+                            vm.Gallery.IsNoneMenuChecked.Value = true;
                         }
                     }
                     break;
                 default:
                     if (!GalleryFunctions.IsFullGalleryOpen)
                     {
-                        vm.IsUniformMenuChecked = true;
+                        vm.Gallery.IsUniformMenuChecked.Value = true;
                     }
-                    vm.IsUniformFullChecked = true;
-                    vm.IsUniformBottomChecked = true;
+                    vm.Gallery.IsUniformFullChecked.Value = true;
+                    vm.Gallery.IsUniformBottomChecked.Value = true;
                     break;
             }
         }
@@ -198,20 +198,20 @@ public static class GalleryStretchMode
     
     public static void SetGalleryStretch(MainViewModel vm, Stretch stretch)
     {
-        vm.GetGalleryItemWidth = double.NaN;
-        vm.GalleryStretch = stretch;
+        vm.Gallery.GalleryItem.ItemWidth.Value = double.NaN;
+        vm.Gallery.GalleryStretch.Value = stretch;
     }
 
     public static void SetSquareStretch(MainViewModel vm)
     {
-        vm.GetGalleryItemWidth = vm.GetGalleryItemHeight;
-        vm.GalleryStretch = Stretch.Uniform;
+        vm.Gallery.GalleryItem.ItemWidth.Value  = vm.Gallery.GalleryItem.ItemHeight.Value;
+        vm.Gallery.GalleryStretch.Value = Stretch.Uniform;
     }
     
     public static void SetSquareFillStretch(MainViewModel vm)
     {
-        vm.GetGalleryItemWidth = vm.GetGalleryItemHeight;
-        vm.GalleryStretch = Stretch.Fill;
+        vm.Gallery.GalleryItem.ItemWidth.Value  = vm.Gallery.GalleryItem.ItemHeight.Value;;
+        vm.Gallery.GalleryStretch.Value = Stretch.Fill;
     }
 
     public static void ChangeBottomGalleryItemStretch(MainViewModel vm, Stretch stretch)

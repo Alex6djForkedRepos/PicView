@@ -15,7 +15,7 @@ public static class WallpaperManager
             return;
         }
         
-        vm.IsLoading = true;
+        vm.MainWindow.IsLoadingIndicatorShown.Value = true;
         try
         {
             var file = await ImageFormatConverter.ConvertToCommonSupportedFormatAsync(path, vm).ConfigureAwait(false);
@@ -31,7 +31,7 @@ public static class WallpaperManager
         }
         finally
         {
-            vm.IsLoading = false;
+            vm.MainWindow.IsLoadingIndicatorShown.Value = false;
         }
     }
     

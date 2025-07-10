@@ -6,14 +6,17 @@ using Avalonia.Media;
 using PicView.Avalonia.UI;
 using PicView.Avalonia.WindowBehavior;
 using PicView.Core.Localization;
+using R3;
 
 namespace PicView.Avalonia.Win32.Views;
 
-public partial class ExifWindow : Window
+public partial class ExifWindow : Window, IDisposable
 {
+    private readonly CompositeDisposable _disposables = new();
     public ExifWindow()
     {
         InitializeComponent();
+        
         if (Settings.Theme.GlassTheme)
         {
             BorderRectangle.Height = 0;
@@ -85,7 +88,10 @@ public partial class ExifWindow : Window
         GenericWindowHelper.GenericWindowInitialize(this, TranslationManager.Translation.ImageInfo + " - PicView");
         Loaded += delegate
         {
-            ClientSizeProperty.Changed.Subscribe(size => { WindowResizing.HandleWindowResize(this, size); });
+            ClientSizeProperty.Changed.ToObservable()
+                .ObserveOn(UIHelper.GetFrameProvider)
+                .Subscribe(size => { WindowResizing.HandleWindowResize(this, size); })
+                .AddTo(_disposables);
         };
     }
 
@@ -100,4 +106,10 @@ public partial class ExifWindow : Window
     private void Close(object? sender, RoutedEventArgs e) => Close();
 
     private void Minimize(object? sender, RoutedEventArgs e) => WindowState = WindowState.Minimized;
+    
+    public void Dispose()
+    {
+        Disposable.Dispose(_disposables);
+        GC.SuppressFinalize(this);
+    }
 }

@@ -4,7 +4,6 @@ using Avalonia.Interactivity;
 using Avalonia.Threading;
 using PicView.Avalonia.FileSystem;
 using PicView.Avalonia.Input;
-using PicView.Avalonia.Navigation;
 using PicView.Avalonia.UI;
 using PicView.Avalonia.ViewModels;
 using PicView.Core.Localization;
@@ -26,12 +25,12 @@ public partial class EditableTitlebar : UserControl
     {
         if (!UIHelper.TryGetMainViewModel(out var vm) ||
             !e.GetCurrentPoint(this).Properties.IsRightButtonPressed ||
-            vm.IsEditableTitlebarOpen)
+            vm.MainWindow.IsEditableTitlebarOpen.CurrentValue)
         {
             return;
         }
 
-        vm.IsEditableTitlebarOpen = true;
+        vm.MainWindow.IsEditableTitlebarOpen.Value = true;
         SelectFileName();
     }
 
@@ -42,7 +41,7 @@ public partial class EditableTitlebar : UserControl
             return;
         }
 
-        Cursor = vm.IsEditableTitlebarOpen
+        Cursor = vm.MainWindow.IsEditableTitlebarOpen.CurrentValue
             ? new Cursor(StandardCursorType.Ibeam)
             : new Cursor(StandardCursorType.Arrow);
     }
@@ -57,10 +56,10 @@ public partial class EditableTitlebar : UserControl
             return;
         }
 
-        vm.IsEditableTitlebarOpen = false;
+        vm.MainWindow.IsEditableTitlebarOpen.Value = false;
         Cursor = new Cursor(StandardCursorType.Arrow);
         MainKeyboardShortcuts.IsKeysEnabled = true;
-        TextBlock.Text = vm.PicViewer.Title;
+        TextBlock.Text = vm.PicViewer.Title.CurrentValue;
     }
 
     protected override void OnKeyDown(KeyEventArgs e)
@@ -70,7 +69,7 @@ public partial class EditableTitlebar : UserControl
             return;
         }
 
-        if (!vm.IsEditableTitlebarOpen)
+        if (!vm.MainWindow.IsEditableTitlebarOpen.CurrentValue)
         {
             e.Handled = true;
             return;
@@ -97,7 +96,7 @@ public partial class EditableTitlebar : UserControl
             return;
         }
 
-        if (!vm.IsEditableTitlebarOpen)
+        if (!vm.MainWindow.IsEditableTitlebarOpen.CurrentValue)
         {
             if (e.Key != Key.Escape)
             {
@@ -109,8 +108,8 @@ public partial class EditableTitlebar : UserControl
 
         if (e.Key == Key.Enter)
         {
-            var oldPath = vm.PicViewer.FileInfo.FullName;
-            var newPath = Path.Combine(vm.PicViewer.FileInfo.DirectoryName, TextBox.Text);
+            var oldPath = vm.PicViewer.FileInfo.CurrentValue.FullName;
+            var newPath = Path.Combine(vm.PicViewer.FileInfo.CurrentValue.DirectoryName, TextBox.Text);
             Task.Run(async () =>
             {
                 if (newPath == oldPath)
@@ -122,8 +121,8 @@ public partial class EditableTitlebar : UserControl
                 MainKeyboardShortcuts.IsKeysEnabled = true;
                 if (isFileRenamed)
                 {
-                    vm.IsLoading = false;
-                    vm.IsEditableTitlebarOpen = false;
+                    vm.MainWindow.IsLoadingIndicatorShown.Value = false;
+                    vm.MainWindow.IsEditableTitlebarOpen.Value = false;
                     await Dispatcher.UIThread.InvokeAsync(() =>
                     {
                         TextBox.ClearSelection();
@@ -143,7 +142,7 @@ public partial class EditableTitlebar : UserControl
     private async Task ShowFileExistsErrorAsync(MainViewModel vm)
     {
         CloseTitlebar();
-        vm.IsLoading = false;
+        vm.MainWindow.IsLoadingIndicatorShown.Value = false;
         await TooltipHelper.ShowTooltipMessageAsync(TranslationManager.GetTranslation("FileAlreadyExistsError"), true);
     }
 
@@ -154,7 +153,7 @@ public partial class EditableTitlebar : UserControl
             return;
         }
 
-        var filename = vm.PicViewer.FileInfo.Name;
+        var filename = vm.PicViewer.FileInfo.CurrentValue.Name;
         TextBox.Text = filename;
 
         var start = TextBox.Text.Length - filename.Length;
@@ -162,7 +161,7 @@ public partial class EditableTitlebar : UserControl
         TextBox.SelectionStart = start;
         TextBox.SelectionEnd = end;
 
-        vm.IsEditableTitlebarOpen = true;
+        vm.MainWindow.IsEditableTitlebarOpen.Value = true;
         Cursor = new Cursor(StandardCursorType.Ibeam);
         TextBox.Focus();
     }

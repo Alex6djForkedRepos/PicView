@@ -20,16 +20,16 @@ public partial class BottomGalleryItemSizeSlider : UserControl
             return;
         }
         // ReSharper disable once CompareOfFloatsByEqualityOperator
-        if (vm.GetBottomGalleryItemHeight == e.NewValue)
+        if (vm.Gallery.GalleryItem.BottomGalleryItemHeight.CurrentValue == e.NewValue)
         {
             return;
         }
-        vm.GetBottomGalleryItemHeight = e.NewValue;
+        vm.Gallery.GalleryItem.BottomGalleryItemHeight.Value = e.NewValue;
         
         if (Settings.Gallery.IsBottomGalleryShown && !GalleryFunctions.IsFullGalleryOpen)
         {
-            vm.GetGalleryItemHeight = e.NewValue;
-            UIHelper.GetGalleryView.Height = vm.GalleryHeight;
+            vm.Gallery.GalleryItem.ItemHeight.Value= e.NewValue;
+            UIHelper.GetGalleryView.Height = GalleryFunctions.GetGalleryHeight(vm);
             WindowResizing.SetSize(vm);
         }
         

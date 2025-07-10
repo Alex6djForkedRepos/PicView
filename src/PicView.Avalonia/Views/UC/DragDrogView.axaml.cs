@@ -106,7 +106,7 @@ public partial class DragDropView : UserControl
     private static double CalculateScale(double width, double height, MainViewModel vm)
     {
         var screen = ScreenHelper.ScreenSize;
-        var padding = vm.BottombarHeight + vm.TitlebarHeight + 50;
+        var padding = vm.MainWindow.BottombarHeight.CurrentValue + vm.MainWindow.TitlebarHeight.CurrentValue + 50;
         var boxedWidth = UIHelper.GetMainView.Bounds.Width * screen.Scaling - padding;
         var boxedHeight = UIHelper.GetMainView.Bounds.Height * screen.Scaling - padding;
         var scaledWidth = boxedWidth / width;

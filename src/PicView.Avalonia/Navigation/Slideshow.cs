@@ -58,7 +58,7 @@ public static class Slideshow
 
         if (Settings.Gallery.IsBottomGalleryShown)
         {
-            vm.GalleryMode = GalleryMode.ClosedToBottom;
+            vm.Gallery.GalleryMode.Value = GalleryMode.ClosedToBottom;
         }
         
         _timer.Stop();
@@ -118,7 +118,7 @@ public static class Slideshow
 
         if (GalleryFunctions.IsFullGalleryOpen || Settings.Gallery.IsBottomGalleryShown)
         {
-            vm.GalleryMode = GalleryMode.BottomToClosed;
+            vm.Gallery.GalleryMode.Value = GalleryMode.BottomToClosed;
         }
     }
 }

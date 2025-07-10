@@ -36,13 +36,13 @@
                     Classes="txt"
                     Height="28"
                     LineHeight="28"
-                    Text="{CompiledBinding Translation.Settings,
+                    Text="{CompiledBinding Translation.Settings.Value,
                                            Mode=OneWay}"
                     TextAlignment="Center"
                     x:Name="TitleText" />
             </Panel>
 
-            <views:SettingsView Background="{DynamicResource WindowBackgroundColor}" x:Name="XSettingsView" />
+            <views:SettingsView Background="{DynamicResource WindowBackgroundColor}" x:Name="SettingsView" />
         </StackPanel>
     </Border>
 </Window>

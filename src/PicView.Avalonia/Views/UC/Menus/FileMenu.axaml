@@ -1,5 +1,5 @@
 <customControls:AnimatedMenu
-    IsOpen="{CompiledBinding IsFileMenuVisible}"
+    IsOpen="{CompiledBinding MainWindow.IsFileMenuVisible.Value}"
     mc:Ignorable="d"
     x:Class="PicView.Avalonia.Views.UC.Menus.FileMenu"
     x:DataType="viewModels:MainViewModel"
@@ -49,53 +49,53 @@
 
                 <customControls:IconButton
                     Classes="hover btn"
-                    Command="{Binding ReloadCommand}"
+                    Command="{Binding Navigation.ReloadCommand}"
                     CornerRadius="8,0,0,0"
                     Data="{StaticResource ReloadGeometry}"
                     IconHeight="17"
                     IconWidth="17"
-                    IsEnabled="{CompiledBinding PicViewer.ImageSource,
+                    IsEnabled="{CompiledBinding PicViewer.ImageSource.Value,
                                                 Converter={x:Static ObjectConverters.IsNotNull}}"
-                    ToolTip.Tip="{CompiledBinding Translation.Reload,
+                    ToolTip.Tip="{CompiledBinding Translation.Reload.Value,
                                                   Mode=OneWay}" />
 
                 <customControls:IconButton
                     Canvas.Left="45"
                     Classes="hover btn"
-                    Command="{CompiledBinding PrintCommand}"
-                    CommandParameter="{CompiledBinding PicViewer.FileInfo.FullName,
+                    Command="{CompiledBinding Tools.PrintCommand}"
+                    CommandParameter="{CompiledBinding PicViewer.FileInfo.Value.FullName,
                                                        FallbackValue=''}"
                     Data="{StaticResource PrintGeometry}"
                     IconHeight="17"
                     IconWidth="17"
-                    IsEnabled="{CompiledBinding PicViewer.FileInfo,
+                    IsEnabled="{CompiledBinding PicViewer.FileInfo.Value,
                                                 Converter={x:Static ObjectConverters.IsNotNull}}"
-                    ToolTip.Tip="{CompiledBinding Translation.Print,
+                    ToolTip.Tip="{CompiledBinding Translation.Print.Value,
                                                   Mode=OneWay}"
                     x:Name="PrintButton" />
 
                 <customControls:IconButton
                     Canvas.Left="90"
                     Classes="hover btn"
-                    Command="{CompiledBinding RecycleFileCommand}"
-                    CommandParameter="{CompiledBinding PicViewer.FileInfo.FullName,
+                    Command="{CompiledBinding Tools.RecycleFileCommand}"
+                    CommandParameter="{CompiledBinding PicViewer.FileInfo.Value.FullName,
                                                        FallbackValue=''}"
                     Data="{StaticResource RecycleGeometry}"
                     IconHeight="17"
                     IconWidth="17"
-                    IsEnabled="{CompiledBinding PicViewer.FileInfo,
+                    IsEnabled="{CompiledBinding PicViewer.FileInfo.Value,
                                                 Converter={x:Static ObjectConverters.IsNotNull}}"
-                    ToolTip.Tip="{CompiledBinding Translation.DeleteFile,
+                    ToolTip.Tip="{CompiledBinding Translation.DeleteFile.Value,
                                                   Mode=OneWay}" />
 
                 <customControls:IconButton
                     Canvas.Left="135"
                     Classes="hover btn"
-                    Command="{CompiledBinding SaveFileCommand}"
+                    Command="{CompiledBinding Tools.SaveFileCommand}"
                     Data="{StaticResource SaveGeometry}"
                     IconHeight="17"
                     IconWidth="17"
-                    IsEnabled="{CompiledBinding PicViewer.ImageSource,
+                    IsEnabled="{CompiledBinding PicViewer.ImageSource.Value,
                                                 Converter={x:Static ObjectConverters.IsNotNull}}"
                     ToolTip.Tip="{CompiledBinding Translation.Save,
                                                   Mode=OneWay}" />
@@ -103,41 +103,41 @@
                 <customControls:IconButton
                     Canvas.Left="180"
                     Classes="hover btn"
-                    Command="{CompiledBinding CopyFileCommand}"
-                    CommandParameter="{CompiledBinding PicViewer.FileInfo.FullName,
+                    Command="{CompiledBinding Tools.CopyFileCommand}"
+                    CommandParameter="{CompiledBinding PicViewer.FileInfo.Value.FullName,
                                                        FallbackValue=''}"
                     Data="{StaticResource CopyGeometry}"
                     IconHeight="17"
                     IconWidth="17"
-                    IsEnabled="{CompiledBinding PicViewer.FileInfo,
+                    IsEnabled="{CompiledBinding PicViewer.FileInfo.Value,
                                                 Converter={x:Static ObjectConverters.IsNotNull}}"
-                    ToolTip.Tip="{CompiledBinding Translation.CopyFile,
+                    ToolTip.Tip="{CompiledBinding Translation.CopyFile.Value,
                                                   Mode=OneWay}" />
 
                 <customControls:IconButton
                     Canvas.Left="225"
                     Classes="hover btn"
-                    Command="{CompiledBinding DuplicateFileCommand}"
-                    CommandParameter="{CompiledBinding PicViewer.FileInfo.FullName,
+                    Command="{CompiledBinding Tools.DuplicateFileCommand}"
+                    CommandParameter="{CompiledBinding PicViewer.FileInfo.Value.FullName,
                                                        FallbackValue=''}"
                     Data="{StaticResource DuplicateGeometry}"
                     IconHeight="17"
                     IconWidth="17"
-                    IsEnabled="{CompiledBinding PicViewer.FileInfo,
+                    IsEnabled="{CompiledBinding PicViewer.FileInfo.Value,
                                                 Converter={x:Static ObjectConverters.IsNotNull}}"
-                    ToolTip.Tip="{CompiledBinding Translation.DuplicateFile,
+                    ToolTip.Tip="{CompiledBinding Translation.DuplicateFile.Value,
                                                   Mode=OneWay}" />
 
                 <customControls:IconButton
                     Canvas.Left="270"
                     Classes="hover btn"
                     ClickMode="Release"
-                    Command="{CompiledBinding CloseMenuCommand}"
+                    Command="{CompiledBinding MainWindow.CloseMenuCommand}"
                     CornerRadius="0,8,0,0"
                     Data="{StaticResource CloseGeometry}"
                     IconHeight="10"
                     IconWidth="10"
-                    ToolTip.Tip="{CompiledBinding Translation.Close,
+                    ToolTip.Tip="{CompiledBinding Translation.Close.Value,
                                                   Mode=OneWay}" />
 
                 <Button
@@ -145,9 +145,9 @@
                     Canvas.Left="7"
                     Canvas.Top="53"
                     Classes="ButtonBorder altHover"
-                    Command="{CompiledBinding OpenFileCommand}"
+                    Command="{CompiledBinding Tools.OpenFileCommand}"
                     Height="46"
-                    ToolTip.Tip="{CompiledBinding Translation.OpenFileDialog,
+                    ToolTip.Tip="{CompiledBinding Translation.OpenFileDialog.Value,
                                                   Mode=OneWay}">
                     <StackPanel Orientation="Horizontal">
                         <Path
@@ -158,7 +158,7 @@
                             Stretch="Fill"
                             VerticalAlignment="Center"
                             Width="21.39" />
-                        <TextBlock Classes="txt btnTxt" Text="{CompiledBinding Translation.Open, Mode=OneWay}" />
+                        <TextBlock Classes="txt btnTxt" Text="{CompiledBinding Translation.Open.Value, Mode=OneWay}" />
                     </StackPanel>
                 </Button>
 
@@ -167,13 +167,13 @@
                     Canvas.Left="7"
                     Canvas.Top="104"
                     Classes="ButtonBorder altHover"
-                    Command="{CompiledBinding OpenWithCommand}"
-                    CommandParameter="{CompiledBinding PicViewer.FileInfo.FullName,
+                    Command="{CompiledBinding Tools.OpenWithCommand}"
+                    CommandParameter="{CompiledBinding PicViewer.FileInfo.Value.FullName,
                                                        FallbackValue=''}"
                     Height="46"
-                    IsEnabled="{CompiledBinding PicViewer.FileInfo,
+                    IsEnabled="{CompiledBinding PicViewer.FileInfo.Value,
                                                 Converter={x:Static ObjectConverters.IsNotNull}}"
-                    ToolTip.Tip="{CompiledBinding Translation.OpenWith}"
+                    ToolTip.Tip="{CompiledBinding Translation.OpenWith.Value}"
                     x:Name="OpenWithButton">
                     <StackPanel Orientation="Horizontal">
                         <Path
@@ -184,7 +184,7 @@
                             Stretch="Fill"
                             VerticalAlignment="Center"
                             Width="17" />
-                        <TextBlock Classes="txt btnTxt" Text="{CompiledBinding Translation.OpenWith, Mode=OneWay}" />
+                        <TextBlock Classes="txt btnTxt" Text="{CompiledBinding Translation.OpenWith.Value, Mode=OneWay}" />
                     </StackPanel>
                 </Button>
 
@@ -193,13 +193,13 @@
                     Canvas.Left="160"
                     Canvas.Top="53"
                     Classes="ButtonBorder altHover"
-                    Command="{CompiledBinding LocateOnDiskCommand}"
-                    CommandParameter="{CompiledBinding PicViewer.FileInfo.FullName,
+                    Command="{CompiledBinding Tools.LocateOnDiskCommand}"
+                    CommandParameter="{CompiledBinding PicViewer.FileInfo.Value.FullName,
                                                        FallbackValue=''}"
                     Height="46"
                     IsEnabled="{CompiledBinding PicViewer.FileInfo,
                                                 Converter={x:Static ObjectConverters.IsNotNull}}"
-                    ToolTip.Tip="{CompiledBinding Translation.ShowInFolder,
+                    ToolTip.Tip="{CompiledBinding Translation.ShowInFolder.Value,
                                                   Mode=OneWay}">
                     <StackPanel Orientation="Horizontal">
                         <Path
@@ -209,7 +209,7 @@
                             Margin="11,0,9,0"
                             Stretch="Fill"
                             Width="19" />
-                        <TextBlock Classes="txt btnTxt" Text="{CompiledBinding Translation.ShowInFolder, Mode=OneWay}" />
+                        <TextBlock Classes="txt btnTxt" Text="{CompiledBinding Translation.ShowInFolder.Value, Mode=OneWay}" />
                     </StackPanel>
                 </Button>
 
@@ -218,11 +218,11 @@
                     Canvas.Left="160"
                     Canvas.Top="104"
                     Classes="ButtonBorder altHover"
-                    Command="{CompiledBinding SaveFileAsCommand}"
+                    Command="{CompiledBinding Tools.SaveFileAsCommand}"
                     Height="46"
-                    IsEnabled="{CompiledBinding PicViewer.FileInfo,
+                    IsEnabled="{CompiledBinding PicViewer.FileInfo.Value,
                                                 Converter={x:Static ObjectConverters.IsNotNull}}"
-                    ToolTip.Tip="{CompiledBinding Translation.SaveAs,
+                    ToolTip.Tip="{CompiledBinding Translation.SaveAs.Value,
                                                   Mode=OneWay}">
                     <StackPanel Orientation="Horizontal">
                         <Path
@@ -233,7 +233,7 @@
                             Stretch="Fill"
                             VerticalAlignment="Center"
                             Width="19" />
-                        <TextBlock Classes="txt btnTxt" Text="{CompiledBinding Translation.SaveAs, Mode=OneWay}" />
+                        <TextBlock Classes="txt btnTxt" Text="{CompiledBinding Translation.SaveAs.Value, Mode=OneWay}" />
                     </StackPanel>
                 </Button>
 
@@ -242,9 +242,9 @@
                     Canvas.Left="7"
                     Canvas.Top="155"
                     Classes="ButtonBorder altHover"
-                    Command="{CompiledBinding PasteCommand}"
+                    Command="{CompiledBinding Tools.PasteCommand}"
                     Height="46"
-                    ToolTip.Tip="{CompiledBinding Translation.Paste,
+                    ToolTip.Tip="{CompiledBinding Translation.Paste.Value,
                                                   Mode=OneWay}">
                     <StackPanel Orientation="Horizontal">
                         <Path
@@ -255,7 +255,7 @@
                             Stretch="Fill"
                             VerticalAlignment="Center"
                             Width="19" />
-                        <TextBlock Classes="txt btnTxt" Text="{CompiledBinding Translation.Paste, Mode=OneWay}" />
+                        <TextBlock Classes="txt btnTxt" Text="{CompiledBinding Translation.Paste.Value, Mode=OneWay}" />
                     </StackPanel>
                 </Button>
 
@@ -264,9 +264,9 @@
                     Canvas.Left="160"
                     Canvas.Top="155"
                     Classes="ButtonBorder altHover"
-                    Command="{CompiledBinding NewWindowCommand}"
+                    Command="{CompiledBinding Window.NewWindow}"
                     Height="46"
-                    ToolTip.Tip="{Binding Translation.NewWindow, Mode=OneWay}">
+                    ToolTip.Tip="{Binding Translation.NewWindow.Value, Mode=OneWay}">
                     <StackPanel Orientation="Horizontal">
                         <Image
                             Height="20"
@@ -283,7 +283,7 @@
                                 </DrawingGroup>
                             </DrawingImage>
                         </Image>
-                        <TextBlock Classes="txt btnTxt" Text="{CompiledBinding Translation.NewWindow, Mode=OneWay}" />
+                        <TextBlock Classes="txt btnTxt" Text="{CompiledBinding Translation.NewWindow.Value, Mode=OneWay}" />
                     </StackPanel>
                 </Button>
             </Canvas>

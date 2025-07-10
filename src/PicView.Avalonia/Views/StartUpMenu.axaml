@@ -1,6 +1,6 @@
 <UserControl
-    MinHeight="{CompiledBinding WindowMinSize}"
-    MinWidth="{CompiledBinding WindowMinSize}"
+    MinHeight="{CompiledBinding MainWindow.WindowMinSize.Value}"
+    MinWidth="{CompiledBinding MainWindow.WindowMinSize.Value}"
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d"
@@ -42,7 +42,7 @@
             VerticalAlignment="Center"
             x:Name="Buttons">
 
-            <Button Command="{CompiledBinding OpenFileCommand}" x:Name="SelectFileButton">
+            <Button Command="{CompiledBinding Tools.OpenFileCommand}" x:Name="SelectFileButton">
                 <StackPanel Orientation="Horizontal">
                     <Image Height="20.091">
                         <Image.Source>
@@ -73,7 +73,8 @@
                         </Image.Source>
                     </Image>
                     <Label
-                        Content="{CompiledBinding Translation.SelectFile}"
+                        Content="{CompiledBinding Translation.SelectFile.Value,
+                                                  Mode=OneWay}"
                         FontFamily="/Assets/Fonts/Roboto-Bold.ttf#Roboto"
                         FontSize="14"
                         Foreground="{StaticResource SelectFileBrush}"
@@ -82,7 +83,7 @@
                 </StackPanel>
             </Button>
 
-            <Button Command="{CompiledBinding OpenLastFileCommand}" x:Name="OpenLastFileButton">
+            <Button Command="{CompiledBinding Tools.OpenLastFileCommand}" x:Name="OpenLastFileButton">
                 <StackPanel Height="30" Orientation="Horizontal">
                     <Image Height="20.091">
                         <Image.Source>
@@ -113,7 +114,8 @@
                         </Image.Source>
                     </Image>
                     <Label
-                        Content="{CompiledBinding Translation.OpenLastFile}"
+                        Content="{CompiledBinding Translation.OpenLastFile.Value,
+                                                  Mode=OneWay}"
                         FontFamily="/Assets/Fonts/Roboto-Bold.ttf#Roboto"
                         FontSize="14"
                         Foreground="{StaticResource OpenLastFileBrush}"
@@ -122,7 +124,7 @@
                 </StackPanel>
             </Button>
 
-            <Button Command="{CompiledBinding PasteCommand}" x:Name="PasteButton">
+            <Button Command="{CompiledBinding Tools.PasteCommand}" x:Name="PasteButton">
                 <StackPanel Height="30" Orientation="Horizontal">
                     <Path
                         Data="{StaticResource PasteGeometry}"
@@ -131,7 +133,8 @@
                         Stretch="Fill"
                         Width="20" />
                     <Label
-                        Content="{CompiledBinding Translation.Paste}"
+                        Content="{CompiledBinding Translation.Paste.Value,
+                                                  Mode=OneWay}"
                         FontFamily="/Assets/Fonts/Roboto-Bold.ttf#Roboto"
                         FontSize="14"
                         Foreground="{StaticResource PasteBrush}"

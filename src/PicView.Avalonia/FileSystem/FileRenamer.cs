@@ -12,7 +12,7 @@ public static class FileRenamer
 
     public static async Task<bool> AttemptRenameAsync(string oldPath, string newPath, MainViewModel vm, uint? width = null, uint? height = null, uint? quality = null)
     {
-        vm.IsLoading = true;
+        vm.MainWindow.IsLoadingIndicatorShown.Value = true;
 
         if (Path.GetExtension(newPath) != Path.GetExtension(oldPath))
         {

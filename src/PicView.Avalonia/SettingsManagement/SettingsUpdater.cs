@@ -18,25 +18,29 @@ public static class SettingsUpdater
 {
     public static void ValidateGallerySettings(MainViewModel vm, bool settingsExists)
     {
-        vm.GetFullGalleryItemHeight = Settings.Gallery.ExpandedGalleryItemSize;
-        vm.GetBottomGalleryItemHeight = Settings.Gallery.BottomGalleryItemSize;
+        if (vm.Gallery is not {} gallery)
+        {
+            return;
+        }
+        vm.Gallery.GalleryItem.ExpandedGalleryItemHeight.Value  = Settings.Gallery.ExpandedGalleryItemSize;
+        vm.Gallery.GalleryItem.BottomGalleryItemHeight.Value = Settings.Gallery.BottomGalleryItemSize;
         if (!settingsExists)
         {
-            vm.GetBottomGalleryItemHeight = GalleryDefaults.DefaultBottomGalleryHeight;
-            vm.GetFullGalleryItemHeight = GalleryDefaults.DefaultFullGalleryHeight;
+            vm.Gallery.GalleryItem.BottomGalleryItemHeight.Value = GalleryDefaults.DefaultBottomGalleryHeight;
+            vm.Gallery.GalleryItem.ExpandedGalleryItemHeight.Value = GalleryDefaults.DefaultFullGalleryHeight;
         }
 
         // Set default gallery sizes if they are out of range or upgrading from an old version
-        if (vm.GetBottomGalleryItemHeight < vm.MinBottomGalleryItemHeight ||
-            vm.GetBottomGalleryItemHeight > vm.MaxBottomGalleryItemHeight)
+        if (vm.Gallery.GalleryItem.BottomGalleryItemHeight.CurrentValue < GalleryDefaults.MinBottomGalleryItemHeight ||
+            vm.Gallery.GalleryItem.BottomGalleryItemHeight.CurrentValue > GalleryDefaults.MaxBottomGalleryItemHeight)
         {
-            vm.GetBottomGalleryItemHeight = GalleryDefaults.DefaultBottomGalleryHeight;
+            vm.Gallery.GalleryItem.BottomGalleryItemHeight.Value = GalleryDefaults.DefaultBottomGalleryHeight;
         }
 
-        if (vm.GetFullGalleryItemHeight < vm.MinFullGalleryItemHeight ||
-            vm.GetFullGalleryItemHeight > vm.MaxFullGalleryItemHeight)
+        if (vm.Gallery.GalleryItem.ExpandedGalleryItemHeight.CurrentValue < GalleryDefaults.MinFullGalleryItemHeight ||
+            vm.Gallery.GalleryItem.ExpandedGalleryItemHeight.CurrentValue > GalleryDefaults.MaxFullGalleryItemHeight)
         {
-            vm.GetFullGalleryItemHeight = GalleryDefaults.DefaultFullGalleryHeight;
+            vm.Gallery.GalleryItem.ExpandedGalleryItemHeight.Value = GalleryDefaults.DefaultFullGalleryHeight;
         }
 
         if (settingsExists)
@@ -56,51 +60,33 @@ public static class SettingsUpdater
     }
 
     public static void InitializeSettings(MainViewModel vm)
-    {    
+    {
         // Set corner radius on macOS
         if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
         {
-            vm.BottomCornerRadius = new CornerRadius(0, 0, 8, 8);
+            vm.MainWindow.BottomCornerRadius.Value = new CornerRadius(0, 0, 8, 8);
         }
         
-        vm.TitlebarHeight = Settings.WindowProperties.Fullscreen
-            || !Settings.UIProperties.ShowInterface
+        vm.MainWindow.TitlebarHeight.Value = Settings.WindowProperties.Fullscreen
+                                       || !Settings.UIProperties.ShowInterface
             ? 0
             : SizeDefaults.MainTitlebarHeight;
-        vm.BottombarHeight = Settings.WindowProperties.Fullscreen
-                             || !Settings.UIProperties.ShowInterface
+        vm.MainWindow.BottombarHeight.Value = Settings.WindowProperties.Fullscreen
+                                              || !Settings.UIProperties.ShowInterface
             ? 0
             : SizeDefaults.BottombarHeight;
-        vm.GetNavSpeed = Settings.UIProperties.NavSpeed;
-        vm.GetSlideshowSpeed = Settings.UIProperties.SlideShowTimer;
-        vm.GetZoomSpeed = Settings.Zoom.ZoomSpeed;
-        vm.PicViewer.IsShowingSideBySide = Settings.ImageScaling.ShowImageSideBySide;
-        vm.IsBottomGalleryShown = Settings.Gallery.IsBottomGalleryShown;
-        vm.IsBottomGalleryShownInHiddenUI = Settings.Gallery.ShowBottomGalleryInHiddenUI;
-        vm.IsAvoidingZoomingOut  = Settings.Zoom.AvoidZoomingOut;
-        vm.IsUIShown  = Settings.UIProperties.ShowInterface;
-        vm.IsTopToolbarShown  = Settings.UIProperties.ShowInterface;
-        vm.IsBottomToolbarShown   = Settings.UIProperties.ShowBottomNavBar &&
+        vm.PicViewer.IsShowingSideBySide.Value = Settings.ImageScaling.ShowImageSideBySide;
+        vm.MainWindow.IsUIShown.Value  = Settings.UIProperties.ShowInterface;
+        vm.MainWindow.IsTopToolbarShown.Value  = Settings.UIProperties.ShowInterface;
+        vm.MainWindow.IsBottomToolbarShown.Value   = Settings.UIProperties.ShowBottomNavBar &&
                                     Settings.UIProperties.ShowInterface;
-        vm.IsShowingTaskbarProgress  = Settings.UIProperties.IsTaskbarProgressEnabled;
-        vm.IsFullscreen  = Settings.WindowProperties.Fullscreen;
-        vm.IsTopMost  = Settings.WindowProperties.TopMost;
-        vm.IsIncludingSubdirectories = Settings.Sorting.IncludeSubDirectories;
-        vm.IsStretched = Settings.ImageScaling.StretchImage;
-        vm.IsLooping  = Settings.UIProperties.Looping;
-        vm.IsAutoFit  = Settings.WindowProperties.AutoFit;
-        vm.IsStayingCentered  = Settings.WindowProperties.KeepCentered;
-        vm.IsOpeningInSameWindow  = Settings.UIProperties.OpenInSameWindow;
-        vm.IsShowingConfirmationOnEsc  = Settings.UIProperties.ShowConfirmationOnEsc;   
-        vm.IsUsingTouchpad  = Settings.Zoom.IsUsingTouchPad;
-        vm.IsAscending  = Settings.Sorting.Ascending;
-        vm.BackgroundChoice = Settings.UIProperties.BgColorChoice;
-        vm.IsConstrainingBackgroundColor = Settings.UIProperties.IsConstrainBackgroundColorEnabled;
+        vm.MainWindow.IsFullscreen.Value  = Settings.WindowProperties.Fullscreen;
+        vm.MainWindow.BackgroundChoice.Value = Settings.UIProperties.BgColorChoice;
     }
     
     public static async Task ResetSettings(MainViewModel vm)
     {
-        vm.IsLoading = true;
+        vm.MainWindow.IsLoadingIndicatorShown.Value = true;
 
         try
         {
@@ -116,10 +102,13 @@ public static class SettingsUpdater
             {
                 TurnOffUsingTouchpad(vm);
             }
-        
-            vm.GetBottomGalleryItemHeight = GalleryDefaults.DefaultBottomGalleryHeight;
-            vm.GetFullGalleryItemHeight = GalleryDefaults.DefaultFullGalleryHeight;
-        
+
+            if (vm.Gallery is not null)
+            {
+                vm.Gallery.GalleryItem.BottomGalleryItemHeight.Value = GalleryDefaults.DefaultBottomGalleryHeight;
+                vm.Gallery.GalleryItem.ExpandedGalleryItemHeight.Value = GalleryDefaults.DefaultFullGalleryHeight;
+            }
+            
             if (string.IsNullOrWhiteSpace(Settings.Gallery.BottomGalleryStretchMode))
             {
                 Settings.Gallery.BottomGalleryStretchMode = "UniformToFill";
@@ -153,7 +142,7 @@ public static class SettingsUpdater
         finally
         {
             TitleManager.SetTitle(vm);
-            vm.IsLoading = false;
+            vm.MainWindow.IsLoadingIndicatorShown.Value = false;
         }
     }
 
@@ -174,15 +163,22 @@ public static class SettingsUpdater
     public static void TurnOffUsingTouchpad(MainViewModel vm)
     {
         Settings.Zoom.IsUsingTouchPad = false;
-        vm.Translation.IsUsingTouchpad = TranslationManager.Translation.UsingMouse;
-        vm.IsUsingTouchpad = false;
+        vm.Translation.IsUsingTouchpad.Value = TranslationManager.Translation.UsingMouse;
+        if (vm.SettingsViewModel is not null)
+        {
+            vm.SettingsViewModel.IsUsingTouchpad.Value = false;
+        }
+        
     }
     
     public static void TurnOnUsingTouchpad(MainViewModel vm)
     {
         Settings.Zoom.IsUsingTouchPad = true;
-        vm.Translation.IsUsingTouchpad = TranslationManager.Translation.UsingTouchpad;
-        vm.IsUsingTouchpad = true;
+        vm.Translation.IsUsingTouchpad.Value = TranslationManager.Translation.UsingTouchpad;
+        if (vm.SettingsViewModel is not null)
+        {
+            vm.SettingsViewModel.IsUsingTouchpad.Value = true;
+        }
     }
     
     public static async Task ToggleSubdirectories(MainViewModel vm)
@@ -197,10 +193,24 @@ public static class SettingsUpdater
         }
         await SaveSettingsAsync();
     }
+
+    public static async Task ToggleStretch(MainViewModel vm)
+    {
+        if (Settings.ImageScaling.StretchImage)
+        {
+            Settings.ImageScaling.StretchImage = false;
+        }
+        else
+        {
+            Settings.ImageScaling.StretchImage = true;
+        }
+        await WindowResizing.SetSizeAsync(vm).ConfigureAwait(false);
+        await SaveSettingsAsync();
+    }
     
     public static async Task TurnOffSubdirectories(MainViewModel vm)
     {
-        vm.IsIncludingSubdirectories = false;
+        vm.GlobalSettings.IsIncludingSubdirectories.Value = false;
         Settings.Sorting.IncludeSubDirectories = false;
 
         if (!NavigationManager.CanNavigate(vm))
@@ -214,7 +224,7 @@ public static class SettingsUpdater
     
     public static async Task TurnOnSubdirectories(MainViewModel vm)
     {
-        vm.IsIncludingSubdirectories = true;
+        vm.GlobalSettings.IsIncludingSubdirectories.Value = true;
         Settings.Sorting.IncludeSubDirectories = true;
         
         if (!NavigationManager.CanNavigate(vm))
@@ -257,12 +267,18 @@ public static class SettingsUpdater
         if (Settings.UIProperties.IsConstrainBackgroundColorEnabled)
         {
             Settings.UIProperties.IsConstrainBackgroundColorEnabled = false;
-            vm.IsConstrainingBackgroundColor = false;
+            if (vm.SettingsViewModel is not null)
+            {
+                vm.SettingsViewModel.IsConstrainingBackgroundColor.Value = false;
+            }
         }
         else
         {
             Settings.UIProperties.IsConstrainBackgroundColorEnabled = true;
-            vm.IsConstrainingBackgroundColor = true;
+            if (vm.SettingsViewModel is not null)
+            {
+                vm.SettingsViewModel.IsConstrainingBackgroundColor.Value = true;
+            }
         }
         
         await Dispatcher.UIThread.InvokeAsync(() =>
@@ -312,8 +328,8 @@ public static class SettingsUpdater
     public static void TurnOffSideBySide(MainViewModel vm)
     {
         Settings.ImageScaling.ShowImageSideBySide = false;
-        vm.PicViewer.IsShowingSideBySide = false;
-        vm.PicViewer.SecondaryImageSource = null;
+        vm.PicViewer.IsShowingSideBySide.Value = false;
+        vm.PicViewer.SecondaryImageSource.Value = null;
         WindowResizing.SetSize(vm);
         TitleManager.SetTitle(vm);
     }
@@ -321,7 +337,7 @@ public static class SettingsUpdater
     public static async Task TurnOnSideBySide(MainViewModel vm)
     {
         Settings.ImageScaling.ShowImageSideBySide = true;
-        vm.PicViewer.IsShowingSideBySide = true;
+        vm.PicViewer.IsShowingSideBySide.Value = true;
         if (NavigationManager.CanNavigate(vm))
         {
             var preloadValue = await NavigationManager.GetNextPreLoadValueAsync();
@@ -332,15 +348,15 @@ public static class SettingsUpdater
 #endif
                 return;
             }
-            vm.PicViewer.SecondaryImageSource = preloadValue.ImageModel.Image;
+            vm.PicViewer.SecondaryImageSource.Value = preloadValue.ImageModel.Image;
             var imageModel1 = new ImageModel
             {
-                FileInfo = vm.PicViewer.FileInfo,
-                PixelWidth = (int)vm.PicViewer.ImageWidth,
-                PixelHeight = (int)vm.PicViewer.ImageHeight,
-                ImageType = vm.PicViewer.ImageType,
+                FileInfo = vm.PicViewer.FileInfo.CurrentValue,
+                PixelWidth = (int)vm.PicViewer.ImageWidth.CurrentValue,
+                PixelHeight = (int)vm.PicViewer.ImageHeight.CurrentValue,
+                ImageType = vm.PicViewer.ImageType.CurrentValue,
                 Image = vm.PicViewer.ImageSource,
-                EXIFOrientation = vm.PicViewer.ExifOrientation
+                EXIFOrientation = vm.PicViewer.ExifOrientation.CurrentValue
             };
             var imageModel2 = new ImageModel
             {
@@ -353,8 +369,8 @@ public static class SettingsUpdater
             };
             await Dispatcher.UIThread.InvokeAsync(() =>
             {
-                WindowResizing.SetSize(vm.PicViewer.ImageWidth, vm.PicViewer.ImageHeight, preloadValue.ImageModel.PixelWidth,
-                    preloadValue.ImageModel.PixelHeight, vm.RotationAngle, vm);
+                WindowResizing.SetSize(vm.PicViewer.ImageWidth.CurrentValue, vm.PicViewer.ImageHeight.CurrentValue, preloadValue.ImageModel.PixelWidth,
+                    preloadValue.ImageModel.PixelHeight, vm.GlobalSettings.RotationAngle.CurrentValue, vm);
                 TitleManager.SetSideBySideTitle(vm, imageModel1, imageModel2);
             });
         }
@@ -383,20 +399,20 @@ public static class SettingsUpdater
     
     public static void TurnOffScroll(MainViewModel vm)
     {
-        vm.ToggleScrollBarVisibility = ScrollBarVisibility.Disabled;
-        vm.Translation.IsScrolling = TranslationManager.Translation.ScrollingDisabled;
-        vm.IsScrollingEnabled = false;
+        vm.MainWindow.ToggleScrollBarVisibility.Value = ScrollBarVisibility.Disabled;
+        vm.Translation.IsScrolling.Value = TranslationManager.Translation.ScrollingDisabled;
+        vm.GlobalSettings.IsScrollingEnabled.Value = false;
         Settings.Zoom.ScrollEnabled = false;
-        vm.RightControlOffSetMargin = new Thickness(0);
+        vm.MainWindow.RightControlOffSetMargin.Value = new Thickness(0);
     }
     
     public static void TurnOnScroll(MainViewModel vm)
     {
-        vm.ToggleScrollBarVisibility = ScrollBarVisibility.Visible;
-        vm.Translation.IsScrolling = TranslationManager.Translation.ScrollingEnabled;
-        vm.IsScrollingEnabled = true;
+        vm.MainWindow.ToggleScrollBarVisibility.Value = ScrollBarVisibility.Visible;
+        vm.Translation.IsScrolling.Value = TranslationManager.Translation.ScrollingEnabled;
+        vm.GlobalSettings.IsScrollingEnabled.Value = true;
         Settings.Zoom.ScrollEnabled = true;
-        vm.RightControlOffSetMargin = new Thickness(0,0,30,0);
+        vm.MainWindow.RightControlOffSetMargin.Value = new Thickness(0,0,30,0);
     }
     
     public static async Task ToggleCtrlZoom(MainViewModel vm)
@@ -407,7 +423,7 @@ public static class SettingsUpdater
         }
         
         Settings.Zoom.CtrlZoom = !Settings.Zoom.CtrlZoom;
-        vm.Translation.IsCtrlToZoom = Settings.Zoom.CtrlZoom
+        vm.Translation.IsCtrlToZoom.Value = Settings.Zoom.CtrlZoom
             ? TranslationManager.Translation.CtrlToZoom
             : TranslationManager.Translation.ScrollToZoom;
         
@@ -421,19 +437,19 @@ public static class SettingsUpdater
             return;
         }
         var isNavigatingWithCtrl = Settings.Zoom.CtrlZoom;
-        vm.ChangeCtrlZoomImage = isNavigatingWithCtrl ? leftRightArrowsImage as DrawingImage : scanEyeImage as DrawingImage;
+        vm.MainWindow.ChangeCtrlZoomImage.Value = isNavigatingWithCtrl ? leftRightArrowsImage as DrawingImage : scanEyeImage as DrawingImage;
         await SaveSettingsAsync().ConfigureAwait(false);
     }
     
     public static void TurnOffCtrlZoom(MainViewModel vm)
     {
         Settings.Zoom.CtrlZoom = false;
-        vm.Translation.IsCtrlToZoom = TranslationManager.Translation.ScrollToZoom;
+        vm.Translation.IsCtrlToZoom.Value = TranslationManager.Translation.ScrollToZoom;
         if (!Application.Current.TryGetResource("ScanEyeImage", Application.Current.RequestedThemeVariant, out var scanEyeImage ))
         {
             return;
         }
-        vm.ChangeCtrlZoomImage = scanEyeImage as DrawingImage;
+        vm.MainWindow.ChangeCtrlZoomImage.Value = scanEyeImage as DrawingImage;
     }
     
     public static async Task ToggleLooping(MainViewModel vm)
@@ -445,10 +461,10 @@ public static class SettingsUpdater
         
         var value = !Settings.UIProperties.Looping;
         Settings.UIProperties.Looping = value;
-        vm.Translation.IsLooping = value
+        vm.Translation.IsLooping.Value = value
             ? TranslationManager.Translation.LoopingEnabled
             : TranslationManager.Translation.LoopingDisabled;
-        vm.IsLooping = value;
+        vm.GlobalSettings.IsLooping.Value = value;
 
         var msg = value
             ? TranslationManager.Translation.LoopingEnabled
@@ -461,8 +477,8 @@ public static class SettingsUpdater
     public static void TurnOffLooping(MainViewModel vm)
     {
         Settings.UIProperties.Looping = false;
-        vm.Translation.IsLooping = TranslationManager.Translation.LoopingDisabled;
-        vm.IsLooping = false;
+        vm.Translation.IsLooping.Value = TranslationManager.Translation.LoopingDisabled;
+        vm.GlobalSettings.IsLooping.Value = false;
     }
     
     #endregion

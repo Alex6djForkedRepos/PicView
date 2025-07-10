@@ -50,12 +50,12 @@ public static class WindowFunctions
             }
             else
             {
-                lastFile = vm?.PicViewer.FileInfo?.FullName ?? FileHistoryManager.GetLastEntry();
+                lastFile = vm?.PicViewer.FileInfo?.CurrentValue.FullName ?? FileHistoryManager.GetLastEntry();
             }
         }
         else
         {
-            var url = vm?.PicViewer.Title.GetURL();
+            var url = vm?.PicViewer.Title.CurrentValue.GetURL();
             lastFile = !string.IsNullOrWhiteSpace(url) ? url : FileHistoryManager.GetLastEntry();
         }
 
@@ -76,7 +76,7 @@ public static class WindowFunctions
         {
             if (Settings.WindowProperties.AutoFit)
             {
-                if (vm.PicViewer.PixelWidth > UIHelper.GetMainView.Bounds.Width || vm.PicViewer.PixelHeight > UIHelper.GetMainView.Bounds.Height)
+                if (vm.PicViewer.PixelWidth.Value > UIHelper.GetMainView.Bounds.Width || vm.PicViewer.PixelHeight.Value > UIHelper.GetMainView.Bounds.Height)
                 {
                     vm.ImageViewer.MainBorder.Height = double.NaN;
                     vm.ImageViewer.MainBorder.Width = double.NaN;
@@ -109,7 +109,7 @@ public static class WindowFunctions
                 }
                 else
                 {
-                    if (vm.PicViewer.PixelWidth > UIHelper.GetMainView.Bounds.Width || vm.PicViewer.PixelHeight > UIHelper.GetMainView.Bounds.Height)
+                    if (vm.PicViewer.PixelWidth.CurrentValue > UIHelper.GetMainView.Bounds.Width || vm.PicViewer.PixelHeight.CurrentValue > UIHelper.GetMainView.Bounds.Height)
                     {
                         Dispatcher.UIThread.Post(() => WindowResizing.SetSize(vm), DispatcherPriority.Render);
                     }
@@ -149,13 +149,13 @@ public static class WindowFunctions
 
         if (Settings.WindowProperties.TopMost)
         {
-            vm.IsTopMost = false;
+            vm.GlobalSettings.IsTopMost.Value = false;
             desktop.MainWindow.Topmost = false;
             Settings.WindowProperties.TopMost = false;
         }
         else
         {
-            vm.IsTopMost = true;
+            vm.GlobalSettings.IsTopMost.Value = true;
             desktop.MainWindow.Topmost = true;
             Settings.WindowProperties.TopMost = true;
         }
@@ -167,17 +167,17 @@ public static class WindowFunctions
     {
         if (Settings.WindowProperties.AutoFit)
         {
-            vm.SizeToContent = SizeToContent.Manual;
-            vm.CanResize = true;
+            vm.MainWindow.SizeToContent.Value = SizeToContent.Manual;
+            vm.MainWindow.CanResize.Value = true;
             Settings.WindowProperties.AutoFit = false;
-            vm.IsAutoFit = false;
+            vm.GlobalSettings.IsAutoFit.Value = false;
         }
         else
         {
-            vm.SizeToContent = SizeToContent.WidthAndHeight;
-            vm.CanResize = false;
+            vm.MainWindow.SizeToContent.Value = SizeToContent.WidthAndHeight;
+            vm.MainWindow.CanResize.Value = false;
             Settings.WindowProperties.AutoFit = true;
-            vm.IsAutoFit = true;
+            vm.GlobalSettings.IsAutoFit.Value = true;
         }
         await ResizeAndFixRenderingError(vm);
         await SaveSettingsAsync().ConfigureAwait(false);
@@ -187,21 +187,21 @@ public static class WindowFunctions
     {
         if (Settings.WindowProperties.AutoFit)
         {
-            vm.SizeToContent = SizeToContent.Manual;
-            vm.CanResize = true;
+            vm.MainWindow.SizeToContent.Value = SizeToContent.Manual;
+            vm.MainWindow.CanResize.Value = true;
             Settings.WindowProperties.AutoFit = false;
             Settings.ImageScaling.StretchImage = false;
-            vm.IsStretched = false;
-            vm.IsAutoFit = false;
+            vm.GlobalSettings.IsStretched.Value = false;
+            vm.GlobalSettings.IsAutoFit.Value = false;
         }
         else
         {
-            vm.SizeToContent = SizeToContent.WidthAndHeight;
-            vm.CanResize = false;
+            vm.MainWindow.SizeToContent.Value = SizeToContent.WidthAndHeight;
+            vm.MainWindow.CanResize.Value = false;
             Settings.WindowProperties.AutoFit = true;
             Settings.ImageScaling.StretchImage = true;
-            vm.IsAutoFit = true;
-            vm.IsStretched = true;
+            vm.GlobalSettings.IsAutoFit.Value = true;
+            vm.GlobalSettings.IsStretched.Value = true;
         }
 
         await ResizeAndFixRenderingError(vm);
@@ -210,8 +210,8 @@ public static class WindowFunctions
 
     public static async Task NormalWindow(MainViewModel vm)
     {
-        vm.SizeToContent = SizeToContent.Manual;
-        vm.CanResize = true;
+        vm.MainWindow.SizeToContent.Value = SizeToContent.Manual;
+        vm.MainWindow.CanResize.Value = true;
         Settings.WindowProperties.AutoFit = false;
         await WindowResizing.SetSizeAsync(vm);
         vm.ImageViewer.MainImage.InvalidateVisual();
@@ -220,11 +220,11 @@ public static class WindowFunctions
 
     public static async Task NormalWindowStretch(MainViewModel vm)
     {
-        vm.SizeToContent = SizeToContent.Manual;
-        vm.CanResize = true;
+        vm.MainWindow.SizeToContent.Value = SizeToContent.Manual;
+        vm.MainWindow.CanResize.Value = true;
         Settings.WindowProperties.AutoFit = false;
         Settings.ImageScaling.StretchImage = true;
-        vm.IsStretched = true;
+        vm.GlobalSettings.IsStretched.Value = true;
         await WindowResizing.SetSizeAsync(vm);
         vm.ImageViewer.MainImage.InvalidateVisual();
         await SaveSettingsAsync().ConfigureAwait(false);
@@ -233,7 +233,7 @@ public static class WindowFunctions
     public static async Task Stretch(MainViewModel vm)
     {
         Settings.ImageScaling.StretchImage = true;
-        vm.IsStretched = true;
+        vm.GlobalSettings.IsStretched.Value = true;
         await WindowResizing.SetSizeAsync(vm);
         vm.ImageViewer.MainImage.InvalidateVisual();
         await SaveSettingsAsync().ConfigureAwait(false);

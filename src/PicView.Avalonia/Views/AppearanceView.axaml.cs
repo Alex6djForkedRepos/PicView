@@ -1,13 +1,12 @@
-using System.Reactive.Disposables;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Media;
 using PicView.Avalonia.ColorManagement;
 using PicView.Avalonia.Gallery;
+using PicView.Avalonia.UI;
 using PicView.Avalonia.ViewModels;
 using PicView.Core.ColorHandling;
-using PicView.Core.Localization;
-using ReactiveUI;
+using R3;
 
 namespace PicView.Avalonia.Views;
 
@@ -114,10 +113,9 @@ public partial class AppearanceView : UserControl
         CheckerboardButton.Background = BackgroundManager.CreateCheckerboardBrush(default, default,10);
         CheckerboardAltButton.Background = BackgroundManager.CreateCheckerboardBrushAlt(25);
         
-        // Subscribe to background color changes with ReactiveUI
-        vm.WhenAnyValue(x => x.BackgroundChoice)
+        Observable.EveryValueChanged(vm.MainWindow, x => x.BackgroundChoice, UIHelper.GetFrameProvider)
             .Subscribe(_ => SetBackgroundTheme(Settings.UIProperties.BgColorChoice))
-            .DisposeWith(_disposables);
+            .AddTo(_disposables);
     }
     
     // New method to update color buttons with values from ColorManager

@@ -47,7 +47,7 @@ public static class RotationNavigation
         {
             vm.ImageViewer.Rotate(angle);
         });
-        vm.RotationAngle = angle;
+        vm.GlobalSettings.RotationAngle.Value = angle;
         await WindowResizing.SetSizeAsync(vm);
     }
 
@@ -124,15 +124,15 @@ public static class RotationNavigation
     {
         Dispatcher.UIThread.Invoke(() => { vm.ImageViewer.Flip(true); });
         
-        if (vm.PicViewer.ScaleX == 1)
+        if (vm.PicViewer.ScaleX.CurrentValue == 1)
         {
-            vm.PicViewer.ScaleX = -1;
-            vm.Translation.IsFlipped = vm.Translation.UnFlip;
+            vm.PicViewer.ScaleX.Value = -1;
+            vm.Translation.IsFlipped.Value = vm.Translation.UnFlip.CurrentValue;
         }
         else
         {
-            vm.PicViewer.ScaleX = 1;
-            vm.Translation.IsFlipped = vm.Translation.Flip;
+            vm.PicViewer.ScaleX.Value = 1;
+            vm.Translation.IsFlipped.Value = vm.Translation.Flip.CurrentValue;
         }
     }
 
@@ -154,7 +154,7 @@ public static class RotationNavigation
 
         await Dispatcher.UIThread.InvokeAsync(() =>
         {
-            if (vm.IsScrollingEnabled)
+            if (vm.GlobalSettings.IsScrollingEnabled.CurrentValue)
             {
                 vm.ImageViewer.ImageScrollViewer.LineUp();
             }
@@ -183,7 +183,7 @@ public static class RotationNavigation
 
         await Dispatcher.UIThread.InvokeAsync(() =>
         {
-            if (vm.IsScrollingEnabled)
+            if (vm.GlobalSettings.IsScrollingEnabled.CurrentValue)
             {
                 vm.ImageViewer.ImageScrollViewer.LineDown();
             }

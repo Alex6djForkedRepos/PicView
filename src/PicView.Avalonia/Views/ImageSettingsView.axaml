@@ -18,16 +18,16 @@
             FontFamily="/Assets/Fonts/Roboto-Bold.ttf#Roboto"
             FontSize="14"
             Margin="0,20,0,20"
-            Text="{CompiledBinding Translation.Image,
+            Text="{CompiledBinding Translation.Image.Value,
                                    Mode=OneWay}" />
 
         <ToggleButton
             Background="Transparent"
             BorderThickness="0"
             Classes="altHover changeColor"
-            IsChecked="{CompiledBinding IsStretched}"
+            IsChecked="{CompiledBinding GlobalSettings.IsStretched.Value}"
             Margin="0,0,0,10"
-            ToolTip.Tip="{CompiledBinding Translation.Stretch,
+            ToolTip.Tip="{CompiledBinding Translation.Stretch.Value,
                                           Mode=OneWay}"
             Width="300">
             <TextBlock
@@ -35,7 +35,7 @@
                 Margin="0"
                 MaxWidth="240"
                 Padding="0,1,5,0"
-                Text="{CompiledBinding Translation.Stretch,
+                Text="{CompiledBinding Translation.Stretch.Value,
                                        Mode=OneWay}" />
         </ToggleButton>
 
@@ -43,8 +43,8 @@
             Background="Transparent"
             BorderThickness="0"
             Classes="altHover changeColor"
-            Command="{CompiledBinding ToggleScrollCommand}"
-            IsChecked="{CompiledBinding IsScrollingEnabled}"
+            Command="{CompiledBinding Tools.ToggleScrollCommand}"
+            IsChecked="{CompiledBinding GlobalSettings.IsScrollingEnabled.Value}"
             Margin="0,0,0,10"
             Width="300">
             <TextBlock
@@ -52,7 +52,7 @@
                 Margin="0"
                 MaxWidth="240"
                 Padding="0,1,5,0"
-                Text="{CompiledBinding Translation.IsScrolling,
+                Text="{CompiledBinding Translation.IsScrolling.Value,
                                        Mode=OneWay}" />
         </ToggleButton>
 
@@ -61,8 +61,8 @@
             Background="Transparent"
             BorderThickness="0"
             Classes="altHover changeColor"
-            Command="{CompiledBinding ShowSideBySideCommand}"
-            IsChecked="{CompiledBinding PicViewer.IsShowingSideBySide}"
+            Command="{CompiledBinding Tools.ShowSideBySideCommand}"
+            IsChecked="{CompiledBinding PicViewer.IsShowingSideBySide.Value}"
             Margin="0,0,0,10"
             Width="300">
             <TextBlock
@@ -70,7 +70,7 @@
                 Margin="0"
                 MaxWidth="240"
                 Padding="0,1,5,0"
-                Text="{CompiledBinding Translation.SideBySide,
+                Text="{CompiledBinding Translation.SideBySide.Value,
                                        Mode=OneWay}" />
         </ToggleButton>
 
@@ -80,7 +80,7 @@
             FontSize="14"
             Foreground="{StaticResource SecondaryTextColor}"
             Margin="0,20,0,20"
-            Text="{CompiledBinding Translation.ImageAliasing,
+            Text="{CompiledBinding Translation.ImageAliasing.Value,
                                    Mode=OneWay}" />
         <ComboBox
             Background="{DynamicResource SecondaryBackgroundColor}"
@@ -91,8 +91,8 @@
             Padding="5,7,0,7"
             Width="300"
             x:Name="ImageAliasingBox">
-            <ComboBoxItem Content="{CompiledBinding Translation.HighQuality, Mode=OneWay}" />
-            <ComboBoxItem Content="{CompiledBinding Translation.None, Mode=OneWay}" />
+            <ComboBoxItem Content="{CompiledBinding Translation.HighQuality.Value, Mode=OneWay}" />
+            <ComboBoxItem Content="{CompiledBinding Translation.None.Value, Mode=OneWay}" />
         </ComboBox>
 
     </StackPanel>

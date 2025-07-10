@@ -18,10 +18,10 @@ public static class Win32Window
         MenuManager.CloseMenus(vm);
 
         // Update view model properties
-        vm.SizeToContent = SizeToContent.Manual;
-        vm.IsFullscreen = true;
-        vm.IsMaximized = false;
-        vm.CanResize = false;
+        vm.MainWindow.SizeToContent.Value = SizeToContent.Manual;
+        vm.MainWindow.IsFullscreen.Value = true;
+        vm.MainWindow.IsMaximized.Value = false;
+        vm.MainWindow.CanResize.Value = false;
 
         // Update settings
         Settings.WindowProperties.Fullscreen = true;
@@ -31,13 +31,13 @@ public static class Win32Window
 
         // Hide interface in fullscreen
         HideInterface(vm);
+        
+        vm.PicViewer.GalleryWidth.Value = double.NaN;
+        
+        await WindowResizing.SetSizeAsync(vm);
 
         // Center it, to make sure it is positioned correctly
         CenterWindowOnScreen(window);
-
-        await WindowResizing.SetSizeAsync(vm);
-
-        vm.GalleryWidth = double.NaN;
 
         if (saveSettings)
         {
@@ -54,7 +54,7 @@ public static class Win32Window
         {
             if (Settings.WindowProperties.AutoFit)
             {
-                vm.SizeToContent = SizeToContent.Manual;
+                vm.MainWindow.SizeToContent.Value = SizeToContent.Manual;
             }
             
             // Save window size, so that restoring it will return to the same size and position
@@ -66,9 +66,9 @@ public static class Win32Window
             SetMargin(vm, window);
         });
 
-        vm.IsMaximized = true;
-        vm.IsFullscreen = false;
-        vm.CanResize = false;
+        vm.MainWindow.IsMaximized.Value = true;
+        vm.MainWindow.IsFullscreen.Value = false;
+        vm.MainWindow.CanResize.Value = false;
 
         if (saveSettings)
         {
@@ -84,8 +84,8 @@ public static class Win32Window
 
         // Update UI state
         SetMargin(vm, window);
-        vm.IsMaximized = false;
-        vm.IsFullscreen = false;
+        vm.MainWindow.IsMaximized.Value = false;
+        vm.MainWindow.IsFullscreen.Value = false;
 
         RestoreInterface(vm);
 
@@ -94,28 +94,27 @@ public static class Win32Window
 
         if (Settings.WindowProperties.AutoFit)
         {
-            vm.SizeToContent = SizeToContent.WidthAndHeight;
-            vm.CanResize = false;
-            vm.IsAutoFit = true;
-            if (Settings.WindowProperties.KeepCentered)
-            {
-                WindowFunctions.CenterWindowOnScreen();
-            }
-            else
-            {
-                WindowFunctions.InitializeWindowSizeAndPosition(window);
-            }
-
-            await WindowFunctions.ResizeAndFixRenderingError(vm); // Fixes incorrect render size
+            vm.MainWindow.SizeToContent.Value = SizeToContent.WidthAndHeight;
+            vm.MainWindow.CanResize.Value = false;
+            vm.GlobalSettings.IsAutoFit.Value = true;
         }
         else
         {
-            vm.SizeToContent = SizeToContent.Manual;
-            vm.CanResize = true;
-            WindowFunctions.InitializeWindowSizeAndPosition(window);
+            vm.MainWindow.SizeToContent.Value = SizeToContent.Manual;
+            vm.MainWindow.CanResize.Value = true;
+            vm.GlobalSettings.IsAutoFit.Value = false;
         }
         
         await WindowResizing.SetSizeAsync(vm);
+        
+        if (Settings.WindowProperties.KeepCentered)
+        {
+            WindowFunctions.CenterWindowOnScreen();
+        }
+        else
+        {
+            WindowFunctions.InitializeWindowSizeAndPosition(window);
+        }
 
         if (saveSettings)
         {
@@ -195,7 +194,7 @@ public static class Win32Window
 
             // Set the window's new position
             window.Position = new PixelPoint((int)centeredX, (int)centeredY);
-        });
+        },DispatcherPriority.Background);
     }
 
     /// <summary>
@@ -203,23 +202,23 @@ public static class Win32Window
     /// </summary>
     private static void RestoreInterface(MainViewModel vm)
     {
-        vm.IsUIShown = Settings.UIProperties.ShowInterface;
+        vm.MainWindow.IsUIShown.Value = Settings.UIProperties.ShowInterface;
 
         if (!Settings.UIProperties.ShowInterface)
         {
             return;
         }
 
-        vm.IsTopToolbarShown = true;
-        vm.TitlebarHeight = SizeDefaults.MainTitlebarHeight;
+        vm.MainWindow.IsTopToolbarShown.Value = true;
+        vm.MainWindow.TitlebarHeight.Value = SizeDefaults.MainTitlebarHeight;
 
         if (!Settings.UIProperties.ShowBottomNavBar)
         {
             return;
         }
 
-        vm.IsBottomToolbarShown = true;
-        vm.BottombarHeight = SizeDefaults.BottombarHeight;
+        vm.MainWindow.IsBottomToolbarShown.Value = true;
+        vm.MainWindow.BottombarHeight.Value = SizeDefaults.BottombarHeight;
     }
 
     /// <summary>
@@ -227,9 +226,9 @@ public static class Win32Window
     /// </summary>
     private static void HideInterface(MainViewModel vm)
     {
-        vm.IsTopToolbarShown = false;
-        vm.IsBottomToolbarShown = false;
-        vm.IsUIShown = false;
+        vm.MainWindow.IsTopToolbarShown.Value = false;
+        vm.MainWindow.IsBottomToolbarShown.Value = false;
+        vm.MainWindow.IsUIShown.Value = false;
     }
 
     /// <summary>
@@ -244,14 +243,14 @@ public static class Win32Window
             var top = window.OffScreenMargin.Top is 0 ? 7 : window.OffScreenMargin.Top;
             var right = window.OffScreenMargin.Right is 0 ? 7 : window.OffScreenMargin.Right;
             var bottom = window.OffScreenMargin.Bottom is 0 ? 7 : window.OffScreenMargin.Bottom;
-            vm.TopScreenMargin = new Thickness(left, top, right, 0);
-            vm.BottomScreenMargin = new Thickness(left, 0, right, bottom);
+            vm.MainWindow.TopScreenMargin.Value = new Thickness(left, top, right, 0);
+            vm.MainWindow.BottomScreenMargin.Value = new Thickness(left, 0, right, bottom);
         }
         else
         {
             var noThickness = new Thickness(0);
-            vm.TopScreenMargin = noThickness;
-            vm.BottomScreenMargin = noThickness;
+            vm.MainWindow.TopScreenMargin.Value = noThickness;
+            vm.MainWindow.BottomScreenMargin.Value = noThickness;
         }
     }
 
