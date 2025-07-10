@@ -31,13 +31,13 @@ public static class Win32Window
 
         // Hide interface in fullscreen
         HideInterface(vm);
+        
+        vm.PicViewer.GalleryWidth.Value = double.NaN;
+        
+        await WindowResizing.SetSizeAsync(vm);
 
         // Center it, to make sure it is positioned correctly
         CenterWindowOnScreen(window);
-
-        await WindowResizing.SetSizeAsync(vm);
-        
-        vm.PicViewer.GalleryWidth.Value = double.NaN;
 
         if (saveSettings)
         {
@@ -97,25 +97,24 @@ public static class Win32Window
             vm.MainWindow.SizeToContent.Value = SizeToContent.WidthAndHeight;
             vm.MainWindow.CanResize.Value = false;
             vm.GlobalSettings.IsAutoFit.Value = true;
-            if (Settings.WindowProperties.KeepCentered)
-            {
-                WindowFunctions.CenterWindowOnScreen();
-            }
-            else
-            {
-                WindowFunctions.InitializeWindowSizeAndPosition(window);
-            }
-
-            await WindowFunctions.ResizeAndFixRenderingError(vm); // Fixes incorrect render size
         }
         else
         {
             vm.MainWindow.SizeToContent.Value = SizeToContent.Manual;
             vm.MainWindow.CanResize.Value = true;
-            WindowFunctions.InitializeWindowSizeAndPosition(window);
+            vm.GlobalSettings.IsAutoFit.Value = false;
         }
         
         await WindowResizing.SetSizeAsync(vm);
+        
+        if (Settings.WindowProperties.KeepCentered)
+        {
+            WindowFunctions.CenterWindowOnScreen();
+        }
+        else
+        {
+            WindowFunctions.InitializeWindowSizeAndPosition(window);
+        }
 
         if (saveSettings)
         {
@@ -195,7 +194,7 @@ public static class Win32Window
 
             // Set the window's new position
             window.Position = new PixelPoint((int)centeredX, (int)centeredY);
-        });
+        },DispatcherPriority.Background);
     }
 
     /// <summary>
