@@ -36,6 +36,7 @@ public static class ImageOptimizer
                 DebugHelper.LogDebug(nameof(ImageOptimizer), nameof(OptimizeImageAsync), ex);
             }
         });
+        await NavigationManager.QuickReload();
         
         TitleManager.SetTitle(vm);
     }
