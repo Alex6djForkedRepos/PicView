@@ -119,7 +119,7 @@ public static class CropFunctions
 
         if (vm?.PicViewer.ImageSource.CurrentValue is not Bitmap || Settings.ImageScaling.ShowImageSideBySide)
         {
-            vm.GlobalSettings.ShouldCropBeEnabled.Value = false;
+            vm.PicViewer.ShouldCropBeEnabled.Value = false;
             return false;
         }
 
@@ -135,11 +135,11 @@ public static class CropFunctions
 
         if (vm.GlobalSettings.RotationAngle.CurrentValue is 0 && vm.PicViewer.ScaleX.CurrentValue is 1)
         {
-            vm.GlobalSettings.ShouldCropBeEnabled.Value = true;
+            vm.PicViewer.ShouldCropBeEnabled.Value = true;
             return true;
         }
 
-        vm.GlobalSettings.ShouldCropBeEnabled.Value = false;
+        vm.PicViewer.ShouldCropBeEnabled.Value = false;
         return false;
     }
 }

@@ -61,6 +61,8 @@
                 Icon="{StaticResource PortalImage}"
                 IconHeight="17"
                 IconWidth="17"
+                IsEnabled="{CompiledBinding PicViewer.ShouldOptimizeImageBeEnabled.Value,
+                                            Mode=OneWay}"
                 ToolTip.Tip="{CompiledBinding Translation.OptimizeImage.Value,
                                               Mode=OneWay}"
                 Width="45"

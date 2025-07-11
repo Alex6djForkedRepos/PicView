@@ -18,7 +18,7 @@ public class ExifViewModel : IDisposable
         SetExifRating4Command = new ReactiveCommand<string>(Set4Star);
         SetExifRating5Command = new ReactiveCommand<string>(Set5Star);            
     }
-
+    
     private void Set0Star(string value)
     {
         EXIFHelper.SetEXIFRating(value, 0);
@@ -108,8 +108,8 @@ public class ExifViewModel : IDisposable
             LensMaker,
             LensModel);
     }
-    public ReactiveCommand? OpenGoogleLinkCommand { get; set; }
-    public ReactiveCommand? OpenBingLinkCommand { get; set; }
+    public ReactiveCommand? OpenGoogleLinkCommand { get; }
+    public ReactiveCommand? OpenBingLinkCommand { get; }
     
     public ReactiveCommand<string>? SetExifRating0Command { get; set; }
     public ReactiveCommand<string>? SetExifRating1Command { get; set; }

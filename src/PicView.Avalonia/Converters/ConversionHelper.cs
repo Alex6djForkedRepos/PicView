@@ -30,7 +30,7 @@ internal static class ConversionHelper
     {
         if (vm.PicViewer.FileInfo is null)
         {
-            vm.GlobalSettings.ShouldOptimizeImageBeEnabled.Value = false;
+            vm.PicViewer.ShouldOptimizeImageBeEnabled.Value = false;
             return;
         }
 
@@ -41,17 +41,17 @@ internal static class ConversionHelper
                 || vm.PicViewer.FileInfo.CurrentValue.Extension.Equals(".png", StringComparison.InvariantCultureIgnoreCase)
                 || vm.PicViewer.FileInfo.CurrentValue.Extension.Equals(".gif", StringComparison.InvariantCultureIgnoreCase))
             {
-                vm.GlobalSettings.ShouldOptimizeImageBeEnabled.Value = true;
+                vm.PicViewer.ShouldOptimizeImageBeEnabled.Value = true;
             }
             else
             {
-                vm.GlobalSettings.ShouldOptimizeImageBeEnabled.Value = false;
+                vm.PicViewer.ShouldOptimizeImageBeEnabled.Value = false;
             }
         }
         catch (Exception e)
         {
             DebugHelper.LogDebug(nameof(ConversionHelper), nameof(DetermineIfOptimizeImageShouldBeEnabled), e);
-            vm.GlobalSettings.ShouldOptimizeImageBeEnabled.Value = false;
+            vm.PicViewer.ShouldOptimizeImageBeEnabled.Value = false;
         }
     }
 }

@@ -8,6 +8,7 @@ using PicView.Avalonia.Navigation;
 using PicView.Avalonia.Resizing;
 using PicView.Avalonia.UI;
 using PicView.Avalonia.ViewModels;
+using PicView.Core.Extensions;
 using PicView.Core.Titles;
 using R3;
 
@@ -73,6 +74,8 @@ public partial class ImageInfoView : UserControl
                 {
                     DirectoryNameTextBox.Text = x.DirectoryName;
                 }
+                FileSizeBox.Text = vm.PicViewer.FileInfo?.CurrentValue?.Length.GetReadableFileSize();
+                ConversionHelper.DetermineIfOptimizeImageShouldBeEnabled(vm);
             }).AddTo(_disposables);
             
             ResetButton.Click += (_, _) =>

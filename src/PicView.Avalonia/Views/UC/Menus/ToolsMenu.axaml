@@ -155,7 +155,7 @@
                     Classes="ButtonBorder altHover"
                     Command="{CompiledBinding Tools.OptimizeImageCommand}"
                     Height="46"
-                    IsEnabled="{CompiledBinding GlobalSettings.ShouldOptimizeImageBeEnabled.Value,
+                    IsEnabled="{CompiledBinding PicViewer.ShouldOptimizeImageBeEnabled.Value,
                                                 Mode=OneWay}"
                     ToolTip.Tip="{CompiledBinding Translation.OptimizeImage.Value,
                                                   Mode=OneWay}"

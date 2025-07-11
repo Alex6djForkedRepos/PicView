@@ -768,7 +768,7 @@
                     Command="{CompiledBinding Tools.OptimizeImageCommand}"
                     Header="{CompiledBinding Translation.OptimizeImage.Value,
                                              Mode=OneWay}"
-                    IsEnabled="{CompiledBinding GlobalSettings.ShouldOptimizeImageBeEnabled.Value,
+                    IsEnabled="{CompiledBinding PicViewer.ShouldOptimizeImageBeEnabled.Value,
                                                 Mode=OneWay}">
                     <MenuItem.Icon>
                         <Image
@@ -785,7 +785,7 @@
                     Command="{CompiledBinding Tools.CropCommand}"
                     Header="{CompiledBinding Translation.Crop.Value,
                                              Mode=OneWay}"
-                    IsEnabled="{CompiledBinding GlobalSettings.ShouldCropBeEnabled.Value,
+                    IsEnabled="{CompiledBinding PicViewer.ShouldCropBeEnabled.Value,
                                                 Mode=OneWay}"
                     x:Name="CropMenuItem">
                     <MenuItem.Icon>

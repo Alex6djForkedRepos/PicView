@@ -247,6 +247,7 @@
                     <Image
                         Height="12"
                         Source="{StaticResource FileUserImage}"
+                        Stretch="Fill"
                         Width="12" />
                 </MenuItem.Icon>
             </MenuItem>
@@ -256,7 +257,7 @@
                 Command="{CompiledBinding Tools.OptimizeImageCommand}"
                 Header="{CompiledBinding Translation.OptimizeImage.Value,
                                          Mode=OneWay}"
-                IsEnabled="{CompiledBinding GlobalSettings.ShouldOptimizeImageBeEnabled.Value,
+                IsEnabled="{CompiledBinding PicViewer.ShouldOptimizeImageBeEnabled.Value,
                                             Mode=OneWay}">
                 <MenuItem.Icon>
                     <Image
@@ -522,6 +523,32 @@
                         </customControls:CopyButton>
                     </StackPanel>
 
+                    <!--  File Size  -->
+                    <StackPanel Margin="15,10" Orientation="Horizontal">
+                        <TextBlock
+                            Classes="txt"
+                            Margin="0,8,0,0"
+                            Text="{CompiledBinding Translation.FileSize.Value,
+                                                   Mode=OneWay}"
+                            Width="100" />
+                        <customControls:FuncTextBox
+                            Classes="TStyle x"
+                            IsReadOnly="True"
+                            x:Name="FileSizeBox" />
+                        <customControls:CopyButton
+                            Classes="altHover BorderStyle"
+                            CopyText="{Binding Path=Text, ElementName=FileSizeBox}"
+                            ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
+                                                          Mode=OneWay}">
+                            <Path
+                                Data="{StaticResource CopyGeometry}"
+                                Fill="{StaticResource SecondaryTextColor}"
+                                Height="16"
+                                Stretch="Fill"
+                                Width="16" />
+                        </customControls:CopyButton>
+                    </StackPanel>
+
                     <!--  Created  -->
                     <StackPanel Margin="15,10" Orientation="Horizontal">
                         <TextBlock
@@ -633,6 +660,7 @@
                                 Width="16" />
                         </customControls:CopyButton>
                     </StackPanel>
+
                 </StackPanel>
 
                 <StackPanel Width="347">
@@ -845,6 +873,7 @@
                                 Width="16" />
                         </customControls:CopyButton>
                     </StackPanel>
+
                 </StackPanel>
 
                 <!--  Convert To  -->

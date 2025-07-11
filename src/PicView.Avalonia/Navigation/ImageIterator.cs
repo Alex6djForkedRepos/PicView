@@ -528,7 +528,9 @@ public class ImageIterator : IAsyncDisposable
     public async Task QuickReload()
     {
         RemoveCurrentItemFromPreLoader();
-        _vm.PicViewer.FileInfo.Value = new FileInfo(_vm.PicViewer.FileInfo.CurrentValue.FullName);
+        var newFileInfo = new FileInfo(_vm.PicViewer.FileInfo.CurrentValue.FullName);
+        ImagePaths[CurrentIndex] = newFileInfo;
+        _vm.PicViewer.FileInfo.Value = newFileInfo;
         await IterateToIndex(CurrentIndex, new CancellationTokenSource()).ConfigureAwait(false);
     }
 

@@ -20,24 +20,31 @@ public static class ImageOptimizer
         {
             return;
         }
-        
-        await Task.Run(() =>
+
+        try
         {
-            try
+            vm.MainWindow.IsLoadingIndicatorShown.Value = true;
+            await Task.Run(() =>
             {
-                var optimizer = new ImageMagick.ImageOptimizer
+                try
                 {
-                    OptimalCompression = true
-                };
-                optimizer.LosslessCompress(vm.PicViewer.FileInfo.CurrentValue.FullName);
-            }
-            catch (Exception ex)
-            {
-                DebugHelper.LogDebug(nameof(ImageOptimizer), nameof(OptimizeImageAsync), ex);
-            }
-        });
-        await NavigationManager.QuickReload();
-        
-        TitleManager.SetTitle(vm);
+                    var optimizer = new ImageMagick.ImageOptimizer
+                    {
+                        OptimalCompression = true
+                    };
+                    optimizer.LosslessCompress(vm.PicViewer.FileInfo.CurrentValue.FullName);
+                }
+                catch (Exception ex)
+                {
+                    DebugHelper.LogDebug(nameof(ImageOptimizer), nameof(OptimizeImageAsync), ex);
+                }
+            });
+            await NavigationManager.QuickReload();
+        }
+        finally
+        {
+            TitleManager.SetTitle(vm);
+            vm.MainWindow.IsLoadingIndicatorShown.Value = false;
+        }
     }
 }

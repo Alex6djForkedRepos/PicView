@@ -244,7 +244,7 @@
                     Classes="ButtonBorder altHover"
                     Command="{CompiledBinding Tools.CropCommand}"
                     Height="46"
-                    IsEnabled="{CompiledBinding GlobalSettings.ShouldCropBeEnabled.Value,
+                    IsEnabled="{CompiledBinding PicViewer.ShouldCropBeEnabled.Value,
                                                 Mode=OneWay}"
                     ToolTip.Tip="{CompiledBinding Translation.Crop,
                                                   Mode=OneWay}">
