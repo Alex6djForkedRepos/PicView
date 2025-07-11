@@ -165,7 +165,7 @@ public static class StartUpHelper
 
         if (!RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
         {
-            if (!ProcessHelper.CheckIfAnotherInstanceIsRunning())
+            if (Settings.UIProperties.OpenInSameWindow && !ProcessHelper.CheckIfAnotherInstanceIsRunning())
             {
                 // No other instance is running, create named pipe server
                 _ = IPC.StartListeningForArguments(vm);
