@@ -19,16 +19,6 @@ public class NavigationViewModel : IDisposable
         await NavigationManager.Iterate(next: true).ConfigureAwait(false);
     });
     
-    public ReactiveCommand NextButtonCommand { get; } = new(async (_, _) =>
-    {
-        await UIHelper.NextButtonNavigation();
-    });
-    
-    public ReactiveCommand NextArrowButtonCommand { get; } = new(async (_, _) =>
-    {
-        await UIHelper.NextArrowButtonNavigation();
-    });
-    
     public ReactiveCommand NextFolderCommand { get; } = new(async (_, _) =>
     {
         await NavigationManager.NavigateBetweenDirectories(next: true).ConfigureAwait(false);
@@ -38,14 +28,6 @@ public class NavigationViewModel : IDisposable
     public ReactiveCommand PreviousCommand { get; } = new(async (_, _) =>
     {
         await NavigationManager.Iterate(next: false).ConfigureAwait(false);
-    });
-    public ReactiveCommand PreviousButtonCommand { get; } = new(async (_, _) =>
-    {
-        await UIHelper.PreviousButtonNavigation();
-    });
-    public ReactiveCommand PreviousArrowButtonCommand { get; } = new(async (_, _) =>
-    {
-        await UIHelper.PreviousArrowButtonNavigation();
     });
 
     public ReactiveCommand PreviousFolderCommand { get; } = new(async (_, _) =>
@@ -84,12 +66,8 @@ public class NavigationViewModel : IDisposable
     {
         Disposable.Dispose(ReloadCommand,
             NextCommand,
-            NextButtonCommand,
-            NextArrowButtonCommand,
             NextFolderCommand,
             PreviousCommand,
-            PreviousButtonCommand,
-            PreviousArrowButtonCommand,
             PreviousFolderCommand,
             FirstCommand,
             LastCommand,

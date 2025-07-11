@@ -18,7 +18,7 @@
         BorderBrush="{StaticResource MainBorderColor}"
         BorderThickness="1,1,0,1"
         Classes="hover"
-        Command="{CompiledBinding Navigation.NextArrowButtonCommand}"
+        Command="{CompiledBinding Navigation.NextCommand}"
         CornerRadius="2,0,0,2"
         Height="60"
         HorizontalAlignment="Right"

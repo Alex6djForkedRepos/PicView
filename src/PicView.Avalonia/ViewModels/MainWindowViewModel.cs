@@ -11,6 +11,11 @@ namespace PicView.Avalonia.ViewModels;
 
 public class MainWindowViewModel : IDisposable
 {
+    public bool IsNavigationButtonLeftClicked { get; set;  }
+    public bool IsNavigationButtonRightClicked { get; set;  }
+    public bool IsClickArrowLeftClicked { get; set;  }
+    public bool IsClickArrowRightClicked { get; set;  }
+    
     public BindableReactiveProperty<Brush?> ImageBackground { get; } = new();
 
     public BindableReactiveProperty<Brush?> ConstrainedImageBackground { get; } = new();

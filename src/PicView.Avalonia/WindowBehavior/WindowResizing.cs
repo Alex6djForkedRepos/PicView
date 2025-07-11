@@ -44,6 +44,46 @@ public static class WindowResizing
         var y = (size.OldValue.Value.Height - size.NewValue.Value.Height) / 2;
 
         window.Position = new PixelPoint(window.Position.X + (int)x, window.Position.Y + (int)y);
+        if (window.DataContext is not MainViewModel vm)
+        {
+            return;
+        }
+
+        if (vm.MainWindow.IsNavigationButtonLeftClicked)
+        {
+            var leftButton = UIHelper.GetBottomBar.GetControl<Button>("PreviousButton");
+            var point = new Point(50, 10);
+            var p = leftButton.PointToScreen(point);
+            vm.PlatformService?.SetCursorPos(p.X, p.Y);
+            vm.MainWindow.IsNavigationButtonLeftClicked = false;
+        }
+
+        if (vm.MainWindow.IsNavigationButtonRightClicked)
+        {
+            var rightButton = UIHelper.GetBottomBar.GetControl<Button>("NextButton");
+            var point = new Point(50, 10);
+            var p = rightButton.PointToScreen(point);
+            vm.PlatformService?.SetCursorPos(p.X, p.Y);
+            vm.MainWindow.IsNavigationButtonRightClicked = false;
+        }
+
+        if (vm.MainWindow.IsClickArrowLeftClicked)
+        {
+            var clickArrowLeft = UIHelper.GetMainView.GetControl<UserControl>("ClickArrowLeft");
+            var point = new Point(15, 95);
+            var p = clickArrowLeft.PointToScreen(point);
+            vm.PlatformService?.SetCursorPos(p.X, p.Y);
+            vm.MainWindow.IsClickArrowLeftClicked = false;
+        }
+
+        if (vm.MainWindow.IsClickArrowRightClicked)
+        {
+            var clickArrowRight = UIHelper.GetMainView.GetControl<UserControl>("ClickArrowRight");
+            var point = new Point(65, 95);
+            var p = clickArrowRight.PointToScreen(point);
+            vm.PlatformService?.SetCursorPos(p.X, p.Y);
+            vm.MainWindow.IsClickArrowRightClicked = false;
+        }
     }
 
     #endregion

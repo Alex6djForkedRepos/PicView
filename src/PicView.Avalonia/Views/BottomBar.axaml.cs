@@ -3,6 +3,8 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
 using PicView.Avalonia.DragAndDrop;
+using PicView.Avalonia.UI;
+using PicView.Avalonia.ViewModels;
 using PicView.Avalonia.WindowBehavior;
 
 namespace PicView.Avalonia.Views;
@@ -65,6 +67,22 @@ public partial class BottomBar : UserControl
                 NextButton.Foreground = new SolidColorBrush(color);
                 PreviousButton.Foreground = new SolidColorBrush(color);
             }
+
+            if (DataContext is not MainViewModel vm)
+            {
+                return;
+            }
+
+            PreviousButton.Click += (_, _) =>
+            {
+                vm.MainWindow.IsNavigationButtonLeftClicked = true;
+                UIHelper.SetButtonInterval(PreviousButton);
+            };
+            NextButton.Click += (_, _) =>
+            {
+                vm.MainWindow.IsNavigationButtonRightClicked = true;
+                UIHelper.SetButtonInterval(NextButton);
+            };
         };
     }
 

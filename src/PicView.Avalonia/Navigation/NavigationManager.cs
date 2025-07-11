@@ -388,15 +388,8 @@ public static class NavigationManager
         }
     }
     public static async Task Iterate(bool next) => await Iterate(next, UIHelper.GetMainView.DataContext as MainViewModel).ConfigureAwait(false);
-
-    /// <summary>
-    ///     Navigates and moves the cursor to the corresponding button.
-    /// </summary>
-    /// <param name="next">True to navigate to the next image, false for the previous image.</param>
-    /// <param name="arrow">True to move cursor to the arrow, false for the button.</param>
-    /// <param name="vm">The main view model instance.</param>
-    /// <returns>A task representing the asynchronous operation.</returns>
-    public static async Task NavigateAndPositionCursor(bool next, bool arrow, MainViewModel vm)
+    
+    public static async Task NavigateOrScrollGallery(bool next, MainViewModel vm)
     {
         if (!CanNavigate(vm))
         {
@@ -410,7 +403,6 @@ public static class NavigationManager
         else
         {
             await Navigate(next, vm);
-            UIHelper.MoveCursorOnButtonClick(next, arrow, vm);
         }
     }
 
