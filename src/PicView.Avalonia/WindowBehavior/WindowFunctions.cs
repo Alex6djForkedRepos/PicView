@@ -12,6 +12,7 @@ using PicView.Avalonia.ViewModels;
 using PicView.Core.ArchiveHandling;
 using PicView.Core.FileHandling;
 using PicView.Core.FileHistory;
+using PicView.Core.Sizing;
 
 // ReSharper disable CompareOfFloatsByEqualityOperator
 
@@ -69,6 +70,30 @@ public static class WindowFunctions
     }
 
     #region Window State
+    
+    /// <summary>
+    /// Restores the interface based on settings
+    /// </summary>
+    public static void RestoreInterface(MainViewModel vm)
+    {
+        vm.MainWindow.IsUIShown.Value = Settings.UIProperties.ShowInterface;
+
+        if (!Settings.UIProperties.ShowInterface)
+        {
+            return;
+        }
+
+        vm.MainWindow.IsTopToolbarShown.Value = true;
+        vm.MainWindow.TitlebarHeight.Value = SizeDefaults.MainTitlebarHeight;
+
+        if (!Settings.UIProperties.ShowBottomNavBar)
+        {
+            return;
+        }
+
+        vm.MainWindow.IsBottomToolbarShown.Value = true;
+        vm.MainWindow.BottombarHeight.Value = SizeDefaults.BottombarHeight;
+    }
     
     public static async Task ResizeAndFixRenderingError(MainViewModel vm)
     {

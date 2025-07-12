@@ -1,4 +1,5 @@
 ﻿using Avalonia.Controls;
+using Avalonia.Threading;
 using PicView.Avalonia.MacOS.Views;
 using PicView.Avalonia.ViewModels;
 using PicView.Avalonia.WindowBehavior;
@@ -21,7 +22,7 @@ public static class MacOSWindow
     
     public static async Task ToggleMaximize(MacMainWindow? window, MainViewModel? vm, bool saveSettings = true)
     {
-        if (Settings.WindowProperties.Maximized)
+        if (window.WindowState == WindowState.Maximized || Settings.WindowProperties.Maximized)
         {
             await Restore(window, vm, saveSettings); 
         }
@@ -36,35 +37,44 @@ public static class MacOSWindow
         // Update settings
         Settings.WindowProperties.Maximized = false;
         Settings.WindowProperties.Fullscreen = false;
+
+        // Update UI state
+        vm.MainWindow.IsMaximized.Value = false;
+        vm.MainWindow.IsFullscreen.Value = false;
+
+        WindowFunctions.RestoreInterface(vm);
+
+        // Update window state
+        await Dispatcher.UIThread.InvokeAsync(() =>
+        {
+            window.WindowState = WindowState.Normal;
+            
+            if (Settings.WindowProperties.AutoFit)
+            {
+                vm.MainWindow.SizeToContent.Value = SizeToContent.WidthAndHeight;
+                vm.MainWindow.CanResize.Value = false;
+                vm.GlobalSettings.IsAutoFit.Value = true;
+                window.SizeToContent = SizeToContent.WidthAndHeight; // Fixes sizeToContent not being applied
+            }
+            else
+            {
+                vm.MainWindow.SizeToContent.Value = SizeToContent.Manual;
+                vm.MainWindow.CanResize.Value = true;
+                vm.GlobalSettings.IsAutoFit.Value = false;
+            }
+        });
         
-        window.WindowState = WindowState.Normal;
-        window.Topmost = Settings.WindowProperties.TopMost;
-
-        if (Settings.UIProperties.ShowInterface)
+        await WindowResizing.SetSizeAsync(vm);
+        
+        if (Settings.WindowProperties.KeepCentered)
         {
-            vm.MainWindow.IsTopToolbarShown.Value = true;
-            vm.MainWindow.IsBottomToolbarShown.Value = Settings.UIProperties.ShowBottomNavBar;
-            vm.MainWindow.IsUIShown.Value = true;
+            WindowFunctions.CenterWindowOnScreen();
         }
         else
         {
-            vm.MainWindow.IsTopToolbarShown.Value = false;
-            vm.MainWindow.IsUIShown.Value = false;
-        }
-
-        if (Settings.WindowProperties.AutoFit)
-        {
-            vm.MainWindow.SizeToContent.Value = SizeToContent.WidthAndHeight;
-            vm.MainWindow.CanResize.Value = false;
-            await WindowResizing.SetSizeAsync(vm);
-        }
-        else
-        {
-            vm.MainWindow.SizeToContent.Value = SizeToContent.Manual;
-            vm.MainWindow.CanResize.Value = true;
             WindowFunctions.InitializeWindowSizeAndPosition(window);
         }
-        
+
         if (saveSettings)
         {
             await SaveSettingsAsync().ConfigureAwait(false);
@@ -73,10 +83,11 @@ public static class MacOSWindow
 
     public static async Task Fullscreen(MacMainWindow? window, MainViewModel? vm, bool saveSettings = true)
     {
+        // Save window size, so that restoring it will return to the same size and position
+        WindowResizing.SaveSize(window);
+        
         Settings.WindowProperties.Maximized = false;
         Settings.WindowProperties.Fullscreen = true;
-        
-        window.WindowState = WindowState.FullScreen;
         
         vm.MainWindow.IsTopToolbarShown.Value = false;
         vm.MainWindow.IsBottomToolbarShown.Value = false;
@@ -84,6 +95,9 @@ public static class MacOSWindow
         vm.MainWindow.IsFullscreen.Value = true;
         vm.MainWindow.IsMaximized.Value = false;
         vm.MainWindow.CanResize.Value = false;
+        
+        window.WindowState = WindowState.FullScreen;
+        
         await WindowResizing.SetSizeAsync(vm);
         
         if (saveSettings)
@@ -94,34 +108,26 @@ public static class MacOSWindow
 
     public static async Task Maximize(MacMainWindow? window, MainViewModel? vm, bool saveSettings = true)
     {
-        var isAutoFit = Settings.WindowProperties.AutoFit;
-        Settings.WindowProperties.AutoFit = false;
-        
-        if (!isAutoFit)
+        await Dispatcher.UIThread.InvokeAsync(() =>
         {
             // Save window size, so that restoring it will return to the same size and position
             WindowResizing.SaveSize(window);
-        }
-        
-        // Update settings
-        Settings.WindowProperties.Maximized = true;
-        Settings.WindowProperties.Fullscreen = false;
-        
-        vm.MainWindow.SizeToContent.Value = SizeToContent.Manual;
+            
+            if (Settings.WindowProperties.AutoFit || window.SizeToContent == SizeToContent.WidthAndHeight)
+            {
+                vm.MainWindow.SizeToContent.Value = SizeToContent.Manual;
+            }
+
+            window.WindowState = WindowState.Maximized;
+            Settings.WindowProperties.Maximized = true;
+            WindowResizing.SetSize(vm);
+            WindowFunctions.CenterWindowOnScreen();
+        });
+
         vm.MainWindow.IsMaximized.Value = true;
         vm.MainWindow.IsFullscreen.Value = false;
         vm.MainWindow.CanResize.Value = false;
-        
-        window.WindowState = WindowState.Maximized;
-        
 
-        await WindowResizing.SetSizeAsync(vm);
-        
-        if (isAutoFit)
-        {
-            Settings.WindowProperties.AutoFit = true;
-        }
-        
         if (saveSettings)
         {
             await SaveSettingsAsync().ConfigureAwait(false);

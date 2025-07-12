@@ -28,7 +28,9 @@ public partial class MacMainWindow : Window
             {
                 return;
             }
-            Observable.EveryValueChanged(this, x => x.WindowState, _frameProvider).SubscribeAwait(async (state, _) =>
+            Observable.EveryValueChanged(this, x => x.WindowState, _frameProvider)
+                .Skip(1)
+                .SubscribeAwait(async (state, _) =>
             {
                 switch (state)
                 {
@@ -40,7 +42,7 @@ public partial class MacMainWindow : Window
 
                         break;
                     case WindowState.Maximized:
-                        if (!Settings.WindowProperties.Maximized)
+                        if (!Settings.WindowProperties.Maximized && !Settings.WindowProperties.Fullscreen)
                         {
                             await MacOSWindow.Maximize(this, vm);
                         }
