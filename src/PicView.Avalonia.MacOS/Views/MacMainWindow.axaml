@@ -29,7 +29,7 @@
                         Command="{CompiledBinding Tools.OpenWithCommand}"
                         CommandParameter="{CompiledBinding PicViewer.FileInfo.Value.FullName,
                                                            FallbackValue=''}"
-                        Header="{CompiledBinding Translation.OpenWith,
+                        Header="{CompiledBinding Translation.OpenWith.Value,
                                                  Mode=OneWay}" />
                     <NativeMenuItem Command="{CompiledBinding Tools.SaveFileCommand}" Header="{CompiledBinding Translation.Save.Value, Mode=OneWay}" />
                     <NativeMenuItem Command="{CompiledBinding Tools.SaveFileAsCommand}" Header="{CompiledBinding Translation.SaveAs.Value, Mode=OneWay}" />
