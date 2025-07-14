@@ -24,7 +24,11 @@ public static class GenericWindowHelper
     {
         window.Loaded += delegate
         {
-            window.MinWidth = window.MaxWidth = window.Width;
+            if (!double.IsNaN(window.Width))
+            {
+                window.MinWidth = window.MaxWidth = window.Width;
+            }
+            
             window.Title = $"{TranslationManager.Translation.ApplicationShortcuts}  - PicView";
         };
         window.KeyUp += (_, e) =>
