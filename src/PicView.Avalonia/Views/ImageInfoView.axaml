@@ -128,7 +128,14 @@
                 Header="{CompiledBinding Translation.RemoveImageData.Value,
                                          Mode=OneWay}"
                 IsEnabled="{CompiledBinding PicViewer.FileInfo.Value,
-                                            Converter={x:Static ObjectConverters.IsNotNull}}" />
+                                            Converter={x:Static ObjectConverters.IsNotNull}}">
+                <MenuItem.Icon>
+                    <Image
+                        Height="12"
+                        Source="{StaticResource OffImage}"
+                        Width="12" />
+                </MenuItem.Icon>
+            </MenuItem>
 
             <!--  Set as wallpaper  -->
             <MenuItem
