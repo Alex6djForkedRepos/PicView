@@ -260,11 +260,11 @@ public partial class FileAssociationsView : UserControl
 
         foreach (var group in vm.AssociationsViewModel.FileTypeGroups)
         {
-
             if (group?.Name is null)
             {
                 continue;
             }
+
             // Find the group checkbox
             var boxes = FileTypesContainer.GetLogicalChildren().OfType<CheckBox>();
             var checkBoxes = boxes.ToList();
@@ -277,32 +277,6 @@ public partial class FileAssociationsView : UserControl
                 }
             }
         }
-    }
-
-    private T? FindLogicalDescendant<T>(string tag) where T : Control
-    {
-        foreach (var child in LogicalChildren)
-        {
-            switch (child)
-            {
-                case T control when control.Tag == tag:
-                    return control;
-                case not null:
-                {
-                    foreach (var grandchild in child.LogicalChildren)
-                    {
-                        if (grandchild is T grandControl && grandControl.Tag == tag)
-                        {
-                            return grandControl;
-                        }
-                    }
-
-                    break;
-                }
-            }
-        }
-
-        return null;
     }
 
     private void FilterCheckBoxes(string? filterText)
