@@ -131,7 +131,7 @@ public partial class BatchResizeView : UserControl
                 .AddTo(_disposables);
             
             Observable.EveryValueChanged(this, x => x.OutputFolderTextBox.Text, UIHelper.GetFrameProvider)
-                .Skip(1)
+                .Skip(2)
                 .Where(x => !string.IsNullOrWhiteSpace(x))
                 .Subscribe(_ =>
                 {
