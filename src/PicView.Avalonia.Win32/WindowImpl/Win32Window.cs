@@ -51,9 +51,10 @@ public static class Win32Window
         {
             WindowFunctions.Fix1to1(vm);
         }
+
         WindowFunctions.FixBorderLayout(vm);
 
-        Dispatcher.UIThread.Post(() => IsChangingWindowState = false, DispatcherPriority.Background);
+        Dispatcher.UIThread.Post(() => IsChangingWindowState = false, DispatcherPriority.SystemIdle);
 
 
         if (saveSettings)
@@ -89,7 +90,7 @@ public static class Win32Window
         vm.MainWindow.IsFullscreen.Value = false;
         vm.MainWindow.CanResize.Value = false;
 
-        Dispatcher.UIThread.Post(() => IsChangingWindowState = false, DispatcherPriority.Background);
+        Dispatcher.UIThread.Post(() => IsChangingWindowState = false, DispatcherPriority.SystemIdle);
 
         if (saveSettings)
         {
@@ -140,7 +141,7 @@ public static class Win32Window
 
         await WindowResizing.SetSizeAsync(vm);
 
-        Dispatcher.UIThread.Post(() => IsChangingWindowState = false, DispatcherPriority.Background);
+        Dispatcher.UIThread.Post(() => IsChangingWindowState = false, DispatcherPriority.SystemIdle);
 
 
         if (saveSettings)
@@ -292,7 +293,7 @@ public static class Win32Window
         }
         else
         {
-            await Dispatcher.UIThread.InvokeAsync(action);
+            await Dispatcher.UIThread.InvokeAsync(action, DispatcherPriority.Render);
         }
     }
 
