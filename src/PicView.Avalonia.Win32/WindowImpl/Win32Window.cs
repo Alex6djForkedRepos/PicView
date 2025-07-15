@@ -15,7 +15,7 @@ public static class Win32Window
     public static async Task Fullscreen(Window window, MainViewModel vm, bool saveSettings = true)
     {
         IsChangingWindowState = true;
-        
+
         // Save window size, so that restoring it will return to the same size and position
         WindowResizing.SaveSize(window);
 
@@ -45,6 +45,11 @@ public static class Win32Window
 
         // Fixes https://github.com/Ruben2776/PicView/issues/226
         await WindowFunctions.ResizeAndFixRenderingError(vm);
+
+        if (vm.PicViewer.PixelWidth.CurrentValue == vm.PicViewer.PixelHeight.CurrentValue)
+        {
+            WindowFunctions.Fix1to1(vm);
+        }
 
         Dispatcher.UIThread.Post(() => IsChangingWindowState = false, DispatcherPriority.Background);
 

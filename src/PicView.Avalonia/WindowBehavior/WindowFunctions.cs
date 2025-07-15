@@ -26,8 +26,10 @@ public static class WindowFunctions
         {
             return;
         }
+
         await WindowClosingBehavior(desktop.MainWindow);
     }
+
     public static async Task WindowClosingBehavior(Window window)
     {
         WindowResizing.SaveSize(window);
@@ -70,7 +72,7 @@ public static class WindowFunctions
     }
 
     #region Window State
-    
+
     /// <summary>
     /// Restores the interface based on settings
     /// </summary>
@@ -94,14 +96,15 @@ public static class WindowFunctions
         vm.MainWindow.IsBottomToolbarShown.Value = true;
         vm.MainWindow.BottombarHeight.Value = SizeDefaults.BottombarHeight;
     }
-    
+
     public static async Task ResizeAndFixRenderingError(MainViewModel vm)
     {
         await Dispatcher.UIThread.InvokeAsync(() =>
         {
             if (Settings.WindowProperties.AutoFit)
             {
-                if (vm.PicViewer.PixelWidth.Value > UIHelper.GetMainView.Bounds.Width || vm.PicViewer.PixelHeight.Value > UIHelper.GetMainView.Bounds.Height)
+                if (vm.PicViewer.PixelWidth.Value > UIHelper.GetMainView.Bounds.Width ||
+                    vm.PicViewer.PixelHeight.Value > UIHelper.GetMainView.Bounds.Height)
                 {
                     vm.ImageViewer.MainBorder.Height = double.NaN;
                     vm.ImageViewer.MainBorder.Width = double.NaN;
@@ -112,13 +115,14 @@ public static class WindowFunctions
                 {
                     WindowResizing.SetSize(vm);
                 }
+
                 CenterWindowOnScreen(false);
             }
             else
             {
                 WindowResizing.SetSize(vm);
             }
-            
+
             if (Settings.WindowProperties.AutoFit)
             {
                 if (Settings.ImageScaling.StretchImage)
@@ -128,13 +132,15 @@ public static class WindowFunctions
                     {
                         return;
                     }
+
                     Dispatcher.UIThread.Post(() => WindowResizing.SetSize(vm), DispatcherPriority.Render);
                     desktop.MainWindow.HorizontalAlignment = HorizontalAlignment.Center;
                     desktop.MainWindow.VerticalAlignment = VerticalAlignment.Center;
                 }
                 else
                 {
-                    if (vm.PicViewer.PixelWidth.CurrentValue > UIHelper.GetMainView.Bounds.Width || vm.PicViewer.PixelHeight.CurrentValue > UIHelper.GetMainView.Bounds.Height)
+                    if (vm.PicViewer.PixelWidth.CurrentValue > UIHelper.GetMainView.Bounds.Width ||
+                        vm.PicViewer.PixelHeight.CurrentValue > UIHelper.GetMainView.Bounds.Height)
                     {
                         Dispatcher.UIThread.Post(() => WindowResizing.SetSize(vm), DispatcherPriority.Render);
                     }
@@ -147,6 +153,7 @@ public static class WindowFunctions
             {
                 return;
             }
+
             Dispatcher.UIThread.Post(() =>
             {
                 WindowResizing.SetSize(vm);
@@ -155,6 +162,19 @@ public static class WindowFunctions
                 desktop.MainWindow.VerticalAlignment = VerticalAlignment.Stretch;
             }, DispatcherPriority.Render);
         }
+    }
+
+    public static void Fix1to1(MainViewModel vm)
+    {
+        var size = WindowResizing.GetSize(vm);
+        if (size is null)
+        {
+            return;
+        }
+
+        WindowResizing.SetSize(size.Value, vm);
+        vm.ImageViewer.MainBorder.Height = size.Value.Width;
+        vm.ImageViewer.MainBorder.Width = size.Value.Height;
     }
 
     public static void ShowMinimizedWindow(Window window)
@@ -204,6 +224,7 @@ public static class WindowFunctions
             Settings.WindowProperties.AutoFit = true;
             vm.GlobalSettings.IsAutoFit.Value = true;
         }
+
         await ResizeAndFixRenderingError(vm);
         await SaveSettingsAsync().ConfigureAwait(false);
     }
@@ -304,12 +325,13 @@ public static class WindowFunctions
             {
                 return;
             }
+
             ScreenHelper.UpdateScreenSize(window);
             var screen = ScreenHelper.ScreenSize;
 
             // Get the size of the window
             var windowSize = window.ClientSize;
-            
+
             var x = screen.X;
             var y = screen.Y;
 
@@ -349,16 +371,17 @@ public static class WindowFunctions
 
     #region Window Drag and Behavior
 
-    public static void WindowDragAndDoubleClickBehavior(Window window, PointerPressedEventArgs e, IPlatformWindowService platformWindowService)
+    public static void WindowDragAndDoubleClickBehavior(Window window, PointerPressedEventArgs e,
+        IPlatformWindowService platformWindowService)
     {
         var currentScreen = ScreenHelper.ScreenSize;
-        
+
         var screen = window.Screens.ScreenFromVisual(window);
         if (screen == null)
         {
             return;
         }
-        
+
         if (e.ClickCount == 2 && e.GetCurrentPoint(window).Properties.IsLeftButtonPressed)
         {
             platformWindowService.MaximizeRestore();
@@ -366,7 +389,7 @@ public static class WindowFunctions
         }
 
         window.BeginMoveDrag(e);
-        
+
         if (screen.WorkingArea.Width == currentScreen.WorkingAreaWidth &&
             screen.WorkingArea.Height == currentScreen.WorkingAreaHeight && screen.Scaling == currentScreen.Scaling)
         {
