@@ -84,7 +84,16 @@ public static class ErrorHandling
         
         if (!NavigationManager.CanNavigate(vm))
         {
-            await NavigationManager.LoadPicFromStringAsync(FileHistoryManager.GetLastEntry(), vm).ConfigureAwait(false);
+            var lastEntry = FileHistoryManager.GetLastEntry();
+            if (string.IsNullOrEmpty(lastEntry) || !File.Exists(lastEntry))
+            {
+                await Dispatcher.UIThread.InvokeAsync(() =>
+                {
+                    ShowStartUpMenu(vm);
+                });
+                return;
+            }
+            await NavigationManager.LoadPicFromStringAsync(lastEntry, vm).ConfigureAwait(false);
             return;
         }
         
