@@ -3,6 +3,7 @@ using Avalonia.Input;
 using Avalonia.Media;
 using PicView.Avalonia.Input;
 using PicView.Avalonia.UI;
+using PicView.Avalonia.ViewModels;
 using PicView.Core.FileAssociations;
 using PicView.Core.Localization;
 using PicView.Core.MacOS.FileAssociation;
@@ -32,6 +33,14 @@ public partial class SettingsWindow : Window
             MinWidth = MaxWidth = Bounds.Width;
             Height = 500;
             Title = TranslationManager.Translation.Settings + " - PicView";
+
+            if (DataContext is not MainViewModel vm)
+            {
+                return;
+            }
+            
+            GoForwardButton.Command = vm.SettingsViewModel.GoForwardCommand;
+            GoBackButton.Command = vm.SettingsViewModel.GoBackCommand;
         };
         KeyDown += (_, e) =>
         {

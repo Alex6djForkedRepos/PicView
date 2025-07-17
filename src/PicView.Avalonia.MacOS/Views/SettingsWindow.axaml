@@ -12,6 +12,7 @@
     x:DataType="viewModels:MainViewModel"
     xmlns="https://github.com/avaloniaui"
     xmlns:buttons="clr-namespace:PicView.Avalonia.Views.UC.Buttons;assembly=PicView.Avalonia"
+    xmlns:customControls="clr-namespace:PicView.Avalonia.CustomControls;assembly=PicView.Avalonia"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewModels="clr-namespace:PicView.Avalonia.ViewModels;assembly=PicView.Avalonia"
@@ -27,10 +28,35 @@
         PointerPressed="MoveWindow">
         <StackPanel>
             <Panel>
-                <buttons:SettingsMenuButton
-                    HorizontalAlignment="Right"
+                <customControls:IconButton
+                    Background="Transparent"
+                    Classes="noBorderHover"
+                    Command="{CompiledBinding SettingsViewModel.GoBackCommand}"
+                    Data="{StaticResource ArrowLeftGeometry}"
+                    Foreground="{DynamicResource MainTextColor}"
+                    Height="28"
+                    HorizontalAlignment="Left"
+                    IconHeight="12"
+                    IconWidth="12"
+                    Margin="75,0,0,0"
+                    Width="35"
                     ZIndex="1"
-                    x:Name="SettingsButton" />
+                    x:Name="GoBackButton" />
+
+                <customControls:IconButton
+                    Background="Transparent"
+                    Classes="noBorderHover"
+                    Command="{CompiledBinding SettingsViewModel.GoForwardCommand}"
+                    Data="{StaticResource ArrowRightGeometry}"
+                    Foreground="{DynamicResource MainTextColor}"
+                    HorizontalAlignment="Left"
+                    IconHeight="12"
+                    IconWidth="12"
+                    Margin="110,0,0,0"
+                    Width="35"
+                    ZIndex="1"
+                    x:Name="GoForwardButton" />
+
                 <TextBlock
                     Background="{DynamicResource WindowBackgroundColor}"
                     Classes="txt"
@@ -40,6 +66,11 @@
                                            Mode=OneWay}"
                     TextAlignment="Center"
                     x:Name="TitleText" />
+
+                <buttons:SettingsMenuButton
+                    HorizontalAlignment="Right"
+                    ZIndex="1"
+                    x:Name="SettingsButton" />
             </Panel>
 
             <views:SettingsView Background="{DynamicResource WindowBackgroundColor}" x:Name="SettingsView" />
