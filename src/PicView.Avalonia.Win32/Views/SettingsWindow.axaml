@@ -16,6 +16,7 @@
         BorderBrush="{DynamicResource WindowBorderColor}"
         BorderThickness="1"
         PointerPressed="MoveWindow"
+        PointerReleased="UpdateWindowPosition"
         x:Name="ParentBorder">
         <StackPanel>
             <Border

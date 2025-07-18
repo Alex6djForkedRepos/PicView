@@ -3,9 +3,11 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
+using Avalonia.Threading;
 using PicView.Avalonia.Input;
 using PicView.Avalonia.UI;
 using PicView.Avalonia.ViewModels;
+using PicView.Core.Config;
 using PicView.Core.FileAssociations;
 using PicView.Core.Localization;
 using PicView.Core.WindowsNT.FileAssociation;
@@ -14,9 +16,31 @@ namespace PicView.Avalonia.Win32.Views;
 
 public partial class SettingsWindow : Window
 {
+    public SettingsWindowConfig Config = new();
+
     public SettingsWindow()
     {
         InitializeComponent();
+        Task.Run(async () =>
+        {
+            await Config.LoadAsync();
+            await Dispatcher.UIThread.InvokeAsync(() =>
+            {
+                if (Config.WindowProperties.Maximized)
+                {
+                    WindowState = WindowState.Maximized;
+                }
+                else
+                {
+                    var left = Config.WindowProperties.Left;
+                    var top = Config.WindowProperties.Top;
+                    if (left.HasValue && top.HasValue)
+                    {
+                        Position = new PixelPoint(left.Value, top.Value);
+                    }
+                }
+            });
+        });
         ParentBorder.Height = ScreenHelper.GetWindowMaxHeight();
         if (Settings.Theme.GlassTheme)
         {
@@ -116,6 +140,7 @@ public partial class SettingsWindow : Window
         {
             Hide();
             await SaveSettingsAsync();
+            await Config.SaveAsync();
         };
 
         InitializeFileAssociationManager();
@@ -142,6 +167,18 @@ public partial class SettingsWindow : Window
         var hostWindow = (Window)VisualRoot;
         hostWindow?.BeginMoveDrag(e);
     }
+    
+    private void UpdateWindowPosition(object? sender, PointerReleasedEventArgs e)
+    {
+        if (VisualRoot is null)
+        {
+            return;
+        }
+
+        var hostWindow = (Window)VisualRoot;
+        Config.WindowProperties.Left = hostWindow.Position.X;
+        Config.WindowProperties.Top = hostWindow.Position.Y;
+    }
 
     private void Close(object? sender, RoutedEventArgs e) => Close();
 
@@ -155,4 +192,6 @@ public partial class SettingsWindow : Window
         var iIFileAssociationService = new WindowsFileAssociationService();
         FileAssociationManager.Initialize(iIFileAssociationService);
     }
+
+
 }

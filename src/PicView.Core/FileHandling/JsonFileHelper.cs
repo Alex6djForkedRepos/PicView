@@ -17,4 +17,16 @@ public static class JsonFileHelper
         var contents = JsonSerializer.Serialize(value, inputType, context);
         await File.WriteAllTextAsync(path, contents).ConfigureAwait(false);
     }
+    
+    public static async Task LoadJsonAsync(string path, object? value, Type inputType, JsonSerializerContext context)
+    {
+        if (value is null || inputType is null || context is null)
+        {
+            DebugHelper.LogDebug(nameof(JsonFileHelper), nameof(WriteJsonAsync), "Types are null");
+            return;
+        }
+
+        var contents = JsonSerializer.Serialize(value, inputType, context);
+        await File.WriteAllTextAsync(path, contents).ConfigureAwait(false);
+    }
 }

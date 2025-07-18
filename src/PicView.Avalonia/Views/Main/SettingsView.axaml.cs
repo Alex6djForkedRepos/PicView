@@ -8,7 +8,6 @@ using PicView.Avalonia.Input;
 using PicView.Avalonia.UI;
 using PicView.Avalonia.ViewModels;
 using PicView.Avalonia.WindowBehavior;
-using PicView.Core.Config;
 using PicView.Core.Keybindings;
 using PicView.Core.Sizing;
 using PicView.Core.ViewModels;
@@ -19,7 +18,7 @@ using R3;
 namespace PicView.Avalonia.Views.Main;
 
 public partial class SettingsView : UserControl
-{
+{ 
     public SettingsView()
     {
         InitializeComponent();

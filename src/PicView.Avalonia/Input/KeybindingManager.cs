@@ -1,9 +1,9 @@
-﻿using System.Diagnostics;
-using System.Text.Json;
+﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 using Avalonia.Input;
 using PicView.Avalonia.Functions;
 using PicView.Avalonia.Interfaces;
+using PicView.Core.DebugTools;
 using PicView.Core.Keybindings;
 
 namespace PicView.Avalonia.Input;
@@ -37,7 +37,7 @@ public static class KeybindingManager
             as Dictionary<string, string>;
 
         CustomShortcuts ??= new Dictionary<KeyGesture, Func<Task>>();
-        await Loop(keyValues).ConfigureAwait(false);
+        await PopulateCustomShortcutsAsync(keyValues).ConfigureAwait(false);
     }
 
     public static async Task UpdateKeyBindingsFile()
@@ -52,13 +52,11 @@ public static class KeybindingManager
         }
         catch (Exception exception)
         {
-#if DEBUG
-            Trace.WriteLine($"{nameof(UpdateKeyBindingsFile)} exception:\n{exception.Message}");
-#endif
+            DebugHelper.LogDebug(nameof(KeybindingManager), nameof(UpdateKeyBindingsFile), exception);
         }
     }
 
-    private static async Task Loop(Dictionary<string, string> keyValues)
+    private static async Task PopulateCustomShortcutsAsync(Dictionary<string, string> keyValues)
     {
         foreach (var kvp in keyValues)
         {
@@ -75,9 +73,7 @@ public static class KeybindingManager
             }
             catch (Exception exception)
             {
-#if DEBUG
-                Trace.WriteLine($"{nameof(Loop)} exception:\n{exception.Message}");
-#endif
+                DebugHelper.LogDebug(nameof(KeybindingManager), nameof(PopulateCustomShortcutsAsync), exception);
             }
         }
     }
@@ -97,7 +93,7 @@ public static class KeybindingManager
                 defaultKeybindings, typeof(Dictionary<string, string>), SourceGenerationContext.Default)
             as Dictionary<string, string>;
 
-        await Loop(keyValues).ConfigureAwait(false);
+        await PopulateCustomShortcutsAsync(keyValues).ConfigureAwait(false);
     }
     
     private static string GetFunctionNameByFunction(Func<Task> function) =>
