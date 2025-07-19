@@ -170,7 +170,7 @@ public class TextIconButton : Button
         }
     }
 
-    private StackPanel BuildControl()
+    private Control BuildControl()
     {
         var stackPanel = new StackPanel
         {

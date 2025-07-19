@@ -13,6 +13,7 @@ public class ImageInfoWindowViewModel : IDisposable
 
     public BindableReactiveProperty<bool> IsCopyButtonEnabled { get; } = new();
     public BindableReactiveProperty<bool> IsExtraButtonsEnabled { get; } = new();
+    public BindableReactiveProperty<bool> IsConvertBoxEnabled { get; } = new();
     
     public BindableReactiveProperty<bool> IsLoading { get; } = new(true);
 
@@ -34,7 +35,8 @@ public class ImageInfoWindowViewModel : IDisposable
         var copyBtnWidth = CopyButtonWidth;
 
         IsCopyButtonEnabled.Value = width >= firstBreakPoint;
-        IsExtraButtonsEnabled.Value = width >= thirdBreakPoint;
+        IsExtraButtonsEnabled.Value = width >= secondBreakPoint;
+        IsConvertBoxEnabled.Value = width >= thirdBreakPoint;
 
         const int smallPadding = 10;
         const int largePadding = 40;
@@ -63,6 +65,15 @@ public class ImageInfoWindowViewModel : IDisposable
                 break;
         }
 
-        HalfLineWidth.Value = width / 2 - (scrollBarThickness + smallPadding);
+        if (width >= thirdBreakPoint)
+        {
+            HalfLineWidth.Value = width / 2 - (scrollBarThickness + largePadding + panelWidth + 15);
+        }
+        else
+        {
+            HalfLineWidth.Value = width / 2 - (scrollBarThickness + smallPadding);
+        }
+        
+        
     }
 }

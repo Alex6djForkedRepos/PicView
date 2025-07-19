@@ -5,9 +5,9 @@
     ExtendClientAreaTitleBarHeightHint="-1"
     Height="320"
     MinHeight="320"
-    MinWidth="737"
+    MinWidth="400"
     Title="Loading..."
-    Width="350"
+    Width="400"
     WindowStartupLocation="CenterOwner"
     x:Class="PicView.Avalonia.Win32.Views.ExifWindow"
     x:DataType="viewModels:MainViewModel"
@@ -105,6 +105,7 @@
                     Height="28"
                     IconHeight="17"
                     IconWidth="17"
+                    IsVisible="{CompiledBinding InfoWindow.IsExtraButtonsEnabled.Value}"
                     ToolTip.Tip="{CompiledBinding Translation.DeleteFile.Value,
                                                   Mode=OneWay}"
                     Width="45"
@@ -125,6 +126,7 @@
                     IconWidth="17"
                     IsEnabled="{CompiledBinding PicViewer.ShouldOptimizeImageBeEnabled.Value,
                                                 Mode=OneWay}"
+                    IsVisible="{CompiledBinding InfoWindow.IsExtraButtonsEnabled.Value}"
                     ToolTip.Tip="{CompiledBinding Translation.OptimizeImage.Value,
                                                   Mode=OneWay}"
                     Width="45"
@@ -143,6 +145,7 @@
                     Icon="{StaticResource OpenExternalImage}"
                     IconHeight="17"
                     IconWidth="17"
+                    IsVisible="{CompiledBinding InfoWindow.IsExtraButtonsEnabled.Value}"
                     ToolTip.Tip="{CompiledBinding Translation.OpenWith.Value,
                                                   Mode=OneWay}"
                     Width="45"
@@ -161,6 +164,7 @@
                     Height="28"
                     IconHeight="17"
                     IconWidth="17"
+                    IsVisible="{CompiledBinding InfoWindow.IsExtraButtonsEnabled.Value}"
                     ToolTip.Tip="{CompiledBinding Translation.Print.Value,
                                                   Mode=OneWay}"
                     Width="45"
@@ -178,6 +182,7 @@
                     Icon="{StaticResource CopyImages}"
                     IconHeight="17"
                     IconWidth="17"
+                    IsVisible="{CompiledBinding InfoWindow.IsExtraButtonsEnabled.Value}"
                     ToolTip.Tip="{CompiledBinding Translation.CopyImage.Value,
                                                   Mode=OneWay}"
                     Width="45"
@@ -196,6 +201,7 @@
                     Height="28"
                     IconHeight="17"
                     IconWidth="17"
+                    IsVisible="{CompiledBinding InfoWindow.IsExtraButtonsEnabled.Value}"
                     ToolTip.Tip="{CompiledBinding Translation.CopyFile,
                                                   Mode=OneWay}"
                     Width="45"
@@ -214,6 +220,7 @@
                     Height="28"
                     IconHeight="17"
                     IconWidth="17"
+                    IsVisible="{CompiledBinding InfoWindow.IsExtraButtonsEnabled.Value}"
                     ToolTip.Tip="{CompiledBinding Translation.DuplicateFile.Value,
                                                   Mode=OneWay}"
                     Width="45"
@@ -232,6 +239,7 @@
                     Height="28"
                     IconHeight="17"
                     IconWidth="17"
+                    IsVisible="{CompiledBinding InfoWindow.IsExtraButtonsEnabled.Value}"
                     ToolTip.Tip="{CompiledBinding Translation.ShowInFolder.Value,
                                                   Mode=OneWay}"
                     Width="45"

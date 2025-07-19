@@ -453,7 +453,7 @@
             <!--  Convert To  -->
             <StackPanel
                 HorizontalAlignment="Right"
-                IsVisible="{CompiledBinding InfoWindow.IsExtraButtonsEnabled.Value}"
+                IsVisible="{CompiledBinding InfoWindow.IsConvertBoxEnabled.Value}"
                 Margin="25,10,35,0"
                 Width="140"
                 x:Name="ConvertToPanel">

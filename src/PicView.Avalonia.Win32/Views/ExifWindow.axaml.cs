@@ -14,7 +14,7 @@ namespace PicView.Avalonia.Win32.Views;
 public partial class ExifWindow : Window, IDisposable
 {
     private readonly CompositeDisposable _disposables = new();
-    public ImageInfoWindowConfig Config = new();
+    public readonly ImageInfoWindowConfig Config = new();
     public ExifWindow()
     {
         InitializeComponent();
@@ -37,10 +37,10 @@ public partial class ExifWindow : Window, IDisposable
                     }
                     var width = Config.WindowProperties.Width ?? Bounds.Width;
                     var height = Config.WindowProperties.Height ?? Bounds.Height;
-                    Width = width < MinWidth ? width : MinWidth;
-                    Height = height < MinHeight ? height : MinHeight;
+                    Width = width < MinWidth ? MinWidth : width;
+                    Height = height < MinHeight ? MinHeight : height;
                 }
-            }, DispatcherPriority.Send);
+            });
         });
         
         if (Settings.Theme.GlassTheme)
