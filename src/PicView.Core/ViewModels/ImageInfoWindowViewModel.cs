@@ -8,7 +8,8 @@ public class ImageInfoWindowViewModel : IDisposable
     public int CopyButtonWidth => 37;
 
     public BindableReactiveProperty<double> TextBoxWidth { get; } = new(180);
-    public BindableReactiveProperty<double> TextBoxXlWidth { get; } = new(630);
+    public BindableReactiveProperty<double> TextBoxXlWidth { get; } = new(620);
+    public BindableReactiveProperty<double> TextBoxXxlWidth { get; } = new(630);
     public BindableReactiveProperty<double> HalfLineWidth { get; } = new(395);
 
     public BindableReactiveProperty<bool> IsCopyButtonEnabled { get; } = new();
@@ -22,6 +23,7 @@ public class ImageInfoWindowViewModel : IDisposable
         Disposable.Dispose(
             TextBoxWidth,
             TextBoxXlWidth,
+            TextBoxXxlWidth,
             IsCopyButtonEnabled);
     }
 
@@ -29,7 +31,7 @@ public class ImageInfoWindowViewModel : IDisposable
     {
         const int firstBreakPoint = 500;
         const int secondBreakPoint = 800;
-        const int thirdBreakPoint = 1550;
+        const int thirdBreakPoint = 1535;
 
         var textWidth = TextWidth;
         var copyBtnWidth = CopyButtonWidth;
@@ -45,23 +47,28 @@ public class ImageInfoWindowViewModel : IDisposable
         {
             case <= firstBreakPoint:
                 TextBoxWidth.Value = TextBoxXlWidth.Value = width - (textWidth + scrollBarThickness + smallPadding);
+                TextBoxXxlWidth.Value = width - (textWidth + scrollBarThickness);
                 break;
             case >= firstBreakPoint and <= secondBreakPoint:
                 TextBoxWidth.Value = TextBoxXlWidth.Value =
                     width - (textWidth + scrollBarThickness + smallPadding + copyBtnWidth);
-
+                TextBoxXxlWidth.Value = width - (textWidth + scrollBarThickness + copyBtnWidth);
                 break;
             case >= secondBreakPoint and <= thirdBreakPoint:
-                var newWidthL = width - width / 2 - (textWidth * 2 + scrollBarThickness + largePadding) +
-                                copyBtnWidth * 2;
-                TextBoxWidth.Value = newWidthL;
-                TextBoxXlWidth.Value = newWidthL * 2 + textWidth * 2 - smallPadding * 2;
+                var thirdBreakWidth = width - width / 2 - (textWidth * 2 + scrollBarThickness + largePadding) +
+                                      copyBtnWidth * 2;
+                TextBoxWidth.Value = thirdBreakWidth;
+                var newWidthBreakL =  thirdBreakWidth * 2 + textWidth * 2 - smallPadding * 2;
+                TextBoxXlWidth.Value = newWidthBreakL;
+                TextBoxXxlWidth.Value = newWidthBreakL - 10;
                 break;
             case >= thirdBreakPoint:
-                var newWidthXl = width / 2 - panelWidth - (textWidth * 2 + scrollBarThickness + largePadding) +
-                                 copyBtnWidth;
-                TextBoxWidth.Value = newWidthXl;
-                TextBoxXlWidth.Value = newWidthXl * 2 + textWidth * 2 - smallPadding * 2;
+                var aboveThirdWidth = width / 2 - panelWidth - (textWidth * 2 + scrollBarThickness + largePadding) +
+                                      copyBtnWidth;
+                TextBoxWidth.Value = aboveThirdWidth;
+                var aboveThirdWidthL = aboveThirdWidth * 2 + textWidth * 2 - smallPadding * 2;
+                TextBoxXlWidth.Value = aboveThirdWidthL;
+                TextBoxXxlWidth.Value = aboveThirdWidthL - 10;
                 break;
         }
 

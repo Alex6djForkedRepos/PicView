@@ -1009,7 +1009,7 @@
                     <StackPanel
                         Height="20"
                         HorizontalAlignment="Center"
-                        Margin="15,15,15,10"
+                        Margin="15,10"
                         Orientation="Horizontal">
                         <Rectangle
                             Fill="{DynamicResource MainBorderColor}"
@@ -1027,10 +1027,10 @@
                             Width="{CompiledBinding InfoWindow.HalfLineWidth.Value}" />
                     </StackPanel>
 
-                    <WrapPanel HorizontalAlignment="Center">
+                    <WrapPanel HorizontalAlignment="Center" Margin="5,10,0,0">
 
                         <!--  Date taken  -->
-                        <StackPanel Margin="15,10" Orientation="Horizontal">
+                        <StackPanel Margin="10" Orientation="Horizontal">
                             <TextBlock
                                 Classes="txt"
                                 Margin="0,8,2,0"
@@ -1060,7 +1060,7 @@
                         </StackPanel>
 
                         <!--  Authors  -->
-                        <StackPanel Margin="15,10" Orientation="Horizontal">
+                        <StackPanel Margin="10" Orientation="Horizontal">
                             <TextBlock
                                 Classes="txt"
                                 Margin="0,8,2,0"
@@ -1090,7 +1090,7 @@
                         </StackPanel>
 
                         <!--  Copyright  -->
-                        <StackPanel Margin="15,10" Orientation="Horizontal">
+                        <StackPanel Margin="10" Orientation="Horizontal">
                             <TextBlock
                                 Classes="txt"
                                 Margin="0,8,2,0"
@@ -1120,7 +1120,7 @@
                         </StackPanel>
 
                         <!--  Software  -->
-                        <StackPanel Margin="15,10" Orientation="Horizontal">
+                        <StackPanel Margin="10" Orientation="Horizontal">
                             <TextBlock
                                 Classes="txt"
                                 Margin="0,8,2,0"
@@ -1150,7 +1150,7 @@
                         </StackPanel>
 
                         <!--  Subject  -->
-                        <StackPanel Margin="15,10" Orientation="Horizontal">
+                        <StackPanel Margin="10,10,0,10" Orientation="Horizontal">
                             <TextBlock
                                 Classes="txt"
                                 Margin="0,8,2,0"
@@ -1162,7 +1162,7 @@
                                 IsReadOnly="True"
                                 Text="{CompiledBinding Exif.Subject.Value,
                                                        Mode=OneWay}"
-                                Width="{CompiledBinding InfoWindow.TextBoxXlWidth.Value}" />
+                                Width="{CompiledBinding InfoWindow.TextBoxXxlWidth.Value}" />
                             <customControls:CopyButton
                                 Classes="altHover BorderStyle"
                                 CopyText="{CompiledBinding Exif.Subject.Value,
@@ -1180,7 +1180,7 @@
                         </StackPanel>
 
                         <!--  Title  -->
-                        <StackPanel Margin="15,10" Orientation="Horizontal">
+                        <StackPanel Margin="10" Orientation="Horizontal">
                             <TextBlock
                                 Classes="txt"
                                 Margin="0,8,2,0"
@@ -1192,7 +1192,7 @@
                                 IsReadOnly="True"
                                 Text="{CompiledBinding Exif.Title.Value,
                                                        Mode=OneWay}"
-                                Width="{CompiledBinding InfoWindow.TextBoxXlWidth.Value}" />
+                                Width="{CompiledBinding InfoWindow.TextBoxXxlWidth.Value}" />
                             <customControls:CopyButton
                                 Classes="altHover BorderStyle"
                                 CopyText="{CompiledBinding Exif.Title.Value,
@@ -1210,7 +1210,7 @@
                         </StackPanel>
 
                         <!--  Comment  -->
-                        <StackPanel Margin="15,10" Orientation="Horizontal">
+                        <StackPanel Margin="10" Orientation="Horizontal">
                             <TextBlock
                                 Classes="txt"
                                 Margin="0,8,2,0"
@@ -1222,7 +1222,7 @@
                                 MaxHeight="600"
                                 Text="{CompiledBinding Exif.Comment.Value,
                                                        Mode=OneWay}"
-                                Width="{CompiledBinding InfoWindow.TextBoxXlWidth.Value}" />
+                                Width="{CompiledBinding InfoWindow.TextBoxXxlWidth.Value}" />
                             <customControls:CopyButton
                                 Classes="altHover BorderStyle"
                                 CopyText="{CompiledBinding Exif.Comment.Value,
@@ -1242,11 +1242,12 @@
 
                 </StackPanel>
 
+                <!--  Gps  -->
                 <StackPanel>
                     <StackPanel
                         Height="20"
                         HorizontalAlignment="Center"
-                        Margin="15,15,15,10"
+                        Margin="15,10"
                         Orientation="Horizontal">
                         <Rectangle
                             Fill="{DynamicResource MainBorderColor}"
@@ -1264,10 +1265,10 @@
                             Width="{CompiledBinding InfoWindow.HalfLineWidth.Value}" />
                     </StackPanel>
 
-                    <WrapPanel HorizontalAlignment="Center" Margin="15,10,0,0">
+                    <WrapPanel HorizontalAlignment="Center" Margin="5,10,0,0">
 
                         <!--  Latitude  -->
-                        <StackPanel Margin="15,10,10,10" Orientation="Horizontal">
+                        <StackPanel Margin="10,10,0,10" Orientation="Horizontal">
                             <TextBlock
                                 Classes="txt"
                                 Margin="0,8,2,0"
@@ -1297,7 +1298,7 @@
                         </StackPanel>
 
                         <!--  Longitude  -->
-                        <StackPanel Margin="15,10,10,10" Orientation="Horizontal">
+                        <StackPanel Margin="10,10,0,10" Orientation="Horizontal">
                             <TextBlock
                                 Classes="txt"
                                 Margin="0,8,2,0"
@@ -1327,7 +1328,7 @@
                         </StackPanel>
 
                         <!--  Altitude  -->
-                        <StackPanel Margin="15,10,10,10" Orientation="Horizontal">
+                        <StackPanel Margin="10,10,0,10" Orientation="Horizontal">
                             <TextBlock
                                 Classes="txt"
                                 Margin="0,8,2,0"
@@ -1391,7 +1392,8 @@
                 <StackPanel>
                     <StackPanel
                         Height="20"
-                        Margin="15,15,15,10"
+                        HorizontalAlignment="Center"
+                        Margin="15,10"
                         Orientation="Horizontal">
                         <Rectangle
                             Fill="{DynamicResource MainBorderColor}"
@@ -1406,10 +1408,10 @@
                             Width="{CompiledBinding InfoWindow.HalfLineWidth.Value}" />
                     </StackPanel>
 
-                    <WrapPanel HorizontalAlignment="Center" Margin="15,10,0,0">
+                    <WrapPanel HorizontalAlignment="Center" Margin="5,10,0,0">
 
                         <!--  Color representation  -->
-                        <StackPanel Margin="15,10,10,10" Orientation="Horizontal">
+                        <StackPanel Margin="10,10,0,10" Orientation="Horizontal">
                             <TextBlock
                                 Classes="txt"
                                 Margin="0,8,2,0"
@@ -1439,7 +1441,7 @@
                         </StackPanel>
 
                         <!--  Resolution unit  -->
-                        <StackPanel Margin="15,10,10,10" Orientation="Horizontal">
+                        <StackPanel Margin="10,10,0,10" Orientation="Horizontal">
                             <TextBlock
                                 Classes="txt"
                                 Margin="0,8,2,0"
@@ -1468,10 +1470,8 @@
                             </customControls:CopyButton>
                         </StackPanel>
 
-
-
                         <!--  Compression  -->
-                        <StackPanel Margin="15,10,10,10" Orientation="Horizontal">
+                        <StackPanel Margin="10,10,0,10" Orientation="Horizontal">
                             <TextBlock
                                 Classes="txt"
                                 Margin="0,8,2,0"
@@ -1501,7 +1501,7 @@
                         </StackPanel>
 
                         <!--  Compressed bits pixel  -->
-                        <StackPanel Margin="15,10,10,10" Orientation="Horizontal">
+                        <StackPanel Margin="10,10,0,10" Orientation="Horizontal">
                             <TextBlock
                                 Classes="txt"
                                 Margin="0,8,2,0"
@@ -1537,7 +1537,7 @@
                     <StackPanel
                         Height="20"
                         HorizontalAlignment="Center"
-                        Margin="15,15,15,10"
+                        Margin="15,10"
                         Orientation="Horizontal">
                         <Rectangle
                             Fill="{DynamicResource MainBorderColor}"
@@ -1555,11 +1555,11 @@
                             Width="{CompiledBinding InfoWindow.HalfLineWidth.Value}" />
                     </StackPanel>
 
-                    <WrapPanel HorizontalAlignment="Center" Margin="15,10,0,0">
+                    <WrapPanel HorizontalAlignment="Center" Margin="5,10,0,0">
 
                         <!--  Camera maker  -->
                         <StackPanel Orientation="Horizontal">
-                            <StackPanel Margin="15,10,10,10" Orientation="Horizontal">
+                            <StackPanel Margin="10" Orientation="Horizontal">
                                 <TextBlock
                                     Classes="txt"
                                     Margin="0,8,2,0"
@@ -1622,7 +1622,7 @@
                         <!--  Fnumber  -->
                         <StackPanel Orientation="Horizontal">
                             <StackPanel Orientation="Horizontal">
-                                <StackPanel Margin="15,10,10,10" Orientation="Horizontal">
+                                <StackPanel Margin="10" Orientation="Horizontal">
                                     <TextBlock
                                         Classes="txt"
                                         Margin="0,8,2,0"
@@ -1686,7 +1686,7 @@
                         <!--  Exposure bias  -->
                         <StackPanel Orientation="Horizontal">
                             <StackPanel Orientation="Horizontal">
-                                <StackPanel Margin="15,10,10,10" Orientation="Horizontal">
+                                <StackPanel Margin="10" Orientation="Horizontal">
                                     <TextBlock
                                         Classes="txt"
                                         Margin="0,8,2,0"
@@ -1750,7 +1750,7 @@
                         <!--  Exposure program  -->
                         <StackPanel Orientation="Horizontal">
                             <StackPanel Orientation="Horizontal">
-                                <StackPanel Margin="15,10,10,10" Orientation="Horizontal">
+                                <StackPanel Margin="10" Orientation="Horizontal">
                                     <TextBlock
                                         Classes="txt"
                                         Margin="0,8,2,0"
@@ -1813,7 +1813,7 @@
                         <!--  Focal length  -->
                         <StackPanel Orientation="Horizontal">
                             <StackPanel Orientation="Horizontal">
-                                <StackPanel Margin="15,10,10,10" Orientation="Horizontal">
+                                <StackPanel Margin="10" Orientation="Horizontal">
                                     <TextBlock
                                         Classes="txt"
                                         Margin="0,8,2,0"
@@ -1877,7 +1877,7 @@
                         <!--  ISO speed  -->
                         <StackPanel Orientation="Horizontal">
                             <StackPanel Orientation="Horizontal">
-                                <StackPanel Margin="15,10,10,10" Orientation="Horizontal">
+                                <StackPanel Margin="10" Orientation="Horizontal">
                                     <TextBlock
                                         Classes="txt"
                                         Margin="0,8,2,0"
@@ -1941,7 +1941,7 @@
                         <!--  Contrast  -->
                         <StackPanel Orientation="Horizontal">
                             <StackPanel Orientation="Horizontal">
-                                <StackPanel Margin="15,10,10,10" Orientation="Horizontal">
+                                <StackPanel Margin="10" Orientation="Horizontal">
                                     <TextBlock
                                         Classes="txt"
                                         Margin="0,8,2,0"
@@ -2005,7 +2005,7 @@
                         <!--  Sharpness  -->
                         <StackPanel Orientation="Horizontal">
                             <StackPanel Orientation="Horizontal">
-                                <StackPanel Margin="15,10,10,10" Orientation="Horizontal">
+                                <StackPanel Margin="10" Orientation="Horizontal">
                                     <TextBlock
                                         Classes="txt"
                                         Margin="0,8,2,0"
@@ -2068,7 +2068,7 @@
                         <!--  Flash energy  -->
                         <StackPanel Orientation="Horizontal">
                             <StackPanel Orientation="Horizontal">
-                                <StackPanel Margin="15,10,10,10" Orientation="Horizontal">
+                                <StackPanel Margin="10" Orientation="Horizontal">
                                     <TextBlock
                                         Classes="txt"
                                         Margin="0,8,2,0"
@@ -2132,7 +2132,7 @@
                         <!--  Light source  -->
                         <StackPanel Orientation="Horizontal">
                             <StackPanel Orientation="Horizontal">
-                                <StackPanel Margin="15,10,10,10" Orientation="Horizontal">
+                                <StackPanel Margin="10" Orientation="Horizontal">
                                     <TextBlock
                                         Classes="txt"
                                         Margin="0,8,2,0"
@@ -2196,7 +2196,7 @@
                         <!--  Photometric interpretation  -->
                         <StackPanel Orientation="Horizontal">
                             <StackPanel Orientation="Horizontal">
-                                <StackPanel Margin="15,10,10,10" Orientation="Horizontal">
+                                <StackPanel Margin="10" Orientation="Horizontal">
                                     <TextBlock
                                         Classes="txt"
                                         Margin="0,8,2,0"
@@ -2259,7 +2259,7 @@
                         <!--  Lens maker  -->
                         <StackPanel Orientation="Horizontal">
                             <StackPanel Orientation="Horizontal">
-                                <StackPanel Margin="15,10,10,10" Orientation="Horizontal">
+                                <StackPanel Margin="10" Orientation="Horizontal">
                                     <TextBlock
                                         Classes="txt"
                                         Margin="0,8,2,0"
@@ -2322,7 +2322,7 @@
 
                         <!--  Exif version  -->
                         <StackPanel Orientation="Horizontal">
-                            <StackPanel Margin="15,10,10,10" Orientation="Horizontal">
+                            <StackPanel Margin="10" Orientation="Horizontal">
                                 <TextBlock
                                     Classes="txt"
                                     Margin="0,8,2,0"
