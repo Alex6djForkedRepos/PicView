@@ -46,14 +46,16 @@ public class ImageIterator : IAsyncDisposable
 
     #region Constructors
 
-    public ImageIterator(FileInfo fileInfo, MainViewModel vm)
+    public ImageIterator(FileInfo fileInfo, MainViewModel vm, bool setInitial = true)
     {
 #if DEBUG
         ArgumentNullException.ThrowIfNull(fileInfo);
 #endif
         _vm = vm;
         FileInfo initialDirectory;
-        if (Settings.Sorting.IncludeSubDirectories)
+        
+        // If setInitial is true, we want to continue from where we left off
+        if (Settings.Sorting.IncludeSubDirectories && setInitial)
         {
             if (!string.IsNullOrWhiteSpace(Settings.StartUp.StartUpDirectory) && !ArchiveExtraction.IsArchived)
             {

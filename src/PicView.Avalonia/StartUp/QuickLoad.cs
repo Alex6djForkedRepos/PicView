@@ -20,16 +20,13 @@ namespace PicView.Avalonia.StartUp;
 public static class QuickLoad
 {
     /// <summary>
-    /// Start up procedure to load an image.
+    /// Asynchronously handles the quick loading of an image, archive, URL, base64 string, or directory into the application view,
+    /// updating the UI state and loading indicative properties as necessary.
     /// </summary>
-    /// <param name="vm">
-    /// The main view model.
-    /// </param>
-    /// <param name="file">
-    /// The path of the file to be loaded, which can be a file, archive, directory,
-    /// URL, or base64 string.
-    /// </param>
-    public static async Task QuickLoadAsync(MainViewModel vm, string file)
+    /// <param name="vm">The main view model.</param>
+    /// <param name="file">The file, URL, or directory path to be loaded.</param>
+    /// <param name="continueFromLeftOff">A boolean indicating whether to continue loading from the last session folder structure.</param>
+    public static async Task QuickLoadAsync(MainViewModel vm, string file, bool continueFromLeftOff)
     {
         var fileInfo = new FileInfo(file);
         if (!fileInfo.Exists) // If not file, try to load if URL, base64 or directory
@@ -58,11 +55,11 @@ public static class QuickLoad
 
         if (Settings.ImageScaling.ShowImageSideBySide)
         {
-            await SideBySideLoadingAsync(vm, fileInfo, magickImage).ConfigureAwait(false);
+            await SideBySideLoadingAsync(vm, fileInfo, magickImage, continueFromLeftOff).ConfigureAwait(false);
         }
         else
         {
-            await SingeImageLoadingAsync(vm, fileInfo, magickImage).ConfigureAwait(false);
+            await SingeImageLoadingAsync(vm, fileInfo, magickImage, continueFromLeftOff).ConfigureAwait(false);
         }
         
         vm.PicViewer.GetIndex.Value = NavigationManager.GetNonZeroIndex;
@@ -75,12 +72,13 @@ public static class QuickLoad
     /// <param name="vm">The main view model.</param>
     /// <param name="fileInfo">The file information object representing the image to be loaded.</param>
     /// <param name="magickImage">The MagickImage to not consecutively ping it.</param>
-    private static async Task SingeImageLoadingAsync(MainViewModel vm, FileInfo fileInfo, MagickImage magickImage)
+    /// <param name="continueFromLeftOff">Continue from last session's directory structure</param>
+    private static async Task SingeImageLoadingAsync(MainViewModel vm, FileInfo fileInfo, MagickImage magickImage, bool continueFromLeftOff)
     {
         var cancellationTokenSource = new CancellationTokenSource();
         ImageModel? imageModel = null;
         await Task.WhenAll(
-                Task.Run(() => { NavigationManager.InitializeImageIterator(vm); }, cancellationTokenSource.Token),
+                Task.Run(() => { NavigationManager.InitializeImageIterator(vm, continueFromLeftOff); }, cancellationTokenSource.Token),
                 Task.Run(async () => imageModel = await SetSingleImageAsync(vm, fileInfo, magickImage),
                     cancellationTokenSource.Token))
             .ConfigureAwait(false);
@@ -135,9 +133,10 @@ public static class QuickLoad
     /// <param name="vm">The main view model managing the application's state and UI properties.</param>
     /// <param name="fileInfo">Information about the file to be loaded.</param>
     /// <param name="magickImage">The MagickImage to not consecutively ping it.</param>
-    private static async Task SideBySideLoadingAsync(MainViewModel vm, FileInfo fileInfo, MagickImage magickImage)
+    /// <param name="continueFromLeftOff">Continue from last session's directory structure</param>
+    private static async Task SideBySideLoadingAsync(MainViewModel vm, FileInfo fileInfo, MagickImage magickImage, bool continueFromLeftOff)
     {
-        NavigationManager.InitializeImageIterator(vm);
+        NavigationManager.InitializeImageIterator(vm, continueFromLeftOff);
         var imageModel = await GetImageModel.GetImageModelAsync(fileInfo, magickImage);
         var secondaryPreloadValue = await NavigationManager.GetNextPreLoadValueAsync();
 

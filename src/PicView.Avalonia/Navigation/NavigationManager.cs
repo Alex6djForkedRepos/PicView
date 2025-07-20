@@ -573,9 +573,9 @@ public static class NavigationManager
 
     #region ImageIterator
 
-    public static void InitializeImageIterator(MainViewModel vm)
+    public static void InitializeImageIterator(MainViewModel vm, bool setInitial = true)
     {
-        ImageIterator ??= new ImageIterator(vm.PicViewer.FileInfo.CurrentValue, vm);
+        ImageIterator ??= new ImageIterator(vm.PicViewer.FileInfo.CurrentValue, vm,  setInitial);
     }
 
     public static async Task DisposeImageIteratorAsync()

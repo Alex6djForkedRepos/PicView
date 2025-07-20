@@ -14,21 +14,16 @@ public class NavigationViewModel : IDisposable
     });
     
     // Next
-    public ReactiveCommand NextCommand { get; } = new(async (_, _) =>
-    {
-        await NavigationManager.Iterate(next: true).ConfigureAwait(false);
-    });
-    
+    public ReactiveCommand NextCommand { get; } = new(Next); // Don't want to await, since it can make it feel slow
+    private static void Next(Unit unit) => _ = NavigationManager.Iterate(next: true);
     public ReactiveCommand NextFolderCommand { get; } = new(async (_, _) =>
     {
         await NavigationManager.NavigateBetweenDirectories(next: true).ConfigureAwait(false);
     });
     
     // Prev
-    public ReactiveCommand PreviousCommand { get; } = new(async (_, _) =>
-    {
-        await NavigationManager.Iterate(next: false).ConfigureAwait(false);
-    });
+    public ReactiveCommand PreviousCommand { get; } = new(Prev); // Don't want to await, since it can make it feel slow
+    private static void Prev(Unit unit) => _ = NavigationManager.Iterate(next: false);
 
     public ReactiveCommand PreviousFolderCommand { get; } = new(async (_, _) =>
     {
