@@ -14,48 +14,40 @@ public static class Win32Window
 
     public static async Task Fullscreen(Window window, MainViewModel vm, bool saveSettings = true)
     {
+        // Need to set changing state to true, to prevent image resize subscription from firing
         IsChangingWindowState = true;
 
         // Save window size, so that restoring it will return to the same size and position
         WindowResizing.SaveSize(window);
 
         MenuManager.CloseMenus(vm);
+        
+        // Update settings
+        Settings.WindowProperties.Fullscreen = true;
 
         // Update view model properties
         vm.MainWindow.SizeToContent.Value = SizeToContent.Manual;
         vm.MainWindow.IsFullscreen.Value = true;
         vm.MainWindow.IsMaximized.Value = false;
         vm.MainWindow.CanResize.Value = false;
-
-        // Update settings
-        Settings.WindowProperties.Fullscreen = true;
-
-        // Apply fullscreen state
-        await InvokeOnUIThreadAsync(() => window.WindowState = WindowState.FullScreen);
-
+        
         // Hide interface in fullscreen
         HideInterface(vm);
-
+        
+        // Gallery needs to take up all space 
         vm.PicViewer.GalleryWidth.Value = double.NaN;
 
-        await WindowResizing.SetSizeAsync(vm);
+        // Apply fullscreen state
+        await Dispatcher.UIThread.InvokeAsync(() => window.WindowState = WindowState.FullScreen, DispatcherPriority.Send);
 
-        // Center it, to make sure it is positioned correctly
-        CenterWindowOnScreen(window);
-
-        // Fixes https://github.com/Ruben2776/PicView/issues/226
-        await WindowFunctions.ResizeAndFixRenderingError(vm);
-
-        // Fix 1to1 incorrect rendering and not filling the whole window #226
-        if (vm.PicViewer.PixelWidth.CurrentValue == vm.PicViewer.PixelHeight.CurrentValue)
+        var size = WindowResizing.GetSize(vm);
+        if (size.HasValue)
         {
-            WindowFunctions.Fix1to1(vm);
+            Dispatcher.UIThread.Post(() => WindowResizing.SetSize(size.Value, vm),  DispatcherPriority.Send);
         }
 
-        WindowFunctions.FixBorderLayout(vm);
-
+        // Reset changing state flag so subscription can fire again. Need to be delayed by dispatcher to not be misfired. 
         Dispatcher.UIThread.Post(() => IsChangingWindowState = false, DispatcherPriority.SystemIdle);
-
 
         if (saveSettings)
         {
@@ -114,8 +106,8 @@ public static class Win32Window
         RestoreInterface(vm);
 
         // Update window state
-        await InvokeOnUIThreadAsync(() => window.WindowState = WindowState.Normal);
-
+        await Dispatcher.UIThread.InvokeAsync(() => window.WindowState = WindowState.Normal, DispatcherPriority.Send);
+        
         if (Settings.WindowProperties.AutoFit)
         {
             vm.MainWindow.SizeToContent.Value = SizeToContent.WidthAndHeight;
@@ -279,21 +271,6 @@ public static class Win32Window
             var noThickness = new Thickness(0);
             vm.MainWindow.TopScreenMargin.Value = noThickness;
             vm.MainWindow.BottomScreenMargin.Value = noThickness;
-        }
-    }
-
-    /// <summary>
-    /// Invokes an action on the UI thread
-    /// </summary>
-    private static async Task InvokeOnUIThreadAsync(Action action)
-    {
-        if (Dispatcher.UIThread.CheckAccess())
-        {
-            action();
-        }
-        else
-        {
-            await Dispatcher.UIThread.InvokeAsync(action, DispatcherPriority.Render);
         }
     }
 

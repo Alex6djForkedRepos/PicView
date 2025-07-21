@@ -26,30 +26,43 @@ public static class ImageSizeCalculationHelper
             return ErrorImageSize(minWidth, minHeight, interfaceSize, containerWidth);
         }
 
-        var isFullscreen = Settings.WindowProperties.Fullscreen || Settings.WindowProperties.Maximized;
+        // When in fullscreen, we need to capture the entire screen estate
+        var isFullscreen = Settings.WindowProperties.Fullscreen;
+        // When in maximized mode, working area and interface size needs to be taken into consideration
+        var isMaximized = Settings.WindowProperties.Maximized;
+
+        var scrollEnabled = Settings.Zoom.ScrollEnabled;
+        var stretchImage = Settings.ImageScaling.StretchImage;
+        var autoFit = Settings.WindowProperties.AutoFit;
+        var showBottomGallery = Settings.Gallery.IsBottomGalleryShown;
+        var showInterface = Settings.UIProperties.ShowInterface;
+        var showGalleryInHiddenUI = Settings.Gallery.ShowBottomGalleryInHiddenUI;
+
 
         var borderSpaceHeight = CalculateBorderSpaceHeight(isFullscreen, uiTopSize, uiBottomSize, galleryHeight);
         var borderSpaceWidth = isFullscreen ? 0 : screenSize.Margin;
 
-        var workArea = CalculateWorkArea(screenSize, borderSpaceWidth, borderSpaceHeight);
+        var workArea = CalculateWorkArea(screenSize, isFullscreen, borderSpaceWidth, borderSpaceHeight, isMaximized);
+
+        var screenMargin = isFullscreen ? 0 : screenSize.Margin;
 
         var (maxAvailableWidth, maxAvailableHeight, adjustedContainerWidth, adjustedContainerHeight) =
-            CalculateMaxImageSize(Settings.Zoom.ScrollEnabled, Settings.ImageScaling.StretchImage,
-                Settings.WindowProperties.AutoFit,
-                workArea.width, workArea.height, screenSize.Margin, imageWidth, imageHeight, dpiScaling, galleryHeight,
+            CalculateMaxImageSize(scrollEnabled, stretchImage,
+                autoFit,
+                workArea.width, workArea.height, screenMargin, imageWidth, imageHeight, dpiScaling, galleryHeight,
                 containerWidth, containerHeight);
 
-        var margin = CalculateGalleryMargin(Settings.Gallery.IsBottomGalleryShown,
-            Settings.UIProperties.ShowInterface, Settings.Gallery.ShowBottomGalleryInHiddenUI, galleryHeight);
+        var margin = CalculateGalleryMargin(showBottomGallery,
+            showInterface, showGalleryInHiddenUI, galleryHeight);
 
         var aspectRatio =
             CalculateAspectRatio(rotationAngle, maxAvailableWidth, maxAvailableHeight, imageWidth, imageHeight);
 
         double displayedWidth, displayedHeight, scrollWidth, scrollHeight;
-        if (Settings.Zoom.ScrollEnabled)
+        if (scrollEnabled)
         {
             (displayedWidth, displayedHeight, scrollWidth, scrollHeight) = CalculateScrolledImageSize(
-                isFullscreen, Settings.WindowProperties.AutoFit, screenSize, imageWidth, imageHeight, aspectRatio,
+                isFullscreen, autoFit, screenSize, imageWidth, imageHeight, aspectRatio,
                 adjustedContainerWidth, adjustedContainerHeight, containerHeight, margin, dpiScaling
             );
         }
@@ -67,9 +80,23 @@ public static class ImageSizeCalculationHelper
             aspectRatio);
     }
 
-    private static (double width, double height) CalculateWorkArea(ScreenSize screenSize, double borderSpaceWidth,
-        double borderSpaceHeight)
-        => (screenSize.WorkingAreaWidth - borderSpaceWidth, screenSize.WorkingAreaHeight - borderSpaceHeight);
+    private static (double width, double height) CalculateWorkArea(ScreenSize screenSize, bool fullscreen,
+        double borderSpaceWidth, double borderSpaceHeight, bool maximized)
+    {
+        if (fullscreen)
+        {
+            return (screenSize.Width, screenSize.Height);
+        }
+
+        if (maximized)
+        {
+            return (screenSize.WorkingAreaWidth, screenSize.WorkingAreaHeight);
+        }
+
+        return (screenSize.WorkingAreaWidth - borderSpaceWidth,
+            screenSize.WorkingAreaHeight - borderSpaceHeight);
+    }
+
 
     private static double CalculateBorderSpaceHeight(bool fullscreen, double uiTop, double uiBottom, double gallery)
         => fullscreen ? 0 : uiTop + uiBottom + gallery;
@@ -89,6 +116,7 @@ public static class ImageSizeCalculationHelper
                 containerWidth, containerHeight);
         }
 
+        // ReSharper disable once InvertIf
         if (autoFit)
         {
             var mw = stretchImage ? workAreaWidth - margin : Math.Min(workAreaWidth - margin, width);
@@ -181,7 +209,8 @@ public static class ImageSizeCalculationHelper
         double containerWidth,
         double containerHeight)
     {
-        if (width <= 0 || height <= 0 || secondaryWidth <= 0 || secondaryHeight <= 0 || rotationAngle > MaxRotationAngle ||
+        if (width <= 0 || height <= 0 || secondaryWidth <= 0 || secondaryHeight <= 0 ||
+            rotationAngle > MaxRotationAngle ||
             rotationAngle < MinRotationAngle)
         {
             return ErrorImageSize(minWidth, minHeight, interfaceSize, containerWidth);

@@ -164,24 +164,6 @@ public static class WindowFunctions
         }
     }
 
-    public static void Fix1to1(MainViewModel vm)
-    {
-        var size = WindowResizing.GetSize(vm);
-        if (size is null)
-        {
-            return;
-        }
-
-        WindowResizing.SetSize(size.Value, vm);
-        vm.ImageViewer.MainBorder.Height = size!.Value.Width;
-        vm.ImageViewer.MainBorder.Width = size.Value.Height;
-    }
-    
-    public static void FixBorderLayout(MainViewModel vm)
-    {
-        vm.ImageViewer.MainBorder.Height = double.NaN;
-    }
-
     public static void ShowMinimizedWindow(Window window)
     {
         window.BringIntoView();
@@ -283,10 +265,18 @@ public static class WindowFunctions
 
     public static async Task Stretch(MainViewModel vm)
     {
-        Settings.ImageScaling.StretchImage = true;
-        vm.GlobalSettings.IsStretched.Value = true;
+        if (Settings.ImageScaling.StretchImage)
+        {
+            Settings.ImageScaling.StretchImage = false;
+            vm.GlobalSettings.IsStretched.Value = false;
+        }
+        else
+        {
+            Settings.ImageScaling.StretchImage = true;
+            vm.GlobalSettings.IsStretched.Value = true;
+        }
+        //vm.ImageViewer.MainImage.InvalidateVisual();
         await WindowResizing.SetSizeAsync(vm);
-        vm.ImageViewer.MainImage.InvalidateVisual();
         await SaveSettingsAsync().ConfigureAwait(false);
     }
 
