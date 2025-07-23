@@ -25,7 +25,7 @@ public partial class BatchResizeView : UserControl
 
     private CancellationTokenSource? _cancellationTokenSource;
     
-    private readonly CompositeDisposable _disposables = new CompositeDisposable();
+    private readonly CompositeDisposable _disposables = new();
 
     public BatchResizeView()
     {
@@ -301,7 +301,7 @@ public partial class BatchResizeView : UserControl
             Percentage? percentage = null;
             if (PercentageResizeBox.IsSelected)
             {
-                if (double.TryParse((string?)PercentageValueBox.Text, out var percentageValue))
+                if (double.TryParse(PercentageValueBox.Text, out var percentageValue))
                 {
                     percentage = new Percentage(percentageValue);
                 }
@@ -310,26 +310,26 @@ public partial class BatchResizeView : UserControl
             uint width = 0, height = 0;
             if (WidthResizeBox.IsSelected)
             {
-                if (uint.TryParse((string?)WidthValueBox.Text, out var widthValue))
+                if (uint.TryParse(WidthValueBox.Text, out var widthValue))
                 {
                     width = widthValue;
                 }
             }
             else if (HeightResizeBox.IsSelected)
             {
-                if (uint.TryParse((string?)HeightValueBox.Text, out var heightValue))
+                if (uint.TryParse(HeightValueBox.Text, out var heightValue))
                 {
                     height = heightValue;
                 }
             }
             else if (WidthAndHeightResizeBox.IsSelected)
             {
-                if (uint.TryParse((string?)WidthAndHeightWidthValueBox.Text, out var widthValue))
+                if (uint.TryParse(WidthAndHeightWidthValueBox.Text, out var widthValue))
                 {
                     width = widthValue;
                 }
 
-                if (uint.TryParse((string?)WidthAndHeightHeightValueBox.Text, out var heightValue))
+                if (uint.TryParse(WidthAndHeightHeightValueBox.Text, out var heightValue))
                 {
                     height = heightValue;
                 }
@@ -575,11 +575,23 @@ public partial class BatchResizeView : UserControl
         StartButton.IsEnabled = true;
     }
 
-    private TextBlock CreateTextBlockLog(string fileName, string oldSize, string newSize)
+    private TextBlock? CreateTextBlockLog(string fileName, string oldSize, string newSize)
     {
+        if (!Application.Current.TryGetResource("SecondaryTextColor",
+                Application.Current.RequestedThemeVariant, out var textColor))
+        {
+            return null;
+        }
+
+        if (textColor is not Color color)
+        {
+            return null;
+        }
+
         var textBlock = new TextBlock
         {
             Classes = { "txt", "txtShadow" },
+            Foreground = new SolidColorBrush(color),
             Padding = new Thickness(0, 0, 0, 5),
             MaxWidth = 580
         };

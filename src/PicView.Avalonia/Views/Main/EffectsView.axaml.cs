@@ -1,7 +1,9 @@
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.LogicalTree;
+using Avalonia.Media;
 using Avalonia.Threading;
 using ImageMagick;
 using PicView.Avalonia.ImageHandling;
@@ -88,6 +90,21 @@ public partial class EffectsView : UserControl
     /// <param name="vm">The main view model to use for event handling.</param>
     private void InitializeUIEvents(MainViewModel vm)
     {
+        if (!Settings.Theme.Dark)
+        {
+            if (TryGetResource("CancelBrush",
+                    Application.Current.RequestedThemeVariant, out var cBrush))
+            {
+                if (cBrush is SolidColorBrush brush)
+                {
+                    UIHelper.SetButtonHover(CancelButton, brush);
+                    UIHelper.SetButtonHover(ResetButton, brush);
+                }
+            }
+            UIHelper.SwitchAccentHoverClass(ResetButton);
+            UIHelper.SwitchAccentHoverClass(CancelButton);
+        }
+        
         CloseItem.Click += (_, _) => (VisualRoot as Window)?.Close();
         PointerPressed += OnPointerPressed;
         ClearEffectsItem.Click += async (_, _) => await RemoveEffects();

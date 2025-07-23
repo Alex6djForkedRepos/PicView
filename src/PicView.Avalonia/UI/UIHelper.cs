@@ -127,37 +127,29 @@ public static class UIHelper
         }
     }
 
+    public static SolidColorBrush GetBrush(string resourceName) =>
+        new(GetColor(resourceName));
+
+    public static Color GetColor(string resourceName)
+    {
+        if (!Application.Current.TryGetResource(resourceName,
+                Application.Current.RequestedThemeVariant, out var textColor))
+        {
+            return default;
+        }
+
+        return textColor is not Color color ? default : color;
+    }
+
     public static void SetButtonHover(Control button, SolidColorBrush brush)
     {
         button.PointerEntered += (_, _) =>
         {
-            if (!Application.Current.TryGetResource("SecondaryTextColor",
-                    Application.Current.RequestedThemeVariant, out var textColor))
-            {
-                return;
-            }
-
-            if (textColor is not Color color)
-            {
-                return;
-            }
-
-            brush.Color = color;
+            brush.Color = GetColor("SecondaryTextColor");
         };
         button.PointerExited += (s, e) =>
         {
-            if (!Application.Current.TryGetResource("MainTextColor",
-                    Application.Current.RequestedThemeVariant, out var textColor))
-            {
-                return;
-            }
-
-            if (textColor is not Color color)
-            {
-                return;
-            }
-
-            brush.Color = color;
+            brush.Color = GetColor("MainTextColor");
         };
     }
 
@@ -166,12 +158,21 @@ public static class UIHelper
         control.Classes.Remove("altHover");
         control.Classes.Add("hover");
     }
+    
+    public static void SwitchAccentHoverClass(Control control)
+    {
+        control.Classes.Remove("altHover");
+        control.Classes.Add("accentHover");
+    }
 
     public static void SwitchHoverBorderClass(Control control)
     {
         control.Classes.Remove("noBorderHover");
         control.Classes.Add("hover");
     }
+
+    public static SolidColorBrush? GetMenuBackgroundColor() =>
+        GetBrush("MenuBackgroundColor");
 
     #endregion
 }

@@ -38,6 +38,27 @@ public partial class SingleImageResizeView : UserControl
         {
             BgPanel.Background = Brushes.Transparent;
         }
+        if (!Settings.Theme.Dark)
+        {
+            var topBg = new SolidColorBrush(Color.FromArgb(a: 65, r: 162, g: 162, b: 162));
+            var bottomBg = new SolidColorBrush(Color.FromArgb(a: 93, r: 162, g: 162, b: 162));
+            MainBorder.Background = topBg;
+            BottomBorder.Background = bottomBg;
+
+            var noThickness = new Thickness(0);
+            PixelWidthTextBox.BorderThickness = noThickness;
+            PixelHeightTextBox.BorderThickness = noThickness;
+            
+            if (TryGetResource("CancelBrush",
+                    Application.Current.RequestedThemeVariant, out var cBrush))
+            {
+                if (cBrush is SolidColorBrush brush)
+                {
+                    UIHelper.SetButtonHover(CancelButton, brush);
+                }
+            }
+            UIHelper.SwitchAccentHoverClass(CancelButton);
+        }
 
         _aspectRatio = (double)vm.PicViewer.PixelWidth.CurrentValue / vm.PicViewer.PixelHeight.CurrentValue;
 
@@ -159,7 +180,7 @@ public partial class SingleImageResizeView : UserControl
     private async Task SaveImageAs(MainViewModel vm)
     {
         if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop
-            || desktop.MainWindow?.StorageProvider is not { } provider)
+            || desktop.MainWindow?.StorageProvider is null)
         {
             return;
         }
@@ -291,8 +312,7 @@ public partial class SingleImageResizeView : UserControl
         ConversionComboBox.SelectedItem = NoConversion;
 
         _isKeepingAspectRatio = true;
-        LinkChainImage.IsVisible = true;
-        UnlinkChainImage.IsVisible = false;
+        ToggleLinkChain();
 
         ShowCancelButton();
     }
@@ -300,8 +320,7 @@ public partial class SingleImageResizeView : UserControl
     private void ToggleAspectRatio()
     {
         _isKeepingAspectRatio = !_isKeepingAspectRatio;
-        LinkChainImage.IsVisible = _isKeepingAspectRatio;
-        UnlinkChainImage.IsVisible = !_isKeepingAspectRatio;
+        ToggleLinkChain();
 
         if (_isKeepingAspectRatio)
         {
@@ -312,6 +331,39 @@ public partial class SingleImageResizeView : UserControl
         {
             ShowResetButton();
         }
+    }
+
+    private void ToggleLinkChain()
+    {
+        if (!_isKeepingAspectRatio)
+        {
+            if (!Application.Current.TryGetResource("UnlinkChainImage",
+                    Application.Current.RequestedThemeVariant, out var link))
+            {
+                return;
+            }
+            
+            if (link is not DrawingImage linkImage)
+            {
+                return;
+            }
+            LinkChainButton.Icon  = linkImage;
+        }
+        else
+        {
+            if (!Application.Current.TryGetResource("LinkChainImage",
+                    Application.Current.RequestedThemeVariant, out var link))
+            {
+                return;
+            }
+            
+            if (link is not DrawingImage linkImage)
+            {
+                return;
+            }
+            LinkChainButton.Icon  = linkImage;
+        }
+
     }
 
     ~SingleImageResizeView()

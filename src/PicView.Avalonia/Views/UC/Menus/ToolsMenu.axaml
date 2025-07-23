@@ -77,7 +77,7 @@
                     Command="{CompiledBinding Window.ShowEffectsWindow}"
                     FontSize="14"
                     Foreground="{StaticResource EffectsBrush}"
-                    Height="45"
+                    Height="46"
                     Icon="{StaticResource FlaskImage}"
                     IconHeight="20"
                     IconMargin="11,0,0,0"
@@ -100,7 +100,7 @@
                     CornerRadius="0,8,0,0"
                     Data="{StaticResource CloseGeometry}"
                     Foreground="{DynamicResource MainTextColor}"
-                    Height="45"
+                    Height="46"
                     IconHeight="10"
                     IconWidth="10"
                     ToolTip.Tip="{CompiledBinding Translation.Close.Value,

@@ -50,9 +50,8 @@ public class ImageInfoWindowViewModel : IDisposable
                 TextBoxXxlWidth.Value = width - (textWidth + scrollBarThickness);
                 break;
             case >= firstBreakPoint and <= secondBreakPoint:
-                TextBoxWidth.Value = TextBoxXlWidth.Value =
+                TextBoxWidth.Value = TextBoxXlWidth.Value = TextBoxXxlWidth.Value =
                     width - (textWidth + scrollBarThickness + smallPadding + copyBtnWidth);
-                TextBoxXxlWidth.Value = width - (textWidth + scrollBarThickness + copyBtnWidth);
                 break;
             case >= secondBreakPoint and <= thirdBreakPoint:
                 var thirdBreakWidth = width - width / 2 - (textWidth * 2 + scrollBarThickness + largePadding) +
@@ -60,7 +59,7 @@ public class ImageInfoWindowViewModel : IDisposable
                 TextBoxWidth.Value = thirdBreakWidth;
                 var newWidthBreakL =  thirdBreakWidth * 2 + textWidth * 2 - smallPadding * 2;
                 TextBoxXlWidth.Value = newWidthBreakL;
-                TextBoxXxlWidth.Value = newWidthBreakL - 10;
+                TextBoxXxlWidth.Value = newWidthBreakL - smallPadding;
                 break;
             case >= thirdBreakPoint:
                 var aboveThirdWidth = width / 2 - panelWidth - (textWidth * 2 + scrollBarThickness) +

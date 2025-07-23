@@ -5,7 +5,7 @@
 
     <Style Selector="TextBlock.txt">
         <Setter Property="FontSize" Value="12" />
-        <Setter Property="Foreground" Value="{StaticResource SecondaryTextColor}" />
+        <Setter Property="Foreground" Value="{DynamicResource MainTextColor}" />
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="FontFamily" Value="/Assets/Fonts/Roboto-Medium.ttf#Roboto" />
         <Setter Property="TextTrimming" Value="CharacterEllipsis" />
@@ -23,6 +23,12 @@
     <Style Selector="TextBlock.hover">
         <Style Selector="^:pointerover">
             <Setter Property="Foreground" Value="{DynamicResource AccentColor}" />
+        </Style>
+    </Style>
+
+    <Style Selector="TextBlock.lightHover">
+        <Style Selector="^:pointerover">
+            <Setter Property="Foreground" Value="{StaticResource SecondaryTextColor}" />
         </Style>
     </Style>
 
@@ -61,7 +67,7 @@
 
     <Style Selector="TextBox.TStyle">
         <Setter Property="FontSize" Value="12" />
-        <Setter Property="Foreground" Value="{DynamicResource SecondaryTextColor}" />
+        <Setter Property="Foreground" Value="{DynamicResource MainTextColor}" />
         <Setter Property="FontFamily" Value="/Assets/Fonts/Roboto-Medium.ttf#Roboto" />
         <Setter Property="Background" Value="{DynamicResource SecondaryBackgroundColor}" />
         <Setter Property="BorderBrush" Value="{DynamicResource MainBorderColor}" />
@@ -70,7 +76,7 @@
         <Setter Property="Margin" Value="5,0,0,0" />
         <Setter Property="Padding" Value="5,7,1,7" />
         <Setter Property="MinWidth" Value="180" />
-        <Setter Property="CaretBrush" Value="{StaticResource SecondaryTextColor}" />
+        <Setter Property="CaretBrush" Value="{DynamicResource MainTextColor}" />
         <Setter Property="SelectionForegroundBrush" Value="{StaticResource SecondaryTextColor}" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
     </Style>

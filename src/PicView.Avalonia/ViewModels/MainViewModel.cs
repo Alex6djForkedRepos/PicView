@@ -37,11 +37,7 @@ public class MainViewModel
         // Only use for unit test
     }
     
+    // TODO should remove this and work towards moving MainViewModel to Core project
     public ImageViewer? ImageViewer;
-
-
-
-
-
-
+    
 }

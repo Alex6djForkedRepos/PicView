@@ -47,6 +47,20 @@ public partial class BatchResizeWindow : Window, IDisposable
             MinimizeButton.Foreground = new SolidColorBrush(color);
             CloseButton.Foreground = new SolidColorBrush(color);
         }
+        else if (!Settings.Theme.Dark)
+        {
+            if (!Application.Current.TryGetResource("MenuBackgroundColor",
+                    Application.Current.RequestedThemeVariant, out var menuBackgroundColor))
+            {
+                return;
+            }
+            
+            if (menuBackgroundColor is not Color color)
+            {
+                return;
+            }
+            ResizeView.Background = new SolidColorBrush(color);
+        }
 
         GenericWindowHelper.GenericWindowInitialize(this, TranslationManager.Translation.BatchResize + " - PicView");
         Loaded += delegate

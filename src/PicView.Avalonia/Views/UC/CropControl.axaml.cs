@@ -1,4 +1,5 @@
 ﻿using System.Runtime.InteropServices;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
@@ -9,8 +10,8 @@ namespace PicView.Avalonia.Views.UC;
 
 public partial class CropControl : UserControl
 {
-    private readonly CropKeyboardManager? _keyboardManager;
     private readonly CropDragHandler? _dragHandler;
+    private readonly CropKeyboardManager? _keyboardManager;
     private readonly CropLayoutManager? _layoutManager;
     private readonly CropResizeHandler? _resizeHandler;
 
@@ -23,10 +24,10 @@ public partial class CropControl : UserControl
             BottomMiddleButton.Cursor = Cursor.Parse("BottomSide");
             LeftMiddleButton.Cursor = Cursor.Parse("LeftSide");
             RightMiddleButton.Cursor = Cursor.Parse("RightSide");
-            
+
             MainRectangle.Cursor = Cursor.Parse("DragMove");
-            
         }
+
         _keyboardManager = new CropKeyboardManager(this);
         _dragHandler = new CropDragHandler(this);
         _resizeHandler = new CropResizeHandler(this);
@@ -44,8 +45,8 @@ public partial class CropControl : UserControl
     {
         if (Settings.Theme.GlassTheme)
         {
-            var glassBrush = new SolidColorBrush(Color.FromArgb(120,225,225,225));
-            var glassBrushAlt = new SolidColorBrush(Color.FromArgb(150,225,225,225));
+            var glassBrush = new SolidColorBrush(Color.FromArgb(120, 225, 225, 225));
+            var glassBrushAlt = new SolidColorBrush(Color.FromArgb(150, 225, 225, 225));
             SizeBorder.Background = glassBrush;
             TopLeftButton.Background = glassBrushAlt;
             BottomRightButton.Background = glassBrushAlt;
@@ -56,10 +57,25 @@ public partial class CropControl : UserControl
             LeftMiddleButton.Background = glassBrushAlt;
             RightMiddleButton.Background = glassBrushAlt;
         }
-        
+        else if (!Settings.Theme.Dark)
+        {
+            if (!Application.Current.TryGetResource("SecondaryTextColor",
+                    Application.Current.RequestedThemeVariant, out var textColor))
+            {
+                return;
+            }
+
+            if (textColor is not Color color)
+            {
+                return;
+            }
+
+            SizeBorder.Background = new SolidColorBrush(color);
+        }
+
         InitializeResizeHandlers();
         _layoutManager.InitializeLayout();
-            
+
         MainRectangle.PointerPressed += _dragHandler.OnDragStart;
         MainRectangle.PointerReleased += _dragHandler.OnDragEnd;
         MainRectangle.PointerMoved += _dragHandler.OnDragMove;
@@ -82,7 +98,7 @@ public partial class CropControl : UserControl
         RightMiddleButton.PointerReleased += _resizeHandler.OnResizeEnd;
         TopMiddleButton.PointerReleased += _resizeHandler.OnResizeEnd;
         BottomMiddleButton.PointerReleased += _resizeHandler.OnResizeEnd;
-            
+
         LostFocus += OnControlLostFocus;
     }
 

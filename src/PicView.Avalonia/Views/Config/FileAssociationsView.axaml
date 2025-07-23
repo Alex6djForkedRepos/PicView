@@ -152,6 +152,7 @@
                     Background="Transparent"
                     Classes="altHover mainBtn"
                     Command="{CompiledBinding AssociationsViewModel.ResetCommand}"
+                    CornerRadius="3"
                     DockPanel.Dock="Left"
                     HorizontalAlignment="Left"
                     Padding="20,10">
@@ -164,14 +165,17 @@
 
                 <Button
                     Background="{DynamicResource AccentColor}"
+                    BorderThickness="0"
                     Classes="BorderStyle accentHover mainBtn"
                     Command="{CompiledBinding AssociationsViewModel.ApplyCommand}"
+                    CornerRadius="3"
                     DockPanel.Dock="Right"
                     HorizontalAlignment="Right"
                     Padding="20,10">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock
                             Classes="txt"
+                            Foreground="{StaticResource SecondaryTextColor}"
                             Margin="10,0,0,0"
                             Text="{CompiledBinding Translation.Apply.Value,
                                                    Mode=OneWay}" />
@@ -188,6 +192,7 @@
                     BorderThickness="0"
                     Classes="errorHover mainBtn"
                     Command="{CompiledBinding AssociationsViewModel.UnassociateCommand}"
+                    CornerRadius="3"
                     DockPanel.Dock="Right"
                     HorizontalAlignment="Right"
                     Padding="5,0"
@@ -195,6 +200,7 @@
                     <StackPanel Orientation="Horizontal">
                         <TextBlock
                             Classes="txt"
+                            Foreground="{StaticResource SecondaryTextColor}"
                             Margin="10,0,0,0"
                             Text="{CompiledBinding Translation.Unassociate.Value,
                                                    Mode=OneWay}" />

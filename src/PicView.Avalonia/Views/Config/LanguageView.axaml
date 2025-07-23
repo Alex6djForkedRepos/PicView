@@ -10,6 +10,7 @@
             Classes="txt"
             FontFamily="/Assets/Fonts/Roboto-Bold.ttf#Roboto"
             FontSize="14"
+            Foreground="{StaticResource SecondaryTextColor}"
             Margin="0,20,0,20"
             Text="{CompiledBinding Translation.Language.Value,
                                    Mode=OneWay}" />
@@ -19,6 +20,7 @@
             BorderBrush="{DynamicResource MainBorderColor}"
             BorderThickness="1"
             FontFamily="/Assets/Fonts/Roboto-Medium.ttf#Roboto"
+            Foreground="{DynamicResource MainTextColor}"
             Margin="0,0,0,25"
             Padding="5,7,0,7"
             Width="300"

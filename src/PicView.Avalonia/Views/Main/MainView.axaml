@@ -15,7 +15,6 @@
     xmlns:gallery="clr-namespace:PicView.Avalonia.Views.Gallery"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:uc="clr-namespace:PicView.Avalonia.Views.UC"
-    xmlns:views="clr-namespace:PicView.Avalonia.Views"
     xmlns:vm="clr-namespace:PicView.Avalonia.ViewModels"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Design.DataContext>

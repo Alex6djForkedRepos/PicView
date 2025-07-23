@@ -3,6 +3,8 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
+using Avalonia.VisualTree;
+using PicView.Avalonia.CustomControls;
 using PicView.Avalonia.UI;
 using PicView.Core.Config;
 using PicView.Core.Localization;
@@ -86,6 +88,16 @@ public partial class ImageInfoWindow : Window, IDisposable
             
             RemoveRatingButton.Classes.Remove("noBorderHover");
             RemoveRatingButton.Classes.Add("hover");
+        }
+        if (!Settings.Theme.Dark)
+        {
+
+            ExifView.Background = UIHelper.GetMenuBackgroundColor();
+            var copyButtons =  ExifView.GetVisualChildren().OfType<CopyButton>();
+            foreach (var btn in copyButtons)
+            {
+                btn.Classes.Add("hover");
+            }
         }
         GenericWindowHelper.GenericWindowInitialize(this, TranslationManager.Translation.ImageInfo + " - PicView");
         Loaded += delegate

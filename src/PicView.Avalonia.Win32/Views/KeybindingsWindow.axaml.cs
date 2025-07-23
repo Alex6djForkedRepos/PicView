@@ -21,7 +21,6 @@ public partial class KeybindingsWindow : Window
             CloseButton.BorderThickness = new Thickness(0);
             MinimizeButton.Background = Brushes.Transparent;
             MinimizeButton.BorderThickness = new Thickness(0);
-            BorderRectangle.Height = 0;
             TitleText.Background = Brushes.Transparent;
             
             if (!Application.Current.TryGetResource("SecondaryTextColor",
@@ -38,6 +37,10 @@ public partial class KeybindingsWindow : Window
             TitleText.Foreground = new SolidColorBrush(color);
             MinimizeButton.Foreground = new SolidColorBrush(color);
             CloseButton.Foreground = new SolidColorBrush(color);
+        }
+        else if (!Settings.Theme.Dark)
+        {
+            KeybindingsView.Background = UIHelper.GetMenuBackgroundColor();
         }
         GenericWindowHelper.KeybindingsWindowInitialize(this);
     }

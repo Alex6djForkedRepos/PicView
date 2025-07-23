@@ -80,10 +80,10 @@
             <Color x:Key="MainTextColor">#424242</Color>
 
             <Color x:Key="MainBackgroundColor">White</Color>
-            <Color x:Key="SecondaryBackgroundColor">#1CFFFFFF</Color>
+            <Color x:Key="SecondaryBackgroundColor">#E4FFFFFF</Color>
             <Color x:Key="TertiaryBackgroundColor">#E29E9E9E</Color>
 
-            <Color x:Key="DisabledBackgroundColor">#DE5B5B5B</Color>
+            <Color x:Key="DisabledBackgroundColor">#B8CFCFCF</Color>
             <Color x:Key="DisabledTextColor">#ACA1A1A1</Color>
 
             <Color x:Key="BackgroundHoverColor">#A2EEEEEE</Color>
@@ -113,7 +113,7 @@
             <Color x:Key="WindowBorderColor">#39FFFFFF</Color>
             <Color x:Key="WindowButtonBackgroundColor">#fff</Color>
 
-            <Color x:Key="DropDownBgColor">#7C7C7C</Color>
+            <Color x:Key="DropDownBgColor">#F3F8F8F8</Color>
 
             <Color x:Key="NoisyTexture">#17FFFFFF</Color>
         </ResourceDictionary>

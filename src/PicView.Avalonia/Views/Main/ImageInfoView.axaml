@@ -17,10 +17,16 @@
     <UserControl.Styles>
         <Styles>
             <Style Selector="TextBox.x">
-                <Setter Property="Background" Value="{DynamicResource DisabledBackgroundColor}" />
-                <Setter Property="Foreground" Value="{StaticResource SecondaryTextColor}" />
+                <Setter Property="Foreground" Value="{DynamicResource MainTextColor}" />
                 <Setter Property="TextWrapping" Value="Wrap" />
                 <Setter Property="MaxHeight" Value="80" />
+            </Style>
+            <Style Selector="Path.CopyPath">
+                <Setter Property="Data" Value="{StaticResource CopyGeometry}" />
+                <Setter Property="Fill" Value="{DynamicResource MainTextColor}" />
+                <Setter Property="Height" Value="16" />
+                <Setter Property="Width" Value="16" />
+                <Setter Property="Stretch" Value="Fill" />
             </Style>
         </Styles>
     </UserControl.Styles>
@@ -450,7 +456,7 @@
 
             <uc:SpinWaiter IsVisible="{CompiledBinding InfoWindow.IsLoading.Value}" x:Name="SpinWaiter" />
 
-            <StackPanel>
+            <StackPanel x:Name="MainContainer">
 
                 <StackPanel Orientation="Horizontal">
 
@@ -465,9 +471,7 @@
                                                        Mode=OneWay}"
                                 Width="{CompiledBinding InfoWindow.TextWidth}" />
                             <customControls:FuncTextBox
-                                Background="{DynamicResource SecondaryBackgroundColor}"
                                 Classes="hover TStyle x"
-                                Foreground="{StaticResource SecondaryTextColor}"
                                 Text="{Binding PicViewer.FileInfo.Value.Name, FallbackValue=''}"
                                 Width="{CompiledBinding InfoWindow.TextBoxXlWidth.Value}"
                                 x:Name="FileNameTextBox" />
@@ -478,12 +482,7 @@
                                 IsVisible="{CompiledBinding InfoWindow.IsCopyButtonEnabled.Value}"
                                 ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                               Mode=OneWay}">
-                                <Path
-                                    Data="{StaticResource CopyGeometry}"
-                                    Fill="{StaticResource SecondaryTextColor}"
-                                    Height="16"
-                                    Stretch="Fill"
-                                    Width="16" />
+                                <Path Classes="CopyPath" />
                             </customControls:CopyButton>
                         </StackPanel>
 
@@ -496,9 +495,7 @@
                                                        Mode=OneWay}"
                                 Width="{CompiledBinding InfoWindow.TextWidth}" />
                             <customControls:FuncTextBox
-                                Background="{DynamicResource SecondaryBackgroundColor}"
                                 Classes="hover TStyle x"
-                                Foreground="{StaticResource SecondaryTextColor}"
                                 Text="{CompiledBinding PicViewer.FileInfo.Value.DirectoryName,
                                                        FallbackValue=''}"
                                 Width="{CompiledBinding InfoWindow.TextBoxXlWidth.Value}"
@@ -510,12 +507,7 @@
                                 IsVisible="{CompiledBinding InfoWindow.IsCopyButtonEnabled.Value}"
                                 ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                               Mode=OneWay}">
-                                <Path
-                                    Data="{StaticResource CopyGeometry}"
-                                    Fill="{StaticResource SecondaryTextColor}"
-                                    Height="16"
-                                    Stretch="Fill"
-                                    Width="16" />
+                                <Path Classes="CopyPath" />
                             </customControls:CopyButton>
                         </StackPanel>
 
@@ -528,9 +520,7 @@
                                                        Mode=OneWay}"
                                 Width="{CompiledBinding InfoWindow.TextWidth}" />
                             <customControls:FuncTextBox
-                                Background="{DynamicResource SecondaryBackgroundColor}"
                                 Classes="hover TStyle x"
-                                Foreground="{StaticResource SecondaryTextColor}"
                                 Text="{CompiledBinding PicViewer.FileInfo.Value.FullName,
                                                        FallbackValue=''}"
                                 Width="{CompiledBinding InfoWindow.TextBoxXlWidth.Value}"
@@ -542,12 +532,7 @@
                                 IsVisible="{CompiledBinding InfoWindow.IsCopyButtonEnabled.Value}"
                                 ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                               Mode=OneWay}">
-                                <Path
-                                    Data="{StaticResource CopyGeometry}"
-                                    Fill="{StaticResource SecondaryTextColor}"
-                                    Height="16"
-                                    Stretch="Fill"
-                                    Width="16" />
+                                <Path Classes="CopyPath" />
                             </customControls:CopyButton>
                         </StackPanel>
 
@@ -560,9 +545,7 @@
                                                        Mode=OneWay}"
                                 Width="{CompiledBinding InfoWindow.TextWidth}" />
                             <customControls:NumTextBox
-                                Background="{DynamicResource SecondaryBackgroundColor}"
                                 Classes="hover TStyle x"
-                                Foreground="{StaticResource SecondaryTextColor}"
                                 Text="{CompiledBinding PicViewer.PixelWidth.Value,
                                                        Mode=OneWay}"
                                 ToolTip.Tip="{CompiledBinding Translation.SizeTooltip.Value,
@@ -576,12 +559,7 @@
                                 IsVisible="{CompiledBinding InfoWindow.IsCopyButtonEnabled.Value}"
                                 ToolTip.Tip="{CompiledBinding Translation.Copy,
                                                               Mode=OneWay}">
-                                <Path
-                                    Data="{StaticResource CopyGeometry}"
-                                    Fill="{StaticResource SecondaryTextColor}"
-                                    Height="16"
-                                    Stretch="Fill"
-                                    Width="16" />
+                                <Path Classes="CopyPath" />
                             </customControls:CopyButton>
                         </StackPanel>
 
@@ -594,9 +572,7 @@
                                                        Mode=OneWay}"
                                 Width="{CompiledBinding InfoWindow.TextWidth}" />
                             <customControls:NumTextBox
-                                Background="{DynamicResource SecondaryBackgroundColor}"
                                 Classes="hover TStyle x"
-                                Foreground="{StaticResource SecondaryTextColor}"
                                 Text="{CompiledBinding PicViewer.PixelHeight.Value,
                                                        Mode=OneWay}"
                                 ToolTip.Tip="{CompiledBinding Translation.SizeTooltip.Value,
@@ -610,12 +586,7 @@
                                 IsVisible="{CompiledBinding InfoWindow.IsCopyButtonEnabled.Value}"
                                 ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                               Mode=OneWay}">
-                                <Path
-                                    Data="{StaticResource CopyGeometry}"
-                                    Fill="{StaticResource SecondaryTextColor}"
-                                    Height="16"
-                                    Stretch="Fill"
-                                    Width="16" />
+                                <Path Classes="CopyPath" />
                             </customControls:CopyButton>
                         </StackPanel>
 
@@ -628,6 +599,7 @@
                                                        Mode=OneWay}"
                                 Width="{CompiledBinding InfoWindow.TextWidth}" />
                             <customControls:FuncTextBox
+                                Background="{DynamicResource DisabledBackgroundColor}"
                                 Classes=" TStyle x"
                                 IsReadOnly="True"
                                 Text="{CompiledBinding Exif.SizeMp.Value,
@@ -641,12 +613,7 @@
                                 IsVisible="{CompiledBinding InfoWindow.IsCopyButtonEnabled.Value}"
                                 ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                               Mode=OneWay}">
-                                <Path
-                                    Data="{StaticResource CopyGeometry}"
-                                    Fill="{StaticResource SecondaryTextColor}"
-                                    Height="16"
-                                    Stretch="Fill"
-                                    Width="16" />
+                                <Path Classes="CopyPath" />
                             </customControls:CopyButton>
                         </StackPanel>
 
@@ -660,6 +627,7 @@
                                 Width="{CompiledBinding InfoWindow.TextWidth}"
                                 x:Name="ResolutionTextBlock" />
                             <customControls:FuncTextBox
+                                Background="{DynamicResource DisabledBackgroundColor}"
                                 Classes=" TStyle x"
                                 IsReadOnly="True"
                                 Text="{CompiledBinding Exif.Resolution.Value,
@@ -672,12 +640,7 @@
                                 IsVisible="{CompiledBinding InfoWindow.IsCopyButtonEnabled.Value}"
                                 ToolTip.Tip="{CompiledBinding Translation.Copy,
                                                               Mode=OneWay}">
-                                <Path
-                                    Data="{StaticResource CopyGeometry}"
-                                    Fill="{StaticResource SecondaryTextColor}"
-                                    Height="16"
-                                    Stretch="Fill"
-                                    Width="16" />
+                                <Path Classes="CopyPath" />
                             </customControls:CopyButton>
                         </StackPanel>
 
@@ -690,6 +653,7 @@
                                                        Mode=OneWay}"
                                 Width="{CompiledBinding InfoWindow.TextWidth}" />
                             <customControls:FuncTextBox
+                                Background="{DynamicResource DisabledBackgroundColor}"
                                 Classes=" TStyle x"
                                 IsReadOnly="True"
                                 Text="{CompiledBinding Exif.PrintSizeCm.Value,
@@ -703,12 +667,7 @@
                                 IsVisible="{CompiledBinding InfoWindow.IsCopyButtonEnabled.Value}"
                                 ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                               Mode=OneWay}">
-                                <Path
-                                    Data="{StaticResource CopyGeometry}"
-                                    Fill="{StaticResource SecondaryTextColor}"
-                                    Height="16"
-                                    Stretch="Fill"
-                                    Width="16" />
+                                <Path Classes="CopyPath" />
                             </customControls:CopyButton>
                         </StackPanel>
 
@@ -721,6 +680,7 @@
                                                        Mode=OneWay}"
                                 Width="{CompiledBinding InfoWindow.TextWidth}" />
                             <customControls:FuncTextBox
+                                Background="{DynamicResource DisabledBackgroundColor}"
                                 Classes=" TStyle x"
                                 IsReadOnly="True"
                                 Text="{CompiledBinding Exif.PrintSizeInch.Value,
@@ -734,12 +694,7 @@
                                 IsVisible="{CompiledBinding InfoWindow.IsCopyButtonEnabled.Value}"
                                 ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                               Mode=OneWay}">
-                                <Path
-                                    Data="{StaticResource CopyGeometry}"
-                                    Fill="{StaticResource SecondaryTextColor}"
-                                    Height="16"
-                                    Stretch="Fill"
-                                    Width="16" />
+                                <Path Classes="CopyPath" />
                             </customControls:CopyButton>
                         </StackPanel>
 
@@ -752,6 +707,7 @@
                                                        Mode=OneWay}"
                                 Width="{CompiledBinding InfoWindow.TextWidth}" />
                             <customControls:FuncTextBox
+                                Background="{DynamicResource DisabledBackgroundColor}"
                                 Classes=" TStyle x"
                                 IsReadOnly="True"
                                 Text="{CompiledBinding Exif.AspectRatio.Value,
@@ -765,12 +721,33 @@
                                 IsVisible="{CompiledBinding InfoWindow.IsCopyButtonEnabled.Value}"
                                 ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                               Mode=OneWay}">
-                                <Path
-                                    Data="{StaticResource CopyGeometry}"
-                                    Fill="{StaticResource SecondaryTextColor}"
-                                    Height="16"
-                                    Stretch="Fill"
-                                    Width="16" />
+                                <Path Classes="CopyPath" />
+                            </customControls:CopyButton>
+                        </StackPanel>
+
+                        <!--  Bit Depth  -->
+                        <StackPanel Margin="15,10" Orientation="Horizontal">
+                            <TextBlock
+                                Classes="txt"
+                                Margin="0,8,0,0"
+                                Text="{CompiledBinding Translation.BitDepth.Value,
+                                                       Mode=OneWay}"
+                                Width="{CompiledBinding InfoWindow.TextWidth}" />
+                            <customControls:FuncTextBox
+                                Background="{DynamicResource DisabledBackgroundColor}"
+                                Classes="TStyle x"
+                                IsReadOnly="True"
+                                Text="{CompiledBinding Exif.BitDepth.Value,
+                                                       Mode=OneWay}"
+                                Width="{CompiledBinding InfoWindow.TextBoxWidth.Value}" />
+                            <customControls:CopyButton
+                                Classes="altHover BorderStyle"
+                                CopyText="{CompiledBinding Exif.BitDepth.Value,
+                                                           Mode=OneWay}"
+                                IsVisible="{CompiledBinding InfoWindow.IsCopyButtonEnabled.Value}"
+                                ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
+                                                              Mode=OneWay}">
+                                <Path Classes="CopyPath" />
                             </customControls:CopyButton>
                         </StackPanel>
 
@@ -783,6 +760,7 @@
                                                        Mode=OneWay}"
                                 Width="{CompiledBinding InfoWindow.TextWidth}" />
                             <customControls:FuncTextBox
+                                Background="{DynamicResource DisabledBackgroundColor}"
                                 Classes="TStyle x"
                                 IsReadOnly="True"
                                 Width="{CompiledBinding InfoWindow.TextBoxWidth.Value}"
@@ -793,12 +771,7 @@
                                 IsVisible="{CompiledBinding InfoWindow.IsCopyButtonEnabled.Value}"
                                 ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                               Mode=OneWay}">
-                                <Path
-                                    Data="{StaticResource CopyGeometry}"
-                                    Fill="{StaticResource SecondaryTextColor}"
-                                    Height="16"
-                                    Stretch="Fill"
-                                    Width="16" />
+                                <Path Classes="CopyPath" />
                             </customControls:CopyButton>
                         </StackPanel>
 
@@ -823,12 +796,7 @@
                                 IsVisible="{CompiledBinding InfoWindow.IsCopyButtonEnabled.Value}"
                                 ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                               Mode=OneWay}">
-                                <Path
-                                    Data="{StaticResource CopyGeometry}"
-                                    Fill="{StaticResource SecondaryTextColor}"
-                                    Height="16"
-                                    Stretch="Fill"
-                                    Width="16" />
+                                <Path Classes="CopyPath" />
                             </customControls:CopyButton>
                         </StackPanel>
 
@@ -853,12 +821,7 @@
                                 IsVisible="{CompiledBinding InfoWindow.IsCopyButtonEnabled.Value}"
                                 ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                               Mode=OneWay}">
-                                <Path
-                                    Data="{StaticResource CopyGeometry}"
-                                    Fill="{StaticResource SecondaryTextColor}"
-                                    Height="16"
-                                    Stretch="Fill"
-                                    Width="16" />
+                                <Path Classes="CopyPath" />
                             </customControls:CopyButton>
                         </StackPanel>
 
@@ -883,42 +846,7 @@
                                 IsVisible="{CompiledBinding InfoWindow.IsCopyButtonEnabled.Value}"
                                 ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                               Mode=OneWay}">
-                                <Path
-                                    Data="{StaticResource CopyGeometry}"
-                                    Fill="{StaticResource SecondaryTextColor}"
-                                    Height="16"
-                                    Stretch="Fill"
-                                    Width="16" />
-                            </customControls:CopyButton>
-                        </StackPanel>
-
-                        <!--  Bit Depth  -->
-                        <StackPanel Margin="15,10" Orientation="Horizontal">
-                            <TextBlock
-                                Classes="txt"
-                                Margin="0,8,0,0"
-                                Text="{CompiledBinding Translation.BitDepth.Value,
-                                                       Mode=OneWay}"
-                                Width="{CompiledBinding InfoWindow.TextWidth}" />
-                            <customControls:FuncTextBox
-                                Classes="TStyle x"
-                                IsReadOnly="True"
-                                Text="{CompiledBinding Exif.BitDepth.Value,
-                                                       Mode=OneWay}"
-                                Width="{CompiledBinding InfoWindow.TextBoxWidth.Value}" />
-                            <customControls:CopyButton
-                                Classes="altHover BorderStyle"
-                                CopyText="{CompiledBinding Exif.BitDepth.Value,
-                                                           Mode=OneWay}"
-                                IsVisible="{CompiledBinding InfoWindow.IsCopyButtonEnabled.Value}"
-                                ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
-                                                              Mode=OneWay}">
-                                <Path
-                                    Data="{StaticResource CopyGeometry}"
-                                    Fill="{StaticResource SecondaryTextColor}"
-                                    Height="16"
-                                    Stretch="Fill"
-                                    Width="16" />
+                                <Path Classes="CopyPath" />
                             </customControls:CopyButton>
                         </StackPanel>
 
@@ -939,11 +867,11 @@
                                                    Mode=OneWay}"
                             TextAlignment="Center" />
                         <ComboBox
-                            Background="{DynamicResource SecondaryBackgroundColor}"
                             BorderBrush="{DynamicResource MainBorderColor}"
                             BorderThickness="1"
                             CornerRadius="2"
                             FontFamily="/Assets/Fonts/Roboto-Medium.ttf#Roboto"
+                            Foreground="{DynamicResource MainTextColor}"
                             Padding="5,7,0,7"
                             SelectedIndex="0"
                             Width="140"
@@ -962,27 +890,24 @@
                             Background="{DynamicResource AccentColor}"
                             Classes="BorderStyle accentHover mainBtn"
                             CornerRadius="2"
+                            Foreground="{StaticResource SecondaryTextColor}"
                             Margin="0,40,0,0"
                             Width="140"
                             x:Name="SaveButton">
                             <TextBlock
                                 Classes="txt"
+                                Foreground="{StaticResource SecondaryTextColor}"
                                 Text="{CompiledBinding Translation.Save.Value,
                                                        Mode=OneWay}"
                                 TextAlignment="Center" />
                             <SplitButton.Flyout>
                                 <MenuFlyout FlyoutPresenterClasses="noCornerRadius" Placement="Bottom">
-                                    <Button
+                                    <MenuItem
                                         Background="Transparent"
-                                        Width="80"
-                                        x:Name="SaveAsButton">
-                                        <TextBlock
-                                            Classes="txt"
-                                            Foreground="{DynamicResource MainTextColor}"
-                                            Text="{CompiledBinding Translation.SaveAs.Value,
-                                                                   Mode=OneWay}"
-                                            TextAlignment="Center" />
-                                    </Button>
+                                        Header="{CompiledBinding Translation.SaveAs.Value,
+                                                                 Mode=OneWay}"
+                                        Width="140"
+                                        x:Name="SaveAsButton" />
                                 </MenuFlyout>
                             </SplitButton.Flyout>
                         </SplitButton>
@@ -1019,7 +944,7 @@
                             Width="{CompiledBinding InfoWindow.HalfLineWidth.Value}" />
                         <Path
                             Data="{StaticResource AtGeometry}"
-                            Fill="{StaticResource SecondaryTextColor}"
+                            Fill="{DynamicResource MainTextColor}"
                             Stretch="Uniform" />
                         <Rectangle
                             Fill="{DynamicResource MainBorderColor}"
@@ -1051,12 +976,7 @@
                                 IsVisible="{CompiledBinding InfoWindow.IsCopyButtonEnabled.Value}"
                                 ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                               Mode=OneWay}">
-                                <Path
-                                    Data="{StaticResource CopyGeometry}"
-                                    Fill="{StaticResource SecondaryTextColor}"
-                                    Height="16"
-                                    Stretch="Fill"
-                                    Width="16" />
+                                <Path Classes="CopyPath" />
                             </customControls:CopyButton>
                         </StackPanel>
 
@@ -1081,12 +1001,7 @@
                                 IsVisible="{CompiledBinding InfoWindow.IsCopyButtonEnabled.Value}"
                                 ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                               Mode=OneWay}">
-                                <Path
-                                    Data="{StaticResource CopyGeometry}"
-                                    Fill="{StaticResource SecondaryTextColor}"
-                                    Height="16"
-                                    Stretch="Fill"
-                                    Width="16" />
+                                <Path Classes="CopyPath" />
                             </customControls:CopyButton>
                         </StackPanel>
 
@@ -1111,12 +1026,7 @@
                                 IsVisible="{CompiledBinding InfoWindow.IsCopyButtonEnabled.Value}"
                                 ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                               Mode=OneWay}">
-                                <Path
-                                    Data="{StaticResource CopyGeometry}"
-                                    Fill="{StaticResource SecondaryTextColor}"
-                                    Height="16"
-                                    Stretch="Fill"
-                                    Width="16" />
+                                <Path Classes="CopyPath" />
                             </customControls:CopyButton>
                         </StackPanel>
 
@@ -1141,17 +1051,12 @@
                                 IsVisible="{CompiledBinding InfoWindow.IsCopyButtonEnabled.Value}"
                                 ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                               Mode=OneWay}">
-                                <Path
-                                    Data="{StaticResource CopyGeometry}"
-                                    Fill="{StaticResource SecondaryTextColor}"
-                                    Height="16"
-                                    Stretch="Fill"
-                                    Width="16" />
+                                <Path Classes="CopyPath" />
                             </customControls:CopyButton>
                         </StackPanel>
 
                         <!--  Subject  -->
-                        <StackPanel Margin="10,10,0,10" Orientation="Horizontal">
+                        <StackPanel Margin="10" Orientation="Horizontal">
                             <TextBlock
                                 Classes="txt"
                                 Margin="0,8,2,0"
@@ -1171,12 +1076,7 @@
                                 IsVisible="{CompiledBinding InfoWindow.IsCopyButtonEnabled.Value}"
                                 ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                               Mode=OneWay}">
-                                <Path
-                                    Data="{StaticResource CopyGeometry}"
-                                    Fill="{StaticResource SecondaryTextColor}"
-                                    Height="16"
-                                    Stretch="Fill"
-                                    Width="16" />
+                                <Path Classes="CopyPath" />
                             </customControls:CopyButton>
                         </StackPanel>
 
@@ -1201,12 +1101,7 @@
                                 IsVisible="{CompiledBinding InfoWindow.IsCopyButtonEnabled.Value}"
                                 ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                               Mode=OneWay}">
-                                <Path
-                                    Data="{StaticResource CopyGeometry}"
-                                    Fill="{StaticResource SecondaryTextColor}"
-                                    Height="16"
-                                    Stretch="Fill"
-                                    Width="16" />
+                                <Path Classes="CopyPath" />
                             </customControls:CopyButton>
                         </StackPanel>
 
@@ -1231,12 +1126,7 @@
                                 IsVisible="{CompiledBinding InfoWindow.IsCopyButtonEnabled.Value}"
                                 ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                               Mode=OneWay}">
-                                <Path
-                                    Data="{StaticResource CopyGeometry}"
-                                    Fill="{StaticResource SecondaryTextColor}"
-                                    Height="16"
-                                    Stretch="Fill"
-                                    Width="16" />
+                                <Path Classes="CopyPath" />
                             </customControls:CopyButton>
                         </StackPanel>
                     </WrapPanel>
@@ -1257,7 +1147,7 @@
                             Width="{CompiledBinding InfoWindow.HalfLineWidth.Value}" />
                         <Path
                             Data="{StaticResource GpsGeometry}"
-                            Fill="{StaticResource SecondaryTextColor}"
+                            Fill="{DynamicResource MainTextColor}"
                             Stretch="Uniform" />
                         <Rectangle
                             Fill="{DynamicResource MainBorderColor}"
@@ -1269,7 +1159,7 @@
                     <WrapPanel HorizontalAlignment="Center" Margin="5,10,0,0">
 
                         <!--  Latitude  -->
-                        <StackPanel Margin="10,10,0,10" Orientation="Horizontal">
+                        <StackPanel Margin="10" Orientation="Horizontal">
                             <TextBlock
                                 Classes="txt"
                                 Margin="0,8,2,0"
@@ -1289,17 +1179,12 @@
                                 IsVisible="{CompiledBinding InfoWindow.IsCopyButtonEnabled.Value}"
                                 ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                               Mode=OneWay}">
-                                <Path
-                                    Data="{StaticResource CopyGeometry}"
-                                    Fill="{StaticResource SecondaryTextColor}"
-                                    Height="16"
-                                    Stretch="Fill"
-                                    Width="16" />
+                                <Path Classes="CopyPath" />
                             </customControls:CopyButton>
                         </StackPanel>
 
                         <!--  Longitude  -->
-                        <StackPanel Margin="10,10,0,10" Orientation="Horizontal">
+                        <StackPanel Margin="10" Orientation="Horizontal">
                             <TextBlock
                                 Classes="txt"
                                 Margin="0,8,2,0"
@@ -1319,17 +1204,12 @@
                                 IsVisible="{CompiledBinding InfoWindow.IsCopyButtonEnabled.Value}"
                                 ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                               Mode=OneWay}">
-                                <Path
-                                    Data="{StaticResource CopyGeometry}"
-                                    Fill="{StaticResource SecondaryTextColor}"
-                                    Height="16"
-                                    Stretch="Fill"
-                                    Width="16" />
+                                <Path Classes="CopyPath" />
                             </customControls:CopyButton>
                         </StackPanel>
 
                         <!--  Altitude  -->
-                        <StackPanel Margin="10,10,0,10" Orientation="Horizontal">
+                        <StackPanel Margin="10" Orientation="Horizontal">
                             <TextBlock
                                 Classes="txt"
                                 Margin="0,8,2,0"
@@ -1349,12 +1229,7 @@
                                 IsVisible="{CompiledBinding InfoWindow.IsCopyButtonEnabled.Value}"
                                 ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                               Mode=OneWay}">
-                                <Path
-                                    Data="{StaticResource CopyGeometry}"
-                                    Fill="{StaticResource SecondaryTextColor}"
-                                    Height="16"
-                                    Stretch="Fill"
-                                    Width="16" />
+                                <Path Classes="CopyPath" />
                             </customControls:CopyButton>
 
                         </StackPanel>
@@ -1367,8 +1242,8 @@
                                 Margin="30,0,15,0"
                                 x:Name="GoogleLinkButton">
                                 <Path
-                                    Data="M473.16 221.48l-2.26-9.59H262.46v88.22H387c-12.93 61.4-72.93 93.72-121.94 93.72-35.66 0-73.25-15-98.13-39.11a140.08 140.08 0 01-41.8-98.88c0-37.16 16.7-74.33 41-98.78s61-38.13 97.49-38.13c41.79 0 71.74 22.19 82.94 32.31l62.69-62.36C390.86 72.72 340.34 32 261.6 32c-60.75 0-119 23.27-161.58 65.71C58 139.5 36.25 199.93 36.25 256s20.58 113.48 61.3 155.6c43.51 44.92 105.13 68.4 168.58 68.4 57.73 0 112.45-22.62 151.45-63.66 38.34-40.4 58.17-96.3 58.17-154.9 0-24.67-2.48-39.32-2.59-39.96z"
-                                    Fill="{StaticResource SecondaryTextColor}"
+                                    Data="{StaticResource GoogleGeometry}"
+                                    Fill="{DynamicResource MainTextColor}"
                                     Height="20"
                                     Stretch="Fill"
                                     Width="20" />
@@ -1379,8 +1254,8 @@
                                                           Mode=OneWay}"
                                 x:Name="BingLinkButton">
                                 <Path
-                                    Data="M31.87 30.58H244.7v212.81H31.87zM266.89 30.58H479.7v212.81H266.89zM31.87 265.61H244.7v212.8H31.87zM266.89 265.61H479.7v212.8H266.89z"
-                                    Fill="{StaticResource SecondaryTextColor}"
+                                    Data="{StaticResource BingGeometry}"
+                                    Fill="{DynamicResource MainTextColor}"
                                     Height="20"
                                     Stretch="Fill"
                                     Width="20" />
@@ -1401,7 +1276,7 @@
                             Height="1"
                             Margin="0,0,7,0"
                             Width="{CompiledBinding InfoWindow.HalfLineWidth.Value}" />
-                        <Image Source="{StaticResource PaletteAltImage}" />
+                        <Image Source="{StaticResource PaletteImage}" />
                         <Rectangle
                             Fill="{DynamicResource MainBorderColor}"
                             Height="1"
@@ -1412,7 +1287,7 @@
                     <WrapPanel HorizontalAlignment="Center" Margin="5,10,0,0">
 
                         <!--  Color representation  -->
-                        <StackPanel Margin="10,10,0,10" Orientation="Horizontal">
+                        <StackPanel Margin="10" Orientation="Horizontal">
                             <TextBlock
                                 Classes="txt"
                                 Margin="0,8,2,0"
@@ -1432,17 +1307,12 @@
                                 IsVisible="{CompiledBinding InfoWindow.IsCopyButtonEnabled.Value}"
                                 ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                               Mode=OneWay}">
-                                <Path
-                                    Data="{StaticResource CopyGeometry}"
-                                    Fill="{StaticResource SecondaryTextColor}"
-                                    Height="16"
-                                    Stretch="Fill"
-                                    Width="16" />
+                                <Path Classes="CopyPath" />
                             </customControls:CopyButton>
                         </StackPanel>
 
                         <!--  Resolution unit  -->
-                        <StackPanel Margin="10,10,0,10" Orientation="Horizontal">
+                        <StackPanel Margin="10" Orientation="Horizontal">
                             <TextBlock
                                 Classes="txt"
                                 Margin="0,8,2,0"
@@ -1462,17 +1332,12 @@
                                 IsVisible="{CompiledBinding InfoWindow.IsCopyButtonEnabled.Value}"
                                 ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                               Mode=OneWay}">
-                                <Path
-                                    Data="{StaticResource CopyGeometry}"
-                                    Fill="{StaticResource SecondaryTextColor}"
-                                    Height="16"
-                                    Stretch="Fill"
-                                    Width="16" />
+                                <Path Classes="CopyPath" />
                             </customControls:CopyButton>
                         </StackPanel>
 
                         <!--  Compression  -->
-                        <StackPanel Margin="10,10,0,10" Orientation="Horizontal">
+                        <StackPanel Margin="10" Orientation="Horizontal">
                             <TextBlock
                                 Classes="txt"
                                 Margin="0,8,2,0"
@@ -1492,17 +1357,12 @@
                                 IsVisible="{CompiledBinding InfoWindow.IsCopyButtonEnabled.Value}"
                                 ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                               Mode=OneWay}">
-                                <Path
-                                    Data="{StaticResource CopyGeometry}"
-                                    Fill="{StaticResource SecondaryTextColor}"
-                                    Height="16"
-                                    Stretch="Fill"
-                                    Width="16" />
+                                <Path Classes="CopyPath" />
                             </customControls:CopyButton>
                         </StackPanel>
 
                         <!--  Compressed bits pixel  -->
-                        <StackPanel Margin="10,10,0,10" Orientation="Horizontal">
+                        <StackPanel Margin="10" Orientation="Horizontal">
                             <TextBlock
                                 Classes="txt"
                                 Margin="0,8,2,0"
@@ -1522,12 +1382,7 @@
                                 IsVisible="{CompiledBinding InfoWindow.IsCopyButtonEnabled.Value}"
                                 ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                               Mode=OneWay}">
-                                <Path
-                                    Data="{StaticResource CopyGeometry}"
-                                    Fill="{StaticResource SecondaryTextColor}"
-                                    Height="16"
-                                    Stretch="Fill"
-                                    Width="16" />
+                                <Path Classes="CopyPath" />
                             </customControls:CopyButton>
                         </StackPanel>
                     </WrapPanel>
@@ -1547,7 +1402,7 @@
                             Width="{CompiledBinding InfoWindow.HalfLineWidth.Value}" />
                         <Path
                             Data="{StaticResource ImageInfoGeometry}"
-                            Fill="{StaticResource SecondaryTextColor}"
+                            Fill="{DynamicResource MainTextColor}"
                             Stretch="Uniform" />
                         <Rectangle
                             Fill="{DynamicResource MainBorderColor}"
@@ -1580,17 +1435,12 @@
                                     IsVisible="{CompiledBinding InfoWindow.IsCopyButtonEnabled.Value}"
                                     ToolTip.Tip="{CompiledBinding Translation.Copy,
                                                                   Mode=OneWay}">
-                                    <Path
-                                        Data="{StaticResource CopyGeometry}"
-                                        Fill="{StaticResource SecondaryTextColor}"
-                                        Height="16"
-                                        Stretch="Fill"
-                                        Width="16" />
+                                    <Path Classes="CopyPath" />
                                 </customControls:CopyButton>
                             </StackPanel>
 
                             <!--  Camera model  -->
-                            <StackPanel Margin="10,10,0,10" Orientation="Horizontal">
+                            <StackPanel Margin="10" Orientation="Horizontal">
                                 <TextBlock
                                     Classes="txt"
                                     Margin="0,8,2,0"
@@ -1610,12 +1460,7 @@
                                     IsVisible="{CompiledBinding InfoWindow.IsCopyButtonEnabled.Value}"
                                     ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                                   Mode=OneWay}">
-                                    <Path
-                                        Data="{StaticResource CopyGeometry}"
-                                        Fill="{StaticResource SecondaryTextColor}"
-                                        Height="16"
-                                        Stretch="Fill"
-                                        Width="16" />
+                                    <Path Classes="CopyPath" />
                                 </customControls:CopyButton>
                             </StackPanel>
                         </StackPanel>
@@ -1643,17 +1488,12 @@
                                         IsVisible="{CompiledBinding InfoWindow.IsCopyButtonEnabled.Value}"
                                         ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                                       Mode=OneWay}">
-                                        <Path
-                                            Data="{StaticResource CopyGeometry}"
-                                            Fill="{StaticResource SecondaryTextColor}"
-                                            Height="16"
-                                            Stretch="Fill"
-                                            Width="16" />
+                                        <Path Classes="CopyPath" />
                                     </customControls:CopyButton>
                                 </StackPanel>
 
                                 <!--  Max aperture  -->
-                                <StackPanel Margin="10,10,0,10" Orientation="Horizontal">
+                                <StackPanel Margin="10" Orientation="Horizontal">
                                     <TextBlock
                                         Classes="txt"
                                         Margin="0,8,2,0"
@@ -1673,12 +1513,7 @@
                                         IsVisible="{CompiledBinding InfoWindow.IsCopyButtonEnabled.Value}"
                                         ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                                       Mode=OneWay}">
-                                        <Path
-                                            Data="{StaticResource CopyGeometry}"
-                                            Fill="{StaticResource SecondaryTextColor}"
-                                            Height="16"
-                                            Stretch="Fill"
-                                            Width="16" />
+                                        <Path Classes="CopyPath" />
                                     </customControls:CopyButton>
                                 </StackPanel>
                             </StackPanel>
@@ -1707,17 +1542,12 @@
                                         IsVisible="{CompiledBinding InfoWindow.IsCopyButtonEnabled.Value}"
                                         ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                                       Mode=OneWay}">
-                                        <Path
-                                            Data="{StaticResource CopyGeometry}"
-                                            Fill="{StaticResource SecondaryTextColor}"
-                                            Height="16"
-                                            Stretch="Fill"
-                                            Width="16" />
+                                        <Path Classes="CopyPath" />
                                     </customControls:CopyButton>
                                 </StackPanel>
 
                                 <!--  Exposure time  -->
-                                <StackPanel Margin="10,10,0,10" Orientation="Horizontal">
+                                <StackPanel Margin="10" Orientation="Horizontal">
                                     <TextBlock
                                         Classes="txt"
                                         Margin="0,8,2,0"
@@ -1737,12 +1567,7 @@
                                         IsVisible="{CompiledBinding InfoWindow.IsCopyButtonEnabled.Value}"
                                         ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                                       Mode=OneWay}">
-                                        <Path
-                                            Data="{StaticResource CopyGeometry}"
-                                            Fill="{StaticResource SecondaryTextColor}"
-                                            Height="16"
-                                            Stretch="Fill"
-                                            Width="16" />
+                                        <Path Classes="CopyPath" />
                                     </customControls:CopyButton>
                                 </StackPanel>
                             </StackPanel>
@@ -1771,17 +1596,12 @@
                                         IsVisible="{CompiledBinding InfoWindow.IsCopyButtonEnabled.Value}"
                                         ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                                       Mode=OneWay}">
-                                        <Path
-                                            Data="{StaticResource CopyGeometry}"
-                                            Fill="{StaticResource SecondaryTextColor}"
-                                            Height="16"
-                                            Stretch="Fill"
-                                            Width="16" />
+                                        <Path Classes="CopyPath" />
                                     </customControls:CopyButton>
                                 </StackPanel>
 
                                 <!--  Digital zoom  -->
-                                <StackPanel Margin="10,10,0,10" Orientation="Horizontal">
+                                <StackPanel Margin="10" Orientation="Horizontal">
                                     <TextBlock
                                         Classes="txt"
                                         Margin="0,8,2,0"
@@ -1800,12 +1620,7 @@
                                         IsVisible="{CompiledBinding InfoWindow.IsCopyButtonEnabled.Value}"
                                         ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                                       Mode=OneWay}">
-                                        <Path
-                                            Data="{StaticResource CopyGeometry}"
-                                            Fill="{StaticResource SecondaryTextColor}"
-                                            Height="16"
-                                            Stretch="Fill"
-                                            Width="16" />
+                                        <Path Classes="CopyPath" />
                                     </customControls:CopyButton>
                                 </StackPanel>
                             </StackPanel>
@@ -1834,17 +1649,12 @@
                                         IsVisible="{CompiledBinding InfoWindow.IsCopyButtonEnabled.Value}"
                                         ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                                       Mode=OneWay}">
-                                        <Path
-                                            Data="{StaticResource CopyGeometry}"
-                                            Fill="{StaticResource SecondaryTextColor}"
-                                            Height="16"
-                                            Stretch="Fill"
-                                            Width="16" />
+                                        <Path Classes="CopyPath" />
                                     </customControls:CopyButton>
                                 </StackPanel>
 
                                 <!--  Focal length 35mm  -->
-                                <StackPanel Margin="10,10,0,10" Orientation="Horizontal">
+                                <StackPanel Margin="10" Orientation="Horizontal">
                                     <TextBlock
                                         Classes="txt"
                                         Margin="0,8,2,0"
@@ -1864,12 +1674,7 @@
                                         IsVisible="{CompiledBinding InfoWindow.IsCopyButtonEnabled.Value}"
                                         ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                                       Mode=OneWay}">
-                                        <Path
-                                            Data="{StaticResource CopyGeometry}"
-                                            Fill="{StaticResource SecondaryTextColor}"
-                                            Height="16"
-                                            Stretch="Fill"
-                                            Width="16" />
+                                        <Path Classes="CopyPath" />
                                     </customControls:CopyButton>
                                 </StackPanel>
                             </StackPanel>
@@ -1898,17 +1703,12 @@
                                         IsVisible="{CompiledBinding InfoWindow.IsCopyButtonEnabled.Value}"
                                         ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                                       Mode=OneWay}">
-                                        <Path
-                                            Data="{StaticResource CopyGeometry}"
-                                            Fill="{StaticResource SecondaryTextColor}"
-                                            Height="16"
-                                            Stretch="Fill"
-                                            Width="16" />
+                                        <Path Classes="CopyPath" />
                                     </customControls:CopyButton>
                                 </StackPanel>
 
                                 <!--  Metering mode  -->
-                                <StackPanel Margin="10,10,0,10" Orientation="Horizontal">
+                                <StackPanel Margin="10" Orientation="Horizontal">
                                     <TextBlock
                                         Classes="txt"
                                         Margin="0,8,2,0"
@@ -1928,12 +1728,7 @@
                                         IsVisible="{CompiledBinding InfoWindow.IsCopyButtonEnabled.Value}"
                                         ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                                       Mode=OneWay}">
-                                        <Path
-                                            Data="{StaticResource CopyGeometry}"
-                                            Fill="{StaticResource SecondaryTextColor}"
-                                            Height="16"
-                                            Stretch="Fill"
-                                            Width="16" />
+                                        <Path Classes="CopyPath" />
                                     </customControls:CopyButton>
                                 </StackPanel>
                             </StackPanel>
@@ -1962,17 +1757,12 @@
                                         IsVisible="{CompiledBinding InfoWindow.IsCopyButtonEnabled.Value}"
                                         ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                                       Mode=OneWay}">
-                                        <Path
-                                            Data="{StaticResource CopyGeometry}"
-                                            Fill="{StaticResource SecondaryTextColor}"
-                                            Height="16"
-                                            Stretch="Fill"
-                                            Width="16" />
+                                        <Path Classes="CopyPath" />
                                     </customControls:CopyButton>
                                 </StackPanel>
 
                                 <!--  Saturation  -->
-                                <StackPanel Margin="10,10,0,10" Orientation="Horizontal">
+                                <StackPanel Margin="10" Orientation="Horizontal">
                                     <TextBlock
                                         Classes="txt"
                                         Margin="0,8,2,0"
@@ -1992,12 +1782,7 @@
                                         IsVisible="{CompiledBinding InfoWindow.IsCopyButtonEnabled.Value}"
                                         ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                                       Mode=OneWay}">
-                                        <Path
-                                            Data="{StaticResource CopyGeometry}"
-                                            Fill="{StaticResource SecondaryTextColor}"
-                                            Height="16"
-                                            Stretch="Fill"
-                                            Width="16" />
+                                        <Path Classes="CopyPath" />
                                     </customControls:CopyButton>
                                 </StackPanel>
                             </StackPanel>
@@ -2026,17 +1811,12 @@
                                         IsVisible="{CompiledBinding InfoWindow.IsCopyButtonEnabled.Value}"
                                         ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                                       Mode=OneWay}">
-                                        <Path
-                                            Data="{StaticResource CopyGeometry}"
-                                            Fill="{StaticResource SecondaryTextColor}"
-                                            Height="16"
-                                            Stretch="Fill"
-                                            Width="16" />
+                                        <Path Classes="CopyPath" />
                                     </customControls:CopyButton>
                                 </StackPanel>
 
                                 <!--  White balance  -->
-                                <StackPanel Margin="10,10,0,10" Orientation="Horizontal">
+                                <StackPanel Margin="10" Orientation="Horizontal">
                                     <TextBlock
                                         Classes="txt"
                                         Margin="0,8,2,0"
@@ -2055,12 +1835,7 @@
                                                                    Mode=OneWay}"
                                         ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                                       Mode=OneWay}">
-                                        <Path
-                                            Data="{StaticResource CopyGeometry}"
-                                            Fill="{StaticResource SecondaryTextColor}"
-                                            Height="16"
-                                            Stretch="Fill"
-                                            Width="16" />
+                                        <Path Classes="CopyPath" />
                                     </customControls:CopyButton>
                                 </StackPanel>
                             </StackPanel>
@@ -2089,17 +1864,12 @@
                                         IsVisible="{CompiledBinding InfoWindow.IsCopyButtonEnabled.Value}"
                                         ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                                       Mode=OneWay}">
-                                        <Path
-                                            Data="{StaticResource CopyGeometry}"
-                                            Fill="{StaticResource SecondaryTextColor}"
-                                            Height="16"
-                                            Stretch="Fill"
-                                            Width="16" />
+                                        <Path Classes="CopyPath" />
                                     </customControls:CopyButton>
                                 </StackPanel>
 
                                 <!--  Flash mode  -->
-                                <StackPanel Margin="10,10,0,10" Orientation="Horizontal">
+                                <StackPanel Margin="10" Orientation="Horizontal">
                                     <TextBlock
                                         Classes="txt"
                                         Margin="0,8,2,0"
@@ -2119,12 +1889,7 @@
                                         IsVisible="{CompiledBinding InfoWindow.IsCopyButtonEnabled.Value}"
                                         ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                                       Mode=OneWay}">
-                                        <Path
-                                            Data="{StaticResource CopyGeometry}"
-                                            Fill="{StaticResource SecondaryTextColor}"
-                                            Height="16"
-                                            Stretch="Fill"
-                                            Width="16" />
+                                        <Path Classes="CopyPath" />
                                     </customControls:CopyButton>
                                 </StackPanel>
                             </StackPanel>
@@ -2153,17 +1918,12 @@
                                         IsVisible="{CompiledBinding InfoWindow.IsCopyButtonEnabled.Value}"
                                         ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                                       Mode=OneWay}">
-                                        <Path
-                                            Data="{StaticResource CopyGeometry}"
-                                            Fill="{StaticResource SecondaryTextColor}"
-                                            Height="16"
-                                            Stretch="Fill"
-                                            Width="16" />
+                                        <Path Classes="CopyPath" />
                                     </customControls:CopyButton>
                                 </StackPanel>
 
                                 <!--  Brightness  -->
-                                <StackPanel Margin="10,10,0,10" Orientation="Horizontal">
+                                <StackPanel Margin="10" Orientation="Horizontal">
                                     <TextBlock
                                         Classes="txt"
                                         Margin="0,8,2,0"
@@ -2183,12 +1943,7 @@
                                         IsVisible="{CompiledBinding InfoWindow.IsCopyButtonEnabled.Value}"
                                         ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                                       Mode=OneWay}">
-                                        <Path
-                                            Data="{StaticResource CopyGeometry}"
-                                            Fill="{StaticResource SecondaryTextColor}"
-                                            Height="16"
-                                            Stretch="Fill"
-                                            Width="16" />
+                                        <Path Classes="CopyPath" />
                                     </customControls:CopyButton>
                                 </StackPanel>
                             </StackPanel>
@@ -2217,17 +1972,12 @@
                                         IsVisible="{CompiledBinding InfoWindow.IsCopyButtonEnabled.Value}"
                                         ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                                       Mode=OneWay}">
-                                        <Path
-                                            Data="{StaticResource CopyGeometry}"
-                                            Fill="{StaticResource SecondaryTextColor}"
-                                            Height="16"
-                                            Stretch="Fill"
-                                            Width="16" />
+                                        <Path Classes="CopyPath" />
                                     </customControls:CopyButton>
                                 </StackPanel>
 
                                 <!--  Orientation  -->
-                                <StackPanel Margin="10,10,0,10" Orientation="Horizontal">
+                                <StackPanel Margin="10" Orientation="Horizontal">
                                     <TextBlock
                                         Classes="txt"
                                         Margin="0,8,2,0"
@@ -2246,12 +1996,7 @@
                                                                    Mode=OneWay}"
                                         ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                                       Mode=OneWay}">
-                                        <Path
-                                            Data="{StaticResource CopyGeometry}"
-                                            Fill="{StaticResource SecondaryTextColor}"
-                                            Height="16"
-                                            Stretch="Fill"
-                                            Width="16" />
+                                        <Path Classes="CopyPath" />
                                     </customControls:CopyButton>
                                 </StackPanel>
                             </StackPanel>
@@ -2280,17 +2025,12 @@
                                         IsVisible="{CompiledBinding InfoWindow.IsCopyButtonEnabled.Value}"
                                         ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                                       Mode=OneWay}">
-                                        <Path
-                                            Data="{StaticResource CopyGeometry}"
-                                            Fill="{StaticResource SecondaryTextColor}"
-                                            Height="16"
-                                            Stretch="Fill"
-                                            Width="16" />
+                                        <Path Classes="CopyPath" />
                                     </customControls:CopyButton>
                                 </StackPanel>
 
                                 <!--  Lens model  -->
-                                <StackPanel Margin="10,10,0,10" Orientation="Horizontal">
+                                <StackPanel Margin="10" Orientation="Horizontal">
                                     <TextBlock
                                         Classes="txt"
                                         Margin="0,8,2,0"
@@ -2310,12 +2050,7 @@
                                         IsVisible="{CompiledBinding InfoWindow.IsCopyButtonEnabled.Value}"
                                         ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                                       Mode=OneWay}">
-                                        <Path
-                                            Data="{StaticResource CopyGeometry}"
-                                            Fill="{StaticResource SecondaryTextColor}"
-                                            Height="16"
-                                            Stretch="Fill"
-                                            Width="16" />
+                                        <Path Classes="CopyPath" />
                                     </customControls:CopyButton>
                                 </StackPanel>
                             </StackPanel>
@@ -2343,12 +2078,7 @@
                                     IsVisible="{CompiledBinding InfoWindow.IsCopyButtonEnabled.Value}"
                                     ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                                   Mode=OneWay}">
-                                    <Path
-                                        Data="{StaticResource CopyGeometry}"
-                                        Fill="{StaticResource SecondaryTextColor}"
-                                        Height="16"
-                                        Stretch="Fill"
-                                        Width="16" />
+                                    <Path Classes="CopyPath" />
                                 </customControls:CopyButton>
                             </StackPanel>
                         </StackPanel>

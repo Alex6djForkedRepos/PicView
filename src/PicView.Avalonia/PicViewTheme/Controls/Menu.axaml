@@ -64,6 +64,7 @@
                             ContentTemplate="{TemplateBinding HeaderTemplate}"
                             Foreground="{DynamicResource ContextMenuTextColor}"
                             Grid.Column="2"
+                            HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
                             Margin="{TemplateBinding Padding}"
                             Name="PART_HeaderPresenter"
                             VerticalAlignment="Center">
@@ -165,6 +166,10 @@
         </Style>
 
         <Style Selector="^.noCornerRadius:nth-last-child(1) /template/ Border#root">
+            <Setter Property="CornerRadius" Value="0" />
+        </Style>
+
+        <Style Selector="^:nth-child(1):nth-last-child(1) /template/ Border#root">
             <Setter Property="CornerRadius" Value="0" />
         </Style>
 

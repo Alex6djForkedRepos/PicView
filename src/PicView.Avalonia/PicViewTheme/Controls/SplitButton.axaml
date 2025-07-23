@@ -42,6 +42,7 @@
                     Content="{TemplateBinding Content}"
                     ContentTemplate="{TemplateBinding ContentTemplate}"
                     CornerRadius="{TemplateBinding CornerRadius}"
+                    Foreground="{TemplateBinding Foreground}"
                     HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
                     Padding="{TemplateBinding Padding}"
                     RecognizesAccessKey="True"
@@ -50,19 +51,6 @@
             </ControlTemplate>
         </Setter>
 
-        <Style Selector="^:pressed /template/ ContentPresenter">
-            <Setter Property="Background" Value="{DynamicResource SecondaryAccentColor}" />
-        </Style>
-
-        <Style Selector="^[Tag=flyout-open] /template/ ContentPresenter">
-            <Setter Property="Background" Value="{DynamicResource BackgroundHoverColor}" />
-        </Style>
-
-        <Style Selector="^[Tag=checked]">
-            <Style Selector="^ /template/ ContentPresenter">
-                <Setter Property="Background" Value="{DynamicResource BackgroundHoverColor}" />
-            </Style>
-        </Style>
     </ControlTheme>
 
     <ControlTheme TargetType="SplitButton" x:Key="{x:Type SplitButton}">

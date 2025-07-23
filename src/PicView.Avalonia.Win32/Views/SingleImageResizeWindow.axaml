@@ -59,7 +59,7 @@
                     Click="Minimize"
                     Data="{StaticResource MinimizeGeometry}"
                     DockPanel.Dock="Right"
-                    Foreground="{DynamicResource MainTextColor}"
+                    Foreground="{StaticResource MainTextColor}"
                     IconHeight="12"
                     IconWidth="12"
                     IsRepeatEnabled="False"
@@ -84,7 +84,7 @@
                 Height="1"
                 x:Name="BorderRectangle" />
 
-            <main:SingleImageResizeView Background="{DynamicResource NoisyTexture}" />
+            <main:SingleImageResizeView Background="{DynamicResource NoisyTexture}" x:Name="ResizeView" />
         </StackPanel>
     </Border>
 </Window>

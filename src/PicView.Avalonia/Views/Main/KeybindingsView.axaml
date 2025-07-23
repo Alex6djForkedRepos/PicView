@@ -1,5 +1,4 @@
 <UserControl
-    Margin="0,0,0,20"
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d"
@@ -1224,6 +1223,7 @@
                 Width="170" />
             <customControls:KeybindTextBox
                 Classes="hover TStyle"
+                Foreground="{DynamicResource DisabledTextColor}"
                 MethodName="CutFile"
                 ToolTip.Tip="{CompiledBinding Translation.ChangeKeybindingTooltip.Value,
                                               Mode=OneWay}"
@@ -1231,6 +1231,7 @@
             <customControls:KeybindTextBox
                 Alt="True"
                 Classes="hover TStyle"
+                Foreground="{DynamicResource DisabledTextColor}"
                 MethodName="CutFile"
                 ToolTip.Tip="{CompiledBinding Translation.ChangeKeybindingTooltip.Value,
                                               Mode=OneWay}"

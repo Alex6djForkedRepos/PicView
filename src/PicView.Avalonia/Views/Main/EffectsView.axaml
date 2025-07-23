@@ -85,6 +85,9 @@
             </MenuItem>
         </ContextMenu>
     </UserControl.ContextMenu>
+    <UserControl.Resources>
+        <SolidColorBrush Color="{DynamicResource MainTextColor}" x:Key="CancelBrush" />
+    </UserControl.Resources>
 
     <Panel>
         <uc:SpinWaiter
@@ -99,6 +102,7 @@
                 Classes="txt"
                 FontFamily="/Assets/Fonts/Roboto-Bold.ttf#Roboto"
                 FontSize="14"
+                Foreground="{StaticResource SecondaryTextColor}"
                 Margin="10,15,0,10"
                 Padding="10,5"
                 Text="{CompiledBinding Translation.Lighting.Value,
@@ -109,6 +113,7 @@
                 <Panel>
                     <TextBlock
                         Classes="txt"
+                        Foreground="{StaticResource SecondaryTextColor}"
                         HorizontalAlignment="Left"
                         Text="{CompiledBinding Translation.Brightness.Value,
                                                Mode=OneWay}"
@@ -168,6 +173,7 @@
                 <Panel>
                     <TextBlock
                         Classes="txt"
+                        Foreground="{StaticResource SecondaryTextColor}"
                         HorizontalAlignment="Left"
                         Text="{CompiledBinding Translation.Contrast.Value,
                                                Mode=OneWay}"
@@ -235,6 +241,7 @@
                 Classes="txt"
                 FontFamily="/Assets/Fonts/Roboto-Bold.ttf#Roboto"
                 FontSize="14"
+                Foreground="{StaticResource SecondaryTextColor}"
                 Margin="10,0,0,10"
                 Padding="10,5"
                 Text="{CompiledBinding Translation.Effects.Value,
@@ -245,6 +252,7 @@
                 <Panel Margin="0,10,0,5">
                     <TextBlock
                         Classes="txt"
+                        Foreground="{StaticResource SecondaryTextColor}"
                         HorizontalAlignment="Left"
                         Text="{CompiledBinding Translation.Blur.Value,
                                                Mode=OneWay}"
@@ -288,6 +296,7 @@
                 <Panel Margin="0,10,0,5">
                     <TextBlock
                         Classes="txt"
+                        Foreground="{StaticResource SecondaryTextColor}"
                         HorizontalAlignment="Left"
                         Text="{CompiledBinding Translation.PencilSketch.Value,
                                                Mode=OneWay}"
@@ -332,6 +341,7 @@
                 <Panel Margin="0,10,0,5">
                     <TextBlock
                         Classes="txt"
+                        Foreground="{StaticResource SecondaryTextColor}"
                         HorizontalAlignment="Left"
                         Text="{CompiledBinding Translation.Posterize.Value,
                                                Mode=OneWay}"
@@ -376,6 +386,7 @@
                 <Panel Margin="0,10,0,5">
                     <TextBlock
                         Classes="txt"
+                        Foreground="{StaticResource SecondaryTextColor}"
                         HorizontalAlignment="Left"
                         Text="{CompiledBinding Translation.Solarize.Value,
                                                Mode=OneWay}"
@@ -425,6 +436,7 @@
                     x:Name="BlackAndWhiteToggleButton">
                     <TextBlock
                         Classes="txt"
+                        Foreground="{StaticResource SecondaryTextColor}"
                         HorizontalAlignment="Left"
                         Text="{CompiledBinding Translation.BlackAndWhite.Value,
                                                Mode=OneWay}"
@@ -438,6 +450,7 @@
                     x:Name="NegativeToggleButton">
                     <TextBlock
                         Classes="txt"
+                        Foreground="{StaticResource SecondaryTextColor}"
                         HorizontalAlignment="Left"
                         Text="{CompiledBinding Translation.NegativeColors.Value,
                                                Mode=OneWay}"
@@ -451,6 +464,7 @@
                     x:Name="OldMovieToggleButton">
                     <TextBlock
                         Classes="txt"
+                        Foreground="{StaticResource SecondaryTextColor}"
                         HorizontalAlignment="Left"
                         Text="{CompiledBinding Translation.OldMovie.Value,
                                                Mode=OneWay}"
@@ -460,7 +474,7 @@
             </StackPanel>
 
             <StackPanel
-                Background="#277A7A7A"
+                Background="#5DA2A2A2"
                 Height="80"
                 Margin="0,15,0,0"
                 Orientation="Horizontal">
@@ -473,6 +487,7 @@
                     x:Name="ResetButton">
                     <TextBlock
                         Classes="txt"
+                        Foreground="{StaticResource CancelBrush}"
                         Text="{CompiledBinding Translation.ClearEffects.Value,
                                                Mode=OneWay}"
                         TextAlignment="Center" />
@@ -486,6 +501,7 @@
                     x:Name="CancelButton">
                     <TextBlock
                         Classes="txt"
+                        Foreground="{StaticResource CancelBrush}"
                         Text="{CompiledBinding Translation.Cancel.Value,
                                                Mode=OneWay}"
                         TextAlignment="Center" />
@@ -499,22 +515,17 @@
                     x:Name="SaveButton">
                     <TextBlock
                         Classes="txt"
+                        Foreground="{StaticResource SecondaryTextColor}"
                         Text="{CompiledBinding Translation.Save.Value,
                                                Mode=OneWay}"
                         TextAlignment="Center" />
                     <SplitButton.Flyout>
                         <MenuFlyout FlyoutPresenterClasses="noCornerRadius" Placement="Bottom">
-                            <Button
-                                Background="Transparent"
-                                Width="130"
-                                x:Name="SaveAsButton">
-                                <TextBlock
-                                    Classes="txt"
-                                    Foreground="{DynamicResource MainTextColor}"
-                                    Text="{CompiledBinding Translation.SaveAs.Value,
-                                                           Mode=OneWay}"
-                                    TextAlignment="Center" />
-                            </Button>
+                            <MenuItem
+                                Header="{CompiledBinding Translation.SaveAs.Value,
+                                                         Mode=OneWay}"
+                                HorizontalAlignment="Center"
+                                Width="195" />
                         </MenuFlyout>
                     </SplitButton.Flyout>
                 </SplitButton>

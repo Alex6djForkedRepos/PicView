@@ -11,7 +11,6 @@ using PicView.Avalonia.StartUp;
 using PicView.Avalonia.ViewModels;
 using PicView.Avalonia.Win32.Views;
 using PicView.Avalonia.Win32.WindowImpl;
-using PicView.Core.Config;
 using PicView.Core.FileAssociations;
 using PicView.Core.FileSorting;
 using PicView.Core.Localization;
@@ -68,7 +67,7 @@ public class App : Application, IPlatformSpecificService, IPlatformWindowService
             await Dispatcher.UIThread.InvokeAsync(() =>
             {
                 ThemeManager.DetermineTheme(Current, settingsExists);
-
+                
                 _mainWindow = new WinMainWindow();
                 desktop.MainWindow = _mainWindow;
             }, DispatcherPriority.Send);

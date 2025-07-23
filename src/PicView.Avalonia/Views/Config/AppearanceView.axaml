@@ -33,9 +33,13 @@
             Padding="5,7,0,7"
             Width="300"
             x:Name="ThemeBox">
-            <ComboBoxItem Content="{CompiledBinding Translation.DarkTheme.Value, Mode=OneWay}" x:Name="DarkThemeBox" />
+            <ComboBoxItem
+                Content="{CompiledBinding Translation.DarkTheme.Value,
+                                          Mode=OneWay}"
+                Foreground="{DynamicResource MainTextColor}"
+                x:Name="DarkThemeBox" />
             <ComboBoxItem x:Name="LightThemeBox">
-                <TextBlock Classes="txt">
+                <TextBlock Classes="txt" Foreground="{DynamicResource MainTextColor}">
                     <TextBlock.Inlines>
                         <Run Text="{CompiledBinding Translation.LightTheme.Value, Mode=OneWay}" />
                         <Run FontStyle="Italic" Text=" (beta)" />
@@ -43,7 +47,7 @@
                 </TextBlock>
             </ComboBoxItem>
             <ComboBoxItem x:Name="GlassThemeBox">
-                <TextBlock Classes="txt">
+                <TextBlock Classes="txt" Foreground="{DynamicResource MainTextColor}">
                     <TextBlock.Inlines>
                         <Run Text="{CompiledBinding Translation.GlassTheme.Value, Mode=OneWay}" />
                         <Run FontStyle="Italic" Text=" (beta)" />

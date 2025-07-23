@@ -94,7 +94,6 @@ public partial class SettingsWindow : Window
         }
         else if (!Settings.Theme.Dark)
         {
-            ParentBorder.Background = new SolidColorBrush(Color.FromArgb(114, 132, 132, 132));
             SettingsButton.Background = Brushes.White;
             if (!Application.Current.TryGetResource("MainBorderColor",
                     Application.Current.RequestedThemeVariant, out var mbColor))

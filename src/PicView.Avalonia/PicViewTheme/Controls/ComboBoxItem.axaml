@@ -24,18 +24,23 @@
         </Setter>
         <Style Selector="^:pointerover /template/ ContentPresenter#PART_ContentPresenter">
             <Setter Property="Background" Value="{DynamicResource SecondaryAccentColor}" />
+            <Setter Property="Foreground" Value="{StaticResource SecondaryTextColor}" />
         </Style>
         <Style Selector="^:selected /template/ ContentPresenter#PART_ContentPresenter">
             <Setter Property="Background" Value="{DynamicResource AccentColor}" />
+            <Setter Property="Foreground" Value="{StaticResource SecondaryTextColor}" />
         </Style>
         <Style Selector="^:selected:focus /template/ ContentPresenter#PART_ContentPresenter">
             <Setter Property="Background" Value="{DynamicResource AccentColor}" />
+            <Setter Property="Foreground" Value="{StaticResource SecondaryTextColor}" />
         </Style>
         <Style Selector="^:selected:pointerover /template/ ContentPresenter#PART_ContentPresenter">
             <Setter Property="Background" Value="{DynamicResource AccentColor}" />
+            <Setter Property="Foreground" Value="{StaticResource SecondaryTextColor}" />
         </Style>
         <Style Selector="^:selected:focus:pointerover /template/ ContentPresenter#PART_ContentPresenter">
             <Setter Property="Background" Value="{DynamicResource AccentColor}" />
+            <Setter Property="Foreground" Value="{StaticResource SecondaryTextColor}" />
         </Style>
 
         <Style Selector="^:focus-within /template/ ContentPresenter#PART_ContentPresenter">

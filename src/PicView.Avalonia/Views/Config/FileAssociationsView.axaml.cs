@@ -93,13 +93,15 @@ public partial class FileAssociationsView : UserControl
                 }
             }
 
+            var brush = UIHelper.GetBrush("SecondaryTextColor");
+
             // Create group header checkbox
             var groupCheckBox = new CheckBox
             {
                 Classes = { "altHover", "y", "changeColor" },
                 Tag = "group",
                 Name = fileTypeGroup.Name,
-                IsThreeState = true,
+                Foreground = brush,
                 IsChecked = fileTypeGroup.IsSelected.CurrentValue
             };
 
@@ -107,6 +109,7 @@ public partial class FileAssociationsView : UserControl
             {
                 Classes = { "txt" },
                 Text = fileTypeGroup.Name,
+                Foreground = brush,
                 FontFamily = new FontFamily("avares://PicView.Avalonia/Assets/Fonts/Roboto-Bold.ttf#Roboto")
             };
 
@@ -137,7 +140,7 @@ public partial class FileAssociationsView : UserControl
                     Classes = { "altHover", "x", "changeColor" },
                     Tag = fileType.Extension,
                     IsChecked = fileType.IsSelected.CurrentValue,
-                    IsThreeState = true
+                    Foreground = brush
                 };
 
                 var fileTextBlock = new TextBlock
@@ -145,7 +148,8 @@ public partial class FileAssociationsView : UserControl
                     Classes = { "txt" },
                     Text = $"{fileType.Description} ({fileType.Extension})",
                     Margin = new Thickness(0),
-                    Padding = new Thickness(0, 1, 5, 0)
+                    Padding = new Thickness(0, 1, 5, 0),
+                    Foreground = brush
                 };
 
                 fileCheckBox.Content = fileTextBlock;
