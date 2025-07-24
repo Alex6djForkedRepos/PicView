@@ -111,6 +111,7 @@ public partial class ImageInfoWindow : Window, IDisposable
                     _config.WindowProperties.Height = size.NewValue.Value.Height;
                 })
                 .AddTo(_disposables);
+            PositionChanged += (_, _) => UpdateWindowPosition();
         };
         
         Closing += async delegate
@@ -135,7 +136,7 @@ public partial class ImageInfoWindow : Window, IDisposable
         hostWindow?.BeginMoveDrag(e);
     }
     
-    private void UpdateWindowPosition(object? sender, PointerReleasedEventArgs e)
+    private void UpdateWindowPosition()
     {
         if (VisualRoot is null)
         {
@@ -146,8 +147,6 @@ public partial class ImageInfoWindow : Window, IDisposable
         _config.WindowProperties.Left = hostWindow.Position.X;
         _config.WindowProperties.Top = hostWindow.Position.Y;
     }
-    
-    
 
     private void Close(object? sender, RoutedEventArgs e) => Close();
 

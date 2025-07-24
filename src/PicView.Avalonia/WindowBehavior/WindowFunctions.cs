@@ -10,6 +10,7 @@ using PicView.Avalonia.Navigation;
 using PicView.Avalonia.UI;
 using PicView.Avalonia.ViewModels;
 using PicView.Core.ArchiveHandling;
+using PicView.Core.Config;
 using PicView.Core.FileHandling;
 using PicView.Core.FileHistory;
 using PicView.Core.Sizing;
@@ -359,6 +360,46 @@ public static class WindowFunctions
                 window.Width = Settings.WindowProperties.Width;
                 window.Height = Settings.WindowProperties.Height;
             });
+        }
+    }
+    
+    public static void InitializeWindowSizeAndPosition(Window window, IWindowProperties properties)
+    {
+        if (Dispatcher.UIThread.CheckAccess())
+        {
+            Set();
+        }
+        else
+        {
+            Dispatcher.UIThread.InvokeAsync(Set);
+        }
+        
+        return;
+
+        void Set()
+        {
+            if (properties.Maximized)
+            {
+                window.WindowState = WindowState.Maximized;
+            }
+            else if (properties is { Left: not null, Top: not null })
+            {
+                window.WindowStartupLocation = WindowStartupLocation.Manual;
+                window.Position = new PixelPoint(properties.Left.GetValueOrDefault(),
+                    properties.Top.Value);
+            }
+            else
+            {
+                window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            }
+
+            if (properties is not { Width: not null, Height: not null })
+            {
+                return;
+            }
+
+            window.Width = properties.Width.Value;
+            window.Height = properties.Height.Value;
         }
     }
 

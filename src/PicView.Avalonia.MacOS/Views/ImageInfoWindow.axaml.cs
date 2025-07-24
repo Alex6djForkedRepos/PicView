@@ -35,6 +35,7 @@ public partial class ImageInfoWindow : Window, IDisposable
                     _config.WindowProperties.Height = size.NewValue.Value.Height;
                 })
                 .AddTo(_disposables);
+            PositionChanged += (_, __) => UpdateWindowPosition();
         };
         
         Closing += async delegate
@@ -59,7 +60,7 @@ public partial class ImageInfoWindow : Window, IDisposable
         hostWindow?.BeginMoveDrag(e);
     }
     
-    private void UpdateWindowPosition(object? sender, PointerReleasedEventArgs e)
+    private void UpdateWindowPosition()
     {
         if (VisualRoot is null)
         {

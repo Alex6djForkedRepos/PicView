@@ -46,7 +46,7 @@ public class SettingsWindowConfig() : ConfigFile("SettingsWindow.json")
             CorrectPath, WindowProperties, typeof(SettingsWindowProperties), SettingsWindowGenerationContext.Default);
     }
     
-    public class SettingsWindowProperties
+    public class SettingsWindowProperties : IWindowProperties
     {
         public int? Top { get; set; }
         public int? Left { get; set; }

@@ -38,7 +38,7 @@ public interface IPlatformWindowService
 
     void ShowKeybindingsWindow();
 
-    void ShowSettingsWindow();
+    Task ShowSettingsWindow();
     
     void ShowEffectsWindow();
     

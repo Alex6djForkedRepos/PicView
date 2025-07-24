@@ -46,7 +46,7 @@ public class ImageInfoWindowConfig() : ConfigFile("ImageInfoWindow.json")
             CorrectPath, WindowProperties, typeof(ImageInfoWindowProperties), ImageInfoWindowGenerationContext.Default);
     }
     
-    public class ImageInfoWindowProperties
+    public class ImageInfoWindowProperties : IWindowProperties
     {
         public int? Top { get; set; }
         public int? Left { get; set; }

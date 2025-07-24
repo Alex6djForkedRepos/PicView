@@ -22,7 +22,7 @@
     <Design.DataContext>
         <vm:MainViewModel />
     </Design.DataContext>
-    <DockPanel PointerPressed="MoveWindow" PointerReleased="UpdateWindowPosition">
+    <DockPanel PointerPressed="MoveWindow">
         <DockPanel
             Background="{DynamicResource SecondaryBackgroundColor}"
             DockPanel.Dock="Top"

@@ -245,8 +245,8 @@ public class App : Application, IPlatformSpecificService, IPlatformWindowService
     public void ShowKeybindingsWindow() =>
         _windowInitializer?.ShowKeybindingsWindow(_vm);
 
-    public void ShowSettingsWindow() =>
-        _windowInitializer?.ShowSettingsWindow(_vm);
+    public async Task ShowSettingsWindow() =>
+        await _windowInitializer?.ShowSettingsWindow(_vm);
 
     public void ShowSingleImageResizeWindow() =>
         _windowInitializer?.ShowSingleImageResizeWindow(_vm);

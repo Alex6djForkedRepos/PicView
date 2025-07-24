@@ -24,7 +24,10 @@ public class WindowInitializer : IPlatformSpecificUpdate
     private ImageInfoWindowConfig? _imageInfoWindowConfig;
     
     private KeybindingsWindow? _keybindingsWindow;
+    
     private SettingsWindow? _settingsWindow;
+    private SettingsWindowConfig? _settingsWindowConfig;
+    
     private SingleImageResizeWindow? _singleImageResizeWindow;
 
     public async Task HandlePlatofrmUpdate(UpdateInfo updateInfo, string tempPath)
@@ -132,28 +135,7 @@ public class WindowInitializer : IPlatformSpecificUpdate
 
         void Show()
         {
-            if (_imageInfoWindowConfig.WindowProperties.Maximized)
-            {
-                _imageInfoWindow.WindowState = WindowState.Maximized;
-            }
-            else
-            {
-                var left = _imageInfoWindowConfig.WindowProperties.Left;
-                var top = _imageInfoWindowConfig.WindowProperties.Top;
-                if (left.HasValue && top.HasValue)
-                {
-                    _imageInfoWindow.WindowStartupLocation  = WindowStartupLocation.Manual;
-                    _imageInfoWindow.Position = new PixelPoint(left.Value, top.Value);
-                }
-                else
-                {
-                    _imageInfoWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-                }
-                var width = _imageInfoWindowConfig.WindowProperties.Width ?? 850;
-                var height = _imageInfoWindowConfig.WindowProperties.Height ?? 495;
-                _imageInfoWindow.Width = width < _imageInfoWindow.MinWidth ? _imageInfoWindow.MinWidth : width;
-                _imageInfoWindow.Height = height < _imageInfoWindow.MinHeight ? _imageInfoWindow.MinHeight : height;
-            }
+            WindowFunctions.InitializeWindowSizeAndPosition(_imageInfoWindow, _imageInfoWindowConfig.WindowProperties);
             _imageInfoWindow.Show(desktop.MainWindow);
         }
     }
@@ -204,40 +186,37 @@ public class WindowInitializer : IPlatformSpecificUpdate
         }
     }
 
-    public void ShowSettingsWindow(MainViewModel vm)
+    public async Task ShowSettingsWindow(MainViewModel vm)
     {
-        if (Dispatcher.UIThread.CheckAccess())
+        if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop)
         {
-            Set();
+            return;
         }
-        else
+        
+        if (_settingsWindowConfig?.WindowProperties is null )
         {
-            Dispatcher.UIThread.InvokeAsync(Set);
+            _settingsWindowConfig = new SettingsWindowConfig();
+            await _settingsWindowConfig.LoadAsync();
         }
-
-        return;
-
-        void Set()
+        if (_settingsWindow is null)
         {
-            if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop)
+            vm.AssociationsViewModel ??= new FileAssociationsViewModel();
+            vm.SettingsViewModel ??= new SettingsViewModel();
+            await Dispatcher.UIThread.InvokeAsync(() =>
             {
-                return;
-            }
-
-            if (_settingsWindow is null)
-            {
-                vm.AssociationsViewModel ??= new FileAssociationsViewModel();
-                vm.SettingsViewModel ??= new SettingsViewModel();
                 _settingsWindow = new SettingsWindow
                 {
                     DataContext = vm,
                     WindowStartupLocation = WindowStartupLocation.CenterOwner
                 };
 
-                _settingsWindow.Show(desktop.MainWindow);
-                _settingsWindow.Closing += (s, e) => _settingsWindow = null;
-            }
-            else
+                Show();
+                _settingsWindow.Closing += (_, _) => _settingsWindow = null;
+            });
+        }
+        else
+        {
+            await Dispatcher.UIThread.InvokeAsync(() =>
             {
                 if (_settingsWindow.WindowState == WindowState.Minimized)
                 {
@@ -245,11 +224,18 @@ public class WindowInitializer : IPlatformSpecificUpdate
                 }
                 else
                 {
-                    _settingsWindow.Show();
+                    Show();
                 }
-            }
-
-            _ = FunctionsMapper.CloseMenus();
+            });
+        }
+        await FunctionsMapper.CloseMenus();
+        
+        return;
+        
+        void Show()
+        {
+            WindowFunctions.InitializeWindowSizeAndPosition(_settingsWindow, _settingsWindowConfig.WindowProperties);
+            _settingsWindow.Show(desktop.MainWindow);
         }
     }
 
