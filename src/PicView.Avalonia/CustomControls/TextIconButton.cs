@@ -159,7 +159,7 @@ public class TextIconButton : Button
     {
         base.OnPropertyChanged(change);
 
-        if (change.Property == IconProperty)
+        if (change.Property == IconProperty || change.Property == TextMaxWidthProperty)
         {
             Content = BuildControl();
         }
@@ -192,7 +192,8 @@ public class TextIconButton : Button
             Text = Text,
             VerticalAlignment = VerticalAlignment.Center,
             FontSize = FontSize,
-            Foreground = Foreground
+            Foreground = Foreground,
+            MaxWidth = TextMaxWidth ?? double.PositiveInfinity,
         };
         PointerEntered += (_, _) =>
         {

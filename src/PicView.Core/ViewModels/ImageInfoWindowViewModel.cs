@@ -6,6 +6,10 @@ public class ImageInfoWindowViewModel : IDisposable
 {
     public int TextWidth => 100;
     public int CopyButtonWidth => 37;
+    
+    private const int TextMaxWidth = 135;
+    
+    public BindableReactiveProperty<double> TextBoxMaxWidth { get; } = new(TextMaxWidth);
 
     public BindableReactiveProperty<double> TextBoxWidth { get; } = new(180);
     public BindableReactiveProperty<double> TextBoxXlWidth { get; } = new(620);
@@ -33,6 +37,8 @@ public class ImageInfoWindowViewModel : IDisposable
         const int secondBreakPoint = 800;
         const int thirdBreakPoint = 1100;
 
+        const int textBreakpoint = 920;
+
         var textWidth = TextWidth;
         var copyBtnWidth = CopyButtonWidth;
 
@@ -42,6 +48,8 @@ public class ImageInfoWindowViewModel : IDisposable
 
         const int smallPadding = 10;
         const int largePadding = 40;
+
+        TextBoxMaxWidth.Value = width < textBreakpoint ? 0 : TextMaxWidth;
 
         switch (width)
         {

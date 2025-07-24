@@ -94,6 +94,9 @@
                 Text="{CompiledBinding Translation.OptimizeImage.Value,
                                        Mode=OneWay}"
                 TextMargin="5,0,5,0"
+                TextMaxWidth="{CompiledBinding InfoWindow.TextBoxMaxWidth.Value}"
+                ToolTip.Tip="{CompiledBinding Translation.OptimizeImage.Value,
+                                              Mode=OneWay}"
                 x:Name="OptimizeButton" />
 
             <customControls:TextIconButton
@@ -114,6 +117,9 @@
                 Text="{CompiledBinding Translation.OpenWith.Value,
                                        Mode=OneWay}"
                 TextMargin="5,0,5,0"
+                TextMaxWidth="{CompiledBinding InfoWindow.TextBoxMaxWidth.Value}"
+                ToolTip.Tip="{CompiledBinding Translation.OpenWith.Value,
+                                              Mode=OneWay}"
                 x:Name="OpenWithButton" />
 
 
