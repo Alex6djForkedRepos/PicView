@@ -45,12 +45,13 @@
                 Height="28"
                 IconHeight="17"
                 IconWidth="17"
+                IsVisible="{CompiledBinding InfoWindow.IsExtraButtonsEnabled.Value}"
                 ToolTip.Tip="{CompiledBinding Translation.DeleteFile.Value,
                                               Mode=OneWay}"
                 Width="45"
                 x:Name="RecycleButton" />
 
-            <customControls:IconButton
+            <customControls:TextIconButton
                 BorderBrush="{DynamicResource MainBorderColor}"
                 BorderThickness="0,0,1,0"
                 Classes="errorHover"
@@ -63,15 +64,17 @@
                 Height="28"
                 Icon="{StaticResource OffImage}"
                 IconHeight="17"
+                IconMargin="10,0,5,0"
                 IconWidth="17"
-                ToolTip.Tip="{CompiledBinding Translation.RemoveImageData.Value,
-                                              Mode=OneWay}"
-                Width="45"
+                IsVisible="{CompiledBinding InfoWindow.IsExtraButtonsEnabled.Value}"
+                Text="{CompiledBinding Translation.RemoveImageData.Value,
+                                       Mode=OneWay}"
+                TextMargin="5,0,5,0"
                 x:Name="RemoveButton" />
 
 
 
-            <customControls:IconButton
+            <customControls:TextIconButton
                 BorderBrush="{DynamicResource MainBorderColor}"
                 BorderThickness="0,0,1,0"
                 Classes="noBorderHover"
@@ -83,15 +86,17 @@
                 Height="28"
                 Icon="{StaticResource PortalImage}"
                 IconHeight="17"
+                IconMargin="10,0,5,0"
                 IconWidth="17"
                 IsEnabled="{CompiledBinding PicViewer.ShouldOptimizeImageBeEnabled.Value,
                                             Mode=OneWay}"
-                ToolTip.Tip="{CompiledBinding Translation.OptimizeImage.Value,
-                                              Mode=OneWay}"
-                Width="45"
+                IsVisible="{CompiledBinding InfoWindow.IsExtraButtonsEnabled.Value}"
+                Text="{CompiledBinding Translation.OptimizeImage.Value,
+                                       Mode=OneWay}"
+                TextMargin="5,0,5,0"
                 x:Name="OptimizeButton" />
 
-            <customControls:IconButton
+            <customControls:TextIconButton
                 BorderBrush="{DynamicResource MainBorderColor}"
                 BorderThickness="0,0,1,0"
                 Classes="noBorderHover"
@@ -103,64 +108,14 @@
                 Height="28"
                 Icon="{StaticResource OpenExternalImage}"
                 IconHeight="17"
+                IconMargin="10,0,5,0"
                 IconWidth="17"
-                ToolTip.Tip="{CompiledBinding Translation.OpenWith.Value,
-                                              Mode=OneWay}"
-                Width="45"
+                IsVisible="{CompiledBinding InfoWindow.IsExtraButtonsEnabled.Value}"
+                Text="{CompiledBinding Translation.OpenWith.Value,
+                                       Mode=OneWay}"
+                TextMargin="5,0,5,0"
                 x:Name="OpenWithButton" />
 
-            <customControls:IconButton
-                BorderBrush="{DynamicResource MainBorderColor}"
-                BorderThickness="0,0,1,0"
-                Classes="noBorderHover"
-                Command="{CompiledBinding Tools.PrintCommand}"
-                CommandParameter="{CompiledBinding PicViewer.FileInfo.Value.FullName,
-                                                   FallbackValue=''}"
-                Data="{StaticResource PrintGeometry}"
-                DockPanel.Dock="Right"
-                Foreground="{StaticResource SecondaryTextColor}"
-                Height="28"
-                IconHeight="17"
-                IconWidth="17"
-                ToolTip.Tip="{CompiledBinding Translation.Print.Value,
-                                              Mode=OneWay}"
-                Width="45"
-                x:Name="PrintButton" />
-
-            <customControls:IconButton
-                BorderBrush="{DynamicResource MainBorderColor}"
-                BorderThickness="0,0,1,0"
-                Classes="noBorderHover"
-                Command="{CompiledBinding Tools.CopyImageCommand}"
-                CommandParameter="{CompiledBinding PicViewer.FileInfo.Value.FullName,
-                                                   FallbackValue=''}"
-                DockPanel.Dock="Right"
-                Foreground="{StaticResource SecondaryTextColor}"
-                Icon="{StaticResource CopyImages}"
-                IconHeight="17"
-                IconWidth="17"
-                ToolTip.Tip="{CompiledBinding Translation.CopyImage.Value,
-                                              Mode=OneWay}"
-                Width="45"
-                x:Name="CopyButton" />
-
-            <customControls:IconButton
-                BorderBrush="{DynamicResource MainBorderColor}"
-                BorderThickness="0,0,1,0"
-                Classes="noBorderHover"
-                Command="{CompiledBinding Tools.CopyFileCommand}"
-                CommandParameter="{CompiledBinding PicViewer.FileInfo.Value.FullName,
-                                                   FallbackValue=''}"
-                Data="{StaticResource CopyGeometry}"
-                DockPanel.Dock="Right"
-                Foreground="{StaticResource SecondaryTextColor}"
-                Height="28"
-                IconHeight="17"
-                IconWidth="17"
-                ToolTip.Tip="{CompiledBinding Translation.CopyFile.Value,
-                                              Mode=OneWay}"
-                Width="45"
-                x:Name="CopyFileButton" />
 
             <customControls:IconButton
                 BorderBrush="{DynamicResource MainBorderColor}"
@@ -175,6 +130,7 @@
                 Height="28"
                 IconHeight="17"
                 IconWidth="17"
+                IsVisible="{CompiledBinding InfoWindow.IsExtraButtonsEnabled.Value}"
                 ToolTip.Tip="{CompiledBinding Translation.DuplicateFile.Value,
                                               Mode=OneWay}"
                 Width="45"
@@ -193,6 +149,7 @@
                 Height="28"
                 IconHeight="17"
                 IconWidth="17"
+                IsVisible="{CompiledBinding InfoWindow.IsExtraButtonsEnabled.Value}"
                 ToolTip.Tip="{CompiledBinding Translation.ShowInFolder.Value,
                                               Mode=OneWay}"
                 Width="45"
