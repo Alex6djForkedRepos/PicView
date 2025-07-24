@@ -6,6 +6,23 @@ public static class ImageSizeCalculationHelper
     private const int MaxRotationAngle = 360;
     private const int MinRotationAngle = 0;
 
+    /// <summary>
+    /// Calculates the dimensions of how the image should fit within the window, based on current settings and parameters
+    /// </summary>
+    /// <param name="imageWidth">The original pixel width of the image.</param>
+    /// <param name="imageHeight">The original pixel height of the image.</param>
+    /// <param name="screenSize">The dimensions of the screen or display area.</param>
+    /// <param name="minWidth">The minimum allowable width of the window.</param>
+    /// <param name="minHeight">The minimum allowable height of the window.</param>
+    /// <param name="interfaceSize">The combined width of the buttons in the titlebar</param>
+    /// <param name="rotationAngle">The angle of rotation applied to the image.</param>
+    /// <param name="dpiScaling">The scaling factor accounting for DPI.</param>
+    /// <param name="uiTopSize">The height of the user interface at the top of the display.</param>
+    /// <param name="uiBottomSize">The height of the user interface at the bottom of the display.</param>
+    /// <param name="galleryHeight">The height of the bottom gallery area, if displayed.</param>
+    /// <param name="containerWidth">The width of the container in which the image is displayed.</param>
+    /// <param name="containerHeight">The height of the container in which the image is displayed.</param>
+    /// <returns>An instance of <see cref="ImageSize"/> containing the calculated dimensions and related properties for the image.</returns>
     public static ImageSize GetImageSize(
         double imageWidth,
         double imageHeight,
@@ -38,12 +55,11 @@ public static class ImageSizeCalculationHelper
         var showInterface = Settings.UIProperties.ShowInterface;
         var showGalleryInHiddenUI = Settings.Gallery.ShowBottomGalleryInHiddenUI;
 
-
+        // Calculate the possible surrounding area and borders between the picture and window
         var borderSpaceHeight = CalculateBorderSpaceHeight(isFullscreen, uiTopSize, uiBottomSize, galleryHeight);
         var borderSpaceWidth = isFullscreen ? 0 : screenSize.Margin;
 
         var workArea = CalculateWorkArea(screenSize, isFullscreen, borderSpaceWidth, borderSpaceHeight, isMaximized);
-
         var screenMargin = isFullscreen ? 0 : screenSize.Margin;
 
         var (maxAvailableWidth, maxAvailableHeight, adjustedContainerWidth, adjustedContainerHeight) =
@@ -199,6 +215,27 @@ public static class ImageSizeCalculationHelper
         return (cWidth, cHeight, sWidth, sHeight);
     }
 
+
+    /// <summary>
+    /// Calculates the size when displaying two images side by side, where both images will scale to the same height
+    /// while respecting the aspect ratio.
+    /// </summary>
+    /// <param name="width">The original width of the first image.</param>
+    /// <param name="height">The original height of the first image.</param>
+    /// <param name="secondaryWidth">The original width of the second image.</param>
+    /// <param name="secondaryHeight">The original height of the second image.</param>
+    /// <param name="screenSize">The dimensions of the screen.</param>
+    /// <param name="minWidth">The minimum allowable width of the window.</param>
+    /// <param name="minHeight">The minimum allowable height of the window.</param>
+    /// <param name="interfaceSize">The combined width of the buttons in the title bar.</param>
+    /// <param name="rotationAngle">The angle of rotation applied to both images.</param>
+    /// <param name="dpiScaling">The scaling factor for DPI adjustments.</param>
+    /// <param name="uiTopSize">The height of the top user interface elements.</param>
+    /// <param name="uiBottomSize">The height of the bottom user interface elements.</param>
+    /// <param name="galleryHeight">The height of the bottom gallery area, if displayed.</param>
+    /// <param name="containerWidth">The width of the container in which the images are displayed.</param>
+    /// <param name="containerHeight">The height of the container in which the images are displayed.</param>
+    /// <returns>An instance of <see cref="ImageSize"/> containing the calculated dimensions and related properties for displaying both images side by side.</returns>
     public static ImageSize GetSideBySideImageSize(
         double width,
         double height,
@@ -339,6 +376,7 @@ public static class ImageSizeCalculationHelper
     }
 
 
+    // Calculate the window's title max width between the interfaceSize (the combined width of the buttons) and the images' own size
     public static double GetTitleMaxWidth(double rotationAngle, double width, double height, double monitorMinWidth,
         double monitorMinHeight, double interfaceSize, double containerWidth)
     {
