@@ -1,4 +1,5 @@
 ﻿using Avalonia.Controls;
+using Avalonia.Media.Imaging;
 using Avalonia.Svg.Skia;
 using Avalonia.Threading;
 using PicView.Avalonia.CustomControls;
@@ -6,7 +7,6 @@ using PicView.Avalonia.ImageHandling;
 using PicView.Avalonia.Navigation;
 using PicView.Avalonia.UI;
 using PicView.Avalonia.ViewModels;
-using PicView.Avalonia.Views.UC;
 using PicView.Core.DebugTools;
 using PicView.Core.Gallery;
 using GalleryItem = PicView.Avalonia.Views.Gallery.GalleryItem;
@@ -201,7 +201,15 @@ public static class GalleryLoad
             var fileInfo = fileInfos[(int)i];
             var isSvg = fileInfo.Extension.Equals(".svg", StringComparison.OrdinalIgnoreCase) ||
                         fileInfo.Extension.Equals(".svgz", StringComparison.OrdinalIgnoreCase);
-            var thumb = await GetThumbnails.GetThumbAsync(fileInfo, galleryItemSize);
+            Bitmap? thumb;
+            if (!isSvg)
+            {
+                thumb = await GetThumbnails.GetThumbAsync(fileInfo, galleryItemSize);
+            }
+            else
+            {
+                thumb = null;
+            }
 
             await Dispatcher.UIThread.InvokeAsync(() =>
             {
@@ -215,7 +223,7 @@ public static class GalleryLoad
                 {
                     galleryItem.GalleryImage.Source = new SvgImage { Source = SvgSource.Load(fileInfo.FullName) };
                 }
-                else if (thumb is not null)
+                else
                 {
                     galleryItem.GalleryImage.Source = thumb;
                 }

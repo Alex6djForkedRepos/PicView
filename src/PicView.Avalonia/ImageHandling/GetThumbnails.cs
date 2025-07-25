@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using Avalonia.Media.Imaging;
+﻿using Avalonia.Media.Imaging;
 using ImageMagick;
 using PicView.Core.DebugTools;
 using PicView.Core.FileHandling;
@@ -29,7 +28,7 @@ public static class GetThumbnails
             }
 
             var thumbnail = profile.CreateThumbnail();
-            if (thumbnail == null)
+            if (thumbnail == null|| thumbnail.Height < height)
             {
                 return await CreateThumbAsync(magick, fileInfo, height).ConfigureAwait(false);
             }
@@ -53,10 +52,7 @@ public static class GetThumbnails
         }
         catch (Exception e)
         {
-#if DEBUG
-            Trace.WriteLine(
-                $"\n{nameof(GetExifThumb)} ping exception: \n{e.Message}\n{e.StackTrace}");
-#endif
+            DebugHelper.LogDebug(nameof(GetThumbnails), nameof(GetExifThumb), e);
             return null;
         }
 
@@ -73,8 +69,8 @@ public static class GetThumbnails
         // https://github.com/AvaloniaUI/Avalonia/discussions/16703
         // https://stackoverflow.com/a/42178963/2923736 convert to DLLImport to LibraryImport, source generation & AOT support
         
-        await using var fileStream = FileStreamUtils.GetOptimizedFileStream(fileInfo);
-
+        using var fileStream = await FileStreamUtils.ReadFileToRecyclableStreamAsync(fileInfo);
+        
         if (fileInfo.Length >= 2147483648)
         {
             // Fixes "The file is too long. This operation is currently limited to supporting files less than 2 gigabytes in size."
