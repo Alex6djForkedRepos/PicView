@@ -21,7 +21,7 @@ public class AnimatedMenu : UserControl
     {
         // Subscribe to changes in the IsOpen property
         Observable.EveryValueChanged(this, x => x.IsOpen, UIHelper.GetFrameProvider)
-            .Select(async isOpen =>
+            .SubscribeAwait(async (isOpen, _) =>
             {
                 // Make sure it is visible before starting the animation
                 if (!IsVisible && isOpen)
@@ -36,8 +36,7 @@ public class AnimatedMenu : UserControl
                 {
                     IsVisible = false;
                 }
-            })
-            .Subscribe();
+            });
     }
     
     /// <summary>

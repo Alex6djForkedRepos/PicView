@@ -1,5 +1,6 @@
 ﻿using Avalonia.Media.Imaging;
 using ImageMagick;
+using Microsoft.IO;
 using PicView.Core.DebugTools;
 using PicView.Core.FileHandling;
 
@@ -19,24 +20,24 @@ public static class GetImage
             DebugHelper.LogDebug(nameof(GetImage), nameof(GetStandardBitmapAsync), $"{nameof(fileInfo)} is null");
             return null;
         }
-        await using var fileStream = FileHelper.GetOptimizedFileStream(fileInfo);
-        var bitmap = new Bitmap(fileStream);
+        await using var memoryStream = await FileManager.ReadFileToRecyclableStreamAsync(fileInfo);
+        var bitmap = new Bitmap(memoryStream);
         return bitmap;
     }
     
     public static async Task<Bitmap?> GetDefaultBitmapAsync(FileInfo fileInfo)
     {
         using var magickImage = new MagickImage();
-        await using var fileStream = FileHelper.GetOptimizedFileStream(fileInfo);
+        await using var memoryStream = await FileManager.ReadFileToRecyclableStreamAsync(fileInfo);
         if (fileInfo.Length >= 2147483648)
         {
             // Fixes "The file is too long. This operation is currently limited to supporting files less than 2 gigabytes in size."
             // ReSharper disable once MethodHasAsyncOverload
-            magickImage.Read(fileStream);
+            magickImage.Read(memoryStream);
         }
         else
         {
-            await magickImage.ReadAsync(fileStream).ConfigureAwait(false);
+            await magickImage.ReadAsync(memoryStream).ConfigureAwait(false); 
         }
 
         var bitmap = magickImage.ToWriteableBitmap();

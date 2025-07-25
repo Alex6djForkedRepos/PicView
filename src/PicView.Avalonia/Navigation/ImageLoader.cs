@@ -29,8 +29,7 @@ public static class ImageLoader
         {
             return;
         }
-
-        MenuManager.CloseMenus(vm);
+        
         vm.MainWindow.IsLoadingIndicatorShown.Value = true;
         TitleManager.SetLoadingTitle(vm);
 
