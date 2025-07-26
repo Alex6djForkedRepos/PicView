@@ -18,10 +18,13 @@ public partial class ImageInfoWindow : Window, IDisposable
     {
         _config = config;
         InitializeComponent();
-        if (!Settings.Theme.Dark || Settings.Theme.GlassTheme)
+        if (Settings.Theme.GlassTheme)
         {
             WindowBorder.Background = Brushes.Transparent;
-            XExifView.Background = Brushes.Transparent;
+        }
+        else if (!Settings.Theme.Dark)
+        {
+            XExifView.Background = UIHelper.GetMenuBackgroundColor();
         }
         GenericWindowHelper.GenericWindowInitialize(this, TranslationManager.Translation.ImageInfo + " - PicView");
         Loaded += delegate

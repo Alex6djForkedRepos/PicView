@@ -41,7 +41,7 @@
                                                    FallbackValue=''}"
                 Data="{StaticResource RecycleGeometry}"
                 DockPanel.Dock="Right"
-                Foreground="{StaticResource SecondaryTextColor}"
+                Foreground="{DynamicResource MainTextColor}"
                 Height="28"
                 IconHeight="17"
                 IconWidth="17"
@@ -60,7 +60,7 @@
                 CommandParameter="{CompiledBinding PicViewer.FileInfo.Value.FullName,
                                                    FallbackValue=''}"
                 DockPanel.Dock="Right"
-                Foreground="{StaticResource SecondaryTextColor}"
+                Foreground="{DynamicResource MainTextColor}"
                 Height="28"
                 Icon="{StaticResource OffImage}"
                 IconHeight="17"
@@ -82,7 +82,7 @@
                 CommandParameter="{CompiledBinding PicViewer.FileInfo.Value.FullName,
                                                    FallbackValue=''}"
                 DockPanel.Dock="Right"
-                Foreground="{StaticResource SecondaryTextColor}"
+                Foreground="{DynamicResource MainTextColor}"
                 Height="28"
                 Icon="{StaticResource PortalImage}"
                 IconHeight="17"
@@ -107,7 +107,7 @@
                 CommandParameter="{CompiledBinding PicViewer.FileInfo.Value.FullName,
                                                    FallbackValue=''}"
                 DockPanel.Dock="Right"
-                Foreground="{StaticResource SecondaryTextColor}"
+                Foreground="{DynamicResource MainTextColor}"
                 Height="28"
                 Icon="{StaticResource OpenExternalImage}"
                 IconHeight="17"
@@ -132,7 +132,7 @@
                                                    FallbackValue=''}"
                 Data="{StaticResource DuplicateGeometry}"
                 DockPanel.Dock="Right"
-                Foreground="{StaticResource SecondaryTextColor}"
+                Foreground="{DynamicResource MainTextColor}"
                 Height="28"
                 IconHeight="17"
                 IconWidth="17"
@@ -151,7 +151,7 @@
                                                    FallbackValue=''}"
                 Data="{StaticResource ShowInFolderGeometry}"
                 DockPanel.Dock="Right"
-                Foreground="{StaticResource SecondaryTextColor}"
+                Foreground="{DynamicResource MainTextColor}"
                 Height="28"
                 IconHeight="17"
                 IconWidth="17"
@@ -171,7 +171,7 @@
                 CommandParameter="{CompiledBinding PicViewer.FileInfo.Value.FullName,
                                                    FallbackValue=''}"
                 DockPanel.Dock="Right"
-                Foreground="{StaticResource SecondaryTextColor}"
+                Foreground="{DynamicResource MainTextColor}"
                 Icon="{StaticResource StarOffImage}"
                 IconHeight="17"
                 IconWidth="17"
@@ -183,7 +183,6 @@
             <TextBlock
                 Classes="txt"
                 DockPanel.Dock="Left"
-                Foreground="{StaticResource SecondaryTextColor}"
                 Text="{CompiledBinding Translation.ImageInfo.Value,
                                        Mode=OneWay}"
                 TextAlignment="Center" />

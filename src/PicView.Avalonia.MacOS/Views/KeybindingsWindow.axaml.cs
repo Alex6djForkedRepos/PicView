@@ -11,10 +11,14 @@ public partial class KeybindingsWindow : Window
     {
         MaxHeight = ScreenHelper.ScreenSize.WorkingAreaHeight;
         InitializeComponent();
-        if (!Settings.Theme.Dark || Settings.Theme.GlassTheme)
+        if (Settings.Theme.GlassTheme)
         {
             WindowBorder.Background = Brushes.Transparent;
             XKeybindingsView.Background = Brushes.Transparent;
+        }
+        else if (!Settings.Theme.Dark)
+        {
+            XKeybindingsView.Background = UIHelper.GetMenuBackgroundColor();
         }
         GenericWindowHelper.KeybindingsWindowInitialize(this);
     }

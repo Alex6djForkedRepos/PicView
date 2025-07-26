@@ -14,7 +14,6 @@
     xmlns:main="clr-namespace:PicView.Avalonia.Views.Main;assembly=PicView.Avalonia"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewModels="clr-namespace:PicView.Avalonia.ViewModels;assembly=PicView.Avalonia"
-    xmlns:views="clr-namespace:PicView.Avalonia.Views;assembly=PicView.Avalonia"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Design.DataContext>
         <viewModels:MainViewModel />
@@ -23,7 +22,8 @@
     <Border
         BorderBrush="{DynamicResource WindowBorderColor}"
         BorderThickness="1"
-        CornerRadius="8">
+        CornerRadius="8"
+        PointerPressed="MoveWindow">
         <Panel>
 
             <Panel
@@ -43,8 +43,7 @@
             <Border
                 Background="{DynamicResource WindowBackgroundColor}"
                 Focusable="True"
-                Margin="0,28,0,0"
-                PointerPressed="MoveWindow">
+                Margin="0,28,0,0">
                 <customControls:AutoScrollViewer Padding="5,2,5,10">
                     <main:KeybindingsView x:Name="XKeybindingsView" />
                 </customControls:AutoScrollViewer>
