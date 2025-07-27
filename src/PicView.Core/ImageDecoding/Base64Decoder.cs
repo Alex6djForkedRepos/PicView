@@ -1,13 +1,18 @@
-﻿using System.Diagnostics;
-using ImageMagick;
+﻿using ImageMagick;
+using PicView.Core.DebugTools;
 
 namespace PicView.Core.ImageDecoding;
 
 /// <summary>
-///     Provides methods for decoding various image formats.
+/// Provides methods to decode Base64 strings into MagickImage objects and validate Base64 strings.
 /// </summary>
 public static class Base64Decoder
 {
+    /// <summary>
+    /// Converts a Base64 encoded string into a MagickImage object.
+    /// </summary>
+    /// <param name="base64">The Base64 encoded string to convert.</param>
+    /// <returns>A MagickImage object if successful, otherwise null.</returns>
     public static MagickImage? Base64ToMagickImage(string base64)
     {
         try
@@ -30,19 +35,22 @@ public static class Base64Decoder
         }
         catch (Exception e)
         {
-#if DEBUG
-            Trace.WriteLine($"{nameof(Base64ToMagickImage)} exception:\n{e.Message}");
-#endif
+            DebugHelper.LogDebug(nameof(Base64Decoder), nameof(Base64ToMagickImage), e);
             return null;
         }
     }
 
+    /// <summary>
+    /// Converts a Base64 encoded file from a FileInfo object into a MagickImage object.
+    /// </summary>
+    /// <param name="fileInfo">The base64 FileInfo</param>
+    /// <returns>A MagickImage object if successful, otherwise null.</returns>
     public static async Task<MagickImage?> Base64ToMagickImage(FileInfo fileInfo)
     {
         var base64String = await File.ReadAllTextAsync(fileInfo.FullName).ConfigureAwait(false);
         return Base64ToMagickImage(base64String);
     }
-    
+
     /// <summary>
     /// Determines whether a string is a valid Base64 string.
     /// </summary>

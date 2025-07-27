@@ -1,30 +1,13 @@
 ﻿using ImageMagick;
+using PicView.Core.DebugTools;
 using PicView.Core.FileHandling;
 
 namespace PicView.Core.ImageEffects;
 
 public static class ImageEffectsHelper
 {
-    public static async Task<MagickImage?> GetRadialBlur(string file)
-    {
-        var magick = new MagickImage();
-        await magick.ReadAsync(file).ConfigureAwait(false);
-        ApplyRadialBlur(magick);
-        return magick;
-    }
-
-    private static void ApplyRadialBlur(MagickImage magick)
-    {
-        magick.AdaptiveBlur(10);
-        var morphology = new MorphologySettings
-        {
-            Kernel = Kernel.DoG,
-            Method = MorphologyMethod.Convolve
-        };
-        magick.Morphology(morphology);
-    }
-    
-    public static async Task<MagickImage?> ApplyEffects(FileInfo fileInfo, ImageEffectConfig config, CancellationToken cancellationToken)
+    public static async Task<MagickImage?> ApplyEffects(FileInfo fileInfo, ImageEffectConfig config,
+        CancellationToken cancellationToken)
     {
         try
         {
@@ -41,10 +24,9 @@ public static class ImageEffectsHelper
         }
         catch (Exception e)
         {
-#if DEBUG
-            Console.WriteLine(e);
-#endif
+            DebugHelper.LogDebug(nameof(ImageEffectsHelper), nameof(ApplyEffects), e);
         }
+
         return null;
     }
 
@@ -61,23 +43,52 @@ public static class ImageEffectsHelper
         {
             await magick.ReadAsync(filestream, cancellationToken).ConfigureAwait(false);
         }
+
         return magick;
     }
 
-    private static void ApplyImageEffects(MagickImage magick, ImageEffectConfig config, CancellationToken cancellationToken)
+    private static void ApplyImageEffects(MagickImage magick, ImageEffectConfig config,
+        CancellationToken cancellationToken)
     {
         magick.BrightnessContrast(config.Brightness, config.Contrast);
         magick.BackgroundColor = MagickColors.Transparent;
         magick.Settings.BackgroundColor = MagickColors.Transparent;
         magick.Settings.FillColor = MagickColors.Transparent;
 
-        if (config.Negative) ApplyNegative(magick);
-        if (config.BlackAndWhite) ApplyBlackAndWhite(magick);
-        if (config.OldMovie) ApplyOldMovieEffect(magick);
-        if (config.SketchStrokeWidth != 0) ApplyPencilSketch(magick, config.SketchStrokeWidth);
-        if (config.PosterizeLevel != 0) ApplyPosterize(magick, config.PosterizeLevel);
-        if (config.BlurLevel != 0) ApplyBlur(magick, config.BlurLevel);
-        if (config.Solarize.ToUInt32() != 0) ApplySolarize(magick, config.Solarize);
+        if (config.Negative)
+        {
+            ApplyNegative(magick);
+        }
+
+        if (config.BlackAndWhite)
+        {
+            ApplyBlackAndWhite(magick);
+        }
+
+        if (config.OldMovie)
+        {
+            ApplyOldMovieEffect(magick);
+        }
+
+        if (config.SketchStrokeWidth != 0)
+        {
+            ApplyPencilSketch(magick, config.SketchStrokeWidth);
+        }
+
+        if (config.PosterizeLevel != 0)
+        {
+            ApplyPosterize(magick, config.PosterizeLevel);
+        }
+
+        if (config.BlurLevel != 0)
+        {
+            ApplyBlur(magick, config.BlurLevel);
+        }
+
+        if (config.Solarize.ToUInt32() != 0)
+        {
+            ApplySolarize(magick, config.Solarize);
+        }
 
         cancellationToken.ThrowIfCancellationRequested();
     }

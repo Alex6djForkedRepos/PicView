@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using PicView.Core.DebugTools;
 
 namespace PicView.Core.ProcessHandling;
 
@@ -112,9 +113,7 @@ public static class ProcessHelper
         }
         catch (Exception exception)
         {
-#if DEBUG
-            Trace.WriteLine($"{nameof(CheckIfAnotherInstanceIsRunning)}: caught exception:\n{exception.Message}");
-#endif
+            DebugHelper.LogDebug(nameof(ProcessHelper), nameof(CheckIfAnotherInstanceIsRunning), exception);
             return false;
         }
     }
@@ -141,9 +140,7 @@ public static class ProcessHelper
         }
         catch (Exception e)
         {
-#if DEBUG
-            Console.WriteLine(e);
-#endif
+            DebugHelper.LogDebug(nameof(ProcessHelper), nameof(OpenWith), e);
         }
     }
 
@@ -170,9 +167,7 @@ public static class ProcessHelper
         }
         catch (Exception e)
         {
-#if DEBUG
-            Console.WriteLine(e);
-#endif
+            DebugHelper.LogDebug(nameof(ProcessHelper), nameof(Print), e);
         }
     }
 

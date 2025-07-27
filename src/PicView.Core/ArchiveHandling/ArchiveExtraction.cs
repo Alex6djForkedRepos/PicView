@@ -1,4 +1,5 @@
-﻿using PicView.Core.FileHandling;
+﻿using PicView.Core.DebugTools;
+using PicView.Core.FileHandling;
 using SharpCompress.Common;
 using SharpCompress.Readers;
 
@@ -108,25 +109,9 @@ public static class ArchiveExtraction
             return true;
 
         }
-        catch (IOException ioEx)
-        {
-#if DEBUG
-            Console.WriteLine($"IO Exception during extraction: {ioEx.Message}");
-#endif
-            return false;
-        }
-        catch (UnauthorizedAccessException authEx)
-        {
-#if DEBUG
-            Console.WriteLine($"Access denied during extraction: {authEx.Message}");
-#endif
-            return false;
-        }
         catch (Exception ex)
         {
-#if DEBUG
-            Console.WriteLine($"Extraction failed: {ex.Message}");
-#endif
+            DebugHelper.LogDebug(nameof(ArchiveExtraction), nameof(ExtractArchiveAsync), ex);
             return false;
         }
     }
@@ -147,9 +132,7 @@ public static class ArchiveExtraction
         }
         catch (Exception ex)
         {
-#if DEBUG
-            Console.WriteLine($"{nameof(ArchiveExtraction)}: Cleanup exception \n {ex.Message}");
-#endif
+            DebugHelper.LogDebug(nameof(ArchiveExtraction), nameof(Cleanup), ex);
         }
         finally
         {

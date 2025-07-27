@@ -1,4 +1,6 @@
-﻿using System.Diagnostics;
+﻿#if DEBUG
+using System.Diagnostics;
+#endif
 using System.IO.Pipes;
 using System.Runtime.InteropServices;
 using Avalonia;

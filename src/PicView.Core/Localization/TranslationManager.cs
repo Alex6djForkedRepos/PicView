@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using PicView.Core.DebugTools;
 
 namespace PicView.Core.Localization;
 
@@ -62,16 +63,12 @@ public static class TranslationManager
         }
         catch (FileNotFoundException fnfEx)
         {
-#if DEBUG
-            Trace.WriteLine($"Language file not found: {fnfEx.Message}");
-#endif
+            DebugHelper.LogDebug(nameof(TranslationManager), nameof(LoadLanguage), fnfEx);
             return false;
         }
         catch (Exception ex)
         {
-#if DEBUG
-            Trace.WriteLine($"{nameof(LoadLanguage)} exception:\n{ex.Message}");
-#endif
+            DebugHelper.LogDebug(nameof(TranslationManager), nameof(LoadLanguage), ex);
             return false;
         }
     }
@@ -148,6 +145,7 @@ public static class TranslationManager
         var baseLanguageCode = userCulture.TwoLetterISOLanguageName; // Gets 'da' from 'da-DK'
 
         // Handle special cases, e.g., Chinese or different regions.
+        // ReSharper disable once ConvertSwitchStatementToSwitchExpression
         switch (baseLanguageCode)
         {
             case "zh":
