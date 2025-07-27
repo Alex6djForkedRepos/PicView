@@ -57,14 +57,28 @@ public static class EXIFHelper
 
     public static EXIFOrientation GetImageOrientation(MagickImage magickImage)
     {
-        var profile = magickImage.GetExifProfile();
+        if (magickImage.Orientation is not OrientationType.Undefined)
+        {
+            return magickImage.Orientation switch
+            {
+                OrientationType.BottomLeft => EXIFOrientation.MirrorVertical,
+                OrientationType.BottomRight => EXIFOrientation.Rotate180,
+                OrientationType.TopLeft => EXIFOrientation.Horizontal,
+                OrientationType.TopRight => EXIFOrientation.MirrorHorizontal,
+                OrientationType.RightBottom => EXIFOrientation.MirrorHorizontalRotate90Cw,
+                OrientationType.RightTop => EXIFOrientation.Rotate90Cw,
+                OrientationType.LeftBottom => EXIFOrientation.Rotated270Cw,
+                OrientationType.LeftTop => EXIFOrientation.MirrorHorizontalRotate270Cw,
+                _ => EXIFOrientation.None
+            };
+        }
 
+        var profile = magickImage.GetExifProfile();
         var orientationValue = profile?.GetValue(ExifTag.Orientation);
         if (orientationValue is null)
         {
             return EXIFOrientation.None;
         }
-
         return orientationValue.Value switch
         {
             0 => EXIFOrientation.None,

@@ -1,6 +1,5 @@
 ﻿using Avalonia.Media.Imaging;
 using ImageMagick;
-using Microsoft.IO;
 using PicView.Core.DebugTools;
 using PicView.Core.FileHandling;
 
@@ -25,9 +24,13 @@ public static class GetImage
         return bitmap;
     }
     
-    public static async Task<Bitmap?> GetDefaultBitmapAsync(FileInfo fileInfo)
+    public static async Task<Bitmap?> GetNonStandardBitmapAsync(FileInfo fileInfo, MagickImage? magickImage)
     {
-        using var magickImage = new MagickImage();
+        var shouldDisposeMagickImage = magickImage is null;
+        if (shouldDisposeMagickImage)
+        {
+            magickImage = new MagickImage();
+        }
         await using var memoryStream = await FileStreamUtils.ReadFileToRecyclableStreamAsync(fileInfo);
         if (fileInfo.Length >= 2147483648)
         {
@@ -41,6 +44,28 @@ public static class GetImage
         }
 
         var bitmap = magickImage.ToWriteableBitmap();
+        if (shouldDisposeMagickImage)
+        {
+            magickImage.Dispose();
+        }
+        return bitmap;
+    }
+    
+    public static async Task<Bitmap?> GetRawBitmapAsync(FileInfo fileInfo, MagickImage? magickImage)
+    {
+        var shouldDisposeMagickImage = magickImage is null;
+        if (shouldDisposeMagickImage)
+        {
+            magickImage = new MagickImage();
+        }
+        // Raw images needs to be loaded by file path, else it just loads thumbnail 
+        // https://github.com/Ruben2776/PicView/issues/221
+        await magickImage.ReadAsync(fileInfo).ConfigureAwait(false); 
+        var bitmap = magickImage.ToWriteableBitmap();
+        if (shouldDisposeMagickImage)
+        {
+            magickImage.Dispose();
+        }
         return bitmap;
     }
     
