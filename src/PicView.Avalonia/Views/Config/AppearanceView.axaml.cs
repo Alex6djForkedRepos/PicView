@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Media;
@@ -6,7 +7,6 @@ using PicView.Avalonia.Gallery;
 using PicView.Avalonia.UI;
 using PicView.Avalonia.ViewModels;
 using PicView.Core.ColorHandling;
-using PicView.Core.Config;
 using R3;
 
 namespace PicView.Avalonia.Views.Config;
@@ -20,6 +20,10 @@ public partial class AppearanceView : UserControl
     public AppearanceView()
     {
         InitializeComponent();
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        {
+            RestartButton.IsEnabled = false;
+        }
         Loaded += AppearanceView_Loaded;
     }
 
@@ -31,35 +35,35 @@ public partial class AppearanceView : UserControl
         }
         GalleryStretchMode.DetermineStretchMode(vm);
 
-        if (SettingsManager.Settings.Theme.GlassTheme)
+        if (Settings.Theme.GlassTheme)
         {
             ThemeBox.SelectedItem = GlassThemeBox;
         }
         else
         {
-            ThemeBox.SelectedItem = SettingsManager.Settings.Theme.Dark ? DarkThemeBox : LightThemeBox;
+            ThemeBox.SelectedItem = Settings.Theme.Dark ? DarkThemeBox : LightThemeBox;
         }
         ThemeBox.SelectionChanged += delegate
         {
             // Adjust based on which theme is selected
             if (Equals(ThemeBox.SelectedItem, GlassThemeBox))
             {
-                SettingsManager.Settings.Theme.GlassTheme = true;
+                Settings.Theme.GlassTheme = true;
             }
             else if (Equals(ThemeBox.SelectedItem, DarkThemeBox))
             {
-                SettingsManager.Settings.Theme.GlassTheme = false;
-                SettingsManager.Settings.Theme.Dark = true;
+                Settings.Theme.GlassTheme = false;
+                Settings.Theme.Dark = true;
             }
             else
             {
-                SettingsManager.Settings.Theme.GlassTheme = false;
-                SettingsManager.Settings.Theme.Dark = false;
+                Settings.Theme.GlassTheme = false;
+                Settings.Theme.Dark = false;
             }
 
-            var selectedTheme = SettingsManager.Settings.Theme.GlassTheme
+            var selectedTheme = Settings.Theme.GlassTheme
                 ? ThemeManager.Theme.Glass
-                : SettingsManager.Settings.Theme.Dark
+                : Settings.Theme.Dark
                     ? ThemeManager.Theme.Dark
                     : ThemeManager.Theme.Light;
 
@@ -71,7 +75,7 @@ public partial class AppearanceView : UserControl
         
         // Set active color button based on current theme
         ClearColorButtonsActiveState();
-        switch ((ColorOptions)SettingsManager.Settings.Theme.ColorTheme)
+        switch ((ColorOptions)Settings.Theme.ColorTheme)
         {
             case ColorOptions.Raspberry:
                 RaspberryButton.Classes.Add(ActiveColorBtnClassName);
@@ -115,7 +119,7 @@ public partial class AppearanceView : UserControl
         CheckerboardAltButton.Background = BackgroundManager.CreateCheckerboardBrushAlt(25);
         
         Observable.EveryValueChanged(vm.MainWindow, x => x.BackgroundChoice, UIHelper.GetFrameProvider)
-            .Subscribe(_ => SetBackgroundTheme(SettingsManager.Settings.UIProperties.BgColorChoice))
+            .Subscribe(_ => SetBackgroundTheme(Settings.UIProperties.BgColorChoice))
             .AddTo(_disposables);
     }
     

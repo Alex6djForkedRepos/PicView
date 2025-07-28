@@ -59,7 +59,8 @@
         <Button
             Classes="errorHover"
             Command="{Binding Tools.RestartCommand}"
-            Margin="0,0,0,20">
+            Margin="0,0,0,20"
+            x:Name="RestartButton">
             <TextBlock
                 Classes="txt"
                 FontFamily="/Assets/Fonts/Roboto-Bold.ttf#Roboto"
