@@ -30,9 +30,9 @@ public partial class ImageInfoView : UserControl
             {
                 return;
             }
-            
+
             ResponsiveResizeUpdate(vm);
-            
+
             KeyDown += (_, e) =>
             {
                 switch (e.Key)
@@ -77,11 +77,8 @@ public partial class ImageInfoView : UserControl
                 .Subscribe(UpdateValues).AddTo(_disposables);
 
             SizeChanged += (_, _) => ResponsiveResizeUpdate(vm);
-            
-            RemoveImageDataMenuItem.Click  += async (_, _) =>
-            {
-                await RemoveImageDataAsync();
-            };
+
+            RemoveImageDataMenuItem.Click += async (_, _) => { await RemoveImageDataAsync(); };
 
             ResetButton.Click += (_, _) =>
             {
@@ -98,7 +95,8 @@ public partial class ImageInfoView : UserControl
                 var ext = GetExtension();
                 var location = FullPathTextBox.Text; // TODO check if this is a valid path
                 // and sync with file name/directory text boxes
-                await SendToImageSaver(vm, vm.PicViewer.FileInfo?.CurrentValue.FullName, location, PixelWidthTextBox.Text,
+                await SendToImageSaver(vm, vm.PicViewer.FileInfo?.CurrentValue.FullName, location,
+                    PixelWidthTextBox.Text,
                     PixelHeightTextBox.Text, ext).ConfigureAwait(false);
             };
 
@@ -117,124 +115,45 @@ public partial class ImageInfoView : UserControl
                     PixelHeightTextBox.Text, ext).ConfigureAwait(false);
             };
             FileNameTextBox.KeyDown += async (_, e) =>
-                await HandleRenameOnEnterAsync(e, () => 
+                await HandleRenameOnEnterAsync(e, () =>
                     Path.Combine(vm.PicViewer.FileInfo.CurrentValue.DirectoryName!, FileNameTextBox.Text));
 
-            FullPathTextBox.KeyDown += async (_, e) => 
+            FullPathTextBox.KeyDown += async (_, e) =>
                 await HandleRenameOnEnterAsync(e, () => FullPathTextBox.Text ?? string.Empty);
 
             DirectoryNameTextBox.KeyDown += async (_, e) =>
-                await HandleRenameOnEnterAsync(e, () => 
+                await HandleRenameOnEnterAsync(e, () =>
                     Path.Combine(DirectoryNameTextBox.Text, vm.PicViewer.FileInfo.CurrentValue.Name));
 
-            AuthorsBox.KeyDown += async (_, e) =>
-            {
-                if (e.Key is not Key.Enter)
-                {
-                    return;
-                }
+            // Register EXIF property updates on 'Enter' key press
+            RegisterExifUpdateHandlers();
 
-                await AddAuthorsAsync();
-            };
-            
-            CopyRightBox.KeyDown += async (_, e) =>
-            {
-                if (e.Key is not Key.Enter)
-                {
-                    return;
-                }
-
-                await AddCopyrightAsync();
-            };
-            
-            SoftwareBox.KeyDown += async (_, e) =>
-            {
-                if (e.Key is not Key.Enter)
-                {
-                    return;
-                }
-
-                await AddSoftwareAsync();
-            };
-            
             vm.InfoWindow.IsLoading.Value = false;
         };
     }
 
-    public async Task RemoveImageDataAsync()
-    {
-        if (DataContext is not MainViewModel vm)
-        {
-            return;
-        }
-        var isRemoved = await EXIFHelper.RemoveExifProfile(vm.PicViewer.FileInfo?.CurrentValue);
-        if (isRemoved)
-        {
-            UpdateValues(vm.PicViewer.FileInfo?.CurrentValue);
-        }
-    }
-    
-    public async Task AddAuthorsAsync()
-    {
-        if (DataContext is not MainViewModel vm)
-        {
-            return;
-        }
-        var isAdded = await EXIFHelper.AddAuthors(vm.PicViewer.FileInfo?.CurrentValue, vm.Exif.Authors.CurrentValue);
-        if (isAdded)
-        {
-            ExifHandling.UpdateExifValues(vm);
-        }
-    }
-    
-    public async Task AddCopyrightAsync()
-    {
-        if (DataContext is not MainViewModel vm)
-        {
-            return;
-        }
-        var isAdded = await EXIFHelper.AddCopyright(vm.PicViewer.FileInfo?.CurrentValue, vm.Exif.Copyright.CurrentValue);
-        if (isAdded)
-        {
-            ExifHandling.UpdateExifValues(vm);
-        }
-    }
-    
-    public async Task AddSoftwareAsync()
-    {
-        if (DataContext is not MainViewModel vm)
-        {
-            return;
-        }
-        var isAdded = await EXIFHelper.AddSoftware(vm.PicViewer.FileInfo?.CurrentValue, vm.Exif.Software.CurrentValue);
-        if (isAdded)
-        {
-            UpdateValues(vm.PicViewer.FileInfo?.CurrentValue);
-        }
-    }
-    
     private async Task HandleRenameOnEnterAsync(KeyEventArgs e, Func<string> getNewPath)
     {
-        if (e.Key is not Key.Enter || DataContext  is not MainViewModel vm)
+        if (e.Key is not Key.Enter || DataContext is not MainViewModel vm)
         {
             return;
         }
-            
+
         try
-        {    
+        {
             var newPath = getNewPath();
             if (string.IsNullOrWhiteSpace(newPath))
             {
                 return;
             }
-            
+
             await Dispatcher.UIThread.InvokeAsync(() => SetLoadingState(true));
             vm.MainWindow.IsLoadingIndicatorShown.Value = true;
             NavigationManager.DisableWatcher();
-            
+
             var fileInfo = vm.PicViewer.FileInfo.CurrentValue;
             var oldPath = fileInfo.FullName;
-            
+
             // Avoid renaming if the path hasn't changed
             if (oldPath.Equals(newPath, StringComparison.OrdinalIgnoreCase))
             {
@@ -242,12 +161,12 @@ public partial class ImageInfoView : UserControl
             }
 
             var renamed = await FileRenamer.AttemptRenameAsync(
-                    oldPath, 
-                    newPath, 
+                    oldPath,
+                    newPath,
                     ErrorHandling.ReloadAsync(vm),
                     vm.PlatformService.DeleteFile(oldPath, true))
                 .ConfigureAwait(false);
-            
+
             if (renamed)
             {
                 await NavigationManager.LoadPicFromFile(newPath, vm).ConfigureAwait(false);
@@ -267,7 +186,8 @@ public partial class ImageInfoView : UserControl
 
     private void ResponsiveResizeUpdate(MainViewModel vm)
     {
-        if (!Application.Current.TryGetResource("ScrollBarThickness", Application.Current.ActualThemeVariant, out var value))
+        if (!Application.Current.TryGetResource("ScrollBarThickness", Application.Current.ActualThemeVariant,
+                out var value))
         {
             return;
         }
@@ -282,7 +202,7 @@ public partial class ImageInfoView : UserControl
 
         var convertWidth = double.IsNaN(ConvertToPanel.Width) ? ConvertToPanel.Bounds.Width : ConvertToPanel.Width;
         convertWidth = convertWidth is 0 ? MinWidth : convertWidth;
-        
+
         vm.InfoWindow.ResponsiveResizeUpdate(panelWidth, scrollBarThickness, convertWidth);
     }
 
@@ -300,14 +220,16 @@ public partial class ImageInfoView : UserControl
         }
 
         FileSizeBox.Text = vm.PicViewer.FileInfo?.CurrentValue?.Length.GetReadableFileSize();
-        vm.PicViewer.ShouldOptimizeImageBeEnabled.Value = ConversionHelper.DetermineIfOptimizeImageShouldBeEnabled(vm.PicViewer.FileInfo?.CurrentValue);
+        vm.PicViewer.ShouldOptimizeImageBeEnabled.Value =
+            ConversionHelper.DetermineIfOptimizeImageShouldBeEnabled(vm.PicViewer.FileInfo?.CurrentValue);
         GoogleLinkButton.IsEnabled = !string.IsNullOrWhiteSpace(vm.Exif.GoogleLink.CurrentValue);
         BingLinkButton.IsEnabled = !string.IsNullOrWhiteSpace(vm.Exif.BingLink.CurrentValue);
 
         vm.Exif.IsExifAvailable.Value = fileInfo.IsExifImage();
     }
 
-    private async Task SendToImageSaver(MainViewModel vm, string? location, string destination, string? width, string? height,
+    private async Task SendToImageSaver(MainViewModel vm, string? location, string destination, string? width,
+        string? height,
         string ext)
     {
         if (!uint.TryParse(width, out var widthValue) || !uint.TryParse(height, out var heightValue))
@@ -318,7 +240,7 @@ public partial class ImageInfoView : UserControl
         try
         {
             await Dispatcher.UIThread.InvokeAsync(() => SetLoadingState(true));
-            
+
             var sameFile = destination.Equals(location, StringComparison.OrdinalIgnoreCase);
             await SaveImageHandler.SaveImageWithPossibleNavigation(DataContext as MainViewModel, location, destination,
                 sameFile, ext, widthValue, heightValue,
@@ -329,7 +251,7 @@ public partial class ImageInfoView : UserControl
             await Dispatcher.UIThread.InvokeAsync(() => SetLoadingState(false));
         }
     }
-    
+
     private void SetLoadingState(bool isLoading)
     {
         ParentPanel.Opacity = isLoading ? 0.1 : 1;
@@ -484,4 +406,398 @@ public partial class ImageInfoView : UserControl
         base.OnDetachedFromVisualTree(e);
         Disposable.Dispose(_disposables);
     }
+
+    #region EXIF Update Registration
+
+    /// <summary>
+    /// Helper method to register a KeyDown event for a TextBox to update an EXIF property.
+    /// </summary>
+    private void RegisterExifUpdateOnEnter(TextBox textBox, Func<Task> updateAction)
+    {
+        textBox.KeyDown += async (_, e) =>
+        {
+            if (e.Key == Key.Enter)
+            {
+                await updateAction();
+            }
+        };
+    }
+
+    /// <summary>
+    /// Registers all EXIF property update handlers.
+    /// </summary>
+    private void RegisterExifUpdateHandlers()
+    {
+        RegisterExifUpdateOnEnter(AuthorsBox, AddAuthorsAsync);
+        RegisterExifUpdateOnEnter(CopyRightBox, AddCopyrightAsync);
+        RegisterExifUpdateOnEnter(SoftwareBox, AddSoftwareAsync);
+        RegisterExifUpdateOnEnter(SubjectBox, AddSubjectAsync);
+        RegisterExifUpdateOnEnter(TitleBox, AddTitleAsync);
+        RegisterExifUpdateOnEnter(CommentBox, AddCommentAsync);
+        RegisterExifUpdateOnEnter(LatitudeBox, AddLatitudeAsync);
+        RegisterExifUpdateOnEnter(LongitudeBox, AddLongitudeAsync);
+        RegisterExifUpdateOnEnter(AltitudeBox, AddAltitudeAsync);
+        RegisterExifUpdateOnEnter(ColorRepresentationBox, AddColorRepresentationAsync);
+        RegisterExifUpdateOnEnter(ResolutionUnitBox, AddResolutionUnitAsync);
+        RegisterExifUpdateOnEnter(CompressionBox, AddCompressionAsync);
+        RegisterExifUpdateOnEnter(CompressedBitsPerPixelBox, AddCompressedBitsPerPixelAsync);
+        RegisterExifUpdateOnEnter(CameraMakerBox, AddCameraMakerAsync);
+        RegisterExifUpdateOnEnter(CameraModelBox, AddCameraModelAsync);
+        RegisterExifUpdateOnEnter(FNumberBox, AddFNumberAsync);
+        RegisterExifUpdateOnEnter(MaxApertureBox, AddMaxApertureAsync);
+        RegisterExifUpdateOnEnter(ExposureBiasBox, AddExposureBiasAsync);
+        RegisterExifUpdateOnEnter(ExposureTimeBox, AddExposureTimeAsync);
+        RegisterExifUpdateOnEnter(ExposureProgramBox, AddExposureProgramAsync);
+        RegisterExifUpdateOnEnter(DigitalZoomBox, AddDigitalZoomAsync);
+        RegisterExifUpdateOnEnter(FocalLengthBox, AddFocalLengthAsync);
+        RegisterExifUpdateOnEnter(FocalLength35mmBox, AddFocalLength35mmAsync);
+        RegisterExifUpdateOnEnter(IsoSpeedBox, AddIsoSpeedAsync);
+        RegisterExifUpdateOnEnter(MeteringModeBox, AddMeteringModeAsync);
+        RegisterExifUpdateOnEnter(ContrastBox, AddContrastAsync);
+        RegisterExifUpdateOnEnter(SaturationBox, AddSaturationAsync);
+        RegisterExifUpdateOnEnter(SharpnessBox, AddSharpnessAsync);
+        RegisterExifUpdateOnEnter(WhiteBalanceBox, AddWhiteBalanceAsync);
+        RegisterExifUpdateOnEnter(FlashEnergyBox, AddFlashEnergyAsync);
+        RegisterExifUpdateOnEnter(FlashModeBox, AddFlashModeAsync);
+        RegisterExifUpdateOnEnter(LightSourceBox, AddLightSourceAsync);
+        RegisterExifUpdateOnEnter(BrightnessBox, AddBrightnessAsync);
+        RegisterExifUpdateOnEnter(PhotometricInterpretationBox, AddPhotometricInterpretationAsync);
+        RegisterExifUpdateOnEnter(LensMakerBox, AddLensMakerAsync);
+        RegisterExifUpdateOnEnter(LensModelBox, AddLensModelAsync);
+        RegisterExifUpdateOnEnter(ExifVersionBox, AddExifVersionAsync);
+    }
+
+    #endregion
+
+    #region EXIF Update Methods
+
+    /// <summary>
+    /// Generic helper to add an EXIF property value to the image file.
+    /// </summary>
+    private async Task AddExifPropertyAsync<T>(Func<FileInfo?, T, Task<bool>> addAction, T value)
+    {
+        if (DataContext is not MainViewModel vm)
+        {
+            return;
+        }
+
+        var isAdded = await addAction(vm.PicViewer.FileInfo?.CurrentValue, value);
+        if (isAdded)
+        {
+            UpdateValues(vm.PicViewer.FileInfo?.CurrentValue);
+        }
+    }
+
+    public async Task RemoveImageDataAsync()
+    {
+        if (DataContext is not MainViewModel vm)
+        {
+            return;
+        }
+
+        var isRemoved = await EXIFHelper.RemoveExifProfile(vm.PicViewer.FileInfo?.CurrentValue);
+        if (isRemoved)
+        {
+            UpdateValues(vm.PicViewer.FileInfo?.CurrentValue);
+        }
+    }
+
+    public async Task AddAuthorsAsync()
+    {
+        if (DataContext is MainViewModel vm)
+        {
+            await AddExifPropertyAsync(EXIFHelper.AddAuthors, vm.Exif.Authors.CurrentValue);
+        }
+    }
+
+    public async Task AddCopyrightAsync()
+    {
+        if (DataContext is MainViewModel vm)
+        {
+            await AddExifPropertyAsync(EXIFHelper.AddCopyright, vm.Exif.Copyright.CurrentValue);
+        }
+    }
+
+    public async Task AddSoftwareAsync()
+    {
+        if (DataContext is MainViewModel vm)
+        {
+            await AddExifPropertyAsync(EXIFHelper.AddSoftware, vm.Exif.Software.CurrentValue);
+        }
+    }
+
+    public async Task AddSubjectAsync()
+    {
+        if (DataContext is MainViewModel vm)
+        {
+            await AddExifPropertyAsync(EXIFHelper.AddSubject, vm.Exif.Subject.CurrentValue);
+        }
+    }
+
+    public async Task AddTitleAsync()
+    {
+        if (DataContext is MainViewModel vm)
+        {
+            await AddExifPropertyAsync(EXIFHelper.AddTitle, vm.Exif.Title.CurrentValue);
+        }
+    }
+
+    public async Task AddCommentAsync()
+    {
+        if (DataContext is MainViewModel vm)
+        {
+            await AddExifPropertyAsync(EXIFHelper.AddComment, vm.Exif.Comment.CurrentValue);
+        }
+    }
+
+    public async Task AddLatitudeAsync()
+    {
+        if (DataContext is MainViewModel vm)
+        {
+            await AddExifPropertyAsync(EXIFHelper.AddLatitude, vm.Exif.Latitude.CurrentValue);
+        }
+    }
+
+    public async Task AddLongitudeAsync()
+    {
+        if (DataContext is MainViewModel vm)
+        {
+            await AddExifPropertyAsync(EXIFHelper.AddLongitude, vm.Exif.Longitude.CurrentValue);
+        }
+    }
+
+    public async Task AddAltitudeAsync()
+    {
+        if (DataContext is MainViewModel vm)
+        {
+            await AddExifPropertyAsync(EXIFHelper.AddAltitude, vm.Exif.Altitude.CurrentValue);
+        }
+    }
+
+    public async Task AddColorRepresentationAsync()
+    {
+        if (DataContext is MainViewModel vm)
+        {
+            await AddExifPropertyAsync(EXIFHelper.AddColorRepresentation, vm.Exif.ColorRepresentation.CurrentValue);
+        }
+    }
+
+    public async Task AddResolutionUnitAsync()
+    {
+        if (DataContext is MainViewModel vm)
+        {
+            await AddExifPropertyAsync(EXIFHelper.AddResolutionUnit, vm.Exif.ResolutionUnit.CurrentValue);
+        }
+    }
+
+    public async Task AddCompressionAsync()
+    {
+        if (DataContext is MainViewModel vm)
+        {
+            await AddExifPropertyAsync(EXIFHelper.AddCompression, vm.Exif.Compression.CurrentValue);
+        }
+    }
+
+    public async Task AddCompressedBitsPerPixelAsync()
+    {
+        if (DataContext is MainViewModel vm)
+        {
+            await AddExifPropertyAsync(EXIFHelper.AddCompressedBitsPerPixel, vm.Exif.CompressedBitsPixel.CurrentValue);
+        }
+    }
+
+    public async Task AddCameraMakerAsync()
+    {
+        if (DataContext is MainViewModel vm)
+        {
+            await AddExifPropertyAsync(EXIFHelper.AddCameraMaker, vm.Exif.CameraMaker.CurrentValue);
+        }
+    }
+
+    public async Task AddCameraModelAsync()
+    {
+        if (DataContext is MainViewModel vm)
+        {
+            await AddExifPropertyAsync(EXIFHelper.AddCameraModel, vm.Exif.CameraModel.CurrentValue);
+        }
+    }
+
+    public async Task AddFNumberAsync()
+    {
+        if (DataContext is MainViewModel vm)
+        {
+            await AddExifPropertyAsync(EXIFHelper.AddFNumber, vm.Exif.FNumber.CurrentValue);
+        }
+    }
+
+    public async Task AddMaxApertureAsync()
+    {
+        if (DataContext is MainViewModel vm)
+        {
+            await AddExifPropertyAsync(EXIFHelper.AddMaxAperture, vm.Exif.MaxAperture.CurrentValue);
+        }
+    }
+
+    public async Task AddExposureBiasAsync()
+    {
+        if (DataContext is MainViewModel vm)
+        {
+            await AddExifPropertyAsync(EXIFHelper.AddExposureBias, vm.Exif.ExposureBias.CurrentValue);
+        }
+    }
+
+    public async Task AddExposureTimeAsync()
+    {
+        if (DataContext is MainViewModel vm)
+        {
+            await AddExifPropertyAsync(EXIFHelper.AddExposureTime, vm.Exif.ExposureTime.CurrentValue);
+        }
+    }
+
+    public async Task AddExposureProgramAsync()
+    {
+        if (DataContext is MainViewModel vm)
+        {
+            await AddExifPropertyAsync(EXIFHelper.AddExposureProgram, vm.Exif.ExposureProgram.CurrentValue);
+        }
+    }
+
+    public async Task AddDigitalZoomAsync()
+    {
+        if (DataContext is MainViewModel vm)
+        {
+            await AddExifPropertyAsync(EXIFHelper.AddDigitalZoom, vm.Exif.DigitalZoom.CurrentValue);
+        }
+    }
+
+    public async Task AddFocalLengthAsync()
+    {
+        if (DataContext is MainViewModel vm)
+        {
+            await AddExifPropertyAsync(EXIFHelper.AddFocalLength, vm.Exif.FocalLength.CurrentValue);
+        }
+    }
+
+    public async Task AddFocalLength35mmAsync()
+    {
+        if (DataContext is MainViewModel vm)
+        {
+            await AddExifPropertyAsync(EXIFHelper.AddFocalLength35mm, vm.Exif.FocalLength35Mm.CurrentValue);
+        }
+    }
+
+    public async Task AddIsoSpeedAsync()
+    {
+        if (DataContext is MainViewModel vm)
+        {
+            await AddExifPropertyAsync(EXIFHelper.AddIsoSpeed, vm.Exif.ISOSpeed.CurrentValue);
+        }
+    }
+
+    public async Task AddMeteringModeAsync()
+    {
+        if (DataContext is MainViewModel vm)
+        {
+            await AddExifPropertyAsync(EXIFHelper.AddMeteringMode, vm.Exif.MeteringMode.CurrentValue);
+        }
+    }
+
+    public async Task AddContrastAsync()
+    {
+        if (DataContext is MainViewModel vm)
+        {
+            await AddExifPropertyAsync(EXIFHelper.AddContrast, vm.Exif.Contrast.CurrentValue);
+        }
+    }
+
+    public async Task AddSaturationAsync()
+    {
+        if (DataContext is MainViewModel vm)
+        {
+            await AddExifPropertyAsync(EXIFHelper.AddSaturation, vm.Exif.Saturation.CurrentValue);
+        }
+    }
+
+    public async Task AddSharpnessAsync()
+    {
+        if (DataContext is MainViewModel vm)
+        {
+            await AddExifPropertyAsync(EXIFHelper.AddSharpness, vm.Exif.Sharpness.CurrentValue);
+        }
+    }
+
+    public async Task AddWhiteBalanceAsync()
+    {
+        if (DataContext is MainViewModel vm)
+        {
+            await AddExifPropertyAsync(EXIFHelper.AddWhiteBalance, vm.Exif.WhiteBalance.CurrentValue);
+        }
+    }
+
+    public async Task AddFlashEnergyAsync()
+    {
+        if (DataContext is MainViewModel vm)
+        {
+            await AddExifPropertyAsync(EXIFHelper.AddFlashEnergy, vm.Exif.FlashEnergy.CurrentValue);
+        }
+    }
+
+    public async Task AddFlashModeAsync()
+    {
+        if (DataContext is MainViewModel vm)
+        {
+            await AddExifPropertyAsync(EXIFHelper.AddFlashMode, vm.Exif.FlashMode.CurrentValue);
+        }
+    }
+
+    public async Task AddLightSourceAsync()
+    {
+        if (DataContext is MainViewModel vm)
+        {
+            await AddExifPropertyAsync(EXIFHelper.AddLightSource, vm.Exif.LightSource.CurrentValue);
+        }
+    }
+
+    public async Task AddBrightnessAsync()
+    {
+        if (DataContext is MainViewModel vm)
+        {
+            await AddExifPropertyAsync(EXIFHelper.AddBrightness, vm.Exif.Brightness.CurrentValue);
+        }
+    }
+
+    public async Task AddPhotometricInterpretationAsync()
+    {
+        if (DataContext is MainViewModel vm)
+        {
+            await AddExifPropertyAsync(EXIFHelper.AddPhotometricInterpretation,
+                vm.Exif.PhotometricInterpretation.CurrentValue);
+        }
+    }
+
+    public async Task AddLensMakerAsync()
+    {
+        if (DataContext is MainViewModel vm)
+        {
+            await AddExifPropertyAsync(EXIFHelper.AddLensMaker, vm.Exif.LensMaker.CurrentValue);
+        }
+    }
+
+    public async Task AddLensModelAsync()
+    {
+        if (DataContext is MainViewModel vm)
+        {
+            await AddExifPropertyAsync(EXIFHelper.AddLensModel, vm.Exif.LensModel.CurrentValue);
+        }
+    }
+
+    public async Task AddExifVersionAsync()
+    {
+        if (DataContext is MainViewModel vm)
+        {
+            await AddExifPropertyAsync(EXIFHelper.AddExifVersion, vm.Exif.ExifVersion.CurrentValue);
+        }
+    }
+
+    #endregion
 }
