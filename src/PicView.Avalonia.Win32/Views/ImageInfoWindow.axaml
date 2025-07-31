@@ -87,6 +87,8 @@
                     Icon="{StaticResource StarOffImage}"
                     IconHeight="17"
                     IconWidth="17"
+                    ToolTip.Tip="{CompiledBinding Translation.RemoveStarRating.Value,
+                                                  Mode=OneWay}"
                     Width="35"
                     x:Name="RemoveRatingButton" />
 
@@ -115,9 +117,6 @@
                     BorderThickness="0,0,1,0"
                     Classes="errorHover"
                     ClickMode="Release"
-                    Command="{CompiledBinding Exif.RemoveImageDataCommand}"
-                    CommandParameter="{CompiledBinding PicViewer.FileInfo.Value.FullName,
-                                                       FallbackValue=''}"
                     DockPanel.Dock="Right"
                     Foreground="{DynamicResource MainTextColor}"
                     Height="28"

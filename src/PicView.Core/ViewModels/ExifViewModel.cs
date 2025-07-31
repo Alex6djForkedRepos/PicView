@@ -19,11 +19,6 @@ public class ExifViewModel : IDisposable
         SetExifRating5Command = new ReactiveCommand<string>(Set5Star);
     }
 
-    public ReactiveCommand<FileInfo> RemoveImageDataCommand { get; } = new(async (value, _) =>
-    {
-        await EXIFHelper.RemoveExifProfile(value);
-    });
-
     public ReactiveCommand? OpenGoogleLinkCommand { get; }
     public ReactiveCommand? OpenBingLinkCommand { get; }
 
@@ -157,7 +152,6 @@ public class ExifViewModel : IDisposable
             Subject,
             Software,
             ResolutionUnit,
-            RemoveImageDataCommand,
             ColorRepresentation,
             Compression,
             Comment,

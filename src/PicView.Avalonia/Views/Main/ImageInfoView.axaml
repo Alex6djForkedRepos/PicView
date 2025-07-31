@@ -129,13 +129,11 @@
 
             <!--  Remove image data  -->
             <MenuItem
-                Command="{CompiledBinding Exif.RemoveImageDataCommand}"
-                CommandParameter="{CompiledBinding PicViewer.FileInfo.Value,
-                                                   FallbackValue=''}"
                 Header="{CompiledBinding Translation.RemoveImageData.Value,
                                          Mode=OneWay}"
                 IsEnabled="{CompiledBinding PicViewer.FileInfo.Value,
-                                            Converter={x:Static ObjectConverters.IsNotNull}}">
+                                            Converter={x:Static ObjectConverters.IsNotNull}}"
+                x:Name="RemoveImageDataMenuItem">
                 <MenuItem.Icon>
                     <Image
                         Height="12"
@@ -1421,9 +1419,7 @@
                                                            Mode=OneWay}"
                                     Width="{CompiledBinding InfoWindow.TextWidth}" />
                                 <customControls:FuncTextBox
-                                    Background="{DynamicResource DisabledBackgroundColor}"
                                     Classes=" TStyle x"
-                                    IsReadOnly="True"
                                     Text="{CompiledBinding Exif.CameraMaker.Value,
                                                            Mode=OneWay}"
                                     Width="{CompiledBinding InfoWindow.TextBoxWidth.Value}" />
@@ -1448,7 +1444,6 @@
                                     Width="{CompiledBinding InfoWindow.TextWidth}" />
                                 <customControls:FuncTextBox
                                     Classes=" TStyle x"
-                                    IsReadOnly="True"
                                     Text="{CompiledBinding Exif.CameraModel.Value,
                                                            Mode=OneWay}"
                                     Width="{CompiledBinding InfoWindow.TextBoxWidth.Value}" />

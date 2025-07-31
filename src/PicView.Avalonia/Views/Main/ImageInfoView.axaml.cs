@@ -1,15 +1,16 @@
 ﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
-using PicView.Avalonia.Converters;
 using PicView.Avalonia.FileSystem;
 using PicView.Avalonia.ImageHandling;
 using PicView.Avalonia.Navigation;
 using PicView.Avalonia.Resizing;
 using PicView.Avalonia.UI;
 using PicView.Avalonia.ViewModels;
+using PicView.Core.Conversion;
 using PicView.Core.Extensions;
 using PicView.Core.FileHandling;
+using PicView.Core.ImageDecoding;
 using PicView.Core.Titles;
 using R3;
 
@@ -76,8 +77,10 @@ public partial class ImageInfoView : UserControl
 
             SizeChanged += (_, _) => ResponsiveResizeUpdate(vm);
             
-
-            vm.Exif.RemoveImageDataCommand.Delay(TimeSpan.FromSeconds(2)).Subscribe(UpdateValues);
+            RemoveImageDataMenuItem.Click  += async (_, _) =>
+            {
+                await RemoveImageDataAsync();
+            };
 
             ResetButton.Click += (_, _) =>
             {
@@ -126,6 +129,19 @@ public partial class ImageInfoView : UserControl
             
             vm.InfoWindow.IsLoading.Value = false;
         };
+    }
+
+    public async Task RemoveImageDataAsync()
+    {
+        if (DataContext is not MainViewModel vm)
+        {
+            return;
+        }
+        var isRemoved = await EXIFHelper.RemoveExifProfile(vm.PicViewer.FileInfo?.CurrentValue);
+        if (isRemoved)
+        {
+            UpdateValues(vm.PicViewer.FileInfo?.CurrentValue);
+        }
     }
     
     private async Task HandleRenameOnEnterAsync(KeyEventArgs e, Func<string> getNewPath)
@@ -213,7 +229,7 @@ public partial class ImageInfoView : UserControl
         }
 
         FileSizeBox.Text = vm.PicViewer.FileInfo?.CurrentValue?.Length.GetReadableFileSize();
-        ConversionHelper.DetermineIfOptimizeImageShouldBeEnabled(vm);
+        vm.PicViewer.ShouldOptimizeImageBeEnabled.Value = ConversionHelper.DetermineIfOptimizeImageShouldBeEnabled(vm.PicViewer.FileInfo?.CurrentValue);
         GoogleLinkButton.IsEnabled = !string.IsNullOrWhiteSpace(vm.Exif.GoogleLink.CurrentValue);
         BingLinkButton.IsEnabled = !string.IsNullOrWhiteSpace(vm.Exif.BingLink.CurrentValue);
     }

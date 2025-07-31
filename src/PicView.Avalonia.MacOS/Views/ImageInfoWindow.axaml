@@ -56,9 +56,6 @@
                 BorderThickness="0,0,1,0"
                 Classes="errorHover"
                 ClickMode="Release"
-                Command="{CompiledBinding Exif.RemoveImageDataCommand}"
-                CommandParameter="{CompiledBinding PicViewer.FileInfo.Value.FullName,
-                                                   FallbackValue=''}"
                 DockPanel.Dock="Right"
                 Foreground="{DynamicResource MainTextColor}"
                 Height="28"
@@ -70,9 +67,7 @@
                 Text="{CompiledBinding Translation.RemoveImageData.Value,
                                        Mode=OneWay}"
                 TextMargin="5,0,5,0"
-                x:Name="RemoveButton" />
-
-
+                x:Name="RemoveImageDataButton" />
 
             <customControls:TextIconButton
                 BorderBrush="{DynamicResource MainBorderColor}"
