@@ -7,7 +7,6 @@ using PicView.Avalonia.CustomControls;
 using PicView.Avalonia.ViewModels;
 using PicView.Avalonia.WindowBehavior;
 using PicView.Core.Exif;
-using PicView.Core.ImageDecoding;
 using PicView.Core.ImageTransformations;
 
 namespace PicView.Avalonia.ImageTransformations.Rotation;

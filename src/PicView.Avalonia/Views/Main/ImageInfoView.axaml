@@ -1177,7 +1177,9 @@
                                                            Mode=OneWay}"
                                     Width="{CompiledBinding InfoWindow.TextWidth}" />
                                 <customControls:FuncTextBox
+                                    Background="{DynamicResource DisabledBackgroundColor}"
                                     Classes=" TStyle x"
+                                    IsReadOnly="True"
                                     Text="{CompiledBinding Exif.Latitude.Value,
                                                            Mode=TwoWay}"
                                     Width="{CompiledBinding InfoWindow.TextBoxWidth.Value}"
@@ -1202,7 +1204,9 @@
                                                            Mode=OneWay}"
                                     Width="{CompiledBinding InfoWindow.TextWidth}" />
                                 <customControls:FuncTextBox
+                                    Background="{DynamicResource DisabledBackgroundColor}"
                                     Classes=" TStyle x"
+                                    IsReadOnly="True"
                                     Text="{CompiledBinding Exif.Longitude.Value,
                                                            Mode=TwoWay}"
                                     Width="{CompiledBinding InfoWindow.TextBoxWidth.Value}"
@@ -1227,7 +1231,9 @@
                                                            Mode=OneWay}"
                                     Width="{CompiledBinding InfoWindow.TextWidth}" />
                                 <customControls:FuncTextBox
+                                    Background="{DynamicResource DisabledBackgroundColor}"
                                     Classes=" TStyle x"
+                                    IsReadOnly="True"
                                     Text="{CompiledBinding Exif.Altitude.Value,
                                                            Mode=TwoWay}"
                                     Width="{CompiledBinding InfoWindow.TextBoxWidth.Value}"
@@ -1305,6 +1311,7 @@
                                                            Mode=OneWay}"
                                     Width="{CompiledBinding InfoWindow.TextWidth}" />
                                 <ComboBox
+                                    Background="{DynamicResource DisabledBackgroundColor}"
                                     Classes="CStyle x"
                                     CornerRadius="2"
                                     ItemsSource="{CompiledBinding Exif.ColorRepresentations.Value}"
@@ -1335,6 +1342,7 @@
                                                            Mode=OneWay}"
                                     Width="{CompiledBinding InfoWindow.TextWidth}" />
                                 <ComboBox
+                                    Background="{DynamicResource DisabledBackgroundColor}"
                                     Classes="CStyle x"
                                     CornerRadius="2"
                                     ItemsSource="{CompiledBinding Exif.ResolutionUnits.Value}"
@@ -1365,6 +1373,7 @@
                                                            Mode=OneWay}"
                                     Width="{CompiledBinding InfoWindow.TextWidth}" />
                                 <ComboBox
+                                    Background="{DynamicResource DisabledBackgroundColor}"
                                     Classes="CStyle x"
                                     CornerRadius="2"
                                     ItemsSource="{CompiledBinding Exif.Compressions.Value}"
@@ -1379,6 +1388,7 @@
                                         <DataTemplate>
                                             <TextBlock
                                                 Classes="txt"
+                                                HorizontalAlignment="Left"
                                                 MaxWidth="200"
                                                 Text="{Binding}" />
                                         </DataTemplate>
@@ -1404,7 +1414,9 @@
                                                            Mode=OneWay}"
                                     Width="{CompiledBinding InfoWindow.TextWidth}" />
                                 <customControls:FuncTextBox
+                                    Background="{DynamicResource DisabledBackgroundColor}"
                                     Classes=" TStyle x"
+                                    IsReadOnly="True"
                                     Text="{CompiledBinding Exif.CompressedBitsPixel.Value,
                                                            Mode=TwoWay}"
                                     Width="{CompiledBinding InfoWindow.TextBoxWidth.Value}"

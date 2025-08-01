@@ -1,4 +1,5 @@
-﻿using Avalonia;
+﻿using System.Diagnostics;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Threading;
@@ -12,7 +13,6 @@ using PicView.Core.Conversion;
 using PicView.Core.Exif;
 using PicView.Core.Extensions;
 using PicView.Core.FileHandling;
-using PicView.Core.ImageDecoding;
 using PicView.Core.Sizing;
 using PicView.Core.Titles;
 using R3;
@@ -130,20 +130,20 @@ public partial class ImageInfoView : UserControl
             // Register EXIF property updates on 'Enter' key press
             RegisterExifUpdateHandlers();
 
-            ResolutionUnitBox.DropDownClosed += async (_, _) =>
-            {
-                await AddExifPropertyAsync(ExifWriter.AddResolutionUnit, vm.Exif.ResolutionUnit.CurrentValue);
-            };
-            
-            ResolutionUnitBox.DropDownClosed += async (_, _) =>
-            {
-                await AddExifPropertyAsync(ExifWriter.AddResolutionUnit, vm.Exif.ResolutionUnit.CurrentValue);
-            };
-            
-            CompressionBox.DropDownClosed  += async (_, _) =>
-            {
-                await AddExifPropertyAsync(ExifWriter.AddCompression, vm.Exif.Compression.CurrentValue);
-            };
+            // ColorRepresentationBox.DropDownClosed += async (_, _) =>
+            // {
+            //     await AddExifPropertyAsync(ExifWriter.AddColorSpace, vm.Exif.ColorRepresentation.CurrentValue);
+            // };
+            //
+            // ResolutionUnitBox.DropDownClosed += async (_, _) =>
+            // {
+            //     await AddExifPropertyAsync(ExifWriter.AddResolutionUnit, vm.Exif.ResolutionUnit.CurrentValue);
+            // };
+            //
+            // CompressionBox.DropDownClosed  += async (_, _) =>
+            // {
+            //     await AddExifPropertyAsync(ExifWriter.AddCompression, vm.Exif.Compression.CurrentValue);
+            // };
 
             vm.InfoWindow.IsLoading.Value = false;
         };
@@ -229,8 +229,15 @@ public partial class ImageInfoView : UserControl
         {
             return;
         }
-
-        await Task.Run(() => ExifHandling.UpdateExifValues(vm), cancellationToken);
+        
+        await Task.Run(() =>
+        {
+            Debug.Assert(vm.PicViewer.ExifOrientation.CurrentValue != null);
+            var orientation = vm.PicViewer.ExifOrientation.CurrentValue.Value;
+            var width = vm.PicViewer.PixelWidth.CurrentValue;
+            var height = vm.PicViewer.PixelHeight.CurrentValue;
+            vm.Exif.UpdateExifValues(fileInfo, orientation, width, height);
+        }, cancellationToken);
         if (DirectoryNameTextBox.Text != fileInfo.DirectoryName)
         {
             DirectoryNameTextBox.Text = fileInfo.DirectoryName;
@@ -317,7 +324,7 @@ public partial class ImageInfoView : UserControl
 
         var gcd = ImageTitleFormatter.GCD(width, height);
         AspectRatioTextBox.Text =
-            AspectRatioHelper.GetFormattedAspectRatio(gcd, vm.PicViewer.PixelWidth.CurrentValue,
+            ImageTitleFormatter.GetFormattedAspectRatio(gcd, vm.PicViewer.PixelWidth.CurrentValue,
                 vm.PicViewer.PixelHeight.CurrentValue);
     }
 
@@ -568,7 +575,7 @@ public partial class ImageInfoView : UserControl
     {
         if (DataContext is MainViewModel vm)
         {
-            await AddExifPropertyAsync(ExifWriter.AddLatitude, vm.Exif.Latitude.CurrentValue);
+            await AddExifPropertyAsync(GpsHelper.AddLatitude, vm.Exif.Latitude.CurrentValue);
         }
     }
 
@@ -576,7 +583,7 @@ public partial class ImageInfoView : UserControl
     {
         if (DataContext is MainViewModel vm)
         {
-            await AddExifPropertyAsync(ExifWriter.AddLongitude, vm.Exif.Longitude.CurrentValue);
+            await AddExifPropertyAsync(GpsHelper.AddLongitude, vm.Exif.Longitude.CurrentValue);
         }
     }
 
@@ -584,7 +591,7 @@ public partial class ImageInfoView : UserControl
     {
         if (DataContext is MainViewModel vm)
         {
-            await AddExifPropertyAsync(ExifWriter.AddAltitude, vm.Exif.Altitude.CurrentValue);
+            await AddExifPropertyAsync(GpsHelper.AddAltitude, vm.Exif.Altitude.CurrentValue);
         }
     }
 

@@ -93,32 +93,28 @@ public static class ExifWriter
             return true;
         }, nameof(ExifWriter), nameof(AddComment));
 
-    public static Task<bool> AddLatitude(FileInfo? fileInfo, string? value)
-    {
-        // TODO: Implement robust parsing for GPS coordinates.
-        // The value needs to be parsed into Rational[3] for Deg/Min/Sec and a GPSLatitudeRef.
-        return Task.FromResult(false);
-    }
-
-    public static Task<bool> AddLongitude(FileInfo? fileInfo, string? value)
-    {
-        // TODO: Implement robust parsing for GPS coordinates.
-        // The value needs to be parsed into Rational[3] for Deg/Min/Sec and a GPSLongitudeRef.
-        return Task.FromResult(false);
-    }
-
-    public static Task<bool> AddAltitude(FileInfo? fileInfo, string? value)
-    {
-        // TODO: Implement robust parsing for GPS Altitude.
-        // The value needs to be parsed into a Rational and a GPSAltitudeRef.
-        return Task.FromResult(false);
-    }
-
-    public static Task<bool> AddResolutionUnit(FileInfo? fileInfo, ushort value) =>
+    public static Task<bool> AddResolutionUnit(FileInfo? fileInfo, ushort? value) =>
         ExifFunctions.TryUpdateImageProfileAsync(fileInfo, magickImage =>
         {
+            if (value is null)
+            {
+                return false;
+            }
             var profile = magickImage.GetExifProfile() ?? new ExifProfile();
-            profile.SetValue<ushort>(ExifTag.ResolutionUnit, 2);
+            profile.SetValue(ExifTag.ResolutionUnit, value.Value);
+            magickImage.SetProfile(profile);
+            return true;
+        }, nameof(ExifWriter), nameof(AddResolutionUnit));
+    
+    public static Task<bool> AddColorSpace(FileInfo? fileInfo, ushort? value) =>
+        ExifFunctions.TryUpdateImageProfileAsync(fileInfo, magickImage =>
+        {
+            if (value is null)
+            {
+                return false;
+            }
+            var profile = magickImage.GetExifProfile() ?? new ExifProfile();
+            profile.SetValue(ExifTag.ColorSpace, value.Value);
             magickImage.SetProfile(profile);
             return true;
         }, nameof(ExifWriter), nameof(AddResolutionUnit));
