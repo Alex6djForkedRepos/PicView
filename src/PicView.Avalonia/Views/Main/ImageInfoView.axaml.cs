@@ -75,7 +75,7 @@ public partial class ImageInfoView : UserControl
             PixelHeightTextBox.KeyUp += delegate { AdjustAspectRatio(PixelHeightTextBox); };
 
             Observable.EveryValueChanged(vm.PicViewer.FileInfo, x => x.Value, UIHelper.GetFrameProvider)
-                .Subscribe(UpdateValues).AddTo(_disposables);
+                .SubscribeAwait(UpdateValuesAsync).AddTo(_disposables);
 
             SizeChanged += (_, _) => ResponsiveResizeUpdate(vm);
 
@@ -207,14 +207,14 @@ public partial class ImageInfoView : UserControl
         vm.InfoWindow.ResponsiveResizeUpdate(panelWidth, scrollBarThickness, convertWidth);
     }
 
-    private void UpdateValues(FileInfo? fileInfo)
+    private async ValueTask UpdateValuesAsync(FileInfo? fileInfo, CancellationToken cancellationToken)
     {
-        if (DataContext is not MainViewModel vm)
+        if (DataContext is not MainViewModel vm || fileInfo is null)
         {
             return;
         }
 
-        ExifHandling.UpdateExifValues(vm);
+        await Task.Run(() => ExifHandling.UpdateExifValues(vm), cancellationToken);
         if (DirectoryNameTextBox.Text != fileInfo.DirectoryName)
         {
             DirectoryNameTextBox.Text = fileInfo.DirectoryName;
@@ -485,7 +485,7 @@ public partial class ImageInfoView : UserControl
         var isAdded = await addAction(vm.PicViewer.FileInfo?.CurrentValue, value);
         if (isAdded)
         {
-            UpdateValues(vm.PicViewer.FileInfo?.CurrentValue);
+            await UpdateValuesAsync(vm.PicViewer.FileInfo?.CurrentValue, CancellationToken.None);
         }
     }
 
@@ -499,7 +499,7 @@ public partial class ImageInfoView : UserControl
         var isRemoved = await EXIFHelper.RemoveExifProfile(vm.PicViewer.FileInfo?.CurrentValue);
         if (isRemoved)
         {
-            UpdateValues(vm.PicViewer.FileInfo?.CurrentValue);
+            await UpdateValuesAsync(vm.PicViewer.FileInfo?.CurrentValue, CancellationToken.None);
         }
     }
 

@@ -3,6 +3,14 @@ using PicView.Core.Localization;
 
 namespace PicView.Core.Sizing;
 
+/// <summary>
+/// Provides functionality to calculate and retrieve the dimensions of an image in different units for printing purposes.
+/// </summary>
+/// <remarks>
+/// This class is designed to compute the printable sizes of an image in centimeters, inches, and megapixels,
+/// based on the provided pixel dimensions and DPI (dots per inch). The computed values can be used in various contexts,
+/// such as displaying or updating metadata for image files.
+/// </remarks>
 public static class PrintSizing
 {
     /// <summary>
@@ -44,8 +52,35 @@ public static class PrintSizing
     /// </remarks>
     public readonly struct PrintSizes(string printSizeCm, string printSizeInch, string sizeMp)
     {
+        /// <summary>
+        /// Gets the dimensions of the image calculated for printing, expressed in centimeters.
+        /// </summary>
+        /// <remarks>
+        /// This property provides the size of the image in centimeters when printed, based on its
+        /// pixel dimensions and DPI (dots per inch). It is commonly used in image resizing,
+        /// aspect ratio adjustments, and display of image details.
+        /// </remarks>
         public string PrintSizeCm { get; } = printSizeCm;
+
+        /// <summary>
+        /// Gets the dimensions of the image calculated for printing, expressed in inches.
+        /// </summary>
+        /// <remarks>
+        /// This property provides the size of the image in inches when printed, based on its
+        /// pixel dimensions and DPI (dots per inch). It is useful in scenarios where precise
+        /// print sizing is required for layout design or physical media output.
+        /// </remarks>
         public string PrintSizeInch { get; } = printSizeInch;
+
+        /// <summary>
+        /// Gets the size of the image expressed in megapixels.
+        /// </summary>
+        /// <remarks>
+        /// This property calculates and provides the total size of an image in megapixels
+        /// based on its pixel dimensions. It is commonly used for determining
+        /// the resolution and relative detail of the image, especially for printing or
+        /// resizing purposes.
+        /// </remarks>
         public string SizeMp { get; } = sizeMp;
     }
 }
