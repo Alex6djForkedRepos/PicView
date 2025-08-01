@@ -172,12 +172,7 @@ public static class EXIFHelper
                 return false;
             }
             var profile = magickImage.GetExifProfile() ?? new ExifProfile();
-            // UserComment requires a specific encoding prefix
-            var bytes = Encoding.Unicode.GetBytes(value);
-            var allBytes = new byte[bytes.Length + 8];
-            "UNICODE\0"u8.ToArray().CopyTo(allBytes, 0);
-            bytes.CopyTo(allBytes, 8);
-            profile.SetValue(ExifTag.UserComment, allBytes);
+            profile.SetValue(ExifTag.UserComment, Encoding.ASCII.GetBytes(value));
             magickImage.SetProfile(profile);
             return true;
         }, nameof(AddComment));
@@ -202,15 +197,6 @@ public static class EXIFHelper
         // The value needs to be parsed into a Rational and a GPSAltitudeRef.
         return Task.FromResult(false);
     }
-
-    public static Task<bool> AddColorRepresentation(FileInfo? fileInfo, ushort value) =>
-        TryUpdateImageProfileAsync(fileInfo, magickImage =>
-        {
-            var profile = magickImage.GetExifProfile() ?? new ExifProfile();
-            profile.SetValue(ExifTag.ColorSpace, value);
-            magickImage.SetProfile(profile);
-            return true;
-        }, nameof(AddColorRepresentation));
 
     public static Task<bool> AddResolutionUnit(FileInfo? fileInfo, ushort value) =>
         TryUpdateImageProfileAsync(fileInfo, magickImage =>

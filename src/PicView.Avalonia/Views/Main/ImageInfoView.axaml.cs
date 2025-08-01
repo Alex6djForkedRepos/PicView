@@ -96,7 +96,7 @@ public partial class ImageInfoView : UserControl
                 var ext = GetExtension();
                 var location = FullPathTextBox.Text; // TODO check if this is a valid path
                 // and sync with file name/directory text boxes
-                await SendToImageSaver(vm, vm.PicViewer.FileInfo?.CurrentValue.FullName, location,
+                await SendToImageSaver(vm.PicViewer.FileInfo?.CurrentValue.FullName, location,
                     PixelWidthTextBox.Text,
                     PixelHeightTextBox.Text, ext).ConfigureAwait(false);
             };
@@ -112,7 +112,7 @@ public partial class ImageInfoView : UserControl
                     return;
                 }
 
-                await SendToImageSaver(vm, vm.PicViewer.FileInfo?.CurrentValue.FullName, file, PixelWidthTextBox.Text,
+                await SendToImageSaver(vm.PicViewer.FileInfo?.CurrentValue.FullName, file, PixelWidthTextBox.Text,
                     PixelHeightTextBox.Text, ext).ConfigureAwait(false);
             };
             FileNameTextBox.KeyDown += async (_, e) =>
@@ -239,7 +239,7 @@ public partial class ImageInfoView : UserControl
         vm.Exif.IsExifAvailable.Value = fileInfo.IsExifImage();
     }
 
-    private async Task SendToImageSaver(MainViewModel vm, string? location, string destination, string? width,
+    private async Task SendToImageSaver(string? location, string destination, string? width,
         string? height,
         string ext)
     {
