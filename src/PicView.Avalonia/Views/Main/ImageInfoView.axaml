@@ -1311,14 +1311,13 @@
                                                            Mode=OneWay}"
                                     Width="{CompiledBinding InfoWindow.TextWidth}" />
                                 <ComboBox
-                                    Background="{DynamicResource DisabledBackgroundColor}"
                                     Classes="CStyle x"
                                     CornerRadius="2"
                                     ItemsSource="{CompiledBinding Exif.ColorRepresentations.Value}"
                                     Margin="5,0,0,0"
                                     MinWidth="180"
                                     Padding="5,7,1,7"
-                                    SelectedIndex="{CompiledBinding Exif.ResolutionUnit.Value,
+                                    SelectedIndex="{CompiledBinding Exif.ColorRepresentation.Value,
                                                                     Mode=TwoWay}"
                                     Width="{CompiledBinding InfoWindow.TextBoxWidth.Value}"
                                     x:Name="ColorRepresentationBox" />
@@ -1350,7 +1349,7 @@
                                     MinWidth="180"
                                     Padding="5,7,1,7"
                                     SelectedIndex="{CompiledBinding Exif.ResolutionUnit.Value,
-                                                                    Mode=TwoWay}"
+                                                                    Mode=OneWay}"
                                     Width="{CompiledBinding InfoWindow.TextBoxWidth.Value}"
                                     x:Name="ResolutionUnitBox" />
                                 <customControls:CopyButton
@@ -1373,7 +1372,6 @@
                                                            Mode=OneWay}"
                                     Width="{CompiledBinding InfoWindow.TextWidth}" />
                                 <ComboBox
-                                    Background="{DynamicResource DisabledBackgroundColor}"
                                     Classes="CStyle x"
                                     CornerRadius="2"
                                     ItemsSource="{CompiledBinding Exif.Compressions.Value}"
@@ -1381,7 +1379,7 @@
                                     MinWidth="180"
                                     Padding="5,7,1,7"
                                     SelectedIndex="{CompiledBinding Exif.Compression.Value,
-                                                                    Mode=TwoWay}"
+                                                                    Mode=OneWay}"
                                     Width="{CompiledBinding InfoWindow.TextBoxWidth.Value}"
                                     x:Name="CompressionBox" />
                                 <customControls:CopyButton

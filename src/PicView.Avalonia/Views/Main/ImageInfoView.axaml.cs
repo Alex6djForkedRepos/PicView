@@ -129,21 +129,22 @@ public partial class ImageInfoView : UserControl
 
             // Register EXIF property updates on 'Enter' key press
             RegisterExifUpdateHandlers();
+            
+            // Resolution Units are for display only atm
+            ResolutionUnitBox.DropDownClosed += (_, _) =>
+            {
+                ResolutionUnitBox.SelectedIndex = (int)vm.Exif.ResolutionUnit.Value!;
+            };
 
-            // ColorRepresentationBox.DropDownClosed += async (_, _) =>
-            // {
-            //     await AddExifPropertyAsync(ExifWriter.AddColorSpace, vm.Exif.ColorRepresentation.CurrentValue);
-            // };
-            //
-            // ResolutionUnitBox.DropDownClosed += async (_, _) =>
-            // {
-            //     await AddExifPropertyAsync(ExifWriter.AddResolutionUnit, vm.Exif.ResolutionUnit.CurrentValue);
-            // };
-            //
-            // CompressionBox.DropDownClosed  += async (_, _) =>
-            // {
-            //     await AddExifPropertyAsync(ExifWriter.AddCompression, vm.Exif.Compression.CurrentValue);
-            // };
+            ColorRepresentationBox.DropDownClosed += async (_, _) =>
+            {
+                await AddExifPropertyAsync(ExifWriter.AddColorSpace, vm.Exif.ColorRepresentation.CurrentValue);
+            };
+            
+            CompressionBox.DropDownClosed  += async (_, _) =>
+            {
+                await AddExifPropertyAsync(ExifWriter.AddCompression, vm.Exif.Compression.CurrentValue);
+            };
 
             vm.InfoWindow.IsLoading.Value = false;
         };
