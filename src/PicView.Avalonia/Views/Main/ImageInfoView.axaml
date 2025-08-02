@@ -1383,17 +1383,7 @@
                                     SelectedIndex="{CompiledBinding Exif.Compression.Value,
                                                                     Mode=TwoWay}"
                                     Width="{CompiledBinding InfoWindow.TextBoxWidth.Value}"
-                                    x:Name="CompressionBox">
-                                    <ComboBox.ItemTemplate>
-                                        <DataTemplate>
-                                            <TextBlock
-                                                Classes="txt"
-                                                HorizontalAlignment="Left"
-                                                MaxWidth="200"
-                                                Text="{Binding}" />
-                                        </DataTemplate>
-                                    </ComboBox.ItemTemplate>
-                                </ComboBox>
+                                    x:Name="CompressionBox" />
                                 <customControls:CopyButton
                                     Classes="altHover BorderStyle"
                                     CopyText="{CompiledBinding Exif.Compression.Value,

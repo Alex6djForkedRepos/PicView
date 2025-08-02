@@ -103,6 +103,7 @@ public partial class EffectsView : UserControl
             }
             UIHelper.SwitchAccentHoverClass(ResetButton);
             UIHelper.SwitchAccentHoverClass(CancelButton);
+            LowerPanel.Background = new SolidColorBrush(Color.Parse("#5DA2A2A2"));
         }
         
         CloseItem.Click += (_, _) => (VisualRoot as Window)?.Close();
