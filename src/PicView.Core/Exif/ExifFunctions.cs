@@ -62,6 +62,34 @@ public static class ExifFunctions
             return false;
         }
     }
+    
+    public static bool TryParseRational(string input, out Rational result)
+    {
+        result = default;
+        if (string.IsNullOrWhiteSpace(input)) return false;
+
+        // Handle fraction format "num/den"
+        if (input.Contains('/'))
+        {
+            var parts = input.Split('/');
+            if (parts.Length == 2 && double.TryParse(parts[0], CultureInfo.InvariantCulture, out var num) && double.TryParse(parts[1], CultureInfo.InvariantCulture, out var den))
+            {
+                if (den == 0) return false;
+                result = new Rational((uint)num, (uint)den);
+                return true;
+            }
+        }
+
+        // Handle decimal format
+        if (!double.TryParse(input, CultureInfo.InvariantCulture, out var val))
+        {
+            return false;
+        }
+
+        result = new Rational(val);
+        return true;
+
+    }
 
     /// <summary>
     /// Tries to parse a string into a SignedRational.

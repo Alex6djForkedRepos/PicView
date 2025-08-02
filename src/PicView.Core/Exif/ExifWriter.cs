@@ -220,7 +220,26 @@ public static class ExifWriter
     /// <param name="value">The F-number value to add.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains true if the operation succeeded; otherwise, false.</returns>
     public static Task<bool> AddFNumber(FileInfo? fileInfo, string? value) =>
-        ExifFunctions.TryUpdateImageProfileAsync(fileInfo, magickImage => { throw new NotImplementedException(); },
+        ExifFunctions.TryUpdateImageProfileAsync(fileInfo, magickImage =>
+            {
+                if (value is null)
+                {
+                    return false;
+                }
+                
+                if (!ExifFunctions.TryParseRational(value, out var rational))
+                {
+                    // The string value is not in a valid format
+                    DebugHelper.LogDebug(nameof(ExifWriter), nameof(AddFNumber),
+                        $"Could not parse '{value}' to SignedRational.");
+                    return false;
+                }
+
+                var profile = magickImage.GetExifProfile() ?? new ExifProfile();
+                profile.SetValue(ExifTag.FNumber, rational);
+                magickImage.SetProfile(profile);
+                return true;
+            },
             nameof(ExifWriter), nameof(AddFNumber));
 
     /// <summary>
@@ -230,7 +249,26 @@ public static class ExifWriter
     /// <param name="value">The maximum aperture value to add.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains true if the operation succeeded; otherwise, false.</returns>
     public static Task<bool> AddMaxAperture(FileInfo? fileInfo, string? value) =>
-        ExifFunctions.TryUpdateImageProfileAsync(fileInfo, magickImage => { throw new NotImplementedException(); },
+        ExifFunctions.TryUpdateImageProfileAsync(fileInfo, magickImage =>
+            {
+                if (value is null)
+                {
+                    return false;
+                }
+                
+                if (!ExifFunctions.TryParseRational(value, out var rational))
+                {
+                    // The string value is not in a valid format
+                    DebugHelper.LogDebug(nameof(ExifWriter), nameof(AddMaxAperture),
+                        $"Could not parse '{value}' to SignedRational.");
+                    return false;
+                }
+
+                var profile = magickImage.GetExifProfile() ?? new ExifProfile();
+                profile.SetValue(ExifTag.MaxApertureValue, rational);
+                magickImage.SetProfile(profile);
+                return true;
+            },
             nameof(ExifWriter), nameof(AddMaxAperture));
 
     /// <summary>

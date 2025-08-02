@@ -441,7 +441,7 @@ public partial class ImageInfoView : UserControl
     {
         textBox.KeyDown += async (_, e) =>
         {
-            if (e.Key == Key.Enter)
+            if (e.Key is Key.Enter or Key.Tab)
             {
                 await updateAction();
             }
