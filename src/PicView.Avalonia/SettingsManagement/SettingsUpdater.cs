@@ -22,12 +22,16 @@ public static class SettingsUpdater
         {
             return;
         }
-        gallery.GalleryItem.ExpandedGalleryItemHeight.Value  = Settings.Gallery.ExpandedGalleryItemSize;
-        gallery.GalleryItem.BottomGalleryItemHeight.Value = Settings.Gallery.BottomGalleryItemSize;
+
         if (!settingsExists)
         {
             gallery.GalleryItem.BottomGalleryItemHeight.Value = GalleryDefaults.DefaultBottomGalleryHeight;
             gallery.GalleryItem.ExpandedGalleryItemHeight.Value = GalleryDefaults.DefaultFullGalleryHeight;
+        }
+        else
+        {
+            gallery.GalleryItem.ExpandedGalleryItemHeight.Value  = Settings.Gallery.ExpandedGalleryItemSize;
+            gallery.GalleryItem.BottomGalleryItemHeight.Value = Settings.Gallery.BottomGalleryItemSize;
         }
 
         // Set default gallery sizes if they are out of range or upgrading from an old version
@@ -56,6 +60,8 @@ public static class SettingsUpdater
             Settings.Gallery.FullGalleryStretchMode = "UniformToFill";
         }
     }
+
+
 
     public static void InitializeSettings(MainViewModel vm)
     {

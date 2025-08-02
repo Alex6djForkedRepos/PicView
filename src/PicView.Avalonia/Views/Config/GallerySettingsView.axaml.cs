@@ -1,7 +1,10 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Media;
 using PicView.Avalonia.Gallery;
+using PicView.Avalonia.UI;
 using PicView.Avalonia.ViewModels;
+using PicView.Avalonia.WindowBehavior;
+using R3;
 
 namespace PicView.Avalonia.Views.Config;
 
@@ -66,6 +69,29 @@ public partial class GalleryView : UserControl
 
             FullGalleryComboBox.SelectionChanged += (_, _) => FullGalleryComboBox_SelectionChanged();
             BottomGalleryComboBox.SelectionChanged += (_, _) => BottomGalleryComboBox_SelectionChanged();
+
+            BottomGallerySlider.ValueChanged += (_, e) =>
+            {
+                Settings.Gallery.BottomGalleryItemSize = e.NewValue;
+                if (!Settings.Gallery.IsBottomGalleryShown)
+                {
+                    return;
+                }
+
+                vm.Gallery.GalleryItem.ItemHeight.Value = e.NewValue;
+                WindowResizing.SetSize(vm);
+            };
+            ExpandedGallerySlider.ValueChanged += (_, e) =>
+            {
+                Settings.Gallery.ExpandedGalleryItemSize = e.NewValue;
+                if (!GalleryFunctions.IsFullGalleryOpen)
+                {
+                    return;
+                    
+                }
+                vm.Gallery.GalleryItem.ItemHeight.Value = e.NewValue;
+                WindowResizing.SetSize(vm);
+            };
         };
     }
 

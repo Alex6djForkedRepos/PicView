@@ -118,18 +118,19 @@ public static class StartUpHelper
             Task.Run(() => KeybindingManager.SetDefaultKeybindings(vm.PlatformService));
         }
 
-        Task.Run(FileHistoryManager.InitializeAsync);
-
         HandleThemeUpdates(vm);
 
         UIHelper.SetControls(desktop);
         Task.Run(() =>
         {
+            _ = FileHistoryManager.InitializeAsync();
             HandleWindowControlSettings(vm, desktop);
-            SettingsUpdater.ValidateGallerySettings(vm, settingsExists);
+
         });
 
+        SettingsUpdater.ValidateGallerySettings(vm, settingsExists);
         vm.MainWindow.LayoutButtonSubscription();
+        vm.Gallery.GalleryItemSizeUpdateSubscription(vm);
 
         SetWindowEventHandlers(window);
         MenuManager.AddMenus();

@@ -47,6 +47,5 @@ public partial class GalleryItem : UserControl
         }
 
         FlyoutBase.ShowAttachedFlyout(ctl);
-        GalleryItemSizeSlider.SetMaxAndMin();
     }
 }
