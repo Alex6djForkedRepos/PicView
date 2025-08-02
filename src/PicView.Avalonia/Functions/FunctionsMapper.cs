@@ -687,90 +687,22 @@ public static class FunctionsMapper
     #region Rating
 
     public static async Task Set0Star()
-    {
-        // TODO: Needs refactoring into EXIFHelper
-        if (Vm is null)
-        {
-            return;
-        }
-
-        await Task.Run(() => { ExifWriter.SetExifRating(Vm.PicViewer.FileInfo.CurrentValue.FullName, 0); });
-        if (Vm.Exif is not null)
-        {
-            Vm.Exif.ExifRating.Value = 0;
-        }
-    }
+        => await SetExifRatingHelper.Set0Star(Vm);
 
     public static async Task Set1Star()
-    {
-        // TODO: Needs refactoring into EXIFHelper
-        if (Vm is null)
-        {
-            return;
-        }
-
-        await Task.Run(() => { ExifWriter.SetExifRating(Vm.PicViewer.FileInfo.CurrentValue.FullName, 1); });
-        if (Vm.Exif is not null)
-        {
-            Vm.Exif.ExifRating.Value = 1;
-        }
-    }
+        => await SetExifRatingHelper.Set1Star(Vm);
 
     public static async Task Set2Star()
-    {
-        // TODO: Needs refactoring into EXIFHelper
-        if (Vm is null)
-        {
-            return;
-        }
-        await Task.Run(() => { ExifWriter.SetExifRating(Vm.PicViewer.FileInfo.CurrentValue.FullName, 2); });
-        if (Vm.Exif is not null)
-        {
-            Vm.Exif.ExifRating.Value = 2;
-        }
-    }
+        => await SetExifRatingHelper.Set2Star(Vm);
 
     public static async Task Set3Star()
-    {
-        // TODO: Needs refactoring into EXIFHelper
-        if (Vm is null)
-        {
-            return;
-        }
-        await Task.Run(() => { ExifWriter.SetExifRating(Vm.PicViewer.FileInfo.CurrentValue.FullName, 3); });
-        if (Vm.Exif is not null)
-        {
-            Vm.Exif.ExifRating.Value = 3;
-        }
-    }
+        => await SetExifRatingHelper.Set3Star(Vm);
 
     public static async Task Set4Star()
-    {
-        // TODO: Needs refactoring into EXIFHelper
-        if (Vm is null)
-        {
-            return;
-        }
-        await Task.Run(() => { ExifWriter.SetExifRating(Vm.PicViewer.FileInfo.CurrentValue.FullName, 4); });
-        if (Vm.Exif is not null)
-        {
-            Vm.Exif.ExifRating.Value = 4;
-        }
-    }
+        => await SetExifRatingHelper.Set4Star(Vm);
 
     public static async Task Set5Star()
-    {
-        // TODO: Needs refactoring into EXIFHelper
-        if (Vm is null)
-        {
-            return;
-        }
-        await Task.Run(() => { ExifWriter.SetExifRating(Vm.PicViewer.FileInfo.CurrentValue.FullName, 5); });
-        if (Vm.Exif is not null)
-        {
-            Vm.Exif.ExifRating.Value = 5;
-        }
-    }
+        => await SetExifRatingHelper.Set5Star(Vm);
 
     #endregion
 

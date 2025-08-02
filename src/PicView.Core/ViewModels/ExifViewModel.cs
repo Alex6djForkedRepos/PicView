@@ -17,12 +17,12 @@ public class ExifViewModel : IDisposable
         OpenGoogleLinkCommand = new ReactiveCommand(OpenGoogleMaps);
         OpenBingLinkCommand = new ReactiveCommand(OpenBingMaps);
 
-        SetExifRating0Command = new ReactiveCommand<string>(Set0Star);
-        SetExifRating1Command = new ReactiveCommand<string>(Set1Star);
-        SetExifRating2Command = new ReactiveCommand<string>(Set2Star);
-        SetExifRating3Command = new ReactiveCommand<string>(Set3Star);
-        SetExifRating4Command = new ReactiveCommand<string>(Set4Star);
-        SetExifRating5Command = new ReactiveCommand<string>(Set5Star);
+        SetExifRating0Command = new ReactiveCommand<string>(async (s, _) => await SetRating(s, 0));
+        SetExifRating1Command = new ReactiveCommand<string>(async (s, _) => await SetRating(s, 1));
+        SetExifRating2Command = new ReactiveCommand<string>(async (s, _) => await SetRating(s, 2));
+        SetExifRating3Command = new ReactiveCommand<string>(async (s, _) => await SetRating(s, 3));
+        SetExifRating4Command = new ReactiveCommand<string>(async (s, _) => await SetRating(s, 4));
+        SetExifRating5Command = new ReactiveCommand<string>(async (s, _) => await SetRating(s, 5));
 
         ResolutionUnits = new BindableReactiveProperty<string[]>([
             string.Empty,
@@ -430,42 +430,17 @@ public class ExifViewModel : IDisposable
             LensModel);
     }
 
-    private void Set0Star(string value)
-    {
-        ExifWriter.SetExifRating(value, 0);
-        ExifRating.Value = 0;
-    }
-
-    private void Set1Star(string value)
-    {
-        ExifWriter.SetExifRating(value, 1);
-        ExifRating.Value = 1;
-    }
-
-    private void Set2Star(string value)
-    {
-        ExifWriter.SetExifRating(value, 2);
-        ExifRating.Value = 2;
-    }
-
-    private void Set3Star(string value)
-    {
-        ExifWriter.SetExifRating(value, 3);
-        ExifRating.Value = 3;
-    }
-
-    private void Set4Star(string value)
-    {
-        ExifWriter.SetExifRating(value, 4);
-        ExifRating.Value = 4;
-    }
-
-    private void Set5Star(string value)
-    {
-        ExifWriter.SetExifRating(value, 5);
-        ExifRating.Value = 5;
-    }
-
     public void OpenGoogleMaps(Unit unit) => ProcessHelper.OpenLink(GoogleLink.CurrentValue);
     public void OpenBingMaps(Unit unit) => ProcessHelper.OpenLink(BingLink.CurrentValue);
+
+    private async Task<bool> SetRating(string filePath, ushort rating)
+    {
+        var isRated = await ExifWriter.SetExifRatingAsync(new FileInfo(filePath), rating).ConfigureAwait(false);
+        if (!isRated)
+        {
+            return false;
+        }
+        ExifRating.Value = rating;
+        return true;
+    }
 }
