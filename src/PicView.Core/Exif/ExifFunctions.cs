@@ -63,7 +63,13 @@ public static class ExifFunctions
         }
     }
 
-    private static bool TryParseRational(string input, out Rational result)
+    /// <summary>
+    /// Tries to parse a string into a SignedRational.
+    /// </summary>
+    /// <param name="input">The string to parse (e.g., "-10/20" or "-0.5").</param>
+    /// <param name="result">The parsed SignedRational.</param>
+    /// <returns>True if parsing was successful, otherwise false.</returns>
+    public static bool TryParseSignedRational(string input, out SignedRational result)
     {
         result = default;
         if (string.IsNullOrWhiteSpace(input))
@@ -75,26 +81,28 @@ public static class ExifFunctions
         if (input.Contains('/'))
         {
             var parts = input.Split('/');
-            if (parts.Length == 2 && double.TryParse(parts[0], CultureInfo.InvariantCulture, out var num) &&
-                double.TryParse(parts[1], CultureInfo.InvariantCulture, out var den))
+            if (parts.Length == 2 && 
+                int.TryParse(parts[0], NumberStyles.Integer, CultureInfo.InvariantCulture, out var numerator) &&
+                int.TryParse(parts[1], NumberStyles.Integer, CultureInfo.InvariantCulture, out var denominator))
             {
-                if (den == 0)
+                if (denominator == 0)
                 {
-                    return false;
+                    return false; // Avoid division by zero
                 }
 
-                result = new Rational((uint)num, (uint)den);
+                result = new SignedRational(numerator, denominator, false);
                 return true;
             }
         }
 
         // Handle decimal format
-        if (double.TryParse(input, CultureInfo.InvariantCulture, out var val))
+        if (!double.TryParse(input, CultureInfo.InvariantCulture, out var val))
         {
-            result = new Rational(val);
-            return true;
+            return false;
         }
 
-        return false;
+        result = new SignedRational(val);
+        return true;
+
     }
 }

@@ -336,9 +336,26 @@ public static class ExifWriter
             return true;
         }, nameof(ExifWriter), nameof(AddLightSource));
 
-    public static Task<bool> AddBrightness(FileInfo? fileInfo, SignedRational? value) =>
-        ExifFunctions.TryUpdateImageProfileAsync(fileInfo, magickImage => { throw new NotImplementedException(); },
-            nameof(ExifWriter), nameof(AddBrightness));
+    public static Task<bool> AddBrightness(FileInfo? fileInfo, string? value) =>
+        ExifFunctions.TryUpdateImageProfileAsync(fileInfo, magickImage =>
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                return false; // No value to set
+            }
+
+            if (!ExifFunctions.TryParseSignedRational(value, out var brightnessValue))
+            {
+                // The string value is not in a valid format
+                DebugHelper.LogDebug(nameof(ExifWriter), nameof(AddBrightness), $"Could not parse '{value}' to SignedRational.");
+                return false;
+            }
+
+            var profile = magickImage.GetExifProfile() ?? new ExifProfile();
+            profile.SetValue(ExifTag.BrightnessValue, brightnessValue);
+            magickImage.SetProfile(profile);
+            return true;
+        }, nameof(ExifWriter), nameof(AddBrightness));
 
     public static Task<bool> AddPhotometricInterpretation(FileInfo? fileInfo, string? value) =>
         ExifFunctions.TryUpdateImageProfileAsync(fileInfo, magickImage =>

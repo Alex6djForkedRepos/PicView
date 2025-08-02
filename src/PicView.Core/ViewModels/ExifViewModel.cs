@@ -1,4 +1,5 @@
-﻿using ImageMagick;
+﻿using System.Globalization;
+using ImageMagick;
 using PicView.Core.DebugTools;
 using PicView.Core.Exif;
 using PicView.Core.Localization;
@@ -237,7 +238,7 @@ public class ExifViewModel : IDisposable
             FlashMode.Value = ExifReader.GetFlashMode(profile);
             FlashEnergy.Value = profile?.GetValue(ExifTag.FlashEnergy)?.Value.ToString() ?? string.Empty;
             LightSource.Value = ExifReader.GetLightSource(profile);
-            Brightness.Value = profile?.GetValue(ExifTag.BrightnessValue)?.Value ?? null;
+            Brightness.Value = profile?.GetValue(ExifTag.BrightnessValue)?.Value.ToString(CultureInfo.CurrentCulture) ?? null;
             PhotometricInterpretation.Value = ExifReader.GetPhotometricInterpretation(profile);
             ExifVersion.Value = ExifReader.GetExifVersion(profile);
             LensModel.Value = profile?.GetValue(ExifTag.LensModel)?.Value ?? string.Empty;
@@ -361,7 +362,7 @@ public class ExifViewModel : IDisposable
 
     public BindableReactiveProperty<string?> LightSource { get; } = new();
 
-    public BindableReactiveProperty<SignedRational?> Brightness { get; } = new();
+    public BindableReactiveProperty<string?> Brightness { get; } = new();
 
     public BindableReactiveProperty<string?> PhotometricInterpretation { get; } = new();
 
