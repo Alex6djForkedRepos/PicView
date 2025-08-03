@@ -202,13 +202,14 @@ public static class GalleryLoad
             var isSvg = fileInfo.Extension.Equals(".svg", StringComparison.OrdinalIgnoreCase) ||
                         fileInfo.Extension.Equals(".svgz", StringComparison.OrdinalIgnoreCase);
             Bitmap? thumb;
-            if (!isSvg)
+            if (isSvg)
             {
-                thumb = await GetThumbnails.GetThumbAsync(fileInfo, galleryItemSize);
+                thumb = null;
             }
             else
             {
-                thumb = null;
+                
+                thumb = await GetThumbnails.GetThumbAsync(fileInfo, galleryItemSize);
             }
 
             await Dispatcher.UIThread.InvokeAsync(() =>

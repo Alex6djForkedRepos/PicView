@@ -23,21 +23,21 @@ public static class ExifFunctions
         {
             MagickFormat.Jpeg or
                 MagickFormat.Tiff or
-                MagickFormat.Dng or       // Adobe Digital Negative
-                MagickFormat.Cr2 or       // Canon RAW
+                MagickFormat.Dng or // Adobe Digital Negative
+                MagickFormat.Cr2 or // Canon RAW
                 MagickFormat.Cr3 or
-                MagickFormat.Nef or       // Nikon RAW
-                MagickFormat.Arw or       // Sony RAW
-                MagickFormat.Orf or       // Olympus RAW
-                MagickFormat.Rw2 or       // Panasonic RAW
-                MagickFormat.Pef or       // Pentax RAW
-                MagickFormat.Raf or       // Fujifilm RAW
-                MagickFormat.Srw or       // Samsung RAW
+                MagickFormat.Nef or // Nikon RAW
+                MagickFormat.Arw or // Sony RAW
+                MagickFormat.Orf or // Olympus RAW
+                MagickFormat.Rw2 or // Panasonic RAW
+                MagickFormat.Pef or // Pentax RAW
+                MagickFormat.Raf or // Fujifilm RAW
+                MagickFormat.Srw or // Samsung RAW
                 MagickFormat.Heif or
-                MagickFormat.Heic         // High Efficiency Image Format
+                MagickFormat.Heic // High Efficiency Image Format
                 => true,
 
-            _ => false,
+            _ => false
         };
     }
 
@@ -64,19 +64,27 @@ public static class ExifFunctions
             return false;
         }
     }
-    
+
     public static bool TryParseRational(string input, out Rational result)
     {
         result = default;
-        if (string.IsNullOrWhiteSpace(input)) return false;
+        if (string.IsNullOrWhiteSpace(input))
+        {
+            return false;
+        }
 
         // Handle fraction format "num/den"
         if (input.Contains('/'))
         {
             var parts = input.Split('/');
-            if (parts.Length == 2 && double.TryParse(parts[0], CultureInfo.InvariantCulture, out var num) && double.TryParse(parts[1], CultureInfo.InvariantCulture, out var den))
+            if (parts.Length == 2 && double.TryParse(parts[0], CultureInfo.InvariantCulture, out var num) &&
+                double.TryParse(parts[1], CultureInfo.InvariantCulture, out var den))
             {
-                if (den == 0) return false;
+                if (den == 0)
+                {
+                    return false;
+                }
+
                 result = new Rational((uint)num, (uint)den);
                 return true;
             }
@@ -90,7 +98,6 @@ public static class ExifFunctions
 
         result = new Rational(val);
         return true;
-
     }
 
     /// <summary>
@@ -111,7 +118,7 @@ public static class ExifFunctions
         if (input.Contains('/'))
         {
             var parts = input.Split('/');
-            if (parts.Length == 2 && 
+            if (parts.Length == 2 &&
                 int.TryParse(parts[0], NumberStyles.Integer, CultureInfo.InvariantCulture, out var numerator) &&
                 int.TryParse(parts[1], NumberStyles.Integer, CultureInfo.InvariantCulture, out var denominator))
             {
@@ -133,6 +140,5 @@ public static class ExifFunctions
 
         result = new SignedRational(val);
         return true;
-
     }
 }

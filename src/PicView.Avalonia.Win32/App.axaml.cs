@@ -11,6 +11,7 @@ using PicView.Avalonia.StartUp;
 using PicView.Avalonia.ViewModels;
 using PicView.Avalonia.Win32.Views;
 using PicView.Avalonia.Win32.WindowImpl;
+using PicView.Core.DebugTools;
 using PicView.Core.FileAssociations;
 using PicView.Core.FileSorting;
 using PicView.Core.Localization;
@@ -83,9 +84,7 @@ public class App : Application, IPlatformSpecificService, IPlatformWindowService
         }
         catch (Exception e)
         {
-#if DEBUG
-            Console.WriteLine(e);
-#endif
+            DebugHelper.LogDebug(nameof(App), nameof(OnFrameworkInitializationCompleted), e);
         }
     }
 

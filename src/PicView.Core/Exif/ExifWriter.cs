@@ -27,6 +27,7 @@ public static class ExifWriter
             {
                 return false;
             }
+
             var rating = value.Value;
             if (rating > 5)
             {
@@ -242,7 +243,7 @@ public static class ExifWriter
                 {
                     return false;
                 }
-                
+
                 if (!ExifFunctions.TryParseRational(value, out var rational))
                 {
                     // The string value is not in a valid format
@@ -271,7 +272,7 @@ public static class ExifWriter
                 {
                     return false;
                 }
-                
+
                 if (!ExifFunctions.TryParseRational(value, out var rational))
                 {
                     // The string value is not in a valid format

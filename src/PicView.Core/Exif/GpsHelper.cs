@@ -65,7 +65,7 @@ public static class GpsHelper
             return coordinate;
         }
     }
-    
+
     public static Task<bool> AddLatitude(FileInfo? fileInfo, string? value)
     {
         // TODO: Implement robust parsing for GPS coordinates.
@@ -86,5 +86,4 @@ public static class GpsHelper
         // The value needs to be parsed into a Rational and a GPSAltitudeRef.
         return Task.FromResult(false);
     }
-
 }

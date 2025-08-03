@@ -9,6 +9,7 @@ using PicView.Avalonia.ImageHandling;
 using PicView.Avalonia.Resizing;
 using PicView.Avalonia.UI;
 using PicView.Avalonia.ViewModels;
+using PicView.Core.DebugTools;
 using PicView.Core.ImageDecoding;
 using R3;
 
@@ -155,9 +156,7 @@ public partial class SingleImageResizeView : UserControl
         }
         catch (Exception e)
         {
-#if DEBUG
-            Console.WriteLine(e);
-#endif
+            DebugHelper.LogDebug(nameof(SingleImageResizeView), nameof(UpdateQualitySliderState), e);
         }
     }
 
