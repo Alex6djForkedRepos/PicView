@@ -1,4 +1,5 @@
-﻿using Avalonia.Media.Imaging;
+﻿using System.Runtime.InteropServices;
+using Avalonia.Media.Imaging;
 using ImageMagick;
 using PicView.Core.DebugTools;
 using PicView.Core.FileHandling;
@@ -11,16 +12,14 @@ public static class GetThumbnails
     {
         try
         {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                await using var stream = FileStreamUtils.GetOptimizedFileStream(fileInfo);
+                var thumb = Bitmap.DecodeToHeight(stream, (int)height);
+                return thumb;
+            }
             using var magick = new MagickImage();
-            try
-            {
-                magick.Ping(fileInfo);
-            }
-            catch (Exception e)
-            {
-                DebugHelper.LogDebug(nameof(GetThumbnails), nameof(GetThumbAsync), e);
-                return await CreateThumbAsync(magick, fileInfo, height).ConfigureAwait(false);
-            }
+            magick.Ping(fileInfo);
             var profile = magick.GetExifProfile();
             if (profile == null)
             {
@@ -28,7 +27,7 @@ public static class GetThumbnails
             }
 
             var thumbnail = profile.CreateThumbnail();
-            if (thumbnail == null|| thumbnail.Height < height)
+            if (thumbnail == null || thumbnail.Height < height)
             {
                 return await CreateThumbAsync(magick, fileInfo, height).ConfigureAwait(false);
             }
@@ -73,9 +72,12 @@ public static class GetThumbnails
         
         if (fileInfo.Length >= 2147483648)
         {
-            // Fixes "The file is too long. This operation is currently limited to supporting files less than 2 gigabytes in size."
-            // ReSharper disable once MethodHasAsyncOverload
-            magick.Read(fileStream);
+            await Task.Run(() =>
+            {
+                // Fixes "The file is too long. This operation is currently limited to supporting files less than 2 gigabytes in size."
+                // ReSharper disable once MethodHasAsyncOverload
+                magick.Read(fileStream);
+            });
         }
         else
         {
