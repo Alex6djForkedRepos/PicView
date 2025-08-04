@@ -1,6 +1,7 @@
 ﻿using PicView.Avalonia.UI;
 using PicView.Core.Config;
 using PicView.Core.ProcessHandling;
+using PicView.Core.ViewModels;
 
 namespace PicView.Avalonia.ViewModels;
 
@@ -13,7 +14,7 @@ public class WindowViewModel
     
     public async Task ShowImageInfoWindow()
     {
-        if (UIHelper.TryGetMainViewModel(out var vm))
+        if (UIHelper.GetMainView.DataContext is MainViewModel vm)
         {
             await vm.PlatformWindowService.ShowImageInfoWindow();
         }
@@ -21,7 +22,7 @@ public class WindowViewModel
 
     public void ShowSettingsWindow()
     {
-        if (UIHelper.TryGetMainViewModel(out var vm))
+        if (UIHelper.GetMainView.DataContext is MainViewModel vm)
         {
             vm.PlatformWindowService.ShowSettingsWindow();
         }
@@ -29,7 +30,7 @@ public class WindowViewModel
 
     public void ShowKeybindingsWindow()
     {
-        if (UIHelper.TryGetMainViewModel(out var vm))
+        if (UIHelper.GetMainView.DataContext is MainViewModel vm)
         {
             vm.PlatformWindowService.ShowKeybindingsWindow();
         }
@@ -37,7 +38,7 @@ public class WindowViewModel
 
     public void ShowAboutWindow()
     {
-        if (UIHelper.TryGetMainViewModel(out var vm))
+        if (UIHelper.GetMainView.DataContext is MainViewModel vm)
         {
             vm.PlatformWindowService.ShowAboutWindow();
         }
@@ -45,7 +46,7 @@ public class WindowViewModel
 
     public void ShowBatchResizeWindow()
     {
-        if (UIHelper.TryGetMainViewModel(out var vm))
+        if (UIHelper.GetMainView.DataContext is MainViewModel vm)
         {
             vm.PlatformWindowService.ShowBatchResizeWindow();
         }
@@ -53,7 +54,7 @@ public class WindowViewModel
 
     public void ShowSingleImageResizeWindow()
     {
-        if (UIHelper.TryGetMainViewModel(out var vm))
+        if (UIHelper.GetMainView.DataContext is MainViewModel vm)
         {
             vm.PlatformWindowService.ShowSingleImageResizeWindow();
         }
@@ -61,7 +62,7 @@ public class WindowViewModel
 
     public void ShowEffectsWindow()
     {
-        if (UIHelper.TryGetMainViewModel(out var vm))
+        if (UIHelper.GetMainView.DataContext is MainViewModel vm)
         {
             vm.PlatformWindowService.ShowEffectsWindow();
         }

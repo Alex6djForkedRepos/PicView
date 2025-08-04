@@ -6,6 +6,7 @@ using PicView.Avalonia.Navigation;
 using PicView.Avalonia.UI;
 using PicView.Avalonia.ViewModels;
 using PicView.Avalonia.Views.UC;
+using PicView.Core.DebugTools;
 using PicView.Core.Gallery;
 using PicView.Core.Localization;
 using PicView.Core.Sizing;
@@ -226,9 +227,7 @@ public static class GalleryFunctions
         }
         catch (Exception exception)
         {
-#if DEBUG
-            Console.WriteLine(exception);
-#endif
+            DebugHelper.LogDebug(nameof(GalleryFunctions), nameof(AddGalleryItem), exception);
         }
 
         return false;
@@ -281,9 +280,7 @@ public static class GalleryFunctions
             }
             catch (Exception e)
             {
-#if DEBUG
-                Console.WriteLine(e);
-#endif
+                DebugHelper.LogDebug(nameof(GalleryFunctions), nameof(ClearItems), e);
             }
         }
     }

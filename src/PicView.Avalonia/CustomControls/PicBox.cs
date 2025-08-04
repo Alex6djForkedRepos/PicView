@@ -299,9 +299,7 @@ public class PicBox : Control, IDisposable
         }
         catch (Exception exception)
         {
-#if DEBUG
-            Console.WriteLine(exception);
-#endif
+            DebugHelper.LogDebug(nameof(PicBox), nameof(GetSizeFromAlternativeSources), exception);
         }
 
         return new Size();

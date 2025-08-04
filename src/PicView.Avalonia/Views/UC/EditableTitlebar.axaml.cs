@@ -2,7 +2,6 @@
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
-using PicView.Avalonia.FileSystem;
 using PicView.Avalonia.Input;
 using PicView.Avalonia.Navigation;
 using PicView.Avalonia.UI;
@@ -25,7 +24,7 @@ public partial class EditableTitlebar : UserControl
 
     private void HandlePointerPressed(object? sender, PointerPressedEventArgs e)
     {
-        if (!UIHelper.TryGetMainViewModel(out var vm) ||
+        if (UIHelper.GetMainView.DataContext is not MainViewModel vm ||
             !e.GetCurrentPoint(this).Properties.IsRightButtonPressed ||
             vm.MainWindow.IsEditableTitlebarOpen.CurrentValue)
         {
@@ -38,7 +37,7 @@ public partial class EditableTitlebar : UserControl
 
     private void HandlePointerEntered(object? sender, PointerEventArgs e)
     {
-        if (!UIHelper.TryGetMainViewModel(out var vm))
+        if (UIHelper.GetMainView.DataContext is not MainViewModel vm)
         {
             return;
         }
@@ -53,7 +52,7 @@ public partial class EditableTitlebar : UserControl
     public void CloseTitlebar()
     {
         TextBox.ClearSelection();
-        if (!UIHelper.TryGetMainViewModel(out var vm))
+        if (UIHelper.GetMainView.DataContext is not MainViewModel vm)
         {
             return;
         }
@@ -66,7 +65,7 @@ public partial class EditableTitlebar : UserControl
 
     protected override void OnKeyDown(KeyEventArgs e)
     {
-        if (!UIHelper.TryGetMainViewModel(out var vm))
+        if (UIHelper.GetMainView.DataContext is not MainViewModel vm)
         {
             return;
         }
@@ -93,7 +92,7 @@ public partial class EditableTitlebar : UserControl
     {
         base.OnKeyUp(e);
 
-        if (!UIHelper.TryGetMainViewModel(out var vm))
+        if (UIHelper.GetMainView.DataContext is not MainViewModel vm)
         {
             return;
         }
@@ -172,7 +171,7 @@ public partial class EditableTitlebar : UserControl
 
     public void SelectFileName()
     {
-        if (!UIHelper.TryGetMainViewModel(out var vm) || vm.PicViewer.FileInfo is null)
+        if (UIHelper.GetMainView.DataContext is not MainViewModel vm)
         {
             return;
         }
