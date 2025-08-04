@@ -307,4 +307,13 @@ public static class GalleryLoad
             GalleryFunctions.Clear();
         }
     }
+
+    public static async Task CancelGalleryLoadAsync()
+    {
+        if (_cancellationTokenSource is not null)
+        {
+            await _cancellationTokenSource.CancelAsync();
+        }
+        CleanupAfterLoading();
+    }
 }

@@ -43,6 +43,8 @@ public static class NavigationManager
     public static async Task LoadWithoutImageIterator(FileInfo fileInfo, MainViewModel vm, List<FileInfo>? files = null,
         int index = 0)
     {
+        _ = Task.Run(GalleryLoad.CancelGalleryLoadAsync);
+        
         var imageModel = await GetImageModel.GetImageModelAsync(fileInfo).ConfigureAwait(false);
         ImageModel? nextImageModel = null;
         vm.PicViewer.ImageSource.Value = imageModel.Image;
