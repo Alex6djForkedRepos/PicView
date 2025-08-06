@@ -552,9 +552,7 @@ public partial class BatchResizeView : UserControl
         }
         catch (Exception e)
         {
-#if DEBUG
-            Console.WriteLine(e);
-#endif
+            DebugHelper.LogDebug(nameof(BatchResizeView), nameof(StartBatchResize), e);
         }
         finally
         {

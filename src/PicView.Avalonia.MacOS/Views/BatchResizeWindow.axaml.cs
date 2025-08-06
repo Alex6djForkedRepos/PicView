@@ -31,6 +31,19 @@ public partial class BatchResizeWindow : Window, IDisposable
                 .AddTo(_disposables);
             PositionChanged += (_, _) => UpdateWindowPosition();
         };
+        
+        Closing += async delegate
+        {
+            Hide();
+            if (VisualRoot is null)
+            {
+                return;
+            }
+
+            var hostWindow = (Window)VisualRoot;
+            hostWindow?.Focus();
+            await _config.SaveAsync();
+        };
     }
     
     private void UpdateWindowPosition()

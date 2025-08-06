@@ -20,7 +20,7 @@ public class BatchResizeWindowConfig() : ConfigFile("BatchResizeWindow.json")
             {
                 var jsonString = await File.ReadAllTextAsync(CorrectPath).ConfigureAwait(false);
                 if (JsonSerializer.Deserialize(
-                        jsonString, typeof(BatchResizeWindowProperties), SettingsWindowGenerationContext.Default) is BatchResizeWindowProperties settings)
+                        jsonString, typeof(BatchResizeWindowProperties), BatchResizeWindowGenerationContext.Default) is BatchResizeWindowProperties settings)
                 {
                     WindowProperties = settings;
                 }
@@ -43,7 +43,7 @@ public class BatchResizeWindowConfig() : ConfigFile("BatchResizeWindow.json")
     public async Task SaveAsync()
     {
         CorrectPath = await ConfigFileManager.SaveConfigFileAndReturnPathAsync(this,
-            CorrectPath, WindowProperties, typeof(BatchResizeWindowProperties), SettingsWindowGenerationContext.Default);
+            CorrectPath, WindowProperties, typeof(BatchResizeWindowProperties), BatchResizeWindowGenerationContext.Default);
     }
     
     public class BatchResizeWindowProperties : IWindowProperties

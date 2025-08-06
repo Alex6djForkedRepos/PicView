@@ -332,7 +332,7 @@ public class WindowInitializer : IPlatformSpecificUpdate
 
         void Show()
         {
-            WindowFunctions.InitializeWindowSizeAndPosition(_batchResizeWindow, vm.Window.BatchResizeWindowConfig.WindowProperties);
+            WindowFunctions.InitializeWindowPosition(_batchResizeWindow, vm.Window.BatchResizeWindowConfig.WindowProperties);
             _batchResizeWindow.Show(desktop.MainWindow);
         }
     }
