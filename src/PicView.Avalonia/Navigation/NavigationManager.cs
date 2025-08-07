@@ -392,9 +392,9 @@ public static class NavigationManager
         }
     }
     
-    /// <inheritdoc cref="NavigateBetweenDirectories(bool last, MainViewModel vm)"/>
+    /// <inheritdoc cref="NavigateFirstOrLast(bool last, MainViewModel vm)"/>
     public static async Task NavigateFirstOrLast(bool last) =>
-        await NavigateBetweenDirectories(last, UIHelper.GetMainView.DataContext as MainViewModel);
+        await NavigateFirstOrLast(last, UIHelper.GetMainView.DataContext as MainViewModel);
 
     /// <summary>
     ///     Iterates to the next or previous image based on the <paramref name="next" /> parameter.
