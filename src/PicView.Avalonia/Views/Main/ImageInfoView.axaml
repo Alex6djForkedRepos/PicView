@@ -79,7 +79,7 @@
                                             Converter={x:Static ObjectConverters.IsNotNull}}"
                 x:Name="OpenWithMenuItem">
                 <MenuItem.Icon>
-                    <Path Classes="OpenWithPath" />
+                    <Image Classes="OpenWithImage" />
                 </MenuItem.Icon>
             </MenuItem>
 

@@ -136,16 +136,22 @@
         <Setter Property="Stretch" Value="Fill" />
     </Style>
 
-    <Style Selector="Path.OpenWithPath">
-        <Setter Property="Data" Value="{StaticResource OpenWithGeometry}" />
+    <Style Selector="Image.OpenWithImage">
+        <Setter Property="Source" Value="{StaticResource OpenExternalImage}" />
+        <Setter Property="Height" Value="12" />
+        <Setter Property="Width" Value="12" />
+    </Style>
+
+    <Style Selector="Path.SortFilesPath">
+        <Setter Property="Data" Value="{StaticResource SortFilesGeometry}" />
         <Setter Property="Fill" Value="{DynamicResource MainTextColor}" />
         <Setter Property="Height" Value="12" />
         <Setter Property="Width" Value="12" />
         <Setter Property="Stretch" Value="Fill" />
     </Style>
 
-    <Style Selector="Path.SortFilesPath">
-        <Setter Property="Data" Value="{StaticResource SortFilesGeometry}" />
+    <Style Selector="Path.RecentFilesPath">
+        <Setter Property="Data" Value="{StaticResource RecentFilesGeometry}" />
         <Setter Property="Fill" Value="{DynamicResource MainTextColor}" />
         <Setter Property="Height" Value="12" />
         <Setter Property="Width" Value="12" />
