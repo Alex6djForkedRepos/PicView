@@ -46,9 +46,10 @@ public static class FunctionsMapper
             
             "Last" => Last,
             "First" => First,
-            "Next10" => Next10,
             
+            "Next10" => Next10,
             "Prev10" => Prev10,
+            
             "Next100" => Next100,
             "Prev100" => Prev100,
             
