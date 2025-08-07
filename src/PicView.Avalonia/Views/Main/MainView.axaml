@@ -34,12 +34,7 @@
                                          Mode=OneWay}"
                 MinWidth="180">
                 <MenuItem.Icon>
-                    <Path
-                        Data="{StaticResource AltFolderGeometry}"
-                        Fill="{StaticResource Brush0}"
-                        Height="12.14"
-                        Stretch="Fill"
-                        Width="15" />
+                    <Path Classes="OpenPath" />
                 </MenuItem.Icon>
             </MenuItem>
 

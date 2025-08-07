@@ -104,6 +104,14 @@
         <Setter Property="Stroke" Value="#48000000" />
     </Style>
 
+    <Style Selector="Path.OpenPath">
+        <Setter Property="Data" Value="{StaticResource AltFolderGeometry}" />
+        <Setter Property="Fill" Value="{DynamicResource MainTextColor}" />
+        <Setter Property="Height" Value="12.14" />
+        <Setter Property="Width" Value="15" />
+        <Setter Property="Stretch" Value="Fill" />
+    </Style>
+
     <Style Selector="Path.CopyPath">
         <Setter Property="Data" Value="{StaticResource CopyGeometry}" />
         <Setter Property="Fill" Value="{DynamicResource MainTextColor}" />
