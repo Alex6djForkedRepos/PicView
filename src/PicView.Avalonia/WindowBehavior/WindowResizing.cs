@@ -286,21 +286,7 @@ public static class WindowResizing
             return null;
         }
 
-        int minWidth;
-        int minHeight;
-        if (Settings.UIProperties.ShowBottomNavBar)
-        {
-            minWidth = minHeight = SizeDefaults.WindowMinSize;
-        }
-        else
-        {
-            minWidth = vm.PlatformWindowService.CombinedTitleButtonsWidth;
-            minHeight = 100;
-        }
-
-        vm.MainWindow.WindowMinWidth.Value = minWidth;
-        vm.MainWindow.WindowMinHeight.Value = minHeight;
-        
+        var (minWidth, minHeight) = MainWindowViewModel.GetAndSetWindowMinSize(vm);
         
         ImageSize size;
         if (Settings.ImageScaling.ShowImageSideBySide && secondWidth > 0 && secondHeight > 0)

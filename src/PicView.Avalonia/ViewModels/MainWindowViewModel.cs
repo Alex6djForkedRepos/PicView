@@ -127,6 +127,21 @@ public class MainWindowViewModel : IDisposable
 
     private static void Close(Unit unit) => DialogManager.Close();
 
+    public static (int WindowMinWidth, int WindowMinHeight) GetAndSetWindowMinSize(MainViewModel vm)
+    {
+        if (Settings.UIProperties.ShowBottomNavBar)
+        {
+            vm.MainWindow.WindowMinWidth.Value = SizeDefaults.WindowMinSize;
+            vm.MainWindow.WindowMinHeight.Value = SizeDefaults.WindowMinSize;
+            return (SizeDefaults.WindowMinSize, SizeDefaults.WindowMinSize);
+        }
+        
+        const int minHeight = 100;
+        vm.MainWindow.WindowMinWidth.Value = vm.PlatformWindowService.CombinedTitleButtonsWidth;
+        vm.MainWindow.WindowMinHeight.Value = minHeight;
+        return (vm.PlatformWindowService.CombinedTitleButtonsWidth, minHeight);
+    }
+
 
     private void SetButtonValues()
     {

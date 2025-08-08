@@ -65,6 +65,8 @@ public static class SettingsUpdater
 
     public static void InitializeSettings(MainViewModel vm)
     {
+        MainWindowViewModel.GetAndSetWindowMinSize(vm);
+        
         // Set corner radius on macOS
         if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
         {

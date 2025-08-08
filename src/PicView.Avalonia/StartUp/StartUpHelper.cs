@@ -75,7 +75,7 @@ public static class StartUpHelper
         Window window, string? arg = null)
     {
         SettingsUpdater.InitializeSettings(vm);
-
+        
         HandleWindowScalingMode(vm, window);
 
         HandleStartUpMenuOrImage(vm, window, arg);
