@@ -733,7 +733,12 @@
                 </MenuItem>
 
                 <!--  Single image resize  -->
-                <MenuItem Command="{CompiledBinding Window.ShowSingleImageResizeWindow}" Header="{CompiledBinding Translation.ResizeImage.Value, Mode=OneWay}">
+                <MenuItem
+                    Command="{CompiledBinding Window.ShowSingleImageResizeWindow}"
+                    Header="{CompiledBinding Translation.ResizeImage.Value,
+                                             Mode=OneWay}"
+                    IsEnabled="{CompiledBinding PicViewer.ShouldCropBeEnabled.Value,
+                                                Mode=OneWay}">
                     <MenuItem.Icon>
                         <Image
                             Height="12"
