@@ -241,19 +241,23 @@ public class ImageIterator : IAsyncDisposable
             return;
         }
 
-        var isGalleryItemAdded = await GalleryFunctions.AddGalleryItem(index, fileInfo, _vm);
-        if (isGalleryItemAdded)
+        if (Settings.Gallery.IsBottomGalleryShown || GalleryFunctions.IsFullGalleryOpen)
         {
-            if (Settings.Gallery.IsBottomGalleryShown && ImagePaths.Count > 1)
+            var isGalleryItemAdded = await GalleryFunctions.AddGalleryItem(index, fileInfo, _vm);
+            if (isGalleryItemAdded)
             {
-                if (_vm.Gallery.GalleryMode.CurrentValue is GalleryMode.BottomToClosed or GalleryMode.FullToClosed)
+                if (Settings.Gallery.IsBottomGalleryShown && ImagePaths.Count > 1)
                 {
-                    _vm.Gallery.GalleryMode.Value = GalleryMode.ClosedToBottom;
+                    if (_vm.Gallery.GalleryMode.CurrentValue is GalleryMode.BottomToClosed or GalleryMode.FullToClosed)
+                    {
+                        _vm.Gallery.GalleryMode.Value = GalleryMode.ClosedToBottom;
+                    }
                 }
-            }
 
-            GalleryNavigation.CenterScrollToSelectedItem(_vm);
+                GalleryNavigation.CenterScrollToSelectedItem(_vm);
+            }
         }
+
 
         PreLoader.Resynchronize(ImagePaths);
     }
