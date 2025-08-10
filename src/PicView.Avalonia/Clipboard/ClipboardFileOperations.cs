@@ -1,4 +1,4 @@
-using System.Diagnostics;
+using System.Runtime.InteropServices;
 using Avalonia.Platform.Storage;
 using PicView.Avalonia.Animations;
 using PicView.Avalonia.Navigation;
@@ -121,6 +121,12 @@ public static class ClipboardFileOperations
     {
         if (string.IsNullOrWhiteSpace(filePath))
         {
+            return;
+        }
+
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        {
+            // TODO add clipboard file copy on macOS 
             return;
         }
 
