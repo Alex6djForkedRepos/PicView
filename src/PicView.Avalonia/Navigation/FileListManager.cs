@@ -2,6 +2,7 @@
 using PicView.Avalonia.Interfaces;
 using PicView.Avalonia.UI;
 using PicView.Avalonia.ViewModels;
+using PicView.Core.DebugTools;
 using PicView.Core.FileSorting;
 
 namespace PicView.Avalonia.Navigation;
@@ -76,9 +77,7 @@ public static class FileListManager
             }
             catch (Exception e)
             {
-#if DEBUG
-                Console.WriteLine($"{nameof(UpdateFileList)} exception:\n{e.Message}");
-#endif
+                DebugHelper.LogDebug(nameof(FileListManager), nameof(UpdateFileList), e);
                 return false;
             }
 
