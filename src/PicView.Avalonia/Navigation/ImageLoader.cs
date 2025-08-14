@@ -25,7 +25,7 @@ public static class ImageLoader
     /// </summary>
     public static async Task LoadPicFromStringAsync(string source, MainViewModel vm, ImageIterator imageIterator)
     {
-        if (string.IsNullOrWhiteSpace(source) || vm is null)
+        if (string.IsNullOrWhiteSpace(source))
         {
             return;
         }
@@ -116,6 +116,7 @@ public static class ImageLoader
                 var index = imageIterator.ImagePaths.FindIndex(x => x.FullName.Equals(fileName));
                 if (index != -1)
                 {
+                    _cancellationTokenSource ??= new CancellationTokenSource();
                     await imageIterator.IterateToIndex(index, _cancellationTokenSource).ConfigureAwait(false);
                     await NavigationManager.CheckIfTiffAndUpdate(vm, fileInfo, index);
                     if (Settings.Gallery.IsBottomGalleryShown && NavigationManager.GetCount > 0)

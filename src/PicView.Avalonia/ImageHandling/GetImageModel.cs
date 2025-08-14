@@ -46,6 +46,7 @@ public static class GetImageModel
             }
 
             // Process the image based on type
+            // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
             switch (magickImage.Format)
             {
                 case MagickFormat.WebP: 
