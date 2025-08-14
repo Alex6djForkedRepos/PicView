@@ -775,6 +775,10 @@ public class ImageIterator : IAsyncDisposable
             PreLoader.Add(index, ImagePaths, preloadValue?.ImageModel);
 
             // Add recent files
+            if (!Settings.Navigation.IsFileHistoryEnabled)
+            {
+                return;
+            }
             if (string.IsNullOrWhiteSpace(TempFileHelper.TempFilePath) && ImagePaths.Count > CurrentIndex)
             {
                 FileHistoryManager.Add(ImagePaths[CurrentIndex].FullName);
