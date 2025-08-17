@@ -10,6 +10,7 @@ using PicView.Avalonia.Navigation;
 using PicView.Avalonia.UI;
 using PicView.Avalonia.ViewModels;
 using PicView.Avalonia.Views.UC;
+using PicView.Core.DebugTools;
 
 namespace PicView.Avalonia.Input;
 
@@ -54,7 +55,7 @@ public static class MainKeyboardShortcuts
     /// Processes the KeyDown event for the main window.
     /// </summary>
     /// <param name="e">The key event arguments.</param>
-    public static async Task MainWindow_KeysDownAsync(KeyEventArgs e)
+    public static async ValueTask MainWindow_KeysDownAsync(KeyEventArgs e)
     {
         if (KeybindingManager.CustomShortcuts is null || !IsKeysEnabled)
         {
@@ -222,15 +223,13 @@ public static class MainKeyboardShortcuts
     /// <summary>
     /// Executes the registered shortcut action for the current key combination.
     /// </summary>
-    private static async Task ExecuteShortcutIfRegistered()
+    private static async ValueTask ExecuteShortcutIfRegistered()
     {
         if (CurrentKeys is not null && KeybindingManager.CustomShortcuts.TryGetValue(CurrentKeys, out var action))
         {
             if (action is null)
             {
-#if DEBUG
-                Trace.WriteLine($"[{nameof(MainWindow_KeysDownAsync)}] error: Null action for {CurrentKeys}");
-#endif
+                DebugHelper.LogDebug(nameof(MainKeyboardShortcuts), nameof(ExecuteShortcutIfRegistered), $"error: Null action for {CurrentKeys}");
                 return;
             }
             
