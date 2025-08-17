@@ -14,9 +14,9 @@ internal partial class SourceGenerationContext : JsonSerializerContext;
 
 public static class KeybindingManager
 {
-    public static Dictionary<KeyGesture, Func<Task>>? CustomShortcuts { get; private set; }
+    public static Dictionary<KeyGesture, Func<ValueTask>>? CustomShortcuts { get; private set; }
 
-    public static async Task LoadKeybindings(IPlatformSpecificService platformSpecificService)
+    public static async ValueTask LoadKeybindings(IPlatformSpecificService platformSpecificService)
     {
         var keybindings = await KeybindingFunctions.LoadKeyBindingsFile().ConfigureAwait(false);
         if (string.IsNullOrWhiteSpace(keybindings))
@@ -29,18 +29,18 @@ public static class KeybindingManager
         }
     }
 
-    public static async Task UpdateKeybindings(string json)
+    public static async ValueTask UpdateKeybindings(string json)
     {
         // Deserialize JSON into a dictionary of string keys and string values
         var keyValues = JsonSerializer.Deserialize(
                 json, typeof(Dictionary<string, string>), SourceGenerationContext.Default)
             as Dictionary<string, string>;
 
-        CustomShortcuts ??= new Dictionary<KeyGesture, Func<Task>>();
+        CustomShortcuts ??= new Dictionary<KeyGesture, Func<ValueTask>>();
         await PopulateCustomShortcutsAsync(keyValues).ConfigureAwait(false);
     }
 
-    public static async Task UpdateKeyBindingsFile()
+    public static async ValueTask UpdateKeyBindingsFile()
     {
         try
         {
@@ -56,7 +56,7 @@ public static class KeybindingManager
         }
     }
 
-    private static async Task PopulateCustomShortcutsAsync(Dictionary<string, string> keyValues)
+    private static async ValueTask PopulateCustomShortcutsAsync(Dictionary<string, string> keyValues)
     {
         foreach (var kvp in keyValues)
         {
@@ -78,7 +78,7 @@ public static class KeybindingManager
         }
     }
 
-    internal static async Task SetDefaultKeybindings(IPlatformSpecificService platformSpecificService)
+    internal static async ValueTask SetDefaultKeybindings(IPlatformSpecificService platformSpecificService)
     {
         if (CustomShortcuts is not null)
         {
@@ -86,7 +86,7 @@ public static class KeybindingManager
         }
         else
         {
-            CustomShortcuts = new Dictionary<KeyGesture, Func<Task>>();
+            CustomShortcuts = new Dictionary<KeyGesture, Func<ValueTask>>();
         }
         var defaultKeybindings = platformSpecificService.DefaultJsonKeyMap();
         var keyValues = JsonSerializer.Deserialize(
@@ -96,6 +96,6 @@ public static class KeybindingManager
         await PopulateCustomShortcutsAsync(keyValues).ConfigureAwait(false);
     }
     
-    private static string GetFunctionNameByFunction(Func<Task> function) =>
+    private static string GetFunctionNameByFunction(Func<ValueTask> function) =>
         function == null ? "" : CustomShortcuts.FirstOrDefault(x => x.Value == function).Value.Method.Name;
 }
