@@ -74,7 +74,7 @@ public static class TooltipHelper
     {
         try
         {
-            var endAnimation = AnimationsHelper.OpacityAnimation(1, 0, .5);
+            var endAnimation = AnimationsHelper.OpacityAnimation(1, 0, Speed);
 
             // ReSharper disable once MethodHasAsyncOverload
             _cancellationTokenSource?.Cancel();
