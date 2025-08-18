@@ -51,7 +51,7 @@ public class PicBox : Control, IDisposable
     private FileStream? _stream;
     private IGifInstance? _animInstance;
     public string? InitialAnimatedSource;
-    private readonly CompositeDisposable _imageTypeSubscription = new();
+    private readonly CompositeDisposable _imageTypeSubscription = new(); // Should be used for disposal when tab navigation arrives
     private bool _isDisposed;
 
     public static readonly StyledProperty<object?> SourceProperty =
@@ -117,14 +117,16 @@ public class PicBox : Control, IDisposable
 
     public PicBox() =>
         this.GetObservable(ImageTypeProperty).ToObservable()
-            .Subscribe(UpdateSource).AddTo(_imageTypeSubscription);
+            .Skip(1) // Skip the initial unset one
+            .SubscribeAwait(UpdateSource)
+            .AddTo(_imageTypeSubscription);
 
-    #endregion
-
-    #region Source Management
-
-    private void UpdateSource(ImageType imageType)
+    private async ValueTask UpdateSource(ImageType imageType, CancellationToken cancellationTokenSource)
     {
+        // A small delay allows to cancel early if the image goes out of screen too fast (eg. scrolling)
+        // The Bitmap constructor is expensive and cannot be cancelled. Fixes some object disposed exceptions when rapidly scrolling through images.
+        await Task.Delay(10, cancellationTokenSource);
+        
         switch (imageType)
         {
             case ImageType.Svg:
@@ -146,6 +148,10 @@ public class PicBox : Control, IDisposable
                 break;
         }
     }
+
+    #endregion
+
+    #region Source Management
 
     private void UpdateSvgSource()
     {

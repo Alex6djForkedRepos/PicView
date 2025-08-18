@@ -9,11 +9,9 @@ using PicView.Avalonia.WindowBehavior;
 using PicView.Core.FileHistory;
 using PicView.Core.Gallery;
 using PicView.Core.ImageDecoding;
-using PicView.Core.Localization;
 using PicView.Core.Models;
 using PicView.Core.Navigation;
 using PicView.Core.Preloading;
-using ZLinq;
 
 namespace PicView.Avalonia.Navigation;
 
@@ -440,7 +438,7 @@ public static class NavigationManager
     #region Load pictures from string, file or url
 
     /// <inheritdoc cref="ImageLoader.LoadPicFromStringAsync(string, MainViewModel, Navigation.ImageIterator)" />
-    public static async Task LoadPicFromStringAsync(string source, MainViewModel vm) =>
+    public static async ValueTask LoadPicFromStringAsync(string source, MainViewModel vm) =>
         await ImageLoader.LoadPicFromStringAsync(source, vm, ImageIterator).ConfigureAwait(false);
 
     /// <inheritdoc cref="ImageLoader.LoadPicFromFile(string, MainViewModel, Navigation.ImageIterator, FileInfo)" />
@@ -448,19 +446,19 @@ public static class NavigationManager
         await ImageLoader.LoadPicFromFile(fileName, vm, ImageIterator, fileInfo).ConfigureAwait(false);
 
     /// <inheritdoc cref="ImageLoader.LoadPicFromArchiveAsync(string, MainViewModel, Navigation.ImageIterator)" />
-    public static async Task LoadPicFromArchiveAsync(string path, MainViewModel vm) =>
+    public static async ValueTask LoadPicFromArchiveAsync(string path, MainViewModel vm) =>
         await ImageLoader.LoadPicFromArchiveAsync(path, vm, ImageIterator).ConfigureAwait(false);
 
     /// <inheritdoc cref="ImageLoader.LoadPicFromUrlAsync(string, MainViewModel, Navigation.ImageIterator)" />
-    public static async Task LoadPicFromUrlAsync(string url, MainViewModel vm) =>
+    public static async ValueTask LoadPicFromUrlAsync(string url, MainViewModel vm) =>
         await ImageLoader.LoadPicFromUrlAsync(url, vm, ImageIterator).ConfigureAwait(false);
 
     /// <inheritdoc cref="ImageLoader.LoadPicFromBase64Async(string, MainViewModel, Navigation.ImageIterator)" />
-    public static async Task LoadPicFromBase64Async(string base64, MainViewModel vm) =>
+    public static async ValueTask LoadPicFromBase64Async(string base64, MainViewModel vm) =>
         await ImageLoader.LoadPicFromBase64Async(base64, vm, ImageIterator).ConfigureAwait(false);
 
     /// <inheritdoc cref="ImageLoader.LoadPicFromDirectoryAsync(string, MainViewModel, FileInfo)"/>
-    public static async Task LoadPicFromDirectoryAsync(string file, MainViewModel vm, FileInfo? fileInfo = null) =>
+    public static async ValueTask LoadPicFromDirectoryAsync(string file, MainViewModel vm, FileInfo? fileInfo = null) =>
         await ImageLoader.LoadPicFromDirectoryAsync(file, vm, fileInfo).ConfigureAwait(false);
 
     #endregion
