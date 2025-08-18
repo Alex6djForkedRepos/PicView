@@ -18,15 +18,13 @@ Enjoy a clean, free, and fast experience with no bloated UI or annoying pop-ups.
     <img alt="macOS" src="https://img.shields.io/badge/OS-macOS-8A2BE2.svg?maxAge=3600&style=flat-square">
 </p>
 
-___
 
 PicView is portable by default. Settings and keybindings are stored in its directory (unless it lacks write permissions), meaning no system files are modified and no installation is necessary. Perfect for storing on a portable USB drive.
 
 Using the installer will also set file associations for you.
 
-<br>
-
 If you like PicView, consider giving it a star or a like on [AlternativeTo](https://alternativeto.net/software/picview/about/)!
+
 
 
 # Downloads
@@ -37,14 +35,6 @@ If you like PicView, consider giving it a star or a like on [AlternativeTo](http
 [![](https://img.shields.io/badge/macOS-x64-blueviolet?style=flat-square&logo=apple&logoColor=fff)](https://github.com/Ruben2776/PicView/releases/download/3.2/PicView-3.2-macOS-x64.dmg)
 
 [Latest releases at PicView.org](https://picview.org/download)
-
-**Mirrors**
-
-[uptodown](https://picview.en.uptodown.com/windows) <br>
-[FossHub](https://www.fosshub.com/PicView.html) <br>
-[SourceForge](https://sourceforge.net/projects/picview/)
-
-<br>
 
 Scoop:
 ```cmd
@@ -61,6 +51,13 @@ Homebrew:
 ```cmd
 brew install picview
 ```
+
+**Mirrors**
+
+[uptodown](https://picview.en.uptodown.com/windows) <br>
+[FossHub](https://www.fosshub.com/PicView.html) <br>
+[SourceForge](https://sourceforge.net/projects/picview/) <br>
+[Major Geeks](https://www.majorgeeks.com/files/details/picview.html)
 
 
 # Features and screenshots
@@ -193,7 +190,7 @@ All builds are compiled using NativeAOT _(with trimming)_, resulting in a fully 
 
 Using Cysharp’s ZLinq and ZString for zero allocation and high performance, and R3 for high-performance ViewModel binding and event streams.
 
-Magick.NET is used for its rich file support and image editing and information capabilities. 
+Magick.NET is used for its rich file support, image editing, and information capabilities. 
 
 # Contributions
 ![Visual Studio 2022](https://img.shields.io/badge/IDE-Visual%20Studio%202022-964ad4.svg?maxAge=3600)
@@ -230,8 +227,12 @@ Turkish by <a href="https://github.com/odest">Dest</a><br>
 English and Danish by <a href="https://github.com/Ruben2776">Ruben2776</a><br>
 
 **Looking for translators!**
+
+
 If you want to help translate another language or update/improve a current one and be listed here, please take a look at
-https://github.com/Ruben2776/PicView/issues/13
+https://github.com/Ruben2776/PicView/issues/13.
+
+[![Help Translate](https://img.shields.io/badge/Help-Translate-blue)](https://github.com/Ruben2776/PicView/issues/13)
 
 
 
@@ -248,6 +249,11 @@ PicView does not collect, send, or receive any user data.
 
 
 # Donate
+Developing PicView is not free. There are ongoing costs, such as website maintenance, Apple Developer License fee, AI subscription, etc.
 If you wish to thank me for my work, please
 
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/W7W46BJFV)
+
+![GitHub Sponsors](https://img.shields.io/github/sponsors/Ruben2776)
+
+
