@@ -61,8 +61,8 @@ If you enjoy PicView, please consider supporting its development:
 
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/W7W46BJFV) 
 
-![Static Badge](https://img.shields.io/badge/PayPal-grey?logo=paypal&link=https%3A%2F%2Fpaypal.me%2FRuben2776) 
-![GitHub Sponsors](https://img.shields.io/github/sponsors/Ruben2776?link=https%3A%2F%2Fgithub.com%2Fsponsors%2FRuben2776)
+<a href="https://www.paypal.com/paypalme/Ruben2776"><img src="https://img.shields.io/badge/PayPal-grey?logo=paypal"><a/>
+<a href="https://github.com/sponsors/Ruben2776"><img src="https://img.shields.io/github/sponsors/Ruben2776"><a/>
 
 <br>
 
