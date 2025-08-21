@@ -146,16 +146,16 @@ public static class UIHelper
         return textColor is not Color color ? default : color;
     }
 
-    public static SolidColorBrush GetSolidColorBrush(string resourceName)
+    public static SolidColorBrush? GetSolidColorBrush(string resourceName)
     {
 
         if (!Application.Current.TryGetResource(resourceName,
         Application.Current.RequestedThemeVariant, out var textColor))
         {
-            return default;
+            return null;
         }
 
-        return textColor is not SolidColorBrush color ? default : color;
+        return textColor as SolidColorBrush ?? null;
     }
 
     public static void SetButtonHover(Control button, SolidColorBrush brush)

@@ -20,7 +20,8 @@
                     Width="20" />
 
                 <TextBlock
-                    Classes="txt"
+                    Classes="txt txtShadow"
+                    FontSize="14"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Bottom"
                     ZIndex="1"

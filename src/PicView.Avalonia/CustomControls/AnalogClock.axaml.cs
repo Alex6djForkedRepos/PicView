@@ -1,4 +1,5 @@
-﻿using Avalonia;
+﻿using System.Globalization;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Shapes;
 using Avalonia.Input;
@@ -14,22 +15,32 @@ public partial class AnalogClock : UserControl
     private Point _centerPoint;
     private Arc? _elapsedHoursArc;
     private Arc? _elapsedMinutesArc;
-    private Rectangle? _hourHand;
+    private Border? _hourHand;
+
+    private bool _isDraggingHourHand;
     private bool _isDraggingHours;
+    private bool _isDraggingMinuteHand;
     private bool _isDraggingMinutes;
-    private Rectangle? _minuteHand;
+    private Border? _minuteHand;
     private Arc? _remainingHoursArc;
     private Arc? _remainingMinutesArc;
+    
+    private bool _is24Hour;
+    private static bool _isPM;
 
     public AnalogClock()
     {
         InitializeComponent();
+
+        var time = DateTime.Now;
+        _isPM = time.Hour >= 12;
+        _is24Hour = !DateTimeFormatInfo.CurrentInfo.ShortTimePattern.Contains("tt");
+        
         GenerateClockFace();
-        UpdateHands(DateTime.Now);
+        UpdateHands(time);
     }
 
     private double ClockRadius => Width / 2;
-
     private void GenerateClockFace()
     {
         DigitalTime.Margin = new Thickness(0, 0, 0, ClockMargin * 3.2);
@@ -41,15 +52,14 @@ public partial class AnalogClock : UserControl
         var panel = new Panel();
 
         _centerPoint = new Point(ClockRadius, ClockRadius);
-
-        // --- Draw remaining time arcs (background) ---
+        
+        
         _remainingHoursArc = GetArc(0, 360, diameter - ClockMargin * 4, false, 0.3, "MainBorderColor");
         _remainingHoursArc.Name = "remainingHoursArc";
 
-        _remainingMinutesArc = GetArc(0, 360, diameter, false, 0.2, "MainBorderColor");
+        _remainingMinutesArc = GetArc(0, 360, diameter, false, 0.3, "MainBorderColor");
         _remainingMinutesArc.Name = "remainingMinutesArc";
-
-        // --- Draw elapsed time arcs (foreground) ---
+        
         _elapsedHoursArc = GetArc(-90, 0, diameter - ClockMargin * 4, true, 1, "AccentColor");
         _elapsedHoursArc.Name = "elapsedHoursArc";
         _elapsedHoursArc.Cursor = new Cursor(StandardCursorType.Hand);
@@ -149,15 +159,27 @@ public partial class AnalogClock : UserControl
         {
             if (_elapsedHoursArc != null && _remainingHoursArc != null)
             {
+                // Old sweep before updating
+                var oldSweep = _elapsedHoursArc.SweepAngle;
+
                 _elapsedHoursArc.SweepAngle = degrees;
                 _remainingHoursArc.StartAngle = -90 + degrees;
                 _remainingHoursArc.SweepAngle = 360 - degrees;
 
+                switch (oldSweep)
+                {
+                    // Detect crossing 12 (0°)
+                    // CCW crossing 12 → back into AM
+                    case < 30 when degrees > 330:
+                    // CW crossing 12 → into PM
+                    case > 330 when degrees < 30:
+                        _isPM = !_isPM;
+                        break;
+                }
+
                 // Update hour hand
                 if (_hourHand != null)
-                {
                     ((RotateTransform)_hourHand.RenderTransform!).Angle = degrees;
-                }
             }
         }
         else
@@ -183,19 +205,50 @@ public partial class AnalogClock : UserControl
     private void UpdateDigitalTimeFromAngles()
     {
         if (_elapsedHoursArc == null || _elapsedMinutesArc == null)
-        {
             return;
-        }
 
-        var hours = (int)(_elapsedHoursArc.SweepAngle / 30) % 12;
-        if (hours == 0)
-        {
-            hours = 12;
-        }
+        var rawHours = (int)(_elapsedHoursArc.SweepAngle / 30) % 12;
+        if (rawHours == 0) rawHours = 12;
 
         var minutes = (int)(_elapsedMinutesArc.SweepAngle / 6) % 60;
 
-        DigitalTime.Text = $"{hours:D2}:{minutes:D2}";
+        int displayHours;
+
+        if (_is24Hour)
+        {
+            displayHours = rawHours % 12 + (_isPM ? 12 : 0);
+            DigitalTime.Text = $"{displayHours:D2}:{minutes:D2}";
+        }
+        else
+        {
+            displayHours = rawHours;
+            var suffix = _isPM ? " PM" : " AM";
+            DigitalTime.Text = $"{displayHours:D2}:{minutes:D2}{suffix}";
+        }
+
+        UpdateArcOpacity();
+    }
+    
+    private void UpdateArcOpacity()
+    {
+        if (_elapsedHoursArc == null || _remainingHoursArc == null)
+            return;
+
+        if (_isPM)
+        {
+            // Both arcs use AccentColor, but with different opacity
+            _elapsedHoursArc.Stroke = UIHelper.GetSolidColorBrush("AccentColor");
+            _remainingHoursArc.Stroke = UIHelper.GetSolidColorBrush("AccentColor");
+        }
+        else
+        {
+            // AM: elapsed = accent, remaining = greyed
+            _elapsedHoursArc.Stroke = UIHelper.GetSolidColorBrush("AccentColor");
+            _remainingHoursArc.Stroke = UIHelper.GetBrush("MainBorderColor");
+        }
+        
+        _elapsedHoursArc.Opacity = 1.0;
+        _remainingHoursArc.Opacity = 0.3;
     }
 
     private static Arc GetArc(double startAngle, double sweepAngle, double diameter, bool fill, double opacity,
@@ -218,95 +271,98 @@ public partial class AnalogClock : UserControl
         };
     }
 
-private bool _isDraggingHourHand;
-private bool _isDraggingMinuteHand;
-
-// Modify the CreateClockHands method to add event handlers to the hands
-private void CreateClockHands()
-{
-    // Hour hand
-    _hourHand = new Rectangle
+    private void CreateClockHands()
     {
-        Width = 6,
-        Height = 40,
-        Fill = UIHelper.GetBrush("MainTextColor"),
-        RenderTransformOrigin = new RelativePoint(0.5, 1, RelativeUnit.Relative),
-        RenderTransform = new RotateTransform(),
-        Cursor = new Cursor(StandardCursorType.Hand) // Add cursor indicator
-    };
+        // Hour hand
+        _hourHand = new Border
+        {
+            Width = 8,
+            Height = 45,
+            Background = UIHelper.GetBrush("MainTextColorFaded"),
+            CornerRadius = new CornerRadius(10,0),
+            RenderTransformOrigin = new RelativePoint(0.5, 1, RelativeUnit.Relative),
+            RenderTransform = new RotateTransform(),
+            Cursor = new Cursor(StandardCursorType.Hand) // Add cursor indicator
+        };
 
-    // Minute hand
-    _minuteHand = new Rectangle
+        // Minute hand
+        _minuteHand = new Border
+        {
+            Width = 5,
+            Height = 60,
+            Background = UIHelper.GetBrush("MainTextColorFaded"),
+            CornerRadius = new CornerRadius(10,0),
+            RenderTransformOrigin = new RelativePoint(0.5, 1, RelativeUnit.Relative),
+            RenderTransform = new RotateTransform(),
+            Cursor = new Cursor(StandardCursorType.Hand) // Add cursor indicator
+        };
+
+        // Add pointer events to hands
+        _hourHand.PointerPressed += HourHand_PointerPressed;
+        _hourHand.PointerReleased += Hand_PointerReleased;
+        _hourHand.PointerMoved += HourHand_PointerMoved;
+
+        _minuteHand.PointerPressed += MinuteHand_PointerPressed;
+        _minuteHand.PointerReleased += Hand_PointerReleased;
+        _minuteHand.PointerMoved += MinuteHand_PointerMoved;
+
+        // Position both hands at center bottom
+        Canvas.SetLeft(_hourHand, ClockRadius - _hourHand.Width / 2);
+        Canvas.SetTop(_hourHand, ClockRadius - _hourHand.Height);
+
+        Canvas.SetLeft(_minuteHand, ClockRadius - _minuteHand.Width / 2);
+        Canvas.SetTop(_minuteHand, ClockRadius - _minuteHand.Height);
+
+        // Add to existing canvas
+        var canvas = MainPanel.Children.OfType<Panel>().First().Children.OfType<Canvas>().First();
+        canvas.Children.Add(_hourHand);
+        canvas.Children.Add(_minuteHand);
+    }
+
+    private void HourHand_PointerPressed(object? sender, PointerPressedEventArgs e)
     {
-        Width = 4,
-        Height = 60,
-        Fill = UIHelper.GetBrush("MainTextColor"),
-        RenderTransformOrigin = new RelativePoint(0.5, 1, RelativeUnit.Relative),
-        RenderTransform = new RotateTransform(),
-        Cursor = new Cursor(StandardCursorType.Hand) // Add cursor indicator
-    };
+        _isDraggingHourHand = true;
+        e.Pointer.Capture(_hourHand);
+        e.Handled = true;
+    }
 
-    // Add pointer events to hands
-    _hourHand.PointerPressed += HourHand_PointerPressed;
-    _hourHand.PointerReleased += Hand_PointerReleased;
-    _hourHand.PointerMoved += HourHand_PointerMoved;
+    private void MinuteHand_PointerPressed(object? sender, PointerPressedEventArgs e)
+    {
+        _isDraggingMinuteHand = true;
+        e.Pointer.Capture(_minuteHand);
+        e.Handled = true;
+    }
 
-    _minuteHand.PointerPressed += MinuteHand_PointerPressed;
-    _minuteHand.PointerReleased += Hand_PointerReleased;
-    _minuteHand.PointerMoved += MinuteHand_PointerMoved;
+    private void Hand_PointerReleased(object? sender, PointerReleasedEventArgs e)
+    {
+        _isDraggingHourHand = false;
+        _isDraggingMinuteHand = false;
+        e.Pointer.Capture(null);
+    }
 
-    // Position both hands at center bottom
-    Canvas.SetLeft(_hourHand, ClockRadius - _hourHand.Width / 2);
-    Canvas.SetTop(_hourHand, ClockRadius - _hourHand.Height);
+    private void HourHand_PointerMoved(object? sender, PointerEventArgs e)
+    {
+        if (!_isDraggingHourHand)
+        {
+            return;
+        }
 
-    Canvas.SetLeft(_minuteHand, ClockRadius - _minuteHand.Width / 2);
-    Canvas.SetTop(_minuteHand, ClockRadius - _minuteHand.Height);
+        var point = e.GetPosition(MainPanel);
+        UpdateArcFromPoint(point, true);
+        e.Handled = true;
+    }
 
-    // Add to existing canvas
-    var canvas = MainPanel.Children.OfType<Panel>().First().Children.OfType<Canvas>().First();
-    canvas.Children.Add(_hourHand);
-    canvas.Children.Add(_minuteHand);
-}
+    private void MinuteHand_PointerMoved(object? sender, PointerEventArgs e)
+    {
+        if (!_isDraggingMinuteHand)
+        {
+            return;
+        }
 
-// Add these event handlers for the hands
-private void HourHand_PointerPressed(object sender, PointerPressedEventArgs e)
-{
-    _isDraggingHourHand = true;
-    e.Pointer.Capture(_hourHand);
-    e.Handled = true;
-}
-
-private void MinuteHand_PointerPressed(object sender, PointerPressedEventArgs e)
-{
-    _isDraggingMinuteHand = true;
-    e.Pointer.Capture(_minuteHand);
-    e.Handled = true;
-}
-
-private void Hand_PointerReleased(object sender, PointerReleasedEventArgs e)
-{
-    _isDraggingHourHand = false;
-    _isDraggingMinuteHand = false;
-    e.Pointer.Capture(null);
-}
-
-private void HourHand_PointerMoved(object sender, PointerEventArgs e)
-{
-    if (!_isDraggingHourHand) return;
-    
-    var point = e.GetPosition(MainPanel);
-    UpdateArcFromPoint(point, true);
-    e.Handled = true;
-}
-
-private void MinuteHand_PointerMoved(object sender, PointerEventArgs e)
-{
-    if (!_isDraggingMinuteHand) return;
-    
-    var point = e.GetPosition(MainPanel);
-    UpdateArcFromPoint(point, false);
-    e.Handled = true;
-}
+        var point = e.GetPosition(MainPanel);
+        UpdateArcFromPoint(point, false);
+        e.Handled = true;
+    }
 
     private void UpdateHands(DateTime time)
     {
@@ -340,5 +396,9 @@ private void MinuteHand_PointerMoved(object sender, PointerEventArgs e)
         // Apply rotations to hands
         ((RotateTransform)_hourHand.RenderTransform!).Angle = elapsedHoursAngle;
         ((RotateTransform)_minuteHand.RenderTransform!).Angle = elapsedMinutesAngle;
+        
+        // Update AM/PM state based on DateTime
+        _isPM = time.Hour >= 12;
+        UpdateArcOpacity();
     }
 }
