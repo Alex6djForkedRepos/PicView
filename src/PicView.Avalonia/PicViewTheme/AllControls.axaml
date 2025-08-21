@@ -41,6 +41,7 @@
                 <ResourceInclude Source="Controls/TabItem.axaml" />
                 <ResourceInclude Source="Controls/TextBlock.axaml" />
                 <ResourceInclude Source="Controls/TextBox.axaml" />
+                <ResourceInclude Source="Controls/TimePicker.axaml" />
                 <ResourceInclude Source="Controls/ToggleButton.axaml" />
                 <ResourceInclude Source="Controls/ToolTip.axaml" />
                 <ResourceInclude Source="Controls/Window.axaml" />

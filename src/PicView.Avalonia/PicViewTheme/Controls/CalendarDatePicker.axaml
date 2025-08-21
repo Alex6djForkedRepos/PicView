@@ -2,7 +2,6 @@
     x:ClassModifier="internal"
     xmlns="https://github.com/avaloniaui"
     xmlns:customControls="clr-namespace:PicView.Avalonia.CustomControls"
-    xmlns:sys="using:System"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <ControlTheme TargetType="CalendarDatePicker" x:Key="{x:Type CalendarDatePicker}">
         <Setter Property="Background" Value="{DynamicResource MainBackgroundColor}" />

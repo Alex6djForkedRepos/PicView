@@ -76,17 +76,14 @@
         <Setter Property="Margin" Value="5,0,0,0" />
         <Setter Property="Padding" Value="8" />
         <Setter Property="MinWidth" Value="180" />
-        <Setter Property="CaretBrush" Value="{DynamicResource MainTextColor}" />
-        <Setter Property="SelectionForegroundBrush" Value="{StaticResource SecondaryTextColor}" />
-        <Setter Property="VerticalContentAlignment" Value="Center" />
     </Style>
-    
+
     <Style Selector="TextBox.TStyle">
         <Setter Property="CaretBrush" Value="{DynamicResource MainTextColor}" />
         <Setter Property="SelectionForegroundBrush" Value="{StaticResource SecondaryTextColor}" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
     </Style>
-    
+
     <Style Selector="ComboBox.CStyle">
         <Setter Property="FontSize" Value="12" />
         <Setter Property="Foreground" Value="{DynamicResource MainTextColor}" />
@@ -109,7 +106,7 @@
     <Style Selector="Polygon.GlassBorder">
         <Setter Property="Stroke" Value="#48000000" />
     </Style>
-    
+
     <Style Selector="Path.OpenPath">
         <Setter Property="Data" Value="{StaticResource AltFolderGeometry}" />
         <Setter Property="Fill" Value="{DynamicResource MainTextColor}" />

@@ -1,0 +1,40 @@
+﻿<Styles
+    xmlns="https://github.com/avaloniaui"
+    xmlns:controls="using:PicView.Avalonia.CustomControls"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Style Selector="controls|RadialSlider">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="controls:RadialSlider">
+                <Canvas Height="{TemplateBinding Height}" Width="{TemplateBinding Width}">
+
+                    <!--  Track  -->
+                    <Path
+                        Data="{Binding TrackGeometry, RelativeSource={RelativeSource TemplatedParent}}"
+                        Stroke="{TemplateBinding Stroke}"
+                        StrokeThickness="{TemplateBinding Thickness}"
+                        x:Name="PART_Track" />
+
+                    <!--  Highlight for second cycle (only visible if enabled)  -->
+                    <Path
+                        Data="{Binding HighlightGeometry, RelativeSource={RelativeSource TemplatedParent}}"
+                        IsVisible="{TemplateBinding ShowHighlightOnSecondCycle}"
+                        Stroke="{TemplateBinding HighlightBrush}"
+                        StrokeThickness="{TemplateBinding Thickness}"
+                        x:Name="PART_Highlight" />
+
+                    <!--  Thumb  -->
+                    <Ellipse
+                        Canvas.Left="{Binding ThumbX, RelativeSource={RelativeSource TemplatedParent}}"
+                        Canvas.Top="{Binding ThumbY, RelativeSource={RelativeSource TemplatedParent}}"
+                        Fill="White"
+                        Height="20"
+                        Stroke="Black"
+                        StrokeThickness="2"
+                        Width="20"
+                        x:Name="PART_Thumb" />
+                </Canvas>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+</Styles>

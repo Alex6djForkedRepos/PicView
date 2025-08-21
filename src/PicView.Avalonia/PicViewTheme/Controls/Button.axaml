@@ -188,7 +188,7 @@
                         </Setter>
                     </KeyFrame>
                     <KeyFrame Cue="1">
-                        <Setter Property="Background">
+                        <Setter Property="Foreground">
                             <SolidColorBrush Color="{DynamicResource AccentColor}" />
                         </Setter>
                     </KeyFrame>
@@ -213,13 +213,13 @@
                             <SolidColorBrush Color="{StaticResource SecondaryTextColor}" />
                         </Setter>
                         <Setter Property="Background">
-                            <SolidColorBrush Color="{DynamicResource AltBackgroundColor}" />
+                            <SolidColorBrush Color="{DynamicResource AltBackgroundHoverColor}" />
                         </Setter>
                     </KeyFrame>
                 </Animation>
             </Style.Animations>
             <Setter Property="Foreground" Value="{StaticResource SecondaryTextColor}" />
-            <Setter Property="Background" Value="{DynamicResource AltBackgroundColor}" />
+            <Setter Property="Background" Value="{DynamicResource AltBackgroundHoverColor}" />
         </Style>
 
         <!--  End of animations  -->
