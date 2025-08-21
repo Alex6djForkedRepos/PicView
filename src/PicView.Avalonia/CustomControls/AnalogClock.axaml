@@ -23,6 +23,7 @@
                     Classes="txt"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Bottom"
+                    ZIndex="1"
                     x:Name="DigitalTime" />
             </Panel>
         </Border>
