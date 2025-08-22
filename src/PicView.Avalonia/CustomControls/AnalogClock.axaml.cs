@@ -5,6 +5,7 @@ using Avalonia.Controls.Shapes;
 using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Media;
+using PicView.Avalonia.Animations;
 using PicView.Avalonia.UI;
 
 namespace PicView.Avalonia.CustomControls;
@@ -18,8 +19,9 @@ public partial class AnalogClock : UserControl
             coerce: CoerceSelectedTime);
     
     private const double ClockMargin = 25;
-    private double ClockRadius => Width / 2;
+    private double ClockRadius => ClockContainer.Width / 2;
     
+    // ReSharper disable once InconsistentNaming
     private static bool _isPM;
 
     private Point _centerPoint;
@@ -45,6 +47,10 @@ public partial class AnalogClock : UserControl
         InitializeComponent();
         EnsureProperSize();
 
+        CancelButton.Click += async (_, _) => await Cancel();
+        AcceptButton.Click +=  async (_, _) => await Accept();
+        
+        _initialTime = SelectedTime;
         _isPM = SelectedTime.Hour >= 12;
         _is24Hour = !DateTimeFormatInfo.CurrentInfo.ShortTimePattern.Contains("tt");
 
@@ -52,6 +58,7 @@ public partial class AnalogClock : UserControl
         UpdateHands(SelectedTime);
     }
 
+    private readonly DateTime _initialTime;
     public DateTime SelectedTime
     {
         get => GetValue(SelectedTimeProperty);
@@ -74,20 +81,24 @@ public partial class AnalogClock : UserControl
 
     private void EnsureProperSize()
     {
-        if (double.IsNaN(Width) || double.IsNaN(Height))
+        double clockWidth;
+        if (double.IsNaN(ClockContainer.Width) || double.IsNaN(ClockContainer.Height))
         {
-            Width = Height = 300;
+            ClockContainer.Width = ClockContainer.Height = clockWidth = 300;
         }
         else if (Math.Abs(Width - Height) > .1)
         {
             var highestNumber = Math.Max(Width, Height);
-            Width = Height = highestNumber;
+            ClockContainer.Width = ClockContainer.Height = clockWidth = highestNumber;
+        }
+        else
+        {
+            clockWidth = ClockContainer.Width;
         }
 
-        if (Width is not 300 || Height is not 300)
-        {
-            CircularBorder.CornerRadius = new CornerRadius(Width / 2);
-        }
+        var newWidth = clockWidth / 2 + OuterBorder.Padding.Left + OuterBorder.Padding.Right;
+        AcceptButton.Width = CancelButton.Width = newWidth;
+        DownArrow.Margin = new Thickness(newWidth, -1, 0, 0);
     }
 
     private void GenerateClockFace()
@@ -116,7 +127,11 @@ public partial class AnalogClock : UserControl
         _elapsedMinutesArc = GetArc(-90, 0, diameter, true, 0.7, "AccentColor");
         _elapsedMinutesArc.Name = "elapsedMinutesArc";
         _elapsedMinutesArc.Cursor = new Cursor(StandardCursorType.Hand);
-
+        
+        // Add A border to hours arcs
+        var borderArc = GetArc(0, 360, diameter - ClockMargin * 4 + 2, false, 1, "MainBorderColor");
+        MainPanel.Children.Add(borderArc);
+        
         // Add pointer events
         _elapsedHoursArc.PointerPressed += ElapsedHoursArc_PointerPressed;
         _elapsedHoursArc.PointerReleased += ElapsedArc_PointerReleased;
@@ -414,6 +429,21 @@ public partial class AnalogClock : UserControl
     #endregion
     
     #region Events
+    
+    private async Task Accept()
+    {
+        var closeAnimation = AnimationsHelper.OpacityAnimation(1, 0, .3);
+        await closeAnimation.RunAsync(this);
+        IsVisible = false;      // Hide the control
+    }
+    
+    private async Task Cancel()
+    {
+        SelectedTime = _initialTime; // Reset to the original time
+        var closeAnimation = AnimationsHelper.OpacityAnimation(1, 0, .3);
+        await closeAnimation.RunAsync(this);
+        IsVisible = false;      // Hide the control
+    }
     
     private void ElapsedHoursArc_PointerPressed(object? sender, PointerPressedEventArgs e)
     {

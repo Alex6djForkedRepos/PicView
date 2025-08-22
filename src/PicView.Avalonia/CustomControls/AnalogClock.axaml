@@ -1,32 +1,82 @@
 ﻿<UserControl
-    Height="300"
-    Width="300"
     x:Class="PicView.Avalonia.CustomControls.AnalogClock"
     xmlns="https://github.com/avaloniaui"
+    xmlns:customControls="clr-namespace:PicView.Avalonia.CustomControls"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-    <Panel>
-        <Border
-            Background="{DynamicResource MainBackgroundColor}"
-            BorderBrush="{DynamicResource MainBorderColor}"
-            BorderThickness="1"
-            CornerRadius="150"
-            x:Name="CircularBorder">
-            <Panel x:Name="MainPanel">
-                <Ellipse
-                    Fill="{DynamicResource MainTextColorFaded}"
-                    Height="20"
-                    StrokeThickness="2"
-                    Width="20" />
+    <StackPanel>
+        <StackPanel Background="{DynamicResource MainBackgroundColor}">
+            <Border
+                BorderBrush="{DynamicResource MainBorderColor}"
+                BorderThickness="1,1,1,0"
+                CornerRadius="4,4,0,0"
+                Padding="15,20,15,0"
+                x:Name="OuterBorder">
 
-                <TextBlock
-                    Classes="txt txtShadow"
-                    FontSize="14"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Bottom"
-                    ZIndex="1"
-                    x:Name="DigitalTime" />
-            </Panel>
-        </Border>
-    </Panel>
+                <Panel
+                    Height="300"
+                    Width="300"
+                    x:Name="ClockContainer">
+                    <Ellipse
+                        Fill="{DynamicResource MenuBackgroundColor}"
+                        Stroke="{DynamicResource MainBorderColor}"
+                        StrokeThickness="1"
+                        x:Name="CircularBorder" />
+                    <Panel
+                        Height="300"
+                        Width="300"
+                        x:Name="MainPanel">
+                        <Ellipse
+                            Fill="{DynamicResource MainTextColorFaded}"
+                            Height="20"
+                            StrokeThickness="2"
+                            Width="20" />
+
+                        <TextBlock
+                            Classes="txt txtShadow"
+                            FontSize="14"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Bottom"
+                            ZIndex="1"
+                            x:Name="DigitalTime" />
+                    </Panel>
+                </Panel>
+            </Border>
+            <Border
+                BorderBrush="{DynamicResource MainBorderColor}"
+                BorderThickness="1,0,1,1"
+                CornerRadius="0,0,4,4"
+                Margin="0,15,0,0">
+                <StackPanel Orientation="Horizontal">
+                    <customControls:IconButton
+                        Background="Transparent"
+                        Classes="altHover"
+                        CornerRadius="0,0,0,4"
+                        Data="{StaticResource CloseGeometry}"
+                        Foreground="{DynamicResource MainTextColor}"
+                        Height="30"
+                        IconHeight="12"
+                        IconWidth="12"
+                        x:Name="CancelButton" />
+                    <customControls:IconButton
+                        Background="Transparent"
+                        Classes="hover"
+                        CornerRadius="0,0,4,0"
+                        Foreground="{DynamicResource MainTextColor}"
+                        Height="30"
+                        Icon="{StaticResource CheckmarkImage}"
+                        IconHeight="14"
+                        IconWidth="14"
+                        x:Name="AcceptButton" />
+                </StackPanel>
+            </Border>
+        </StackPanel>
+        <Polygon
+            Fill="{DynamicResource MenuBackgroundColor}"
+            Points="0,0 15,30, 30,0"
+            Stroke="{DynamicResource MainBorderColor}"
+            StrokeThickness="1"
+            x:Name="DownArrow" />
+    </StackPanel>
+
 </UserControl>

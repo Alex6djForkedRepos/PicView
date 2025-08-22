@@ -39,7 +39,7 @@ public partial class DateTimePickerButtons : UserControl
                 Content = _calendar
             };
             FlyoutBase.SetAttachedFlyout(CalendarButton, calendarFlyout);
-            CalendarButton.Click += (_, _) => { FlyoutBase.ShowAttachedFlyout(CalendarButton); };
+            CalendarButton.Click += (_, _) => { ShowPopUpControl(true); };
             
             _clock = new AnalogClock
             {
@@ -49,13 +49,35 @@ public partial class DateTimePickerButtons : UserControl
             {
                 Placement = PlacementMode.Top,
                 ShowMode = FlyoutShowMode.Standard,
-                Content = _clock
+                Content = _clock,
+                HorizontalOffset = -TimePickerButton.Width / 2 + 5
             };
             FlyoutBase.SetAttachedFlyout(TimePickerButton, timePickerFlyout);
-            TimePickerButton.Click += (_, _) => { FlyoutBase.ShowAttachedFlyout(TimePickerButton); };
+            TimePickerButton.Click += (_, _) => { ShowPopUpControl(false); };
 
             _calendar.SelectedDatesChanged += CalendarOnDisplayDateChanged;
         };
+    }
+
+    private void ShowPopUpControl(bool calendar)
+    {
+        if (Date.HasValue)
+        {
+            _calendar.SelectedDate = Date.Value;
+            _clock.SelectedTime = Date.Value;
+        }
+
+        if (calendar)
+        {
+            _calendar.IsVisible = true;
+            _calendar.Opacity = 1;
+        }
+        else
+        {
+            _clock.IsVisible = true;
+            _clock.Opacity = 1;
+        }
+        FlyoutBase.ShowAttachedFlyout(calendar ? CalendarButton : TimePickerButton);
     }
 
     private void TimePickerOnSelectedTimeChanged(object? sender, TimePickerSelectedValueChangedEventArgs e)
