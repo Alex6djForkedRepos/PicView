@@ -24,10 +24,11 @@ public partial class DateTimePickerButtons : UserControl
         InitializeComponent();
         Loaded += delegate
         {
+            Date ??= DateTime.Now;
             _calendar = new Calendar
             {
                 SelectionMode = CalendarSelectionMode.SingleDate,
-                SelectedDate = Date,
+                SelectedDate = Date.Value,
                 BorderThickness = new Thickness(1,0,1,1)
             };
             
@@ -42,6 +43,7 @@ public partial class DateTimePickerButtons : UserControl
             
             _clock = new AnalogClock
             {
+                SelectedTime = Date.Value
             };
             var timePickerFlyout = new Flyout
             {
