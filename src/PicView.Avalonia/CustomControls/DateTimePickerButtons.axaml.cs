@@ -1,6 +1,9 @@
 ﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
+using Avalonia.Controls.Shapes;
+using Avalonia.Layout;
+using PicView.Avalonia.UI;
 
 namespace PicView.Avalonia.CustomControls;
 
@@ -31,12 +34,13 @@ public partial class DateTimePickerButtons : UserControl
                 SelectedDate = Date.Value,
                 BorderThickness = new Thickness(1,0,1,1)
             };
-            
+            _calendar.Measure(Size.Infinity);
+            var calendarContainer = new CalendarContainer();
             var calendarFlyout = new Flyout
             {
                 Placement = PlacementMode.Top,
                 ShowMode = FlyoutShowMode.Standard,
-                Content = _calendar
+                Content = calendarContainer
             };
             FlyoutBase.SetAttachedFlyout(CalendarButton, calendarFlyout);
             CalendarButton.Click += (_, _) => { ShowPopUpControl(true); };

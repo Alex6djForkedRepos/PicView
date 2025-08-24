@@ -5,12 +5,13 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <StackPanel>
-        <StackPanel Background="{DynamicResource MainBackgroundColor}">
+        <StackPanel>
             <Border
+                Background="{DynamicResource MainBackgroundColor}"
                 BorderBrush="{DynamicResource MainBorderColor}"
                 BorderThickness="1,1,1,0"
                 CornerRadius="4,4,0,0"
-                Padding="15,20,15,0"
+                Padding="15,20,15,15"
                 x:Name="OuterBorder">
 
                 <Panel
@@ -43,10 +44,10 @@
                 </Panel>
             </Border>
             <Border
+                Background="{DynamicResource MenuBackgroundColor}"
                 BorderBrush="{DynamicResource MainBorderColor}"
-                BorderThickness="1,0,1,1"
-                CornerRadius="0,0,4,4"
-                Margin="0,15,0,0">
+                BorderThickness="1"
+                CornerRadius="0,0,4,4">
                 <StackPanel Orientation="Horizontal">
                     <customControls:IconButton
                         Background="Transparent"

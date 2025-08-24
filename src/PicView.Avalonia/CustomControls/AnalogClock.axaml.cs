@@ -45,17 +45,20 @@ public partial class AnalogClock : UserControl
     public AnalogClock()
     {
         InitializeComponent();
-        EnsureProperSize();
-
-        CancelButton.Click += async (_, _) => await Cancel();
-        AcceptButton.Click +=  async (_, _) => await Accept();
-        
         _initialTime = SelectedTime;
         _isPM = SelectedTime.Hour >= 12;
         _is24Hour = !DateTimeFormatInfo.CurrentInfo.ShortTimePattern.Contains("tt");
+        
+        Loaded += (_, _) =>
+        {
+            EnsureProperSize();
 
-        GenerateClockFace();
-        UpdateHands(SelectedTime);
+            CancelButton.Click += async (_, _) => await Cancel();
+            AcceptButton.Click += async (_, _) => await Accept();
+            
+            GenerateClockFace();
+            UpdateHands(SelectedTime);
+        };
     }
 
     private readonly DateTime _initialTime;
