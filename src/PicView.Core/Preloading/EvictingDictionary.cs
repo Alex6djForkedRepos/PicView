@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using System.Buffers;
+using System.Collections;
 using System.Diagnostics.CodeAnalysis;
+using PicView.Core.DebugTools;
 
 namespace PicView.Core.Preloading;
 
@@ -7,17 +9,6 @@ namespace PicView.Core.Preloading;
 /// A thread-safe, fixed-size dictionary keyed by <see cref="int"/> that evicts items
 /// according to a directional policy intended for image iteration.
 /// </summary>
-/// <typeparam name="TValue">
-/// The type of values stored in the dictionary.
-/// </typeparam>
-/// <remarks>
-/// <para>
-/// When the dictionary reaches its capacity, the eviction policy depends on the navigation
-/// direction supplied to <see cref="TryAdd(int, TValue, bool, out TValue)"/>:
-/// moving forward (i.e., <c>isReverse == false</c>) evicts the lowest key,
-/// while moving backward (i.e., <c>isReverse == true</c>) evicts the highest key.
-/// </para>
-/// </remarks>
 public class EvictingDictionary<TValue> : IEnumerable<KeyValuePair<int, TValue>>
 {
     private readonly Dictionary<int, TValue> _dictionary;
@@ -113,13 +104,13 @@ public class EvictingDictionary<TValue> : IEnumerable<KeyValuePair<int, TValue>>
                 {
                     // Moving backward: Evict the key that is "farthest ahead".
                     // This is the key with the largest forward distance from the current index.
-                    for (var i = 0; i < _dictionary.Keys.Count; i++)
+                    foreach (var dictionaryKey in _dictionary.Keys)
                     {
-                        var distance = (i - key + totalCount) % totalCount;
+                        var distance = (dictionaryKey - key + totalCount) % totalCount;
                         if (distance > maxDistance)
                         {
                             maxDistance = distance;
-                            keyToEvict = i;
+                            keyToEvict = dictionaryKey;
                         }
                     }
                 }
@@ -127,25 +118,37 @@ public class EvictingDictionary<TValue> : IEnumerable<KeyValuePair<int, TValue>>
                 {
                     // Moving forward: Evict the key that is "farthest behind".
                     // This is the key with the largest backward distance from the current index.
-                    for (var i = 0; i < _dictionary.Keys.Count; i++)
+                    foreach (var dictionaryKey in _dictionary.Keys)
                     {
-                        var distance = (key - i + totalCount) % totalCount;
+                        var distance = (key - dictionaryKey + totalCount) % totalCount;
                         if (distance > maxDistance)
                         {
                             maxDistance = distance;
-                            keyToEvict = i;
+                            keyToEvict = dictionaryKey;
                         }
                     }
                 }
 
-                if (keyToEvict > -1 && keyToEvict > _dictionary.Count)
+                if (keyToEvict < 0 || !_dictionary.TryGetValue(keyToEvict, out var value1))
                 {
-                    evictedValue = _dictionary[keyToEvict];
-                    _dictionary.Remove(keyToEvict);
+                    if (isReverse)
+                    {
+                        _dictionary.Remove(_dictionary.Keys.Max());
+                    }
+                    else
+                    {
+                        _dictionary.Remove(_dictionary.Keys.Min());
+                    }
+                    evictedValue = default;
+#if DEBUG
+                    DebugHelper.LogDebug(nameof(EvictingDictionary<>), nameof(TryAdd), $"Invalid parameter for key {keyToEvict}");
+#endif
+                    
                 }
                 else
                 {
-                    evictedValue = default;
+                    evictedValue = value1;
+                    _dictionary.Remove(keyToEvict);
                 }
             }
             else
@@ -155,13 +158,14 @@ public class EvictingDictionary<TValue> : IEnumerable<KeyValuePair<int, TValue>>
 
             _dictionary.Add(key, value);
 
-            return evictedValue != null;
+            return !EqualityComparer<TValue>.Default.Equals(evictedValue, default);
         }
         finally
         {
             _lock.Exit(); // Lock released
         }
     }
+
 
     /// <summary>
     /// Removes the element with the specified key.
@@ -279,10 +283,6 @@ public class EvictingDictionary<TValue> : IEnumerable<KeyValuePair<int, TValue>>
         _lock.Enter();
         try
         {
-            if (key < 0 || key > _dictionary.Count)
-            {
-                return false;
-            }
             return _dictionary.ContainsKey(key);
         }
         finally

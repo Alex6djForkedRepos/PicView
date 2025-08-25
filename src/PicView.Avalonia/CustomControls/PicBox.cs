@@ -118,15 +118,11 @@ public class PicBox : Control, IDisposable
     public PicBox() =>
         this.GetObservable(ImageTypeProperty).ToObservable()
             .Skip(1) // Skip the initial unset one
-            .SubscribeAwait(UpdateSource)
+            .Subscribe(UpdateSource)
             .AddTo(_imageTypeSubscription);
 
-    private async ValueTask UpdateSource(ImageType imageType, CancellationToken cancellationTokenSource)
+    private void UpdateSource(ImageType imageType)
     {
-        // A small delay allows to cancel early if the image goes out of screen too fast (eg. scrolling)
-        // The Bitmap constructor is expensive and cannot be cancelled. Fixes some object disposed exceptions when rapidly scrolling through images.
-        await Task.Delay(10, cancellationTokenSource);
-        
         switch (imageType)
         {
             case ImageType.Svg:

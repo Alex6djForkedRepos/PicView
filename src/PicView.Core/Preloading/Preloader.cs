@@ -59,7 +59,7 @@ public class PreLoader(Func<FileInfo, ValueTask<ImageModel>> imageModelLoader) :
         var fileInfo = list[index];
         var preLoadValue = new PreLoadValue(new ImageModel { FileInfo = fileInfo }, isLoading: true);
         ct.ThrowIfCancellationRequested();
-        _preLoadList.TryAdd(index, preLoadValue,  list.Count, isReverse, out var evictedValue);
+        _preLoadList.TryAdd(index, preLoadValue, list.Count, isReverse, out var evictedValue);
 
         try
         {
