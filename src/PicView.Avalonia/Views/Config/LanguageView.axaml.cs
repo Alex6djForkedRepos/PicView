@@ -4,6 +4,7 @@ using PicView.Avalonia.SettingsManagement;
 using PicView.Avalonia.UI;
 using PicView.Avalonia.ViewModels;
 using PicView.Core.Localization;
+using ZLinq;
 
 namespace PicView.Avalonia.Views.Config;
 
@@ -29,15 +30,14 @@ public partial class LanguageView : UserControl
             }
 
             // Get languages and convert to a list of tuples with (language code and display name)
-            var languages = TranslationManager.GetLanguages()
-                .Select(filePath => 
+            var languages = TranslationManager.GetLanguages().ToList()
+                .Select(filePath =>
                 {
-                    var langCode = Path.GetFileNameWithoutExtension(filePath);
+                    var langCode = Path.GetFileNameWithoutExtension(filePath.Name);
                     var displayName = new CultureInfo(langCode).DisplayName;
                     return (LanguageCode: langCode, DisplayName: displayName);
                 })
-                .OrderBy(x => x.DisplayName)  // Sort by display name instead of file path
-                .ToList();
+                .OrderBy(x => x.DisplayName);  // Sort by display name instead of file path
 
             foreach (var (langCode, displayName) in languages)
             {
