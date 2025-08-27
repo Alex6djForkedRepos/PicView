@@ -106,7 +106,7 @@ public class GifInstance : IGifInstance
 
         var elapsedTicks = elapsed.Ticks;
         var timeModulus = TimeSpan.FromTicks(elapsedTicks % totalTicks);
-        var targetFrame = _frameTimes.FirstOrDefault(x => timeModulus < x);
+        var targetFrame = _frameTimes.Find(x => timeModulus < x);
         var currentFrame = _frameTimes.IndexOf(targetFrame);
         if (currentFrame == -1)
         {
