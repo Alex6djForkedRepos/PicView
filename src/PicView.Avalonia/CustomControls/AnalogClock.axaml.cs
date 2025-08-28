@@ -12,41 +12,37 @@ namespace PicView.Avalonia.CustomControls;
 
 public partial class AnalogClock : UserControl
 {
+    private const double ClockMargin = 25;
+
     public static readonly StyledProperty<DateTime> SelectedTimeProperty =
         AvaloniaProperty.Register<AnalogClock, DateTime>(
             nameof(SelectedTime),
             DateTime.Now,
             coerce: CoerceSelectedTime);
 
-    private const double ClockMargin = 25;
-    private double ClockRadius => ClockContainer.Width / 2;
-
     // ReSharper disable once InconsistentNaming
     private static bool _isPM;
+
+    private readonly bool _is24Hour;
 
     private Point _centerPoint;
     private Arc? _elapsedHoursArc;
     private Arc? _elapsedMinutesArc;
     private Border? _hourHand;
-
-    // Field to track the previous angle of the minute hand during a drag.
-    private double _previousMinuteAngle = -1;
-
-    private readonly bool _is24Hour;
+    private DateTime _initialTime;
 
     private bool _isDraggingHourHand;
     private bool _isDraggingHours;
     private bool _isDraggingMinuteHand;
     private bool _isDraggingMinutes;
-    private Border? _minuteHand;
-    private Arc? _remainingHoursArc;
-    private Arc? _remainingMinutesArc;
-    private DateTime _initialTime;
-
-    public event EventHandler? Accepted;
-    public event EventHandler? Cancelled;
 
     private bool _isGenerated; // Prevent creating extra hands
+    private Border? _minuteHand;
+
+    // Field to track the previous angle of the minute hand during a drag.
+    private double _previousMinuteAngle = -1;
+    private Arc? _remainingHoursArc;
+    private Arc? _remainingMinutesArc;
 
     public AnalogClock()
     {
@@ -62,8 +58,9 @@ public partial class AnalogClock : UserControl
                 UpdateHands(SelectedTime);
                 return;
             }
+
             _isGenerated = true;
-            
+
             EnsureProperSize();
 
             CancelButton.Click += async (_, _) => await Cancel();
@@ -75,11 +72,16 @@ public partial class AnalogClock : UserControl
         };
     }
 
+    private double ClockRadius => ClockContainer.Width / 2;
+
     public DateTime SelectedTime
     {
         get => GetValue(SelectedTimeProperty);
         set => SetValue(SelectedTimeProperty, value);
     }
+
+    public event EventHandler? Accepted;
+    public event EventHandler? Cancelled;
 
     // This callback is triggered whenever the SelectedTime property changes.
     private static DateTime CoerceSelectedTime(AvaloniaObject instance, DateTime value)
@@ -174,6 +176,10 @@ public partial class AnalogClock : UserControl
             var x = ClockRadius + numberRadius * Math.Cos(angleRad);
             var y = ClockRadius + numberRadius * Math.Sin(angleRad);
             var text = new TextBlock { Text = h.ToString(), FontSize = textFontSize, Classes = { "txt" } };
+            text.PointerEntered += (_, _) => { text.Foreground = UIHelper.GetSolidColorBrush("SecondaryAccentColor"); };
+            text.PointerExited += (_, _) => { text.Foreground = UIHelper.GetBrush("MainTextColor"); };
+            var h1 = h;
+            text.PointerPressed += (_, _) => { UpdateTimeFromInt(h1); };
             text.Measure(Size.Infinity);
             var size = text.DesiredSize;
             Canvas.SetLeft(text, x - size.Width / 2);
@@ -407,7 +413,6 @@ public partial class AnalogClock : UserControl
     }
 
 
-
     private void UpdateHands(DateTime time)
     {
         if (_hourHand == null || _minuteHand == null ||
@@ -445,6 +450,68 @@ public partial class AnalogClock : UserControl
         UpdateArcOpacity();
     }
 
+    private void UpdateTimeFromInt(int roundedTime)
+    {
+        if (roundedTime is < 1 or > 12)
+        {
+            return;
+        }
+
+        var now = SelectedTime;
+        // Normalize the clicked label to a 12-hour base (12 stays 12)
+        var twelveHour = roundedTime == 12 ? 12 : roundedTime;
+
+        // baseAM24: 12 -> 0 (midnight), otherwise same number
+        var baseAM24 = twelveHour == 12 ? 0 : twelveHour;
+        var basePM24 = (baseAM24 + 12) % 24;
+
+        var candidateAm = FindClosestForHour(baseAM24);
+        var candidatePm = FindClosestForHour(basePM24);
+
+        // Choose closest of AM/PM
+        var chosen = Math.Abs((now - candidateAm).TotalSeconds) <= Math.Abs((now - candidatePm).TotalSeconds)
+            ? candidateAm
+            : candidatePm;
+
+        // If already exactly at chosen (same hour and minute), toggle to the other candidate.
+        if (now.Hour == chosen.Hour && now.Minute == chosen.Minute && now.Second == chosen.Second)
+        {
+            chosen = chosen == candidateAm ? candidatePm : candidateAm;
+        }
+
+        // Update SelectedTime (preserve date part determined by chosen)
+        SetCurrentValue(SelectedTimeProperty, chosen);
+
+        // Update local AM/PM state and visuals
+        _isPM = chosen.Hour >= 12;
+        UpdateHands(chosen);
+        return;
+
+        // For each base hour (AM and PM) find the closest candidate within yesterday/today/tomorrow
+        DateTime FindClosestForHour(int hour24)
+        {
+            var best = MakeCandidate(now.Date.AddDays(-1), hour24);
+            var bestDiff = Math.Abs((now - best).TotalSeconds);
+
+            for (var d = -1; d <= 1; d++)
+            {
+                var cand = MakeCandidate(now.Date.AddDays(d), hour24);
+                var diff = Math.Abs((now - cand).TotalSeconds);
+                if (diff < bestDiff)
+                {
+                    best = cand;
+                    bestDiff = diff;
+                }
+            }
+
+            return best;
+        }
+
+        // Helper to build DateTime for a given day and hour
+        DateTime MakeCandidate(DateTime dayDate, int hour24) =>
+            new(dayDate.Year, dayDate.Month, dayDate.Day, hour24, 0, 0);
+    }
+
     #endregion
 
     #region Events
@@ -456,7 +523,7 @@ public partial class AnalogClock : UserControl
         await closeAnimation.RunAsync(this);
         Accepted?.Invoke(this, EventArgs.Empty);
         await Task.Delay(TimeSpan.FromSeconds(speed * 3));
-        IsVisible = false;      // Hide the control
+        IsVisible = false; // Hide the control
     }
 
     private async Task Cancel()
@@ -464,7 +531,7 @@ public partial class AnalogClock : UserControl
         SelectedTime = _initialTime; // Reset to the original time
         var closeAnimation = AnimationsHelper.OpacityAnimation(1, 0, .3);
         await closeAnimation.RunAsync(this);
-        IsVisible = false;      // Hide the control
+        IsVisible = false; // Hide the control
         Cancelled?.Invoke(this, EventArgs.Empty);
     }
 
