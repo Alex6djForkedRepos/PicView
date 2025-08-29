@@ -35,7 +35,7 @@
                         FontSize="{TemplateBinding FontSize}"
                         Foreground="{TemplateBinding Foreground}"
                         HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                        Padding="15"
+                        Padding="20,15"
                         VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                         x:Name="PART_ContentPresenter" />
 

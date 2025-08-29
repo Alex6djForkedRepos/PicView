@@ -5,8 +5,10 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <StackPanel>
         <Calendar
+            AllowTapRangeSelection="True"
             BorderThickness="1,1,1,0"
             CornerRadius="2,2,0,0"
+            DisplayDateStart="1601/01/01"
             x:Name="PartCalendar" />
         <Border
             Background="{DynamicResource MenuBackgroundColor}"
