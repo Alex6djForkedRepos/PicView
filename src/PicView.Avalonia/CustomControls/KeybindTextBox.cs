@@ -104,6 +104,12 @@ public class KeybindTextBox : TextBox
     protected override void OnKeyDown(KeyEventArgs e)
     {
         // Disable keyboard behavior #248
+        
+        // Fix tab
+        if (e.Key == Key.Tab)
+        {
+            _ = AssociateKey(e);
+        }
     }
 
     private void OnGotFocus(object? sender, GotFocusEventArgs e)
