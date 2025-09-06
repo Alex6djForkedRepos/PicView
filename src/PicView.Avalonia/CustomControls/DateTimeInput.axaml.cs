@@ -3,9 +3,10 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Data;
+using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
-using Avalonia.Threading;
 
 namespace PicView.Avalonia.CustomControls;
 
@@ -16,6 +17,23 @@ namespace PicView.Avalonia.CustomControls;
 /// </summary>
 public class DateTimeInput : TemplatedControl
 {
+    /// <summary>
+    /// Defines the SelectedDateTime dependency property.
+    /// </summary>
+    public static readonly StyledProperty<DateTime?> SelectedDateTimeProperty =
+        AvaloniaProperty.Register<DateTimeInput, DateTime?>(
+            nameof(SelectedDateTime),
+            defaultBindingMode: BindingMode.TwoWay);
+
+    // Holds the button for AM/PM selection.
+    private Button? _ampmToggle;
+
+    // Tracks if the current culture uses a 12-hour clock.
+    private bool _is12HourClock;
+
+    // Tracks the current AM/PM state when in 12-hour mode.
+    private bool _isAm = true;
+
     // Flag to prevent recursive updates between the main property and the text boxes.
     private bool _isUpdatingFromProperty;
 
@@ -31,6 +49,16 @@ public class DateTimeInput : TemplatedControl
         SelectedDateTimeProperty.Changed.AddClassHandler<DateTimeInput>((x, e) => x.OnSelectedDateTimeChanged(e));
     }
 
+    /// <summary>
+    /// Gets or sets the selected date and time.
+    /// This is the main property to bind to from your ViewModel.
+    /// </summary>
+    public DateTime? SelectedDateTime
+    {
+        get => GetValue(SelectedDateTimeProperty);
+        set => SetValue(SelectedDateTimeProperty, value);
+    }
+
 
     /// <summary>
     /// Called when the control's template is applied. This is where we find
@@ -44,7 +72,6 @@ public class DateTimeInput : TemplatedControl
         var container = e.NameScope.Find<Panel>("PART_Container");
         if (container == null)
         {
-            // The template must have a panel named PART_Container.
             throw new InvalidOperationException("Could not find PART_Container in the control template.");
         }
 
@@ -77,6 +104,8 @@ public class DateTimeInput : TemplatedControl
         container.Children.Clear();
         var culture = CultureInfo.CurrentCulture;
         var dateTimeFormat = culture.DateTimeFormat;
+
+        _is12HourClock = dateTimeFormat.ShortTimePattern.Contains('h');
 
         // --- Create TextBoxes ---
         _yearBox = CreateNumericTextBox(4, "YYYY");
@@ -117,28 +146,64 @@ public class DateTimeInput : TemplatedControl
         }
 
         // --- Add Time Controls to Container ---
-        // Simplified time order (Hour then Minute is almost universal)
         container.Children.Add(CreateLineSeparator('—'));
         container.Children.Add(_hourBox);
         container.Children.Add(CreateTimeSeparator());
         container.Children.Add(_minuteBox);
+
+        if (!_is12HourClock)
+        {
+            return;
+        }
+
+        _ampmToggle = new Button
+        {
+            Cursor = new Cursor(StandardCursorType.Hand),
+            Content = new TextBlock
+            {
+                Classes = { "txt" },
+                Text = dateTimeFormat.AMDesignator
+            },
+            Padding = new Thickness(5, 0),
+            MinWidth = 0,
+            VerticalAlignment = VerticalAlignment.Center,
+            Margin = new Thickness(2, 0, 0, 0)
+        };
+        _ampmToggle.Click += OnAmPmToggleClick;
+        container.Children.Add(_ampmToggle);
+        _isAm = true; // Default to AM
+    }
+
+    private void OnAmPmToggleClick(object? sender, RoutedEventArgs e)
+    {
+        _isAm = !_isAm;
+        _ampmToggle?.Content =
+            _isAm
+                ? CultureInfo.CurrentCulture.DateTimeFormat.AMDesignator
+                : CultureInfo.CurrentCulture.DateTimeFormat.PMDesignator;
+        // Trigger a re-parse and update of the main property
+        OnPartTextChanged(null, null);
     }
 
     /// <summary>
     /// Creates a TextBox configured for numeric input.
     /// </summary>
-    private NumTextBox CreateNumericTextBox(int maxLength, string watermark)
+    private TextBox CreateNumericTextBox(int maxLength, string watermark)
     {
-        var textBox = new NumTextBox
+        var textBox = new TextBox
         {
             MaxLength = maxLength,
             Watermark = watermark,
             TextAlignment = TextAlignment.Center,
             VerticalAlignment = VerticalAlignment.Center,
-            Padding = new Thickness(2,0),
-            FontFamily = new FontFamily("avares://PicView.Avalonia/Assets/Fonts/Roboto-Regular.ttf#Roboto")
+            Padding = new Thickness(0),
+            FontFamily = new FontFamily("avares://PicView.Avalonia/Assets/Fonts/Roboto-Medium.ttf#Roboto"),
+            FontSize = 12
         };
+
+        // Attach event handlers
         textBox.TextChanged += OnPartTextChanged;
+        textBox.KeyDown += OnTextBoxKeyDown; // Hook up the new keyboard handler
         return textBox;
     }
 
@@ -151,10 +216,10 @@ public class DateTimeInput : TemplatedControl
         {
             Classes = { "txt" },
             Text = ":",
-            VerticalAlignment = VerticalAlignment.Center,
+            VerticalAlignment = VerticalAlignment.Center
         };
     }
-    
+
     private static TextBlock CreateLineSeparator(char separatorChar)
     {
         return new TextBlock
@@ -168,10 +233,69 @@ public class DateTimeInput : TemplatedControl
     }
 
     /// <summary>
+    /// Handles the KeyDown event for the numeric text boxes to increment/decrement values.
+    /// </summary>
+    private void OnTextBoxKeyDown(object? sender, KeyEventArgs e)
+    {
+        // We only care about the Up and Down arrow keys.
+        if (e.Key != Key.Up && e.Key != Key.Down)
+        {
+            return;
+        }
+
+        if (sender is not TextBox textBox)
+        {
+            return;
+        }
+
+        // Mark the event as handled to prevent default behaviors like caret movement.
+        e.Handled = true;
+
+        var change = e.Key == Key.Up ? 1 : -1;
+
+        // Use the current date/time if available, otherwise default to now.
+        // This ensures the control is responsive even when empty.
+        var currentDt = SelectedDateTime ?? DateTime.Now;
+        DateTime newDt;
+
+        // Determine which text box fired the event and apply the correct logic.
+        if (ReferenceEquals(textBox, _yearBox))
+        {
+            newDt = currentDt.AddYears(change);
+        }
+        else if (ReferenceEquals(textBox, _monthBox))
+        {
+            newDt = currentDt.AddMonths(change);
+        }
+        else if (ReferenceEquals(textBox, _dayBox))
+        {
+            newDt = currentDt.AddDays(change);
+        }
+        else if (ReferenceEquals(textBox, _hourBox))
+        {
+            newDt = currentDt.AddHours(change);
+        }
+        else if (ReferenceEquals(textBox, _minuteBox))
+        {
+            newDt = currentDt.AddMinutes(change);
+        }
+        else
+        {
+            return; // Should not happen
+        }
+
+        // Update the main property. This will trigger the update of all text boxes.
+        SelectedDateTime = newDt;
+
+        // Select the text so the user can immediately press the key again.
+        textBox.SelectAll();
+    }
+
+    /// <summary>
     /// Event handler for when text changes in any of the input TextBoxes.
     /// It attempts to parse the current input into a DateTime object.
     /// </summary>
-    private void OnPartTextChanged(object? sender, TextChangedEventArgs e)
+    private void OnPartTextChanged(object? sender, TextChangedEventArgs? e)
     {
         // If the text is being changed by our own code, do nothing.
         if (_isUpdatingFromProperty)
@@ -189,6 +313,19 @@ public class DateTimeInput : TemplatedControl
         // Only update the source property if all fields have a valid number.
         if (yearParsed && monthParsed && dayParsed && hourParsed && minuteParsed)
         {
+            // Adjust hour for 12-hour clock format
+            if (_is12HourClock)
+            {
+                if (!_isAm && hour < 12) // PM and not 12 PM
+                {
+                    hour += 12;
+                }
+                else if (_isAm && hour == 12) // 12 AM
+                {
+                    hour = 0;
+                }
+            }
+
             try
             {
                 // Attempt to create a valid DateTime object.
@@ -224,7 +361,26 @@ public class DateTimeInput : TemplatedControl
             _yearBox.Text = dt.Value.Year.ToString("D4");
             _monthBox!.Text = dt.Value.Month.ToString("D2");
             _dayBox!.Text = dt.Value.Day.ToString("D2");
-            _hourBox!.Text = dt.Value.Hour.ToString("D2");
+
+            var hour = dt.Value.Hour;
+            if (_is12HourClock)
+            {
+                _isAm = hour < 12;
+                _ampmToggle?.Content = _isAm
+                    ? CultureInfo.CurrentCulture.DateTimeFormat.AMDesignator
+                    : CultureInfo.CurrentCulture.DateTimeFormat.PMDesignator;
+
+                if (hour == 0)
+                {
+                    hour = 12; // 12 AM
+                }
+                else if (hour > 12)
+                {
+                    hour -= 12; // PM hours
+                }
+            }
+
+            _hourBox!.Text = hour.ToString("D2");
             _minuteBox!.Text = dt.Value.Minute.ToString("D2");
         }
         else
@@ -235,29 +391,13 @@ public class DateTimeInput : TemplatedControl
             _dayBox!.Text = string.Empty;
             _hourBox!.Text = string.Empty;
             _minuteBox!.Text = string.Empty;
+            if (!_is12HourClock || _ampmToggle == null)
+            {
+                return;
+            }
+
+            _isAm = true;
+            _ampmToggle.Content = CultureInfo.CurrentCulture.DateTimeFormat.AMDesignator;
         }
     }
-
-    #region Avalonia Properties
-
-    /// <summary>
-    /// Defines the SelectedDateTime dependency property.
-    /// </summary>
-    public static readonly StyledProperty<DateTime?> SelectedDateTimeProperty =
-        AvaloniaProperty.Register<DateTimeInput, DateTime?>(
-            nameof(SelectedDateTime),
-            null,
-            defaultBindingMode: BindingMode.TwoWay);
-
-    /// <summary>
-    /// Gets or sets the selected date and time.
-    /// This is the main property to bind to from your ViewModel.
-    /// </summary>
-    public DateTime? SelectedDateTime
-    {
-        get => GetValue(SelectedDateTimeProperty);
-        set => SetValue(SelectedDateTimeProperty, value);
-    }
-
-    #endregion
 }

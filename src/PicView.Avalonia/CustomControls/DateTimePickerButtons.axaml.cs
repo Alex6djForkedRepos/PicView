@@ -3,7 +3,9 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Data;
+using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.LogicalTree;
 
 namespace PicView.Avalonia.CustomControls;
 
@@ -114,6 +116,28 @@ public partial class DateTimePickerButtons : UserControl
 
         _clock.Accepted += OnClockAccepted;
         _clock.Cancelled += (_, _) => _timePickerFlyout.Hide();
+
+        DateBox.KeyUp += DateBoxOnKeyUp;
+    }
+
+    private void DateBoxOnKeyUp(object? sender, KeyEventArgs e)
+    {
+        if (e.Key != Key.Enter)
+        {
+            return;
+        }
+
+        SelectedDateTime = DateBox.SelectedDateTime;
+        ExecuteCommand();
+    }
+
+    protected override void OnDetachedFromLogicalTree(LogicalTreeAttachmentEventArgs e)
+    {
+        base.OnDetachedFromLogicalTree(e);
+
+        DateBox.KeyUp -= DateBoxOnKeyUp;
+        _clock.Accepted -= OnClockAccepted;
+        _calendarContainer.Accepted -= OnCalendarAccepted;
     }
 
     private void ShowPopUpControl(bool calendar)
@@ -150,7 +174,7 @@ public partial class DateTimePickerButtons : UserControl
             return;
         }
 
-        var newDate = _calendarContainer.SelectedDate.Value.Date;
+        var newDate = _calendarContainer.PartCalendar.DisplayDate.Date;
         var oldTime = SelectedDateTime.Value.TimeOfDay;
         SelectedDateTime = newDate + oldTime;
 
