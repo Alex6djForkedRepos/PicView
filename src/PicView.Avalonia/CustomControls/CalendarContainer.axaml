@@ -1,0 +1,53 @@
+﻿<UserControl
+    x:Class="PicView.Avalonia.CustomControls.CalendarContainer"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:customControls="clr-namespace:PicView.Avalonia.CustomControls"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <StackPanel>
+        <Calendar
+            AllowTapRangeSelection="True"
+            BorderThickness="1,1,1,0"
+            CornerRadius="2,2,0,0"
+            DisplayDateStart="1601/01/01"
+            x:Name="PartCalendar" />
+        <Border
+            Background="{DynamicResource MenuBackgroundColor}"
+            BorderBrush="{DynamicResource MainBorderColor}"
+            BorderThickness="1"
+            CornerRadius="0,0,4,4"
+            Margin="0,-2,0,0">
+            <StackPanel Orientation="Horizontal">
+                <customControls:IconButton
+                    Background="Transparent"
+                    Classes="altHover"
+                    CornerRadius="0,0,0,4"
+                    Data="{StaticResource CloseGeometry}"
+                    Foreground="{DynamicResource MainTextColor}"
+                    Height="30"
+                    IconHeight="12"
+                    IconWidth="12"
+                    Width="136"
+                    x:Name="CancelButton" />
+                <customControls:IconButton
+                    Background="Transparent"
+                    Classes="hover"
+                    CornerRadius="0,0,4,0"
+                    Foreground="{DynamicResource MainTextColor}"
+                    Height="30"
+                    Icon="{StaticResource CheckmarkImage}"
+                    IconHeight="14"
+                    IconWidth="14"
+                    Width="136"
+                    x:Name="AcceptButton" />
+            </StackPanel>
+        </Border>
+        <Polygon
+            Fill="{DynamicResource MenuBackgroundColor}"
+            Margin="122,-4,0,0"
+            Points="0,0 15,30, 30,0"
+            Stroke="{DynamicResource MainBorderColor}"
+            StrokeThickness="1"
+            ZIndex="-1"
+            x:Name="DownArrow" />
+    </StackPanel>
+</UserControl>

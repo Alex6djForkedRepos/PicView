@@ -121,6 +121,17 @@ public static class UIHelper
         }
     }
 
+    public static DrawingImage? GetIcon(string resourceName)
+    {
+        if (!Application.Current.TryGetResource(resourceName,
+                Application.Current.RequestedThemeVariant, out var icon))
+        {
+            return null;
+        }
+
+        return icon as DrawingImage;
+    }
+
     public static SolidColorBrush GetBrush(string resourceName) =>
         new(GetColor(resourceName));
 
@@ -133,6 +144,18 @@ public static class UIHelper
         }
 
         return textColor is not Color color ? default : color;
+    }
+
+    public static SolidColorBrush? GetSolidColorBrush(string resourceName)
+    {
+
+        if (!Application.Current.TryGetResource(resourceName,
+        Application.Current.RequestedThemeVariant, out var textColor))
+        {
+            return null;
+        }
+
+        return textColor as SolidColorBrush ?? null;
     }
 
     public static void SetButtonHover(Control button, SolidColorBrush brush)
