@@ -64,6 +64,11 @@ public partial class HoverBar : UserControl
 
     private async Task ManagePointerPressed(object? sender, PointerPressedEventArgs e)
     {
+        if (DataContext is not MainViewModel vm)
+        {
+            return;
+        }
+        
         var props = e.Properties;
         
         if (NextButton.IsPointerOver)
@@ -104,6 +109,20 @@ public partial class HoverBar : UserControl
             if (props.IsRightButtonPressed || props.IsLeftButtonPressed)
             {
                 ShowQuickEditingDialog();
+            }
+        }
+        else if (RotateLeftButton.IsPointerOver)
+        {
+            if (props.IsLeftButtonPressed)
+            {
+                vm.MainWindow.IsHoverRotateLeftClicked = true;
+            }
+        }
+        else if (RotateRightButton.IsPointerOver)
+        {
+            if (props.IsLeftButtonPressed)
+            {
+                vm.MainWindow.IsHoverRotateRightClicked = true;
             }
         }
         else if (ProgressBar.IsPointerOver)

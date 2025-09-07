@@ -83,6 +83,16 @@ public static class WindowResizing
             clicked => vm.MainWindow.IsTopToolbarRotationClicked = clicked,
             () => UIHelper.GetTitlebar.GetControl<IconButton>("RotateRightButton"),
             new Point(11, 7));
+
+        RepositionCursorIfTriggered(vm, vm.MainWindow.IsHoverRotateRightClicked,
+            clicked => vm.MainWindow.IsHoverRotateRightClicked = clicked,
+            () => UIHelper.GetHoverBar.GetControl<IconButton>("RotateRightButton"),
+            new Point(11, 7));
+
+        RepositionCursorIfTriggered(vm, vm.MainWindow.IsHoverRotateLeftClicked,
+            clicked => vm.MainWindow.IsHoverRotateLeftClicked = clicked,
+            () => UIHelper.GetHoverBar.GetControl<IconButton>("RotateLeftButton"),
+            new Point(11, 7));
     }
 
     private static void RepositionCursorIfTriggered(
