@@ -47,14 +47,14 @@ public static class WindowResizing
             () => UIHelper.GetBottomBar.GetControl<Button>("NextButton"),
             new Point(50, 10));
 
-        RepositionCursorIfTriggered(vm, vm.HoverbarViewModel.IsHoverNavigationButtonLeftClicked,
-            clicked => vm.HoverbarViewModel.IsHoverNavigationButtonLeftClicked = clicked,
-            () => UIHelper.GetHoverBar.GetControl<Button>("PreviousButton"),
+        RepositionCursorIfTriggered(vm, vm.HoverbarViewModel.IsHoverNavigationButtonNextClicked,
+            clicked => vm.HoverbarViewModel.IsHoverNavigationButtonNextClicked = clicked,
+            () => UIHelper.GetHoverBar.GetControl<Button>("NextButton"),
             new Point(50, 10));
 
-        RepositionCursorIfTriggered(vm, vm.HoverbarViewModel.IsHoverNavigationButtonRightClicked,
-            clicked => vm.HoverbarViewModel.IsHoverNavigationButtonRightClicked = clicked,
-            () => UIHelper.GetHoverBar.GetControl<Button>("NextButton"),
+        RepositionCursorIfTriggered(vm, vm.HoverbarViewModel.IsHoverNavigationButtonPreviousClicked,
+            clicked => vm.HoverbarViewModel.IsHoverNavigationButtonPreviousClicked = clicked,
+            () => UIHelper.GetHoverBar.GetControl<Button>("PreviousButton"),
             new Point(50, 10));
 
         RepositionCursorIfTriggered(vm, vm.MainWindow.IsClickArrowLeftClicked,

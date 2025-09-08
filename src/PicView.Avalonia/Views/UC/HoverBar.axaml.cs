@@ -43,15 +43,15 @@ public partial class HoverBar : UserControl
                 h => NextButton.Click -= h)
             .SubscribeAwait(async (_, _) =>
             {
-                vm.HoverbarViewModel.IsHoverNavigationButtonLeftClicked = true;
+                vm.HoverbarViewModel.IsHoverNavigationButtonNextClicked = true;
                 await FunctionsMapper.Next();
             });
         Observable.FromEventHandler<RoutedEventArgs>(h => PreviousButton.Click += h,
                 h => PreviousButton.Click -= h)
             .SubscribeAwait(async (_, _) =>
             {
-                vm.HoverbarViewModel.IsHoverNavigationButtonRightClicked = true;
-                await FunctionsMapper.Next();
+                vm.HoverbarViewModel.IsHoverNavigationButtonPreviousClicked = true;
+                await FunctionsMapper.Prev();
             });
     }
 

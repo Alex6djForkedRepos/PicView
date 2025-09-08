@@ -12,8 +12,8 @@ public class HoverbarViewModel : IDisposable
     public bool IsHoverRotateLeftClicked { get; set; }
     public bool IsHoverRotateRightClicked { get; set; }
 
-    public bool IsHoverNavigationButtonLeftClicked { get; set; }
-    public bool IsHoverNavigationButtonRightClicked { get; set; }
+    public bool IsHoverNavigationButtonNextClicked { get; set; }
+    public bool IsHoverNavigationButtonPreviousClicked { get; set; }
 
     public BindableReactiveProperty<bool> IsHoverbarVisible { get; } = new();
 }
