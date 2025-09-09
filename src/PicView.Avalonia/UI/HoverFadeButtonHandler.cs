@@ -42,11 +42,13 @@ public class HoverFadeButtonHandler
     {
         _mainButton.PointerEntered += OnPointerEntered;
         _mainButton.PointerExited += OnPointerExited;
-        if (_childButton != null)
+        if (_childButton == null)
         {
-            _childButton.PointerEntered += OnPointerEntered;
-            _childButton.PointerExited += OnPointerExited;
+            return;
         }
+
+        _childButton.PointerEntered += OnPointerEntered;
+        _childButton.PointerExited += OnPointerExited;
     }
 
     private void OnPointerEntered(object? sender, PointerEventArgs e)
@@ -152,9 +154,6 @@ public class HoverFadeButtonHandler
     private void SetOpacity(double opacity)
     {
         _mainButton.Opacity = opacity;
-        if (_childButton != null)
-        {
-            _childButton.Opacity = opacity;
-        }
+        _childButton?.Opacity = opacity;
     }
 }

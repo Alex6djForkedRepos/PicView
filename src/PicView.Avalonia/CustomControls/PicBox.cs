@@ -370,9 +370,16 @@ public class PicBox : Control, IDisposable
             DebugHelper.LogDebug(nameof(PicBox), nameof(RenderImage), e);
             
             var preloadValue = NavigationManager.GetCurrentPreLoadValue();
-            if (preloadValue?.ImageModel != null)
+            if (preloadValue?.ImageModel?.Image != null)
             {
-                context.DrawImage(preloadValue.ImageModel.Image as IImage, sourceRect, destRect);
+                try
+                {
+                    context.DrawImage(preloadValue?.ImageModel?.Image as IImage, sourceRect, destRect);
+                }
+                catch (Exception exception)
+                {
+                    DebugHelper.LogDebug(nameof(PicBox), nameof(RenderImage), exception);
+                }
             }
             else
             {
