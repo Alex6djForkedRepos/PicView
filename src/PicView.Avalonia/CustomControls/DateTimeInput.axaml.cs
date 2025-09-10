@@ -45,7 +45,7 @@ public class DateTimeInput : TemplatedControl
 
     private CompositeDisposable _disposables = new();
 
-    private const string PART_Container = "PART_Container";
+    private const string PARTContainer = "PART_Container";
     private const string RobotoFont = "avares://PicView.Avalonia/Assets/Fonts/Roboto-Medium.ttf#Roboto";
 
     /// <summary>
@@ -77,7 +77,7 @@ public class DateTimeInput : TemplatedControl
         base.OnApplyTemplate(e);
 
         // Find the container that will hold our dynamic controls.
-        var container = e.NameScope.Find<Panel>(nameof(PART_Container));
+        var container = e.NameScope.Find<Panel>(PARTContainer);
         if (container == null)
         {
             throw new InvalidOperationException("Could not find PART_Container in the control template.");
@@ -212,7 +212,8 @@ public class DateTimeInput : TemplatedControl
             VerticalAlignment = VerticalAlignment.Center,
             Padding = new Thickness(0),
             FontFamily = new FontFamily(RobotoFont),
-            FontSize = 12
+            FontSize = 12,
+            MinWidth = maxLength * 7 // fix for macOS not having proper width
         };
 
         // Attach event handlers
