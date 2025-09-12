@@ -7,8 +7,10 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.LogicalTree;
 using Avalonia.Media;
+using Avalonia.Threading;
 using PicView.Avalonia.Navigation;
 using PicView.Avalonia.ViewModels;
+using PicView.Avalonia.WindowBehavior;
 using R3;
 
 namespace PicView.Avalonia.CustomControls;
@@ -69,6 +71,7 @@ public class DraggableProgressBar : TemplatedControl
         // wait for a 25ms pause in changes (debounce), and then emit the last value.
         CurrentIndexProperty.Changed.ToObservable()
             .Debounce(TimeSpan.FromMilliseconds(25))
+            .Skip(1) // Skip first loading, when it is just setup
             .SubscribeAwait(async (x, cancel) =>
             {
                 // Check if the new value exists and is different from the old one.
@@ -194,8 +197,16 @@ public class DraggableProgressBar : TemplatedControl
         if (!expandedBounds.Contains(clickPosition))
         {
             // Click was on the track (outside expanded thumb), so jump to position
-            UpdateIndexFromPosition(clickPosition.X);
-            return;
+            IsDragging = false; 
+            Task.Run(async () =>
+            {
+                await Dispatcher.UIThread.InvokeAsync(() =>
+                {
+                    UpdateIndexFromPosition(clickPosition.X);
+                }, DispatcherPriority.Send);
+                await WindowResizing.SetSizeAsync(DataContext as MainViewModel);
+            });
+
         }
 
         // Click was on (or near) the thumb, so start dragging
