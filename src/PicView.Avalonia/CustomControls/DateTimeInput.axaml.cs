@@ -46,7 +46,6 @@ public class DateTimeInput : TemplatedControl
     private CompositeDisposable _disposables = new();
 
     private const string PARTContainer = "PART_Container";
-    private const string RobotoFont = "avares://PicView.Avalonia/Assets/Fonts/Roboto-Medium.ttf#Roboto";
 
     /// <summary>
     /// Static constructor to register the default style for this control.
@@ -211,7 +210,7 @@ public class DateTimeInput : TemplatedControl
             TextAlignment = TextAlignment.Center,
             VerticalAlignment = VerticalAlignment.Center,
             Padding = new Thickness(0),
-            FontFamily = new FontFamily(RobotoFont),
+            FontFamily = UIHelper.MediumFontFamily,
             FontSize = 12,
             MinWidth = maxLength * 7 // fix for macOS not having proper width
         };

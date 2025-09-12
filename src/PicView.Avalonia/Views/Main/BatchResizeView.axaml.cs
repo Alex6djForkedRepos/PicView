@@ -609,7 +609,7 @@ public partial class BatchResizeView : UserControl
         {
             Text = newSize,
             Foreground = Brushes.Green,
-            FontFamily = new FontFamily("avares://PicView.Avalonia/Assets/Fonts/Roboto-Bold.ttf#Roboto")
+            FontFamily = UIHelper.BoldFontFamily
         };
 
         textBlock.Inlines.Add(fileNameRun);

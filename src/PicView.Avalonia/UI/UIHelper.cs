@@ -84,6 +84,11 @@ public static class UIHelper
     #endregion
 
     #region Helper functions
+    
+    private const string BoldFontLocation = "avares://PicView.Avalonia/Assets/Fonts/Roboto-Medium.ttf#Roboto";
+    public static FontFamily BoldFontFamily => new(BoldFontLocation);
+    private const string MediumFontLocation = "avares://PicView.Avalonia/Assets/Fonts/Roboto-Medium.ttf#Roboto";
+    public static FontFamily MediumFontFamily => new(MediumFontLocation);
 
     /// <summary>
     /// Centers the window or gallery based on current state
