@@ -116,13 +116,15 @@ public class DateTimeInput : TemplatedControl
         var dateTimeFormat = culture.DateTimeFormat;
         
         _is12HourClock = dateTimeFormat.ShortTimePattern.Contains('h');
+        
+        var today = DateTime.Now;
 
         // --- Create TextBoxes ---
-        _yearBox = CreateNumericTextBox(4, "YYYY");
-        _monthBox = CreateNumericTextBox(2, "MM");
-        _dayBox = CreateNumericTextBox(2, "DD");
-        _hourBox = CreateNumericTextBox(2, "HH");
-        _minuteBox = CreateNumericTextBox(2, "mm");
+        _yearBox = CreateNumericTextBox(maxLength:4, watermark: today.Year.ToString("D4"));
+        _monthBox = CreateNumericTextBox(maxLength:2, watermark: today.Month.ToString("D2"));
+        _dayBox = CreateNumericTextBox(maxLength:2, watermark: today.Day.ToString("D2"));
+        _hourBox = CreateNumericTextBox(maxLength:2, watermark: today.TimeOfDay.Hours.ToString("D2"));
+        _minuteBox = CreateNumericTextBox(maxLength:2, watermark: today.TimeOfDay.Minutes.ToString("D2"));
 
         // --- Determine Date Field Order ---
         var dateParts = dateTimeFormat.ShortDatePattern.Split(dateTimeFormat.DateSeparator)
@@ -235,9 +237,7 @@ public class DateTimeInput : TemplatedControl
             Text = CultureInfo.CurrentCulture.DateTimeFormat.TimeSeparator,
             VerticalAlignment = VerticalAlignment.Center
         };
-        Observable.EveryValueChanged(this, x => x.IsEffectivelyEnabled, UIHelper.GetFrameProvider)
-            .Subscribe(b => textBlock.IsVisible = b)
-            .AddTo(_disposables);
+        HideTextBlockWhenNotEnabledSubscription(textBlock);
         return textBlock;
     }
 
@@ -256,10 +256,15 @@ public class DateTimeInput : TemplatedControl
             FontSize = 18,
             Opacity = .6
         };
+        HideTextBlockWhenNotEnabledSubscription(textBlock);
+        return textBlock;
+    }
+
+    private void HideTextBlockWhenNotEnabledSubscription(TextBlock textBlock)
+    {
         Observable.EveryValueChanged(this, x => x.IsEffectivelyEnabled, UIHelper.GetFrameProvider)
             .Subscribe(b => textBlock.IsVisible = b)
             .AddTo(_disposables);
-        return textBlock;
     }
     
     /// <summary>
