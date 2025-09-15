@@ -6,6 +6,7 @@ using Avalonia.Media;
 using PicView.Avalonia.Interfaces;
 using PicView.Avalonia.UI;
 using PicView.Avalonia.Update;
+using PicView.Avalonia.ViewModels;
 using PicView.Avalonia.Win32.PlatformUpdate;
 
 namespace PicView.Avalonia.Win32.Views;
@@ -14,8 +15,9 @@ public partial class AboutWindow : Window, IPlatformSpecificUpdate
 {
     public AboutWindow()
     {
+        var vm = UIHelper.GetMainView.DataContext as MainViewModel;
+        vm.AboutView ??= new AboutViewModel(this);
         InitializeComponent();
-        AboutView.PlatformUpdate = this;
         if (Settings.Theme.GlassTheme)
         {
             IconBorder.Background = Brushes.Transparent;
