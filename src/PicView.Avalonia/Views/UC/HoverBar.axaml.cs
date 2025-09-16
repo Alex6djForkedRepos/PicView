@@ -13,15 +13,6 @@ namespace PicView.Avalonia.Views.UC;
 
 public partial class HoverBar : UserControl
 {
-    private readonly (int MaxWidth, int ButtonWidth, bool ShowRotate)[] _breakpoints =
-    [
-        (MaxWidth: 450, ButtonWidth: 65, ShowRotate: false),
-        (MaxWidth: 550, ButtonWidth: 70, ShowRotate:false),
-        (MaxWidth: 650, ButtonWidth: 72, ShowRotate:false),
-        (MaxWidth: 800, ButtonWidth: 75, ShowRotate:false),
-        (int.MaxValue, ButtonWidth: 80, ShowRotate:true)
-    ];
-
     public HoverBar()
     {
         InitializeComponent();
@@ -57,10 +48,63 @@ public partial class HoverBar : UserControl
 
     private void ApplyResponsiveResize(double width)
     {
-        var config = _breakpoints.First(bp => width <= bp.MaxWidth);
-        RotateLeftButton.IsVisible = config.ShowRotate;
-        NextButton.Width = PreviousButton.Width = config.ButtonWidth;
+        const int firstBreakpoint = 475;
+        const int secondBreakpoint = 550;
+        const int thirdBreakpoint = 800;
+
+        switch (width)
+        {
+            case <= firstBreakpoint:
+                ApplyLayout(
+                    70,
+                    false,
+                    true,
+                    false,
+                    new Thickness(5, 45, 5, 0));
+                break;
+
+            case <= secondBreakpoint:
+                ApplyLayout(
+                    75,
+                    false,
+                    true,
+                    false,
+                    new Thickness(5, 45, 5, 0));
+                break;
+
+            case < thirdBreakpoint:
+                ApplyLayout(
+                    72,
+                    false,
+                    false,
+                    true,
+                    new Thickness(5, 65, 5, 0));
+                break;
+
+            default:
+                ApplyLayout(
+                    75,
+                    true,
+                    false,
+                    true,
+                    new Thickness(5, 65, 5, 0));
+                break;
+        }
     }
+
+    private void ApplyLayout(double buttonWidth, bool showRotateLeft, bool showTopBorder, bool showAdvancedButtons,
+        Thickness topPanelMargin)
+    {
+        NextButton.Width = PreviousButton.Width = buttonWidth;
+        RotateLeftButton.IsVisible = showRotateLeft;
+        TopBorder.IsVisible = showTopBorder;
+        RotateRightButton.IsVisible =
+            FlipButton.IsVisible =
+                ZoomInMenuButton.IsVisible =
+                    ZoomOutMenuButton.IsVisible = showAdvancedButtons;
+        TopPanel.Margin = topPanelMargin;
+    }
+
 
     private async Task ManagePointerPressed(object? sender, PointerPressedEventArgs e)
     {
