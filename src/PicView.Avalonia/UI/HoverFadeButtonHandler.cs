@@ -35,19 +35,20 @@ public class HoverFadeButtonHandler
     /// <summary>
     ///     Duration of fade-in and fade-out in seconds.
     /// </summary>
-    public double FadeInDuration { get; set; } = 0.3;
-
-    public double FadeOutDuration { get; set; } = 0.45;
+    private static double FadeInDuration => 0.3;
+    private static double FadeOutDuration => 0.45;
 
     private void AttachEvents()
     {
         _mainButton.PointerEntered += OnPointerEntered;
         _mainButton.PointerExited += OnPointerExited;
-        if (_childButton != null)
+        if (_childButton == null)
         {
-            _childButton.PointerEntered += OnPointerEntered;
-            _childButton.PointerExited += OnPointerExited;
+            return;
         }
+
+        _childButton.PointerEntered += OnPointerEntered;
+        _childButton.PointerExited += OnPointerExited;
     }
 
     private void OnPointerEntered(object? sender, PointerEventArgs e)
@@ -63,6 +64,11 @@ public class HoverFadeButtonHandler
 
     private void OnPointerExited(object? sender, PointerEventArgs e)
     {
+        if (e.Pointer.Captured != null) // Don't fade out when captured
+        {
+            return;
+        }
+        
         // Delay fade-out to ensure pointer is truly outside both parent and child
         Dispatcher.UIThread.Post(async () =>
         {
@@ -148,9 +154,6 @@ public class HoverFadeButtonHandler
     private void SetOpacity(double opacity)
     {
         _mainButton.Opacity = opacity;
-        if (_childButton != null)
-        {
-            _childButton.Opacity = opacity;
-        }
+        _childButton?.Opacity = opacity;
     }
 }

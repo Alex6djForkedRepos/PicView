@@ -58,18 +58,18 @@ public class App : Application, IPlatformSpecificService, IPlatformWindowService
             }
 
             var settingsExists = await LoadSettingsAsync().ConfigureAwait(false);
+            _vm = new MainViewModel(this, this);
         
             TranslationManager.Init();
         
             await Dispatcher.UIThread.InvokeAsync(() =>
             {
+                DataContext = _vm;
                 ThemeManager.DetermineTheme(Current, settingsExists);
             
                 _mainWindow = new MacMainWindow();
                 desktop.MainWindow = _mainWindow;
             },DispatcherPriority.Send);
-        
-            _vm = new MainViewModel(this, this);
         
             await Dispatcher.UIThread.InvokeAsync(() =>
             {
@@ -87,15 +87,11 @@ public class App : Application, IPlatformSpecificService, IPlatformWindowService
             {
                 if (Settings.UIProperties.OpenInSameWindow)
                 {
-                    var tasks = new[]
+                    Dispatcher.UIThread.Invoke(() => 
                     {
-                        NavigationManager.LoadPicFromStringAsync(e.Urls[0], _vm),
-                        Dispatcher.UIThread.InvokeAsync(() =>
-                        {
-                            _mainWindow.Activate();
-                        }).GetTask()
-                    };
-                    await Task.WhenAll(tasks).ConfigureAwait(false);
+                        _mainWindow.Activate();
+                    }, DispatcherPriority.Send);
+                    await NavigationManager.LoadPicFromStringAsync(e.Urls[0], _vm);
                 }
                 else
                 {
@@ -172,7 +168,7 @@ public class App : Application, IPlatformSpecificService, IPlatformWindowService
         catch (Exception e)
         {
             Debug.WriteLine(e);
-           _ = TooltipHelper.ShowTooltipMessageAsync(e.Message, true);
+            TooltipHelper.ShowTooltipMessage(e.Message, true);
         }
     }
 

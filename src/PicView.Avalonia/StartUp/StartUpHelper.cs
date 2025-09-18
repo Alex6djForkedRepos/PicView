@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Runtime;
 using System.Runtime.InteropServices;
 using Avalonia;
 using Avalonia.Controls;
@@ -12,6 +13,7 @@ using PicView.Avalonia.Navigation;
 using PicView.Avalonia.SettingsManagement;
 using PicView.Avalonia.UI;
 using PicView.Avalonia.ViewModels;
+using PicView.Avalonia.Views.UC;
 using PicView.Avalonia.WindowBehavior;
 using PicView.Core.FileAssociations;
 using PicView.Core.FileHistory;
@@ -79,7 +81,6 @@ public static class StartUpHelper
         HandleWindowScalingMode(vm, window);
 
         HandleStartUpMenuOrImage(vm, window, arg);
-        window.Show();
 
         HandlePostWindowUpdates(vm, settingsExists, desktop, window);
     }
@@ -106,7 +107,7 @@ public static class StartUpHelper
     private static void HandlePostWindowUpdates(MainViewModel vm, bool settingsExists,
         IClassicDesktopStyleApplicationLifetime desktop, Window window)
     {
-        ResourceLimits.LimitMemory(new Percentage(90));
+        SetMemorySettings();
 
         Task.Run(() => LanguageUpdater.UpdateLanguageAsync(vm.Translation, vm.PicViewer, settingsExists));
         if (settingsExists)
@@ -125,15 +126,15 @@ public static class StartUpHelper
         {
             _ = FileHistoryManager.InitializeAsync();
             HandleWindowControlSettings(vm, desktop);
-
         });
 
         SettingsUpdater.ValidateGallerySettings(vm, settingsExists);
         vm.MainWindow.LayoutButtonSubscription();
         vm.Gallery.GalleryItemSizeUpdateSubscription(vm);
 
-        SetWindowEventHandlers(window);
         MenuManager.AddMenus();
+        UIHelper.AddHoverBar(vm);
+        SetWindowEventHandlers(window);
 
         if (!Settings.WindowProperties.AutoFit)
         {
@@ -154,6 +155,8 @@ public static class StartUpHelper
                 DispatcherPriority.Background);
         }
         
+        TooltipHelper.StartTooltipSubscription(vm);
+        
         if (!RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
         {
             // Windows needs a named pipe server to open files in the same window
@@ -164,6 +167,12 @@ public static class StartUpHelper
         }
         
         Application.Current.Name = "PicView";
+    }
+
+    private static void SetMemorySettings()
+    {
+        ResourceLimits.LimitMemory(new Percentage(80));
+        GCSettings.LatencyMode = GCLatencyMode.LowLatency;
     }
 
     private static void HandleThemeUpdates(MainViewModel vm)

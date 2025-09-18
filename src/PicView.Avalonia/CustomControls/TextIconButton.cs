@@ -173,10 +173,7 @@ public class TextIconButton : Button
 
         if (change.Property == TextProperty)
         {
-            if (_textBlock is not null)
-            {
-                _textBlock.Text = change.NewValue.ToString();
-            }
+            _textBlock?.Text = change.NewValue.ToString();
         }
     }
 

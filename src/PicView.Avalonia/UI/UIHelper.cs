@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Media;
@@ -10,6 +9,7 @@ using PicView.Avalonia.ViewModels;
 using PicView.Avalonia.Views;
 using PicView.Avalonia.Views.UC;
 using PicView.Avalonia.WindowBehavior;
+using R3;
 using R3.Avalonia;
 using GalleryAnimationControlView = PicView.Avalonia.Views.Gallery.GalleryAnimationControlView;
 using MainView = PicView.Avalonia.Views.Main.MainView;
@@ -28,7 +28,10 @@ public static class UIHelper
     public static EditableTitlebar? GetEditableTitlebar { get; private set; }
     public static GalleryAnimationControlView? GetGalleryView { get; private set; }
     public static BottomBar? GetBottomBar { get; private set; }
+    public static HoverBar? GetHoverBar { get; private set; }
+    
     public static ToolTipMessage? GetToolTipMessage { get; private set; }
+
 
     public static AvaloniaRenderingFrameProvider? GetFrameProvider { get; private set; }
 
@@ -48,9 +51,44 @@ public static class UIHelper
         GetToolTipMessage = GetMainView?.MainGrid.FindControl<ToolTipMessage>("ToolTipMessage");
     }
 
+    public static void AddHoverBar(MainViewModel vm)
+    {
+        if (GetHoverBar is not null)
+        {
+            return;
+        }
+        GetHoverBar = new HoverBar();
+        GetMainView.MainGrid.Children.Add(GetHoverBar);
+        _ = new HoverFadeButtonHandler(GetHoverBar, vm, GetHoverBar.TopBorder);
+        Observable.EveryValueChanged(vm.MainWindow.CurrentView, control => control.Value)
+            .Subscribe(control =>
+            {
+                if (control is ImageViewer)
+                {
+                    if (!Settings.UIProperties.ShowBottomNavBar && Settings.UIProperties.ShowAltInterfaceButtons)
+                    {
+                        vm.HoverbarViewModel.IsHoverbarVisible.Value = true;
+                    }
+                    else
+                    {
+                        vm.HoverbarViewModel.IsHoverbarVisible.Value = false;
+                    }
+                }
+                else
+                {
+                    vm.HoverbarViewModel.IsHoverbarVisible.Value = false;
+                }
+            });
+    }
+
     #endregion
 
     #region Helper functions
+    
+    private const string BoldFontLocation = "avares://PicView.Avalonia/Assets/Fonts/Roboto-Medium.ttf#Roboto";
+    public static FontFamily BoldFontFamily => new(BoldFontLocation);
+    private const string MediumFontLocation = "avares://PicView.Avalonia/Assets/Fonts/Roboto-Medium.ttf#Roboto";
+    public static FontFamily MediumFontFamily => new(MediumFontLocation);
 
     /// <summary>
     /// Centers the window or gallery based on current state
@@ -107,18 +145,12 @@ public static class UIHelper
 
     public static void SetButtonInterval(RepeatButton? button)
     {
-        if (button != null)
-        {
-            button.Interval = (int)TimeSpan.FromSeconds(Settings.UIProperties.NavSpeed).TotalMilliseconds;
-        }
+        button?.Interval = (int)TimeSpan.FromSeconds(Settings.UIProperties.NavSpeed).TotalMilliseconds;
     }
 
     public static void SetButtonInterval(IconButton? button)
     {
-        if (button != null)
-        {
-            button.Interval = (int)TimeSpan.FromSeconds(Settings.UIProperties.NavSpeed).TotalMilliseconds;
-        }
+        button?.Interval = (int)TimeSpan.FromSeconds(Settings.UIProperties.NavSpeed).TotalMilliseconds;
     }
 
     public static DrawingImage? GetIcon(string resourceName)

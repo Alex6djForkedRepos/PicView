@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+﻿using System.Runtime.InteropServices;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
@@ -13,7 +13,6 @@ using PicView.Core.Conversion;
 using PicView.Core.Exif;
 using PicView.Core.Extensions;
 using PicView.Core.FileHandling;
-using PicView.Core.Models;
 using PicView.Core.Sizing;
 using PicView.Core.Titles;
 using R3;
@@ -27,6 +26,12 @@ public partial class ImageInfoView : UserControl
     public ImageInfoView()
     {
         InitializeComponent();
+        // Disable print menu on macOS
+        // TODO: Remove this once print is implemented for macOS
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        {
+            PrintMenuItem.IsVisible = false;
+        }
         Loaded += (_, _) =>
         {
             if (DataContext is not MainViewModel vm)
@@ -327,9 +332,9 @@ public partial class ImageInfoView : UserControl
         PrintSizeCmTextBox.Text = printSizes.PrintSizeCm;
         SizeMpTextBox.Text = printSizes.SizeMp;
 
-        var gcd = ImageTitleFormatter.GCD(width, height);
+        var gcd = AspectRatioFormatter.GCD(width, height);
         AspectRatioTextBox.Text =
-            ImageTitleFormatter.GetFormattedAspectRatio(gcd, vm.PicViewer.PixelWidth.CurrentValue,
+            AspectRatioFormatter.GetFormattedAspectRatio(gcd, vm.PicViewer.PixelWidth.CurrentValue,
                 vm.PicViewer.PixelHeight.CurrentValue);
     }
 

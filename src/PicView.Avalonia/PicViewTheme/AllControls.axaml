@@ -17,6 +17,10 @@
                 <ResourceInclude Source="Controls/CalendarButton.axaml" />
                 <ResourceInclude Source="Controls/CalendarDayButton.axaml" />
                 <ResourceInclude Source="Controls/CalendarItem.axaml" />
+                <ResourceInclude Source="Controls/Calendar.axaml" />
+                <ResourceInclude Source="Controls/CalendarButton.axaml" />
+                <ResourceInclude Source="Controls/CalendarDayButton.axaml" />
+                <ResourceInclude Source="Controls/CalendarItem.axaml" />
                 <ResourceInclude Source="Controls/CheckBox.axaml" />
                 <ResourceInclude Source="Controls/ComboBox.axaml" />
                 <ResourceInclude Source="Controls/ComboBoxItem.axaml" />
@@ -49,6 +53,6 @@
 
     <StyleInclude Source="Classes.axaml" />
     <StyleInclude Source="../CustomControls/DateTimeInput.axaml" />
-
+    <StyleInclude Source="../CustomControls/DraggableProgressBar.axaml" />
 
 </Styles>

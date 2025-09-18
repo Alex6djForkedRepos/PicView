@@ -37,16 +37,6 @@ public static class WindowResizing
 
         window.Position = new PixelPoint(window.Position.X + (int)x, window.Position.Y + (int)y);
 
-        if (vm.MainWindow is
-            {
-                IsNavigationButtonLeftClicked: false, IsNavigationButtonRightClicked: false,
-                IsClickArrowLeftClicked: false, IsClickArrowRightClicked: false, IsRotateLeftClicked: false,
-                IsRotateRightClicked: false, IsTopToolbarRotationClicked: false
-            })
-        {
-            return;
-        }
-
         RepositionCursorIfTriggered(vm, vm.MainWindow.IsNavigationButtonLeftClicked,
             clicked => vm.MainWindow.IsNavigationButtonLeftClicked = clicked,
             () => UIHelper.GetBottomBar.GetControl<Button>("PreviousButton"),
@@ -55,6 +45,16 @@ public static class WindowResizing
         RepositionCursorIfTriggered(vm, vm.MainWindow.IsNavigationButtonRightClicked,
             clicked => vm.MainWindow.IsNavigationButtonRightClicked = clicked,
             () => UIHelper.GetBottomBar.GetControl<Button>("NextButton"),
+            new Point(50, 10));
+
+        RepositionCursorIfTriggered(vm, vm.HoverbarViewModel.IsHoverNavigationButtonNextClicked,
+            clicked => vm.HoverbarViewModel.IsHoverNavigationButtonNextClicked = clicked,
+            () => UIHelper.GetHoverBar.GetControl<Button>("NextButton"),
+            new Point(50, 10));
+
+        RepositionCursorIfTriggered(vm, vm.HoverbarViewModel.IsHoverNavigationButtonPreviousClicked,
+            clicked => vm.HoverbarViewModel.IsHoverNavigationButtonPreviousClicked = clicked,
+            () => UIHelper.GetHoverBar.GetControl<Button>("PreviousButton"),
             new Point(50, 10));
 
         RepositionCursorIfTriggered(vm, vm.MainWindow.IsClickArrowLeftClicked,
@@ -82,6 +82,16 @@ public static class WindowResizing
         RepositionCursorIfTriggered(vm, vm.MainWindow.IsTopToolbarRotationClicked,
             clicked => vm.MainWindow.IsTopToolbarRotationClicked = clicked,
             () => UIHelper.GetTitlebar.GetControl<IconButton>("RotateRightButton"),
+            new Point(11, 7));
+
+        RepositionCursorIfTriggered(vm, vm.HoverbarViewModel.IsHoverRotateRightClicked,
+            clicked => vm.HoverbarViewModel.IsHoverRotateRightClicked = clicked,
+            () => UIHelper.GetHoverBar.GetControl<IconButton>("RotateRightButton"),
+            new Point(11, 7));
+
+        RepositionCursorIfTriggered(vm, vm.HoverbarViewModel.IsHoverRotateLeftClicked,
+            clicked => vm.HoverbarViewModel.IsHoverRotateLeftClicked = clicked,
+            () => UIHelper.GetHoverBar.GetControl<IconButton>("RotateLeftButton"),
             new Point(11, 7));
     }
 

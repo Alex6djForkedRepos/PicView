@@ -23,9 +23,9 @@ public static class ImageLoader
     /// <summary>
     ///     Loads a picture from a given string source, which can be a file path, directory path, or URL.
     /// </summary>
-    public static async Task LoadPicFromStringAsync(string source, MainViewModel vm, ImageIterator imageIterator)
+    public static async ValueTask LoadPicFromStringAsync(string source, MainViewModel vm, ImageIterator imageIterator)
     {
-        if (string.IsNullOrWhiteSpace(source) || vm is null)
+        if (string.IsNullOrWhiteSpace(source))
         {
             return;
         }
@@ -33,57 +33,53 @@ public static class ImageLoader
         vm.MainWindow.IsLoadingIndicatorShown.Value = true;
         TitleManager.SetLoadingTitle(vm);
 
-        // Starting in new task makes it more responsive and works better
-        await Task.Run(async () =>
-        {
-            var check = FileTypeResolver.CheckIfLoadableString(source);
+        var check = FileTypeResolver.CheckIfLoadableString(source);
 
-            if (check == null)
-            {
+        if (check == null)
+        {
+            await ErrorHandling.ReloadAsync(vm).ConfigureAwait(false);
+            vm.MainWindow.IsLoadingIndicatorShown.Value = false;
+            ArchiveExtraction.Cleanup();
+            return;
+        }
+
+        switch (check.Value.Type)
+        {
+            case FileTypeResolver.LoadAbleFileType.File:
+                vm.MainWindow.CurrentView.Value = vm.ImageViewer;
+                await LoadPicFromFile(check.Value.Data, vm, imageIterator).ConfigureAwait(false);
+                vm.MainWindow.IsLoadingIndicatorShown.Value = false;
+                ArchiveExtraction.Cleanup();
+                return;
+            case FileTypeResolver.LoadAbleFileType.Directory:
+                vm.MainWindow.CurrentView.Value = vm.ImageViewer;
+                await LoadPicFromDirectoryAsync(check.Value.Data, vm).ConfigureAwait(false);
+                vm.MainWindow.IsLoadingIndicatorShown.Value = false;
+                ArchiveExtraction.Cleanup();
+                return;
+            case FileTypeResolver.LoadAbleFileType.Web:
+                vm.MainWindow.CurrentView.Value = vm.ImageViewer;
+                await LoadPicFromUrlAsync(check.Value.Data, vm, imageIterator).ConfigureAwait(false);
+                vm.MainWindow.IsLoadingIndicatorShown.Value = false;
+                ArchiveExtraction.Cleanup();
+                return;
+            case FileTypeResolver.LoadAbleFileType.Base64:
+                vm.MainWindow.CurrentView.Value = vm.ImageViewer;
+                await LoadPicFromBase64Async(check.Value.Data, vm, imageIterator).ConfigureAwait(false);
+                vm.MainWindow.IsLoadingIndicatorShown.Value = false;
+                ArchiveExtraction.Cleanup();
+                return;
+            case FileTypeResolver.LoadAbleFileType.Zip:
+                vm.MainWindow.CurrentView.Value = vm.ImageViewer;
+                await LoadPicFromArchiveAsync(check.Value.Data, vm, imageIterator).ConfigureAwait(false);
+                vm.MainWindow.IsLoadingIndicatorShown.Value = false;
+                return;
+            default:
                 await ErrorHandling.ReloadAsync(vm).ConfigureAwait(false);
                 vm.MainWindow.IsLoadingIndicatorShown.Value = false;
                 ArchiveExtraction.Cleanup();
                 return;
-            }
-
-            switch (check.Value.Type)
-            {
-                case FileTypeResolver.LoadAbleFileType.File:
-                    vm.MainWindow.CurrentView.Value = vm.ImageViewer;
-                    await LoadPicFromFile(check.Value.Data, vm, imageIterator).ConfigureAwait(false);
-                    vm.MainWindow.IsLoadingIndicatorShown.Value = false;
-                    ArchiveExtraction.Cleanup();
-                    return;
-                case FileTypeResolver.LoadAbleFileType.Directory:
-                    vm.MainWindow.CurrentView.Value = vm.ImageViewer;
-                    await LoadPicFromDirectoryAsync(check.Value.Data, vm).ConfigureAwait(false);
-                    vm.MainWindow.IsLoadingIndicatorShown.Value = false;
-                    ArchiveExtraction.Cleanup();
-                    return;
-                case FileTypeResolver.LoadAbleFileType.Web:
-                    vm.MainWindow.CurrentView.Value = vm.ImageViewer;
-                    await LoadPicFromUrlAsync(check.Value.Data, vm, imageIterator).ConfigureAwait(false);
-                    vm.MainWindow.IsLoadingIndicatorShown.Value = false;
-                    ArchiveExtraction.Cleanup();
-                    return;
-                case FileTypeResolver.LoadAbleFileType.Base64:
-                    vm.MainWindow.CurrentView.Value = vm.ImageViewer;
-                    await LoadPicFromBase64Async(check.Value.Data, vm, imageIterator).ConfigureAwait(false);
-                    vm.MainWindow.IsLoadingIndicatorShown.Value = false;
-                    ArchiveExtraction.Cleanup();
-                    return;
-                case FileTypeResolver.LoadAbleFileType.Zip:
-                    vm.MainWindow.CurrentView.Value = vm.ImageViewer;
-                    await LoadPicFromArchiveAsync(check.Value.Data, vm, imageIterator).ConfigureAwait(false);
-                    vm.MainWindow.IsLoadingIndicatorShown.Value = false;
-                    return;
-                default:
-                    await ErrorHandling.ReloadAsync(vm).ConfigureAwait(false);
-                    vm.MainWindow.IsLoadingIndicatorShown.Value = false;
-                    ArchiveExtraction.Cleanup();
-                    return;
-            }
-        });
+        }
     }
 
     #endregion
@@ -97,7 +93,7 @@ public static class ImageLoader
     /// <param name="vm">The main view model instance associated with the application context.</param>
     /// <param name="imageIterator">An iterator for navigating through images in the directory.</param>
     /// <param name="fileInfo">Optional file information, defaults to a new <c>FileInfo</c> instance for the given file name if not provided.</param>
-    public static async Task LoadPicFromFile(string fileName, MainViewModel vm, ImageIterator imageIterator,
+    public static async ValueTask LoadPicFromFile(string fileName, MainViewModel vm, ImageIterator imageIterator,
         FileInfo? fileInfo = null)
     {
         fileInfo ??= new FileInfo(fileName);
@@ -116,6 +112,7 @@ public static class ImageLoader
                 var index = imageIterator.ImagePaths.FindIndex(x => x.FullName.Equals(fileName));
                 if (index != -1)
                 {
+                    _cancellationTokenSource ??= new CancellationTokenSource();
                     await imageIterator.IterateToIndex(index, _cancellationTokenSource).ConfigureAwait(false);
                     await NavigationManager.CheckIfTiffAndUpdate(vm, fileInfo, index);
                     if (Settings.Gallery.IsBottomGalleryShown && NavigationManager.GetCount > 0)
@@ -161,7 +158,7 @@ public static class ImageLoader
     /// <param name="file">The path to the directory containing the picture.</param>
     /// <param name="vm">The main view model instance.</param>
     /// <param name="fileInfo">Optional: FileInfo object for the directory.</param>
-    public static async Task LoadPicFromDirectoryAsync(string file, MainViewModel vm, FileInfo? fileInfo = null)
+    public static async ValueTask LoadPicFromDirectoryAsync(string file, MainViewModel vm, FileInfo? fileInfo = null)
     {
         vm.MainWindow.IsLoadingIndicatorShown.Value = true;
         TitleManager.SetLoadingTitle(vm);
@@ -225,7 +222,7 @@ public static class ImageLoader
     /// <param name="path">The path to the archive file containing the picture(s) to load.</param>
     /// <param name="vm">The main view model instance used to manage UI state and operations.</param>
     /// <param name="imageIterator">The image iterator to use for navigation.</param>
-    public static async Task LoadPicFromArchiveAsync(string path, MainViewModel vm, ImageIterator imageIterator)
+    public static async ValueTask LoadPicFromArchiveAsync(string path, MainViewModel vm, ImageIterator imageIterator)
     {
         if (_cancellationTokenSource is not null)
         {
@@ -305,7 +302,7 @@ public static class ImageLoader
     /// <param name="url">The URL of the picture to load.</param>
     /// <param name="vm">The main view model instance.</param>
     /// <param name="imageIterator">The image iterator to use for navigation.</param>
-    public static async Task LoadPicFromUrlAsync(string url, MainViewModel vm, ImageIterator imageIterator)
+    public static async ValueTask LoadPicFromUrlAsync(string url, MainViewModel vm, ImageIterator imageIterator)
     {
         var tasks = new List<Task>();
         if (_cancellationTokenSource is not null)
@@ -353,7 +350,6 @@ public static class ImageLoader
         {
             DebugHelper.LogDebug(nameof(ImageLoader), nameof(LoadPicFromUrlAsync), e);
             await ErrorHandling.ReloadAsync(vm);
-            await TooltipHelper.ShowTooltipMessageAsync(e.Message, true);
             return;
         }
 
@@ -386,7 +382,7 @@ public static class ImageLoader
     /// <param name="base64">The Base64-encoded string representing the picture.</param>
     /// <param name="vm">The main view model instance.</param>
     /// <param name="imageIterator">The image iterator to use for navigation.</param>
-    public static async Task LoadPicFromBase64Async(string base64, MainViewModel vm, ImageIterator imageIterator)
+    public static async ValueTask LoadPicFromBase64Async(string base64, MainViewModel vm, ImageIterator imageIterator)
     {
         TitleManager.SetLoadingTitle(vm);
         vm.MainWindow.IsLoadingIndicatorShown.Value = true;
@@ -400,30 +396,27 @@ public static class ImageLoader
 
         await NavigationManager.DisposeImageIteratorAsync().ConfigureAwait(false);
 
-        await Task.Run(async () =>
+        try
         {
-            try
+            var magickImage = Base64Decoder.Base64ToMagickImage(base64);
+            magickImage.Format = MagickFormat.Png;
+            var bitmap = magickImage.ToWriteableBitmap();
+            var imageModel = new ImageModel
             {
-                var magickImage = Base64Decoder.Base64ToMagickImage(base64);
-                magickImage.Format = MagickFormat.Png;
-                var bitmap = magickImage.ToWriteableBitmap();
-                var imageModel = new ImageModel
-                {
-                    Image = bitmap,
-                    PixelWidth = bitmap?.PixelSize.Width ?? 0,
-                    PixelHeight = bitmap?.PixelSize.Height ?? 0,
-                    ImageType = ImageType.Bitmap
-                };
-                await UpdateImage.SetSingleImageAsync(imageModel.Image, imageModel.ImageType,
-                    TranslationManager.Translation.Base64Image, vm);
-            }
-            catch (Exception e)
-            {
-                DebugHelper.LogDebug(nameof(ImageLoader), nameof(LoadPicFromBase64Async), e);
-                await imageIterator.DisposeAsync();
-                await ErrorHandling.ReloadAsync(vm);
-            }
-        });
+                Image = bitmap,
+                PixelWidth = bitmap?.PixelSize.Width ?? 0,
+                PixelHeight = bitmap?.PixelSize.Height ?? 0,
+                ImageType = ImageType.Bitmap
+            };
+            await UpdateImage.SetSingleImageAsync(imageModel.Image, imageModel.ImageType,
+                TranslationManager.Translation.Base64Image, vm);
+        }
+        catch (Exception e)
+        {
+            DebugHelper.LogDebug(nameof(ImageLoader), nameof(LoadPicFromBase64Async), e);
+            await imageIterator.DisposeAsync();
+            await ErrorHandling.ReloadAsync(vm);
+        }
         vm.MainWindow.IsLoadingIndicatorShown.Value = false;
     }
 
@@ -433,7 +426,7 @@ public static class ImageLoader
 
     private static CancellationTokenSource? _cancellationTokenSource;
 
-    public static async Task CancelAsync()
+    public static async ValueTask CancelAsync()
     {
         if (_cancellationTokenSource is not null)
         {
@@ -450,13 +443,13 @@ public static class ImageLoader
     #region Image Iterator Loading
 
     /// <inheritdoc cref="ImageIterator.NextIteration(NavigateTo, CancellationTokenSource)" />
-    public static async Task LastIterationAsync(ImageIterator imageIterator) =>
+    public static async ValueTask LastIterationAsync(ImageIterator imageIterator) =>
         await imageIterator
             .NextIteration(NavigateTo.Last, _cancellationTokenSource)
             .ConfigureAwait(false);
 
     /// <inheritdoc cref="ImageIterator.NextIteration(NavigateTo, CancellationTokenSource)" />
-    public static async Task FirstIterationAsync(ImageIterator imageIterator) =>
+    public static async ValueTask FirstIterationAsync(ImageIterator imageIterator) =>
         await imageIterator
             .NextIteration(NavigateTo.First, _cancellationTokenSource)
             .ConfigureAwait(false);
@@ -466,22 +459,18 @@ public static class ImageLoader
     /// </summary>
     /// <param name="index">The index to iterate to.</param>
     /// <param name="imageIterator">The ImageIterator instance.</param>
-    public static async Task CheckCancellationAndStartIterateToIndex(int index, ImageIterator imageIterator)
+    public static async ValueTask CheckCancellationAndStartIterateToIndex(int index, ImageIterator imageIterator)
     {
         if (_cancellationTokenSource is not null)
         {
             await _cancellationTokenSource.CancelAsync().ConfigureAwait(false);
         }
 
-        // Need to start in a new task. This makes it more responsive, since it can get laggy when loading large images
-        await Task.Run(async () =>
-        {
-            _cancellationTokenSource = new CancellationTokenSource();
-            await imageIterator.NextIteration(index, _cancellationTokenSource).ConfigureAwait(false);
-        }).ConfigureAwait(false);
+        _cancellationTokenSource = new CancellationTokenSource();
+        await imageIterator.NextIteration(index, _cancellationTokenSource).ConfigureAwait(false);
     }
 
-    public static async Task IterateToIndexAsync(int index, ImageIterator imageIterator) =>
+    public static async ValueTask IterateToIndexAsync(int index, ImageIterator imageIterator) =>
         await imageIterator.NextIteration(index, _cancellationTokenSource).ConfigureAwait(false);
 
     #endregion

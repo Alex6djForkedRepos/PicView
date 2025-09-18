@@ -2,21 +2,89 @@
 using ImageMagick;
 using PicView.Core.DebugTools;
 using PicView.Core.FileHandling;
+using PicView.Core.ImageReading;
 
 namespace PicView.Avalonia.ImageHandling;
 
 public static class GetImage
 {
-    public static async Task<Bitmap?> GetStandardBitmapAsync(string file)
-    {
-        return await GetStandardBitmapAsync(new FileInfo(file)).ConfigureAwait(false);
-    }
-    
-    public static async Task<Bitmap?> GetStandardBitmapAsync(FileInfo fileInfo)
+    public static async ValueTask<object?> GetImageCore(FileInfo fileInfo, MagickImage? magickImage = null)
     {
         if (fileInfo is null)
         {
-            DebugHelper.LogDebug(nameof(GetImage), nameof(GetStandardBitmapAsync), $"{nameof(fileInfo)} is null");
+            return null;
+        }
+
+        var shouldDisposeMagickImage = magickImage is null;
+
+        try
+        {
+            // Initialize MagickImage if not provided
+            magickImage ??= CreateAndPingMagickImage(fileInfo);
+            
+            if (fileInfo.Extension.Equals(".b64", StringComparison.InvariantCultureIgnoreCase))
+            {
+                return await GetBase64ImageAsync(fileInfo).ConfigureAwait(false);
+            }
+
+            // Process the image based on type
+            // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
+            switch (magickImage.Format)
+            {
+                case MagickFormat.WebP: 
+                case MagickFormat.WebM:
+                case MagickFormat.Png:
+                case MagickFormat.Png00:
+                case MagickFormat.Png8:
+                case MagickFormat.Png24:
+                case MagickFormat.Png32:
+                case MagickFormat.Png48:
+                case MagickFormat.Png64:
+                case MagickFormat.APng:
+                case MagickFormat.Jpe:
+                case MagickFormat.Jpeg:
+                case MagickFormat.Pjpeg:
+                case MagickFormat.Bmp:
+                case MagickFormat.Tif:
+                case MagickFormat.Tiff:
+                case MagickFormat.Ico:
+                case MagickFormat.Icon:
+                case MagickFormat.Wbmp:
+                    return await GetSkBitmapAsync(fileInfo).ConfigureAwait(false);
+                
+                case MagickFormat.Arw:
+                case MagickFormat.Nef:
+                case MagickFormat.Dng:
+                case MagickFormat.Cr2:
+                case MagickFormat.Rw2:
+                    return await GetRawBitmapAsync(fileInfo, magickImage).ConfigureAwait(false);
+
+                default:
+                    return await GetNonStandardBitmapAsync(fileInfo, magickImage).ConfigureAwait(false);
+            }
+        }
+        catch (Exception e)
+        {
+            DebugHelper.LogDebug(nameof(GetImage), nameof(GetImageCore), e);
+            return null;
+        }
+        finally
+        {
+            if (shouldDisposeMagickImage)
+            {
+                magickImage?.Dispose();
+            }
+        }
+    }
+    
+    public static async ValueTask<Bitmap?> GetSkBitmapAsync(string file) =>
+        await GetSkBitmapAsync(new FileInfo(file)).ConfigureAwait(false);
+
+    public static async ValueTask<Bitmap?> GetSkBitmapAsync(FileInfo fileInfo)
+    {
+        if (fileInfo is null)
+        {
+            DebugHelper.LogDebug(nameof(GetImage), nameof(GetSkBitmapAsync), $"{nameof(fileInfo)} is null");
             return null;
         }
         await using var stream = FileStreamUtils.GetOptimizedFileStream(fileInfo);
@@ -24,24 +92,14 @@ public static class GetImage
         return bitmap;
     }
     
-    public static async Task<Bitmap?> GetNonStandardBitmapAsync(FileInfo fileInfo, MagickImage? magickImage)
+    public static async ValueTask<Bitmap?> GetNonStandardBitmapAsync(FileInfo fileInfo, MagickImage? magickImage)
     {
         var shouldDisposeMagickImage = magickImage is null;
         if (shouldDisposeMagickImage)
         {
             magickImage = new MagickImage();
         }
-        await using var stream = FileStreamUtils.GetOptimizedFileStream(fileInfo);
-        if (fileInfo.Length >= 2147483648)
-        {
-            // Fixes "The file is too long. This operation is currently limited to supporting files less than 2 gigabytes in size."
-            // ReSharper disable once MethodHasAsyncOverload
-            magickImage.Read(stream);
-        }
-        else
-        {
-            await magickImage.ReadAsync(stream).ConfigureAwait(false); 
-        }
+        magickImage = await MagickPerformanceReader.ReadMagickImageWithSpanAsync(fileInfo, magickImage);
 
         var bitmap = magickImage.ToWriteableBitmap();
         if (shouldDisposeMagickImage)
@@ -51,7 +109,7 @@ public static class GetImage
         return bitmap;
     }
     
-    public static async Task<Bitmap?> GetRawBitmapAsync(FileInfo fileInfo, MagickImage? magickImage)
+    public static async ValueTask<Bitmap?> GetRawBitmapAsync(FileInfo fileInfo, MagickImage? magickImage)
     {
         var shouldDisposeMagickImage = magickImage is null;
         if (shouldDisposeMagickImage)
@@ -69,7 +127,7 @@ public static class GetImage
         return bitmap;
     }
     
-    public static async Task<Bitmap?> GetBase64ImageAsync(FileInfo fileInfo)
+    public static async ValueTask<Bitmap?> GetBase64ImageAsync(FileInfo fileInfo)
     {
         var base64String = await File.ReadAllTextAsync(fileInfo.FullName).ConfigureAwait(false);
         var base64Data = Convert.FromBase64String(base64String);
@@ -89,5 +147,12 @@ public static class GetImage
         var bitmap = magickImage.ToWriteableBitmap();
         magickImage.Dispose();
         return bitmap;
+    }
+    
+    public static MagickImage CreateAndPingMagickImage(FileInfo fileInfo)
+    {
+        var magickImage = new MagickImage();
+        magickImage.Ping(fileInfo);
+        return magickImage;
     }
 }

@@ -51,7 +51,7 @@ public class PicBox : Control, IDisposable
     private FileStream? _stream;
     private IGifInstance? _animInstance;
     public string? InitialAnimatedSource;
-    private readonly CompositeDisposable _imageTypeSubscription = new();
+    private readonly CompositeDisposable _imageTypeSubscription = new(); // Should be used for disposal when tab navigation arrives
     private bool _isDisposed;
 
     public static readonly StyledProperty<object?> SourceProperty =
@@ -117,11 +117,9 @@ public class PicBox : Control, IDisposable
 
     public PicBox() =>
         this.GetObservable(ImageTypeProperty).ToObservable()
-            .Subscribe(UpdateSource).AddTo(_imageTypeSubscription);
-
-    #endregion
-
-    #region Source Management
+            .Skip(1) // Skip the initial unset one
+            .Subscribe(UpdateSource)
+            .AddTo(_imageTypeSubscription);
 
     private void UpdateSource(ImageType imageType)
     {
@@ -146,6 +144,10 @@ public class PicBox : Control, IDisposable
                 break;
         }
     }
+
+    #endregion
+
+    #region Source Management
 
     private void UpdateSvgSource()
     {
@@ -349,6 +351,11 @@ public class PicBox : Control, IDisposable
 
     private void RenderImage(DrawingContext context, IImage source, Rect viewPort, Size sourceSize)
     {
+        if (source is null)
+        {
+            DebugHelper.LogDebug(nameof(PicBox), nameof(RenderImage), "source is null");
+            return;
+        }
         var scale = CalculateScaling(viewPort.Size, sourceSize);
         var scaledSize = sourceSize * scale;
         var destRect = viewPort.CenterRect(new Rect(scaledSize)).Intersect(viewPort);
@@ -357,6 +364,32 @@ public class PicBox : Control, IDisposable
         try
         {
             context.DrawImage(source, sourceRect, destRect);
+        }
+        catch (ObjectDisposedException e)
+        {
+            DebugHelper.LogDebug(nameof(PicBox), nameof(RenderImage), e);
+            
+            var preloadValue = NavigationManager.GetCurrentPreLoadValue();
+            if (preloadValue?.ImageModel?.Image != null)
+            {
+                try
+                {
+                    context.DrawImage(preloadValue?.ImageModel?.Image as IImage, sourceRect, destRect);
+                }
+                catch (Exception exception)
+                {
+                    DebugHelper.LogDebug(nameof(PicBox), nameof(RenderImage), exception);
+                }
+            }
+            else
+            {
+                // Last resort bug fix
+                var asyncPreloadValue = NavigationManager.GetCurrentPreLoadValueAsync().GetAwaiter().GetResult();
+                if (asyncPreloadValue?.ImageModel?.Image is IImage image)
+                {
+                    context.DrawImage(image, sourceRect, destRect);
+                }
+            }
         }
         catch (Exception e)
         {
@@ -420,11 +453,6 @@ public class PicBox : Control, IDisposable
     /// <returns>The desired size of the control.</returns>
     protected override Size MeasureOverride(Size availableSize)
     {
-        if (Source is null)
-        {
-            return new Size();
-        }
-
         if (Source is not IImage source)
         {
             return new Size();

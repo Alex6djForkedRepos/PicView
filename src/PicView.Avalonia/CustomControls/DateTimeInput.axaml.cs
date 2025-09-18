@@ -45,8 +45,7 @@ public class DateTimeInput : TemplatedControl
 
     private CompositeDisposable _disposables = new();
 
-    private const string PART_Container = "PART_Container";
-    private const string RobotoFont = "avares://PicView.Avalonia/Assets/Fonts/Roboto-Medium.ttf#Roboto";
+    private const string PARTContainer = "PART_Container";
 
     /// <summary>
     /// Static constructor to register the default style for this control.
@@ -77,7 +76,7 @@ public class DateTimeInput : TemplatedControl
         base.OnApplyTemplate(e);
 
         // Find the container that will hold our dynamic controls.
-        var container = e.NameScope.Find<Panel>(nameof(PART_Container));
+        var container = e.NameScope.Find<Panel>(PARTContainer);
         if (container == null)
         {
             throw new InvalidOperationException("Could not find PART_Container in the control template.");
@@ -117,13 +116,15 @@ public class DateTimeInput : TemplatedControl
         var dateTimeFormat = culture.DateTimeFormat;
         
         _is12HourClock = dateTimeFormat.ShortTimePattern.Contains('h');
+        
+        var today = DateTime.Now;
 
         // --- Create TextBoxes ---
-        _yearBox = CreateNumericTextBox(4, "YYYY");
-        _monthBox = CreateNumericTextBox(2, "MM");
-        _dayBox = CreateNumericTextBox(2, "DD");
-        _hourBox = CreateNumericTextBox(2, "HH");
-        _minuteBox = CreateNumericTextBox(2, "mm");
+        _yearBox = CreateNumericTextBox(maxLength:4, watermark: today.Year.ToString("D4"));
+        _monthBox = CreateNumericTextBox(maxLength:2, watermark: today.Month.ToString("D2"));
+        _dayBox = CreateNumericTextBox(maxLength:2, watermark: today.Day.ToString("D2"));
+        _hourBox = CreateNumericTextBox(maxLength:2, watermark: today.TimeOfDay.Hours.ToString("D2"));
+        _minuteBox = CreateNumericTextBox(maxLength:2, watermark: today.TimeOfDay.Minutes.ToString("D2"));
 
         // --- Determine Date Field Order ---
         var dateParts = dateTimeFormat.ShortDatePattern.Split(dateTimeFormat.DateSeparator)
@@ -152,7 +153,7 @@ public class DateTimeInput : TemplatedControl
             container.Children.Add(dateControls[i]);
             if (i < dateControls.Count - 1)
             {
-                container.Children.Add(CreateLineSeparator('/'));
+                container.Children.Add(CreateLineSeparator(CultureInfo.CurrentCulture.DateTimeFormat.DateSeparator[0]));
             }
         }
 
@@ -211,33 +212,40 @@ public class DateTimeInput : TemplatedControl
             TextAlignment = TextAlignment.Center,
             VerticalAlignment = VerticalAlignment.Center,
             Padding = new Thickness(0),
-            FontFamily = new FontFamily(RobotoFont),
-            FontSize = 12
+            FontFamily = UIHelper.MediumFontFamily,
+            FontSize = 12,
+            MinWidth = maxLength * 7 // fix for macOS not having proper width
         };
 
         // Attach event handlers
         textBox.TextChanged += OnPartTextChanged;
-        textBox.KeyDown += OnTextBoxKeyDown; // Hook up the new keyboard handler
+        textBox.KeyDown += OnTextBoxKeyDown; 
         return textBox;
     }
 
     /// <summary>
-    /// Creates a separator control.
+    /// Creates a time separator control based on the current culture's time separator format.
     /// </summary>
+    /// <returns>
+    /// A <see cref="TextBlock"/> representing the time separator with appropriate styling and visibility bindings.
+    /// </returns>
     private TextBlock CreateTimeSeparator()
     {
         var textBlock = new TextBlock
         {
             Classes = { "txt" },
-            Text = ":",
+            Text = CultureInfo.CurrentCulture.DateTimeFormat.TimeSeparator,
             VerticalAlignment = VerticalAlignment.Center
         };
-        Observable.EveryValueChanged(this, x => x.IsEffectivelyEnabled, UIHelper.GetFrameProvider)
-            .Subscribe(b => textBlock.IsVisible = b)
-            .AddTo(_disposables);
+        HideTextBlockWhenNotEnabledSubscription(textBlock);
         return textBlock;
     }
 
+    /// <summary>
+    /// Creates a line separator as a textual visual element.
+    /// </summary>
+    /// <param name="separatorChar">The character to be used as a separator in the line.</param>
+    /// <returns>A <see cref="TextBlock"/> configured with the specified separator character and styling.</returns>
     private TextBlock CreateLineSeparator(char separatorChar)
     {
         var textBlock = new TextBlock
@@ -248,10 +256,15 @@ public class DateTimeInput : TemplatedControl
             FontSize = 18,
             Opacity = .6
         };
+        HideTextBlockWhenNotEnabledSubscription(textBlock);
+        return textBlock;
+    }
+
+    private void HideTextBlockWhenNotEnabledSubscription(TextBlock textBlock)
+    {
         Observable.EveryValueChanged(this, x => x.IsEffectivelyEnabled, UIHelper.GetFrameProvider)
             .Subscribe(b => textBlock.IsVisible = b)
             .AddTo(_disposables);
-        return textBlock;
     }
     
     /// <summary>
@@ -324,6 +337,10 @@ public class DateTimeInput : TemplatedControl
         {
             return;
         }
+        
+        // Always clear any previous error state when the text changes.
+        // We will re-add it if the new value is invalid.
+        PseudoClasses.Remove(":error");
 
         // Try to parse the values from the text boxes into integers.
         var yearParsed = int.TryParse(_yearBox?.Text, out var year);
@@ -357,8 +374,7 @@ public class DateTimeInput : TemplatedControl
             catch (ArgumentOutOfRangeException)
             {
                 // One of the values is out of range (e.g., month 13).
-                // In a real app, you might add validation feedback here.
-                SetCurrentValue(SelectedDateTimeProperty, null);
+                OnError();
             }
         }
         else
@@ -366,6 +382,22 @@ public class DateTimeInput : TemplatedControl
             // If any part is not a valid number, the overall DateTime is invalid.
             SetCurrentValue(SelectedDateTimeProperty, null);
         }
+        return;
+        
+        void OnError()
+        {
+            PseudoClasses.Add(":error");
+            SetCurrentValue(SelectedDateTimeProperty, null);
+        }
+    }
+
+    public void ClearTextBoxes()
+    {
+        _yearBox?.Text = string.Empty;
+        _monthBox?.Text = string.Empty;
+        _dayBox?.Text = string.Empty;
+        _hourBox?.Text = string.Empty;
+        _minuteBox?.Text = string.Empty;
     }
 
     /// <summary>

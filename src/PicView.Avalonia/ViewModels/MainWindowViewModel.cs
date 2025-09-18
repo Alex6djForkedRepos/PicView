@@ -14,12 +14,13 @@ public class MainWindowViewModel : IDisposable
 {
     public bool IsNavigationButtonLeftClicked { get; set; }
     public bool IsNavigationButtonRightClicked { get; set; }
+    
     public bool IsClickArrowLeftClicked { get; set; }
     public bool IsClickArrowRightClicked { get; set; }
 
     public bool IsRotateLeftClicked { get; set; }
     public bool IsRotateRightClicked { get; set; }
-
+    
     public bool IsTopToolbarRotationClicked { get; set; }
 
     public BindableReactiveProperty<Brush?> ImageBackground { get; } = new();
