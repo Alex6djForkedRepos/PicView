@@ -10,7 +10,7 @@ jobs:
     steps:    
       # Step 1: Checkout the code
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
 
       # Step 3: Get version from Directory.Build.props using PowerShell
