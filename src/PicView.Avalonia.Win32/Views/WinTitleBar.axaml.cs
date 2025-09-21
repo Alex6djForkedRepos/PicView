@@ -95,12 +95,22 @@ public partial class WinTitleBar : UserControl
         GalleryButton.IsVisible = false;
         MenuButton.IsVisible = false;
 
-        FileMenuItem.Open();
-
         if (DataContext is not MainViewModel vm)
         {
             return;
         }
+
+        // Overflow buttons if the window is too small
+        if (vm.MainWindow.TitleMaxWidth.CurrentValue < vm.PlatformWindowService.CombinedTitleButtonsWidth * 2)
+        {
+            WinBtnPanel.IsVisible = false;
+        }
+        else
+        {
+            WinBtnPanel.IsVisible = true;
+        }
+
+        FileMenuItem.Open();
 
         Task.Run(() =>
         {
@@ -117,6 +127,7 @@ public partial class WinTitleBar : UserControl
         EditableTitlebar.IsVisible = true;
         GalleryButton.IsVisible = true;
         MenuButton.IsVisible = true;
+        WinBtnPanel.IsVisible = true;
     }
 
     private void TryDragWindow(PointerPressedEventArgs e)

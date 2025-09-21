@@ -438,6 +438,8 @@
                                             Mode=OneWay}"
                 Margin="0,0,5,5"
                 Stretch="Fill"
+                Stroke="{DynamicResource MainBackgroundColor}"
+                StrokeThickness="1"
                 VerticalAlignment="Bottom"
                 Width="12" />
         </Panel>

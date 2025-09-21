@@ -67,71 +67,75 @@
                 Width="30"
                 x:Name="GalleryButton" />
 
-            <customControls:IconButton
-                Background="{DynamicResource WindowButtonBackgroundColor}"
-                BorderBrush="{DynamicResource MainBorderColor}"
-                Classes="hover"
-                ClickMode="Release"
-                Command="{CompiledBinding MainWindow.ExitCommand}"
-                Data="{StaticResource CloseGeometry}"
+            <StackPanel
                 DockPanel.Dock="Right"
-                Foreground="{DynamicResource MainTextColor}"
-                IconHeight="10"
-                IconWidth="10"
-                IsRepeatEnabled="False"
-                Width="30"
-                x:Name="CloseButton" />
+                Orientation="Horizontal"
+                x:Name="WinBtnPanel">
 
-            <customControls:IconButton
-                Background="{DynamicResource WindowButtonBackgroundColor}"
-                BorderBrush="{DynamicResource MainBorderColor}"
-                BorderThickness="0,0,1,0"
-                Classes="hover"
-                ClickMode="Release"
-                Command="{CompiledBinding MainWindow.ToggleFullscreenCommand}"
-                Data="{StaticResource FullscreenGeometry}"
-                DockPanel.Dock="Right"
-                Foreground="{DynamicResource MainTextColor}"
-                IconHeight="12"
-                IconWidth="12"
-                IsRepeatEnabled="False"
-                IsVisible="{CompiledBinding MainWindow.ShouldMaximizeBeShown.Value,
-                                            Mode=OneWay}"
-                Width="30"
-                x:Name="FullscreenButton" />
+                <customControls:IconButton
+                    Background="{DynamicResource WindowButtonBackgroundColor}"
+                    BorderBrush="{DynamicResource MainBorderColor}"
+                    BorderThickness="1,0,1,0"
+                    Classes="hover "
+                    ClickMode="Release"
+                    Command="{CompiledBinding MainWindow.MinimizeCommand}"
+                    Data="{StaticResource MinimizeGeometry}"
+                    Foreground="{DynamicResource MainTextColor}"
+                    IconHeight="12"
+                    IconWidth="12"
+                    IsRepeatEnabled="False"
+                    Width="30"
+                    x:Name="MinimizeButton" />
 
-            <customControls:IconButton
-                Background="{DynamicResource WindowButtonBackgroundColor}"
-                BorderBrush="{DynamicResource MainBorderColor}"
-                BorderThickness="0,0,1,0"
-                Classes="hover"
-                Command="{CompiledBinding MainWindow.RestoreCommand}"
-                Data="{StaticResource RestoreGeometry}"
-                DockPanel.Dock="Right"
-                Foreground="{DynamicResource MainTextColor}"
-                IconHeight="12"
-                IconWidth="12"
-                IsRepeatEnabled="False"
-                IsVisible="{CompiledBinding !MainWindow.ShouldMaximizeBeShown.Value,
-                                            Mode=OneWay}"
-                Width="30"
-                x:Name="RestoreButton" />
+                <customControls:IconButton
+                    Background="{DynamicResource WindowButtonBackgroundColor}"
+                    BorderBrush="{DynamicResource MainBorderColor}"
+                    BorderThickness="0,0,1,0"
+                    Classes="hover"
+                    ClickMode="Release"
+                    Command="{CompiledBinding MainWindow.ToggleFullscreenCommand}"
+                    Data="{StaticResource FullscreenGeometry}"
+                    Foreground="{DynamicResource MainTextColor}"
+                    IconHeight="12"
+                    IconWidth="12"
+                    IsRepeatEnabled="False"
+                    IsVisible="{CompiledBinding MainWindow.ShouldMaximizeBeShown.Value,
+                                                Mode=OneWay}"
+                    Width="30"
+                    x:Name="FullscreenButton" />
 
-            <customControls:IconButton
-                Background="{DynamicResource WindowButtonBackgroundColor}"
-                BorderBrush="{DynamicResource MainBorderColor}"
-                BorderThickness="1,0,1,0"
-                Classes="hover "
-                ClickMode="Release"
-                Command="{CompiledBinding MainWindow.MinimizeCommand}"
-                Data="{StaticResource MinimizeGeometry}"
-                DockPanel.Dock="Right"
-                Foreground="{DynamicResource MainTextColor}"
-                IconHeight="12"
-                IconWidth="12"
-                IsRepeatEnabled="False"
-                Width="30"
-                x:Name="MinimizeButton" />
+                <customControls:IconButton
+                    Background="{DynamicResource WindowButtonBackgroundColor}"
+                    BorderBrush="{DynamicResource MainBorderColor}"
+                    BorderThickness="0,0,1,0"
+                    Classes="hover"
+                    Command="{CompiledBinding MainWindow.RestoreCommand}"
+                    Data="{StaticResource RestoreGeometry}"
+                    Foreground="{DynamicResource MainTextColor}"
+                    IconHeight="12"
+                    IconWidth="12"
+                    IsRepeatEnabled="False"
+                    IsVisible="{CompiledBinding !MainWindow.ShouldMaximizeBeShown.Value,
+                                                Mode=OneWay}"
+                    Width="30"
+                    x:Name="RestoreButton" />
+
+                <customControls:IconButton
+                    Background="{DynamicResource WindowButtonBackgroundColor}"
+                    BorderBrush="{DynamicResource MainBorderColor}"
+                    Classes="hover"
+                    ClickMode="Release"
+                    Command="{CompiledBinding MainWindow.ExitCommand}"
+                    Data="{StaticResource CloseGeometry}"
+                    Foreground="{DynamicResource MainTextColor}"
+                    IconHeight="10"
+                    IconWidth="10"
+                    IsRepeatEnabled="False"
+                    Width="30"
+                    x:Name="CloseButton" />
+
+
+            </StackPanel>
 
             <uc:EditableTitlebar
                 Background="{DynamicResource WindowSecondaryBackgroundColor}"
