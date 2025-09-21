@@ -136,6 +136,14 @@
         <Setter Property="Stretch" Value="Fill" />
     </Style>
 
+    <Style Selector="Path.PastePath">
+        <Setter Property="Data" Value="{StaticResource PasteGeometry}" />
+        <Setter Property="Fill" Value="{DynamicResource MainTextColor}" />
+        <Setter Property="Height" Value="12" />
+        <Setter Property="Width" Value="12" />
+        <Setter Property="Stretch" Value="Fill" />
+    </Style>
+
     <Style Selector="Path.SavePath">
         <Setter Property="Data" Value="{StaticResource SaveGeometry}" />
         <Setter Property="Fill" Value="{DynamicResource MainTextColor}" />
@@ -157,6 +165,14 @@
         <Setter Property="Fill" Value="{DynamicResource MainTextColor}" />
         <Setter Property="Height" Value="12" />
         <Setter Property="Width" Value="12" />
+        <Setter Property="Stretch" Value="Fill" />
+    </Style>
+
+    <Style Selector="Path.ClosePath">
+        <Setter Property="Data" Value="{StaticResource CloseGeometry}" />
+        <Setter Property="Fill" Value="{DynamicResource MainTextColor}" />
+        <Setter Property="Height" Value="10" />
+        <Setter Property="Width" Value="10" />
         <Setter Property="Stretch" Value="Fill" />
     </Style>
 
@@ -184,6 +200,54 @@
 
     <Style Selector="Path.RecyclePath">
         <Setter Property="Data" Value="{StaticResource RecycleGeometry}" />
+        <Setter Property="Fill" Value="{DynamicResource MainTextColor}" />
+        <Setter Property="Height" Value="12" />
+        <Setter Property="Width" Value="12" />
+        <Setter Property="Stretch" Value="Fill" />
+    </Style>
+
+    <Style Selector="Path.SettingsPath">
+        <Setter Property="Data" Value="{StaticResource CogGeometry}" />
+        <Setter Property="Fill" Value="{DynamicResource MainTextColor}" />
+        <Setter Property="Height" Value="12" />
+        <Setter Property="Width" Value="12" />
+        <Setter Property="Stretch" Value="Fill" />
+    </Style>
+
+    <Style Selector="Path.FlipPath">
+        <Setter Property="Data" Value="{StaticResource FlipGeometry}" />
+        <Setter Property="Fill" Value="{DynamicResource MainTextColor}" />
+        <Setter Property="Height" Value="12" />
+        <Setter Property="Width" Value="12" />
+        <Setter Property="Stretch" Value="Fill" />
+    </Style>
+
+    <Style Selector="Path.CropPath">
+        <Setter Property="Data" Value="{StaticResource CropGeometry}" />
+        <Setter Property="Fill" Value="{DynamicResource MainTextColor}" />
+        <Setter Property="Height" Value="12" />
+        <Setter Property="Width" Value="12" />
+        <Setter Property="Stretch" Value="Fill" />
+    </Style>
+
+    <Style Selector="Path.ImageInfoPath">
+        <Setter Property="Data" Value="{StaticResource ImageInfoGeometry}" />
+        <Setter Property="Fill" Value="{DynamicResource MainTextColor}" />
+        <Setter Property="Height" Value="12" />
+        <Setter Property="Width" Value="12" />
+        <Setter Property="Stretch" Value="Fill" />
+    </Style>
+
+    <Style Selector="Path.RotateLeftPath">
+        <Setter Property="Data" Value="{StaticResource RotateLeftGeometry}" />
+        <Setter Property="Fill" Value="{DynamicResource MainTextColor}" />
+        <Setter Property="Height" Value="12" />
+        <Setter Property="Width" Value="12" />
+        <Setter Property="Stretch" Value="Fill" />
+    </Style>
+
+    <Style Selector="Path.RotateRightPath">
+        <Setter Property="Data" Value="{StaticResource RotateRightGeometry}" />
         <Setter Property="Fill" Value="{DynamicResource MainTextColor}" />
         <Setter Property="Height" Value="12" />
         <Setter Property="Width" Value="12" />

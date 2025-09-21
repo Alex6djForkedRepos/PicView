@@ -12,6 +12,7 @@ using PicView.Avalonia.Input;
 using PicView.Avalonia.UI;
 using PicView.Avalonia.UI.FileHistory;
 using PicView.Avalonia.ViewModels;
+using PicView.Avalonia.Views.UC;
 using PicView.Avalonia.WindowBehavior;
 using PicView.Core.Conversion;
 using PicView.Core.FileHistory;
@@ -119,7 +120,7 @@ public partial class MainView : UserControl
             _ = new HoverFadeButtonHandler(ClickArrowLeft, vm, ClickArrowLeft.PolyButton);
             _ = new HoverFadeButtonHandler(AltButtonsPanel, vm);
             
-            PointerWheelChanged += async (_, e) => await UC.ImageViewer.PreviewOnPointerWheelChanged(this, e);
+            PointerWheelChanged += async (_, e) => await ImageViewer.PreviewOnPointerWheelChanged(this, e);
         };
     }
 
@@ -183,7 +184,8 @@ public partial class MainView : UserControl
         });
         
         // Update file history menu items in Dispatcher with low priority to avoid slowdown
-        await Dispatcher.UIThread.InvokeAsync(() => FileHistoryMenuController?.UpdateFileHistoryMenu());
+        await Dispatcher.UIThread.InvokeAsync(() => FileHistoryMenuController?.UpdateFileHistoryMenu(),
+            DispatcherPriority.Background);
     }
 
     private async Task Drop(object? sender, DragEventArgs e)

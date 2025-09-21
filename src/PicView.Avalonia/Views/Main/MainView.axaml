@@ -705,12 +705,7 @@
                 <!--  Exif window  -->
                 <MenuItem Command="{CompiledBinding Window.ShowImageInfoWindow}" Header="{CompiledBinding Translation.ImageInfo.Value, Mode=OneWay}">
                     <MenuItem.Icon>
-                        <Path
-                            Data="{StaticResource ImageInfoGeometry}"
-                            Fill="{StaticResource Brush0}"
-                            Height="12"
-                            Stretch="Fill"
-                            Width="12" />
+                        <Path Classes="ImageInfoPath" />
                     </MenuItem.Icon>
                 </MenuItem>
 
@@ -736,8 +731,8 @@
                     Command="{CompiledBinding Window.ShowSingleImageResizeWindow}"
                     Header="{CompiledBinding Translation.ResizeImage.Value,
                                              Mode=OneWay}"
-                    IsEnabled="{CompiledBinding PicViewer.ShouldCropBeEnabled.Value,
-                                                Mode=OneWay}">
+                    IsEnabled="{CompiledBinding PicViewer.ImageSource.Value,
+                                                Converter={x:Static ObjectConverters.IsNotNull}}">
                     <MenuItem.Icon>
                         <Image
                             Height="12"
@@ -784,12 +779,7 @@
                                                 Mode=OneWay}"
                     x:Name="CropMenuItem">
                     <MenuItem.Icon>
-                        <Path
-                            Data="{StaticResource CropGeometry}"
-                            Fill="{DynamicResource MainTextColor}"
-                            Height="12"
-                            Stretch="Fill"
-                            Width="12" />
+                        <Path Classes="CropPath" />
                     </MenuItem.Icon>
                 </MenuItem>
 
@@ -804,12 +794,7 @@
                                                 Converter={x:Static ObjectConverters.IsNotNull}}"
                     StaysOpenOnClick="True">
                     <MenuItem.Icon>
-                        <Path
-                            Data="{StaticResource FlipGeometry}"
-                            Fill="{DynamicResource MainTextColor}"
-                            Height="12"
-                            Stretch="Fill"
-                            Width="12">
+                        <Path Classes="FlipPath">
                             <Path.RenderTransform>
                                 <ScaleTransform ScaleX="{CompiledBinding PicViewer.ScaleX.Value}" />
                             </Path.RenderTransform>
@@ -826,12 +811,7 @@
                                                 Converter={x:Static ObjectConverters.IsNotNull}}"
                     StaysOpenOnClick="True">
                     <MenuItem.Icon>
-                        <Path
-                            Data="{StaticResource RotateLeftGeometry}"
-                            Fill="{StaticResource Brush0}"
-                            Height="12"
-                            Stretch="Fill"
-                            Width="12" />
+                        <Path Classes="RotateLeftPath" />
                     </MenuItem.Icon>
                 </MenuItem>
 
@@ -844,12 +824,7 @@
                                                 Converter={x:Static ObjectConverters.IsNotNull}}"
                     StaysOpenOnClick="True">
                     <MenuItem.Icon>
-                        <Path
-                            Data="{StaticResource RotateRightGeometry}"
-                            Fill="{StaticResource Brush0}"
-                            Height="12"
-                            Stretch="Fill"
-                            Width="12" />
+                        <Path Classes="RotateRightPath" />
                     </MenuItem.Icon>
                 </MenuItem>
             </MenuItem>
@@ -875,12 +850,7 @@
             <!--  Paste  -->
             <MenuItem Command="{CompiledBinding Tools.PasteCommand}" Header="{CompiledBinding Translation.Paste.Value, Mode=OneWay}">
                 <MenuItem.Icon>
-                    <Path
-                        Data="{StaticResource PasteGeometry}"
-                        Fill="{StaticResource Brush0}"
-                        Height="12"
-                        Stretch="Fill"
-                        Width="12" />
+                    <Path Classes="PastePath" />
                 </MenuItem.Icon>
             </MenuItem>
 
