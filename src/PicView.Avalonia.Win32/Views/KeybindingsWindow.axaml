@@ -86,7 +86,6 @@
                 <main:KeybindingsView
                     Background="{DynamicResource NoisyTexture}"
                     Padding="5,2,5,10"
-                    PointerPressed="MoveWindow"
                     x:Name="KeybindingsView" />
             </customControls:AutoScrollViewer>
         </Panel>
