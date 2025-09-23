@@ -346,6 +346,7 @@
 
                 <!--  Toggle looping  -->
                 <MenuItem
+                    Command="{CompiledBinding Tools.ToggleLoopingCommand}"
                     Header="{CompiledBinding Translation.IsLooping.Value,
                                              Mode=OneWay}"
                     IsChecked="{Binding GlobalSettings.IsLooping.Value}"
