@@ -40,7 +40,6 @@ public static class MainKeyboardShortcuts
     
     public static bool IsEscKeyEnabled { get; set; } = true;
 
-    // For backward compatibility with existing code
     public static bool CtrlDown => (CurrentModifiers & KeyModifiers.Control) == KeyModifiers.Control;
     public static bool AltOrOptionDown => (CurrentModifiers & KeyModifiers.Alt) == KeyModifiers.Alt;
     public static bool ShiftDown => (CurrentModifiers & KeyModifiers.Shift) == KeyModifiers.Shift;

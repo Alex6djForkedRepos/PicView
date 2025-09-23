@@ -161,7 +161,6 @@ public static class UIHelper
 
     public static SolidColorBrush? GetSolidColorBrush(string resourceName)
     {
-
         if (!Application.Current.TryGetResource(resourceName,
         Application.Current.RequestedThemeVariant, out var textColor))
         {
