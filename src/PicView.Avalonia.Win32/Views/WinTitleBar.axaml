@@ -964,15 +964,6 @@
                         Theme="{StaticResource MainBg}"
                         ToggleType="CheckBox" />
 
-                    <!--  Toggle side-by-side  -->
-                    <MenuItem
-                        Command="{CompiledBinding Tools.ShowSideBySideCommand}"
-                        Header="{CompiledBinding Translation.SideBySide.Value,
-                                                 Mode=OneWay}"
-                        IsChecked="{CompiledBinding PicViewer.IsShowingSideBySide.Value}"
-                        Theme="{StaticResource MainBg}"
-                        ToggleType="CheckBox" />
-
                     <Separator Margin="0" Opacity="1" />
 
                     <!--  Toggle topmost  -->
