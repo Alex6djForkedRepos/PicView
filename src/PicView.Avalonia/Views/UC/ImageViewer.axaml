@@ -1,7 +1,6 @@
 <UserControl
     Background="{CompiledBinding MainWindow.ImageBackground.Value,
                                  Mode=OneWay}"
-    PointerPressed="InputElement_OnPointerPressed"
     mc:Ignorable="d"
     x:Class="PicView.Avalonia.Views.UC.ImageViewer"
     x:DataType="vm:MainViewModel"
@@ -15,39 +14,36 @@
         <vm:MainViewModel />
     </Design.DataContext>
     <LayoutTransformControl x:Name="ImageLayoutTransformControl">
-        <customControls:AutoScrollViewer
-            Focusable="False"
-            Height="{CompiledBinding PicViewer.ScrollViewerHeight.Value,
+        <customControls:ZoomPanControl
+            Height="{CompiledBinding PicViewer.ImageHeight.Value,
                                      Mode=OneWay}"
-            ScrollChanged="ImageScrollViewer_OnScrollChanged"
-            Theme="{StaticResource Main}"
-            VerticalScrollBarVisibility="{CompiledBinding MainWindow.ToggleScrollBarVisibility.Value}"
-            Width="{CompiledBinding PicViewer.ScrollViewerWidth.Value,
+            Width="{CompiledBinding PicViewer.ImageWidth.Value,
                                     Mode=OneWay}"
-            x:Name="ImageScrollViewer">
-            <Border
-                Background="{CompiledBinding MainWindow.ConstrainedImageBackground.Value,
-                                             Mode=OneWay}"
-                Height="{CompiledBinding PicViewer.ImageHeight.Value,
+            x:Name="ZoomPanControl">
+            <customControls:AutoScrollViewer
+                Focusable="False"
+                Height="{CompiledBinding PicViewer.ScrollViewerHeight.Value,
                                          Mode=OneWay}"
-                Width="{CompiledBinding PicViewer.ImageWidth.Value,
+                Theme="{StaticResource Main}"
+                VerticalScrollBarVisibility="{CompiledBinding MainWindow.ToggleScrollBarVisibility.Value}"
+                Width="{CompiledBinding PicViewer.ScrollViewerWidth.Value,
                                         Mode=OneWay}"
-                x:Name="MainBorder">
-                <customControls:PicBox
-                    ImageType="{CompiledBinding PicViewer.ImageType.Value,
-                                                Mode=OneWay}"
-                    PointerMoved="MainImage_OnPointerMoved"
-                    PointerPressed="MainImage_OnPointerPressed"
-                    PointerReleased="MainImage_OnPointerReleased"
-                    SecondaryImageWidth="{CompiledBinding PicViewer.SecondaryImageWidth.Value,
+                x:Name="ImageScrollViewer">
+                <Border Background="{CompiledBinding MainWindow.ConstrainedImageBackground.Value, Mode=OneWay}"
+                        x:Name="MainBorder">
+                    <customControls:PicBox
+                        ImageType="{CompiledBinding PicViewer.ImageType.Value,
+                                                    Mode=OneWay}"
+                        SecondaryImageWidth="{CompiledBinding PicViewer.SecondaryImageWidth.Value,
+                                                              Mode=OneWay}"
+                        SecondarySource="{CompiledBinding PicViewer.SecondaryImageSource.Value,
                                                           Mode=OneWay}"
-                    SecondarySource="{CompiledBinding PicViewer.SecondaryImageSource.Value,
-                                                      Mode=OneWay}"
-                    Source="{CompiledBinding PicViewer.ImageSource.Value,
-                                             Mode=OneWay}"
-                    UseLayoutRounding="True"
-                    x:Name="MainImage" />
-            </Border>
-        </customControls:AutoScrollViewer>
+                        Source="{CompiledBinding PicViewer.ImageSource.Value,
+                                                 Mode=OneWay}"
+                        UseLayoutRounding="True"
+                        x:Name="MainImage" />
+                </Border>
+            </customControls:AutoScrollViewer>
+        </customControls:ZoomPanControl>
     </LayoutTransformControl>
 </UserControl>

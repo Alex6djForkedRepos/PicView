@@ -31,7 +31,7 @@ public partial class RotationContextMenu : ContextMenu
         Rotation90Item.IsChecked = false;
         Rotation180Item.IsChecked = false;
         Rotation270Item.IsChecked = false;
-        switch (vm.GlobalSettings.RotationAngle.CurrentValue)
+        switch (vm.PicViewer.RotationAngle.CurrentValue)
         {
             case 0:
                 Rotation0Item.IsChecked = true;

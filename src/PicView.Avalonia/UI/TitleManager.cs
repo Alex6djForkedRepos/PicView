@@ -42,7 +42,8 @@ public static class TitleManager
             }
 
             var singleImageWindowTitles =
-                ImageTitleFormatter.GenerateTitleForSingleImage(pWidth, pHeight, title, vm.GlobalSettings.RotationAngle.CurrentValue);
+                ImageTitleFormatter.GenerateTitleForSingleImage(pWidth, pHeight, title,
+                    vm.PicViewer.RotationAngle.CurrentValue);
             vm.PicViewer.WindowTitle.Value = singleImageWindowTitles.BaseTitle;
             vm.PicViewer.Title.Value = singleImageWindowTitles.TitleWithAppName;
             vm.PicViewer.TitleTooltip.Value = singleImageWindowTitles.TitleWithAppName;
@@ -238,10 +239,10 @@ public static class TitleManager
         
         var firstWindowTitles = ImageTitleFormatter.GenerateTitleStrings(imageModel1.PixelWidth,
             imageModel1.PixelHeight, NavigationManager.GetCurrentIndex,
-            imageModel1.FileInfo, vm.GlobalSettings.RotationAngle.CurrentValue, NavigationManager.GetCollection);
+            imageModel1.FileInfo, vm.PicViewer.RotationAngle.CurrentValue, NavigationManager.GetCollection);
         var secondWindowTitles = ImageTitleFormatter.GenerateTitleStrings(imageModel2.PixelWidth,
             imageModel2.PixelHeight, NavigationManager.GetNextIndex,
-            imageModel2.FileInfo, vm.GlobalSettings.RotationAngle.CurrentValue, NavigationManager.GetCollection);
+            imageModel2.FileInfo, vm.PicViewer.RotationAngle.CurrentValue, NavigationManager.GetCollection);
         var windowTitle = $"{firstWindowTitles.BaseTitle} \u21dc || \u21dd {secondWindowTitles.BaseTitle} - PicView";
         var title = $"{firstWindowTitles.BaseTitle} \u21dc || \u21dd  {secondWindowTitles.BaseTitle}";
         var titleTooltip = $"{firstWindowTitles.FilePathTitle} \u21dc || \u21dd  {secondWindowTitles.FilePathTitle}";

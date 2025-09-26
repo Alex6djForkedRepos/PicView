@@ -36,6 +36,8 @@ public class PicViewerModel : IDisposable
     
     public BindableReactiveProperty<MagickFormat?> Format { get; } = new();
 
+    public BindableReactiveProperty<double> RotationAngle { get; } = new(0);
+
     /// <summary>
     /// The width to scale the image to
     /// </summary>

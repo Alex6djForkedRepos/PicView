@@ -133,7 +133,7 @@ public static class CropFunctions
             return false;
         }
 
-        if (vm.GlobalSettings.RotationAngle.CurrentValue is 0 && vm.PicViewer.ScaleX.CurrentValue is 1)
+        if (vm.PicViewer.RotationAngle.CurrentValue is 0 && vm.PicViewer.ScaleX.CurrentValue is 1)
         {
             vm.PicViewer.ShouldCropBeEnabled.Value = true;
             return true;

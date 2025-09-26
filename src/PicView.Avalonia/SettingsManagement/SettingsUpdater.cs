@@ -396,7 +396,7 @@ public static class SettingsUpdater
             await Dispatcher.UIThread.InvokeAsync(() =>
             {
                 WindowResizing.SetSize(vm.PicViewer.ImageWidth.CurrentValue, vm.PicViewer.ImageHeight.CurrentValue, preloadValue.ImageModel.PixelWidth,
-                    preloadValue.ImageModel.PixelHeight, vm.GlobalSettings.RotationAngle.CurrentValue, vm);
+                    preloadValue.ImageModel.PixelHeight, vm.PicViewer.RotationAngle.CurrentValue, vm);
                 TitleManager.SetSideBySideTitle(vm, imageModel1, imageModel2);
             });
         }

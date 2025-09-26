@@ -66,7 +66,7 @@ public static class FileSaverHelper
                 null,
                 null,
                 Path.GetExtension(destination),
-                vm.GlobalSettings.RotationAngle.CurrentValue,
+                vm.PicViewer.RotationAngle.CurrentValue,
                 null,
                 false,
                 false,
@@ -105,7 +105,7 @@ public static class FileSaverHelper
                                 height: null,
                                 quality,
                                 ext,
-                                vm.GlobalSettings.RotationAngle.CurrentValue);
+                                vm.PicViewer.RotationAngle.CurrentValue);
                         }
                     
                         break;

@@ -26,7 +26,7 @@ public static class RotationNavigation
     public static async Task RotateTo(MainViewModel? vm, int angle)
     {
         await Dispatcher.UIThread.InvokeAsync(() => { vm.ImageViewer.Rotate(angle); });
-        vm.GlobalSettings.RotationAngle.Value = angle;
+        vm.PicViewer.RotationAngle.Value = angle;
         await WindowResizing.SetSizeAsync(vm);
     }
 

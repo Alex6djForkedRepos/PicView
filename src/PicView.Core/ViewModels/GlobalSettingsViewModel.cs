@@ -19,8 +19,6 @@ public class GlobalSettingsViewModel
     
     public BindableReactiveProperty<bool> IsFileHistoryEnabled { get; } = new(Settings.Navigation.IsFileHistoryEnabled);
 
-    public BindableReactiveProperty<double> RotationAngle { get; } = new(0);
-
     public BindableReactiveProperty<double> ZoomValue { get; } = new();
     
     public BindableReactiveProperty<bool> IsShowingTaskbarProgress { get; } = new(Settings.UIProperties.IsTaskbarProgressEnabled);

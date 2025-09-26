@@ -15,10 +15,8 @@ public class FileSizeBenchmark
     private List<FileInfo>? _fileInfos;
 
     [GlobalSetup]
-    public async ValueTask Setup()
+    public void Setup()
     {
-        await LoadSettingsAsync();
-
         var picturesPath = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
         _fileInfos = new DirectoryInfo(picturesPath)
             .DescendantsAndSelf()
