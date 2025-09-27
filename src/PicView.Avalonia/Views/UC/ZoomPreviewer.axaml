@@ -3,27 +3,60 @@
     x:Class="PicView.Avalonia.Views.UC.ZoomPreviewer"
     x:DataType="vm:MainViewModel"
     xmlns="https://github.com/avaloniaui"
+    xmlns:customControls="clr-namespace:PicView.Avalonia.CustomControls"
     xmlns:vm="clr-namespace:PicView.Avalonia.ViewModels"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Border
         Background="{DynamicResource MainBackgroundColor}"
         BorderBrush="{DynamicResource MainBorderColor}"
-        BorderThickness="1">
-        <Panel>
-            <Image
-                Height="150"
-                IsHitTestVisible="False"
-                Source="{CompiledBinding PicViewer.ImageSource.Value,
-                                         Mode=OneWay}"
-                Stretch="Uniform"
-                x:Name="OverlayImage" />
-            <Canvas x:Name="OverlayCanvas">
-                <Rectangle
-                    Fill="Transparent"
-                    Stroke="{DynamicResource AccentColor}"
-                    StrokeThickness="2"
-                    x:Name="ViewportBorder" />
-            </Canvas>
-        </Panel>
+        BorderThickness="1"
+        CornerRadius="6,6,1,1">
+        <StackPanel>
+            <Border
+                Background="{DynamicResource MainBackgroundColor}"
+                BorderBrush="{DynamicResource MainBorderColor}"
+                BorderThickness="0,0,1,1"
+                CornerRadius="6,6,1,1">
+                <Grid ColumnDefinitions="*,*">
+                    <customControls:IconButton
+                        Classes="altHover mainBtn"
+                        Command="{CompiledBinding Tools.ResetZoomCommand}"
+                        CornerRadius="6,0,0,0"
+                        Data="{StaticResource ReloadGeometry}"
+                        Grid.Column="0"
+                        Height="22"
+                        IconHeight="11"
+                        IconWidth="11"
+                        Padding="1"
+                        ToolTip.Tip="{CompiledBinding Translation.ResetZoom.Value}" />
+
+                    <customControls:IconButton
+                        Classes="altHover mainBtn"
+                        CornerRadius="0,6,0,0"
+                        Data="{StaticResource CloseGeometry}"
+                        Grid.Column="1"
+                        Height="22"
+                        IconHeight="10"
+                        IconWidth="10"
+                        Padding="1"
+                        ToolTip.Tip="{CompiledBinding Translation.Close.Value}"
+                        x:Name="CloseButton" />
+                </Grid>
+            </Border>
+            <Panel>
+                <customControls:ThumbImage
+                    Height="150"
+                    Source="{CompiledBinding PicViewer.ImageSource.Value}"
+                    Stretch="Uniform"
+                    x:Name="OverlayImage" />
+                <Canvas x:Name="OverlayCanvas">
+                    <Rectangle
+                        Fill="Transparent"
+                        Stroke="{DynamicResource AccentColor}"
+                        StrokeThickness="2"
+                        x:Name="ViewportBorder" />
+                </Canvas>
+            </Panel>
+        </StackPanel>
     </Border>
 </UserControl>

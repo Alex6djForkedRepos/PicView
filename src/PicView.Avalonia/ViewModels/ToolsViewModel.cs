@@ -35,6 +35,8 @@ public class ToolsViewModel : IDisposable
         await FunctionsMapper.ShowSettingsFile();
     });
 
+    public ReactiveCommand ResetZoomCommand { get; } = new(async (_, _) => { await FunctionsMapper.ResetZoom(); });
+
     // Open related
     public ReactiveCommand OpenFileCommand { get; } = new(async (_, _) => { await FunctionsMapper.Open(); });
 

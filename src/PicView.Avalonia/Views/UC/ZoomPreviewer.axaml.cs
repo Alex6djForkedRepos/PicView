@@ -21,6 +21,8 @@ public partial class ZoomPreviewer : UserControl
     {
         InitializeComponent();
 
+        CloseButton.Click += delegate { IsVisible = false; };
+
         // Add pointer event handlers for dragging
         AddHandler(PointerPressedEvent, OnPointerPressed, RoutingStrategies.Tunnel);
         AddHandler(PointerMovedEvent, OnPointerMoved, RoutingStrategies.Tunnel);
@@ -186,12 +188,12 @@ public partial class ZoomPreviewer : UserControl
             Dispatcher.UIThread.Post(() =>
             {
                 // Only hide if we're not dragging
-                if (!_isDragging)
+                if (!_isDragging && !IsPointerOver)
                 {
                     IsVisible = false;
                 }
             });
-        }, null, TimeSpan.FromSeconds(1.5), Timeout.InfiniteTimeSpan);
+        }, null, TimeSpan.FromSeconds(2.5), Timeout.InfiniteTimeSpan);
     }
 
     internal void UpdateViewportRect()
