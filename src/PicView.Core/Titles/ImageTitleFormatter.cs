@@ -18,8 +18,8 @@ public static class ImageTitleFormatter
     /// The name of the application.
     /// </summary>
     public const string AppName = "PicView";
-    
-    private const double NormalZoomLevel = 1.0;
+
+    private const double NormalZoomLevel = 100;
     private const double NoZoomLevel = 0.0;
 
 
@@ -174,16 +174,8 @@ public static class ImageTitleFormatter
     /// </summary>
     /// <param name="zoomValue">The current zoom level of the image as a double value.</param>
     /// <returns>A formatted string representing the zoom percentage, or null if the zoom is 0 or 100%.</returns>
-    private static string? FormatZoomPercentage(double zoomValue)
-    {
-        if (zoomValue is NoZoomLevel or NormalZoomLevel)
-        {
-            return null;
-        }
-
-        var zoomPercentage = Math.Round(zoomValue * 100);
-        return $"{zoomPercentage}%";
-    }
+    private static string? FormatZoomPercentage(double zoomValue) =>
+        zoomValue is NoZoomLevel or NormalZoomLevel ? null : $"{Math.Floor(zoomValue)}%";
 
 
     /// <summary>

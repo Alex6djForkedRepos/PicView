@@ -41,7 +41,11 @@ public class ZoomPanControl : Decorator
     private Point _panStartPointer;
     private Point _panStartTranslate;
 
-    public double ZoomLevel { get; private set; } = 1;
+    /// <summary>
+    /// Represents the current zoom level as a percentage.
+    /// A value of 100 corresponds to the default zoom level, while values higher or lower indicate zoomed-in or zoomed-out states, respectively.
+    /// </summary>
+    public double ZoomLevel { get; private set; } = 100;
 
     // Accessors
     public double Scale
@@ -250,6 +254,8 @@ public class ZoomPanControl : Decorator
         TranslateX = 0;
         TranslateY = 0;
 
+        ZoomLevel = resetZoom * 100;
+
         // If we have a specific zoom point and child is available, center properly
         if (zoomPoint.HasValue && Child != null)
         {
@@ -282,12 +288,18 @@ public class ZoomPanControl : Decorator
         SetTransitions(animated);
         Scale = TranslateX = TranslateY = 1.0;
         SetScaleImmediate(1.0, CenterPoint());
-        ZoomLevel = 1;
+
+        ZoomLevel = 100;
     }
 
+    /// <summary>
+    /// Handles zooming functionality using the mouse pointer wheel. Zooms in or out based on the scroll direction.
+    /// </summary>
+    /// <param name="e">The event arguments containing details about the pointer wheel input.</param>
     public void ZoomWithPointerWheel(PointerWheelEventArgs e) =>
         ZoomWithPointerWheelCore(e.Delta.Y > 0, e.GetPosition(this));
 
+    /// <inheritdoc cref="ZoomWithPointerWheel(PointerWheelEventArgs)"/>
     public void ZoomWithPointerWheel(PointerDeltaEventArgs e) =>
         ZoomWithPointerWheelCore(e.Delta.Y > 0, e.GetPosition(this));
 
@@ -298,6 +310,12 @@ public class ZoomPanControl : Decorator
         ZoomBy(step, shouldAnimate, pos);
     }
 
+    /// <summary>
+    /// Adjusts the zoom scale by a specified multiplier, with optional animation and zoom origin point.
+    /// </summary>
+    /// <param name="multiplier">The amount by which to adjust the current zoom scale. Positive values zoom in, negative values zoom out.</param>
+    /// <param name="animated">Specifies whether the zoom adjustment should include an animation.</param>
+    /// <param name="zoomAtPoint">The point where the zoom operation is centered. If null, the control's center is used.</param>
     public void ZoomBy(double multiplier, bool animated = true, Point? zoomAtPoint = null)
     {
         var center = zoomAtPoint ?? CenterPoint();
@@ -317,12 +335,16 @@ public class ZoomPanControl : Decorator
             AnimateScaleTo(targetScale, center, animated);
         }
 
-        ZoomLevel = targetScale;
+        ZoomLevel = targetScale * 100;
     }
 
     /// <summary>
-    /// Zoom in. If zoomAtCursorPoint is provided it will zoom at that point; otherwise uses control center.
+    /// Zooms in the content by increasing the scale based on the specified multiplier.
+    /// Updates the zoom level and optionally animates the zoom effect while focusing on a specific point.
     /// </summary>
+    /// <param name="multiplier">The factor by which the scale is increased. Defaults to 1.2.</param>
+    /// <param name="animated">Indicates whether the zoom effect should be animated. Defaults to true.</param>
+    /// <param name="zoomAtCursorPoint">The point to zoom around. Defaults to the center if null.</param>
     public void ZoomIn(double multiplier = 1.2, bool animated = true,
         Point? zoomAtCursorPoint = null)
     {
@@ -337,12 +359,15 @@ public class ZoomPanControl : Decorator
             AnimateScaleTo(targetScale, center, animated);
         }
 
-        ZoomLevel = targetScale;
+        ZoomLevel = targetScale * 100;
     }
 
     /// <summary>
-    /// Zoom out. Always uses the control center as requested.
+    /// Zooms out the view by a specified multiplier, applying deadzone logic
+    /// and animation if enabled.
     /// </summary>
+    /// <param name="multiplier">The factor by which to decrease the zoom level. For example, a multiplier of 1/1.2 reduces the scale.</param>
+    /// <param name="animated">Indicates whether the zoom-out operation should be animated.</param>
     public void ZoomOut(double multiplier = 1.0 / 1.2, bool animated = true)
     {
         var center = CenterPoint();
@@ -356,18 +381,23 @@ public class ZoomPanControl : Decorator
             AnimateScaleTo(targetScale, center, animated);
         }
 
-        ZoomLevel = targetScale;
+        ZoomLevel = targetScale * 100;
     }
 
     /// <summary>
-    /// Immediate (no animation) set of scale around given control point.
+    /// Sets the scale of the control immediately, optionally focusing the scaling around a specific point.
+    /// Updates the internal zoom level and applies the necessary transformations to the child element.
     /// </summary>
+    /// <param name="newScale">The new scale value to apply.</param>
+    /// <param name="around">The point around which the scaling should occur. If null, the scaling is applied around the center of the control.</param>
     public void SetScaleImmediate(double newScale, Point? around = null)
     {
         var center = around ?? CenterPoint();
         ApplyScaleAroundPoint(newScale, center);
         ConstrainTranslationToBounds();
         UpdateChildTransform();
+
+        ZoomLevel = newScale * 100;
 
         if (DataContext is not MainViewModel vm)
         {
@@ -379,15 +409,12 @@ public class ZoomPanControl : Decorator
         TitleManager.SetTitle(vm);
         if (Settings.Zoom.IsShowingZoomPercentagePopup)
         {
-            _ = TooltipHelper.ShowTooltipMessageContinuallyAsync($"{Math.Floor(ZoomLevel * 100)}%", true,
+            _ = TooltipHelper.ShowTooltipMessageContinuallyAsync($"{Math.Floor(ZoomLevel)}%", true,
                 TimeSpan.FromSeconds(1));
         }
     }
 
-    private Point CenterPoint()
-    {
-        return new Point(Bounds.Width / 2.0, Bounds.Height / 2.0);
-    }
+    private Point CenterPoint() => new(Bounds.Width / 2.0, Bounds.Height / 2.0);
 
     private void AnimateScaleTo(double targetScale, Point center, bool animated)
     {
