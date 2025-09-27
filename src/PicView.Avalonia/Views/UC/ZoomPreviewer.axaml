@@ -1,13 +1,7 @@
-﻿<Window
-    CanResize="False"
+﻿<UserControl
     Focusable="False"
     IsHitTestVisible="False"
-    ShowInTaskbar="False"
-    SizeToContent="WidthAndHeight"
-    SystemDecorations="None"
-    Title="ZoomPreviewWindow"
-    Topmost="True"
-    x:Class="PicView.Avalonia.Views.UC.ZoomPreviewWindow"
+    x:Class="PicView.Avalonia.Views.UC.ZoomPreviewer"
     x:DataType="vm:MainViewModel"
     xmlns="https://github.com/avaloniaui"
     xmlns:vm="clr-namespace:PicView.Avalonia.ViewModels"
@@ -32,4 +26,4 @@
             </Canvas>
         </Panel>
     </Border>
-</Window>
+</UserControl>

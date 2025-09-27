@@ -3,7 +3,9 @@ using Avalonia.Animation;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.Layout;
 using Avalonia.Media;
+using PicView.Avalonia.UI;
 using PicView.Avalonia.Views.UC;
 using R3;
 
@@ -31,14 +33,14 @@ public class ZoomPanControl : Decorator
     public static readonly StyledProperty<bool> EnableDeadzoneProperty =
         AvaloniaProperty.Register<ZoomPanControl, bool>(nameof(EnableDeadzone), true);
 
-    private ZoomPreviewWindow? _previewWindow;
+    private ZoomPreviewer? _zoomPreviewer;
 
     // Private fields for panning
     private bool _isPanning;
     private Point _panStartPointer;
     private Point _panStartTranslate;
 
-    public double ZoomLevel { get; private set; } = 1;
+    public double ZoomLevel { get; private set; }
 
     // Accessors
     public double Scale
@@ -95,8 +97,16 @@ public class ZoomPanControl : Decorator
         // When the child changes, ensure transforms are applied
         ChildProperty.Changed.ToObservable().Skip(1).Subscribe(_ => UpdateChildTransform());
 
-        _previewWindow = new ZoomPreviewWindow { DataContext = DataContext };
-        _previewWindow.SetZoomPanControl(this);
+        _zoomPreviewer = new ZoomPreviewer
+        {
+            DataContext = DataContext,
+            HorizontalAlignment = HorizontalAlignment.Right,
+            VerticalAlignment = VerticalAlignment.Bottom,
+            Margin = new Thickness(0, 0, 25, 25),
+            IsVisible = false
+        };
+        _zoomPreviewer.SetZoomPanControl(this);
+        UIHelper.GetMainView.MainGrid.Children.Add(_zoomPreviewer);
 
         ScaleProperty.Changed.ToObservable().Skip(1).Subscribe(_ =>
         {
@@ -117,18 +127,16 @@ public class ZoomPanControl : Decorator
 
     private void UpdatePreviewWindow()
     {
-        if (_previewWindow == null)
+        if (_zoomPreviewer == null)
         {
             return;
         }
 
-        _previewWindow.UpdatePosition();
-
         // Update visibility based on zoom state
-        _previewWindow.UpdateVisibility();
+        _zoomPreviewer.UpdateVisibility();
 
         // Update viewport rectangle
-        _previewWindow.UpdateViewportRect();
+        _zoomPreviewer.UpdateViewportRect();
     }
 
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
@@ -136,11 +144,13 @@ public class ZoomPanControl : Decorator
         base.OnAttachedToVisualTree(e);
 
         // Show preview window when attached
-        if (_previewWindow != null && !_previewWindow.IsVisible)
+        if (_zoomPreviewer is not { IsVisible: false })
         {
-            _previewWindow.Show();
-            UpdatePreviewWindow();
+            return;
         }
+
+        _zoomPreviewer.IsVisible = true;
+        UpdatePreviewWindow();
     }
     
     protected override Size ArrangeOverride(Size finalSize)
@@ -223,34 +233,35 @@ public class ZoomPanControl : Decorator
             return targetScale;
         }
 
-        var resetZoom = 1.0;
+        const double resetZoom = 1.0;
         var lowerBound = resetZoom - DeadzoneTolerance;
         var upperBound = resetZoom + DeadzoneTolerance;
 
         // Check if target scale is within deadzone
-        if (targetScale >= lowerBound && targetScale <= upperBound)
+        if (!(targetScale >= lowerBound) || !(targetScale <= upperBound))
         {
-            // Snap to reset zoom and center the content
-            SetTransitions(animated);
-            Scale = resetZoom;
-            TranslateX = 0;
-            TranslateY = 0;
-
-            // If we have a specific zoom point and child is available, center properly
-            if (zoomPoint.HasValue && Child != null)
-            {
-                var center = CenterPoint();
-                SetScaleImmediate(resetZoom, center);
-            }
-            else
-            {
-                SetScaleImmediate(resetZoom, CenterPoint());
-            }
-
-            return resetZoom;
+            return targetScale;
         }
 
-        return targetScale;
+        // Snap to reset zoom and center the content
+        SetTransitions(animated);
+        Scale = resetZoom;
+        TranslateX = 0;
+        TranslateY = 0;
+
+        // If we have a specific zoom point and child is available, center properly
+        if (zoomPoint.HasValue && Child != null)
+        {
+            var center = CenterPoint();
+            SetScaleImmediate(resetZoom, center);
+        }
+        else
+        {
+            SetScaleImmediate(resetZoom, CenterPoint());
+        }
+
+        return resetZoom;
+
     }
 
     public void ResetZoom(bool animated, bool resetFlipAndRotation)
@@ -259,6 +270,8 @@ public class ZoomPanControl : Decorator
         {
             return;
         }
+
+        _zoomPreviewer.IsVisible = false;
 
         if (resetFlipAndRotation)
         {

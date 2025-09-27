@@ -1,20 +1,28 @@
 ﻿using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Input;
+using Avalonia.LogicalTree;
 using Avalonia.Threading;
 using PicView.Avalonia.CustomControls;
-using PicView.Avalonia.UI;
 
 namespace PicView.Avalonia.Views.UC;
 
-public partial class ZoomPreviewWindow : Window
+public partial class ZoomPreviewer : UserControl
 {
     private ZoomPanControl? _zoomPanControl;
     private Control? _childControl;
     private Timer? _hideTimer;
 
-    public ZoomPreviewWindow()
+    public ZoomPreviewer()
     {
         InitializeComponent();
+        Focusable = false;
+    }
+
+    protected override void OnGotFocus(GotFocusEventArgs e)
+    {
+        // Don't call base to prevent focus
+        e.Handled = true;
     }
 
     public void SetZoomPanControl(ZoomPanControl zoomPanControl)
@@ -23,19 +31,6 @@ public partial class ZoomPreviewWindow : Window
         _childControl = zoomPanControl.Child;
 
         UpdateViewportRect();
-    }
-
-    public void UpdatePosition()
-    {
-        var p = UIHelper.GetMainView.PointToScreen(
-            new Point(UIHelper.GetMainView.Bounds.Width - Width - 15,
-                UIHelper.GetMainView.Bounds.Height - Height - 25));
-
-        Position = new PixelPoint(p.X, p.Y);
-
-        _hideTimer?.Dispose();
-        _hideTimer = new Timer(_ => { Dispatcher.UIThread.Post(Hide); }, null, TimeSpan.FromSeconds(1.3),
-            Timeout.InfiniteTimeSpan);
     }
 
     public void UpdateVisibility()
@@ -47,13 +42,18 @@ public partial class ZoomPreviewWindow : Window
         }
 
         // Show when zoomed in or out (not at 1.0 scale)
-        var shouldShow = Math.Abs(_zoomPanControl.Scale - 1.0) > 0.001;
+        var shouldShow = _zoomPanControl.Scale > 1;
         IsVisible = shouldShow;
 
         if (shouldShow)
         {
             UpdateViewportRect();
         }
+
+        // Reset the timer to hide the window after 1.5 seconds
+        _hideTimer?.Dispose();
+        _hideTimer = new Timer(_ => { Dispatcher.UIThread.Post(() => IsVisible = false); }, null,
+            TimeSpan.FromSeconds(1.5), Timeout.InfiniteTimeSpan);
     }
 
     internal void UpdateViewportRect()
@@ -111,9 +111,9 @@ public partial class ZoomPreviewWindow : Window
         );
     }
 
-    protected override void OnClosed(EventArgs e)
+    protected override void OnDetachedFromLogicalTree(LogicalTreeAttachmentEventArgs e)
     {
+        base.OnDetachedFromLogicalTree(e);
         _hideTimer?.Dispose();
-        base.OnClosed(e);
     }
 }

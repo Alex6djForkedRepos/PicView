@@ -50,10 +50,7 @@ public partial class ImageViewer : UserControl
             () => DataContext,
             () =>
             {
-                if (ZoomPanControl?.ZoomLevel != 0)
-                {
-                    ResetZoom(false);
-                }
+                ResetZoom(false);
             });
     }
 
