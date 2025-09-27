@@ -6,6 +6,7 @@ using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
 using PicView.Avalonia.UI;
+using PicView.Avalonia.ViewModels;
 using PicView.Avalonia.Views.UC;
 using R3;
 
@@ -40,7 +41,7 @@ public class ZoomPanControl : Decorator
     private Point _panStartPointer;
     private Point _panStartTranslate;
 
-    public double ZoomLevel { get; private set; }
+    public double ZoomLevel { get; private set; } = 1;
 
     // Accessors
     public double Scale
@@ -281,6 +282,7 @@ public class ZoomPanControl : Decorator
         SetTransitions(animated);
         Scale = TranslateX = TranslateY = 1.0;
         SetScaleImmediate(1.0, CenterPoint());
+        ZoomLevel = 1;
     }
 
     public void ZoomWithPointerWheel(PointerWheelEventArgs e) =>
@@ -314,6 +316,8 @@ public class ZoomPanControl : Decorator
         {
             AnimateScaleTo(targetScale, center, animated);
         }
+
+        ZoomLevel = targetScale;
     }
 
     /// <summary>
@@ -332,6 +336,8 @@ public class ZoomPanControl : Decorator
         {
             AnimateScaleTo(targetScale, center, animated);
         }
+
+        ZoomLevel = targetScale;
     }
 
     /// <summary>
@@ -349,6 +355,8 @@ public class ZoomPanControl : Decorator
         {
             AnimateScaleTo(targetScale, center, animated);
         }
+
+        ZoomLevel = targetScale;
     }
 
     /// <summary>
@@ -360,6 +368,20 @@ public class ZoomPanControl : Decorator
         ApplyScaleAroundPoint(newScale, center);
         ConstrainTranslationToBounds();
         UpdateChildTransform();
+
+        if (DataContext is not MainViewModel vm)
+        {
+            return;
+        }
+
+        vm.GlobalSettings.ZoomValue.Value = ZoomLevel;
+
+        TitleManager.SetTitle(vm);
+        if (Settings.Zoom.IsShowingZoomPercentagePopup)
+        {
+            _ = TooltipHelper.ShowTooltipMessageContinuallyAsync($"{Math.Floor(ZoomLevel * 100)}%", true,
+                TimeSpan.FromSeconds(1));
+        }
     }
 
     private Point CenterPoint()
@@ -484,8 +506,6 @@ public class ZoomPanControl : Decorator
 
         Child.RenderTransform = group;
         Child.RenderTransformOrigin = new RelativePoint(0, 0, RelativeUnit.Absolute);
-
-        ZoomLevel = TranslateX;
 
         // Update preview window after transform change
         UpdatePreviewWindow();

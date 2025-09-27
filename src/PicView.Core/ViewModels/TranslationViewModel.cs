@@ -302,6 +302,7 @@ public class TranslationViewModel : IDisposable
         Help.Value = t.Help;
         View.Value = t.View;
         Edit.Value = t.Edit;
+        ShowZoomPercentagePopup.Value = t.ShowZoomPercentagePopup;
     }
 
     #region Static Translation Strings
@@ -549,6 +550,7 @@ public class TranslationViewModel : IDisposable
     public BindableReactiveProperty<string?> ShowImageGallery { get; } = new();
     public BindableReactiveProperty<string?> ShowInFolder { get; } = new();
     public BindableReactiveProperty<string?> ShowUI { get; } = new();
+    public BindableReactiveProperty<string?> ShowZoomPercentagePopup { get; } = new();
     public BindableReactiveProperty<string?> SideBySide { get; } = new();
     public BindableReactiveProperty<string?> SideBySideTooltip { get; } = new();
     public BindableReactiveProperty<string?> SizeMp { get; } = new();

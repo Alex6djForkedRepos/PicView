@@ -347,6 +347,7 @@ public class LanguageModel
     public string? ShowInfoWindow { get; set; }
     public string? ShowResizeWindow { get; set; }
     public string? ShowUI { get; set; }
+    public string? ShowZoomPercentagePopup { get; set; }
     public string? ShutterPriority { get; set; }
     public string? SideBySide { get; set; }
     public string? SideBySideTooltip { get; set; }

@@ -41,6 +41,23 @@
                                        Mode=OneWay}" />
         </ToggleButton>
 
+        <ToggleButton
+            Background="Transparent"
+            BorderThickness="0"
+            Classes="altHover alt changeColor"
+            IsChecked="{CompiledBinding SettingsViewModel.IsShowingZoomPercentagePopup.Value}"
+            Margin="0,0,0,10"
+            Width="300">
+            <TextBlock
+                Classes="txt"
+                Foreground="{StaticResource SecondaryTextColor}"
+                Margin="0"
+                MaxWidth="240"
+                Padding="0,1,5,0"
+                Text="{CompiledBinding Translation.ShowZoomPercentagePopup.Value,
+                                       Mode=OneWay}" />
+        </ToggleButton>
+
         <ComboBox
             Background="{DynamicResource SecondaryBackgroundColor}"
             BorderBrush="{DynamicResource MainBorderColor}"

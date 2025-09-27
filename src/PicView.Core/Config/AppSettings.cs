@@ -285,6 +285,12 @@ public class Zoom
     public bool CtrlZoom { get; set; } = true;
 
     /// <summary>
+    /// Indicates whether the zoom percentage popup is displayed when adjusting the zoom level.
+    /// This setting can be changed dynamically during application runtime.
+    /// </summary>
+    public bool IsShowingZoomPercentagePopup { get; set; } = false;
+
+    /// <summary>
     /// Determines whether to reverse the horizontal scrolling direction for navigation.
     /// When set to true, the horizontal scroll behavior is reversed, I.E, enable "Natural scroll".
     /// </summary>

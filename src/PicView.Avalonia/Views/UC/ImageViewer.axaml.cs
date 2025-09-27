@@ -24,12 +24,17 @@ public partial class ImageViewer : UserControl
 
     private void OnLoaded(object? sender, RoutedEventArgs e)
     {
-        InitializeImageTransformer();
-        AddHandler(PointerWheelChangedEvent, PreviewOnPointerWheelChanged, RoutingStrategies.Tunnel);
-        AddHandler(Gestures.PointerTouchPadGestureMagnifyEvent, TouchMagnifyEvent, RoutingStrategies.Bubble);
-        AddHandler(Gestures.PinchEvent, TouchMagnifyEvent, RoutingStrategies.Bubble);
-        ImageControlHelper.TriggerScalingModeUpdate(MainImage, false);
-        InitializeMouseInputHelper();
+        // Start in dispatcher with low priority,
+        // because it is more important to schedule it after more important things.
+        Dispatcher.UIThread.Invoke(() =>
+        {
+            InitializeImageTransformer();
+            AddHandler(PointerWheelChangedEvent, PreviewOnPointerWheelChanged, RoutingStrategies.Tunnel);
+            AddHandler(Gestures.PointerTouchPadGestureMagnifyEvent, TouchMagnifyEvent, RoutingStrategies.Bubble);
+            AddHandler(Gestures.PinchEvent, TouchMagnifyEvent, RoutingStrategies.Bubble);
+            ImageControlHelper.TriggerScalingModeUpdate(MainImage, false);
+            InitializeMouseInputHelper();
+        }, DispatcherPriority.Background);
     }
 
     public void TriggerScalingModeUpdate(bool invalidate) =>
@@ -41,7 +46,7 @@ public partial class ImageViewer : UserControl
     public static async Task PreviewOnPointerWheelChanged(object? sender, PointerWheelEventArgs e) =>
         await MouseShortcuts.HandlePointerWheelChanged(e);
 
-    public void InitializeImageTransformer()
+    private void InitializeImageTransformer()
     {
         ZoomPanControl.Initialize();
         _imageTransformer = new RotationTransformer(
