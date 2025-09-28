@@ -323,6 +323,7 @@ public class ZoomPanControl : Decorator
 
         if (Settings.Zoom.AvoidZoomingOut && targetScale < 1)
         {
+            ResetZoom(false, false);
             return;
         }
 
@@ -650,9 +651,9 @@ public class ZoomPanControl : Decorator
         }
     }
 
-    // <summary>
+    /// <summary>
     /// Sets translation values and ensures they are constrained to bounds.
-    /// This method should be used by external controls (like ZoomPreviewer) to ensure consistent behavior.
+    /// This method should be used by external controls (like <see cref="Views.UC.ZoomPreviewer"/>) to ensure consistent behavior.
     /// </summary>
     public void SetConstrainedTranslation(double translateX, double translateY)
     {
