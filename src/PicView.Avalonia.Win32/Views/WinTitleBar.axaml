@@ -18,7 +18,7 @@
     </UserControl.Resources>
 
     <Border
-        Background="{DynamicResource WindowBackgroundColor}"
+        Background="{DynamicResource WindowSecondaryBackgroundColor}"
         BorderBrush="{DynamicResource MainBorderColor}"
         BorderThickness="0,0,0,1"
         x:Name="TopWindowBorder">
