@@ -29,8 +29,7 @@
                 Width="{CompiledBinding PicViewer.ScrollViewerWidth.Value,
                                         Mode=OneWay}"
                 x:Name="ImageScrollViewer">
-                <Border Background="{CompiledBinding MainWindow.ConstrainedImageBackground.Value, Mode=OneWay}"
-                        x:Name="MainBorder">
+                <Border Background="{CompiledBinding MainWindow.ConstrainedImageBackground.Value, Mode=OneWay}" x:Name="MainBorder">
                     <customControls:PicBox
                         ImageType="{CompiledBinding PicViewer.ImageType.Value,
                                                     Mode=OneWay}"

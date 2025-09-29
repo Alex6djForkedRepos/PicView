@@ -41,6 +41,12 @@ public class ZoomPanControl : Decorator
     private Point _panStartPointer;
     private Point _panStartTranslate;
 
+    // Persistent transform objects for animations to work
+    private ScaleTransform? _scaleTransform;
+    private RotateTransform? _rotateTransform;
+    private TranslateTransform? _translateTransform;
+    private TransformGroup? _transformGroup;
+
     /// <summary>
     /// Represents the current zoom level as a percentage.
     /// A value of 100 corresponds to the default zoom level, while values higher or lower indicate zoomed-in or zoomed-out states, respectively.
@@ -175,7 +181,7 @@ public class ZoomPanControl : Decorator
 
         if (e.ClickCount == 2)
         {
-            ResetZoom(true, false);
+            ResetZoom(Settings.Zoom.IsZoomAnimated);
             return;
         }
 
@@ -271,7 +277,7 @@ public class ZoomPanControl : Decorator
 
     }
 
-    public void ResetZoom(bool animated, bool resetFlipAndRotation)
+    public void ResetZoom(bool animated)
     {
         if (Child == null)
         {
@@ -279,11 +285,6 @@ public class ZoomPanControl : Decorator
         }
 
         _zoomPreviewer.IsVisible = false;
-
-        if (resetFlipAndRotation)
-        {
-            Rotation = 0;
-        }
 
         SetTransitions(animated);
         Scale = TranslateX = TranslateY = 1.0;
@@ -306,8 +307,7 @@ public class ZoomPanControl : Decorator
     private void ZoomWithPointerWheelCore(bool isZoomIn, Point pos)
     {
         var step = isZoomIn ? Settings.Zoom.ZoomSpeed : -Math.Abs(Settings.Zoom.ZoomSpeed);
-        var shouldAnimate = true; // TODO: Add zoom animation toggle setting
-        ZoomBy(step, shouldAnimate, pos);
+        ZoomBy(step, Settings.Zoom.IsZoomAnimated, pos);
     }
 
     /// <summary>
@@ -323,7 +323,7 @@ public class ZoomPanControl : Decorator
 
         if (Settings.Zoom.AvoidZoomingOut && targetScale < 1)
         {
-            ResetZoom(false, false);
+            ResetZoom(animated);
             return;
         }
 
@@ -425,13 +425,22 @@ public class ZoomPanControl : Decorator
 
     private void SetTransitions(bool isAnimated)
     {
+        if (_scaleTransform == null || _rotateTransform == null || _translateTransform == null)
+        {
+            // Transforms not yet initialized
+            return;
+        }
+
         if (!isAnimated)
         {
-            Transitions = null;
+            _scaleTransform.Transitions = null;
+            _rotateTransform.Transitions = null;
+            _translateTransform.Transitions = null;
         }
         else
         {
-            Transitions ??=
+            // Apply transitions to the persistent transform objects
+            _scaleTransform.Transitions ??=
             [
                 new DoubleTransition
                 {
@@ -443,18 +452,21 @@ public class ZoomPanControl : Decorator
                 {
                     Property = ScaleTransform.ScaleYProperty,
                     Duration = TimeSpan.FromSeconds(.25)
-                },
+                }
+            ];
 
+            _translateTransform.Transitions ??=
+            [
                 new DoubleTransition
                 {
                     Property = TranslateTransform.XProperty,
-                    Duration = TimeSpan.FromSeconds(.25)
+                    Duration = TimeSpan.FromSeconds(.20)
                 },
 
                 new DoubleTransition
                 {
                     Property = TranslateTransform.YProperty,
-                    Duration = TimeSpan.FromSeconds(.25)
+                    Duration = TimeSpan.FromSeconds(.20)
                 }
             ];
         }
@@ -525,15 +537,29 @@ public class ZoomPanControl : Decorator
             return;
         }
 
-        // Build transform group
-        var group = new TransformGroup();
+        // Initialize transforms only once
+        if (_transformGroup == null)
+        {
+            _scaleTransform = new ScaleTransform();
+            _rotateTransform = new RotateTransform();
+            _translateTransform = new TranslateTransform();
 
-        group.Children.Add(new ScaleTransform(Scale, Scale));
-        group.Children.Add(new RotateTransform(Rotation));
-        group.Children.Add(new TranslateTransform(TranslateX, TranslateY));
+            _transformGroup = new TransformGroup();
+            _transformGroup.Children.Add(_scaleTransform);
+            _transformGroup.Children.Add(_rotateTransform);
+            _transformGroup.Children.Add(_translateTransform);
 
-        Child.RenderTransform = group;
-        Child.RenderTransformOrigin = new RelativePoint(0, 0, RelativeUnit.Absolute);
+            Child.RenderTransform = _transformGroup;
+            Child.RenderTransformOrigin = new RelativePoint(0, 0, RelativeUnit.Absolute);
+        }
+
+        // Update the properties of the existing transform objects
+        // This is what makes animations work!
+        _scaleTransform.ScaleX = Scale;
+        _scaleTransform.ScaleY = Scale;
+        _rotateTransform.Angle = Rotation;
+        _translateTransform.X = TranslateX;
+        _translateTransform.Y = TranslateY;
 
         // Update preview window after transform change
         UpdatePreviewWindow();

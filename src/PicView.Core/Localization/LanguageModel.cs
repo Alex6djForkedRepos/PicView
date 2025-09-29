@@ -393,6 +393,7 @@ public class LanguageModel
     public string? UnselectAll { get; set; }
     public string? UnsupportedFile { get; set; }
     public string? Up { get; set; }
+    public string? UseAnimatedZoom { get; set; }
     public string? UsingMouse { get; set; }
     public string? UsingTouchpad { get; set; }
     public string? Version { get; set; }
