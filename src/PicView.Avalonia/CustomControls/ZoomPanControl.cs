@@ -152,7 +152,7 @@ public class ZoomPanControl : Decorator
             return;
         }
 
-        _zoomPreviewer.IsVisible = true;
+        _zoomPreviewer.SetVisible();
         UpdatePreviewWindow();
     }
     
@@ -229,7 +229,7 @@ public class ZoomPanControl : Decorator
     /// Applies deadzone logic to snap zoom values close to 1.0 back to exactly 1.0.
     /// Also resets translation when snapping to reset zoom.
     /// </summary>
-    private double ApplyDeadzone(double targetScale, bool animated, Point? zoomPoint = null)
+    private double ApplyDeadzone(double targetScale)
     {
         if (!EnableDeadzone || DeadzoneTolerance <= 0)
         {
@@ -316,7 +316,7 @@ public class ZoomPanControl : Decorator
         }
 
         // Apply deadzone logic
-        targetScale = ApplyDeadzone(targetScale, animated, center);
+        targetScale = ApplyDeadzone(targetScale);
 
         // Only animate if deadzone didn't handle the zoom
         if (Math.Abs(targetScale - Scale) > 1e-9)
@@ -339,7 +339,7 @@ public class ZoomPanControl : Decorator
         var targetScale = Scale * multiplier;
 
         // Apply deadzone logic
-        targetScale = ApplyDeadzone(targetScale, false, center);
+        targetScale = ApplyDeadzone(targetScale);
 
         if (Math.Abs(targetScale - Scale) > 1e-9)
         {
@@ -360,7 +360,7 @@ public class ZoomPanControl : Decorator
         var targetScale = Scale * multiplier;
 
         // Apply deadzone logic
-        targetScale = ApplyDeadzone(targetScale, false, center);
+        targetScale = ApplyDeadzone(targetScale);
 
         if (Math.Abs(targetScale - Scale) > 1e-9)
         {

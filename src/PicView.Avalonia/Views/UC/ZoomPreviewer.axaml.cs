@@ -4,6 +4,7 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.LogicalTree;
 using Avalonia.Threading;
+using PicView.Avalonia.Animations;
 using PicView.Avalonia.CustomControls;
 using PicView.Avalonia.ViewModels;
 
@@ -22,7 +23,7 @@ public partial class ZoomPreviewer : UserControl
     {
         InitializeComponent();
 
-        CloseButton.Click += delegate { IsVisible = false; };
+        CloseButton.Click += delegate { SetInvisible(); };
 
         // Add pointer event handlers for dragging
         AddHandler(PointerPressedEvent, OnPointerPressed, RoutingStrategies.Tunnel);
@@ -161,7 +162,7 @@ public partial class ZoomPreviewer : UserControl
     {
         if (_zoomPanControl == null)
         {
-            IsVisible = false;
+            SetInvisible();
             return;
         }
 
@@ -181,11 +182,15 @@ public partial class ZoomPreviewer : UserControl
 
         // Show when zoomed in or out (not at 1.0 scale)
         var shouldShow = _zoomPanControl.Scale > 1;
-        IsVisible = shouldShow;
 
         if (shouldShow)
         {
+            SetVisible();
             UpdateViewportRect();
+        }
+        else
+        {
+            SetInvisible();
         }
 
         // Don't start hide timer if we're currently dragging
@@ -227,15 +232,29 @@ public partial class ZoomPreviewer : UserControl
         _hideTimer?.Dispose();
         _hideTimer = new Timer(_ =>
         {
-            Dispatcher.UIThread.Post(() =>
+            Dispatcher.UIThread.Invoke(async () =>
             {
                 // Only hide if we're not dragging
                 if (!_isDragging && !IsPointerOver)
                 {
+                    var opacityAnim = AnimationsHelper.OpacityAnimation(1, 0, TimeSpan.FromSeconds(0.5));
+                    await opacityAnim.RunAsync(this);
                     IsVisible = false;
                 }
             });
         }, null, TimeSpan.FromSeconds(2.5), Timeout.InfiniteTimeSpan);
+    }
+
+    public void SetVisible()
+    {
+        Opacity = 1;
+        IsVisible = true;
+    }
+
+    public void SetInvisible()
+    {
+        Opacity = 1;
+        IsVisible = false;
     }
 
     internal void UpdateViewportRect()
