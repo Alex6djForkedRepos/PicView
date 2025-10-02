@@ -15,25 +15,9 @@ namespace PicView.Avalonia.CustomControls;
 
 public class ZoomPanControl : Decorator
 {
-    // Bindable properties so you can bind to them if needed.
-    public static readonly StyledProperty<double> ScaleProperty =
-        AvaloniaProperty.Register<ZoomPanControl, double>(nameof(Scale), 1.0);
-
-    public static readonly StyledProperty<double> RotationProperty =
-        AvaloniaProperty.Register<ZoomPanControl, double>(nameof(Rotation));
-
-    public static readonly StyledProperty<double> TranslateXProperty =
-        AvaloniaProperty.Register<ZoomPanControl, double>(nameof(TranslateX));
-
-    public static readonly StyledProperty<double> TranslateYProperty =
-        AvaloniaProperty.Register<ZoomPanControl, double>(nameof(TranslateY));
-
     // Deadzone configuration
     public static readonly StyledProperty<double> DeadzoneToleranceProperty =
         AvaloniaProperty.Register<ZoomPanControl, double>(nameof(DeadzoneTolerance), 0.05);
-
-    public static readonly StyledProperty<bool> EnableDeadzoneProperty =
-        AvaloniaProperty.Register<ZoomPanControl, bool>(nameof(EnableDeadzone), true);
 
     private ZoomPreviewer? _zoomPreviewer;
 
@@ -44,11 +28,15 @@ public class ZoomPanControl : Decorator
 
     // Persistent transform objects for animations to work
     private ScaleTransform? _scaleTransform;
-    private RotateTransform? _rotateTransform;
     private TranslateTransform? _translateTransform;
     private TransformGroup? _transformGroup;
 
     private readonly CompositeDisposable _disposables = new();
+
+    // Internal transform properties
+    private double _scale = 1.0;
+    private double _translateX;
+    private double _translateY;
 
     /// <summary>
     /// Represents the current zoom level as a percentage.
@@ -56,30 +44,22 @@ public class ZoomPanControl : Decorator
     /// </summary>
     public double ZoomLevel { get; private set; } = 100;
 
-    // Accessors
     public double Scale
     {
-        get => GetValue(ScaleProperty);
-        set => SetValue(ScaleProperty, value);
-    }
-
-    /// <summary>Rotation in degrees (clockwise)</summary>
-    public double Rotation
-    {
-        get => GetValue(RotationProperty);
-        set => SetValue(RotationProperty, value);
+        get => _scale;
+        set => _scale = value;
     }
 
     public double TranslateX
     {
-        get => GetValue(TranslateXProperty);
-        set => SetValue(TranslateXProperty, value);
+        get => _translateX;
+        set => _translateX = value;
     }
 
     public double TranslateY
     {
-        get => GetValue(TranslateYProperty);
-        set => SetValue(TranslateYProperty, value);
+        get => _translateY;
+        set => _translateY = value;
     }
 
     /// <summary>
@@ -90,15 +70,6 @@ public class ZoomPanControl : Decorator
     {
         get => GetValue(DeadzoneToleranceProperty);
         set => SetValue(DeadzoneToleranceProperty, Math.Max(0, value));
-    }
-
-    /// <summary>
-    /// Whether the deadzone snap-to-reset feature is enabled.
-    /// </summary>
-    public bool EnableDeadzone
-    {
-        get => GetValue(EnableDeadzoneProperty);
-        set => SetValue(EnableDeadzoneProperty, value);
     }
 
     public void Initialize()
@@ -232,11 +203,6 @@ public class ZoomPanControl : Decorator
     /// </summary>
     private double ApplyDeadzone(double targetScale)
     {
-        if (!EnableDeadzone || DeadzoneTolerance <= 0)
-        {
-            return targetScale;
-        }
-
         const double resetZoom = 1.0;
         var lowerBound = resetZoom - DeadzoneTolerance;
         var upperBound = resetZoom + DeadzoneTolerance;
@@ -423,7 +389,7 @@ public class ZoomPanControl : Decorator
 
     private void SetTransitions(bool isAnimated)
     {
-        if (_scaleTransform == null || _rotateTransform == null || _translateTransform == null)
+        if (_scaleTransform == null || _translateTransform == null)
         {
             // Transforms not yet initialized
             return;
@@ -432,7 +398,6 @@ public class ZoomPanControl : Decorator
         if (!isAnimated)
         {
             _scaleTransform.Transitions = null;
-            _rotateTransform.Transitions = null;
             _translateTransform.Transitions = null;
         }
         else
@@ -472,8 +437,7 @@ public class ZoomPanControl : Decorator
 
     /// <summary>
     /// Applies the scale change so that the child point under `controlPoint` remains fixed in control coordinates.
-    /// Takes rotation and flipping into account.
-    /// Transform order used: Result = Translate + Rotate( Scale * childPoint ).
+    /// Transform order used: Result = Translate + Scale * childPoint.
     /// </summary>
     private void ApplyScaleAroundPoint(double newScale, Point controlPoint)
     {
@@ -482,44 +446,19 @@ public class ZoomPanControl : Decorator
             return;
         }
 
-        // Current params
         var s = Scale;
-        var sNew = newScale;
-        if (Math.Abs(s - sNew) < 1e-9)
+        if (Math.Abs(s - newScale) < 1e-9)
         {
             return;
         }
 
-        var angleDeg = Rotation;
-        var angleRad = angleDeg * Math.PI / 180.0;
+        var px = (controlPoint.X - TranslateX) / s;
+        var py = (controlPoint.Y - TranslateY) / s;
 
-        // Current translate
-        var tx = TranslateX;
-        var ty = TranslateY;
+        var newTx = controlPoint.X - newScale * px;
+        var newTy = controlPoint.Y - newScale * py;
 
-        // We want child point pChild such that: controlPoint = (tx,ty) + R( s * pChild )
-        // => pChild = (1/s) * R^{-1}( controlPoint - t )
-        // after scale: t' = controlPoint - R( sNew * pChild )
-        // compute:
-        var cpMinusT = new Point(controlPoint.X - tx, controlPoint.Y - ty);
-
-        // R^{-1} rotate by -angle
-        var cos = Math.Cos(-angleRad);
-        var sin = Math.Sin(-angleRad);
-        var px = (cpMinusT.X * cos - cpMinusT.Y * sin) / s;
-        var py = (cpMinusT.X * sin + cpMinusT.Y * cos) / s;
-
-        // Now compute new translation so that R( sNew * pChild ) + t' = controlPoint
-        var cos2 = Math.Cos(angleRad);
-        var sin2 = Math.Sin(angleRad);
-        var rotatedX = sNew * (px * cos2 - py * sin2);
-        var rotatedY = sNew * (px * sin2 + py * cos2);
-
-        var newTx = controlPoint.X - rotatedX;
-        var newTy = controlPoint.Y - rotatedY;
-
-        // Commit
-        Scale = sNew;
+        Scale = newScale;
         TranslateX = newTx;
         TranslateY = newTy;
     }
@@ -539,12 +478,10 @@ public class ZoomPanControl : Decorator
         if (_transformGroup == null)
         {
             _scaleTransform = new ScaleTransform();
-            _rotateTransform = new RotateTransform();
             _translateTransform = new TranslateTransform();
 
             _transformGroup = new TransformGroup();
             _transformGroup.Children.Add(_scaleTransform);
-            _transformGroup.Children.Add(_rotateTransform);
             _transformGroup.Children.Add(_translateTransform);
 
             Child.RenderTransform = _transformGroup;
@@ -555,7 +492,6 @@ public class ZoomPanControl : Decorator
         // This is what makes animations work!
         _scaleTransform.ScaleX = Scale;
         _scaleTransform.ScaleY = Scale;
-        _rotateTransform.Angle = Rotation;
         _translateTransform.X = TranslateX;
         _translateTransform.Y = TranslateY;
 
@@ -565,7 +501,6 @@ public class ZoomPanControl : Decorator
 
     /// <summary>
     /// Ensures the transformed child covers the control area (i.e. prevents panning away until whitespace appears).
-    /// Works when rotated/flipped because we compute transformed corners and clamp them against control bounds.
     /// </summary>
     private void ConstrainTranslationToBounds()
     {
@@ -588,92 +523,64 @@ public class ZoomPanControl : Decorator
             return;
         }
 
-        // Transform the 4 corners through our transform (Scale + Rotate + Translate)
-        var angleRad = Rotation * Math.PI / 180.0;
-        var cos = Math.Cos(angleRad);
-        var sin = Math.Sin(angleRad);
-
-        var corners = new[]
-        {
-            TransformPointLocal(new Point(0, 0)),
-            TransformPointLocal(new Point(childSize.Width, 0)),
-            TransformPointLocal(new Point(childSize.Width, childSize.Height)),
-            TransformPointLocal(new Point(0, childSize.Height))
-        };
-
-        var minX = corners.Min(c => c.X);
-        var maxX = corners.Max(c => c.X);
-        var minY = corners.Min(c => c.Y);
-        var maxY = corners.Max(c => c.Y);
-
+        // Without rotation, the scaled content bounds are straightforward
+        var scaledWidth = childSize.Width * Scale;
+        var scaledHeight = childSize.Height * Scale;
+        
         var controlWidth = Bounds.Width;
         var controlHeight = Bounds.Height;
 
-        // If transformed content is smaller than control in any axis, center it (so user sees content)
         var desiredTx = TranslateX;
         var desiredTy = TranslateY;
 
         // Horizontal
-        var contentWidth = maxX - minX;
-        if (contentWidth <= controlWidth)
+        if (scaledWidth <= controlWidth)
         {
-            // center horizontally
-            var centerOffset = (controlWidth - contentWidth) / 2.0 - minX;
-            desiredTx += centerOffset;
+            // Center horizontally if content is smaller than control
+            desiredTx = (controlWidth - scaledWidth) / 2.0;
         }
         else
         {
-            // ensure minX <= 0 and maxX >= controlWidth
-            if (minX > 0)
+            // Constrain to prevent showing whitespace
+            // Left edge: TranslateX should be <= 0
+            if (desiredTx > 0)
             {
-                desiredTx -= minX;
+                desiredTx = 0;
             }
 
-            if (maxX < controlWidth)
+            // Right edge: TranslateX + scaledWidth should be >= controlWidth
+            if (desiredTx + scaledWidth < controlWidth)
             {
-                desiredTx += controlWidth - maxX;
+                desiredTx = controlWidth - scaledWidth;
             }
         }
 
         // Vertical
-        var contentHeight = maxY - minY;
-        if (contentHeight <= controlHeight)
+        if (scaledHeight <= controlHeight)
         {
-            var centerOffset = (controlHeight - contentHeight) / 2.0 - minY;
-            desiredTy += centerOffset;
+            // Center vertically if content is smaller than control
+            desiredTy = (controlHeight - scaledHeight) / 2.0;
         }
         else
         {
-            if (minY > 0)
+            // Constrain to prevent showing whitespace
+            // Top edge: TranslateY should be <= 0
+            if (desiredTy > 0)
             {
-                desiredTy -= minY;
+                desiredTy = 0;
             }
 
-            if (maxY < controlHeight)
+            // Bottom edge: TranslateY + scaledHeight should be >= controlHeight
+            if (desiredTy + scaledHeight < controlHeight)
             {
-                desiredTy += controlHeight - maxY;
+                desiredTy = controlHeight - scaledHeight;
             }
         }
 
-        // Apply clamped translation
         TranslateX = desiredTx;
         TranslateY = desiredTy;
-        return;
-
-        Point TransformPointLocal(Point p)
-        {
-            // Scale
-            var sx = Scale * p.X;
-            var sy = Scale * p.Y;
-
-            // Rotate
-            var rx = sx * cos - sy * sin;
-            var ry = sx * sin + sy * cos;
-
-            // Translate
-            return new Point(rx + TranslateX, ry + TranslateY);
-        }
     }
+
 
     /// <summary>
     /// Sets translation values and ensures they are constrained to bounds.
