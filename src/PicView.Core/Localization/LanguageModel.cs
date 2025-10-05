@@ -230,8 +230,10 @@ public class LanguageModel
     public string? MoveToRecycleBin { get; set; }
     public string? MoveWindow { get; set; }
     public string? Navigate { get; set; }
+    public string? NavigateBackwards { get; set; }
     public string? NavigateBetweenDirectories { get; set; }
     public string? NavigateFileHistory { get; set; }
+    public string? NavigateForwards { get; set; }
     public string? Navigation { get; set; }
     public string? NearestNeighbor { get; set; }
     public string? NegativeColors { get; set; }
@@ -399,6 +401,7 @@ public class LanguageModel
     public string? Version { get; set; }
     public string? View { get; set; }
     public string? ViewLicenseFile { get; set; }
+    public string? WhenDeletingAFile { get; set; }
     public string? WhiteBalance { get; set; }
     public string? WhiteFluorescent { get; set; }
     public string? Width { get; set; }

@@ -440,4 +440,9 @@ public class Navigation
     /// </summary>
     public bool IsNavigatingBetweenDirectories { get; set; } = false;
 
+    /// <summary>
+    /// Indicates whether navigation should move backward in the sequence when an image file is deleted.
+    /// </summary>
+    public bool IsNavigatingBackwardsWhenDeleting { get; set; } = true;
+
 }

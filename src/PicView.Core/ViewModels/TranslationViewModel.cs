@@ -297,6 +297,8 @@ public class TranslationViewModel : IDisposable
         MouseSideButtons.Value = t.MouseSideButtons;
         NavigateFileHistory.Value = t.NavigateFileHistory;
         NavigateBetweenDirectories.Value = t.NavigateBetweenDirectories;
+        NavigateForwards.Value = t.NavigateForwards;
+        NavigateBackwards.Value = t.NavigateBackwards;
         Comment.Value = t.Comment;
         Navigate.Value = t.Navigate;
         Help.Value = t.Help;
@@ -304,6 +306,7 @@ public class TranslationViewModel : IDisposable
         Edit.Value = t.Edit;
         ShowZoomPercentagePopup.Value = t.ShowZoomPercentagePopup;
         UseAnimatedZoom.Value = t.UseAnimatedZoom;
+        WhenDeletingAFile.Value = t.WhenDeletingAFile;
     }
 
     #region Static Translation Strings
@@ -460,8 +463,10 @@ public class TranslationViewModel : IDisposable
     public BindableReactiveProperty<string?> MoveToRecycleBin { get; } = new();
     public BindableReactiveProperty<string?> MoveWindow { get; } = new();
     public BindableReactiveProperty<string?> Navigate { get; } = new();
+    public BindableReactiveProperty<string?> NavigateBackwards { get; } = new();
     public BindableReactiveProperty<string?> NavigateBetweenDirectories { get; } = new();
     public BindableReactiveProperty<string?> NavigateFileHistory { get; } = new();
+    public BindableReactiveProperty<string?> NavigateForwards { get; } = new();
     public BindableReactiveProperty<string?> Navigation { get; } = new();
     public BindableReactiveProperty<string?> NegativeColors { get; } = new();
     public BindableReactiveProperty<string?> NewWindow { get; } = new();
@@ -588,6 +593,7 @@ public class TranslationViewModel : IDisposable
     public BindableReactiveProperty<string?> Version { get; } = new();
     public BindableReactiveProperty<string?> View { get; } = new();
     public BindableReactiveProperty<string?> ViewLicenseFile { get; } = new();
+    public BindableReactiveProperty<string?> WhenDeletingAFile { get; } = new();
 
     public BindableReactiveProperty<string?> WhiteBalance { get; } = new();
 
