@@ -13,32 +13,26 @@ namespace PicView.Avalonia.CustomControls;
 
 public class ZoomPanControl : Decorator
 {
-    // Deadzone configuration
+    #region Properties and Fields
+
+    // Styled Properties
     public static readonly StyledProperty<double> DeadzoneToleranceProperty =
         AvaloniaProperty.Register<ZoomPanControl, double>(nameof(DeadzoneTolerance), 0.05);
 
-    private ZoomPreviewer? _zoomPreviewer;
+    /// <summary>
+    /// The tolerance range around 1.0 where zoom will snap to reset (1.0).
+    /// For example, 0.05 means zoom values between 0.95 and 1.05 will snap to 1.0.
+    /// </summary>
+    public double DeadzoneTolerance
+    {
+        get => GetValue(DeadzoneToleranceProperty);
+        set => SetValue(DeadzoneToleranceProperty, Math.Max(0, value));
+    }
 
-    // Private fields for panning
-    private bool _isPanning;
-    private Point _panStartPointer;
-    private Point _panStartTranslate;
-
-    // Persistent transform objects for animations to work
-    private ScaleTransform? _scaleTransform;
-    private TranslateTransform? _translateTransform;
-    private TransformGroup? _transformGroup;
-
-    // Internal transform properties
+    // Transform Properties
     private double _scale = 1.0;
     private double _translateX;
     private double _translateY;
-
-    /// <summary>
-    /// Represents the current zoom level as a percentage.
-    /// A value of 100 corresponds to the default zoom level, while values higher or lower indicate zoomed-in or zoomed-out states, respectively.
-    /// </summary>
-    public double ZoomLevel { get; private set; } = 100;
 
     public double Scale
     {
@@ -59,21 +53,34 @@ public class ZoomPanControl : Decorator
     }
 
     /// <summary>
-    /// The tolerance range around 1.0 where zoom will snap to reset (1.0).
-    /// For example, 0.05 means zoom values between 0.95 and 1.05 will snap to 1.0.
+    /// Represents the current zoom level as a percentage.
+    /// A value of 100 corresponds to the default zoom level, while values higher or lower indicate zoomed-in or zoomed-out states, respectively.
     /// </summary>
-    public double DeadzoneTolerance
-    {
-        get => GetValue(DeadzoneToleranceProperty);
-        set => SetValue(DeadzoneToleranceProperty, Math.Max(0, value));
-    }
+    public double ZoomLevel { get; private set; } = 100;
+
+    // Transform Objects (persistent for animations)
+    private ScaleTransform? _scaleTransform;
+    private TranslateTransform? _translateTransform;
+    private TransformGroup? _transformGroup;
+
+    // Panning State
+    private bool _isPanning;
+    private Point _panStartPointer;
+    private Point _panStartTranslate;
+
+    // UI Components
+    private ZoomPreviewer? _zoomPreviewer;
+
+    #endregion
+
+    #region Initialization and Lifecycle
 
     public void Initialize()
     {
         // Pointer handling for panning
-        AddHandler(PointerPressedEvent, HandlePointerPressed, RoutingStrategies.Tunnel);
-        AddHandler(PointerMovedEvent, HandlePointerMoved, RoutingStrategies.Tunnel);
-        AddHandler(PointerReleasedEvent, HandlePointerReleased, RoutingStrategies.Tunnel);
+        AddHandler(PointerPressedEvent, HandleResetZoomOrStartPanning, RoutingStrategies.Tunnel);
+        AddHandler(PointerMovedEvent, HandlePanning, RoutingStrategies.Tunnel);
+        AddHandler(PointerReleasedEvent, StopPanning, RoutingStrategies.Tunnel);
 
         _zoomPreviewer = new ZoomPreviewer
         {
@@ -86,20 +93,6 @@ public class ZoomPanControl : Decorator
         };
         _zoomPreviewer.SetZoomPanControl(this);
         UIHelper.GetMainView.MainGrid.Children.Add(_zoomPreviewer);
-    }
-
-    private void UpdatePreviewWindow()
-    {
-        if (_zoomPreviewer == null)
-        {
-            return;
-        }
-
-        // Update visibility based on zoom state
-        _zoomPreviewer.UpdateVisibility();
-
-        // Update viewport rectangle
-        _zoomPreviewer.UpdateViewportRect();
     }
 
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
@@ -115,7 +108,7 @@ public class ZoomPanControl : Decorator
         _zoomPreviewer.SetVisible();
         UpdatePreviewWindow();
     }
-    
+
     protected override Size ArrangeOverride(Size finalSize)
     {
         // After layout, ensure transforms are constrained
@@ -124,117 +117,9 @@ public class ZoomPanControl : Decorator
         return base.ArrangeOverride(finalSize);
     }
 
-    private void HandlePointerPressed(object? sender, PointerPressedEventArgs e)
-    {
-        if (Child == null)
-        {
-            return;
-        }
+    #endregion
 
-        if (e.ClickCount == 2)
-        {
-            ResetZoom(Settings.Zoom.IsZoomAnimated);
-            return;
-        }
-
-        var p = e.GetPosition(this);
-        if (!e.GetCurrentPoint(this).Properties.IsLeftButtonPressed || !(Math.Abs(Scale) > 1.0001) ||
-            e.KeyModifiers == KeyModifiers.Shift)
-        {
-            return;
-        }
-
-        _isPanning = true;
-        _panStartPointer = p;
-        _panStartTranslate = new Point(TranslateX, TranslateY);
-        e.Pointer.Capture(this);
-    }
-
-    private void HandlePointerMoved(object? sender, PointerEventArgs e)
-    {
-        if (!_isPanning || Child == null)
-        {
-            return;
-        }
-
-        var p = e.GetPosition(this);
-        var delta = p - _panStartPointer;
-
-        // delta is in control coordinates; we need to convert that into translate change respecting rotation/scale
-        // Given we compose transforms as: Result = Translate + Rotate( Scale * childPoint )
-        // The translate we manipulate is in control coordinates directly, so we can add the delta to it,
-        // but rotation means dragging direction should rotate together (so we rotate delta by -Rotation to convert?)
-        // Simpler and correct: update TranslateX/Y by delta (works because translate is last transform).
-        var newTx = _panStartTranslate.X + delta.X;
-        var newTy = _panStartTranslate.Y + delta.Y;
-
-        TranslateX = newTx;
-        TranslateY = newTy;
-
-        ConstrainTranslationToBounds();
-        UpdateChildTransform();
-    }
-
-    private void HandlePointerReleased(object? sender, PointerReleasedEventArgs e)
-    {
-        if (!_isPanning)
-        {
-            return;
-        }
-
-        _isPanning = false;
-        e.Pointer.Capture(null);
-    }
-
-    /// <summary>
-    /// Applies deadzone logic to snap zoom values close to 1.0 back to exactly 1.0.
-    /// Also resets translation when snapping to reset zoom.
-    /// </summary>
-    private double ApplyDeadzone(double targetScale)
-    {
-        const double resetZoom = 1.0;
-        var lowerBound = resetZoom - DeadzoneTolerance;
-        var upperBound = resetZoom + DeadzoneTolerance;
-
-        // Check if target scale is within deadzone
-        if (!(targetScale >= lowerBound) || !(targetScale <= upperBound))
-        {
-            return targetScale;
-        }
-
-        return resetZoom * 100;
-    }
-
-    public void ResetZoom(bool animated)
-    {
-        if (Child == null)
-        {
-            return;
-        }
-
-        _zoomPreviewer.IsVisible = false;
-
-        ApplyZoomAndTitle(1.0, CenterPoint(), animated);
-        SetZoomValue(100);
-    }
-
-    public void ResetZoomSlim()
-    {
-        SetTransitions(false);
-        Scale = TranslateX = TranslateY = 1.0;
-        SetScaleImmediate(1.0, CenterPoint());
-
-        SetZoomValue(100);
-    }
-
-    private void SetZoomValue(double zoomValue)
-    {
-        ZoomLevel = zoomValue;
-        if (DataContext is MainViewModel vm)
-        {
-            vm.PicViewer.ZoomValue.Value = zoomValue;
-        }
-    }
+    #region Public Zoom API
 
     /// <summary>
     /// Handles zooming functionality using the mouse pointer wheel. Zooms in or out based on the scroll direction.
@@ -246,12 +131,6 @@ public class ZoomPanControl : Decorator
     /// <inheritdoc cref="ZoomWithPointerWheel(PointerWheelEventArgs)"/>
     public void ZoomWithPointerWheel(PointerDeltaEventArgs e) =>
         ZoomWithPointerWheelCore(e.Delta.Y > 0, e.GetPosition(this));
-
-    private void ZoomWithPointerWheelCore(bool isZoomIn, Point pos)
-    {
-        var step = isZoomIn ? Settings.Zoom.ZoomSpeed : -Math.Abs(Settings.Zoom.ZoomSpeed);
-        ZoomBy(Math.Max(0.09, Scale + step), Settings.Zoom.IsZoomAnimated, pos);
-    }
 
     /// <summary>
     /// Zooms in the content by increasing the scale based on the specified multiplier.
@@ -278,6 +157,151 @@ public class ZoomPanControl : Decorator
         var targetScale = Scale * multiplier;
 
         ZoomBy(targetScale, Settings.Zoom.IsZoomAnimated, center);
+    }
+
+    public void ResetZoom(bool animated)
+    {
+        if (Child == null)
+        {
+            return;
+        }
+
+        _zoomPreviewer.IsVisible = false;
+
+        ApplyZoomAndTitle(1.0, CenterPoint(), animated);
+        SetZoomValue(100);
+    }
+
+    public void ResetZoomSlim()
+    {
+        SetTransitions(false);
+        Scale = TranslateX = TranslateY = 1.0;
+        SetScaleImmediate(1.0, CenterPoint());
+
+        SetZoomValue(100);
+    }
+
+    /// <summary>
+    /// Sets the scale of the control immediately, optionally focusing the scaling around a specific point.
+    /// Updates the internal zoom level and applies the necessary transformations to the child element.
+    /// </summary>
+    /// <param name="newScale">The new scale value to apply.</param>
+    /// <param name="around">The point around which the scaling should occur. If null, the scaling is applied around the center of the control.</param>
+    public void SetScaleImmediate(double newScale, Point? around = null)
+    {
+        if (double.IsNaN(newScale) || double.IsInfinity(newScale))
+        {
+            return;
+        }
+
+        var center = around ?? CenterPoint();
+        ApplyScaleAroundPoint(newScale, center);
+        ConstrainTranslationToBounds();
+        UpdateChildTransform();
+
+        SetZoomValue(newScale * 100);
+    }
+
+    /// <summary>
+    /// Sets translation values and ensures they are constrained to bounds.
+    /// This method should be used by external controls (like <see cref="Views.UC.ZoomPreviewer"/>) to ensure consistent behavior.
+    /// </summary>
+    public void SetConstrainedTranslation(double translateX, double translateY)
+    {
+        TranslateX = translateX;
+        TranslateY = translateY;
+        ConstrainTranslationToBounds();
+        UpdateChildTransform();
+    }
+
+    #endregion
+
+    #region Panning Event Handlers
+
+    private void HandleResetZoomOrStartPanning(object? sender, PointerPressedEventArgs e)
+    {
+        if (Child == null)
+        {
+            return;
+        }
+
+        // Panning shouldn't happen when moving the window by holding shift
+        if (e.KeyModifiers == KeyModifiers.Shift)
+        {
+            return;
+        }
+
+        if (e.ClickCount == 2)
+        {
+            ResetZoom(Settings.Zoom.IsZoomAnimated);
+            return;
+        }
+
+        var p = e.GetPosition(this);
+        if (!e.GetCurrentPoint(this).Properties.IsLeftButtonPressed || !(Math.Abs(Scale) > 1.0001))
+        {
+            return;
+        }
+
+        _isPanning = true;
+        _panStartPointer = p;
+        _panStartTranslate = new Point(TranslateX, TranslateY);
+        e.Pointer.Capture(this);
+    }
+
+    private void HandlePanning(object? sender, PointerEventArgs e)
+    {
+        if (!_isPanning || Child == null)
+        {
+            return;
+        }
+
+        // Panning shouldn't happen when moving the window by holding shift
+        if (e.KeyModifiers == KeyModifiers.Shift)
+        {
+            return;
+        }
+
+        // Animated panning feels off, should disable it
+        SetTransitions(false);
+
+        var p = e.GetPosition(this);
+        var delta = p - _panStartPointer;
+
+        // delta is in control coordinates; we need to convert that into translate change respecting rotation/scale
+        // Given we compose transforms as: Result = Translate + Rotate( Scale * childPoint )
+        // The translate we manipulate is in control coordinates directly, so we can add the delta to it,
+        // but rotation means dragging direction should rotate together (so we rotate delta by -Rotation to convert?)
+        // Simpler and correct: update TranslateX/Y by delta (works because translate is last transform).
+        var newTx = _panStartTranslate.X + delta.X;
+        var newTy = _panStartTranslate.Y + delta.Y;
+
+        TranslateX = newTx;
+        TranslateY = newTy;
+
+        ConstrainTranslationToBounds();
+        UpdateChildTransform();
+    }
+
+    private void StopPanning(object? sender, PointerReleasedEventArgs e)
+    {
+        if (!_isPanning)
+        {
+            return;
+        }
+
+        _isPanning = false;
+        e.Pointer.Capture(null);
+    }
+
+    #endregion
+
+    #region Internal Zoom Logic
+
+    private void ZoomWithPointerWheelCore(bool isZoomIn, Point pos)
+    {
+        var step = isZoomIn ? Settings.Zoom.ZoomSpeed : -Math.Abs(Settings.Zoom.ZoomSpeed);
+        ZoomBy(Math.Max(0.09, Scale + step), Settings.Zoom.IsZoomAnimated, pos);
     }
 
     /// <summary>
@@ -323,82 +347,18 @@ public class ZoomPanControl : Decorator
         }
     }
 
-
-
-    /// <summary>
-    /// Sets the scale of the control immediately, optionally focusing the scaling around a specific point.
-    /// Updates the internal zoom level and applies the necessary transformations to the child element.
-    /// </summary>
-    /// <param name="newScale">The new scale value to apply.</param>
-    /// <param name="around">The point around which the scaling should occur. If null, the scaling is applied around the center of the control.</param>
-    public void SetScaleImmediate(double newScale, Point? around = null)
-    {
-        if (double.IsNaN(newScale) || double.IsInfinity(newScale))
-        {
-            return;
-        }
-
-        var center = around ?? CenterPoint();
-        ApplyScaleAroundPoint(newScale, center);
-        ConstrainTranslationToBounds();
-        UpdateChildTransform();
-
-        SetZoomValue(newScale * 100);
-    }
-
-    private Point CenterPoint() => new(Bounds.Width / 2.0, Bounds.Height / 2.0);
-
     private void SetTransitionsAndScale(double targetScale, Point center, bool animated)
     {
         SetTransitions(animated);
         SetScaleImmediate(targetScale, center);
     }
 
-    private void SetTransitions(bool isAnimated)
+    private void SetZoomValue(double zoomValue)
     {
-        if (_scaleTransform == null || _translateTransform == null)
+        ZoomLevel = zoomValue;
+        if (DataContext is MainViewModel vm)
         {
-            // Transforms not yet initialized
-            return;
-        }
-
-        if (!isAnimated)
-        {
-            _scaleTransform.Transitions = null;
-            _translateTransform.Transitions = null;
-        }
-        else
-        {
-            // Apply transitions to the persistent transform objects
-            _scaleTransform.Transitions ??=
-            [
-                new DoubleTransition
-                {
-                    Property = ScaleTransform.ScaleXProperty,
-                    Duration = TimeSpan.FromSeconds(.25)
-                },
-
-                new DoubleTransition
-                {
-                    Property = ScaleTransform.ScaleYProperty,
-                    Duration = TimeSpan.FromSeconds(.25)
-                }
-            ];
-
-            _translateTransform.Transitions ??=
-            [
-                new DoubleTransition
-                {
-                    Property = TranslateTransform.XProperty,
-                    Duration = TimeSpan.FromSeconds(.20)
-                },
-
-                new DoubleTransition
-                {
-                    Property = TranslateTransform.YProperty,
-                    Duration = TimeSpan.FromSeconds(.20)
-                }
-            ];
+            vm.PicViewer.ZoomValue.Value = zoomValue;
         }
     }
 
@@ -464,6 +424,54 @@ public class ZoomPanControl : Decorator
 
         // Update preview window after transform change
         UpdatePreviewWindow();
+    }
+
+    private void SetTransitions(bool isAnimated)
+    {
+        if (_scaleTransform == null || _translateTransform == null)
+        {
+            // Transforms not yet initialized
+            return;
+        }
+
+        if (!isAnimated)
+        {
+            _scaleTransform.Transitions = null;
+            _translateTransform.Transitions = null;
+        }
+        else
+        {
+            // Apply transitions to the persistent transform objects
+            _scaleTransform.Transitions ??=
+            [
+                new DoubleTransition
+                {
+                    Property = ScaleTransform.ScaleXProperty,
+                    Duration = TimeSpan.FromSeconds(.25)
+                },
+
+                new DoubleTransition
+                {
+                    Property = ScaleTransform.ScaleYProperty,
+                    Duration = TimeSpan.FromSeconds(.25)
+                }
+            ];
+
+            _translateTransform.Transitions ??=
+            [
+                new DoubleTransition
+                {
+                    Property = TranslateTransform.XProperty,
+                    Duration = TimeSpan.FromSeconds(.25)
+                },
+
+                new DoubleTransition
+                {
+                    Property = TranslateTransform.YProperty,
+                    Duration = TimeSpan.FromSeconds(.25)
+                }
+            ];
+        }
     }
 
     /// <summary>
@@ -548,16 +556,25 @@ public class ZoomPanControl : Decorator
         TranslateY = desiredTy;
     }
 
+    #endregion
 
-    /// <summary>
-    /// Sets translation values and ensures they are constrained to bounds.
-    /// This method should be used by external controls (like <see cref="Views.UC.ZoomPreviewer"/>) to ensure consistent behavior.
-    /// </summary>
-    public void SetConstrainedTranslation(double translateX, double translateY)
+    #region Utility Methods
+
+    private void UpdatePreviewWindow()
     {
-        TranslateX = translateX;
-        TranslateY = translateY;
-        ConstrainTranslationToBounds();
-        UpdateChildTransform();
+        if (_zoomPreviewer == null)
+        {
+            return;
+        }
+
+        // Update visibility based on zoom state
+        _zoomPreviewer.UpdateVisibility();
+
+        // Update viewport rectangle
+        _zoomPreviewer.UpdateViewportRect();
     }
+
+    private Point CenterPoint() => new(Bounds.Width / 2.0, Bounds.Height / 2.0);
+
+    #endregion
 }
