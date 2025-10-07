@@ -68,6 +68,9 @@
                             Stroke="{DynamicResource AccentColor}"
                             StrokeThickness="2"
                             x:Name="ViewportBorder" />
+                        <Canvas.RenderTransform>
+                            <ScaleTransform ScaleX="{CompiledBinding PicViewer.ScaleX.Value}" />
+                        </Canvas.RenderTransform>
                     </Canvas>
                 </Panel>
             </LayoutTransformControl>
