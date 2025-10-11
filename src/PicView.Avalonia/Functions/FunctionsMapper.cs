@@ -234,7 +234,7 @@ public static class FunctionsMapper
 
     /// <inheritdoc cref="NavigationManager.Iterate(bool, MainViewModel)" />
     public static async ValueTask Next() =>
-        await NavigationManager.Iterate(next: true, Vm).ConfigureAwait(false);
+        await NavigationManager.Iterate(true, Vm, CancellationToken.None).ConfigureAwait(false);
     
     /// <inheritdoc cref="NavigationManager.NavigateBetweenDirectories(bool, MainViewModel)" />
     public static async ValueTask NextFolder() =>
@@ -246,7 +246,7 @@ public static class FunctionsMapper
 
     /// <inheritdoc cref="NavigationManager.Iterate(bool, MainViewModel)" />
     public static async ValueTask Prev() =>
-        await NavigationManager.Iterate(next: false, Vm).ConfigureAwait(false);
+        await NavigationManager.Iterate(false, Vm, CancellationToken.None).ConfigureAwait(false);
     
     /// <inheritdoc cref="NavigationManager.NavigateBetweenDirectories(bool, MainViewModel)" />
     public static async ValueTask PrevFolder() =>
@@ -405,9 +405,12 @@ public static class FunctionsMapper
         await Task.Run(() => GalleryFunctions.OpenCloseBottomGallery(Vm));
     
     /// <inheritdoc cref="GalleryFunctions.CloseGallery(MainViewModel)" />
-    public static async ValueTask CloseGallery() =>
-        await Task.Run(() => GalleryFunctions.CloseGallery(Vm));
-    
+    public static ValueTask CloseGallery()
+    {
+        GalleryFunctions.CloseGallery(Vm);
+        return ValueTask.CompletedTask;
+    }
+
     /// <inheritdoc cref="GalleryNavigation.GalleryClick(MainViewModel)" />
     public static async ValueTask GalleryClick() =>
         await GalleryNavigation.GalleryClick(Vm).ConfigureAwait(false);

@@ -4,6 +4,7 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.LogicalTree;
 using PicView.Avalonia.Functions;
+using PicView.Avalonia.Navigation;
 using PicView.Avalonia.UI;
 using PicView.Avalonia.ViewModels;
 using PicView.Avalonia.Views.UC.PopUps;
@@ -32,17 +33,17 @@ public partial class HoverBar : UserControl
 
         Observable.FromEventHandler<RoutedEventArgs>(h => NextButton.Click += h,
                 h => NextButton.Click -= h)
-            .SubscribeAwait(async (_, _) =>
+            .SubscribeAwait(async (_, c) =>
             {
                 vm.HoverbarViewModel.IsHoverNavigationButtonNextClicked = true;
-                await FunctionsMapper.Next();
+                await NavigationManager.Navigate(true, vm, c);
             });
         Observable.FromEventHandler<RoutedEventArgs>(h => PreviousButton.Click += h,
                 h => PreviousButton.Click -= h)
-            .SubscribeAwait(async (_, _) =>
+            .SubscribeAwait(async (_, c) =>
             {
                 vm.HoverbarViewModel.IsHoverNavigationButtonPreviousClicked = true;
-                await FunctionsMapper.Prev();
+                await NavigationManager.Navigate(false, vm, c);
             });
     }
 
