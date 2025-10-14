@@ -9,6 +9,7 @@ using PicView.Avalonia.Navigation;
 using PicView.Avalonia.UI;
 using PicView.Avalonia.ViewModels;
 using PicView.Avalonia.Views.UC.PopUps;
+using PicView.Core.Sizing;
 using R3;
 
 namespace PicView.Avalonia.Views.UC;
@@ -56,6 +57,10 @@ public partial class HoverBar : UserControl
 
         switch (width)
         {
+            case < SizeDefaults.WindowMinSize:
+                // Too small to fit
+                IsVisible = false;
+                break;
             case <= firstBreakpoint:
                 ApplyLayout(
                     70,
@@ -105,6 +110,8 @@ public partial class HoverBar : UserControl
                 ZoomInMenuButton.IsVisible =
                     ZoomOutMenuButton.IsVisible = showAdvancedButtons;
         TopPanel.Margin = topPanelMargin;
+
+        IsVisible = true;
     }
 
 
