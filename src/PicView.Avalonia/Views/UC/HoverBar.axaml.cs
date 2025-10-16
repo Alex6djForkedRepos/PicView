@@ -20,6 +20,34 @@ public partial class HoverBar : UserControl
     {
         InitializeComponent();
         Loaded += OnLoaded;
+        if (Settings.Theme.Dark)
+        {
+            return;
+        }
+
+        FileMenuButton.Classes.Remove("noBorderHover");
+        FileMenuButton.Classes.Add("hover");
+
+        ZoomOutMenuButton.Classes.Remove("noBorderHover");
+        ZoomOutMenuButton.Classes.Add("hover");
+
+        ZoomInMenuButton.Classes.Remove("noBorderHover");
+        ZoomInMenuButton.Classes.Add("hover");
+
+        RotateLeftButton.Classes.Remove("noBorderHover");
+        RotateLeftButton.Classes.Add("hover");
+
+        RotateRightButton.Classes.Remove("noBorderHover");
+        RotateRightButton.Classes.Add("hover");
+
+        FlipButton.Classes.Remove("noBorderHover");
+        FlipButton.Classes.Add("hover");
+
+        ImageMenuButton.Classes.Remove("noBorderHover");
+        ImageMenuButton.Classes.Add("hover");
+
+        SettingsMenuButton.Classes.Remove("noBorderHover");
+        SettingsMenuButton.Classes.Add("hover");
     }
 
     private void OnLoaded(object? sender, RoutedEventArgs e)

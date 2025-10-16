@@ -5,7 +5,6 @@
     x:Class="PicView.Avalonia.Views.Main.ImageInfoView"
     x:DataType="vm:MainViewModel"
     xmlns="https://github.com/avaloniaui"
-    xmlns:converters="clr-namespace:PicView.Avalonia.Converters"
     xmlns:customControls="clr-namespace:PicView.Avalonia.CustomControls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -786,6 +785,8 @@
                             <customControls:CopyButton
                                 Classes="altHover BorderStyle"
                                 CopyText="{Binding Path=Text, ElementName=FileSizeBox}"
+                                IsEnabled="{CompiledBinding PicViewer.FileInfo.Value,
+                                                            Converter={x:Static ObjectConverters.IsNotNull}}"
                                 IsVisible="{CompiledBinding InfoWindow.IsCopyButtonEnabled.Value}"
                                 ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                               Mode=OneWay}">
@@ -802,6 +803,8 @@
                                                        Mode=OneWay}"
                                 Width="{CompiledBinding InfoWindow.TextWidth}" />
                             <customControls:DateTimePickerButtons
+                                IsEnabled="{CompiledBinding PicViewer.FileInfo.Value,
+                                                            Converter={x:Static ObjectConverters.IsNotNull}}"
                                 Margin="5,0,0,0"
                                 SelectedDateTime="{CompiledBinding PicViewer.FileInfo.Value.CreationTime,
                                                                    Mode=TwoWay}"
@@ -827,6 +830,8 @@
                                                        Mode=OneWay}"
                                 Width="{CompiledBinding InfoWindow.TextWidth}" />
                             <customControls:DateTimePickerButtons
+                                IsEnabled="{CompiledBinding PicViewer.FileInfo.Value,
+                                                            Converter={x:Static ObjectConverters.IsNotNull}}"
                                 Margin="5,0,0,0"
                                 SelectedDateTime="{CompiledBinding PicViewer.FileInfo.Value.LastWriteTime,
                                                                    Mode=TwoWay}"
@@ -851,6 +856,8 @@
                                                        Mode=OneWay}"
                                 Width="{CompiledBinding InfoWindow.TextWidth}" />
                             <customControls:DateTimePickerButtons
+                                IsEnabled="{CompiledBinding PicViewer.FileInfo.Value,
+                                                            Converter={x:Static ObjectConverters.IsNotNull}}"
                                 Margin="5,0,0,0"
                                 SelectedDateTime="{CompiledBinding PicViewer.FileInfo.Value.LastAccessTime,
                                                                    Mode=TwoWay}"
@@ -868,7 +875,6 @@
                         </StackPanel>
 
                     </WrapPanel>
-
 
 
 
