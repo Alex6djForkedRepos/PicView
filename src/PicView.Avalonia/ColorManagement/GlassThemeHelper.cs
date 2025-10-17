@@ -46,6 +46,10 @@ public static class GlassThemeHelper
         Application.Current.Resources["MenuButtonColor"] = Color.Parse("#50797979");
         
         Application.Current.Resources["WindowBorderColor"] = Color.Parse("#15FFFFFF");
+
+        Application.Current.Resources["DropDownBgColor"] = Color.Parse("#CC464646");
+
+        Application.Current.Resources["WindowButtonBackgroundColor"] = Color.Parse("#CC464646");
     }
 
     public static void ApplyTransparentStyle(Menu borderLike)

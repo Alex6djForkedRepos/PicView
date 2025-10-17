@@ -211,7 +211,7 @@
     </ControlTheme>
 
     <ControlTheme TargetType="MenuItem" x:Key="MainBg">
-        <Setter Property="Background" Value="{DynamicResource MainBackgroundColor}" />
+        <Setter Property="Background" Value="{DynamicResource SecondaryBackgroundColor}" />
         <Setter Property="Foreground" Value="{DynamicResource MainTextColor}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="CornerRadius" Value="0" />
