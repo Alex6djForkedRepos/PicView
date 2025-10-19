@@ -69,15 +69,10 @@ public partial class PrintPreviewWindow : Window
     private void Close(object? sender, RoutedEventArgs e) => Close();
     private void Minimize(object? sender, RoutedEventArgs e) => WindowState = WindowState.Minimized;
 
-    protected override void OnLoaded(RoutedEventArgs e)
+    public void Initialize()
     {
-        base.OnLoaded(e);
-
-        if (DataContext is not MainViewModel vm)
-        {
-            return;
-        }
-
+        var vm = Dispatcher.UIThread.Invoke(() => DataContext as MainViewModel);
+        
         if (vm.PrintPreview == null)
         {
             return;
