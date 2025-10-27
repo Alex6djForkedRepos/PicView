@@ -473,7 +473,7 @@ namespace PicView.Core.ViewModels
                             {
                                 var thumb = Thumbs[i];
                                 var thumbDir = Path.Combine(destinationDirectory, thumb.SaveDestination);
-                                var thumbPath = Path.Combine(thumbDir, file.Name);
+                                var thumbPath = Path.Combine(thumbDir, Path.GetFileName(destinationFileName));
                                 if (thumb.Percentage is not null)
                                 {
                                     magick.Resize(thumb.Percentage.Value);
