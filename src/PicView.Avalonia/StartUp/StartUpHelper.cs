@@ -113,23 +113,17 @@ public static class StartUpHelper
         Task.Run(() => LanguageUpdater.UpdateLanguageAsync(vm.Translation, vm.PicViewer, settingsExists));
         if (settingsExists)
         {
-            Task.Run(async () =>
-            {
-                await KeybindingManager.LoadKeybindings(vm.PlatformService);
-                await Dispatcher.UIThread.InvokeAsync(() => { SetWindowEventHandlers(window); });
-            });
+            Task.Run(() => KeybindingManager.LoadKeybindings(vm.PlatformService));
         }
         else
         {
             Task.Run(() =>
             {
                 KeybindingManager.SetDefaultKeybindings(vm.PlatformService);
-                SetWindowEventHandlers(window);
             });
         }
 
-
-        
+        SetWindowEventHandlers(window);
         HandleThemeUpdates(vm);
 
         UIHelper.SetControls(desktop);
@@ -336,11 +330,13 @@ public static class StartUpHelper
 
     private static async Task MainWindow_KeysDownAsync(object? sender, KeyEventArgs e)
     {
+        e.Handled = true;
         await MainKeyboardShortcuts.MainWindow_KeysDownAsync(e).ConfigureAwait(false);
     }
 
     private static void MainWindow_KeyUp(object? sender, KeyEventArgs e)
     {
+        e.Handled = true;
         MainKeyboardShortcuts.MainWindow_KeysUp(e);
     }
 }
