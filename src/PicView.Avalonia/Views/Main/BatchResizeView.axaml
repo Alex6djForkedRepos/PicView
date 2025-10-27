@@ -140,7 +140,10 @@
                 DockPanel.Dock="Top"
                 HorizontalAlignment="Center"
                 x:Name="MainTabControl">
-                <TabItem Classes="alt" x:Name="SelectFilesTabItem">
+                <TabItem
+                    Classes="alt"
+                    CornerRadius="6"
+                    x:Name="SelectFilesTabItem">
                     <TabItem.Header>
                         <StackPanel VerticalAlignment="Center" Width="112">
                             <PathIcon
@@ -157,7 +160,10 @@
                         </StackPanel>
                     </TabItem.Header>
                 </TabItem>
-                <TabItem Classes="alt" x:Name="ResizeSettingsTabItem">
+                <TabItem
+                    Classes="alt"
+                    CornerRadius="6"
+                    x:Name="ResizeSettingsTabItem">
                     <TabItem.Header>
                         <StackPanel VerticalAlignment="Center" Width="112">
                             <Image
@@ -173,7 +179,10 @@
                         </StackPanel>
                     </TabItem.Header>
                 </TabItem>
-                <TabItem Classes="alt" x:Name="ThumbnailTabItem">
+                <TabItem
+                    Classes="alt"
+                    CornerRadius="6"
+                    x:Name="ThumbnailTabItem">
                     <TabItem.Header>
                         <StackPanel VerticalAlignment="Center" Width="112">
                             <Image
@@ -200,9 +209,10 @@
                 Orientation="Horizontal"
                 Spacing="10">
                 <customControls:TextIconButton
-                    Background="{StaticResource SoftenColorBrush}"
+                    Background="{DynamicResource SoftenColor}"
                     Classes="ButtonBorder altHover mainBtn"
                     Command="{CompiledBinding BatchResizeViewModel.SelectAndAddFileCommand}"
+                    Foreground="{DynamicResource MainTextColor}"
                     Icon="{StaticResource AddFileImage}"
                     IconHeight="16"
                     IconMargin="5,0,10,0"
@@ -210,9 +220,10 @@
                     Text="{CompiledBinding Translation.AddFiles}"
                     x:Name="AddFileButton" />
                 <customControls:TextIconButton
-                    Background="{StaticResource SoftenColorBrush}"
+                    Background="{DynamicResource SoftenColor}"
                     Classes="ButtonBorder altHover mainBtn"
                     Command="{CompiledBinding BatchResizeViewModel.SelectAndAddFolderCommand}"
+                    Foreground="{DynamicResource MainTextColor}"
                     Icon="{StaticResource AddFolderImage}"
                     IconHeight="16"
                     IconMargin="5,0,10,0"
@@ -230,7 +241,8 @@
                 CornerRadius="4,4,0,0"
                 DockPanel.Dock="Top"
                 IsVisible="{Binding Path=IsSelected, ElementName=SelectFilesTabItem}"
-                Margin="10,0">
+                Margin="10,0"
+                x:Name="FolderHeaderBorder">
 
                 <!--  Files panel header  -->
                 <DockPanel LastChildFill="True" VerticalAlignment="Top">
@@ -244,6 +256,7 @@
                         <TextBlock Classes="txt" Text="{CompiledBinding Translation.RemoveAll.Value, Mode=OneWay}" />
                     </Button>
 
+                    <!--  Filter  -->
                     <Panel DockPanel.Dock="Left">
 
                         <Image
@@ -253,7 +266,7 @@
                             Source="{StaticResource SearchImage}"
                             Width="14" />
 
-                        <AutoCompleteBox
+                        <TextBox
                             Background="Transparent"
                             BorderBrush="Transparent"
                             BorderThickness="1"
@@ -268,6 +281,7 @@
                                                         Mode=OneWay}"
                             x:Name="FilterBox" />
 
+                        <!--  clear  -->
                         <customControls:IconButton
                             Classes="altHover"
                             Command="{CompiledBinding BatchResizeViewModel.ClearFilterCommand}"
@@ -294,7 +308,8 @@
                 DragDrop.AllowDrop="True"
                 Effect="{StaticResource MenuShadowButtonBorder}"
                 IsVisible="{Binding Path=IsSelected, ElementName=SelectFilesTabItem}"
-                Margin="10,0,10,35">
+                Margin="10,0,10,35"
+                x:Name="FilePanelLogBorder">
                 <Panel>
                     <customControls:AutoScrollViewer
                         IsVisible="{CompiledBinding !BatchResizeViewModel.IsFiltering.Value}" MinHeight="50">

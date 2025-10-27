@@ -81,7 +81,7 @@
 
             <Rectangle
                 DockPanel.Dock="Top"
-                Fill="{DynamicResource WindowBorderColor}"
+                Fill="{DynamicResource MainBorderColor}"
                 Height="1"
                 x:Name="BorderRectangle" />
 

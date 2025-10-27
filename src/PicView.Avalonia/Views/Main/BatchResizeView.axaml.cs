@@ -1,7 +1,9 @@
 using System.Collections.ObjectModel;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.LogicalTree;
+using Avalonia.Media;
 using ImageMagick;
 using PicView.Avalonia.Navigation;
 using PicView.Avalonia.ViewModels;
@@ -29,6 +31,34 @@ public partial class BatchResizeView : UserControl
 
         SubscribeToEvents(vm);
         InitializeNavigationData(vm);
+        if (!Settings.Theme.Dark)
+        {
+            LightThemeAdjustments();
+        }
+    }
+
+    private void LightThemeAdjustments()
+    {
+        if (!Application.Current.TryGetResource("MenuBackgroundColor",
+                Application.Current.RequestedThemeVariant, out var menuBackgroundColor))
+        {
+            return;
+        }
+
+        if (menuBackgroundColor is not Color color)
+        {
+            return;
+        }
+
+        Background = new SolidColorBrush(color);
+        var lightColor = new SolidColorBrush(Color.Parse("#F0FFFFFF"));
+        FolderHeaderBorder.Background = FilePanelLogBorder.Background = lightColor;
+
+        AddFileButton.Classes.Remove("altHover");
+        AddFileButton.Classes.Add("hover");
+
+        AddFolderButton.Classes.Remove("altHover");
+        AddFolderButton.Classes.Add("hover");
     }
 
     private void SubscribeToEvents(MainViewModel vm)

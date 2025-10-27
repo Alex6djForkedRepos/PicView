@@ -47,10 +47,11 @@
         </Style>
 
         <Style Selector="^.alt:selected /template/ ContentPresenter#PART_ContentPresenter">
-            <Setter Property="Background" Value="{StaticResource SoftenColorBrush}" />
+            <Setter Property="Background" Value="{DynamicResource SoftenColor}" />
             <Setter Property="Opacity" Value="1" />
             <Setter Property="BorderThickness" Value="1" />
             <Setter Property="BorderBrush" Value="{DynamicResource MainBorderColor}" />
+            <Setter Property="CornerRadius" Value="6" />
         </Style>
     </ControlTheme>
 </ResourceDictionary>
