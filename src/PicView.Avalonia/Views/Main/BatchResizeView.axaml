@@ -308,11 +308,11 @@
                 DragDrop.AllowDrop="True"
                 Effect="{StaticResource MenuShadowButtonBorder}"
                 IsVisible="{Binding Path=IsSelected, ElementName=SelectFilesTabItem}"
-                Margin="10,0,10,35"
+                Margin="10,0,10,20"
                 x:Name="FilePanelLogBorder">
                 <Panel>
                     <customControls:AutoScrollViewer
-                        IsVisible="{CompiledBinding !BatchResizeViewModel.IsFiltering.Value}" MinHeight="50">
+                        IsVisible="{CompiledBinding !BatchResizeViewModel.IsFiltering.Value}">
                         <ItemsControl ItemsSource="{CompiledBinding BatchResizeViewModel.SelectedFiles.Value}">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
@@ -347,7 +347,7 @@
                         </ItemsControl>
                     </customControls:AutoScrollViewer>
                     <customControls:AutoScrollViewer
-                        IsVisible="{CompiledBinding BatchResizeViewModel.IsFiltering.Value}" MinHeight="50">
+                        IsVisible="{CompiledBinding BatchResizeViewModel.IsFiltering.Value}">
                         <ItemsControl ItemsSource="{CompiledBinding BatchResizeViewModel.FilteredFiles.Value}">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
@@ -388,22 +388,61 @@
                 DockPanel.Dock="Top"
                 HorizontalAlignment="Right"
                 IsVisible="{Binding Path=IsSelected, ElementName=SelectFilesTabItem}"
-                Margin="0,-100,45,0"
+                Margin="0,-74,30,0"
                 Orientation="Horizontal">
                 <TextBlock Classes="txt" Text="{CompiledBinding BatchResizeViewModel.SelectedFiles.Value.Count}" />
                 <TextBlock Classes="txt" Text=" " />
                 <TextBlock Classes="txt" Text="{CompiledBinding Translation.Files}" />
             </StackPanel>
 
+
+            <!--  Output folder  -->
+            <DockPanel
+                DockPanel.Dock="Top"
+                IsVisible="{Binding Path=IsSelected, ElementName=SelectFilesTabItem}"
+                LastChildFill="True">
+                <TextBlock
+                    Classes="txt"
+                    DockPanel.Dock="Left"
+                    Margin="15,0,5,0"
+                    Text="{CompiledBinding Translation.OutputFolder.Value,
+                                           Mode=OneWay}"
+                    VerticalAlignment="Center" />
+
+                <customControls:IconButton
+                    Background="Transparent"
+                    Classes="altHover"
+                    ClickMode="Release"
+                    Command="{CompiledBinding BatchResizeViewModel.PickOutputFolderCommand}"
+                    CornerRadius="4"
+                    Data="{StaticResource AltFolderGeometry}"
+                    DockPanel.Dock="Right"
+                    Foreground="{DynamicResource MainTextColor}"
+                    IconHeight="20"
+                    IconWidth="20"
+                    IsRepeatEnabled="False"
+                    Margin="5,0,10,0"
+                    Width="30"
+                    x:Name="OutputFolderButton" />
+                <customControls:FuncTextBox
+                    Classes="hover TStyle"
+                    DockPanel.Dock="Left"
+                    MinWidth="252"
+                    Text="{CompiledBinding BatchResizeViewModel.OutputFolder.Value,
+                                           Mode=TwoWay}"
+                    x:Name="OutputFolderTextBox" />
+            </DockPanel>
+
             <!--  Resize settings  -->
             <customControls:AutoScrollViewer
                 DockPanel.Dock="Top"
                 IsVisible="{Binding Path=IsSelected, ElementName=ResizeSettingsTabItem}"
-                Margin="10,15">
+                Margin="10,15"
+                x:Name="ResizeSettingsContainer">
                 <StackPanel HorizontalAlignment="Center" Spacing="15">
 
                     <!--  Compression  -->
-                    <StackPanel Orientation="Horizontal">
+                    <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                         <TextBlock
                             Classes="txt"
                             Foreground="{DynamicResource MainTextColor}"
@@ -429,7 +468,7 @@
                     </StackPanel>
 
                     <!--  Quality  -->
-                    <StackPanel Orientation="Horizontal">
+                    <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                         <TextBlock
                             Classes="txt"
                             IsEnabled="{Binding Path=IsChecked, ElementName=IsQualityEnabledBox}"
@@ -461,8 +500,32 @@
                             Text="{Binding Path=Value, ElementName=QualitySlider}" />
                     </StackPanel>
 
+                    <!--  Convert to  -->
+                    <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                        <TextBlock
+                            Classes="txt"
+                            Margin="5,0,0,0"
+                            Text="{CompiledBinding Translation.ConvertTo.Value,
+                                                   Mode=OneWay}"
+                            Width="130" />
+                        <ComboBox
+                            Background="{DynamicResource SecondaryBackgroundColor}"
+                            BorderBrush="{DynamicResource MainBorderColor}"
+                            BorderThickness="1"
+                            CornerRadius="2"
+                            FontFamily="/Assets/Fonts/Roboto-Medium.ttf#Roboto"
+                            Foreground="{DynamicResource MainTextColor}"
+                            ItemsSource="{CompiledBinding BatchResizeViewModel.ConversionTargets.Value,
+                                                          Mode=TwoWay}"
+                            Margin="11,0,0,0"
+                            Padding="5,7,0,7"
+                            SelectedIndex="{CompiledBinding Window.BatchResizeWindowConfig.WindowProperties.ConvertToIndex}"
+                            Width="252"
+                            x:Name="ConversionComboBox" />
+                    </StackPanel>
+
                     <!--  Resize  -->
-                    <StackPanel Orientation="Horizontal">
+                    <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                         <TextBlock
                             Classes="txt"
                             Margin="5,0,0,0"
@@ -491,6 +554,7 @@
 
                     <!--  Percentage  -->
                     <StackPanel
+                        HorizontalAlignment="Center"
                         IsVisible="{CompiledBinding BatchResizeViewModel.IsPercentageResizing.Value}"
                         Margin="10,0,0,0"
                         Orientation="Horizontal">
@@ -518,6 +582,7 @@
 
                     <!--  Width and height adjustment  -->
                     <StackPanel
+                        HorizontalAlignment="Center"
                         IsVisible="{CompiledBinding BatchResizeViewModel.IsWidthAndHeightResizing.Value}"
                         Margin="10,0,0,0"
                         Orientation="Horizontal">
@@ -566,7 +631,10 @@
                         </Button>
 
 
-                        <StackPanel Orientation="Horizontal" Spacing="10">
+                        <StackPanel
+                            HorizontalAlignment="Center"
+                            Orientation="Horizontal"
+                            Spacing="10">
                             <TextBlock
                                 Classes="txt"
                                 FontFamily="/Assets/Fonts/Roboto-Medium.ttf#Roboto"
@@ -590,6 +658,7 @@
 
                     <!--  Width  -->
                     <StackPanel
+                        HorizontalAlignment="Center"
                         IsVisible="{CompiledBinding BatchResizeViewModel.IsWidthResizing.Value}"
                         Margin="10,0,0,0"
                         Orientation="Horizontal"
@@ -615,6 +684,7 @@
 
                     <!--  Height  -->
                     <StackPanel
+                        HorizontalAlignment="Center"
                         IsVisible="{CompiledBinding BatchResizeViewModel.IsHeightResizing.Value}"
                         Margin="10,0,0,0"
                         Orientation="Horizontal"
@@ -638,86 +708,6 @@
                             Width="175" />
                     </StackPanel>
 
-                    <!--  Output settings  -->
-                    <Image
-                        Height="20"
-                        HorizontalAlignment="Center"
-                        Margin="0,20,0,-10"
-                        Source="{StaticResource FolderSettingsImage}"
-                        Width="20" />
-                    <TextBlock
-                        Classes="txt"
-                        Margin="0,5,0,5"
-                        Text="{CompiledBinding Translation.OutputSettings}"
-                        TextAlignment="Center" />
-
-                    <!--  Output folder  -->
-                    <StackPanel
-                        Margin="10,0,0,0"
-                        Orientation="Horizontal"
-                        Spacing="10">
-                        <TextBlock
-                            Classes="txt"
-                            DockPanel.Dock="Left"
-                            Margin="5,0,0,0"
-                            Text="{CompiledBinding Translation.OutputFolder.Value,
-                                                   Mode=OneWay}"
-                            Width="130" />
-
-                        <customControls:FuncTextBox
-                            Classes="hover TStyle"
-                            DockPanel.Dock="Left"
-                            Margin="10,0"
-                            MinWidth="252"
-                            Text="{CompiledBinding BatchResizeViewModel.OutputFolder.Value,
-                                                   Mode=TwoWay}"
-                            x:Name="OutputFolderTextBox" />
-
-                        <customControls:IconButton
-                            Background="Transparent"
-                            Classes="altHover"
-                            ClickMode="Release"
-                            Command="{CompiledBinding BatchResizeViewModel.PickOutputFolderCommand}"
-                            CornerRadius="4"
-                            Data="{StaticResource AltFolderGeometry}"
-                            DockPanel.Dock="Right"
-                            Foreground="{DynamicResource MainTextColor}"
-                            IconHeight="20"
-                            IconWidth="20"
-                            IsRepeatEnabled="False"
-                            Margin="5,0,5,0"
-                            Width="30"
-                            x:Name="OutputFolderButton" />
-
-                    </StackPanel>
-
-                    <!--  Convert to  -->
-                    <StackPanel
-                        Margin="10,0,0,0"
-                        Orientation="Horizontal"
-                        Spacing="10">
-                        <TextBlock
-                            Classes="txt"
-                            Margin="5,0,0,0"
-                            Text="{CompiledBinding Translation.ConvertTo.Value,
-                                                   Mode=OneWay}"
-                            Width="130" />
-                        <ComboBox
-                            Background="{DynamicResource SecondaryBackgroundColor}"
-                            BorderBrush="{DynamicResource MainBorderColor}"
-                            BorderThickness="1"
-                            CornerRadius="2"
-                            FontFamily="/Assets/Fonts/Roboto-Medium.ttf#Roboto"
-                            Foreground="{DynamicResource MainTextColor}"
-                            ItemsSource="{CompiledBinding BatchResizeViewModel.ConversionTargets.Value,
-                                                          Mode=TwoWay}"
-                            Margin="11,0,0,0"
-                            Padding="5,7,0,7"
-                            SelectedIndex="{CompiledBinding Window.BatchResizeWindowConfig.WindowProperties.ConvertToIndex}"
-                            Width="252"
-                            x:Name="ConversionComboBox" />
-                    </StackPanel>
-
                 </StackPanel>
             </customControls:AutoScrollViewer>
 
@@ -725,7 +715,8 @@
             <customControls:AutoScrollViewer
                 DockPanel.Dock="Top"
                 IsVisible="{Binding Path=IsSelected, ElementName=ThumbnailTabItem}"
-                Margin="0,0,0,20">
+                Margin="0,0,0,20"
+                x:Name="ThumbnailTabContainer">
                 <StackPanel Margin="15,5">
 
                     <StackPanel

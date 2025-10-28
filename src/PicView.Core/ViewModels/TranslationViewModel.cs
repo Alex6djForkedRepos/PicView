@@ -200,7 +200,6 @@ public class TranslationViewModel : IDisposable
         OptimizeImage.Value = t.OptimizeImage;
         Orientation.Value = t.Orientation;
         OutputFolder.Value = t.OutputFolder;
-        OutputSettings.Value = t.OutputSettings;
         Pan.Value = t.Pan;
         PaperSize.Value = t.PaperSize;
         Paste.Value = t.FilePaste;
@@ -511,7 +510,6 @@ public class TranslationViewModel : IDisposable
     public BindableReactiveProperty<string?> OptimizeImage { get; } = new();
     public BindableReactiveProperty<string?> Orientation { get; } = new();
     public BindableReactiveProperty<string?> OutputFolder { get; } = new();
-    public BindableReactiveProperty<string?> OutputSettings { get; } = new();
     public BindableReactiveProperty<string?> Pan { get; } = new();
     public BindableReactiveProperty<string?> Paste { get; } = new();
     public BindableReactiveProperty<string?> PencilSketch { get; } = new();

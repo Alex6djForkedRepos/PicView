@@ -318,6 +318,7 @@ public class WindowInitializer : IPlatformSpecificUpdate
                 Show();
                 _batchResizeWindow.Closing += (_, _) =>
                 {
+                    _batchResizeWindow.Dispose();
                     _batchResizeWindow = null;
                     vm.BatchResizeViewModel.Dispose();
                     vm.BatchResizeViewModel = null;
