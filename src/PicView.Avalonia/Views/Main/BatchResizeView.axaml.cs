@@ -121,7 +121,7 @@ public partial class BatchResizeView : UserControl
             return;
         }
 
-        var x = i;
+        var oneBased = i;
         i++;
 
         // Dynamically construct the control names
@@ -140,32 +140,35 @@ public partial class BatchResizeView : UserControl
         var outputBox = this.FindControl<TextBox>(outputBoxName);
         var comboBox = this.FindControl<ComboBox>(comboBoxName);
 
-        // Check which resizing option is selected
-        var thumbIsPercentageResized = ReferenceEquals(comboBox.SelectedItem, percentageItem);
-        var thumbIsWidthResized = ReferenceEquals(comboBox.SelectedItem, widthItem);
-        var thumbIsHeightResized = ReferenceEquals(comboBox.SelectedItem, heightItem);
-        var saveDestination = outputBox.Text;
-
-        // Parse the value from the TextBox
-        if (!uint.TryParse(valueBox?.Text, out var thumbValue))
+        valueBox.TextChanged += delegate
         {
-            return;
-        }
+            // Check which resizing option is selected
+            var thumbIsPercentageResized = ReferenceEquals(comboBox.SelectedItem, percentageItem);
+            var thumbIsWidthResized = ReferenceEquals(comboBox.SelectedItem, widthItem);
+            var thumbIsHeightResized = ReferenceEquals(comboBox.SelectedItem, heightItem);
+            var saveDestination = outputBox.Text;
 
-        if (thumbIsPercentageResized)
-        {
-            vm.BatchResizeViewModel.Thumbs[x] = new BatchThumb(saveDestination, new Percentage(thumbValue));
-        }
+            // Parse the value from the TextBox
+            if (!uint.TryParse(valueBox?.Text, out var thumbValue))
+            {
+                return;
+            }
 
-        if (thumbIsWidthResized)
-        {
-            vm.BatchResizeViewModel.Thumbs[x] = new BatchThumb(saveDestination, width: thumbValue);
-        }
+            if (thumbIsPercentageResized)
+            {
+                vm.BatchResizeViewModel.Thumbs[oneBased] = new BatchThumb(saveDestination, new Percentage(thumbValue));
+            }
 
-        if (thumbIsHeightResized)
-        {
-            vm.BatchResizeViewModel.Thumbs[x] = new BatchThumb(saveDestination, height: thumbValue);
-        }
+            if (thumbIsWidthResized)
+            {
+                vm.BatchResizeViewModel.Thumbs[oneBased] = new BatchThumb(saveDestination, width: thumbValue);
+            }
+
+            if (thumbIsHeightResized)
+            {
+                vm.BatchResizeViewModel.Thumbs[oneBased] = new BatchThumb(saveDestination, height: thumbValue);
+            }
+        };
     }
 
     private static void InitializeNavigationData(MainViewModel vm)
