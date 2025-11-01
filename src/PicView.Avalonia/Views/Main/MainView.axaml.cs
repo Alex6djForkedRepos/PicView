@@ -12,7 +12,6 @@ using PicView.Avalonia.Input;
 using PicView.Avalonia.UI;
 using PicView.Avalonia.UI.FileHistory;
 using PicView.Avalonia.ViewModels;
-using PicView.Avalonia.Views.UC;
 using PicView.Avalonia.WindowBehavior;
 using PicView.Core.Conversion;
 using PicView.Core.FileHistory;
@@ -119,8 +118,9 @@ public partial class MainView : UserControl
             _ = new HoverFadeButtonHandler(ClickArrowRight, vm, ClickArrowRight.PolyButton);
             _ = new HoverFadeButtonHandler(ClickArrowLeft, vm, ClickArrowLeft.PolyButton);
             _ = new HoverFadeButtonHandler(AltButtonsPanel, vm);
-            
-            PointerWheelChanged += async (_, e) => await ImageViewer.PreviewOnPointerWheelChanged(this, e);
+
+            PointerWheelChanged += async (_, e) =>
+                await MouseShortcuts.HandlePointerWheelChanged(e).ConfigureAwait(false);
         };
     }
 
