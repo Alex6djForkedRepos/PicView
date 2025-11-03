@@ -157,7 +157,11 @@ public static class StartUpHelper
         }
 
         MenuManager.AddMenus();
-        UIHelper.AddHoverBar(vm);
+        if (Settings.UIProperties.ShowHoverNavigationBar)
+        {
+            UIHelper.AddHoverBar(vm);
+        }
+        
         TooltipHelper.StartTooltipSubscription(vm);
         
         if (!RuntimeInformation.IsOSPlatform(OSPlatform.OSX))

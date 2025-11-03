@@ -71,7 +71,6 @@ public static class GalleryNavigation
         {
             // Use post to ensure the UI update takes place after resize
             Dispatcher.UIThread.Post(ScrollToSelected);
-            ;
         }
         else
         {

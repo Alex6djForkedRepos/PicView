@@ -140,8 +140,6 @@ public partial class BottomBar : UserControl
                 FlipButton.Classes.Remove("noBorderHover");
                 RotateRightButton.Classes.Add("noBorderHoverAlt");
                 FlipButton.Classes.Add("noBorderHoverAlt");
-
-
             }
         };
     }
