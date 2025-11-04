@@ -249,7 +249,7 @@ public partial class HoverBar : UserControl
     }
 
     private static void ShowNavigationDialog() =>
-        UIHelper.GetMainView.MainGrid.Children.Add(new NavigationDialog());
+        DialogManager.AddNavigationDialog();
 
     private static void ShowQuickSettingsDialog() =>
         UIHelper.GetMainView.MainGrid.Children.Add(new QuickSettingsDialog());
@@ -258,7 +258,7 @@ public partial class HoverBar : UserControl
         UIHelper.GetMainView.MainGrid.Children.Add(new QuickEditingDialog());
 
     private static void ShowSearchDialog() =>
-        UIHelper.GetMainView.MainGrid.Children.Add(new FileSearchDialog());
+        DialogManager.AddFileSearchDialog();
 
     protected override void OnDetachedFromLogicalTree(LogicalTreeAttachmentEventArgs e)
     {

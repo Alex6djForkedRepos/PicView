@@ -130,14 +130,14 @@ public partial class FileSearchDialog : AnimatedPopUp
                 }
 
                 // Need to delay to make it feel smooth
-                await Task.Delay(100, ct);
+                await Task.Delay(10, ct);
 
                 for (var i = batchSize; i < fileSearchResults.Length; i += batchSize)
                 {
                     var batch = fileSearchResults.Skip(i).Take(batchSize);
                     foreach (var item in batch)
                     {
-                        await Task.Delay(100, ct);
+                        await Task.Delay(10, ct);
                         ct.ThrowIfCancellationRequested();
                         if (!ct.IsCancellationRequested)
                         {
