@@ -55,47 +55,40 @@ public static class SettingsManager
     public static AppSettings? GlobalSettings { get; private set; }
 
     /// <summary>
-    /// Loads application settings asynchronously from a file or initializes them to default if loading fails.
+    /// Loads application settings synchronously from a file or initializes them to default if loading fails.
     /// </summary>
     /// <returns>
     /// A boolean indicating whether the settings were successfully loaded.
     /// </returns>
     /// <exception cref="JsonException">Thrown if deserialization of the settings file fails.</exception>
-    public static async ValueTask<bool> LoadSettingsAsync()
+    public static bool LoadSettings()
     {
         try
         {
-            // Load global config (read-only, Program Path)
             GlobalConfig ??= new GlobalSettingsConfiguration();
-            if (File.Exists(GlobalConfig.LocalConfigPath))
-            {
-                await using var globalStream = File.OpenRead(GlobalConfig.LocalConfigPath);
-                if (globalStream.Length > 0)
-                {
-                    GlobalSettings = await JsonSerializer.DeserializeAsync<AppSettings>(
-                        globalStream, SettingsGenerationContext.Default.AppSettings).ConfigureAwait(false);
-                }
-            }
-
-            // Load user config (User Profile or Program Path)
             Configuration ??= new SettingsConfiguration();
+        
             var userPath = ConfigFileManager.ResolveDefaultConfigPath(Configuration);
             Configuration.CorrectPath = userPath;
 
-            if (File.Exists(userPath))
+            // Synchronous loading - fastest for startup
+            if (File.Exists(GlobalConfig.LocalConfigPath))
             {
-                await using var userStream = File.OpenRead(userPath);
-                if (userStream.Length > 0)
-                {
-                    Settings = await JsonSerializer.DeserializeAsync<AppSettings>(
-                        userStream, SettingsGenerationContext.Default.AppSettings).ConfigureAwait(false);
-                }
+                var json = File.ReadAllText(GlobalConfig.LocalConfigPath);
+                GlobalSettings = JsonSerializer.Deserialize<AppSettings>(
+                    json, SettingsGenerationContext.Default.AppSettings);
             }
 
+            if (File.Exists(userPath))
+            {
+                var json = File.ReadAllText(userPath);
+                Settings = JsonSerializer.Deserialize<AppSettings>(
+                    json, SettingsGenerationContext.Default.AppSettings);
+            }
+            
             // Fallback to defaults if no user config found
             Settings ??= GetDefaults();
-
-            // Apply Global Overrides
+        
             if (GlobalSettings != null)
             {
                 ApplyOverrides(Settings, GlobalSettings);
@@ -105,7 +98,7 @@ public static class SettingsManager
         }
         catch (Exception ex)
         {
-            DebugHelper.LogDebug(nameof(SettingsManager), nameof(LoadSettingsAsync), ex);
+            DebugHelper.LogDebug(nameof(SettingsManager), nameof(LoadSettings), ex);
             SetDefaults();
             return false;
         }

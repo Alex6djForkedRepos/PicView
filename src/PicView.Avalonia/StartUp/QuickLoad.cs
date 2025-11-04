@@ -123,11 +123,8 @@ public static class QuickLoad
                 vm.ImageViewer.SetTransform(vm.PicViewer.ExifOrientation.CurrentValue, magickImage.Format);
                 WindowResizing.SetSize(magickImage.Width, magickImage.Height, vm);
                 window.Show();
+                WindowFunctions.CenterWindowOnScreen();
             }, DispatcherPriority.Send);
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-            {
-                Dispatcher.UIThread.Post(() => WindowFunctions.CenterWindowOnScreen(), DispatcherPriority.Send);
-            }
         }
         else
         {

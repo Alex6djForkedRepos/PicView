@@ -42,7 +42,7 @@ public class App : Application, IPlatformSpecificService, IPlatformWindowService
         AvaloniaXamlLoader.Load(this);
     }
 
-    public override async void OnFrameworkInitializationCompleted()
+    public override void OnFrameworkInitializationCompleted()
     {
         try
         {
@@ -57,30 +57,25 @@ public class App : Application, IPlatformSpecificService, IPlatformWindowService
                 return;
             }
 
-            var settingsExists = await LoadSettingsAsync().ConfigureAwait(false);
+            var settingsExists = LoadSettings();
             _vm = new MainViewModel(this, this);
         
             TranslationManager.Init();
-        
-            await Dispatcher.UIThread.InvokeAsync(() =>
+
+            DataContext = _vm;
+            ThemeManager.DetermineTheme(Current, settingsExists);
+
+            _mainWindow = new MacMainWindow();
+            desktop.MainWindow = _mainWindow;
+
+            _mainWindow.DataContext = _vm;
+            StartUpHelper.StartWithoutArguments(_vm, settingsExists, desktop, _mainWindow, startUpFilePath);
+            if (Settings.WindowProperties.AutoFit && startUpFilePath is not null)
             {
-                DataContext = _vm;
-                ThemeManager.DetermineTheme(Current, settingsExists);
-            
-                _mainWindow = new MacMainWindow();
-                desktop.MainWindow = _mainWindow;
-            },DispatcherPriority.Send);
-        
-            await Dispatcher.UIThread.InvokeAsync(() =>
-            {
-                _mainWindow.DataContext = _vm;
-                StartUpHelper.StartWithoutArguments(_vm, settingsExists, desktop, _mainWindow, startUpFilePath);
-                if (Settings.WindowProperties.AutoFit && startUpFilePath is not null)
-                {
-                    WindowFunctions.CenterWindowOnScreen();
-                }
-                _windowInitializer = new WindowInitializer();
-            },DispatcherPriority.Send);
+                WindowFunctions.CenterWindowOnScreen();
+            }
+
+            _windowInitializer = new WindowInitializer();
             
             // Register for macOS file opening
             Current.UrlsOpened += async (_, e) =>
