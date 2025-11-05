@@ -357,7 +357,7 @@ public static class WindowFunctions
             window.Position = horizontal
                 ? new PixelPoint((int)centeredX, (int)centeredY)
                 : new PixelPoint(window.Position.X, (int)centeredY);
-        }, DispatcherPriority.Background);
+        });
     }
 
     public static void InitializeWindowSizeAndPosition(Window window)
