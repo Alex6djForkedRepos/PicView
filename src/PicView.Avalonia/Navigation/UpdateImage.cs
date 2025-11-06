@@ -81,6 +81,7 @@ public static class UpdateImage
             }
 
             vm.ImageViewer.SetTransform(preLoadValue.ImageModel.Orientation, preLoadValue.ImageModel.Format);
+            vm.ImageViewer.ZoomPanControl.ResetZoomSlim();
 
             if (Settings.ImageScaling.ShowImageSideBySide && nextPreloadValue is { ImageModel: not null })
             {
@@ -296,6 +297,7 @@ public static class UpdateImage
                 vm.MainWindow.CurrentView.Value = vm.ImageViewer;
             }
             WindowResizing.SetSize(width, height, 0, 0, 0, vm);
+            vm.ImageViewer.ZoomPanControl.ResetZoomSlim();
         }, DispatcherPriority.Send);
 
         var singeImageWindowTitles = ImageTitleFormatter.GenerateTitleForSingleImage(width, height, name, 100);

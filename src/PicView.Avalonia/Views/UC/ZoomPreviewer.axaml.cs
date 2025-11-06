@@ -6,6 +6,7 @@ using Avalonia.LogicalTree;
 using Avalonia.Threading;
 using PicView.Avalonia.Animations;
 using PicView.Avalonia.CustomControls;
+using PicView.Avalonia.UI;
 using PicView.Avalonia.ViewModels;
 
 namespace PicView.Avalonia.Views.UC;
@@ -183,9 +184,17 @@ public partial class ZoomPreviewer : UserControl
 
         if (DataContext is MainViewModel vm)
         {
-            if (vm.HoverbarViewModel.IsHoverbarVisible.CurrentValue)
+            if (vm.HoverbarViewModel.IsHoverbarVisible.CurrentValue && UIHelper.GetHoverBar?.Opacity > 0)
             {
-                Margin = new Thickness(0, 0, 70, 115);
+                if (UIHelper.GetMainView.Bounds.Width > vm.HoverbarViewModel.MaxWidth + 300)
+                {
+                    Margin = new Thickness(0, 0, 25, 25);
+                }
+                else
+                {
+                    Margin = new Thickness(0, 0, 70, 115);
+                }
+                
             }
             else if (Settings.Gallery.IsBottomGalleryShown)
             {

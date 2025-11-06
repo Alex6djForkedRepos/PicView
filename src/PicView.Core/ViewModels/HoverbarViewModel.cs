@@ -15,5 +15,6 @@ public class HoverbarViewModel : IDisposable
     public bool IsHoverNavigationButtonNextClicked { get; set; }
     public bool IsHoverNavigationButtonPreviousClicked { get; set; }
 
+    public double MaxWidth { get; set; } = 775;
     public BindableReactiveProperty<bool> IsHoverbarVisible { get; } = new();
 }

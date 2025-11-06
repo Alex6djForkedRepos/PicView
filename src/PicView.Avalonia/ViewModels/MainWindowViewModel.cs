@@ -129,7 +129,15 @@ public class MainWindowViewModel : IDisposable
             .Subscribe(isFullscreen =>
             {
                 SetButtonValues();
-                vm.HoverbarViewModel.IsHoverbarVisible.Value = isFullscreen && Settings.WindowProperties.Fullscreen;
+                if (!isFullscreen)
+                {
+                    return;
+                }
+
+                if (vm.MainWindow.CurrentView.Value == vm.ImageViewer)
+                {
+                    vm.HoverbarViewModel.IsHoverbarVisible.Value = isFullscreen && Settings.WindowProperties.Fullscreen;
+                }
             });
     }
 

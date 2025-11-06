@@ -54,7 +54,7 @@ public partial class HoverBar : UserControl
     private void OnLoaded(object? sender, RoutedEventArgs e)
     {
         AddHandler(PointerPressedEvent, ManagePointerPressed, RoutingStrategies.Tunnel);
-        SizeChanged += (_, args) => ApplyResponsiveResize(args.NewSize.Width);
+        UIHelper.GetMainView.SizeChanged += (_, args) => ApplyResponsiveResize(args.NewSize.Width);
         ApplyResponsiveResize(Bounds.Width);
 
 
@@ -106,7 +106,7 @@ public partial class HoverBar : UserControl
 
         switch (width)
         {
-            case < SizeDefaults.WindowMinSize:
+            case < SizeDefaults.SecondaryWindowMinWidth:
                 // Too small to fit
                 IsVisible = false;
                 break;
@@ -114,51 +114,40 @@ public partial class HoverBar : UserControl
                 ApplyLayout(
                     70,
                     false,
-                    true,
-                    false,
-                    new Thickness(5, 45, 5, 0));
+                    false);
                 break;
 
             case <= secondBreakpoint:
                 ApplyLayout(
                     75,
                     false,
-                    true,
-                    false,
-                    new Thickness(5, 45, 5, 0));
+                    false);
                 break;
 
             case < thirdBreakpoint:
                 ApplyLayout(
                     72,
                     false,
-                    false,
-                    true,
-                    new Thickness(5, 65, 5, 0));
+                    true);
                 break;
 
             default:
                 ApplyLayout(
                     75,
                     true,
-                    false,
-                    true,
-                    new Thickness(5, 65, 5, 0));
+                    true);
                 break;
         }
     }
 
-    private void ApplyLayout(double buttonWidth, bool showRotateLeft, bool showTopBorder, bool showAdvancedButtons,
-        Thickness topPanelMargin)
+    private void ApplyLayout(double buttonWidth, bool showRotateLeft, bool showAdvancedButtons)
     {
         NextButton.Width = PreviousButton.Width = buttonWidth;
         RotateLeftButton.IsVisible = showRotateLeft;
-        TopBorder.IsVisible = showTopBorder;
         RotateRightButton.IsVisible =
             FlipButton.IsVisible =
                 ZoomInMenuButton.IsVisible =
                     ZoomOutMenuButton.IsVisible = showAdvancedButtons;
-        TopPanel.Margin = topPanelMargin;
 
         IsVisible = true;
     }
