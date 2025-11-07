@@ -2,13 +2,8 @@
 
 namespace PicView.Core.ViewModels;
 
-public class HoverbarViewModel : IDisposable
+public class HoverbarViewModel
 {
-    public void Dispose()
-    {
-        Disposable.Dispose(IsHoverbarVisible);
-    }
-
     public bool IsHoverRotateLeftClicked { get; set; }
     public bool IsHoverRotateRightClicked { get; set; }
 

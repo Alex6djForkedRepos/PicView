@@ -150,6 +150,10 @@ public partial class HoverBar : UserControl
                     ZoomOutMenuButton.IsVisible = showAdvancedButtons;
 
         IsVisible = true;
+
+        // Make sure hover bar is above the bottom gallery if needed
+        var newHeight = Settings.Gallery.IsBottomGalleryShown ? 50 : 160;
+        Height = UIHelper.GetMainView.Bounds.Height > SizeDefaults.WindowMinSize ? newHeight : double.NaN;
     }
 
 
