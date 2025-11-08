@@ -44,7 +44,7 @@ public static class FileExtensions
         var fraction = fileSize % divisor;
 
         // Format whole part
-        whole.TryFormat(buffer, out var charsWritten, provider: CultureInfo.CurrentCulture);
+        whole.TryFormat(buffer, out var charsWritten);
 
         // Handle fractional part only if needed
         if (fraction > 0 && magnitude > 0) // Only show decimals for non-byte sizes
@@ -53,7 +53,7 @@ public static class FileExtensions
             var decimalValue = fraction * 100 / divisor;
             if (decimalValue > 0)
             {
-                buffer[charsWritten++] = '.';
+                buffer[charsWritten++] = CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator[0];
 
                 // Format first decimal digit
                 var firstDigit = decimalValue / 10;
