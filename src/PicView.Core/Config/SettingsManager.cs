@@ -164,6 +164,7 @@ public static class SettingsManager
     public static AppSettings GetDefaults()
     {
         UIProperties uiProperties;
+        Zoom zoom;
         if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
         {
             uiProperties = new UIProperties
@@ -171,10 +172,15 @@ public static class SettingsManager
                 IsTaskbarProgressEnabled = false,
                 OpenInSameWindow = true
             };
+            zoom = new Zoom
+            {
+                ZoomSpeed = 0.15
+            };
         }
         else
         {
             uiProperties = new UIProperties();
+            zoom = new Zoom();
         }
 
         var settings = new AppSettings
@@ -185,7 +191,7 @@ public static class SettingsManager
             Sorting = new Sorting(),
             Theme = new Theme(),
             WindowProperties = new WindowProperties(),
-            Zoom = new Zoom(),
+            Zoom = zoom,
             StartUp = new StartUp(),
             Navigation = new Navigation(),
             Version = SettingsConfiguration.CurrentSettingsVersion
