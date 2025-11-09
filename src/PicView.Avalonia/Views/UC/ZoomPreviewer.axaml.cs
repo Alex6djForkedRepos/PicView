@@ -184,6 +184,12 @@ public partial class ZoomPreviewer : UserControl
             return;
         }
 
+        if (_isDragging)
+        {
+            // Don't change position when dragging the zoom preview window
+            return;
+        }
+
         if (DataContext is MainViewModel vm)
         {
             if (vm.HoverbarViewModel.IsHoverbarVisible.CurrentValue && UIHelper.GetHoverBar?.Opacity > 0)
