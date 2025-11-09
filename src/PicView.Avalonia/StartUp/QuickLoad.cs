@@ -85,23 +85,51 @@ public static class QuickLoad
     {
         var cancellationTokenSource = new CancellationTokenSource();
         ImageModel? imageModel = null;
-        await Task.WhenAll(
-                Task.Run(() => { NavigationManager.InitializeImageIterator(vm, continueFromLeftOff); },
-                    cancellationTokenSource.Token),
-                Task.Run(async () => imageModel = await SetSingleImageAsync(vm, fileInfo, magickImage, window),
-                    cancellationTokenSource.Token))
-            .ConfigureAwait(false);
-        if (TiffManager.IsTiff(imageModel.FileInfo.FullName))
+        if (TiffManager.IsTiff(fileInfo.FullName))
         {
-            TitleManager.TrySetTiffTitle(imageModel, vm);
+            NavigationManager.InitializeImageIterator(vm, continueFromLeftOff);
+            var isMultiPagedTiff =
+                await NavigationManager.CheckIfTiffAndUpdate(vm, fileInfo, NavigationManager.GetCurrentIndex);
+            if (isMultiPagedTiff)
+            {
+                imageModel = new ImageModel
+                {
+                    Format = magickImage.Format,
+                    DpiX = (ushort)magickImage.Density.X,
+                    DpiY = (ushort)magickImage.Density.Y,
+                    FileInfo = fileInfo,
+                    Image = vm.PicViewer.ImageSource.CurrentValue,
+                    ImageType = ImageType.Bitmap,
+                    Orientation = ExifOrientationHelper.GetImageOrientation(magickImage),
+                    PixelWidth = (int)magickImage.Width,
+                    PixelHeight = (int)magickImage.Height
+                };
+                TitleManager.TrySetTiffTitle(imageModel, vm);
+            }
+            else
+            {
+                await NormalLoading(cancellationTokenSource.Token).ConfigureAwait(false);
+            }
         }
         else
         {
-            TitleManager.SetTitle(vm, imageModel);
+            await NormalLoading(cancellationTokenSource.Token).ConfigureAwait(false);
         }
 
         await StartPreloaderAndGalleryAsync(vm, imageModel, fileInfo);
         cancellationTokenSource.Dispose();
+        return;
+
+        async ValueTask NormalLoading(CancellationToken token)
+        {
+            await Task.WhenAll(
+                    Task.Run(() => { NavigationManager.InitializeImageIterator(vm, continueFromLeftOff); },
+                        token),
+                    Task.Run(async () => imageModel = await SetSingleImageAsync(vm, fileInfo, magickImage, window),
+                        token))
+                .ConfigureAwait(false);
+            TitleManager.SetTitle(vm, imageModel);
+        }
     }
 
     /// <summary>
