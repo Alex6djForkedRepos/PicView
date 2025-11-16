@@ -29,10 +29,6 @@
                     <customControls:PicBox
                         ImageType="{CompiledBinding PicViewer.ImageType.Value,
                                                     Mode=OneWay}"
-                        SecondaryImageWidth="{CompiledBinding PicViewer.SecondaryImageWidth.Value,
-                                                              Mode=OneWay}"
-                        SecondarySource="{CompiledBinding PicViewer.SecondaryImageSource.Value,
-                                                          Mode=OneWay}"
                         Source="{CompiledBinding PicViewer.ImageSource.Value}"
                         x:Name="MainImage" />
                 </Border>

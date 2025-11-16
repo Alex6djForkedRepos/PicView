@@ -263,13 +263,13 @@ public partial class ZoomPreviewer : UserControl
                                  vm.PicViewer.ImageHeight.CurrentValue;
             var width = vm.PicViewer.ImageWidth.CurrentValue * defaultHeight / vm.PicViewer.ImageHeight.Value;
             OverlayImage.Width = width;
-            OverlayImage.SecondaryImageWidth = secondaryWidth;
+            //OverlayImage.SecondaryImageWidth = secondaryWidth;
         }
         else
         {
             OverlayImage.Width = vm.PicViewer.PixelWidth.CurrentValue * defaultHeight /
                                  vm.PicViewer.PixelHeight.CurrentValue;
-            OverlayImage.SecondaryImageWidth = 0;
+            //OverlayImage.SecondaryImageWidth = 0;
         }
     }
 

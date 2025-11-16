@@ -20,6 +20,9 @@ public class PicViewerModel : IDisposable
     
     public BindableReactiveProperty<FileInfo?> FileInfo { get; } = new();
 
+    /// <summary>
+    /// Used to show file search results.
+    /// </summary>
     public BindableReactiveProperty<ObservableCollection<FileSearchResult>> FilteredFileInfos { get; } = new();
 
     /// <summary>
@@ -32,10 +35,21 @@ public class PicViewerModel : IDisposable
     /// </summary>
     public BindableReactiveProperty<int> PixelHeight { get; } = new(0);
     
+    /// <summary>
+    /// First frame to display
+    /// </summary>
     public BindableReactiveProperty<object?> ImageSource  { get; } = new();
+    
+    /// <summary>
+    /// Alternate frames if any (multi-paged tiff or animated images)
+    /// </summary>
+    public BindableReactiveProperty<object[]?> ImageSources  { get; } = new();
 
     public BindableReactiveProperty<object?> SecondaryImageSource { get; } = new();
 
+    /// <summary>
+    /// Represents the type of the currently loaded image, such as bitmap, animated GIF, animated WebP, or SVG.
+    /// </summary>
     public BindableReactiveProperty<ImageType> ImageType { get; } = new();
     
     public BindableReactiveProperty<MagickFormat?> Format { get; } = new();
