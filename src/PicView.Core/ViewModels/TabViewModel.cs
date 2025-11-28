@@ -6,7 +6,7 @@ public class TabViewModel : IAsyncDisposable
 {
     public string Id { get; } = Guid.NewGuid().ToString("N");
     public PicViewerModel PicViewer { get; }
-    public IImageIterator ImageIterator { get; }
+    public IImageIterator? ImageIterator { get; }
     public CancellationTokenSource NavigationCts { get; private set; } = new();
 
     public TabViewModel(PicViewerModel model, IImageIterator iterator)

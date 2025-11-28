@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Runtime;
 using System.Runtime.InteropServices;
 using Avalonia;
@@ -18,8 +19,10 @@ using PicView.Avalonia.ViewModels;
 using PicView.Avalonia.WindowBehavior;
 using PicView.Core.FileAssociations;
 using PicView.Core.FileHistory;
+using PicView.Core.Models;
 using PicView.Core.Navigation;
 using PicView.Core.ProcessHandling;
+using R3;
 using ImageViewer = PicView.Avalonia.Views.UC.ImageViewer;
 using NavigationViewModel = PicView.Core.ViewModels.NavigationViewModel;
 

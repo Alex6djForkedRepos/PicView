@@ -60,7 +60,7 @@
         </Style>
     </ControlTheme>
 
-    <ControlTheme TargetType="TabControl" x:Key="ScrollableTabControl">
+    <ControlTheme TargetType="TabStrip" x:Key="ScrollableTabControl">
         <Setter Property="Template">
             <ControlTemplate>
                 <Border
@@ -75,19 +75,10 @@
                         <customControls:AutoScrollViewer
                             DockPanel.Dock="Top"
                             HorizontalScrollBarVisibility="Auto"
-                            Name="PART_ScrollViewer"
                             Theme="{StaticResource InlineSlim}"
                             VerticalScrollBarVisibility="Disabled">
                             <ItemsPresenter ItemsPanel="{TemplateBinding ItemsPanel}" Name="PART_ItemsPresenter" />
                         </customControls:AutoScrollViewer>
-
-                        <ContentPresenter
-                            Content="{TemplateBinding SelectedContent}"
-                            ContentTemplate="{TemplateBinding SelectedContentTemplate}"
-                            HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
-                            Margin="{TemplateBinding Padding}"
-                            Name="PART_SelectedContentHost"
-                            VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
                     </DockPanel>
                 </Border>
             </ControlTemplate>

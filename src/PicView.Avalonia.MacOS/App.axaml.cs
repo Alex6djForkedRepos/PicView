@@ -11,6 +11,7 @@ using PicView.Avalonia.MacOS.WindowImpl;
 using PicView.Avalonia.Navigation;
 using PicView.Avalonia.StartUp;
 using PicView.Avalonia.ViewModels;
+using PicView.Core.DebugTools;
 using PicView.Core.FileAssociations;
 using PicView.Core.FileSorting;
 using PicView.Core.Localization;
@@ -91,9 +92,9 @@ public class App : Application, IPlatformSpecificService, IPlatformWindowService
             };
             Current.UrlsOpened -= handler;
         }
-        catch (Exception)
+        catch (Exception e)
         {
-            //
+            DebugHelper.LogDebug(nameof(App), nameof(OnFrameworkInitializationCompleted), e);
         }
     }
 

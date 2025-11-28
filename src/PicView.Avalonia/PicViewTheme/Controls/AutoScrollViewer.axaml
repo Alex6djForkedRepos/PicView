@@ -163,7 +163,7 @@
                         <ScrollBar.Transitions>
                             <Transitions>
                                 <DoubleTransition
-                                    Duration="0:0:0.25"
+                                    Duration="0:0:0.45"
                                     Easing="CubicEaseOut"
                                     Property="Opacity" />
                             </Transitions>

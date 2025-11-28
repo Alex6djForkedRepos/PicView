@@ -9,7 +9,6 @@
 
                 <ResourceInclude Source="Controls/AnimatedPopUp.axaml" />
                 <ResourceInclude Source="Controls/AutoScrollViewer.axaml" />
-                <ResourceInclude Source="Controls/Border.axaml" />
                 <ResourceInclude Source="Controls/Button.axaml" />
                 <ResourceInclude Source="Controls/ButtonSpinner.axaml" />
                 <ResourceInclude Source="Controls/Calendar.axaml" />

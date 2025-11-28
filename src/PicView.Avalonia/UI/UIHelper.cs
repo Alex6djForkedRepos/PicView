@@ -43,7 +43,7 @@ public static class UIHelper
     /// </summary>
     public static void SetControls(IClassicDesktopStyleApplicationLifetime desktop)
     {
-        GetMainView = desktop.MainWindow?.FindControl<TabView>("TabView")?.FindControl<MainView>("MainView");
+        GetMainView = desktop.MainWindow?.FindControl<MainView>("MainView");
         GetTitlebar = desktop.MainWindow?.FindControl<Control>("Titlebar");
         GetEditableTitlebar = GetTitlebar?.FindControl<EditableTitlebar>("EditableTitlebar");
         GetGalleryView = GetMainView?.MainGrid.GetControl<GalleryAnimationControlView>("GalleryView");
