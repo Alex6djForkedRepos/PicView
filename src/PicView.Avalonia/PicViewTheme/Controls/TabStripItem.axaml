@@ -15,7 +15,8 @@
                     BorderThickness="{TemplateBinding BorderThickness}"
                     CornerRadius="{TemplateBinding CornerRadius}"
                     Name="PART_LayoutRoot"
-                    Padding="{TemplateBinding Padding}">
+                    Padding="{TemplateBinding Padding}"
+                    RenderTransformOrigin="0.5,0.5">
                     <Panel>
                         <ContentPresenter
                             Content="{TemplateBinding Content}"
@@ -41,6 +42,14 @@
         </Style>
         <Style Selector="^:selected:pointerover /template/ ContentPresenter#PART_ContentPresenter">
             <Setter Property="BorderBrush" Value="{DynamicResource AccentColor}" />
+        </Style>
+
+        <!--  Applies when :dragging pseudo-class is active  -->
+        <Style Selector="^:dragging">
+            <Setter Property="Opacity" Value="0.9" />
+            <Setter Property="RenderTransform">
+                <ScaleTransform ScaleX="1.05" ScaleY="1.05" />
+            </Setter>
         </Style>
     </ControlTheme>
 </ResourceDictionary>

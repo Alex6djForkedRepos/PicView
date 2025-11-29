@@ -594,14 +594,14 @@
     <DockPanel LastChildFill="True">
         <views1:MacOSTitlebar DockPanel.Dock="Top" x:Name="Titlebar" />
         <uc:BottomBar DockPanel.Dock="Bottom" x:Name="BottomBar" />
-        <TabStrip
+        <customControls:DraggableTabStrip
             DataContext="{Binding NavigationViewModel}"
             DockPanel.Dock="Top"
             ItemsSource="{CompiledBinding Tabs.Value}"
             Theme="{StaticResource ScrollableTabControl}"
             x:Name="MainTabStrip">
 
-            <TabStrip.ItemTemplate>
+            <customControls:DraggableTabStrip.ItemTemplate>
                 <DataTemplate>
                     <Grid ColumnDefinitions="Auto,*,*">
                         <customControls:IconButton
@@ -628,8 +628,8 @@
                             Width="1" />
                     </Grid>
                 </DataTemplate>
-            </TabStrip.ItemTemplate>
-        </TabStrip>
+            </customControls:DraggableTabStrip.ItemTemplate>
+        </customControls:DraggableTabStrip>
 
         <main:MainView Background="Transparent" x:Name="MainView" />
 

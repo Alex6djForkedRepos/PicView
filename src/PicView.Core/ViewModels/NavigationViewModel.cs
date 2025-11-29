@@ -20,11 +20,12 @@ public class NavigationViewModel : IDisposable
         _navService = navService;
         _sharedCache = cache;
         
-        for (var i = 0; i < 10; i++)
+        for (var i = 0; i < 6; i++)
         {
+            var randomFileName = Path.GetRandomFileName();
             Tabs.Value.Add(new TabModel
             {
-                TabTitle = "new tab",
+                TabTitle = randomFileName,
                 TabTooltip = "tooltip"
             });
         }

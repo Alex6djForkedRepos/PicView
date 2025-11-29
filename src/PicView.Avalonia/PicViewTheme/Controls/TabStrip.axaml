@@ -22,5 +22,6 @@
                 <customControls:ResponsiveTabPanel />
             </ItemsPanelTemplate>
         </Setter>
+
     </ControlTheme>
 </ResourceDictionary>
