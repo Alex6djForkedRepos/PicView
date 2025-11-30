@@ -3,8 +3,9 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
-using Avalonia.Media;
 using Avalonia.Interactivity;
+using Avalonia.Media;
+using PicView.Core.ViewModels;
 
 namespace PicView.Avalonia.CustomControls;
 
@@ -17,11 +18,11 @@ public class DraggableTabStrip : TabStrip
     private int _currentTargetIndex = -1;
 
     private object? _draggedItem;
-    private double _draggedTabStartX; 
-    private double _draggedTabWidth; 
+    private double _draggedTabStartX;
+    private double _draggedTabWidth;
     private bool _isDragging;
 
-    private double _pointerOffsetWithinTab; 
+    private double _pointerOffsetWithinTab;
     private TabStripItem? _pressedContainer;
     private Point _pressedPoint;
     private int _sourceIndex = -1;
@@ -31,11 +32,15 @@ public class DraggableTabStrip : TabStrip
     protected override void ContainerForItemPreparedOverride(Control container, object? item, int index)
     {
         base.ContainerForItemPreparedOverride(container, item, index);
-        if (container is not TabStripItem tsi) return;
+        if (container is not TabStripItem tsi)
+        {
+            return;
+        }
 
         tsi.AddHandler(PointerPressedEvent, OnItemPointerPressed, RoutingStrategies.Tunnel | RoutingStrategies.Bubble);
         tsi.AddHandler(PointerMovedEvent, OnItemPointerMoved, RoutingStrategies.Tunnel | RoutingStrategies.Bubble);
-        tsi.AddHandler(PointerReleasedEvent, OnItemPointerReleased, RoutingStrategies.Tunnel | RoutingStrategies.Bubble);
+        tsi.AddHandler(PointerReleasedEvent, OnItemPointerReleased,
+            RoutingStrategies.Tunnel | RoutingStrategies.Bubble);
         tsi.PointerCaptureLost += OnPointerCaptureLost;
     }
 
@@ -47,15 +52,36 @@ public class DraggableTabStrip : TabStrip
             tsi.RemoveHandler(PointerMovedEvent, OnItemPointerMoved);
             tsi.RemoveHandler(PointerReleasedEvent, OnItemPointerReleased);
             tsi.PointerCaptureLost -= OnPointerCaptureLost;
+
+            // If the title is null, the item was removed from the collection.
+            if (tsi.DataContext is TabViewModel { TabTitle: null })
+            {
+                // Reset any transform that might be applied
+                tsi.RenderTransform = null;
+
+                // If the item being removed is the one currently being tracked/dragged, stop tracking it.
+                if (_pressedContainer == tsi)
+                {
+                    EndDrag();
+                }
+            }
         }
+
         base.ClearContainerForItemOverride(container);
     }
 
     private void OnItemPointerPressed(object? sender, PointerPressedEventArgs e)
     {
         var props = e.GetCurrentPoint(this).Properties;
-        if (!props.IsLeftButtonPressed) return;
-        if (sender is not TabStripItem tsi) return;
+        if (!props.IsLeftButtonPressed)
+        {
+            return;
+        }
+
+        if (sender is not TabStripItem tsi)
+        {
+            return;
+        }
 
         _pressedContainer = tsi;
         _pressedPoint = e.GetPosition(this);
@@ -68,7 +94,10 @@ public class DraggableTabStrip : TabStrip
         _originalX.Clear();
         foreach (var c in GetRealizedContainers())
         {
-            if (c is TabStripItem t) _originalX[t] = t.Bounds.X;
+            if (c is TabStripItem t)
+            {
+                _originalX[t] = t.Bounds.X;
+            }
         }
 
         _draggedTabStartX = tsi.Bounds.X;
@@ -81,7 +110,10 @@ public class DraggableTabStrip : TabStrip
 
     private void OnItemPointerMoved(object? sender, PointerEventArgs e)
     {
-        if (_pressedContainer == null) return;
+        if (_pressedContainer == null)
+        {
+            return;
+        }
 
         var pos = e.GetPosition(this);
         var deltaX = pos.X - _pressedPoint.X;
@@ -92,18 +124,20 @@ public class DraggableTabStrip : TabStrip
             if (Math.Abs(deltaX) > DragThreshold)
             {
                 _isDragging = true;
-                
+
                 // Now we capture
                 e.Pointer.Capture(_pressedContainer);
 
                 if (_pressedContainer is IPseudoClasses pcs)
+                {
                     pcs.Set(DraggingPseudoClass, true);
+                }
 
                 _pressedContainer.ZIndex = 1000;
             }
             else
             {
-                return; 
+                return;
             }
         }
 
@@ -112,7 +146,10 @@ public class DraggableTabStrip : TabStrip
         var dragCenter = dragLeft + _draggedTabWidth / 2;
 
         var realized = GetRealizedContainers().OfType<TabStripItem>().ToList();
-        if (realized.Count == 0) return;
+        if (realized.Count == 0)
+        {
+            return;
+        }
 
         var newTargetIndex = _sourceIndex;
 
@@ -123,7 +160,10 @@ public class DraggableTabStrip : TabStrip
             var tabX = _originalX.TryGetValue(tab, out var val) ? val : tab.Bounds.X;
             var center = tabX + tab.Bounds.Width / 2;
 
-            if (dragCenter > center) newTargetIndex = i;
+            if (dragCenter > center)
+            {
+                newTargetIndex = i;
+            }
         }
 
         _currentTargetIndex = newTargetIndex;
@@ -144,11 +184,17 @@ public class DraggableTabStrip : TabStrip
                 // Logic: If the item needs to move left or right to fill the gap
                 if (_currentTargetIndex > _sourceIndex) // Dragging Right
                 {
-                    if (i > _sourceIndex && i <= _currentTargetIndex) offset = -_draggedTabWidth;
+                    if (i > _sourceIndex && i <= _currentTargetIndex)
+                    {
+                        offset = -_draggedTabWidth;
+                    }
                 }
                 else if (_currentTargetIndex < _sourceIndex) // Dragging Left
                 {
-                    if (i >= _currentTargetIndex && i < _sourceIndex) offset = _draggedTabWidth;
+                    if (i >= _currentTargetIndex && i < _sourceIndex)
+                    {
+                        offset = _draggedTabWidth;
+                    }
                 }
             }
 
@@ -181,7 +227,9 @@ public class DraggableTabStrip : TabStrip
         if (_pressedContainer != null)
         {
             if (_pressedContainer is IPseudoClasses pcs)
+            {
                 pcs.Set(DraggingPseudoClass, false);
+            }
 
             _pressedContainer.Opacity = 1.0;
             _pressedContainer.ZIndex = 0; // RESET ZINDEX
@@ -205,32 +253,57 @@ public class DraggableTabStrip : TabStrip
 
     private bool TryMoveItem(int oldIndex, int newIndex)
     {
-        if (oldIndex == newIndex) return true;
+        if (oldIndex == newIndex)
+        {
+            return true;
+        }
 
-        IList? list = ItemsSource as IList ?? Items;
-        if (list == null || oldIndex < 0 || oldIndex >= list.Count) return false;
+        var list = ItemsSource as IList ?? Items;
+        if (list == null || oldIndex < 0 || oldIndex >= list.Count)
+        {
+            return false;
+        }
 
         // Clamp newIndex
-        if (newIndex < 0) newIndex = 0;
-        if (newIndex >= list.Count) newIndex = list.Count - 1;
+        if (newIndex < 0)
+        {
+            newIndex = 0;
+        }
+
+        if (newIndex >= list.Count)
+        {
+            newIndex = list.Count - 1;
+        }
 
         try
         {
             var item = list[oldIndex];
             list.RemoveAt(oldIndex);
-            
+
             // Adjust insert index because we removed an item
             // If we are moving it forward (0 -> 2), the indices shift down after removal
             // but the target index (2) was calculated based on the list WITH the item.
             // However, your logic `if (newIndex > oldIndex) newIndex--;` depends on how you calculated target.
             // With the "Drag Center" logic, simpler insertion usually works:
-            
+
             list.Insert(newIndex, item);
             return true;
         }
         catch
         {
             return false;
+        }
+    }
+
+    public void ResetStateFromMoved(Control tsi)
+    {
+        // Reset any transform that might be applied
+        tsi.RenderTransform = null;
+
+        // If the item being removed is the one currently being tracked/dragged, stop tracking it.
+        if (_pressedContainer == tsi)
+        {
+            EndDrag();
         }
     }
 }

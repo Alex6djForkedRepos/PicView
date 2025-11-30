@@ -597,36 +597,37 @@
         <customControls:DraggableTabStrip
             DataContext="{Binding NavigationViewModel}"
             DockPanel.Dock="Top"
+            IsVisible="{CompiledBinding IsTabPanelVisible.Value}"
             ItemsSource="{CompiledBinding Tabs.Value}"
             Theme="{StaticResource ScrollableTabControl}"
             x:Name="MainTabStrip">
 
             <customControls:DraggableTabStrip.ItemTemplate>
                 <DataTemplate>
-                    <Grid ColumnDefinitions="Auto,*,*">
+                    <DockPanel LastChildFill="True">
                         <customControls:IconButton
                             Classes="altHover"
+                            Command="{CompiledBinding CloseTabCommand}"
+                            CommandParameter="{CompiledBinding Id}"
                             Data="{StaticResource CloseGeometry}"
+                            DockPanel.Dock="Left"
                             Foreground="{DynamicResource MainTextColor}"
                             Height="32"
                             IconHeight="12"
                             IconWidth="12"
                             Margin="0,0,5,0"
                             Padding="9,0" />
+                        <Rectangle
+                            DockPanel.Dock="Right"
+                            Fill="{DynamicResource TertiaryBorderColor}"
+                            Height="32"
+                            Width="1" />
                         <TextBlock
                             Classes="txt"
-                            Grid.Column="1"
                             Text="{CompiledBinding TabTitle,
                                                    Mode=OneWay}"
-                            TextAlignment="Center"
                             ToolTip.Tip="{Binding TabTooltip, Mode=OneWay}" />
-                        <Rectangle
-                            Fill="{DynamicResource TertiaryBorderColor}"
-                            Grid.Column="2"
-                            Height="32"
-                            HorizontalAlignment="Right"
-                            Width="1" />
-                    </Grid>
+                    </DockPanel>
                 </DataTemplate>
             </customControls:DraggableTabStrip.ItemTemplate>
         </customControls:DraggableTabStrip>

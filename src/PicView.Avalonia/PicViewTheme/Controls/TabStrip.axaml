@@ -6,15 +6,13 @@
     <ControlTheme TargetType="TabStrip" x:Key="{x:Type TabStrip}">
         <Setter Property="Template">
             <ControlTemplate>
-                <Border DockPanel.Dock="Top">
-                    <customControls:AutoScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
-                        <ItemsPresenter
-                            HorizontalAlignment="Stretch"
-                            ItemsPanel="{TemplateBinding ItemsPanel}"
-                            MinWidth="{Binding Bounds.Width, RelativeSource={RelativeSource TemplatedParent}}"
-                            Name="PART_ItemsPresenter" />
-                    </customControls:AutoScrollViewer>
-                </Border>
+                <customControls:AutoScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+                    <ItemsPresenter
+                        HorizontalAlignment="Stretch"
+                        ItemsPanel="{TemplateBinding ItemsPanel}"
+                        MinWidth="{Binding Bounds.Width, RelativeSource={RelativeSource TemplatedParent}}"
+                        Name="PART_ItemsPresenter" />
+                </customControls:AutoScrollViewer>
             </ControlTemplate>
         </Setter>
         <Setter Property="ItemsPanel">
@@ -23,5 +21,8 @@
             </ItemsPanelTemplate>
         </Setter>
 
+        <Style Selector="^:singleitem /template/ ItemsPresenter#PART_ItemsPresenter">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
     </ControlTheme>
 </ResourceDictionary>

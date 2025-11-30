@@ -7,8 +7,10 @@ namespace PicView.Core.ViewModels;
 
 public class NavigationViewModel : IDisposable
 {
-    public BindableReactiveProperty<ObservableCollection<TabModel>>? Tabs { get; } = new([]);
+    public BindableReactiveProperty<ObservableCollection<TabViewModel>>? Tabs { get; } = new([]);
     public BindableReactiveProperty<int> ActiveTabIndex { get; } = new(0);
+    
+    public BindableReactiveProperty<bool> IsTabPanelVisible { get; } = new();
 
     private readonly IImageIteratorFactory? _iteratorFactory;
     private readonly INavigationService? _navService;
@@ -20,37 +22,46 @@ public class NavigationViewModel : IDisposable
         _navService = navService;
         _sharedCache = cache;
         
-        for (var i = 0; i < 6; i++)
+        for (var i = 0; i < 4; i++)
         {
-            var randomFileName = Path.GetRandomFileName();
-            Tabs.Value.Add(new TabModel
-            {
-                TabTitle = randomFileName,
-                TabTooltip = "tooltip"
-            });
+            CreateTab();
         }
     }
 
-    public TabViewModel CreateTab(FileInfo? file = null)
+    public void CreateTab()
     {
-        var picModel = new PicViewerModel();
-        var iterator = _iteratorFactory.Create(file ?? new FileInfo(Environment.CurrentDirectory));
+        //var picModel = new PicViewerModel();
+        //var iterator = _iteratorFactory?.Create(file ?? new FileInfo(Environment.CurrentDirectory));
 
-        var tab = new TabViewModel(picModel, iterator);
-        Tabs.Value.Add(new TabModel
+        //var tab = new TabViewModel(picModel, iterator);
+        var randomFileName = Path.GetRandomFileName();
+        var id = Guid.NewGuid().ToString("N");
+        var tabViewModel = new TabViewModel(null, null, id, CloseTab)
         {
-            TabTitle = file?.Name ?? "New Tab"
-        });
+            TabTitle = randomFileName,
+            TabTooltip = randomFileName
+        };
+        Tabs.Value.Add(tabViewModel);
         ActiveTabIndex.Value = Tabs.Value.Count - 1;
-        return tab;
+        IsTabPanelVisible.Value = Tabs.Value.Count > 1;
     }
 
-    public void CloseTab(TabModel tab)
+    public async ValueTask CloseTab(TabViewModel tab)
     {
         Tabs.Value.Remove(tab);
-        if (Tabs.Value.Count == 0)
+        IsTabPanelVisible.Value = Tabs.Value.Count > 1;
+        if (tab is not null)
         {
-            // maybe create an empty tab
+            await tab.DisposeAsync();
+        }
+    }
+    
+    public async ValueTask CloseTab(string tabId)
+    {
+        var tab = Tabs.Value.FirstOrDefault(t => t.Id == tabId);
+        if (tab is not null)
+        {
+            await CloseTab(tab);
         }
     }
 

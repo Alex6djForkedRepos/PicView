@@ -37,6 +37,7 @@
                                         Converter={x:Static ObjectConverters.IsNotNull}}"
             IsRepeatEnabled="False"
             IsTabStop="False"
+            IsVisible="False"
             Margin="0"
             ToolTip.Tip="{CompiledBinding Translation.IsFlipped.Value,
                                           Mode=OneWay}"
@@ -62,11 +63,43 @@
                                         Converter={x:Static ObjectConverters.IsNotNull}}"
             IsRepeatEnabled="False"
             IsTabStop="False"
+            IsVisible="False"
             Margin="0"
             ToolTip.Tip="{CompiledBinding Translation.RotateRight.Value,
                                           Mode=OneWay}"
             Width="30"
             x:Name="RotateRightButton" />
+
+        <customControls:IconButton
+            Background="Transparent"
+            BorderBrush="{DynamicResource MainBorderColor}"
+            BorderThickness="0"
+            Classes="hover"
+            DockPanel.Dock="Right"
+            Foreground="{DynamicResource MainTextColor}"
+            Icon="{StaticResource MenuImage}"
+            IconHeight="13"
+            IconWidth="13"
+            IsRepeatEnabled="False"
+            IsTabStop="False"
+            Margin="0"
+            Width="30" />
+
+        <customControls:IconButton
+            Background="Transparent"
+            BorderBrush="{DynamicResource MainBorderColor}"
+            BorderThickness="0"
+            Classes="hover"
+            Command="{CompiledBinding NavigationViewModel.CreateTab}"
+            Data="{StaticResource AddGeometry}"
+            DockPanel.Dock="Right"
+            Foreground="{DynamicResource MainTextColor}"
+            IconHeight="13"
+            IconWidth="13"
+            IsRepeatEnabled="False"
+            IsTabStop="False"
+            Margin="0"
+            Width="30" />
 
         <customControls:IconButton
             Background="Transparent"

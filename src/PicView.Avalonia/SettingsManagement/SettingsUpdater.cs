@@ -12,7 +12,6 @@ using PicView.Core.Gallery;
 using PicView.Core.Localization;
 using PicView.Core.Models;
 using PicView.Core.Sizing;
-using NavigationViewModel = PicView.Core.ViewModels.NavigationViewModel;
 
 namespace PicView.Avalonia.SettingsManagement;
 public static class SettingsUpdater
