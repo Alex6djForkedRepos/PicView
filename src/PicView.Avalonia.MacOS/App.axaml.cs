@@ -34,7 +34,6 @@ public class App : Application, IPlatformSpecificService, IPlatformWindowService
     public override void Initialize()
     {
         AvaloniaXamlLoader.Load(this);
-        
 #if DEBUG
         this.AttachDeveloperTools();
 #endif
@@ -69,11 +68,11 @@ public class App : Application, IPlatformSpecificService, IPlatformWindowService
             _mainWindow.DataContext = _vm;
             if (string.IsNullOrWhiteSpace(startUpFilePath))
             {
-                StartUpHelper.StartWithoutArguments(_vm, settingsExists, desktop, _mainWindow);
+                StartUpHelper2.StartWithoutArguments(_vm, settingsExists, desktop, _mainWindow);
             }
             else
             {
-                StartUpHelper.StartUpBlank(_vm, settingsExists, desktop, _mainWindow);
+                StartUpHelper2.StartUpBlank(_vm, settingsExists, desktop, _mainWindow);
             }
             _windowInitializer = new WindowInitializer();
             
