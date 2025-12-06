@@ -1,0 +1,57 @@
+<customControls:AnimatedMenu
+    IsOpen="{CompiledBinding MainWindow.IsTabMenuVisible.Value}"
+    mc:Ignorable="d"
+    x:Class="PicView.Avalonia.Views.UC.Menus.TabMenu"
+    x:DataType="viewModels:MainViewModel"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:customControls="clr-namespace:PicView.Avalonia.CustomControls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewModels="clr-namespace:PicView.Avalonia.ViewModels"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Design.DataContext>
+        <viewModels:MainViewModel />
+    </Design.DataContext>
+    <Border
+        Background="{DynamicResource MenuBackgroundColor}"
+        BorderBrush="{DynamicResource OuterBorderColor}"
+        BorderThickness="1"
+        CornerRadius="8"
+        Effect="{DynamicResource MenuShadowButtonBorder}"
+        x:Name="MainBorder">
+        <DockPanel MinHeight="400" MinWidth="315">
+            <DockPanel
+                DockPanel.Dock="Top"
+                LastChildFill="True"
+                VerticalAlignment="Top">
+
+                <customControls:IconButton
+                    Background="{DynamicResource SecondaryButtonBackgroundColor}"
+                    BorderBrush="{DynamicResource MainBorderColor}"
+                    BorderThickness="0,0,1,0"
+                    Classes="noBorderHover"
+                    Command="{CompiledBinding Window.ShowSettingsWindow}"
+                    CornerRadius="0,8,0,0"
+                    Data="{StaticResource FilledArrowRightGeometry}"
+                    DockPanel.Dock="Right"
+                    Foreground="{DynamicResource MainTextColor}"
+                    IconHeight="12"
+                    IconWidth="12"
+                    Width="35"
+                    x:Name="GalleryExpandButton" />
+
+                <customControls:TextIconButton
+                    Background="Transparent"
+                    Classes="altHover"
+                    Command="{CompiledBinding Gallery.ToggleGalleryCommand}"
+                    CornerRadius="8,0,0,0"
+                    Icon="{StaticResource GalleryImage}"
+                    IconHeight="12"
+                    IconMargin="0,0,5,0"
+                    IconWidth="12"
+                    Padding="15,7,15,7"
+                    Text="{CompiledBinding Translation.ShowImageGallery.Value}" />
+            </DockPanel>
+        </DockPanel>
+    </Border>
+</customControls:AnimatedMenu>

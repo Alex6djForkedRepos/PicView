@@ -594,7 +594,7 @@
 
     <DockPanel LastChildFill="True">
         <views1:MacOSTitlebar DockPanel.Dock="Top" x:Name="Titlebar" />
-        <uc:BottomBar DockPanel.Dock="Bottom" x:Name="BottomBar" />
+        <uc:BottomBar2 DockPanel.Dock="Bottom" x:Name="BottomBar" />
         <customControls:DraggableTabStrip
             Background="{DynamicResource MainBackgroundColor}"
             BorderBrush="{DynamicResource TertiaryBorderColor}"
@@ -633,25 +633,26 @@
             </customControls:DraggableTabStrip.ItemTemplate>
         </customControls:DraggableTabStrip>
 
-        <Panel>
-
-            <Image
-                DataContext="{CompiledBinding NavigationViewModel.ActiveTab.Value}"
-                Source="{CompiledBinding ImageSource.Value}"
-                Stretch="Uniform" />
-
-            <buttons:ClickArrowRight
-                HorizontalAlignment="Right"
-                Margin="{CompiledBinding MainWindow.RightControlOffSetMargin.Value}"
-                Opacity="0"
-                VerticalAlignment="Center"
-                x:Name="ClickArrowRight" />
-            <buttons:ClickArrowLeft
-                HorizontalAlignment="Left"
-                Opacity="0"
-                VerticalAlignment="Center"
-                x:Name="ClickArrowLeft" />
-
-        </Panel>
+        <main:MainView2 x:Name="MainView" />
+        <!-- <Panel> -->
+        <!--    -->
+        <!--  <Image  -->
+        <!--  DataContext="{CompiledBinding NavigationViewModel.ActiveTab.Value}"  -->
+        <!--  Source="{CompiledBinding ImageSource.Value}"  -->
+        <!--  Stretch="Uniform" />  -->
+        <!--    -->
+        <!--  <buttons:ClickArrowRight  -->
+        <!--  HorizontalAlignment="Right"  -->
+        <!--  Margin="{CompiledBinding MainWindow.RightControlOffSetMargin.Value}"  -->
+        <!--  Opacity="0"  -->
+        <!--  VerticalAlignment="Center"  -->
+        <!--  x:Name="ClickArrowRight" />  -->
+        <!--  <buttons:ClickArrowLeft  -->
+        <!--  HorizontalAlignment="Left"  -->
+        <!--  Opacity="0"  -->
+        <!--  VerticalAlignment="Center"  -->
+        <!--  x:Name="ClickArrowLeft" />  -->
+        <!--    -->
+        <!-- </Panel> -->
     </DockPanel>
 </Window>

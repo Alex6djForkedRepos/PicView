@@ -1,4 +1,5 @@
-﻿using Avalonia;
+﻿using System.Runtime.InteropServices;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Layout;
 using PicView.Avalonia.ViewModels;
@@ -23,6 +24,15 @@ public static class MenuManager
         mainView.MainGrid.Children.Add(CreateMenu<ImageMenu>(new Thickness(0, 0, 140, 0)));
         mainView.MainGrid.Children.Add(CreateMenu<SettingsMenu>(new Thickness(0, 0, -102, 0)));
         mainView.MainGrid.Children.Add(CreateMenu<ToolsMenu>(new Thickness(95, 0, 0, 0)));
+        
+        mainView.MainGrid.Children.Add(new TabMenu
+        {
+            Name = "TabsMenu",
+            VerticalAlignment = VerticalAlignment.Top,
+            Margin = new Thickness(2, 1, 2, 0),
+            IsVisible = false,
+            HorizontalAlignment = RuntimeInformation.IsOSPlatform(OSPlatform.OSX) ? HorizontalAlignment.Right : HorizontalAlignment.Left
+        });
     }
 
     private static T CreateMenu<T>(Thickness margin) where T : Control, new()
@@ -46,6 +56,7 @@ public static class MenuManager
         vm.MainWindow.IsImageMenuVisible.Value = false;
         vm.MainWindow.IsSettingsMenuVisible.Value = false;
         vm.MainWindow.IsToolsMenuVisible.Value = false;
+        vm.MainWindow.IsTabMenuVisible.Value = false;
     }
 
     /// <summary>
@@ -56,7 +67,8 @@ public static class MenuManager
         return vm.MainWindow.IsFileMenuVisible.CurrentValue ||
                vm.MainWindow.IsImageMenuVisible.CurrentValue ||
                vm.MainWindow.IsSettingsMenuVisible.CurrentValue ||
-               vm.MainWindow.IsToolsMenuVisible.CurrentValue;
+               vm.MainWindow.IsToolsMenuVisible.CurrentValue ||
+               vm.MainWindow.IsTabMenuVisible.CurrentValue;
     }
 
     /// <summary>
@@ -78,6 +90,11 @@ public static class MenuManager
     /// Toggles the tools menu
     /// </summary>
     public static void ToggleToolsMenu(MainViewModel vm) => ToggleMenu(vm, MenuType.Tools);
+    
+    /// <summary>
+    /// Toggles the tabs menu
+    /// </summary>
+    public static void ToggleTabsMenu(MainViewModel vm) => ToggleMenu(vm, MenuType.Tabs);
 
     private static void ToggleMenu(MainViewModel vm, MenuType menuType)
     {
@@ -108,6 +125,7 @@ public static class MenuManager
             MenuType.Image => vm.MainWindow.IsImageMenuVisible.CurrentValue,
             MenuType.Settings => vm.MainWindow.IsSettingsMenuVisible.CurrentValue,
             MenuType.Tools => vm.MainWindow.IsToolsMenuVisible.CurrentValue,
+            MenuType.Tabs => vm.MainWindow.IsTabMenuVisible.CurrentValue,
             _ => false
         };
     }
@@ -128,6 +146,9 @@ public static class MenuManager
             case MenuType.Tools:
                 vm.MainWindow.IsToolsMenuVisible.Value = state;
                 break;
+            case MenuType.Tabs:
+                vm.MainWindow.IsTabMenuVisible.Value = state;
+                break;
         }
     }
 
@@ -136,6 +157,7 @@ public static class MenuManager
         File,
         Image,
         Settings,
-        Tools
+        Tools,
+        Tabs
     }
 }

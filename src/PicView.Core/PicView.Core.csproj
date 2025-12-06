@@ -43,4 +43,7 @@
     <ItemGroup>
         <InternalsVisibleTo Include="PicView.Tests"/>
     </ItemGroup>
+    <ItemGroup>
+      <Folder Include="Navigation\Gallery\" />
+    </ItemGroup>
 </Project>

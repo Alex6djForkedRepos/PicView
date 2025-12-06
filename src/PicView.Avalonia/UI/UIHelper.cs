@@ -23,11 +23,11 @@ public static class UIHelper
 {
     #region Controls
 
-    public static MainView? GetMainView { get; private set; }
+    public static MainView2? GetMainView { get; private set; }
     public static Control? GetTitlebar { get; private set; }
     public static EditableTitlebar? GetEditableTitlebar { get; private set; }
     public static GalleryAnimationControlView? GetGalleryView { get; private set; }
-    public static BottomBar? GetBottomBar { get; private set; }
+    public static BottomBar2? GetBottomBar { get; private set; }
     public static HoverBar? GetHoverBar { get; private set; }
     
     public static ToolTipMessage? GetToolTipMessage { get; private set; }
@@ -43,11 +43,11 @@ public static class UIHelper
     /// </summary>
     public static void SetControls(IClassicDesktopStyleApplicationLifetime desktop)
     {
-        GetMainView = desktop.MainWindow?.FindControl<MainView>("MainView");
+        GetMainView = desktop.MainWindow?.FindControl<MainView2>("MainView");
         GetTitlebar = desktop.MainWindow?.FindControl<Control>("Titlebar");
         GetEditableTitlebar = GetTitlebar?.FindControl<EditableTitlebar>("EditableTitlebar");
         GetGalleryView = GetMainView?.MainGrid.GetControl<GalleryAnimationControlView>("GalleryView");
-        GetBottomBar = desktop.MainWindow?.FindControl<BottomBar>("BottomBar");
+        GetBottomBar = desktop.MainWindow?.FindControl<BottomBar2>("BottomBar");
         GetToolTipMessage = GetMainView?.MainGrid.FindControl<ToolTipMessage>("ToolTipMessage");
     }
 
