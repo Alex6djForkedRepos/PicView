@@ -110,123 +110,140 @@ public class DraggableTabStrip : TabStrip
         _pointerOffsetWithinTab = _pressedPoint.X - _draggedTabStartX;
     }
 
-    private void OnItemPointerMoved(object? sender, PointerEventArgs e)
+private void OnItemPointerMoved(object? sender, PointerEventArgs e)
+{
+    if (_pressedContainer == null)
     {
-        if (_pressedContainer == null)
-        {
-            return;
-        }
-
-        var pos = e.GetPosition(this);
-        var deltaX = pos.X - _pressedPoint.X;
-        var deltaY = pos.Y - _pressedPoint.Y;
-
-        // Start dragging if threshold crossed
-        if (!_isDragging)
-        {
-            if (Math.Abs(deltaX) > DragThreshold || Math.Abs(deltaY) > DragThreshold)
-            {
-                _isDragging = true;
-                e.Pointer.Capture(_pressedContainer);
-                PseudoClasses.Set(DraggingPseudoClass, true);
-
-                _pressedContainer.ZIndex = 1000;
-            }
-            else
-            {
-                return;
-            }
-        }
-
-        // Check for vertical detachment
-        var absVerticalDelta = Math.Abs(deltaY);
-        if (absVerticalDelta > DetachThreshold && !_isDetaching)
-        {
-            _isDetaching = true;
-
-            PseudoClasses.Set(DetachingPseudoClass, true);
-            PseudoClasses.Set(DraggingPseudoClass, false);
-
-            // Visual feedback for detachment
-            _pressedContainer.Opacity = 0.7;
-
-            e.Handled = true;
-            return;
-        }
-
-        // If detaching, only update vertical position
-        if (_isDetaching)
-        {
-            var dragLeft = pos.X - _pointerOffsetWithinTab;
-            _pressedContainer.RenderTransform = new TranslateTransform(
-                dragLeft - _draggedTabStartX,
-                deltaY
-            );
-            e.Handled = true;
-            return;
-        }
-
-        // Normal horizontal drag logic
-        var dragLeftPos = pos.X - _pointerOffsetWithinTab;
-        var dragCenter = dragLeftPos + _draggedTabWidth / 2;
-
-        var realized = GetRealizedContainers().OfType<TabStripItem>().ToList();
-        if (realized.Count == 0)
-        {
-            return;
-        }
-
-        var newTargetIndex = _sourceIndex;
-
-        for (var i = 0; i < realized.Count; i++)
-        {
-            var tab = realized[i];
-            var tabX = _originalX.TryGetValue(tab, out var val) ? val : tab.Bounds.X;
-            var center = tabX + tab.Bounds.Width / 2;
-
-            if (dragCenter > center)
-            {
-                newTargetIndex = i;
-            }
-        }
-
-        _currentTargetIndex = newTargetIndex;
-
-        // Visual updates
-        for (var i = 0; i < realized.Count; i++)
-        {
-            var tab = realized[i];
-            var startX = _originalX.TryGetValue(tab, out var val) ? val : tab.Bounds.X;
-            double offset = 0;
-
-            if (tab == _pressedContainer)
-            {
-                offset = dragLeftPos - startX;
-            }
-            else
-            {
-                // Logic: If the item needs to move left or right to fill the gap
-                if (_currentTargetIndex > _sourceIndex) // Dragging Right
-                {
-                    if (i > _sourceIndex && i <= _currentTargetIndex)
-                    {
-                        offset = -_draggedTabWidth;
-                    }
-                }
-                else if (_currentTargetIndex < _sourceIndex) // Dragging Left
-                {
-                    if (i >= _currentTargetIndex && i < _sourceIndex)
-                    {
-                        offset = _draggedTabWidth;
-                    }
-                }
-            }
-
-            tab.RenderTransform = new TranslateTransform(offset, 0);
-        }
-
-        e.Handled = true;
+        return;
     }
+
+    var pos = e.GetPosition(this);
+    var deltaX = pos.X - _pressedPoint.X;
+    var deltaY = pos.Y - _pressedPoint.Y;
+    var absVerticalDelta = Math.Abs(deltaY);
+
+    // 1. Start dragging if threshold crossed
+    if (!_isDragging)
+    {
+        if (Math.Abs(deltaX) > DragThreshold || absVerticalDelta > DragThreshold)
+        {
+            _isDragging = true;
+            e.Pointer.Capture(_pressedContainer);
+            PseudoClasses.Set(DraggingPseudoClass, true);
+            _pressedContainer.ZIndex = 1000;
+        }
+        else
+        {
+            return;
+        }
+    }
+
+    // 2. State Switching Logic
+    
+    // Case A: Transition from Attached -> Detaching
+    if (!_isDetaching && absVerticalDelta > DetachThreshold)
+    {
+        _isDetaching = true;
+
+        PseudoClasses.Set(DetachingPseudoClass, true);
+        PseudoClasses.Set(DraggingPseudoClass, false);
+
+        // Visual feedback for detachment
+        _pressedContainer.Opacity = 0.7;
+    }
+    // Case B: Transition from Detaching -> Attached (THE FIX)
+    else if (_isDetaching && absVerticalDelta <= DetachThreshold)
+    {
+        _isDetaching = false;
+
+        PseudoClasses.Set(DetachingPseudoClass, false);
+        PseudoClasses.Set(DraggingPseudoClass, true);
+
+        // Restore visual state
+        _pressedContainer.Opacity = 1.0;
+        
+        // We do NOT return here. We let the code fall through 
+        // to the "Normal horizontal drag logic" below, 
+        // which will snap the Y transform back to 0.
+    }
+
+    // 3. Movement Logic
+
+    // If we are definitely detaching, move freely in X and Y
+    if (_isDetaching)
+    {
+        var dragLeft = pos.X - _pointerOffsetWithinTab;
+        _pressedContainer.RenderTransform = new TranslateTransform(
+            dragLeft - _draggedTabStartX,
+            deltaY
+        );
+        e.Handled = true;
+        return;
+    }
+
+    // Normal horizontal drag logic (Reordering)
+    var dragLeftPos = pos.X - _pointerOffsetWithinTab;
+    var dragCenter = dragLeftPos + _draggedTabWidth / 2;
+
+    var realized = GetRealizedContainers().OfType<TabStripItem>().ToList();
+    if (realized.Count == 0)
+    {
+        return;
+    }
+
+    var newTargetIndex = _sourceIndex;
+
+    for (var i = 0; i < realized.Count; i++)
+    {
+        var tab = realized[i];
+        var tabX = _originalX.TryGetValue(tab, out var val) ? val : tab.Bounds.X;
+        var center = tabX + tab.Bounds.Width / 2;
+
+        if (dragCenter > center)
+        {
+            newTargetIndex = i;
+        }
+    }
+
+    _currentTargetIndex = newTargetIndex;
+
+    // Visual updates for reordering
+    for (var i = 0; i < realized.Count; i++)
+    {
+        var tab = realized[i];
+        var startX = _originalX.TryGetValue(tab, out var val) ? val : tab.Bounds.X;
+        double offset = 0;
+
+        if (tab == _pressedContainer)
+        {
+            offset = dragLeftPos - startX;
+        }
+        else
+        {
+            // Logic: If the item needs to move left or right to fill the gap
+            if (_currentTargetIndex > _sourceIndex) // Dragging Right
+            {
+                if (i > _sourceIndex && i <= _currentTargetIndex)
+                {
+                    offset = -_draggedTabWidth;
+                }
+            }
+            else if (_currentTargetIndex < _sourceIndex) // Dragging Left
+            {
+                if (i >= _currentTargetIndex && i < _sourceIndex)
+                {
+                    offset = _draggedTabWidth;
+                }
+            }
+        }
+
+        // IMPORTANT: The Y value is 0 here, which ensures that if we 
+        // just came back from being detached, the tab snaps back to the strip row.
+        tab.RenderTransform = new TranslateTransform(offset, 0);
+    }
+
+    e.Handled = true;
+}
 
     private void OnItemPointerReleased(object? sender, PointerReleasedEventArgs e)
     {
