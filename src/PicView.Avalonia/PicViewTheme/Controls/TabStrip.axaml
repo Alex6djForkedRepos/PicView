@@ -21,8 +21,5 @@
             </ItemsPanelTemplate>
         </Setter>
 
-        <Style Selector="^:singleitem /template/ ItemsPresenter#PART_ItemsPresenter">
-            <Setter Property="IsVisible" Value="False" />
-        </Style>
     </ControlTheme>
 </ResourceDictionary>

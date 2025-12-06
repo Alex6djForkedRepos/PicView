@@ -12,7 +12,6 @@
     x:Class="PicView.Avalonia.MacOS.Views.MacMainWindow"
     x:DataType="viewModels:MainViewModel"
     xmlns="https://github.com/avaloniaui"
-    xmlns:buttons="clr-namespace:PicView.Avalonia.Views.UC.Buttons;assembly=PicView.Avalonia"
     xmlns:converters="clr-namespace:PicView.Avalonia.Converters;assembly=PicView.Avalonia"
     xmlns:customControls="clr-namespace:PicView.Avalonia.CustomControls;assembly=PicView.Avalonia"
     xmlns:main="clr-namespace:PicView.Avalonia.Views.Main;assembly=PicView.Avalonia"
@@ -631,6 +630,7 @@
                     </DockPanel>
                 </DataTemplate>
             </customControls:DraggableTabStrip.ItemTemplate>
+
         </customControls:DraggableTabStrip>
 
         <main:MainView2 x:Name="MainView" />

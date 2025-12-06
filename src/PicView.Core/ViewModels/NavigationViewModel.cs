@@ -41,7 +41,6 @@ public class NavigationViewModel
         var id = Guid.NewGuid().ToString("N");
         var tabViewModel = new TabViewModel(id, CloseTab);
         Tabs.Value.Add(tabViewModel);
-        IsTabPanelVisible.Value = Tabs.Value.Count > 1;
     }
 
     public async ValueTask CloseTab(TabViewModel tab)
