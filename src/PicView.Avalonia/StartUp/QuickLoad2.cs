@@ -7,6 +7,7 @@ using PicView.Avalonia.ImageHandling;
 using PicView.Avalonia.Navigation;
 using PicView.Avalonia.UI;
 using PicView.Avalonia.ViewModels;
+using PicView.Avalonia.Views.UC;
 using PicView.Avalonia.WindowBehavior;
 using PicView.Core.DebugTools;
 using PicView.Core.Exif;

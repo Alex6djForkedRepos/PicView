@@ -1,5 +1,6 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using PicView.Avalonia.CustomControls;
 using PicView.Avalonia.MacOS.WindowImpl;
 using PicView.Avalonia.UI;
@@ -85,6 +86,17 @@ public partial class MacMainWindow : Window
         };
         
         MainTabStrip.TabDetached += MainTabStripOnTabDetached;
+        MainTabStrip.TabCreated += MainTabStripOnTabCreated;
+    }
+
+    private void MainTabStripOnTabCreated(object? sender, TabCreatedEventArgs e)
+    {
+        if (sender is not TabItem tab)
+        {
+            return;
+        }
+
+        //tab.Content = "test";
     }
 
     private void MainTabStripOnTabDetached(object? sender, TabDetachEventArgs e)

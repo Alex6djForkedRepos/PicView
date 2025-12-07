@@ -17,6 +17,7 @@
     xmlns:main="clr-namespace:PicView.Avalonia.Views.Main;assembly=PicView.Avalonia"
     xmlns:uc="clr-namespace:PicView.Avalonia.Views.UC;assembly=PicView.Avalonia"
     xmlns:viewModels="clr-namespace:PicView.Avalonia.ViewModels;assembly=PicView.Avalonia"
+    xmlns:viewModels1="clr-namespace:PicView.Core.ViewModels;assembly=PicView.Core"
     xmlns:views1="clr-namespace:PicView.Avalonia.MacOS.Views"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Window.Resources>
@@ -594,65 +595,60 @@
     <DockPanel LastChildFill="True">
         <views1:MacOSTitlebar DockPanel.Dock="Top" x:Name="Titlebar" />
         <uc:BottomBar2 DockPanel.Dock="Bottom" x:Name="BottomBar" />
-        <customControls:DraggableTabStrip
-            Background="{DynamicResource MainBackgroundColor}"
-            BorderBrush="{DynamicResource TertiaryBorderColor}"
-            BorderThickness="0,0,0,1"
-            DataContext="{Binding NavigationViewModel}"
-            DockPanel.Dock="Top"
-            IsVisible="{CompiledBinding IsTabPanelVisible.Value}"
-            ItemsSource="{CompiledBinding Tabs.Value}"
-            SelectedIndex="{CompiledBinding ActiveTabIndex.Value,
-                                            Mode=TwoWay}"
-            Theme="{StaticResource ScrollableTabControl}"
-            x:Name="MainTabStrip">
+        <Panel>
+            <customControls:DraggableTabControl
+                Background="{DynamicResource MainBackgroundColor}"
+                BorderBrush="{DynamicResource TertiaryBorderColor}"
+                BorderThickness="0,0,0,1"
+                DataContext="{Binding NavigationViewModel}"
+                ItemsSource="{CompiledBinding Tabs.Value}"
+                SelectedIndex="{CompiledBinding ActiveTabIndex.Value,
+                                                Mode=TwoWay}"
+                Tag="{CompiledBinding IsTabPanelVisible.Value}"
+                Theme="{StaticResource ScrollableTabControl}"
+                x:Name="MainTabStrip">
 
-            <customControls:DraggableTabStrip.ItemTemplate>
-                <DataTemplate>
-                    <DockPanel LastChildFill="True">
-                        <customControls:IconButton
-                            Background="Transparent"
-                            Classes="altHover"
-                            Command="{CompiledBinding CloseTab}"
-                            Data="{StaticResource CloseGeometry}"
-                            DockPanel.Dock="Left"
-                            Foreground="{DynamicResource MainTextColor}"
-                            Height="32"
-                            IconHeight="12"
-                            IconWidth="12"
-                            Margin="0,0,5,0"
-                            Padding="9,0" />
-                        <TextBlock
-                            Classes="txt"
-                            Text="{CompiledBinding TabTitle.Value,
-                                                   Mode=OneWay}"
-                            ToolTip.Tip="{Binding TabTooltip.Value, Mode=OneWay}" />
-                    </DockPanel>
-                </DataTemplate>
-            </customControls:DraggableTabStrip.ItemTemplate>
+                <customControls:DraggableTabControl.Styles>
+                    <Style Selector="TabItem">
+                        <Setter Property="Theme" Value="{StaticResource DraggableTabItem}" />
+                    </Style>
+                </customControls:DraggableTabControl.Styles>
 
-        </customControls:DraggableTabStrip>
+                <customControls:DraggableTabControl.ItemTemplate>
+                    <DataTemplate>
+                        <DockPanel LastChildFill="True">
+                            <customControls:IconButton
+                                Background="Transparent"
+                                Classes="altHover"
+                                Command="{CompiledBinding CloseTab}"
+                                Data="{StaticResource CloseGeometry}"
+                                DockPanel.Dock="Left"
+                                Foreground="{DynamicResource MainTextColor}"
+                                Height="32"
+                                IconHeight="12"
+                                IconWidth="12"
+                                Margin="0,0,5,0"
+                                Padding="9,0" />
+                            <TextBlock
+                                Classes="txt"
+                                Text="{CompiledBinding TabTitle.Value,
+                                                       Mode=OneWay}"
+                                ToolTip.Tip="{Binding TabTooltip.Value, Mode=OneWay}" />
+                        </DockPanel>
+                    </DataTemplate>
+                </customControls:DraggableTabControl.ItemTemplate>
 
-        <main:MainView2 x:Name="MainView" />
-        <!-- <Panel> -->
-        <!--    -->
-        <!--  <Image  -->
-        <!--  DataContext="{CompiledBinding NavigationViewModel.ActiveTab.Value}"  -->
-        <!--  Source="{CompiledBinding ImageSource.Value}"  -->
-        <!--  Stretch="Uniform" />  -->
-        <!--    -->
-        <!--  <buttons:ClickArrowRight  -->
-        <!--  HorizontalAlignment="Right"  -->
-        <!--  Margin="{CompiledBinding MainWindow.RightControlOffSetMargin.Value}"  -->
-        <!--  Opacity="0"  -->
-        <!--  VerticalAlignment="Center"  -->
-        <!--  x:Name="ClickArrowRight" />  -->
-        <!--  <buttons:ClickArrowLeft  -->
-        <!--  HorizontalAlignment="Left"  -->
-        <!--  Opacity="0"  -->
-        <!--  VerticalAlignment="Center"  -->
-        <!--  x:Name="ClickArrowLeft" />  -->
-        <!--    -->
-        <!-- </Panel> -->
+                <customControls:DraggableTabControl.ContentTemplate>
+                    <DataTemplate DataType="viewModels1:TabViewModel">
+                        <DockPanel LastChildFill="True">
+                            <Image Source="{CompiledBinding ImageSource.Value}" Stretch="Uniform" />
+
+                        </DockPanel>
+                    </DataTemplate>
+                </customControls:DraggableTabControl.ContentTemplate>
+
+            </customControls:DraggableTabControl>
+            <main:MainView2 x:Name="MainView" />
+        </Panel>
     </DockPanel>
 </Window>

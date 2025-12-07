@@ -145,6 +145,10 @@
         <DependentUpon>BottomBar2.axaml</DependentUpon>
         <SubType>Code</SubType>
       </Compile>
+      <Compile Update="Views\UC\ImageViewer2.axaml.cs">
+        <DependentUpon>ImageViewer2.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
   </ItemGroup>
 
 

@@ -2,7 +2,6 @@ using System.Collections;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Metadata;
-using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
@@ -11,14 +10,14 @@ using PicView.Core.ViewModels;
 namespace PicView.Avalonia.CustomControls;
 
 [PseudoClasses(DraggingPseudoClass, DetachingPseudoClass)]
-public class DraggableTabStrip : TabStrip
+public class DraggableTabControl : TabControl
 {
     private const double DragThreshold = 4.0;
     private const double DetachThreshold = 50.0; // Vertical distance to trigger detachment
     private const string DraggingPseudoClass = ":dragging";
     private const string DetachingPseudoClass = ":detaching";
 
-    private readonly Dictionary<TabStripItem, double> _originalX = new();
+    private readonly Dictionary<TabItem, double> _originalX = new();
     private int _currentTargetIndex = -1;
 
     private double _draggedTabStartX;
@@ -27,21 +26,28 @@ public class DraggableTabStrip : TabStrip
     private bool _isDragging;
 
     private double _pointerOffsetWithinTab;
-    private TabStripItem? _pressedContainer;
+    private TabItem? _pressedContainer;
     private Point _pressedPoint;
     private int _sourceIndex = -1;
 
-    protected override Type StyleKeyOverride => typeof(TabStrip);
+    protected override Type StyleKeyOverride => typeof(DraggableTabControl);
 
-    // Event for when a tab should be detached
     public event EventHandler<TabDetachEventArgs>? TabDetached;
+    public event EventHandler<TabCreatedEventArgs>? TabCreated;
 
     protected override void ContainerForItemPreparedOverride(Control container, object? item, int index)
     {
         base.ContainerForItemPreparedOverride(container, item, index);
-        if (container is not TabStripItem tsi)
+        if (container is not TabItem tsi)
         {
             return;
+        }
+        
+        // Check if this is a newly added item (not just being recycled)
+        if (item is TabViewModel { IsClosing: false })
+        {
+            // Raise the TabCreated event
+            TabCreated?.Invoke(tsi, new TabCreatedEventArgs(item, index));
         }
 
         tsi.AddHandler(PointerPressedEvent, OnItemPointerPressed, RoutingStrategies.Tunnel | RoutingStrategies.Bubble);
@@ -53,7 +59,7 @@ public class DraggableTabStrip : TabStrip
 
     protected override void ClearContainerForItemOverride(Control container)
     {
-        if (container is TabStripItem tsi)
+        if (container is TabItem tsi)
         {
             tsi.RemoveHandler(PointerPressedEvent, OnItemPointerPressed);
             tsi.RemoveHandler(PointerMovedEvent, OnItemPointerMoved);
@@ -82,7 +88,7 @@ public class DraggableTabStrip : TabStrip
             return;
         }
 
-        if (sender is not TabStripItem tsi)
+        if (sender is not TabItem tsi)
         {
             return;
         }
@@ -99,7 +105,7 @@ public class DraggableTabStrip : TabStrip
         _originalX.Clear();
         foreach (var c in GetRealizedContainers())
         {
-            if (c is TabStripItem t)
+            if (c is TabItem t)
             {
                 _originalX[t] = t.Bounds.X;
             }
@@ -185,15 +191,15 @@ private void OnItemPointerMoved(object? sender, PointerEventArgs e)
     var dragLeftPos = pos.X - _pointerOffsetWithinTab;
     var dragCenter = dragLeftPos + _draggedTabWidth / 2;
 
-    var realized = GetRealizedContainers().OfType<TabStripItem>().ToList();
-    if (realized.Count == 0)
+    var realized = GetRealizedContainers().OfType<TabItem>().ToArray();
+    if (realized.Length == 0)
     {
         return;
     }
 
     var newTargetIndex = _sourceIndex;
 
-    for (var i = 0; i < realized.Count; i++)
+    for (var i = 0; i < realized.Length; i++)
     {
         var tab = realized[i];
         var tabX = _originalX.TryGetValue(tab, out var val) ? val : tab.Bounds.X;
@@ -208,7 +214,7 @@ private void OnItemPointerMoved(object? sender, PointerEventArgs e)
     _currentTargetIndex = newTargetIndex;
 
     // Visual updates for reordering
-    for (var i = 0; i < realized.Count; i++)
+    for (var i = 0; i < realized.Length; i++)
     {
         var tab = realized[i];
         var startX = _originalX.TryGetValue(tab, out var val) ? val : tab.Bounds.X;
@@ -361,4 +367,10 @@ public class TabDetachEventArgs(object detachedItem, PixelPoint screenPosition) 
 {
     public object DetachedItem { get; } = detachedItem;
     public PixelPoint ScreenPosition { get; } = screenPosition;
+}
+
+public class TabCreatedEventArgs(object createdItem, int index) : EventArgs
+{
+    public object CreatedItem { get; } = createdItem;
+    public int Index { get; } = index;
 }

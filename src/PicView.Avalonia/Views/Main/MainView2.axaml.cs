@@ -15,6 +15,7 @@ using PicView.Avalonia.ViewModels;
 using PicView.Avalonia.WindowBehavior;
 using PicView.Core.Conversion;
 using PicView.Core.FileHistory;
+using R3;
 
 namespace PicView.Avalonia.Views.Main;
 
@@ -105,6 +106,12 @@ public partial class MainView2 : UserControl
             {
                 return;
             }
+            Observable.EveryValueChanged(vm.NavigationViewModel, model => model.IsTabPanelVisible.Value)
+                .Subscribe(b =>
+                {
+                    Margin = new Thickness(0, b ? 32 : 0, 0, 0);
+                });
+            
             // Initialize the history menu controller
             // TODO: rewrite FileHistory to MVVM
             FileHistoryMenuController = new FileHistoryMenuController(RecentFilesCM, HistorySortButton, HistoryClearButton, HistoryFileButton, vm);

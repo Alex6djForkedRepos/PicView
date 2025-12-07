@@ -60,35 +60,4 @@
         </Style>
     </ControlTheme>
 
-    <ControlTheme TargetType="TabStrip" x:Key="ScrollableTabControl">
-        <Setter Property="Template">
-            <ControlTemplate>
-                <Border
-                    Background="{TemplateBinding Background}"
-                    BorderBrush="{TemplateBinding BorderBrush}"
-                    BorderThickness="{TemplateBinding BorderThickness}"
-                    CornerRadius="{TemplateBinding CornerRadius}"
-                    HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
-                    Padding="{TemplateBinding Padding}"
-                    VerticalAlignment="{TemplateBinding VerticalAlignment}">
-                    <DockPanel>
-                        <customControls:AutoScrollViewer
-                            DockPanel.Dock="Top"
-                            HorizontalScrollBarVisibility="Auto"
-                            Theme="{StaticResource InlineSlim}"
-                            VerticalScrollBarVisibility="Disabled">
-                            <ItemsPresenter ItemsPanel="{TemplateBinding ItemsPanel}" Name="PART_ItemsPresenter" />
-                        </customControls:AutoScrollViewer>
-                    </DockPanel>
-                </Border>
-            </ControlTemplate>
-        </Setter>
-
-        <!--  Default horizontal layout for tabs  -->
-        <Setter Property="ItemsPanel">
-            <ItemsPanelTemplate>
-                <customControls:ResponsiveTabPanel MinTabWidth="140" />
-            </ItemsPanelTemplate>
-        </Setter>
-    </ControlTheme>
 </ResourceDictionary>

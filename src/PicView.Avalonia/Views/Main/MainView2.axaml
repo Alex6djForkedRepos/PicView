@@ -1026,10 +1026,9 @@
             ZIndex="3" />
         <ContentControl
             ClipToBounds="True"
-            Content="{CompiledBinding MainWindow.CurrentView.Value,
+            Content="{CompiledBinding NavigationViewModel.ActiveTab.Value.TabContent.Value,
                                       Mode=OneWay}"
-            ContextMenu="{StaticResource MainContextMenu}"
-            Margin="{CompiledBinding Gallery.GalleryMargin.Value}" />
+            ContextMenu="{StaticResource MainContextMenu}" />
         <buttons:ClickArrowRight
             HorizontalAlignment="Right"
             Margin="{CompiledBinding MainWindow.RightControlOffSetMargin.Value}"
