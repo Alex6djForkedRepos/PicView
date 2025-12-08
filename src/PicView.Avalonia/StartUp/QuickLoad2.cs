@@ -76,9 +76,11 @@ public static class QuickLoad2
         // 3. Create NavigationService (Core)
         var navService = new NavigationService(imageLoader, archiveService, sharedCache);
 
+        var thumbnailService = new AvaloniaThumbnailLoader();
+
         // 4. Initialize ViewModel
-        vm.NavigationViewModel.Initialize(galleryService, navService, sharedCache);
-        vm.NavigationViewModel.ActiveTab.Value.InitilizeImageIterator(vm.PlatformService.GetFiles(fileInfo), sharedCache);
+        vm.NavigationViewModel.Initialize(galleryService, navService, sharedCache, thumbnailService);
+        vm.NavigationViewModel.ActiveTab.Value.InitializeImageIterator(vm.PlatformService.GetFiles(fileInfo), sharedCache, thumbnailService);
     }
     
     private static void SetPicViewerValues(MainViewModel vm, ImageModel imageModel, FileInfo fileInfo)

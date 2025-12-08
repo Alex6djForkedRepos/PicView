@@ -7,6 +7,7 @@ namespace PicView.Core.Navigation;
 public class ImageIterator : IImageIterator
 {
     private readonly IImageCache _cache;
+    private readonly IThumbnailLoader _thumbnailLoader;
     private readonly int _negativeIterations;
     private readonly TabViewModel _tab;
 
@@ -15,9 +16,10 @@ public class ImageIterator : IImageIterator
 
     private List<FileInfo> _files = [];
 
-    public ImageIterator(IImageCache cache, TabViewModel tab)
+    public ImageIterator(IImageCache cache, IThumbnailLoader thumbnailLoader, TabViewModel tab)
     {
         _cache = cache ?? throw new ArgumentNullException(nameof(cache));
+        _thumbnailLoader = thumbnailLoader ?? throw new ArgumentNullException(nameof(thumbnailLoader));
         _tab = tab ?? throw new ArgumentNullException(nameof(tab));
 
         // Defaults from settings or injected config
@@ -34,18 +36,34 @@ public class ImageIterator : IImageIterator
         {
             return;
         }
-        
+
         // Get the current image to ensure it's loaded (User is waiting for this)
         var currentFile = _files[index];
-        if (_cache.TryGet(currentFile, out var preLoaded))
+        var preLoadValue = _cache.GetOrScheduleLoad(currentFile, ct);
+        
+        if (preLoadValue.IsLoading && preLoadValue.ImageModel.Image is null)
         {
-            _tab.CurrentModel.Value = preLoaded.ImageModel;
+            // Try to load thumbnail if full image is not ready
+            var thumb = await _thumbnailLoader.GetThumbnailAsync(currentFile).ConfigureAwait(false);
+            
+            // Check if full image loaded while we were getting the thumbnail
+            if (preLoadValue.IsLoading && preLoadValue.ImageModel.Image is null && thumb is not null)
+            {
+                 // Show thumbnail temporarily
+                 var tempModel = new Models.ImageModel
+                 {
+                     FileInfo = currentFile,
+                     Image = thumb,
+                 };
+                 _tab.CurrentModel.Value = tempModel;
+            }
+            
+            // Wait for full load
+            await preLoadValue.WaitForLoadingCompleteAsync().WaitAsync(ct).ConfigureAwait(false);
         }
-        else
-        {
-            var loaded = await _cache.GetOrLoadAsync(currentFile, ct).ConfigureAwait(false);
-            _tab.CurrentModel.Value = loaded;
-        }
+
+        // Now update with the final loaded image
+        _tab.CurrentModel.Value = preLoadValue.ImageModel;
         
         CurrentIndex = index;
 

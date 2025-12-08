@@ -21,6 +21,7 @@ public class NavigationViewModel
     private INavigationService? _sharedNavigation;
     private IImageCache? _sharedCache;
     private IGalleryService? _sharedGallery;
+    private IThumbnailLoader? _sharedThumbnailLoader;
 
     public NavigationViewModel()
     {
@@ -36,11 +37,13 @@ public class NavigationViewModel
     /// to reduce application memory and switch between tabs, if the selected gallery item is within another tab</param>
     /// <param name="navigationService">The navigation service responsible for navigating within the tabs</param>
     /// <param name="cache">The bitmap cache shared between tabs to reduce application memory usage</param>
-    public void Initialize(IGalleryService gallery, INavigationService navigationService, IImageCache cache)
+    /// <param name="thumbnailLoader">The thumbnail loader to use for preloading images</param>
+    public void Initialize(IGalleryService gallery, INavigationService navigationService, IImageCache cache, IThumbnailLoader thumbnailLoader)
     {
         _sharedCache = cache;
         _sharedGallery = gallery;
         _sharedNavigation = navigationService;
+        _sharedThumbnailLoader = thumbnailLoader;
     }
     
     /// <summary>
@@ -62,9 +65,9 @@ public class NavigationViewModel
     public void CreateTab()
     {
         var tab = CreateTabInternal();
-        if (_sharedCache != null)
+        if (_sharedCache != null && _sharedThumbnailLoader != null)
         {
-            tab.Initialize(_sharedCache);
+            tab.Initialize(_sharedCache, _sharedThumbnailLoader);
         }
         ActiveTab.Value = tab;
         ActiveTabIndex.Value = Tabs.Value.IndexOf(tab);

@@ -11,6 +11,12 @@ public interface IImageCache : IAsyncDisposable
     /// or the caller should call UpdatePriorities.
     /// </summary>
     ValueTask<ImageModel> GetOrLoadAsync(FileInfo file, CancellationToken ct = default);
+    
+    /// <summary>
+    /// Gets the existing preload value or schedules a background load if not present.
+    /// Returns immediately.
+    /// </summary>
+    PreLoadValue GetOrScheduleLoad(FileInfo file, CancellationToken ct = default);
 
     /// <summary>
     /// Updates the priority list for a specific owner (e.g., a Tab).

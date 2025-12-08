@@ -52,15 +52,15 @@ public class TabViewModel(string id, Func<string, ValueTask> closeTab) : IAsyncD
             .AddTo(Disposables);
     }
 
-    public void Initialize(IImageCache cache)
+    public void Initialize(IImageCache cache, IThumbnailLoader thumbnailLoader)
     {
         Initialize();
-        ImageIterator = new ImageIterator(cache, this);
+        ImageIterator = new ImageIterator(cache, thumbnailLoader, this);
     }
 
-    public void InitilizeImageIterator(List<FileInfo> files, IImageCache cache)
+    public void InitializeImageIterator(List<FileInfo> files, IImageCache cache, IThumbnailLoader thumbnailLoader)
     {
-        ImageIterator ??= new ImageIterator(cache, this);
+        ImageIterator ??= new ImageIterator(cache, thumbnailLoader, this);
         ImageIterator.Initialize(files);
     }
 
