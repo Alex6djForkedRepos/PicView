@@ -3,6 +3,7 @@ using Avalonia.Threading;
 using ImageMagick;
 using PicView.Avalonia.ImageHandling;
 using PicView.Avalonia.Navigation;
+using PicView.Avalonia.Navigation.Services;
 using PicView.Avalonia.ViewModels;
 using PicView.Core.DebugTools;
 using PicView.Core.Extensions;
@@ -10,12 +11,11 @@ using PicView.Core.FileHandling;
 using PicView.Core.ImageDecoding;
 using PicView.Core.Models;
 using PicView.Core.Navigation;
-using ImageIterator = PicView.Core.Navigation.ImageIterator;
 
 namespace PicView.Avalonia.StartUp;
 
 /// <summary>
-/// Provides methods for loading images during application startup.
+/// Provides methods for quickly loading the image first, and then initializing the rest of the navigation.
 /// </summary>
 public static class QuickLoad2
 {
@@ -62,8 +62,25 @@ public static class QuickLoad2
 
         SetPicViewerValues(vm, imageModel, fileInfo);
 
-        vm.NavigationViewModel.Initialize(null, new NavigationService(null, null, null), null);
+        // --- Initialization Logic ---
+        
+        // 1. Create dependencies
+        var imageLoader = new AvaloniaImageLoader();
+        var archiveService = new AvaloniaArchiveService();
+        var galleryService = new AvaloniaGalleryService(vm);
+
+        // 2. Create SharedImageCache
+        // We use the same loading logic as AvaloniaImageLoader (via GetImageModel)
+        var sharedCache = new SharedImageCache(GetImageModel.GetImageModelAsync);
+
+        // 3. Create NavigationService (Core)
+        var navService = new NavigationService(imageLoader, archiveService, sharedCache);
+
+        // 4. Initialize ViewModel
+        vm.NavigationViewModel.Initialize(galleryService, navService, sharedCache);
+        vm.NavigationViewModel.ActiveTab.Value.InitilizeImageIterator(vm.PlatformService.GetFiles(fileInfo), sharedCache);
     }
+    
     private static void SetPicViewerValues(MainViewModel vm, ImageModel imageModel, FileInfo fileInfo)
     {
         if (imageModel.ImageType is ImageType.AnimatedGif or ImageType.AnimatedWebp)
@@ -73,13 +90,8 @@ public static class QuickLoad2
         
         vm.PicViewer.FileInfo.Value = fileInfo;
         
-        vm.NavigationViewModel.ActiveTab.Value.IModel.FileInfo = fileInfo;
-        vm.NavigationViewModel.ActiveTab.Value.IModel.Image = imageModel.Image;
-        vm.NavigationViewModel.ActiveTab.Value.IModel.ImageType = imageModel.ImageType;
-        vm.NavigationViewModel.ActiveTab.Value.IModel.PixelWidth = imageModel.PixelWidth;
-        vm.NavigationViewModel.ActiveTab.Value.IModel.PixelHeight = imageModel.PixelHeight;
-        vm.NavigationViewModel.ActiveTab.Value.IModel.Format = imageModel.Format;
-        vm.NavigationViewModel.ActiveTab.Value.IModel.Orientation = imageModel.Orientation;
+        vm.NavigationViewModel.ActiveTab.Value.CurrentModel.Value = imageModel;
+        vm.NavigationViewModel.ActiveTab.Value.Initialize();
         
         vm.PicViewer.GetIndex.Value = NavigationManager.GetNonZeroIndex;
         vm.PicViewer.Index.Value = NavigationManager.GetCurrentIndex;

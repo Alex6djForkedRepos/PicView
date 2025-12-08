@@ -276,7 +276,7 @@
                     BorderBrush="{DynamicResource MainBorderColor}"
                     BorderThickness="0,0,1,0"
                     Classes="hover"
-                    Command="{CompiledBinding Navigation.PreviousCommand}"
+                    Command="{CompiledBinding NavigationViewModel.PrevFile}"
                     Data="{StaticResource FilledArrowLeftGeometry}"
                     Focusable="False"
                     Foreground="{DynamicResource MainTextColor}"

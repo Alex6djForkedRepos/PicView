@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using PicView.Core.DebugTools;
 using PicView.Core.Gallery;
 using PicView.Core.Navigation;
 using PicView.Core.Navigation.Interfaces;
@@ -24,6 +25,7 @@ public class NavigationViewModel
     public NavigationViewModel()
     {
         ActiveTab = new BindableReactiveProperty<TabViewModel>(CreateInitialTab());
+        ActiveTab.Value.IsSelected = true;
     }
 
     /// <summary>
@@ -39,7 +41,6 @@ public class NavigationViewModel
         _sharedCache = cache;
         _sharedGallery = gallery;
         _sharedNavigation = navigationService;
-        ActiveTab.Value.Initialize();
     }
     
     /// <summary>
@@ -61,9 +62,12 @@ public class NavigationViewModel
     public void CreateTab()
     {
         var tab = CreateTabInternal();
+        if (_sharedCache != null)
+        {
+            tab.Initialize(_sharedCache);
+        }
         ActiveTab.Value = tab;
         ActiveTabIndex.Value = Tabs.Value.IndexOf(tab);
-        tab.Initialize();
     }
     
     private void SelectTab(TabViewModel tab)
@@ -75,6 +79,13 @@ public class NavigationViewModel
 
     public async ValueTask CloseTabAsync(TabViewModel tab)
     {
+        if (Tabs.Value.Count <= 0)
+        {
+#if DEBUG
+            DebugHelper.LogDebug(nameof(NavigationViewModel), nameof(CloseTabAsync), new Exception("There should always be at least one tab open."));
+#endif
+            return;
+        }
         var wasActive = ReferenceEquals(tab, ActiveTab.Value);
         Tabs.Value.Remove(tab);
         IsTabPanelVisible.Value = Tabs.Value.Count > 1;
@@ -87,7 +98,10 @@ public class NavigationViewModel
         {
             // pick nearest tab
             var newIndex = Math.Clamp(ActiveTabIndex.Value, 0, Tabs.Value.Count - 1);
-            SelectTab(Tabs.Value[newIndex]);
+            if (Tabs.Value.Count > 0)
+            {
+                SelectTab(Tabs.Value[newIndex]);
+            }
         }
     }
     
@@ -111,15 +125,16 @@ public class NavigationViewModel
         tab.CanNavigate();
 
     public async ValueTask NextFile() =>
-        await NextFileCore(NavigateTo.Next);
+        await NextFileCore(NavigateTo.Next).ConfigureAwait(false);
 
     public async ValueTask PrevFile() =>
-        await NextFileCore(NavigateTo.Previous);
+        await NextFileCore(NavigateTo.Previous).ConfigureAwait(false);
     
     public async ValueTask FirstFile() =>
-        await NextFileCore(NavigateTo.First);
+        await NextFileCore(NavigateTo.First).ConfigureAwait(false);
+
     public async ValueTask LastFile() =>
-        await NextFileCore(NavigateTo.Last);
+        await NextFileCore(NavigateTo.Last).ConfigureAwait(false);
 
     private async ValueTask NextFileCore(NavigateTo navigateTo)
     {
@@ -129,11 +144,8 @@ public class NavigationViewModel
         {
             return;
         }
-        
         var ct = tab.ResetNavigationCts().Token;
-
-        await _sharedNavigation.NavigateAsync(tab, navigateTo, ct)
-            .ConfigureAwait(false);
+        await _sharedNavigation.NavigateAsync(tab, navigateTo, ct).ConfigureAwait(false);
     }
 
 

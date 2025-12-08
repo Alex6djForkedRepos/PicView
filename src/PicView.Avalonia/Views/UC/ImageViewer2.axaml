@@ -28,7 +28,7 @@
                     x:Name="MainBorder">
                     <customControls:PicBox
                         ImageType="Bitmap"
-                        Source="{CompiledBinding NavigationViewModel.ActiveTab.Value.IModel.Image}"
+                        Source="{CompiledBinding NavigationViewModel.ActiveTab.Value.CurrentModel.Value.Image}"
                         x:Name="MainImage" />
                 </Border>
             </customControls:AutoScrollViewer>

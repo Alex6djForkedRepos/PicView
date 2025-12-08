@@ -1,4 +1,5 @@
 ﻿using PicView.Core.Models;
+using PicView.Core.Navigation;
 using PicView.Core.Navigation.Interfaces;
 using R3;
 
@@ -10,8 +11,8 @@ public class TabViewModel(string id, Func<string, ValueTask> closeTab) : IAsyncD
     public string Id { get; init; } = id;
     public bool IsClosing { get; private set; }
     public bool IsSelected { get; set; } = false;
-    public ImageModel IModel { get; set; } = new();
-    public IImageIterator? ImageIterator { get; set; }
+    public BindableReactiveProperty<ImageModel> CurrentModel { get; } = new(new ImageModel());
+    public IImageIterator? ImageIterator { get; private set; }
     public CancellationTokenSource NavigationCts { get; private set; } = new();
 
     public bool CanNavigate()
@@ -22,7 +23,7 @@ public class TabViewModel(string id, Func<string, ValueTask> closeTab) : IAsyncD
     public BindableReactiveProperty<string> TabTitle { get; } = new(string.Empty);
     public BindableReactiveProperty<string> TabTooltip { get; } = new(string.Empty);
     public BindableReactiveProperty<object?> ImageSource { get; } = new(null);
-
+    
     public void Initialize()
     {
         if (Disposables is null)
@@ -34,25 +35,34 @@ public class TabViewModel(string id, Func<string, ValueTask> closeTab) : IAsyncD
             // Already initialized
             return;
         }
-        Observable.EveryValueChanged(IModel, model => model.FileInfo).Subscribe(file => 
-        {
-            if (file is null)
-            {
-                return;
-            }
 
-            TabTitle.Value = file.Name;
-            TabTooltip.Value = file.FullName;
-        })
-        .AddTo(Disposables);
-        
-        Observable.EveryValueChanged(IModel, model => model.Image).Subscribe(img => 
-        {
-            ImageSource.Value = img;
-        })
-        .AddTo(Disposables);
+        CurrentModel
+            .Select(model => model?.FileInfo) 
+            .Subscribe(file => 
+            {
+                if (file is null) return;
+                TabTitle.Value = file.Name;
+                TabTooltip.Value = file.FullName;
+            })
+            .AddTo(Disposables);
+
+        CurrentModel
+            .Select(model => model?.Image)
+            .Subscribe(img => ImageSource.Value = img)
+            .AddTo(Disposables);
     }
 
+    public void Initialize(IImageCache cache)
+    {
+        Initialize();
+        ImageIterator = new ImageIterator(cache, this);
+    }
+
+    public void InitilizeImageIterator(List<FileInfo> files, IImageCache cache)
+    {
+        ImageIterator ??= new ImageIterator(cache, this);
+        ImageIterator.Initialize(files);
+    }
 
     public async ValueTask CloseTab()
     {
@@ -79,7 +89,7 @@ public class TabViewModel(string id, Func<string, ValueTask> closeTab) : IAsyncD
         {
             await ImageIterator.DisposeAsync();
         }
-        Disposables.Dispose();
+        Disposables?.Dispose();
         NavigationCts.Dispose();
         
         GC.SuppressFinalize(this);
