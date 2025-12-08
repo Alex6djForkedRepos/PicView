@@ -1,6 +1,6 @@
 ﻿using PicView.Core.Models;
 
-namespace PicView.Core.Navigation;
+namespace PicView.Core.Navigation.Interfaces;
 
 public interface IImageLoader
 {

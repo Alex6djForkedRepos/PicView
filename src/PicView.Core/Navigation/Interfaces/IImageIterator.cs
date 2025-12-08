@@ -1,15 +1,12 @@
-﻿namespace PicView.Core.Navigation;
+﻿namespace PicView.Core.Navigation.Interfaces;
 
 public interface IImageIterator : IAsyncDisposable
 {
-    event EventHandler<EventArgs>? FileListChanged;
-    event EventHandler<EventArgs>? CurrentChanged;
-    
     IReadOnlyList<FileInfo> Files { get; }
     int CurrentIndex { get; }
     int GetIteration(int index, NavigateTo navigation, bool skip1=false, bool skip10=false, bool skip100=false);
     ValueTask IterateToIndexAsync(int index, CancellationToken ct);
-    ValueTask TimerIteration(int index, CancellationTokenSource? cts);
+    ValueTask RepeatNavigateAsync(NavigateTo to, TimeSpan repeatInterval, CancellationToken ct);  // held-key repeat
     ValueTask SlimUpdate(int index, object? imageSource);
     ValueTask IterateToIndexSlim(int index, bool isReverse, CancellationToken token);
     ValueTask PreloadAsync();

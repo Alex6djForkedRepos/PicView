@@ -1,5 +1,5 @@
 ﻿using PicView.Core.Models;
-using PicView.Core.Navigation;
+using PicView.Core.Navigation.Interfaces;
 using R3;
 
 namespace PicView.Core.ViewModels;

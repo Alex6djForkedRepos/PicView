@@ -1,4 +1,6 @@
-﻿namespace PicView.Core.Navigation;
+﻿using PicView.Core.Navigation.Interfaces;
+
+namespace PicView.Core.Navigation;
 
 public class ImageIterator : IImageIterator
 {
@@ -6,9 +8,7 @@ public class ImageIterator : IImageIterator
     {
         throw new NotImplementedException();
     }
-
-    public event EventHandler<EventArgs>? FileListChanged;
-    public event EventHandler<EventArgs>? CurrentChanged;
+    
     public IReadOnlyList<FileInfo> Files { get; }
     public int CurrentIndex { get; }
     public int GetIteration(int index, NavigateTo navigation, bool skip1 = false, bool skip10 = false, bool skip100 = false)
@@ -21,7 +21,7 @@ public class ImageIterator : IImageIterator
         throw new NotImplementedException();
     }
 
-    public ValueTask TimerIteration(int index, CancellationTokenSource? cts)
+    public ValueTask RepeatNavigateAsync(NavigateTo to, TimeSpan repeatInterval, CancellationToken ct)
     {
         throw new NotImplementedException();
     }

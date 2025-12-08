@@ -1,4 +1,4 @@
-﻿namespace PicView.Core.Navigation;
+﻿namespace PicView.Core.Navigation.Interfaces;
 
 public interface IFileWatcher : IDisposable
 {

@@ -2,7 +2,7 @@
 using PicView.Core.Preloading;
 using PicView.Core.ViewModels;
 
-namespace PicView.Core.Navigation;
+namespace PicView.Core.Navigation.Interfaces;
 
 public interface IImageCache
 {

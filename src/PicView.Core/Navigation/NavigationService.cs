@@ -1,4 +1,5 @@
-﻿using PicView.Core.Preloading;
+﻿using PicView.Core.Navigation.Interfaces;
+using PicView.Core.Preloading;
 using PicView.Core.ViewModels;
 
 namespace PicView.Core.Navigation;
