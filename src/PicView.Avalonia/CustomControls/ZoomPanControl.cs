@@ -71,7 +71,7 @@ public class ZoomPanControl : Decorator
 
         _zoomPreviewer = new ZoomPreviewer
         {
-            DataContext = DataContext,
+            DataContext = UIHelper.GetMainView.DataContext as MainViewModel,
             HorizontalAlignment = HorizontalAlignment.Right,
             VerticalAlignment = VerticalAlignment.Bottom,
             Margin = new Thickness(0, 0, 25, 25),

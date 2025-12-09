@@ -1,11 +1,12 @@
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Controls.Primitives;
 using PicView.Avalonia.CustomControls;
 using PicView.Avalonia.MacOS.WindowImpl;
 using PicView.Avalonia.UI;
 using PicView.Avalonia.ViewModels;
+using PicView.Avalonia.Views.UC;
 using PicView.Avalonia.WindowBehavior;
+using PicView.Core.ViewModels;
 using R3;
 using R3.Avalonia;
 
@@ -83,20 +84,28 @@ public partial class MacMainWindow : Window
             {
                 vm.NavigationViewModel.IsTabPanelVisible.Value = count > 1;
             });
+            
+            MainTabStrip.TabDetached += MainTabStripOnTabDetached;
+            MainTabStrip.TabCreated += MainTabStripOnTabCreated;
         };
-        
-        MainTabStrip.TabDetached += MainTabStripOnTabDetached;
-        MainTabStrip.TabCreated += MainTabStripOnTabCreated;
     }
 
     private void MainTabStripOnTabCreated(object? sender, TabCreatedEventArgs e)
     {
+        // Test tab creation
         if (sender is not TabItem tab)
         {
             return;
         }
 
-        //tab.Content = "test";
+        var startUpMenu = new StartUpMenu()
+        {
+            DataContext = DataContext
+        };
+        if (e.CreatedItem is TabViewModel tabViewModel)
+        {
+            tabViewModel.CurrentView.Value = startUpMenu;
+        }
     }
 
     private void MainTabStripOnTabDetached(object? sender, TabDetachEventArgs e)

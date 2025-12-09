@@ -3,7 +3,6 @@ using Avalonia.Input;
 using Avalonia.Threading;
 using PicView.Avalonia.Animations;
 using PicView.Avalonia.Gallery;
-using PicView.Avalonia.Navigation;
 using PicView.Avalonia.ViewModels;
 
 namespace PicView.Avalonia.UI;
@@ -83,7 +82,6 @@ public class HoverFadeButtonHandler
 
     private bool ShouldShowButton()
     {
-        // You may want to extend this with more checks
         if (!Settings.UIProperties.ShowAltInterfaceButtons || GalleryFunctions.IsFullGalleryOpen)
         {
             return false;

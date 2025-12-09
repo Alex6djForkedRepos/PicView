@@ -5,6 +5,7 @@ using PicView.Avalonia.ImageHandling;
 using PicView.Avalonia.Navigation;
 using PicView.Avalonia.Navigation.Services;
 using PicView.Avalonia.ViewModels;
+using PicView.Avalonia.Views.UC;
 using PicView.Core.DebugTools;
 using PicView.Core.Extensions;
 using PicView.Core.FileHandling;
@@ -45,7 +46,11 @@ public static class QuickLoad2
             await NavigationManager.LoadPicFromArchiveAsync(file, vm).ConfigureAwait(false);
             return;
         }
-
+        Dispatcher.UIThread.Invoke(() =>
+        {
+            vm.NavigationViewModel.ActiveTab.Value.CurrentView.Value = new ImageViewer2();
+        }, DispatcherPriority.Send);
+    
         var magickImage = new MagickImage();
         try
         {

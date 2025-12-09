@@ -592,11 +592,10 @@
 
         </NativeMenu>
     </NativeMenu.Menu>
-
     <DockPanel LastChildFill="True">
         <views1:MacOSTitlebar DockPanel.Dock="Top" x:Name="Titlebar" />
         <uc:BottomBar2 DockPanel.Dock="Bottom" x:Name="BottomBar" />
-        <Panel>
+        <Panel Background="{CompiledBinding MainWindow.ImageBackground.Value, Mode=OneWay}">
             <customControls:DraggableTabControl
                 Background="{DynamicResource MainBackgroundColor}"
                 BorderBrush="{DynamicResource TertiaryBorderColor}"
@@ -640,7 +639,7 @@
 
                 <customControls:DraggableTabControl.ContentTemplate>
                     <DataTemplate DataType="viewModels1:TabViewModel">
-                        <Image Source="{CompiledBinding ImageSource.Value}" Stretch="Uniform" />
+                        <ContentControl ClipToBounds="True" Content="{CompiledBinding CurrentView.Value, Mode=OneWay}" />
                     </DataTemplate>
                 </customControls:DraggableTabControl.ContentTemplate>
 

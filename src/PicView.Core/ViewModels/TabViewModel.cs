@@ -11,7 +11,8 @@ public class TabViewModel(string id, Func<string, ValueTask> closeTab) : IAsyncD
     public string Id { get; init; } = id;
     public bool IsClosing { get; private set; }
     public bool IsSelected { get; set; } = false;
-    public BindableReactiveProperty<ImageModel> CurrentModel { get; } = new(new ImageModel());
+    public BindableReactiveProperty<ImageModel?> CurrentModel { get; } = new(null);
+    public BindableReactiveProperty<object?> CurrentView { get; } = new(null);
     public IImageIterator? ImageIterator { get; private set; }
     public CancellationTokenSource NavigationCts { get; private set; } = new();
 
@@ -22,7 +23,6 @@ public class TabViewModel(string id, Func<string, ValueTask> closeTab) : IAsyncD
     
     public BindableReactiveProperty<string> TabTitle { get; } = new(string.Empty);
     public BindableReactiveProperty<string> TabTooltip { get; } = new(string.Empty);
-    public BindableReactiveProperty<object?> ImageSource { get; } = new(null);
     
     public void Initialize()
     {
@@ -46,10 +46,10 @@ public class TabViewModel(string id, Func<string, ValueTask> closeTab) : IAsyncD
             })
             .AddTo(Disposables);
 
-        CurrentModel
-            .Select(model => model?.Image)
-            .Subscribe(img => ImageSource.Value = img)
-            .AddTo(Disposables);
+        // CurrentModel
+        //     .Select(model => model?.Image)
+        //     .Subscribe(img => ImageSource.Value = img)
+        //     .AddTo(Disposables);
     }
 
     public void Initialize(IImageCache cache, IThumbnailLoader thumbnailLoader)

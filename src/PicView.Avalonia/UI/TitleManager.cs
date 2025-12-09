@@ -20,6 +20,7 @@ public static class TitleManager
     /// <remarks>Can be used to refresh the title when files are added or removed.</remarks>
     public static void SetTitle(MainViewModel vm)
     {
+        vm ??= UIHelper.GetMainView.DataContext as MainViewModel ?? throw new Exception();
         var pWidth = vm.PicViewer.PixelWidth.Value;
         var pHeight = vm.PicViewer.PixelHeight.Value;
         var fileInfo = vm.PicViewer.FileInfo.Value;
