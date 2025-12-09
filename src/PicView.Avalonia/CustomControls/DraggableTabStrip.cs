@@ -274,7 +274,7 @@ private void OnItemPointerMoved(object? sender, PointerEventArgs e)
                 }
 
                 // Raise event for creating new window
-                TabDetached?.Invoke(this, new TabDetachEventArgs(item, screenPos));
+                TabDetached?.Invoke(sender, new TabDetachEventArgs(item, screenPos));
             }
 
             EndDrag();

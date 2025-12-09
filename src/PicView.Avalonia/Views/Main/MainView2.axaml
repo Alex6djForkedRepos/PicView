@@ -1018,23 +1018,6 @@
 
 
     <Panel x:Name="MainGrid">
-        <uc:SpinWaiter
-            HorizontalAlignment="Center"
-            IsVisible="{CompiledBinding MainWindow.IsLoadingIndicatorShown.Value,
-                                        Mode=OneWay}"
-            VerticalAlignment="Center"
-            ZIndex="3" />
-        <buttons:ClickArrowRight2
-            HorizontalAlignment="Right"
-            Margin="{CompiledBinding MainWindow.RightControlOffSetMargin.Value}"
-            Opacity="0"
-            VerticalAlignment="Center"
-            x:Name="ClickArrowRight" />
-        <buttons:ClickArrowLeft2
-            HorizontalAlignment="Left"
-            Opacity="0"
-            VerticalAlignment="Center"
-            x:Name="ClickArrowLeft" />
         <StackPanel
             Background="Transparent"
             Height="150"

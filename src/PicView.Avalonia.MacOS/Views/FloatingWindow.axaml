@@ -4,7 +4,7 @@
     x:Class="PicView.Avalonia.MacOS.Views.FloatingWindow"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <DockPanel>
+    <DockPanel x:Name="MainPanel">
 
         <Border
             BorderBrush="{DynamicResource MainBorderColor}"

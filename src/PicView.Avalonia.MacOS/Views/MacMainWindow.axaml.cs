@@ -98,10 +98,7 @@ public partial class MacMainWindow : Window
             return;
         }
 
-        var startUpMenu = new StartUpMenu()
-        {
-            DataContext = DataContext
-        };
+        var startUpMenu = new StartUpMenu();
         if (e.CreatedItem is TabViewModel tabViewModel)
         {
             tabViewModel.CurrentView.Value = startUpMenu;
@@ -116,9 +113,33 @@ public partial class MacMainWindow : Window
             Position = new PixelPoint(e.ScreenPosition.X - 100, e.ScreenPosition.Y - 50),
             Width = Width,
             Height = Height,
-            DataContext = e.DetachedItem
+            DataContext = DataContext
         };
 
+        if (e.DetachedItem is TabViewModel tab)
+        {
+            var currentView = tab.CurrentView.Value;
+            if (currentView is StartUpMenu startUpMenu)
+            {
+                newWindow.MainPanel.Children.Add(new ContentControl
+                {
+                    Content = startUpMenu
+                });
+            }
+            else
+            {
+                if (currentView is ImageViewer2 imageViewer)
+                {
+                    imageViewer.DataContext = e.DetachedItem;
+                    newWindow.MainPanel.Children.Add(new ContentControl
+                    {
+                        Content = currentView
+                    });
+                }
+            }
+            newWindow.Closed += async (_, _) => await tab.CloseTab();
+        }
+        
         newWindow.Show();
     }
 

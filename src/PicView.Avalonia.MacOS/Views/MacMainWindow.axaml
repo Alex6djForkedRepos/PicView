@@ -596,6 +596,25 @@
         <views1:MacOSTitlebar DockPanel.Dock="Top" x:Name="Titlebar" />
         <uc:BottomBar2 DockPanel.Dock="Bottom" x:Name="BottomBar" />
         <Panel Background="{CompiledBinding MainWindow.ImageBackground.Value, Mode=OneWay}">
+            <buttons:ClickArrowRight2
+                HorizontalAlignment="Right"
+                Margin="{CompiledBinding MainWindow.RightControlOffSetMargin.Value}"
+                Opacity="0"
+                VerticalAlignment="Center"
+                ZIndex="2"
+                x:Name="ClickArrowRight" />
+            <buttons:ClickArrowLeft2
+                HorizontalAlignment="Left"
+                Opacity="0"
+                VerticalAlignment="Center"
+                ZIndex="2"
+                x:Name="ClickArrowLeft" />
+            <uc:SpinWaiter
+                HorizontalAlignment="Center"
+                IsVisible="{CompiledBinding MainWindow.IsLoadingIndicatorShown.Value,
+                                            Mode=OneWay}"
+                VerticalAlignment="Center"
+                ZIndex="3" />
             <customControls:DraggableTabControl
                 Background="{DynamicResource MainBackgroundColor}"
                 BorderBrush="{DynamicResource TertiaryBorderColor}"
@@ -644,7 +663,10 @@
                 </customControls:DraggableTabControl.ContentTemplate>
 
             </customControls:DraggableTabControl>
-            <main:MainView2 ZIndex="1" x:Name="MainView" />
+            <main:MainView2
+                IsHitTestVisible="False"
+                ZIndex="1"
+                x:Name="MainView" />
         </Panel>
     </DockPanel>
 </Window>
