@@ -92,12 +92,6 @@ public partial class MacMainWindow : Window
 
     private void MainTabStripOnTabCreated(object? sender, TabCreatedEventArgs e)
     {
-        // Test tab creation
-        if (sender is not TabItem tab)
-        {
-            return;
-        }
-
         var startUpMenu = new StartUpMenu();
         if (e.CreatedItem is TabViewModel tabViewModel)
         {
