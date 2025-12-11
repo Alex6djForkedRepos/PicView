@@ -24,17 +24,6 @@ public static class MenuManager
         mainView.MainGrid.Children.Add(CreateMenu<ImageMenu>(new Thickness(0, 0, 140, 0)));
         mainView.MainGrid.Children.Add(CreateMenu<SettingsMenu>(new Thickness(0, 0, -102, 0)));
         mainView.MainGrid.Children.Add(CreateMenu<ToolsMenu>(new Thickness(95, 0, 0, 0)));
-        
-        
-        mainView.MainGrid.Children.Add(new TabMenu
-        {
-            Name = "TabsMenu",
-            VerticalAlignment = VerticalAlignment.Top,
-            Margin = new Thickness(3, 0, 3, 0),
-            IsVisible = false,
-            HorizontalAlignment = RuntimeInformation.IsOSPlatform(OSPlatform.OSX) ?
-                HorizontalAlignment.Right : HorizontalAlignment.Left
-        });
     }
 
     private static T CreateMenu<T>(Thickness margin) where T : Control, new()

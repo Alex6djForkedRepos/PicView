@@ -1,10 +1,12 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Layout;
 using PicView.Avalonia.CustomControls;
 using PicView.Avalonia.MacOS.WindowImpl;
 using PicView.Avalonia.UI;
 using PicView.Avalonia.ViewModels;
 using PicView.Avalonia.Views.UC;
+using PicView.Avalonia.Views.UC.Menus;
 using PicView.Avalonia.WindowBehavior;
 using PicView.Core.ViewModels;
 using R3;
@@ -80,13 +82,33 @@ public partial class MacMainWindow : Window
                     SystemDecorations = shown ? SystemDecorations.Full : SystemDecorations.None;
                 }
             });
-            Observable.EveryValueChanged(MainTabStrip.Items, x => x.Count).Subscribe(count =>
+            Observable.EveryValueChanged(MainTabControl.Items, x => x.Count).Subscribe(count =>
             {
                 vm.NavigationViewModel.IsTabPanelVisible.Value = count > 1;
             });
             
-            MainTabStrip.TabDetached += MainTabStripOnTabDetached;
-            MainTabStrip.TabCreated += MainTabStripOnTabCreated;
+            MainTabControl.TabDetached += MainTabStripOnTabDetached;
+            MainTabControl.TabCreated += MainTabStripOnTabCreated;
+
+            var tabMenu = new TabMenu
+            {
+                Name = "TabsMenu",
+                VerticalAlignment = VerticalAlignment.Top,
+                Margin = new Thickness(3, 0, 3, 0),
+                IsVisible = false,
+                HorizontalAlignment = HorizontalAlignment.Right,
+                ZIndex = 2
+            };
+            MainPanel.Children.Add(tabMenu);
+            
+            // Close tabMenu when clicking outside of it
+            PointerPressed += (_, _) =>
+            {
+                if (!tabMenu.IsPointerOver)
+                {
+                    vm.MainWindow.IsTabMenuVisible.Value = false;
+                }
+            };
         };
     }
 

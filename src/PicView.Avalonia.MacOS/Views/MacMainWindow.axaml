@@ -595,7 +595,7 @@
     <DockPanel LastChildFill="True">
         <views1:MacOSTitlebar DockPanel.Dock="Top" x:Name="Titlebar" />
         <uc:BottomBar2 DockPanel.Dock="Bottom" x:Name="BottomBar" />
-        <Panel Background="{CompiledBinding MainWindow.ImageBackground.Value, Mode=OneWay}">
+        <Panel Background="{CompiledBinding MainWindow.ImageBackground.Value, Mode=OneWay}" x:Name="MainPanel">
             <buttons:ClickArrowRight2
                 HorizontalAlignment="Right"
                 Margin="{CompiledBinding MainWindow.RightControlOffSetMargin.Value}"
@@ -624,7 +624,7 @@
                 SelectedIndex="{CompiledBinding ActiveTabIndex.Value,
                                                 Mode=TwoWay}"
                 Tag="{CompiledBinding IsTabPanelVisible.Value}"
-                x:Name="MainTabStrip">
+                x:Name="MainTabControl">
 
                 <customControls:DraggableTabControl.Styles>
                     <Style Selector="TabItem">
