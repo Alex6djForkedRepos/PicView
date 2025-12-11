@@ -45,11 +45,6 @@ public class TabViewModel(string id, Func<string, ValueTask> closeTab) : IAsyncD
                 TabTooltip.Value = file.FullName;
             })
             .AddTo(Disposables);
-
-        // CurrentModel
-        //     .Select(model => model?.Image)
-        //     .Subscribe(img => ImageSource.Value = img)
-        //     .AddTo(Disposables);
     }
 
     public void Initialize(IImageCache cache, IThumbnailLoader thumbnailLoader)

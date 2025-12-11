@@ -1,6 +1,7 @@
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.LogicalTree;
 using Avalonia.Threading;
 using ImageMagick;
 using PicView.Avalonia.ImageTransformations;
@@ -25,7 +26,6 @@ public partial class ImageViewer2 : UserControl
     private void OnLoaded(object? sender, RoutedEventArgs e)
     {
         InitializeImageTransformer();
-        ZoomPanControl.Initialize();
         ImageControlHelper.TriggerScalingModeUpdate(MainImage, true);
         
         // Start in dispatcher with low priority,
@@ -62,6 +62,16 @@ public partial class ImageViewer2 : UserControl
         //     {
         //         ZoomPanControl.ResetZoomSlim();
         //     });
+        ZoomPanControl.Initialize(DataContext);
+        MainPanel.Children.Add(ZoomPanControl.ZoomPreviewer);
+    }
+
+    protected override void OnDetachedFromLogicalTree(LogicalTreeAttachmentEventArgs e)
+    {
+        base.OnDetachedFromLogicalTree(e);
+        RemoveHandler(PointerWheelChangedEvent, PreviewOnPointerWheelChanged);
+        RemoveHandler(Gestures.PointerTouchPadGestureMagnifyEvent, TouchMagnifyEvent);
+        RemoveHandler(Gestures.PinchEvent, TouchMagnifyEvent);
     }
 
     private void InitializeMouseInputHelper() =>

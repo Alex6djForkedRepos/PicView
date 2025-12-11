@@ -157,6 +157,10 @@
         <DependentUpon>ClickArrowLeft2.axaml</DependentUpon>
         <SubType>Code</SubType>
       </Compile>
+      <Compile Update="Views\UC\ZoomPreviewer2.axaml.cs">
+        <DependentUpon>ZoomPreviewer2.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
   </ItemGroup>
 
 
