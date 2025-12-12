@@ -84,7 +84,7 @@ public partial class MacMainWindow2 : Window
             });
             Observable.EveryValueChanged(MainTabControl.Items, x => x.Count).Subscribe(count =>
             {
-                vm.NavigationViewModel.IsTabPanelVisible.Value = count > 1;
+                vm.Tabs.IsTabPanelVisible.Value = count > 1;
             });
             
             MainTabControl.TabDetached += MainTabStripOnTabDetached;

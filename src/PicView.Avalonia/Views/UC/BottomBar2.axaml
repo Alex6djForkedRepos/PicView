@@ -20,7 +20,7 @@
 
             <!--  Next  -->
             <MenuItem
-                Command="{CompiledBinding NavigationViewModel.NextFile}"
+                Command="{CompiledBinding Tabs.NextFile}"
                 Header="{CompiledBinding Translation.NextImage,
                                          Mode=OneWay}"
                 IsEnabled="{CompiledBinding PicViewer.FileInfo.Value,
@@ -36,7 +36,7 @@
 
             <!--  Prev  -->
             <MenuItem
-                Command="{CompiledBinding NavigationViewModel.PrevFile}"
+                Command="{CompiledBinding Tabs.PrevFile}"
                 Header="{CompiledBinding Translation.PrevImage,
                                          Mode=OneWay}"
                 IsEnabled="{CompiledBinding PicViewer.FileInfo.Value,
@@ -282,7 +282,7 @@
                     BorderBrush="{DynamicResource MainBorderColor}"
                     BorderThickness="0,0,1,0"
                     Classes="hover"
-                    Command="{CompiledBinding NavigationViewModel.PrevFile}"
+                    Command="{CompiledBinding Tabs.PrevFile}"
                     Data="{StaticResource FilledArrowLeftGeometry}"
                     Focusable="False"
                     Foreground="{DynamicResource MainTextColor}"
@@ -300,7 +300,7 @@
                     BorderBrush="{DynamicResource MainBorderColor}"
                     BorderThickness="0,0,1,0"
                     Classes="hover"
-                    Command="{CompiledBinding NavigationViewModel.NextFile}"
+                    Command="{CompiledBinding Tabs.NextFile}"
                     CommandParameter="0"
                     Data="{StaticResource FilledArrowRightGeometry}"
                     Focusable="False"

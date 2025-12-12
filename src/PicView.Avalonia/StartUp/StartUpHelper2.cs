@@ -15,12 +15,14 @@ using PicView.Avalonia.Navigation;
 using PicView.Avalonia.SettingsManagement;
 using PicView.Avalonia.UI;
 using PicView.Avalonia.ViewModels;
+using PicView.Avalonia.Views.UC;
 using PicView.Avalonia.WindowBehavior;
 using PicView.Core.FileAssociations;
 using PicView.Core.FileHistory;
+using PicView.Core.Localization;
 using PicView.Core.ProcessHandling;
+using PicView.Core.ViewModels;
 using ImageViewer = PicView.Avalonia.Views.UC.ImageViewer;
-using NavigationViewModel = PicView.Core.ViewModels.NavigationViewModel;
 
 namespace PicView.Avalonia.StartUp;
 
@@ -148,7 +150,7 @@ public static class StartUpHelper2
         UIHelper.SetControls(desktop);
         Task.Run(() =>
         {
-            vm.NavigationViewModel ??= new NavigationViewModel();
+            vm.Tabs ??= new TabOverviewViewModel();
             _ = FileHistoryManager.InitializeAsync();
             HandleWindowControlSettings(vm, desktop);
             SettingsUpdater.ValidateGallerySettings(vm, settingsExists);
@@ -176,7 +178,6 @@ public static class StartUpHelper2
                 DispatcherPriority.Background);
         }
 
-        MenuManager.AddMenus();
         if (Settings.UIProperties.ShowHoverNavigationBar)
         {
             UIHelper.AddHoverBar(vm);
@@ -237,7 +238,6 @@ public static class StartUpHelper2
 
         if (args.Length > 1)
         {
-            vm.MainWindow.CurrentView.Value = vm.ImageViewer;
             Task.Run(() => QuickLoad2.QuickLoadAsync(vm, args[1], window, false));
         }
         else
@@ -271,7 +271,6 @@ public static class StartUpHelper2
             }
             else
             {
-                vm.MainWindow.CurrentView.Value = vm.ImageViewer;
                 Task.Run(() => QuickLoad2.QuickLoadAsync(vm, Settings.StartUp.LastFile, window, true));
             }
         }
@@ -284,18 +283,9 @@ public static class StartUpHelper2
 
         void ShowStartUpMenu()
         {
-            
             window.Show();
-            
-            // Starting it in Dispatcher with post fixes occurrences where the text is not centered or the text is missing
-            Dispatcher.UIThread.Post(() => { ErrorHandling.ShowStartUpMenu(vm); });
-            Dispatcher.UIThread.Post(() =>
-            {
-                if (Settings.WindowProperties.AutoFit)
-                {
-                    WindowFunctions.CenterWindowOnScreen();
-                }
-            }, DispatcherPriority.Background);
+            vm.Tabs.ActiveTab.Value.CurrentView.Value = new StartUpMenu();
+            vm.Tabs.TitleViewModel.WindowTitle.Value = TranslationManager.Translation.NoImage;
         }
     }
 

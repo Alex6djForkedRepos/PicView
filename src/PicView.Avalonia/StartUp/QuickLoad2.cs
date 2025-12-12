@@ -29,7 +29,7 @@ public static class QuickLoad2
     /// <param name="continueFromLeftOff">A boolean indicating whether to continue loading from the last session folder structure.</param>
     public static async ValueTask QuickLoadAsync(MainViewModel vm, string file, Window window, bool continueFromLeftOff)
     {
-        vm.NavigationViewModel.TitleViewModel.WindowTitle.Value =
+        vm.Tabs.TitleViewModel.WindowTitle.Value =
             TranslationManager.Translation.Loading ?? "Loading...";
         
         var fileInfo = new FileInfo(file);
@@ -50,7 +50,7 @@ public static class QuickLoad2
         }
         Dispatcher.UIThread.Invoke(() =>
         {
-            vm.NavigationViewModel.ActiveTab.Value.CurrentView.Value = new ImageViewer2();
+            vm.Tabs.ActiveTab.Value.CurrentView.Value = new ImageViewer2();
         }, DispatcherPriority.Send);
     
         var magickImage = new MagickImage();
@@ -89,14 +89,14 @@ public static class QuickLoad2
 
         var files = vm.PlatformService.GetFiles(fileInfo);
         // 4. Initialize ViewModel
-        vm.NavigationViewModel.LoadAndInitializeFromPath(files, galleryService, navService, sharedCache, thumbnailService);
-        vm.NavigationViewModel.ActiveTab.Value.UpdateTabTitle(vm.NavigationViewModel.TitleViewModel);
+        vm.Tabs.LoadAndInitializeFromPath(files, galleryService, navService, sharedCache, thumbnailService);
+        vm.Tabs.ActiveTab.Value.UpdateTabTitle(vm.Tabs.TitleViewModel);
     }
     
     private static void SetPicViewerValues(MainViewModel vm, ImageModel imageModel, FileInfo fileInfo)
     {
-        vm.NavigationViewModel.ActiveTab.Value.CurrentModel.Value = imageModel;
-        vm.NavigationViewModel.ActiveTab.Value.Initialize(vm.NavigationViewModel.TitleViewModel);
+        vm.Tabs.ActiveTab.Value.CurrentModel.Value = imageModel;
+        vm.Tabs.ActiveTab.Value.Initialize(vm.Tabs.TitleViewModel);
         
         // Legacy, delete later
         vm.PicViewer.FileInfo.Value = fileInfo;

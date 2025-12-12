@@ -619,7 +619,7 @@
                 Background="{DynamicResource SecondaryBackgroundColor}"
                 BorderBrush="{DynamicResource TertiaryBorderColor}"
                 BorderThickness="0,0,0,1"
-                DataContext="{Binding NavigationViewModel}"
+                DataContext="{Binding Tabs}"
                 ItemsSource="{CompiledBinding Tabs.Value}"
                 SelectedIndex="{CompiledBinding ActiveTabIndex.Value,
                                                 Mode=TwoWay}"

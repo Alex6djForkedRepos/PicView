@@ -33,7 +33,7 @@
             Foreground="{DynamicResource MainTextColor}"
             IconHeight="12"
             IconWidth="12"
-            IsEnabled="{CompiledBinding PicViewer.FileInfo.Value,
+            IsEnabled="{CompiledBinding Tabs.ActiveTab.Value.CurrentModel.Value.Image,
                                         Converter={x:Static ObjectConverters.IsNotNull}}"
             IsRepeatEnabled="False"
             IsTabStop="False"
@@ -109,7 +109,7 @@
             BorderBrush="{DynamicResource MainBorderColor}"
             BorderThickness="0"
             Classes="altHover"
-            Command="{CompiledBinding NavigationViewModel.CreateTab}"
+            Command="{CompiledBinding Tabs.CreateTab}"
             Data="{StaticResource AddGeometry}"
             DockPanel.Dock="Right"
             Foreground="{DynamicResource MainTextColor}"

@@ -30,7 +30,7 @@ public class MainViewModel
     public PrintPreviewViewModel? PrintPreview { get; set; }
     public BatchResizeViewModel? BatchResizeViewModel { get; set; }
 
-    public Core.ViewModels.NavigationViewModel NavigationViewModel { get; set; } = new();
+    public TabOverviewViewModel Tabs { get; set; } = new();
     public TabMenuViewModel? TabMenu { get; set; }
 
     public MainViewModel(IPlatformSpecificService? platformSpecificService, IPlatformWindowService? platformWindowService)

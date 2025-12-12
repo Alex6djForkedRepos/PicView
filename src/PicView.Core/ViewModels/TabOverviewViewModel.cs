@@ -7,7 +7,7 @@ using R3;
 
 namespace PicView.Core.ViewModels;
 
-public class NavigationViewModel
+public class TabOverviewViewModel
 {
     public TitleViewModel TitleViewModel { get; } = new();
     public BindableReactiveProperty<ObservableCollection<TabViewModel>>? Tabs { get; } = new([]);
@@ -24,7 +24,7 @@ public class NavigationViewModel
     private IGalleryService? _sharedGallery;
     private IThumbnailLoader? _sharedThumbnailLoader;
 
-    public NavigationViewModel()
+    public TabOverviewViewModel()
     {
         ActiveTab = new BindableReactiveProperty<TabViewModel>(CreateInitialTab());
         ActiveTab.Value.IsSelected = true;
@@ -94,7 +94,7 @@ public class NavigationViewModel
         if (Tabs.Value.Count <= 0)
         {
 #if DEBUG
-            DebugHelper.LogDebug(nameof(NavigationViewModel), nameof(CloseTabAsync), new Exception("There should always be at least one tab open."));
+            DebugHelper.LogDebug(nameof(TabOverviewViewModel), nameof(CloseTabAsync), new Exception("There should always be at least one tab open."));
 #endif
             return;
         }

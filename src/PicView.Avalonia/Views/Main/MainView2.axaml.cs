@@ -106,7 +106,7 @@ public partial class MainView2 : UserControl
             {
                 return;
             }
-            Observable.EveryValueChanged(vm.NavigationViewModel, model => model.IsTabPanelVisible.Value)
+            Observable.EveryValueChanged(vm.Tabs, model => model.IsTabPanelVisible.Value)
                 .Subscribe(b =>
                 {
                     Margin = new Thickness(0, b ? 32 : 0, 0, 0);

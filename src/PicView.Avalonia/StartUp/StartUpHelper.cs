@@ -20,7 +20,6 @@ using PicView.Core.FileAssociations;
 using PicView.Core.FileHistory;
 using PicView.Core.ProcessHandling;
 using ImageViewer = PicView.Avalonia.Views.UC.ImageViewer;
-using NavigationViewModel = PicView.Core.ViewModels.NavigationViewModel;
 
 namespace PicView.Avalonia.StartUp;
 

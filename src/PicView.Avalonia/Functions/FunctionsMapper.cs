@@ -237,7 +237,7 @@ public static class FunctionsMapper
 
     /// <inheritdoc cref="Core.ViewModels.NavigationViewModel.NextFile()" />
     public static async ValueTask Next() =>
-        await Vm.NavigationViewModel.NextFile().ConfigureAwait(false);
+        await Vm.Tabs.NextFile().ConfigureAwait(false);
     
     /// <inheritdoc cref="NavigationManager.NavigateBetweenDirectories(bool, MainViewModel)" />
     public static async ValueTask NextFolder() =>
@@ -249,7 +249,7 @@ public static class FunctionsMapper
 
     /// <inheritdoc cref="Core.ViewModels.NavigationViewModel.PrevFile()" />
     public static async ValueTask Prev() =>
-        await Vm.NavigationViewModel.PrevFile().ConfigureAwait(false);
+        await Vm.Tabs.PrevFile().ConfigureAwait(false);
     
     /// <inheritdoc cref="NavigationManager.NavigateBetweenDirectories(bool, MainViewModel)" />
     public static async ValueTask PrevFolder() =>
@@ -333,7 +333,7 @@ public static class FunctionsMapper
 
     public static ValueTask ZoomIn()
     {
-        if (Vm.NavigationViewModel.ActiveTab.CurrentValue.CurrentView.CurrentValue is ImageViewer2 imageViewer)
+        if (Vm.Tabs.ActiveTab.CurrentValue.CurrentView.CurrentValue is ImageViewer2 imageViewer)
         {
             imageViewer.ZoomIn();
         }
@@ -342,7 +342,7 @@ public static class FunctionsMapper
 
     public static ValueTask ZoomOut()
     {
-        if (Vm.NavigationViewModel.ActiveTab.CurrentValue.CurrentView.CurrentValue is ImageViewer2 imageViewer)
+        if (Vm.Tabs.ActiveTab.CurrentValue.CurrentView.CurrentValue is ImageViewer2 imageViewer)
         {
             imageViewer.ZoomOut();
         }
