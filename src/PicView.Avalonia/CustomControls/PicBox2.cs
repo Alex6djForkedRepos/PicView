@@ -203,7 +203,7 @@ public class PicBox2 : Control
             return new Size(preloadValue.ImageModel.PixelWidth, preloadValue.ImageModel.PixelHeight);
         }
 
-        if (vm.Tabs.ActiveTab.Value.CurrentModel.CurrentValue.FileInfo?.Exists != true)
+        if (vm.Tabs.ActiveTab.Value.Model.CurrentValue.FileInfo?.Exists != true)
         {
             return new Size();
         }
@@ -211,7 +211,7 @@ public class PicBox2 : Control
         try
         {
             using var magickImage = new MagickImage();
-            magickImage.Ping(vm.Tabs.ActiveTab.Value.CurrentModel.Value.FileInfo);
+            magickImage.Ping(vm.Tabs.ActiveTab.Value.Model.Value.FileInfo);
             return new Size(magickImage.Width, magickImage.Height);
         }
         catch (Exception exception)

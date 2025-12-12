@@ -2,8 +2,9 @@
 
 public interface IImageIterator : IAsyncDisposable
 {
-    IReadOnlyList<FileInfo> Files { get; }
+    List<FileInfo> Files { get; internal set; }
     int CurrentIndex { get; }
+    void SetCurrentIndex(int index);
     bool IsReversed { get; }
     void Initialize(List<FileInfo> files, int initialIndex = 0);
     int GetIteration(int index, NavigateTo navigation, bool skip1=false, bool skip10=false, bool skip100=false);

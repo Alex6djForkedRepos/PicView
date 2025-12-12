@@ -12,10 +12,11 @@ public class TabViewModel(string id, Func<string, ValueTask> closeTab) : IAsyncD
     public string Id { get; } = id;
     public bool IsClosing { get; private set; }
     public bool IsSelected { get; set; }
-    public BindableReactiveProperty<ImageModel?> CurrentModel { get; } = new(null);
+    public BindableReactiveProperty<ImageModel> Model { get; } = new(new ImageModel());
     public BindableReactiveProperty<object?> CurrentView { get; } = new(null);
     public IImageIterator? ImageIterator { get; private set; }
     public CancellationTokenSource NavigationCts { get; private set; } = new();
+    private TitleViewModel? _titleViewModel { get; set; }
 
     public bool CanNavigate()
     {
@@ -36,9 +37,10 @@ public class TabViewModel(string id, Func<string, ValueTask> closeTab) : IAsyncD
             // Already initialized
             return;
         }
+        _titleViewModel = titleViewModel;
 
-        CurrentModel
-            .Select(model => model?.FileInfo) 
+        Model
+            .Select(model => model.FileInfo) 
             .Subscribe(file => 
             {
                 if (file is null)
@@ -48,25 +50,26 @@ public class TabViewModel(string id, Func<string, ValueTask> closeTab) : IAsyncD
                 TabTitle.Value = file.Name;
                 TabTooltip.Value = file.FullName;
 
-                UpdateTabTitle(titleViewModel);
+                UpdateTabTitle();
             })
             .AddTo(Disposables);
     }
     
-    public void UpdateTabTitle(TitleViewModel titleViewModel)
+    public void UpdateTabTitle()
     {
         if (ImageIterator?.Files is null || !IsSelected)
         {
             return;
         }
             
-        var width = CurrentModel.CurrentValue.PixelWidth;
-        var height = CurrentModel.CurrentValue.PixelHeight;
+        var width = Model.CurrentValue.PixelWidth;
+        var height = Model.CurrentValue.PixelHeight;
         var index = ImageIterator.CurrentIndex;
         var windowTitles = ImageTitleFormatter.GenerateTitleStrings(width, height,
-            index, CurrentModel.CurrentValue.FileInfo, 100, ImageIterator.Files);
-        titleViewModel.WindowTitle.Value = windowTitles.BaseTitle;
-        titleViewModel.WindowTitleTooltip.Value = windowTitles.FilePathTitle;
+            index, Model.CurrentValue.FileInfo, 100, ImageIterator.Files);
+        _titleViewModel.WindowTitle.Value = windowTitles.TitleWithAppName;
+        _titleViewModel.Title.Value = windowTitles.BaseTitle;
+        _titleViewModel.TitleTooltip.Value = windowTitles.FilePathTitle;
     }
 
     public void Initialize(IImageCache cache, IThumbnailLoader thumbnailLoader, TitleViewModel titleViewModel)
@@ -78,7 +81,7 @@ public class TabViewModel(string id, Func<string, ValueTask> closeTab) : IAsyncD
     public void InitializeImageIterator(List<FileInfo> files, IImageCache cache, IThumbnailLoader thumbnailLoader)
     {
         ImageIterator ??= new ImageIterator(cache, thumbnailLoader, this);
-        var index = files.FindIndex(x => x.FullName.Equals(CurrentModel.Value?.FileInfo.FullName));
+        var index = files.FindIndex(x => x.FullName.Equals(Model.Value?.FileInfo.FullName));
         ImageIterator.Initialize(files, index);
     }
 

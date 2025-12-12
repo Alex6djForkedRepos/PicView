@@ -25,8 +25,7 @@ public static class FilePicker
             return;
         }
 
-        MenuManager.CloseMenus(vm);
-        await NavigationManager.LoadPicFromStringAsync(file, vm).ConfigureAwait(false);
+        await vm.Tabs.LoadFromFileAsync(file).ConfigureAwait(false);
     }
 
     public static async Task<string?> SelectFile()

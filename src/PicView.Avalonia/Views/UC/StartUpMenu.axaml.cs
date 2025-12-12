@@ -4,10 +4,17 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
+using Avalonia.Threading;
 using PicView.Avalonia.ColorManagement;
+using PicView.Avalonia.FileSystem;
+using PicView.Avalonia.Functions;
 using PicView.Avalonia.UI;
 using PicView.Avalonia.ViewModels;
+using PicView.Avalonia.WindowBehavior;
+using PicView.Core.DebugTools;
+using PicView.Core.FileHistory;
 using PicView.Core.Sizing;
+using PicView.Core.ViewModels;
 
 namespace PicView.Avalonia.Views.UC;
 
@@ -85,11 +92,93 @@ public partial class StartUpMenu : UserControl
             pasteBrush.Color = color as Color? ?? default;
         };
 
-        if (DataContext is not MainViewModel vm)
-            return;
+        if (UIHelper.GetMainView.DataContext is MainViewModel vm)
+        {
+            TitleManager.SetNoImageTitle(vm.Tabs.TitleViewModel);
+        }
 
-        TitleManager.SetNoImageTitle(vm);
+        SelectFileButton.Click += async delegate { await SelectFileButtonOnClick(); };
+        OpenLastFileButton.Click += async delegate { await OpenLastButtonOnClick(); };
+        
         UIHelper.GetHoverBar?.IsVisible = false;
+    }
+
+    private async ValueTask SelectFileButtonOnClick()
+    {
+        var file = await FilePicker.SelectFile().ConfigureAwait(false);
+        if (file is null)
+        {
+            return;
+        }
+
+        var vm = await Dispatcher.UIThread.InvokeAsync(() =>
+        {
+            if (UIHelper.GetMainView.DataContext is not MainViewModel vm)
+            {
+                return null;
+            }
+            vm.Tabs.ActiveTab.Value.CurrentView.Value = new ImageViewer2();
+            return vm;
+        });
+        if (vm is not null)
+        {
+            await vm.Tabs.LoadFromFileAsync(file).ConfigureAwait(false);
+        }
+    }
+    
+    private async ValueTask OpenLastButtonOnClick()
+    {
+        var lastFile = Settings.StartUp.LastFile;
+        try
+        {
+            if (!string.IsNullOrEmpty(lastFile))
+            {
+                var vm = await ChangeToImageViewer();
+                await vm.Tabs.LoadFromStringAsync(lastFile);
+            }
+            else
+            {
+                var lastEntry = FileHistoryManager.GetLastEntry();
+                if (lastEntry != null)
+                {
+                    var vm = await ChangeToImageViewer();
+                    await vm.Tabs.LoadFromStringAsync(lastEntry);
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            DebugHelper.LogDebug(nameof(StartUpMenu), nameof(OpenLastButtonOnClick), e);
+            await ChangeToStartUpMenu();
+        }
+
+
+        return;
+        
+        async ValueTask<MainViewModel?> ChangeToImageViewer()
+        {
+            return await Dispatcher.UIThread.InvokeAsync(() =>
+            {
+                if (UIHelper.GetMainView.DataContext is not MainViewModel vm)
+                {
+                    return null;
+                }
+                vm.Tabs.ActiveTab.Value.CurrentView.Value = new ImageViewer2();
+                return vm;
+            });
+        }
+        
+        async ValueTask ChangeToStartUpMenu(){
+        {
+            await Dispatcher.UIThread.InvokeAsync(() =>
+            {
+                if (UIHelper.GetMainView.DataContext is not MainViewModel vm)
+                {
+                    return;
+                }
+                vm.Tabs.ActiveTab.Value.CurrentView.Value = new StartUpMenu();
+            });
+        }}
     }
 
     public void ResponsiveSize(double width, double height)

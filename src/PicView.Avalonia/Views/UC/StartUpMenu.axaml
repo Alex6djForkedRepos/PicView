@@ -35,7 +35,7 @@
             VerticalAlignment="Center"
             x:Name="Buttons">
 
-            <Button Command="{CompiledBinding Tools.OpenFileCommand}" x:Name="SelectFileButton">
+            <Button x:Name="SelectFileButton">
                 <StackPanel Orientation="Horizontal">
                     <Image Height="20.091">
                         <Image.Source>
@@ -76,7 +76,7 @@
                 </StackPanel>
             </Button>
 
-            <Button Command="{CompiledBinding Tools.OpenLastFileCommand}" x:Name="OpenLastFileButton">
+            <Button x:Name="OpenLastFileButton">
                 <StackPanel Height="30" Orientation="Horizontal">
                     <Image Height="20.091">
                         <Image.Source>

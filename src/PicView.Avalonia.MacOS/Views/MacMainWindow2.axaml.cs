@@ -89,6 +89,7 @@ public partial class MacMainWindow2 : Window
             
             MainTabControl.TabDetached += MainTabStripOnTabDetached;
             MainTabControl.TabCreated += MainTabStripOnTabCreated;
+            MainTabControl.SelectionChanged += MainTabControlOnSelectionChanged;
 
             var tabMenu = new TabMenu
             {
@@ -110,6 +111,19 @@ public partial class MacMainWindow2 : Window
                 }
             };
         };
+    }
+
+    private void MainTabControlOnSelectionChanged(object? sender, SelectionChangedEventArgs e)
+    {
+        if (DataContext is not MainViewModel vm)
+        {
+            return;
+        }
+
+        if (e.AddedItems[0] is TabViewModel tab)
+        {
+            vm.Tabs.ActiveTab.Value = tab;
+        }
     }
 
     private void MainTabStripOnTabCreated(object? sender, TabCreatedEventArgs e)

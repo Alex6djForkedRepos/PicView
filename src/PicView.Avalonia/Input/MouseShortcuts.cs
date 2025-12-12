@@ -8,6 +8,7 @@ using PicView.Avalonia.Functions;
 using PicView.Avalonia.Navigation;
 using PicView.Avalonia.UI;
 using PicView.Avalonia.ViewModels;
+using PicView.Avalonia.Views.UC;
 
 namespace PicView.Avalonia.Input;
 
@@ -36,7 +37,7 @@ public static class MouseShortcuts
 
         // Don't handle mouse wheel if the view is not the image viewer
         // or a dialog is opened
-        if (vm.MainWindow.CurrentView.Value != vm.ImageViewer || DialogManager.IsDialogOpen)
+        if (vm.Tabs.ActiveTab.Value.CurrentView.Value is not ImageViewer2 || DialogManager.IsDialogOpen)
         {
             return;
         }

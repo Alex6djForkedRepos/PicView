@@ -285,7 +285,7 @@ public static class StartUpHelper2
         {
             window.Show();
             vm.Tabs.ActiveTab.Value.CurrentView.Value = new StartUpMenu();
-            vm.Tabs.TitleViewModel.WindowTitle.Value = TranslationManager.Translation.NoImage;
+            TabNavigationInitializer.Initialize(vm);
         }
     }
 

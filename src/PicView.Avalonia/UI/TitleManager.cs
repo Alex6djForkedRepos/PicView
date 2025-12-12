@@ -7,6 +7,7 @@ using PicView.Core.ImageDecoding;
 using PicView.Core.Localization;
 using PicView.Core.Models;
 using PicView.Core.Titles;
+using PicView.Core.ViewModels;
 
 namespace PicView.Avalonia.UI;
 
@@ -269,11 +270,11 @@ public static class TitleManager
     ///     This method sets the title, window title, and tooltip to a default message
     ///     indicating that no image is currently loaded or available.
     /// </remarks>
-    public static void SetNoImageTitle(MainViewModel vm)
+    public static void SetNoImageTitle(TitleViewModel vm)
     {
-        vm.PicViewer.Title.Value = TranslationManager.Translation.NoImage ?? string.Empty;
-        vm.PicViewer.WindowTitle.Value = TranslationManager.Translation.NoImage + " - PicView";
-        vm.PicViewer.TitleTooltip.Value = TranslationManager.Translation.NoImage ?? string.Empty;
+        vm.Title.Value = TranslationManager.Translation.NoImage ?? string.Empty;
+        vm.WindowTitle.Value = TranslationManager.Translation.NoImage + " - PicView";
+        vm.TitleTooltip.Value = TranslationManager.Translation.NoImage ?? string.Empty;
     }
 
     private static void ReturnError(MainViewModel vm)

@@ -33,7 +33,7 @@
             Foreground="{DynamicResource MainTextColor}"
             IconHeight="12"
             IconWidth="12"
-            IsEnabled="{CompiledBinding Tabs.ActiveTab.Value.CurrentModel.Value.Image,
+            IsEnabled="{CompiledBinding Tabs.ActiveTab.Value.Model.Value.Image,
                                         Converter={x:Static ObjectConverters.IsNotNull}}"
             IsRepeatEnabled="False"
             IsTabStop="False"

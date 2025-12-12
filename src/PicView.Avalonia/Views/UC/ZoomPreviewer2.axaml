@@ -50,13 +50,13 @@
             </Border>
             <LayoutTransformControl>
                 <LayoutTransformControl.LayoutTransform>
-                    <RotateTransform Angle="{CompiledBinding CurrentModel.Value.Rotation}" />
+                    <RotateTransform Angle="{CompiledBinding Model.Value.Rotation}" />
                 </LayoutTransformControl.LayoutTransform>
                 <Panel>
                     <customControls:PicBox
-                        ImageType="{CompiledBinding CurrentModel.Value.ImageType,
+                        ImageType="{CompiledBinding Model.Value.ImageType,
                                                     Mode=OneWay}"
-                        Source="{CompiledBinding CurrentModel.Value.Image}"
+                        Source="{CompiledBinding Model.Value.Image}"
                         x:Name="OverlayImage">
                         <customControls:PicBox.RenderTransform>
                             <ScaleTransform ScaleX="{CompiledBinding $parent[Window].((vm:MainViewModel)DataContext).PicViewer.ScaleX.Value}" />

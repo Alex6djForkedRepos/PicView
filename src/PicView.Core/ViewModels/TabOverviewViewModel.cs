@@ -13,6 +13,7 @@ public class TabOverviewViewModel
     public BindableReactiveProperty<ObservableCollection<TabViewModel>>? Tabs { get; } = new([]);
     public BindableReactiveProperty<int> ActiveTabIndex { get; } = new(0);
     public BindableReactiveProperty<TabViewModel> ActiveTab { get; }
+    public BindableReactiveProperty<bool> CanActiveTabNavigate { get; } = new();
     
     /// <summary>
     /// The tab panel should only be visible when there are more than one tab. It should not be possible to close the last tab.
@@ -46,6 +47,12 @@ public class TabOverviewViewModel
         _sharedNavigation = navigationService;
         _sharedThumbnailLoader = thumbnailLoader;
         _sharedCache.RegisterOwner(ActiveTab.Value);
+
+        Observable.EveryValueChanged(ActiveTab.Value, x => x.ImageIterator)
+            .Subscribe(iterator =>
+            {
+                CanActiveTabNavigate.Value = iterator?.Files?.Count >= 0;
+            });
     }
     
     /// <summary>
@@ -76,9 +83,8 @@ public class TabOverviewViewModel
         {
             tab.Initialize(_sharedCache, _sharedThumbnailLoader, TitleViewModel);
         }
-        ActiveTab.Value = tab;
-        ActiveTabIndex.Value = Tabs.Value.IndexOf(tab);
         _sharedCache.RegisterOwner(tab);
+        SelectTab(tab);
     }
     
     private void SelectTab(TabViewModel tab)
@@ -111,7 +117,12 @@ public class TabOverviewViewModel
                 SelectTab(Tabs.Value[newIndex]);
             }
         }
-        _sharedCache?.RemoveOwner(tab.Id);
+
+        if (_sharedCache is not null)
+        {
+            await _sharedCache.RemoveOwner(tab.Id);
+        }
+     
         if (tab is not null)
         {
             await tab.DisposeAsync();
@@ -126,11 +137,6 @@ public class TabOverviewViewModel
             await CloseTabAsync(tab);
         }
     }
-
-    public void Dispose()
-    {
-        Tabs.Value.Clear();
-    }
     
     public void LoadAndInitializeFromPath(List<FileInfo> files, IGalleryService gallery, INavigationService navigationService, IImageCache cache, IThumbnailLoader thumbnailLoader)
     {
@@ -138,10 +144,16 @@ public class TabOverviewViewModel
         ActiveTab.Value.InitializeImageIterator(files, cache, thumbnailLoader);
         _sharedCache.PreloadAsync(ActiveTab.Value.Id, ActiveTab.Value.ImageIterator.CurrentIndex, false, files, CancellationToken.None);
     }
+    
+    public void LoadAndInitialize(IGalleryService gallery, INavigationService navigationService, IImageCache cache, IThumbnailLoader thumbnailLoader)
+    {
+        Initialize(gallery, navigationService, cache, thumbnailLoader);
+        ActiveTab.Value.Initialize(cache, thumbnailLoader, TitleViewModel);
+    }
 
     #region Navigation
 
-    public bool CanNavigate(TabViewModel tab) =>
+    public static bool CanNavigate(TabViewModel tab) =>
         tab.CanNavigate();
     public bool CanNavigate() =>
         ActiveTab.Value.CanNavigate();
@@ -183,6 +195,23 @@ public class TabOverviewViewModel
         await _sharedNavigation.LoadFromStringAsync(source, tab, ct)
             .ConfigureAwait(false);
     }
+    
+    public async ValueTask LoadFromFileAsync(FileInfo file)
+    {
+        if (_sharedNavigation is null)
+        {
+            return;
+        }
+        var tab = ActiveTab.Value;
+        var ct = tab.ResetNavigationCts();
+        await _sharedNavigation.LoadFromFileAsync(file, ActiveTab.Value, ct).ConfigureAwait(false);
+    }
+    
+    public async ValueTask LoadFromFileAsync(string file)
+    {
+        await LoadFromFileAsync(new FileInfo(file)).ConfigureAwait(false);
+    }
+    
     public async ValueTask NavigateAsync(TabViewModel tab, NavigateTo to, CancellationTokenSource ct)
     {
         if (_sharedNavigation is null || tab.ImageIterator is null)

@@ -16,7 +16,7 @@
                     x:Name="ImageScrollViewer">
                     <!--  ReSharper disable once Xaml.PossibleNullReferenceException  -->
                     <Border Background="{Binding $parent[Window].((viewModels:MainViewModel)DataContext).MainWindow.ConstrainedImageBackground.Value}" x:Name="MainBorder">
-                        <customControls:PicBox2 Source="{CompiledBinding CurrentModel.Value.Image}" x:Name="MainImage" />
+                        <customControls:PicBox2 Source="{CompiledBinding Model.Value.Image}" x:Name="MainImage" />
                     </Border>
                 </customControls:AutoScrollViewer>
             </customControls:ZoomPanControl2>

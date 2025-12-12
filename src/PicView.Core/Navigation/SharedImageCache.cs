@@ -32,7 +32,9 @@ public class SharedImageCache : IImageCache
 
     public void RegisterOwner(object owner)
     {
-        _preLoader.RegisterOwner(owner.ToString());
+        var id = owner.ToString();
+        _items.ExpandCapacity(id); 
+        _preLoader.RegisterOwner(id);
     }
 
     public async ValueTask RemoveOwner(object owner)

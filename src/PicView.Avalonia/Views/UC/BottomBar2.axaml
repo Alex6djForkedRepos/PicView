@@ -289,8 +289,7 @@
                     Height="{CompiledBinding MainWindow.BottombarHeight.Value}"
                     IconHeight="20"
                     IconWidth="17"
-                    IsEnabled="{CompiledBinding PicViewer.FileInfo.Value,
-                                                Converter={x:Static ObjectConverters.IsNotNull}}"
+                    IsEnabled="{CompiledBinding Tabs.CanActiveTabNavigate.Value}"
                     IsTabStop="False"
                     Width="80"
                     x:Name="PreviousButton" />
@@ -301,15 +300,13 @@
                     BorderThickness="0,0,1,0"
                     Classes="hover"
                     Command="{CompiledBinding Tabs.NextFile}"
-                    CommandParameter="0"
                     Data="{StaticResource FilledArrowRightGeometry}"
                     Focusable="False"
                     Foreground="{DynamicResource MainTextColor}"
                     Height="{CompiledBinding MainWindow.BottombarHeight.Value}"
                     IconHeight="20"
                     IconWidth="17"
-                    IsEnabled="{CompiledBinding PicViewer.FileInfo.Value,
-                                                Converter={x:Static ObjectConverters.IsNotNull}}"
+                    IsEnabled="{CompiledBinding Tabs.CanActiveTabNavigate.Value}"
                     IsTabStop="False"
                     Width="80"
                     x:Name="NextButton" />
@@ -324,7 +321,7 @@
                     Icon="{StaticResource RefreshCcwDot}"
                     IconHeight="16"
                     IconWidth="16"
-                    IsEnabled="{CompiledBinding PicViewer.ImageSource.Value,
+                    IsEnabled="{CompiledBinding Tabs.ActiveTab.Value.Model.Value.Image,
                                                 Converter={x:Static ObjectConverters.IsNotNull}}"
                     IsRepeatEnabled="False"
                     Margin="0"
@@ -346,7 +343,7 @@
                     Height="{CompiledBinding MainWindow.BottombarHeight.Value}"
                     IconHeight="16"
                     IconWidth="16"
-                    IsEnabled="{CompiledBinding PicViewer.ImageSource.Value,
+                    IsEnabled="{CompiledBinding Tabs.ActiveTab.Value.Model.Value.Image,
                                                 Converter={x:Static ObjectConverters.IsNotNull}}"
                     IsRepeatEnabled="False"
                     Margin="0"
@@ -371,6 +368,8 @@
                     Height="25"
                     IconHeight="16"
                     IconWidth="16"
+                    IsEnabled="{CompiledBinding Tabs.ActiveTab.Value.Model.Value.Image,
+                                                Converter={x:Static ObjectConverters.IsNotNull}}"
                     IsTabStop="False"
                     ToolTip.HorizontalOffset="15"
                     ToolTip.Tip="{CompiledBinding Translation.Crop.Value}"
