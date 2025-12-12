@@ -9,13 +9,16 @@
     SizeChanged="Control_OnSizeChanged"
     SizeToContent="{CompiledBinding MainWindow.SizeToContent.Value}"
     Title="{CompiledBinding PicViewer.WindowTitle.Value}"
-    x:Class="PicView.Avalonia.MacOS.Views.MacMainWindow"
+    x:Class="PicView.Avalonia.MacOS.Views.MacMainWindow2"
     x:DataType="viewModels:MainViewModel"
     xmlns="https://github.com/avaloniaui"
+    xmlns:buttons="clr-namespace:PicView.Avalonia.Views.UC.Buttons;assembly=PicView.Avalonia"
     xmlns:converters="clr-namespace:PicView.Avalonia.Converters;assembly=PicView.Avalonia"
+    xmlns:customControls="clr-namespace:PicView.Avalonia.CustomControls;assembly=PicView.Avalonia"
     xmlns:main="clr-namespace:PicView.Avalonia.Views.Main;assembly=PicView.Avalonia"
     xmlns:uc="clr-namespace:PicView.Avalonia.Views.UC;assembly=PicView.Avalonia"
     xmlns:viewModels="clr-namespace:PicView.Avalonia.ViewModels;assembly=PicView.Avalonia"
+    xmlns:viewModels1="clr-namespace:PicView.Core.ViewModels;assembly=PicView.Core"
     xmlns:views1="clr-namespace:PicView.Avalonia.MacOS.Views"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Window.Resources>
@@ -589,10 +592,81 @@
 
         </NativeMenu>
     </NativeMenu.Menu>
-
     <DockPanel LastChildFill="True">
         <views1:MacOSTitlebar DockPanel.Dock="Top" x:Name="Titlebar" />
-        <uc:BottomBar DockPanel.Dock="Bottom" x:Name="BottomBar" />
-        <main:MainView Background="Transparent" x:Name="MainView" />
+        <uc:BottomBar2 DockPanel.Dock="Bottom" x:Name="BottomBar" />
+        <Panel Background="{CompiledBinding MainWindow.ImageBackground.Value, Mode=OneWay}" x:Name="MainPanel">
+            <buttons:ClickArrowRight2
+                HorizontalAlignment="Right"
+                Margin="{CompiledBinding MainWindow.RightControlOffSetMargin.Value}"
+                Opacity="0"
+                VerticalAlignment="Center"
+                ZIndex="2"
+                x:Name="ClickArrowRight" />
+            <buttons:ClickArrowLeft2
+                HorizontalAlignment="Left"
+                Opacity="0"
+                VerticalAlignment="Center"
+                ZIndex="2"
+                x:Name="ClickArrowLeft" />
+            <uc:SpinWaiter
+                HorizontalAlignment="Center"
+                IsVisible="{CompiledBinding MainWindow.IsLoadingIndicatorShown.Value,
+                                            Mode=OneWay}"
+                VerticalAlignment="Center"
+                ZIndex="3" />
+            <customControls:DraggableTabControl
+                Background="{DynamicResource SecondaryBackgroundColor}"
+                BorderBrush="{DynamicResource TertiaryBorderColor}"
+                BorderThickness="0,0,0,1"
+                DataContext="{Binding NavigationViewModel}"
+                ItemsSource="{CompiledBinding Tabs.Value}"
+                SelectedIndex="{CompiledBinding ActiveTabIndex.Value,
+                                                Mode=TwoWay}"
+                Tag="{CompiledBinding IsTabPanelVisible.Value}"
+                x:Name="MainTabControl">
+
+                <customControls:DraggableTabControl.Styles>
+                    <Style Selector="TabItem">
+                        <Setter Property="Theme" Value="{StaticResource DraggableTabItem}" />
+                    </Style>
+                </customControls:DraggableTabControl.Styles>
+
+                <customControls:DraggableTabControl.ItemTemplate>
+                    <DataTemplate>
+                        <DockPanel LastChildFill="True">
+                            <customControls:IconButton
+                                Background="Transparent"
+                                Classes="altHover"
+                                Command="{CompiledBinding CloseTab}"
+                                Data="{StaticResource CloseGeometry}"
+                                DockPanel.Dock="Left"
+                                Foreground="{DynamicResource MainTextColor}"
+                                Height="32"
+                                IconHeight="12"
+                                IconWidth="12"
+                                Margin="0,0,5,0"
+                                Padding="9,0" />
+                            <TextBlock
+                                Classes="txt"
+                                Text="{CompiledBinding TabTitle.Value,
+                                                       Mode=OneWay}"
+                                ToolTip.Tip="{Binding TabTooltip.Value, Mode=OneWay}" />
+                        </DockPanel>
+                    </DataTemplate>
+                </customControls:DraggableTabControl.ItemTemplate>
+
+                <customControls:DraggableTabControl.ContentTemplate>
+                    <DataTemplate DataType="viewModels1:TabViewModel">
+                        <ContentControl ClipToBounds="True" Content="{CompiledBinding CurrentView.Value, Mode=OneWay}" />
+                    </DataTemplate>
+                </customControls:DraggableTabControl.ContentTemplate>
+
+            </customControls:DraggableTabControl>
+            <main:MainView2
+                IsHitTestVisible="False"
+                ZIndex="1"
+                x:Name="MainView" />
+        </Panel>
     </DockPanel>
 </Window>

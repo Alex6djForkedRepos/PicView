@@ -90,6 +90,10 @@
       <DependentUpon>EffectsWindow.axaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Views\MacMainWindow2.axaml.cs">
+      <DependentUpon>MacMainWindow2.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
 
 	<ItemGroup>

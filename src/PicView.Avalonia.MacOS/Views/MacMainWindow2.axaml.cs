@@ -1,18 +1,24 @@
+using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Layout;
+using PicView.Avalonia.CustomControls;
 using PicView.Avalonia.MacOS.WindowImpl;
 using PicView.Avalonia.UI;
 using PicView.Avalonia.ViewModels;
+using PicView.Avalonia.Views.UC;
+using PicView.Avalonia.Views.UC.Menus;
 using PicView.Avalonia.WindowBehavior;
+using PicView.Core.ViewModels;
 using R3;
 using R3.Avalonia;
 
 namespace PicView.Avalonia.MacOS.Views;
 
-public partial class MacMainWindow : Window
+public partial class MacMainWindow2 : Window
 {
     private readonly AvaloniaRenderingFrameProvider _frameProvider;
 
-    public MacMainWindow()
+    public MacMainWindow2()
     {
         InitializeComponent();
 
@@ -44,21 +50,21 @@ public partial class MacMainWindow : Window
                     case WindowState.FullScreen:
                         if (!Settings.WindowProperties.Fullscreen)
                         {
-                            await MacOSWindow.Fullscreen(this, vm);
+                            await MacOSWindow2.Fullscreen(this, vm);
                         }
 
                         break;
                     case WindowState.Maximized:
                         if (!Settings.WindowProperties.Maximized && !Settings.WindowProperties.Fullscreen)
                         {
-                            await MacOSWindow.Maximize(this, vm);
+                            await MacOSWindow2.Maximize(this, vm);
                         }
 
                         break;
                     case WindowState.Normal:
                         if (Settings.WindowProperties.Maximized || Settings.WindowProperties.Fullscreen)
                         {
-                            await MacOSWindow.Restore(this, vm);
+                            await MacOSWindow2.Restore(this, vm);
                         }
                         break;
                 }
@@ -76,7 +82,81 @@ public partial class MacMainWindow : Window
                     SystemDecorations = shown ? SystemDecorations.Full : SystemDecorations.None;
                 }
             });
+            Observable.EveryValueChanged(MainTabControl.Items, x => x.Count).Subscribe(count =>
+            {
+                vm.NavigationViewModel.IsTabPanelVisible.Value = count > 1;
+            });
+            
+            MainTabControl.TabDetached += MainTabStripOnTabDetached;
+            MainTabControl.TabCreated += MainTabStripOnTabCreated;
+
+            var tabMenu = new TabMenu
+            {
+                Name = "TabsMenu",
+                VerticalAlignment = VerticalAlignment.Top,
+                Margin = new Thickness(3, 0, 3, 0),
+                IsVisible = false,
+                HorizontalAlignment = HorizontalAlignment.Right,
+                ZIndex = 2
+            };
+            MainPanel.Children.Add(tabMenu);
+            
+            // Close tabMenu when clicking outside of it
+            PointerPressed += (_, _) =>
+            {
+                if (!tabMenu.IsPointerOver)
+                {
+                    vm.MainWindow.IsTabMenuVisible.Value = false;
+                }
+            };
         };
+    }
+
+    private void MainTabStripOnTabCreated(object? sender, TabCreatedEventArgs e)
+    {
+        var startUpMenu = new StartUpMenu();
+        if (e.CreatedItem is TabViewModel tabViewModel)
+        {
+            tabViewModel.CurrentView.Value = startUpMenu;
+        }
+    }
+
+    private void MainTabStripOnTabDetached(object? sender, TabDetachEventArgs e)
+    {
+        // Create a new window with the detached tab
+        var newWindow = new FloatingWindow
+        {
+            Position = new PixelPoint(e.ScreenPosition.X - 100, e.ScreenPosition.Y - 50),
+            Width = Width,
+            Height = Height,
+            DataContext = DataContext
+        };
+
+        if (e.DetachedItem is TabViewModel tab)
+        {
+            var currentView = tab.CurrentView.Value;
+            if (currentView is StartUpMenu startUpMenu)
+            {
+                newWindow.MainPanel.Children.Add(new ContentControl
+                {
+                    Content = startUpMenu
+                });
+            }
+            else
+            {
+                if (currentView is ImageViewer2 imageViewer)
+                {
+                    imageViewer.DataContext = e.DetachedItem;
+                    newWindow.MainPanel.Children.Add(new ContentControl
+                    {
+                        Content = currentView
+                    });
+                }
+            }
+            newWindow.Closed += async (_, _) => await tab.CloseTab();
+        }
+        
+        newWindow.Show();
     }
 
     private void Control_OnSizeChanged(object? sender, SizeChangedEventArgs e)

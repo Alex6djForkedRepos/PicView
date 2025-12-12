@@ -27,7 +27,7 @@ namespace PicView.Avalonia.MacOS;
 
 public class App : Application, IPlatformSpecificService, IPlatformWindowService
 {
-    private MacMainWindow? _mainWindow;
+    private MacMainWindow2? _mainWindow;
     private static WindowInitializer? _windowInitializer;
     private MainViewModel? _vm;
 
@@ -62,7 +62,7 @@ public class App : Application, IPlatformSpecificService, IPlatformWindowService
             DataContext = _vm;
             ThemeManager.DetermineTheme(Current, settingsExists);
 
-            _mainWindow = new MacMainWindow();
+            _mainWindow = new MacMainWindow2();
             desktop.MainWindow = _mainWindow;
 
             _mainWindow.DataContext = _vm;
@@ -259,23 +259,23 @@ public class App : Application, IPlatformSpecificService, IPlatformWindowService
 
     /// <inheritdoc />
     public async Task Maximize(bool saveSetting = true) =>
-        await MacOSWindow.Maximize(_mainWindow, _vm, saveSetting);
+        await MacOSWindow2.Maximize(_mainWindow, _vm, saveSetting);
     
     /// <inheritdoc />
     public async Task MaximizeRestore(bool saveSetting = true) =>
-        await MacOSWindow.ToggleMaximize(_mainWindow, _vm, saveSetting);
+        await MacOSWindow2.ToggleMaximize(_mainWindow, _vm, saveSetting);
 
     /// <inheritdoc />
     public async Task Fullscreen(bool saveSetting = true) =>
-        await MacOSWindow.Fullscreen(_mainWindow, _vm, saveSetting);
+        await MacOSWindow2.Fullscreen(_mainWindow, _vm, saveSetting);
     
     /// <inheritdoc />
     public async Task ToggleFullscreen(bool saveSetting = true) =>
-        await MacOSWindow.ToggleFullscreen(_mainWindow, _vm, saveSetting);
+        await MacOSWindow2.ToggleFullscreen(_mainWindow, _vm, saveSetting);
     
     /// <inheritdoc />
     public async Task Restore() =>
-        await MacOSWindow.Restore(_mainWindow, _vm);
+        await MacOSWindow2.Restore(_mainWindow, _vm);
     
     #endregion
 }
