@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Runtime.InteropServices;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Metadata;
@@ -332,6 +333,7 @@ public class DraggableTabControl : TabControl
         var screenPos = _pressedTab.PointToScreen(e.GetPosition(_pressedTab));
 
         // Remove from collection
+        // We need to add it to detached tabs in event
         var list = ItemsSource as IList ?? Items;
         if (list != null && _sourceIndex >= 0 && _sourceIndex < list.Count)
         {
@@ -398,7 +400,7 @@ public class DraggableTabControl : TabControl
 
     #endregion
 
-    #region Ghost Window Logic
+#region Ghost Window Logic
 
     private void CreateGhostWindow(TabItem tabItem)
     {
@@ -441,20 +443,8 @@ public class DraggableTabControl : TabControl
 
     private Bitmap? CaptureContentBitmap(TabItem tabItem)
     {
-        // Must be dragging the selected item to capture its content
-        var selectedItem = SelectedItem;
-        var draggedItem = ItemFromContainer(tabItem);
-
-        if (!ReferenceEquals(selectedItem, draggedItem))
-        {
-            return null;
-        }
-
-        var contentPresenter = this.GetVisualDescendants()
-            .OfType<ContentPresenter>()
-            .FirstOrDefault(cp => cp.Name == "PART_SelectedContentHost");
-
-        return contentPresenter != null ? CaptureVisual(contentPresenter) : null;
+        var vm = tabItem.DataContext as TabViewModel;
+        return CaptureVisual(vm.CurrentView.Value as Control);
     }
 
     private (double width, double height) CalculateGhostSize(Size contentSize)

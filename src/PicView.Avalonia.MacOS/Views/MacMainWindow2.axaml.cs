@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Layout;
@@ -87,8 +88,8 @@ public partial class MacMainWindow2 : Window
                 vm.Tabs.IsTabPanelVisible.Value = count > 1;
             });
             
-            MainTabControl.TabDetached += MainTabStripOnTabDetached;
-            MainTabControl.TabCreated += MainTabStripOnTabCreated;
+            MainTabControl.TabDetached += MainTabControlOnTabDetached;
+            MainTabControl.TabCreated += MainTabControlOnTabCreated;
             MainTabControl.SelectionChanged += MainTabControlOnSelectionChanged;
 
             var tabMenu = new TabMenu
@@ -129,50 +130,43 @@ public partial class MacMainWindow2 : Window
         tab.UpdateTabTitle();
     }
 
-    private void MainTabStripOnTabCreated(object? sender, TabCreatedEventArgs e)
+    private static void MainTabControlOnTabCreated(object? sender, TabCreatedEventArgs e)
     {
-        var startUpMenu = new StartUpMenu();
-        if (e.CreatedItem is TabViewModel tabViewModel)
+        // Only set the StartUpMenu if the View is currently null.
+        // This prevents overwriting the view (e.g. an image) when reordering tabs,
+        // as reordering triggers the TabCreated event again by recreating containers.
+        if (e.CreatedItem is TabViewModel { CurrentView.Value: null } tabViewModel)
         {
-            tabViewModel.CurrentView.Value = startUpMenu;
+            tabViewModel.CurrentView.Value = new StartUpMenu();
         }
     }
 
-    private void MainTabStripOnTabDetached(object? sender, TabDetachEventArgs e)
+    private void MainTabControlOnTabDetached(object? sender, TabDetachEventArgs e)
     {
+        if (e.DetachedItem is not TabViewModel tab)
+        {
+            return;
+        }
+        if (DataContext is not MainViewModel vm)
+        {
+            return;
+        }
+        
+        vm.Tabs.DetachedTabs ??= new BindableReactiveProperty<ObservableCollection<TabViewModel>>([]);
+        vm.Tabs.DetachedTabs.Value.Add(tab);
         // Create a new window with the detached tab
-        var newWindow = new FloatingWindow
+        var newWindow = new MacMainWindow2
         {
             Position = new PixelPoint(e.ScreenPosition.X - 100, e.ScreenPosition.Y - 50),
             Width = Width,
             Height = Height,
-            DataContext = DataContext
+            DataContext = vm,
+            MainTabControl =
+            {
+                ItemsSource = vm.Tabs.DetachedTabs.Value
+            }
         };
-
-        if (e.DetachedItem is TabViewModel tab)
-        {
-            var currentView = tab.CurrentView.Value;
-            if (currentView is StartUpMenu startUpMenu)
-            {
-                newWindow.MainPanel.Children.Add(new ContentControl
-                {
-                    Content = startUpMenu
-                });
-            }
-            else
-            {
-                if (currentView is ImageViewer2 imageViewer)
-                {
-                    imageViewer.DataContext = e.DetachedItem;
-                    newWindow.MainPanel.Children.Add(new ContentControl
-                    {
-                        Content = currentView
-                    });
-                }
-            }
-            newWindow.Closed += async (_, _) => await tab.CloseTab();
-        }
-        
+        newWindow.Closing += (_, _) => vm.Tabs.DetachedTabs.Value.Remove(tab);
         newWindow.Show();
     }
 

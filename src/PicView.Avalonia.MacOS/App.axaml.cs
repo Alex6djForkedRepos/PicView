@@ -68,7 +68,7 @@ public class App : Application, IPlatformSpecificService, IPlatformWindowService
             _mainWindow.DataContext = _vm;
             if (string.IsNullOrWhiteSpace(startUpFilePath))
             {
-                StartUpHelper2.StartWithoutArguments(_vm, settingsExists, desktop, _mainWindow);
+                StartUpHelper2.StartWithArguments(_vm, settingsExists, desktop, _mainWindow);
             }
             else
             {
@@ -85,7 +85,7 @@ public class App : Application, IPlatformSpecificService, IPlatformWindowService
                     {
                         _mainWindow.Activate();
                     }, DispatcherPriority.Send);
-                    await NavigationManager.LoadPicFromStringAsync(e.Urls[0], _vm);
+                    await _vm.Tabs.LoadFromStringAsync(e.Urls[0]);
                 }
                 else
                 {

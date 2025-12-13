@@ -19,10 +19,8 @@ using PicView.Avalonia.Views.UC;
 using PicView.Avalonia.WindowBehavior;
 using PicView.Core.FileAssociations;
 using PicView.Core.FileHistory;
-using PicView.Core.Localization;
 using PicView.Core.ProcessHandling;
 using PicView.Core.ViewModels;
-using ImageViewer = PicView.Avalonia.Views.UC.ImageViewer;
 
 namespace PicView.Avalonia.StartUp;
 
@@ -33,60 +31,81 @@ public static class StartUpHelper2
         Window window)
     {
         var args = Environment.GetCommandLineArgs();
-        if (settingsExists)
+        if (args.Length > 1)
         {
-            if (args.Length > 1)
+            var arg = args[1];
+            if (arg.StartsWith("associate:", StringComparison.OrdinalIgnoreCase))
             {
-                var arg = args[1];
-                if (arg.StartsWith("associate:", StringComparison.OrdinalIgnoreCase))
+                // Set file associations and exit
+                Task.Run(async () =>
                 {
-                    // Set file associations and exit
-                    Task.Run(async () =>
+                    try
                     {
-                        try
-                        {
-                            vm.PlatformService.InitiateFileAssociationService();
-                            Debug.WriteLine($"Processing file association argument: {arg}");
-                            await FileAssociationProcessor.ProcessFileAssociationArguments(arg);
-                        }
-                        catch (Exception ex)
-                        {
-                            Debug.WriteLine($"Error in file association processing: {ex.Message}");
-                        }
-                        finally
-                        {
-                            // Always exit the elevated process after processing associations
-                            Environment.Exit(0);
-                        }
-                    });
-                }
-                else
-                {
-                    IPC.SendWithArgs(args);
-                }
+                        vm.PlatformService.InitiateFileAssociationService();
+                        Debug.WriteLine($"Processing file association argument: {arg}");
+                        await FileAssociationProcessor.ProcessFileAssociationArguments(arg);
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine($"Error in file association processing: {ex.Message}");
+                    }
+                    finally
+                    {
+                        // Always exit the elevated process after processing associations
+                        Environment.Exit(0);
+                    }
+                });
+            }
+            else if (arg.Equals("blank:", StringComparison.OrdinalIgnoreCase))
+            {
+                BlankStartUp();
+            }
+            else if (Settings.UIProperties.OpenInSameWindow && ProcessHelper.CheckIfAnotherInstanceIsRunning())
+            {
+                IPC.SendWithArgs(args);
+            }
+            else
+            {
+                ImageStartUp(arg);
             }
         }
+        else
+        {
+            RegularStartUp();
+        }
+            
+        return;
 
-        SettingsUpdater.InitializeSettings(vm);
+        void RegularStartUp()
+        {
+            SettingsUpdater.InitializeSettings(vm);
 
-        HandleWindowScalingMode(vm, window);
+            HandleWindowScalingMode(vm, window);
 
-        HandleStartUpMenuOrImage(vm, window, args);
+            StartUpMenuOrLastFile(vm, window);
 
-        HandlePostWindowUpdates(vm, settingsExists, desktop, window);
-    }
-
-    public static void StartWithoutArguments(MainViewModel vm, bool settingsExists,
-        IClassicDesktopStyleApplicationLifetime desktop,
-        Window window, string? arg = null)
-    {
-        SettingsUpdater.InitializeSettings(vm);
+            HandlePostWindowUpdates(vm, settingsExists, desktop, window);
+        }
         
-        HandleWindowScalingMode(vm, window);
+        void ImageStartUp(string filePath)
+        {
+            SettingsUpdater.InitializeSettings(vm);
 
-        HandleStartUpMenuOrImage(vm, window, arg);
+            HandleWindowScalingMode(vm, window);
 
-        HandlePostWindowUpdates(vm, settingsExists, desktop, window);
+            HandleStartImage(vm, window, filePath);
+
+            HandlePostWindowUpdates(vm, settingsExists, desktop, window);
+        }
+
+        void BlankStartUp()
+        {
+            SettingsUpdater.InitializeSettings(vm);
+
+            HandleWindowScalingMode(vm, window);
+
+            HandlePostWindowUpdates(vm, settingsExists, desktop, window);
+        }
     }
     
     public static void StartUpBlank(MainViewModel vm, bool settingsExists,
@@ -232,33 +251,9 @@ public static class StartUpHelper2
         }
     }
 
-    private static void HandleStartUpMenuOrImage(MainViewModel vm, Window window, string[] args)
+    private static void HandleStartImage(MainViewModel vm, Window window, string arg)
     {
-        vm.ImageViewer = new ImageViewer();
-
-        if (args.Length > 1)
-        {
-            Task.Run(() => QuickLoad2.QuickLoadAsync(vm, args[1], window, false));
-        }
-        else
-        {
-            StartUpMenuOrLastFile(vm, window);
-        }
-    }
-
-    private static void HandleStartUpMenuOrImage(MainViewModel vm, Window window, string? arg = null)
-    {
-        vm.ImageViewer = new ImageViewer();
-
-        if (arg is not null)
-        {
-            vm.MainWindow.CurrentView.Value = vm.ImageViewer;
-            Task.Run(() => QuickLoad2.QuickLoadAsync(vm, arg,  window,false));
-        }
-        else
-        {
-            StartUpMenuOrLastFile(vm, window);
-        }
+        Task.Run(() => QuickLoad2.QuickLoadAsync(vm, arg, window, false));
     }
 
     private static void StartUpMenuOrLastFile(MainViewModel vm, Window window)

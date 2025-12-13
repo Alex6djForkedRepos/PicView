@@ -18,7 +18,8 @@ namespace PicView.Core.ViewModels;
 public class TabOverviewViewModel
 {
     public TitleViewModel TitleViewModel { get; } = new();
-    public BindableReactiveProperty<ObservableCollection<TabViewModel>>? Tabs { get; } = new([]);
+    public BindableReactiveProperty<ObservableCollection<TabViewModel>> Tabs { get; } = new([]);
+    public BindableReactiveProperty<ObservableCollection<TabViewModel>>? DetachedTabs { get; set; }
     public BindableReactiveProperty<int> ActiveTabIndex { get; } = new(0);
     public BindableReactiveProperty<TabViewModel> ActiveTab { get; }
     public BindableReactiveProperty<bool> CanActiveTabNavigate { get; } = new();
@@ -106,7 +107,11 @@ public class TabOverviewViewModel
     public void SelectTab(TabViewModel tab)
     {
         ActiveTab.Value = tab;
+        
+        // If the tab is floating, IndexOf will be -1. 
+        // This effectively "deselects" the tab in the Main Window's TabControl, which is correct behavior.
         ActiveTabIndex.Value = Tabs.Value.IndexOf(tab);
+        
         ActiveTab.Value.IsSelected = true;
         CanActiveTabNavigate.Value = ActiveTab.Value.ImageIterator?.Files?.Count > 1;
     }
@@ -114,25 +119,26 @@ public class TabOverviewViewModel
 
     public async ValueTask CloseTabAsync(TabViewModel tab)
     {
-        if (Tabs.Value.Count <= 0)
-        {
-#if DEBUG
-            DebugHelper.LogDebug(nameof(TabOverviewViewModel), nameof(CloseTabAsync), new Exception("There should always be at least one tab open."));
-#endif
-            return;
-        }
+        // ... (Check for minimum tabs if necessary, usually enforced on main tabs) ...
+
         var wasActive = ReferenceEquals(tab, ActiveTab.Value);
-        Tabs.Value.Remove(tab);
+        
+        // 2. Try removing from both collections
+        var removedFromMain = Tabs.Value.Remove(tab);
+        var removedFromFloating = DetachedTabs?.Value?.Remove(tab);
+
         IsTabPanelVisible.Value = Tabs.Value.Count > 1;
 
         if (wasActive)
         {
-            // pick nearest tab
-            var newIndex = Math.Clamp(ActiveTabIndex.Value, 0, Tabs.Value.Count - 1);
-            if (Tabs.Value.Count > 0)
+            // If it was a main tab, select the nearest main tab
+            if (removedFromMain && Tabs.Value.Count > 0)
             {
+                var newIndex = Math.Clamp(ActiveTabIndex.Value, 0, Tabs.Value.Count - 1);
                 SelectTab(Tabs.Value[newIndex]);
             }
+            // If it was a floating tab, we generally don't automatically focus the main window
+            // unless we want that specific behavior.
         }
 
         if (_sharedCache is not null)
@@ -148,7 +154,8 @@ public class TabOverviewViewModel
     
     public async ValueTask CloseTabAsync(string tabId)
     {
-        var tab = Tabs.Value.FirstOrDefault(t => t.Id == tabId);
+        var tab = Tabs.Value.FirstOrDefault(t => t.Id == tabId) 
+                  ?? DetachedTabs?.Value?.FirstOrDefault(t => t.Id == tabId);
         if (tab is not null)
         {
             await CloseTabAsync(tab);
@@ -182,35 +189,35 @@ public class TabOverviewViewModel
     }
 
 
-    public async ValueTask LoadFromStringAsync(string source)
+    public async ValueTask LoadFromStringAsync(string source, TabViewModel? senderTab = null)
     {
         if (_sharedNavigation is null)
         {
             return;
         }
-        var tab = ActiveTab.Value;
+        var tab = senderTab ?? ActiveTab.Value;
         var ct = tab.ResetNavigationCts();
         
         await _sharedNavigation.LoadFromStringAsync(source, tab, ct)
             .ConfigureAwait(false);
-        CanActiveTabNavigate.Value = ActiveTab.Value.ImageIterator?.Files?.Count > 1;
+        CanActiveTabNavigate.Value = tab.ImageIterator?.Files?.Count > 1;
     }
     
-    public async ValueTask LoadFromFileAsync(FileInfo file)
+    public async ValueTask LoadFromFileAsync(FileInfo file, TabViewModel? senderTab = null)
     {
         if (_sharedNavigation is null)
         {
             return;
         }
-        var tab = ActiveTab.Value;
+        var tab = senderTab ?? ActiveTab.Value;
         var ct = tab.ResetNavigationCts();
-        await _sharedNavigation.LoadFromFileAsync(file, ActiveTab.Value, ct).ConfigureAwait(false);
-        CanActiveTabNavigate.Value = ActiveTab.Value.ImageIterator?.Files?.Count > 1;
+        await _sharedNavigation.LoadFromFileAsync(file, tab, ct).ConfigureAwait(false);
+        CanActiveTabNavigate.Value = tab.ImageIterator?.Files?.Count > 1;
     }
     
-    public async ValueTask LoadFromFileAsync(string file)
+    public async ValueTask LoadFromFileAsync(string file, TabViewModel? senderTab = null)
     {
-        await LoadFromFileAsync(new FileInfo(file)).ConfigureAwait(false);
+        await LoadFromFileAsync(new FileInfo(file), senderTab).ConfigureAwait(false);
     }
     
     public async ValueTask NavigateAsync(TabViewModel tab, NavigateTo to, CancellationTokenSource ct)

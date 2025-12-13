@@ -7,10 +7,8 @@ using Avalonia.Media;
 using Avalonia.Threading;
 using PicView.Avalonia.ColorManagement;
 using PicView.Avalonia.FileSystem;
-using PicView.Avalonia.Functions;
 using PicView.Avalonia.UI;
 using PicView.Avalonia.ViewModels;
-using PicView.Avalonia.WindowBehavior;
 using PicView.Core.DebugTools;
 using PicView.Core.FileHistory;
 using PicView.Core.Localization;
@@ -23,13 +21,20 @@ public partial class StartUpMenu : UserControl
 {
     public StartUpMenu()
     {
+        MinHeight= SizeDefaults.WindowMinSize;
+        MinWidth = SizeDefaults.WindowMinSize;
         InitializeComponent();
+
         SizeChanged += (_, e) => ResponsiveSize(e.NewSize.Width, e.NewSize.Height);
         Loaded += StartUpMenu_Loaded;
     }
 
     private void StartUpMenu_Loaded(object? sender, RoutedEventArgs e)
     {
+        FilePasteLabel.Content = TranslationManager.Translation.FilePaste ?? "Paste";
+        OpenFileDialogLabel.Content = TranslationManager.Translation.OpenFileDialog ?? "Open File";
+        OpenLastFileLabel.Content = TranslationManager.Translation.OpenLastFile ?? "Open Last File";
+        
         SelectFileButton.PointerEntered += (_, _) =>
         {
             if (!this.TryFindResource("SelectFileBrush", Application.Current.RequestedThemeVariant, out var brush))
@@ -124,7 +129,7 @@ public partial class StartUpMenu : UserControl
         });
         if (vm is not null)
         {
-            await vm.Tabs.LoadFromFileAsync(file).ConfigureAwait(false);
+            await vm.Tabs.LoadFromFileAsync(file, DataContext as TabViewModel).ConfigureAwait(false);
         }
     }
     
@@ -135,8 +140,15 @@ public partial class StartUpMenu : UserControl
         {
             if (!string.IsNullOrEmpty(lastFile))
             {
-                var vm = await ChangeToImageViewer();
-                await vm.Tabs.LoadFromStringAsync(lastFile);
+                var vm = Dispatcher.UIThread.Invoke(() =>
+                {
+                    if (DataContext is TabViewModel tab)
+                    {
+                        tab.CurrentView.Value = new ImageViewer2();
+                    }
+                    return UIHelper.GetMainView.DataContext as MainViewModel;
+                });
+                await vm.Tabs.LoadFromStringAsync(lastFile, DataContext as TabViewModel);
             }
             else
             {
@@ -144,7 +156,7 @@ public partial class StartUpMenu : UserControl
                 if (lastEntry != null)
                 {
                     var vm = await ChangeToImageViewer();
-                    await vm.Tabs.LoadFromStringAsync(lastEntry);
+                    await vm.Tabs.LoadFromStringAsync(lastEntry, DataContext as TabViewModel);
                 }
             }
         }
@@ -153,7 +165,6 @@ public partial class StartUpMenu : UserControl
             DebugHelper.LogDebug(nameof(StartUpMenu), nameof(OpenLastButtonOnClick), e);
             await ChangeToStartUpMenu();
         }
-
 
         return;
         
