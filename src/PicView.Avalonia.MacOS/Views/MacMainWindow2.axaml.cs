@@ -120,10 +120,14 @@ public partial class MacMainWindow2 : Window
             return;
         }
 
-        if (e.AddedItems[0] is TabViewModel tab)
+        if (e.AddedItems[0] is not TabViewModel tab)
         {
-            vm.Tabs.ActiveTab.Value = tab;
+            return;
         }
+
+        tab.IsSelected = true;
+        vm.Tabs.ActiveTab.Value = tab;
+        tab.UpdateTabTitle();
     }
 
     private void MainTabStripOnTabCreated(object? sender, TabCreatedEventArgs e)

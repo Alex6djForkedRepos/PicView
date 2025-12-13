@@ -13,6 +13,7 @@ using PicView.Avalonia.ViewModels;
 using PicView.Avalonia.WindowBehavior;
 using PicView.Core.DebugTools;
 using PicView.Core.FileHistory;
+using PicView.Core.Localization;
 using PicView.Core.Sizing;
 using PicView.Core.ViewModels;
 
@@ -95,6 +96,7 @@ public partial class StartUpMenu : UserControl
         if (UIHelper.GetMainView.DataContext is MainViewModel vm)
         {
             TitleManager.SetNoImageTitle(vm.Tabs.TitleViewModel);
+            vm.Tabs.ActiveTab.Value.TabTitle.Value = TranslationManager.Translation.NoImage ?? "No Image";
         }
 
         SelectFileButton.Click += async delegate { await SelectFileButtonOnClick(); };

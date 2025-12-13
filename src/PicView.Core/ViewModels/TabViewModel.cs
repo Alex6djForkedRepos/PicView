@@ -1,4 +1,5 @@
-﻿using PicView.Core.Models;
+﻿using PicView.Core.Localization;
+using PicView.Core.Models;
 using PicView.Core.Navigation;
 using PicView.Core.Navigation.Interfaces;
 using PicView.Core.Titles;
@@ -24,7 +25,7 @@ public class TabViewModel(string id, Func<string, ValueTask> closeTab) : IAsyncD
     public BindableReactiveProperty<object?> CurrentView { get; } = new(null);
     public IImageIterator? ImageIterator { get; private set; }
     public CancellationTokenSource NavigationCts { get; private set; } = new();
-    private TitleViewModel? _titleViewModel { get; set; }
+    private TitleViewModel? TitleViewModel { get; set; }
 
     public bool CanNavigate()
     {
@@ -45,7 +46,7 @@ public class TabViewModel(string id, Func<string, ValueTask> closeTab) : IAsyncD
             // Already initialized
             return;
         }
-        _titleViewModel = titleViewModel;
+        TitleViewModel = titleViewModel;
 
         Model
             .Select(model => model.FileInfo) 
@@ -53,6 +54,13 @@ public class TabViewModel(string id, Func<string, ValueTask> closeTab) : IAsyncD
             {
                 if (file is null)
                 {
+                    var noImage = TranslationManager.Translation.NoImage;
+                    if (string.IsNullOrEmpty(noImage))
+                    {
+                        return;
+                    }
+                    TabTitle.Value = noImage;
+                    TabTooltip.Value = noImage;
                     return;
                 }
                 TabTitle.Value = file.Name;
@@ -75,9 +83,9 @@ public class TabViewModel(string id, Func<string, ValueTask> closeTab) : IAsyncD
         var index = ImageIterator.CurrentIndex;
         var windowTitles = ImageTitleFormatter.GenerateTitleStrings(width, height,
             index, Model.CurrentValue.FileInfo, 100, ImageIterator.Files);
-        _titleViewModel.WindowTitle.Value = windowTitles.TitleWithAppName;
-        _titleViewModel.Title.Value = windowTitles.BaseTitle;
-        _titleViewModel.TitleTooltip.Value = windowTitles.FilePathTitle;
+        TitleViewModel.WindowTitle.Value = windowTitles.TitleWithAppName;
+        TitleViewModel.Title.Value = windowTitles.BaseTitle;
+        TitleViewModel.TitleTooltip.Value = windowTitles.FilePathTitle;
     }
 
     public void Initialize(IImageCache cache, IThumbnailLoader thumbnailLoader, TitleViewModel titleViewModel)
