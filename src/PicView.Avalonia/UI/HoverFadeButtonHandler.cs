@@ -87,7 +87,7 @@ public class HoverFadeButtonHandler
             return false;
         }
 
-        return _childButton == null || _vm.Tabs.CanNavigate();
+        return _childButton == null || _vm.Tabs.CanActiveTabNavigate.Value;
     }
 
     /// <summary>

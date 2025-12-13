@@ -55,12 +55,20 @@ public class TabOverviewViewModel
         _sharedNavigation = navigationService;
         _sharedThumbnailLoader = thumbnailLoader;
         _sharedCache.RegisterOwner(ActiveTab.Value);
-
-        Observable.EveryValueChanged(ActiveTab.Value, x => x.ImageIterator)
-            .Subscribe(iterator =>
-            {
-                CanActiveTabNavigate.Value = iterator?.Files?.Count >= 0;
-            });
+    }
+    
+    public void LoadAndInitializeFromPath(List<FileInfo> files, IGalleryService gallery, INavigationService navigationService, IImageCache cache, IThumbnailLoader thumbnailLoader)
+    {
+        Initialize(gallery, navigationService, cache, thumbnailLoader);
+        ActiveTab.Value.InitializeImageIterator(files, cache, thumbnailLoader);
+        _sharedCache.PreloadAsync(ActiveTab.Value.Id, ActiveTab.Value.ImageIterator.CurrentIndex, false, files, CancellationToken.None);
+        CanActiveTabNavigate.Value = files.Count > 1;
+    }
+    
+    public void LoadAndInitialize(IGalleryService gallery, INavigationService navigationService, IImageCache cache, IThumbnailLoader thumbnailLoader)
+    {
+        Initialize(gallery, navigationService, cache, thumbnailLoader);
+        ActiveTab.Value.Initialize(cache, thumbnailLoader, TitleViewModel);
     }
     
     /// <summary>
@@ -95,11 +103,12 @@ public class TabOverviewViewModel
         SelectTab(tab);
     }
     
-    private void SelectTab(TabViewModel tab)
+    public void SelectTab(TabViewModel tab)
     {
         ActiveTab.Value = tab;
         ActiveTabIndex.Value = Tabs.Value.IndexOf(tab);
         ActiveTab.Value.IsSelected = true;
+        CanActiveTabNavigate.Value = ActiveTab.Value.ImageIterator?.Files?.Count > 1;
     }
 
 
@@ -145,26 +154,8 @@ public class TabOverviewViewModel
             await CloseTabAsync(tab);
         }
     }
-    
-    public void LoadAndInitializeFromPath(List<FileInfo> files, IGalleryService gallery, INavigationService navigationService, IImageCache cache, IThumbnailLoader thumbnailLoader)
-    {
-        Initialize(gallery, navigationService, cache, thumbnailLoader);
-        ActiveTab.Value.InitializeImageIterator(files, cache, thumbnailLoader);
-        _sharedCache.PreloadAsync(ActiveTab.Value.Id, ActiveTab.Value.ImageIterator.CurrentIndex, false, files, CancellationToken.None);
-    }
-    
-    public void LoadAndInitialize(IGalleryService gallery, INavigationService navigationService, IImageCache cache, IThumbnailLoader thumbnailLoader)
-    {
-        Initialize(gallery, navigationService, cache, thumbnailLoader);
-        ActiveTab.Value.Initialize(cache, thumbnailLoader, TitleViewModel);
-    }
 
     #region Navigation
-
-    public static bool CanNavigate(TabViewModel tab) =>
-        tab.CanNavigate();
-    public bool CanNavigate() =>
-        ActiveTab.Value.CanNavigate();
 
     public async ValueTask NextFile() =>
         await NextFileCore(NavigateTo.Next).ConfigureAwait(false);
@@ -182,7 +173,7 @@ public class TabOverviewViewModel
     {
         var tab = ActiveTab.Value;
 
-        if (!CanNavigate(tab) || _sharedNavigation is null)
+        if (!CanActiveTabNavigate.Value || _sharedNavigation is null)
         {
             return;
         }
@@ -202,6 +193,7 @@ public class TabOverviewViewModel
         
         await _sharedNavigation.LoadFromStringAsync(source, tab, ct)
             .ConfigureAwait(false);
+        CanActiveTabNavigate.Value = ActiveTab.Value.ImageIterator?.Files?.Count > 1;
     }
     
     public async ValueTask LoadFromFileAsync(FileInfo file)
@@ -213,6 +205,7 @@ public class TabOverviewViewModel
         var tab = ActiveTab.Value;
         var ct = tab.ResetNavigationCts();
         await _sharedNavigation.LoadFromFileAsync(file, ActiveTab.Value, ct).ConfigureAwait(false);
+        CanActiveTabNavigate.Value = ActiveTab.Value.ImageIterator?.Files?.Count > 1;
     }
     
     public async ValueTask LoadFromFileAsync(string file)
@@ -230,7 +223,7 @@ public class TabOverviewViewModel
     }
     public async ValueTask NavigateToIndexAsync(int index)
     {
-        if (!CanNavigate(ActiveTab.Value) || _sharedNavigation is null)
+        if (!CanActiveTabNavigate.Value || _sharedNavigation is null)
         {
             return;
         }

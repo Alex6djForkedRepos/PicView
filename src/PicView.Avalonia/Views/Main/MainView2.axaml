@@ -508,7 +508,7 @@
                     Command="{CompiledBinding Navigation.NextCommand}"
                     Header="{CompiledBinding Translation.NextImage.Value,
                                              Mode=OneWay}"
-                    IsEnabled="{CompiledBinding PicViewer.FileInfo.Value,
+                    IsEnabled="{CompiledBinding Tabs.ActiveTab.Value.Model.Value.Image,
                                                 Converter={x:Static ObjectConverters.IsNotNull}}"
                     StaysOpenOnClick="True">
                     <MenuItem.Icon>
@@ -524,7 +524,7 @@
                     Command="{CompiledBinding Navigation.PreviousCommand}"
                     Header="{CompiledBinding Translation.PrevImage.Value,
                                              Mode=OneWay}"
-                    IsEnabled="{CompiledBinding PicViewer.FileInfo.Value,
+                    IsEnabled="{CompiledBinding Tabs.ActiveTab.Value.Model.Value.Image,
                                                 Converter={x:Static ObjectConverters.IsNotNull}}"
                     StaysOpenOnClick="True">
                     <MenuItem.Icon>
@@ -542,7 +542,7 @@
                     Command="{CompiledBinding Navigation.Skip10Command}"
                     Header="{CompiledBinding Translation.AdvanceBy10Images.Value,
                                              Mode=OneWay}"
-                    IsEnabled="{CompiledBinding PicViewer.FileInfo.Value,
+                    IsEnabled="{CompiledBinding Tabs.ActiveTab.Value.Model.Value.Image,
                                                 Converter={x:Static ObjectConverters.IsNotNull}}"
                     StaysOpenOnClick="True">
                     <MenuItem.Icon>
@@ -558,7 +558,7 @@
                     Command="{CompiledBinding Navigation.Skip100Command}"
                     Header="{CompiledBinding Translation.AdvanceBy100Images.Value,
                                              Mode=OneWay}"
-                    IsEnabled="{CompiledBinding PicViewer.FileInfo.Value,
+                    IsEnabled="{CompiledBinding Tabs.ActiveTab.Value.Model.Value.Image,
                                                 Converter={x:Static ObjectConverters.IsNotNull}}"
                     StaysOpenOnClick="True">
                     <MenuItem.Icon>
@@ -574,7 +574,7 @@
                     Command="{CompiledBinding Navigation.Prev10Command}"
                     Header="{CompiledBinding Translation.GoBackBy10Images.Value,
                                              Mode=OneWay}"
-                    IsEnabled="{CompiledBinding PicViewer.FileInfo.Value,
+                    IsEnabled="{CompiledBinding Tabs.ActiveTab.Value.Model.Value.Image,
                                                 Converter={x:Static ObjectConverters.IsNotNull}}"
                     StaysOpenOnClick="True">
                     <MenuItem.Icon>
@@ -590,7 +590,7 @@
                     Command="{CompiledBinding Navigation.Prev100Command}"
                     Header="{CompiledBinding Translation.GoBackBy100Images.Value,
                                              Mode=OneWay}"
-                    IsEnabled="{CompiledBinding PicViewer.FileInfo.Value,
+                    IsEnabled="{CompiledBinding Tabs.ActiveTab.Value.Model.Value.Image,
                                                 Converter={x:Static ObjectConverters.IsNotNull}}"
                     StaysOpenOnClick="True">
                     <MenuItem.Icon>
@@ -608,7 +608,7 @@
                     Command="{CompiledBinding Navigation.FirstCommand}"
                     Header="{CompiledBinding Translation.FirstImage.Value,
                                              Mode=OneWay}"
-                    IsEnabled="{CompiledBinding PicViewer.FileInfo.Value,
+                    IsEnabled="{CompiledBinding Tabs.ActiveTab.Value.Model.Value.Image,
                                                 Converter={x:Static ObjectConverters.IsNotNull}}">
                     <MenuItem.Icon>
                         <Image
@@ -623,7 +623,7 @@
                     Command="{CompiledBinding Navigation.LastCommand}"
                     Header="{CompiledBinding Translation.LastImage.Value,
                                              Mode=OneWay}"
-                    IsEnabled="{CompiledBinding PicViewer.FileInfo.Value,
+                    IsEnabled="{CompiledBinding Tabs.ActiveTab.Value.Model.Value.Image,
                                                 Converter={x:Static ObjectConverters.IsNotNull}}">
                     <MenuItem.Icon>
                         <Image
@@ -640,7 +640,7 @@
                     Command="{CompiledBinding Navigation.NextFolderCommand}"
                     Header="{CompiledBinding Translation.NextFolder.Value,
                                              Mode=OneWay}"
-                    IsEnabled="{CompiledBinding PicViewer.FileInfo.Value,
+                    IsEnabled="{CompiledBinding Tabs.ActiveTab.Value.Model.Value.Image,
                                                 Converter={x:Static ObjectConverters.IsNotNull}}">
                     <MenuItem.Icon>
                         <Image
@@ -655,7 +655,7 @@
                     Command="{CompiledBinding Navigation.PreviousFolderCommand}"
                     Header="{CompiledBinding Translation.PrevFolder.Value,
                                              Mode=OneWay}"
-                    IsEnabled="{CompiledBinding PicViewer.FileInfo.Value,
+                    IsEnabled="{CompiledBinding Tabs.ActiveTab.Value.Model.Value.Image,
                                                 Converter={x:Static ObjectConverters.IsNotNull}}">
                     <MenuItem.Icon>
                         <Image
@@ -713,7 +713,7 @@
                                                        FallbackValue=''}"
                     Header="{CompiledBinding Translation.FileProperties.Value,
                                              Mode=OneWay}"
-                    IsEnabled="{CompiledBinding PicViewer.FileInfo.Value,
+                    IsEnabled="{CompiledBinding Tabs.ActiveTab.Value.Model.Value.Image,
                                                 Converter={x:Static ObjectConverters.IsNotNull}}">
                     <MenuItem.Icon>
                         <Image
@@ -900,7 +900,7 @@
                     CommandParameter="{CompiledBinding Tabs.ActiveTab.Value.Model.Value.FileInfo,
                                                        FallbackValue=''}"
                     Header="{Binding Translation.FileCopyPath.Value, Mode=OneWay}"
-                    IsEnabled="{CompiledBinding PicViewer.FileInfo.Value,
+                    IsEnabled="{CompiledBinding Tabs.ActiveTab.Value.Model.Value.Image,
                                                 Converter={x:Static ObjectConverters.IsNotNull}}">
                     <MenuItem.Icon>
                         <Path Classes="CopyPath" />
@@ -912,7 +912,7 @@
                     Command="{CompiledBinding Tools.CopyBase64Command}"
                     CommandParameter="{CompiledBinding Tabs.ActiveTab.Value.Model.Value.FileInfo,
                                                        FallbackValue=''}"
-                    IsEnabled="{CompiledBinding PicViewer.FileInfo.Value,
+                    IsEnabled="{CompiledBinding Tabs.ActiveTab.Value.Model.Value.Image,
                                                 Converter={x:Static ObjectConverters.IsNotNull}}">
                     <MenuItem.Header>
                         <TextBlock>
@@ -934,7 +934,7 @@
                                                        FallbackValue=''}"
                     Header="{CompiledBinding Translation.DuplicateFile.Value,
                                              Mode=OneWay}"
-                    IsEnabled="{CompiledBinding PicViewer.FileInfo.Value,
+                    IsEnabled="{CompiledBinding Tabs.ActiveTab.Value.Model.Value.Image,
                                                 Converter={x:Static ObjectConverters.IsNotNull}}">
                     <MenuItem.Icon>
                         <Path Classes="DuplicatePath" />

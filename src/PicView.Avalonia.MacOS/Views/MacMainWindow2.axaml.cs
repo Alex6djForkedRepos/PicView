@@ -125,8 +125,7 @@ public partial class MacMainWindow2 : Window
             return;
         }
 
-        tab.IsSelected = true;
-        vm.Tabs.ActiveTab.Value = tab;
+        vm.Tabs.SelectTab(tab);
         tab.UpdateTabTitle();
     }
 

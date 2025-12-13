@@ -58,8 +58,7 @@
                 Command="{CompiledBinding Navigation.Skip10Command}"
                 Header="{CompiledBinding Translation.AdvanceBy10Images,
                                          Mode=OneWay}"
-                IsEnabled="{CompiledBinding PicViewer.FileInfo.Value,
-                                            Converter={x:Static ObjectConverters.IsNotNull}}"
+                IsEnabled="{CompiledBinding Tabs.CanActiveTabNavigate.Value}"
                 StaysOpenOnClick="True">
                 <MenuItem.Icon>
                     <Image
@@ -74,8 +73,7 @@
                 Command="{CompiledBinding Navigation.Skip100Command}"
                 Header="{CompiledBinding Translation.AdvanceBy100Images.Value,
                                          Mode=OneWay}"
-                IsEnabled="{CompiledBinding PicViewer.FileInfo.Value,
-                                            Converter={x:Static ObjectConverters.IsNotNull}}"
+                IsEnabled="{CompiledBinding Tabs.CanActiveTabNavigate.Value}"
                 StaysOpenOnClick="True">
                 <MenuItem.Icon>
                     <Image
@@ -90,8 +88,7 @@
                 Command="{CompiledBinding Navigation.Prev10Command}"
                 Header="{CompiledBinding Translation.GoBackBy10Images.Value,
                                          Mode=OneWay}"
-                IsEnabled="{CompiledBinding PicViewer.FileInfo.Value,
-                                            Converter={x:Static ObjectConverters.IsNotNull}}"
+                IsEnabled="{CompiledBinding Tabs.CanActiveTabNavigate.Value}"
                 StaysOpenOnClick="True">
                 <MenuItem.Icon>
                     <Image
@@ -106,8 +103,7 @@
                 Command="{CompiledBinding Navigation.Prev100Command}"
                 Header="{CompiledBinding Translation.GoBackBy100Images.Value,
                                          Mode=OneWay}"
-                IsEnabled="{CompiledBinding PicViewer.FileInfo.Value,
-                                            Converter={x:Static ObjectConverters.IsNotNull}}"
+                IsEnabled="{CompiledBinding Tabs.CanActiveTabNavigate.Value}"
                 StaysOpenOnClick="True">
                 <MenuItem.Icon>
                     <Image
@@ -124,8 +120,7 @@
                 Command="{CompiledBinding Navigation.FirstCommand}"
                 Header="{CompiledBinding Translation.FirstImage.Value,
                                          Mode=OneWay}"
-                IsEnabled="{CompiledBinding PicViewer.FileInfo.Value,
-                                            Converter={x:Static ObjectConverters.IsNotNull}}">
+                IsEnabled="{CompiledBinding Tabs.CanActiveTabNavigate.Value}">
                 <MenuItem.Icon>
                     <Image
                         Height="12"
@@ -139,8 +134,7 @@
                 Command="{CompiledBinding Navigation.LastCommand}"
                 Header="{CompiledBinding Translation.LastImage.Value,
                                          Mode=OneWay}"
-                IsEnabled="{CompiledBinding PicViewer.FileInfo.Value,
-                                            Converter={x:Static ObjectConverters.IsNotNull}}">
+                IsEnabled="{CompiledBinding Tabs.CanActiveTabNavigate.Value}">
                 <MenuItem.Icon>
                     <Image
                         Height="12"
@@ -156,7 +150,7 @@
                 Command="{CompiledBinding Navigation.NextFolderCommand}"
                 Header="{CompiledBinding Translation.NextFolder.Value,
                                          Mode=OneWay}"
-                IsEnabled="{CompiledBinding PicViewer.FileInfo.Value,
+                IsEnabled="{CompiledBinding Tabs.ActiveTab.Value.Model.Value.FileInfo,
                                             Converter={x:Static ObjectConverters.IsNotNull}}">
                 <MenuItem.Icon>
                     <Image
@@ -171,7 +165,7 @@
                 Command="{CompiledBinding Navigation.PreviousFolderCommand}"
                 Header="{CompiledBinding Translation.PrevFolder.Value,
                                          Mode=OneWay}"
-                IsEnabled="{CompiledBinding PicViewer.FileInfo.Value,
+                IsEnabled="{CompiledBinding Tabs.ActiveTab.Value.Model.Value.FileInfo,
                                             Converter={x:Static ObjectConverters.IsNotNull}}">
                 <MenuItem.Icon>
                     <Image
@@ -251,7 +245,7 @@
                     Icon="{StaticResource ZoomOutImage}"
                     IconHeight="16"
                     IconWidth="18"
-                    IsEnabled="{CompiledBinding PicViewer.ImageSource.Value,
+                    IsEnabled="{CompiledBinding Tabs.ActiveTab.Value.Model.Value.Image,
                                                 Converter={x:Static ObjectConverters.IsNotNull}}"
                     IsTabStop="False"
                     ToolTip.HorizontalOffset="15"
@@ -269,7 +263,7 @@
                     Icon="{StaticResource ZoomAltImage}"
                     IconHeight="16"
                     IconWidth="18"
-                    IsEnabled="{CompiledBinding PicViewer.ImageSource.Value,
+                    IsEnabled="{CompiledBinding Tabs.ActiveTab.Value.Model.Value.Image,
                                                 Converter={x:Static ObjectConverters.IsNotNull}}"
                     IsTabStop="False"
                     ToolTip.HorizontalOffset="15"

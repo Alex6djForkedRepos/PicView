@@ -26,11 +26,6 @@ public class TabViewModel(string id, Func<string, ValueTask> closeTab) : IAsyncD
     public IImageIterator? ImageIterator { get; private set; }
     public CancellationTokenSource NavigationCts { get; private set; } = new();
     private TitleViewModel? TitleViewModel { get; set; }
-
-    public bool CanNavigate()
-    {
-        return ImageIterator is { Files.Count: > 0 };
-    }
     
     public BindableReactiveProperty<string> TabTitle { get; } = new(string.Empty);
     public BindableReactiveProperty<string> TabTooltip { get; } = new(string.Empty);
@@ -48,6 +43,11 @@ public class TabViewModel(string id, Func<string, ValueTask> closeTab) : IAsyncD
         }
         TitleViewModel = titleViewModel;
 
+        ModelSubscription();
+    }
+
+    private void ModelSubscription()
+    {
         Model
             .Select(model => model.FileInfo) 
             .Subscribe(file => 
@@ -65,7 +65,6 @@ public class TabViewModel(string id, Func<string, ValueTask> closeTab) : IAsyncD
                 }
                 TabTitle.Value = file.Name;
                 TabTooltip.Value = file.FullName;
-
                 UpdateTabTitle();
             })
             .AddTo(Disposables);
