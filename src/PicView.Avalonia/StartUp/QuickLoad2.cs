@@ -29,7 +29,7 @@ public static class QuickLoad2
     /// <param name="continueFromLeftOff">A boolean indicating whether to continue loading from the last session folder structure.</param>
     public static async ValueTask QuickLoadAsync(MainViewModel vm, string file, Window window, bool continueFromLeftOff)
     {
-        vm.Tabs.TitleViewModel.WindowTitle.Value = vm.Tabs.TitleViewModel.Title.Value =
+        vm.Tabs.ActiveTab.CurrentValue.WindowTitle.Value = vm.Tabs.ActiveTab.CurrentValue.Title.Value =
             TranslationManager.Translation.Loading ?? "Loading...";
         
         var fileInfo = new FileInfo(file);
@@ -75,7 +75,7 @@ public static class QuickLoad2
     private static void SetPicViewerValues(MainViewModel vm, ImageModel imageModel, FileInfo fileInfo)
     {
         vm.Tabs.ActiveTab.Value.Model.Value = imageModel;
-        vm.Tabs.ActiveTab.Value.Initialize(vm.Tabs.TitleViewModel);
+        vm.Tabs.ActiveTab.Value.Initialize();
         
         // Legacy, delete later
         vm.PicViewer.FileInfo.Value = fileInfo;

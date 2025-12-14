@@ -48,7 +48,7 @@ public static class ErrorHandling
                 vm.MainWindow.CurrentView.Value = startUpMenu;
             }
             
-            TitleManager.SetNoImageTitle(vm.Tabs.TitleViewModel);
+            TitleManager.SetNoImageTitle(vm);
             GalleryFunctions.Clear();
             MenuManager.CloseMenus(vm);
 

@@ -25,12 +25,17 @@ public class TabViewModel(string id, Func<string, ValueTask> closeTab) : IAsyncD
     public BindableReactiveProperty<object?> CurrentView { get; } = new(null);
     public IImageIterator? ImageIterator { get; private set; }
     public CancellationTokenSource NavigationCts { get; private set; } = new();
-    private TitleViewModel? TitleViewModel { get; set; }
     
+    // Titles
+    public BindableReactiveProperty<string>? Title { get; } = new();
+
+    public BindableReactiveProperty<string>? TitleTooltip { get; } = new();
+    public BindableReactiveProperty<string>? WindowTitle { get; } = new();
     public BindableReactiveProperty<string> TabTitle { get; } = new(string.Empty);
     public BindableReactiveProperty<string> TabTooltip { get; } = new(string.Empty);
+
     
-    public void Initialize(TitleViewModel titleViewModel)
+    public void Initialize()
     {
         if (Disposables is null)
         {
@@ -41,7 +46,6 @@ public class TabViewModel(string id, Func<string, ValueTask> closeTab) : IAsyncD
             // Already initialized
             return;
         }
-        TitleViewModel = titleViewModel;
 
         ModelSubscription();
     }
@@ -82,14 +86,14 @@ public class TabViewModel(string id, Func<string, ValueTask> closeTab) : IAsyncD
         var index = ImageIterator.CurrentIndex;
         var windowTitles = ImageTitleFormatter.GenerateTitleStrings(width, height,
             index, Model.CurrentValue.FileInfo, 100, ImageIterator.Files);
-        TitleViewModel.WindowTitle.Value = windowTitles.TitleWithAppName;
-        TitleViewModel.Title.Value = windowTitles.BaseTitle;
-        TitleViewModel.TitleTooltip.Value = windowTitles.FilePathTitle;
+        WindowTitle.Value = windowTitles.TitleWithAppName;
+        Title.Value = windowTitles.BaseTitle;
+        TitleTooltip.Value = windowTitles.FilePathTitle;
     }
 
-    public void Initialize(IImageCache cache, IThumbnailLoader thumbnailLoader, TitleViewModel titleViewModel)
+    public void Initialize(IImageCache cache, IThumbnailLoader thumbnailLoader)
     {
-        Initialize(titleViewModel);
+        Initialize();
         ImageIterator = new ImageIterator(cache, thumbnailLoader, this);
     }
 

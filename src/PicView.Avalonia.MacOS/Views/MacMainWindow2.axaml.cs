@@ -1,9 +1,11 @@
 using System.Collections.ObjectModel;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Layout;
 using PicView.Avalonia.CustomControls;
 using PicView.Avalonia.MacOS.WindowImpl;
+using PicView.Avalonia.StartUp;
 using PicView.Avalonia.UI;
 using PicView.Avalonia.ViewModels;
 using PicView.Avalonia.Views.UC;
@@ -167,7 +169,12 @@ public partial class MacMainWindow2 : Window
             }
         };
         newWindow.Closing += (_, _) => vm.Tabs.DetachedTabs.Value.Remove(tab);
-        newWindow.Show();
+        if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop)
+        {
+            return;
+        }
+        StartUpHelper2.StartUpBlank(vm, false, desktop, newWindow);
+        
     }
 
     private void Control_OnSizeChanged(object? sender, SizeChangedEventArgs e)

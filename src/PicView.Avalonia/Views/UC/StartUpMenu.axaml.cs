@@ -100,7 +100,7 @@ public partial class StartUpMenu : UserControl
 
         if (UIHelper.GetMainView.DataContext is MainViewModel vm)
         {
-            TitleManager.SetNoImageTitle(vm.Tabs.TitleViewModel);
+            TitleManager.SetNoImageTitle(vm);
             vm.Tabs.ActiveTab.Value.TabTitle.Value = TranslationManager.Translation.NoImage ?? "No Image";
         }
 
@@ -129,7 +129,8 @@ public partial class StartUpMenu : UserControl
         });
         if (vm is not null)
         {
-            await vm.Tabs.LoadFromFileAsync(file, DataContext as TabViewModel).ConfigureAwait(false);
+            var tab = await Dispatcher.UIThread.InvokeAsync(() => DataContext as TabViewModel);
+            await vm.Tabs.LoadFromFileAsync(file, tab).ConfigureAwait(false);
         }
     }
     

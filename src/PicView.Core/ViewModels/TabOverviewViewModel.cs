@@ -17,7 +17,6 @@ namespace PicView.Core.ViewModels;
 /// </summary>
 public class TabOverviewViewModel
 {
-    public TitleViewModel TitleViewModel { get; } = new();
     public BindableReactiveProperty<ObservableCollection<TabViewModel>> Tabs { get; } = new([]);
     public BindableReactiveProperty<ObservableCollection<TabViewModel>>? DetachedTabs { get; set; }
     public BindableReactiveProperty<int> ActiveTabIndex { get; } = new(0);
@@ -69,7 +68,7 @@ public class TabOverviewViewModel
     public void LoadAndInitialize(IGalleryService gallery, INavigationService navigationService, IImageCache cache, IThumbnailLoader thumbnailLoader)
     {
         Initialize(gallery, navigationService, cache, thumbnailLoader);
-        ActiveTab.Value.Initialize(cache, thumbnailLoader, TitleViewModel);
+        ActiveTab.Value.Initialize(cache, thumbnailLoader);
     }
     
     /// <summary>
@@ -98,7 +97,7 @@ public class TabOverviewViewModel
         var tab = CreateTabInternal();
         if (_sharedCache != null && _sharedThumbnailLoader != null)
         {
-            tab.Initialize(_sharedCache, _sharedThumbnailLoader, TitleViewModel);
+            tab.Initialize(_sharedCache, _sharedThumbnailLoader);
         }
         _sharedCache.RegisterOwner(tab);
         SelectTab(tab);

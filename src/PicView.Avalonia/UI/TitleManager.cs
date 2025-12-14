@@ -270,11 +270,11 @@ public static class TitleManager
     ///     This method sets the title, window title, and tooltip to a default message
     ///     indicating that no image is currently loaded or available.
     /// </remarks>
-    public static void SetNoImageTitle(TitleViewModel vm)
+    public static void SetNoImageTitle(MainViewModel vm)
     {
-        vm.Title.Value = TranslationManager.Translation.NoImage ?? string.Empty;
-        vm.WindowTitle.Value = TranslationManager.Translation.NoImage + " - PicView";
-        vm.TitleTooltip.Value = TranslationManager.Translation.NoImage ?? string.Empty;
+        vm.Tabs.ActiveTab.CurrentValue.Title.Value = TranslationManager.Translation.NoImage ?? string.Empty;
+        vm.Tabs.ActiveTab.CurrentValue.WindowTitle.Value = TranslationManager.Translation.NoImage + " - PicView";
+        vm.Tabs.ActiveTab.CurrentValue.TitleTooltip.Value = TranslationManager.Translation.NoImage ?? string.Empty;
     }
 
     private static void ReturnError(MainViewModel vm)
