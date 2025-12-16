@@ -151,11 +151,71 @@ public partial class MacMainWindow2 : Window
         {
             return;
         }
+
         if (DataContext is not MainViewModel parentVm)
         {
             return;
         }
 
+        if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop)
+        {
+            return;
+        }
+
+        // 1. Try to find a target window under the mouse
+        MacMainWindow2? targetWindow = null;
+
+        foreach (var window in desktop.Windows)
+        {
+            if (window == this || window is not MacMainWindow2 macWindow)
+            {
+                continue;
+            }
+
+            var clientPoint = macWindow.PointToClient(e.ScreenPosition);
+            if (!new Rect(0, 0, macWindow.ClientSize.Width, macWindow.ClientSize.Height).Contains(clientPoint))
+            {
+                continue;
+            }
+
+            targetWindow = macWindow;
+            break;
+        }
+
+        // 2. If dropped on an existing window, attach the tab there
+        if (targetWindow != null)
+        {
+            if (targetWindow.DataContext is not MainViewModel targetVm)
+            {
+                return;
+            }
+
+            // Need to properly remove it from the previous location
+            parentVm.Tabs.RemoveTab(tab);
+                
+            // Add to new window
+            targetVm.Tabs.Tabs.Value.Add(tab);
+            targetVm.Tabs.SelectTab(tab);
+                
+            // Update context
+            tab.ParentWindowContext = targetVm;
+                
+            // Refresh bindings
+            if (tab.CurrentView.CurrentValue is Control control)
+            {
+                control.DataContext = tab;
+            }
+                
+            // Close the source window if it's empty
+            if (parentVm.Tabs.Tabs.Value.Count == 0)
+            {
+                // Close();
+            }
+            // Logic handled, return
+            return;
+        }
+
+        // 3. Fallback: Create a new window (Detaching behavior)
         Task.Run(() =>
         {
             var newVm = new MainViewModel(parentVm.PlatformService, parentVm.PlatformWindowService)
@@ -175,23 +235,18 @@ public partial class MacMainWindow2 : Window
                     DataContext = newVm
                 };
 
-                if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop)
-                {
-                    return;
-                }
-
-                StartUpHelper2.StartUpBlank(newVm, settingsExists:true, setPos: false, desktop, newWindow);
+                StartUpHelper2.StartUpBlank(newVm, settingsExists: true, setPos: false, desktop, newWindow);
                 // Fix null DataContext
                 if (tab.CurrentView.CurrentValue is Control control)
                 {
                     control.DataContext = tab;
-                }                
-                
+                }
+
             }, DispatcherPriority.Send);
-            
+
             // Initialize the NEW window's tabs with the OLD window's services
             // This ensures both windows share the same memory cache
-            if (parentVm.Tabs.SharedCache is not  { } cache ||
+            if (parentVm.Tabs.SharedCache is not { } cache ||
                 parentVm.Tabs.SharedNavigation is not { } nav ||
                 parentVm.Tabs.SharedThumbnailLoader is not { } thumb ||
                 parentVm.Tabs.SharedGallery is not { } gallery)
@@ -201,13 +256,14 @@ public partial class MacMainWindow2 : Window
 
             if (newVm.Tabs.ActiveTab.CurrentValue.ImageIterator?.Files?.Count > 0)
             {
-                newVm.Tabs.LoadAndInitializeFromPath(newVm.Tabs.ActiveTab.CurrentValue.ImageIterator.Files, gallery, nav, cache, thumb);
+                newVm.Tabs.LoadAndInitializeFromPath(newVm.Tabs.ActiveTab.CurrentValue.ImageIterator.Files, gallery, nav,
+                    cache, thumb);
             }
             else
             {
                 newVm.Tabs.LoadAndInitialize(gallery, nav, cache, thumb);
             }
-            
+
             // Need to properly remove it from the previous location
             parentVm.Tabs.RemoveTab(tab);
         });
