@@ -52,7 +52,7 @@
                             CornerRadius="8,0,0,0"
                             Icon="{StaticResource GalleryImage}"
                             IconHeight="12"
-                            IconMargin="0,0,5,0"
+                            IconMargin="0,0,7,0"
                             IconWidth="12"
                             Padding="15,7,15,7"
                             Text="{CompiledBinding Translation.ShowImageGallery.Value}"
@@ -91,7 +91,7 @@
                             CornerRadius="8,0,0,0"
                             Icon="{StaticResource GalleryImage}"
                             IconHeight="12"
-                            IconMargin="0,0,5,0"
+                            IconMargin="0,0,7,0"
                             IconWidth="12"
                             Padding="15,7,15,7"
                             Text="Show docked gallery at bottom" />
@@ -102,7 +102,7 @@
                             CornerRadius="8,0,0,0"
                             Icon="{StaticResource GalleryImage}"
                             IconHeight="12"
-                            IconMargin="0,0,5,0"
+                            IconMargin="0,0,7,0"
                             IconWidth="12"
                             Padding="15,7,15,7"
                             Text="Show docked gallery to the left" />
@@ -113,7 +113,7 @@
                             CornerRadius="8,0,0,0"
                             Icon="{StaticResource GalleryImage}"
                             IconHeight="12"
-                            IconMargin="0,0,5,0"
+                            IconMargin="0,0,7,0"
                             IconWidth="12"
                             Padding="15,7,15,7"
                             Text="Show docked gallery to the right" />
@@ -124,7 +124,7 @@
                             CornerRadius="8,0,0,0"
                             Icon="{StaticResource GalleryImage}"
                             IconHeight="12"
-                            IconMargin="0,0,5,0"
+                            IconMargin="0,0,7,0"
                             IconWidth="12"
                             Padding="15,7,15,7"
                             Text="Show docked gallery at top" />
@@ -135,14 +135,73 @@
                             CornerRadius="8,0,0,0"
                             Data="{StaticResource CloseGeometry}"
                             IconHeight="12"
-                            IconMargin="0,0,5,0"
+                            IconMargin="0,0,7,0"
                             IconWidth="12"
                             Padding="15,7,15,7"
                             Text="Close docked gallery" />
                     </StackPanel>
                 </Carousel.Items>
             </Carousel>
-
+            <customControls:TextIconButton
+                Background="Transparent"
+                Classes="altHover"
+                Command="{CompiledBinding Window.ShowBatchResizeWindow}"
+                DockPanel.Dock="Top"
+                Icon="{StaticResource BatchResizeImage}"
+                IconHeight="12"
+                IconMargin="0,0,7,0"
+                IconWidth="12"
+                Padding="15,7,15,7"
+                Text="{CompiledBinding Translation.ResizeImage.Value}"
+                VerticalAlignment="Top" />
+            <customControls:TextIconButton
+                Background="Transparent"
+                Classes="altHover"
+                Command="{CompiledBinding Window.ShowEffectsWindow}"
+                DockPanel.Dock="Top"
+                Icon="{StaticResource FlaskImage}"
+                IconHeight="12"
+                IconMargin="0,0,7,0"
+                IconWidth="12"
+                Padding="15,7,15,7"
+                Text="{CompiledBinding Translation.Effects.Value}"
+                VerticalAlignment="Top" />
+            <customControls:TextIconButton
+                Background="Transparent"
+                Classes="altHover"
+                Command="{CompiledBinding Window.ShowKeybindingsWindow}"
+                DockPanel.Dock="Top"
+                Icon="{StaticResource ShortcutsImage}"
+                IconHeight="12"
+                IconMargin="0,0,7,0"
+                IconWidth="12"
+                Padding="15,7,15,7"
+                Text="{CompiledBinding Translation.ApplicationShortcuts.Value}"
+                VerticalAlignment="Top" />
+            <customControls:TextIconButton
+                Background="Transparent"
+                Classes="altHover"
+                Command="{CompiledBinding Window.ShowSettingsWindow}"
+                Data="{StaticResource CogGeometry}"
+                DockPanel.Dock="Top"
+                IconHeight="12"
+                IconMargin="0,0,7,0"
+                IconWidth="12"
+                Padding="15,7,15,7"
+                Text="{CompiledBinding Translation.Settings.Value}"
+                VerticalAlignment="Top" />
+            <customControls:TextIconButton
+                Background="Transparent"
+                Classes="altHover"
+                Command="{CompiledBinding Window.ShowAboutWindow}"
+                DockPanel.Dock="Top"
+                Icon="{StaticResource AboutImage}"
+                IconHeight="12"
+                IconMargin="0,0,7,0"
+                IconWidth="12"
+                Padding="15,7,15,7"
+                Text="{CompiledBinding Translation.About.Value}"
+                VerticalAlignment="Top" />
         </DockPanel>
     </Border>
 </customControls:AnimatedMenu>

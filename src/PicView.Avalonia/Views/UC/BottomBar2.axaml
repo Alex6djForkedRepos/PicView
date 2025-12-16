@@ -115,7 +115,7 @@
 
             <!--  First Image  -->
             <MenuItem
-                Command="{CompiledBinding Navigation.FirstCommand}"
+                Command="{CompiledBinding Tabs.FirstFile}"
                 Header="{CompiledBinding Translation.FirstImage.Value,
                                          Mode=OneWay}"
                 IsEnabled="{CompiledBinding Tabs.CanActiveTabNavigate.Value}">
@@ -129,7 +129,7 @@
 
             <!--  Last Image  -->
             <MenuItem
-                Command="{CompiledBinding Navigation.LastCommand}"
+                Command="{CompiledBinding Tabs.LastFile}"
                 Header="{CompiledBinding Translation.LastImage.Value,
                                          Mode=OneWay}"
                 IsEnabled="{CompiledBinding Tabs.CanActiveTabNavigate.Value}">
