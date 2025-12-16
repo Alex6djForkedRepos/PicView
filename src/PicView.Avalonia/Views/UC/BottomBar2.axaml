@@ -53,7 +53,7 @@
 
             <!--  Next 10  -->
             <MenuItem
-                Command="{CompiledBinding Navigation.Skip10Command}"
+                Command="{CompiledBinding Tabs.Prev10}"
                 Header="{CompiledBinding Translation.AdvanceBy10Images,
                                          Mode=OneWay}"
                 IsEnabled="{CompiledBinding Tabs.CanActiveTabNavigate.Value}"
@@ -68,7 +68,7 @@
 
             <!--  Next 100  -->
             <MenuItem
-                Command="{CompiledBinding Navigation.Skip100Command}"
+                Command="{CompiledBinding Tabs.Next100}"
                 Header="{CompiledBinding Translation.AdvanceBy100Images.Value,
                                          Mode=OneWay}"
                 IsEnabled="{CompiledBinding Tabs.CanActiveTabNavigate.Value}"
@@ -83,7 +83,7 @@
 
             <!--  Prev 10  -->
             <MenuItem
-                Command="{CompiledBinding Navigation.Prev10Command}"
+                Command="{CompiledBinding Tabs.Prev10}"
                 Header="{CompiledBinding Translation.GoBackBy10Images.Value,
                                          Mode=OneWay}"
                 IsEnabled="{CompiledBinding Tabs.CanActiveTabNavigate.Value}"
@@ -98,7 +98,7 @@
 
             <!--  Prev 100  -->
             <MenuItem
-                Command="{CompiledBinding Navigation.Prev100Command}"
+                Command="{CompiledBinding Tabs.Prev100}"
                 Header="{CompiledBinding Translation.GoBackBy100Images.Value,
                                          Mode=OneWay}"
                 IsEnabled="{CompiledBinding Tabs.CanActiveTabNavigate.Value}"
@@ -169,6 +169,23 @@
                     <Image
                         Height="14"
                         Source="{StaticResource PrevFolderImage}"
+                        Width="14" />
+                </MenuItem.Icon>
+            </MenuItem>
+
+            <Separator />
+
+            <!--  Slideshow  -->
+            <MenuItem
+                Command="{CompiledBinding Tools.StartSlideShowTask}"
+                Header="{CompiledBinding Translation.Slideshow.Value,
+                                         Mode=OneWay}"
+                IsEnabled="{CompiledBinding Tabs.ActiveTab.Value.Model.Value.FileInfo,
+                                            Converter={x:Static ObjectConverters.IsNotNull}}">
+                <MenuItem.Icon>
+                    <Image
+                        Height="14"
+                        Source="{StaticResource SlideshowImage}"
                         Width="14" />
                 </MenuItem.Icon>
             </MenuItem>
@@ -274,6 +291,7 @@
                 BorderThickness="0,0,1,0"
                 Classes="hover"
                 Command="{CompiledBinding Tabs.PrevFile}"
+                ContextMenu="{StaticResource MainContextMenu}"
                 Data="{StaticResource FilledArrowLeftGeometry}"
                 Focusable="False"
                 Foreground="{DynamicResource MainTextColor}"
