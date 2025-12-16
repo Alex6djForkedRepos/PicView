@@ -19,6 +19,9 @@ namespace PicView.Avalonia.Views.UC;
 
 public partial class StartUpMenu : UserControl
 {
+    private MainViewModel? ParentContext => 
+        (DataContext as TabViewModel)?.ParentWindowContext as MainViewModel;
+    
     public StartUpMenu()
     {
         MinHeight= SizeDefaults.WindowMinSize;
@@ -98,10 +101,11 @@ public partial class StartUpMenu : UserControl
             pasteBrush.Color = color as Color? ?? default;
         };
 
-        if (UIHelper.GetMainView.DataContext is MainViewModel vm)
+        if (DataContext is TabViewModel tab)
         {
-            TitleManager.SetNoImageTitle(vm);
-            vm.Tabs.ActiveTab.Value.TabTitle.Value = TranslationManager.Translation.NoImage ?? "No Image";
+            tab.Title.Value = TranslationManager.Translation.NoImage ?? string.Empty;
+            tab.WindowTitle.Value = TranslationManager.Translation.NoImage + " - PicView";
+            tab.TitleTooltip.Value = TranslationManager.Translation.NoImage ?? string.Empty;
         }
 
         SelectFileButton.Click += async delegate { await SelectFileButtonOnClick(); };
@@ -110,95 +114,80 @@ public partial class StartUpMenu : UserControl
         UIHelper.GetHoverBar?.IsVisible = false;
     }
     
-    private async ValueTask SelectFileButtonOnClick()
+  private async ValueTask SelectFileButtonOnClick()
+{
+    var file = await FilePicker.SelectFile().ConfigureAwait(false);
+    if (file is null)
     {
-        var file = await FilePicker.SelectFile().ConfigureAwait(false);
-        if (file is null)
-        {
-            return;
-        }
-
-        var vm = await Dispatcher.UIThread.InvokeAsync(() =>
-        {
-            if (DataContext is not TabViewModel { ParentWindowContext: MainViewModel vm })
-            {
-                return null;
-            }
-            vm.Tabs.ActiveTab.Value.CurrentView.Value = new ImageViewer2();
-            return vm;
-        });
-        if (vm is not null)
-        {
-            var tab = await Dispatcher.UIThread.InvokeAsync(() => DataContext as TabViewModel);
-            await vm.Tabs.LoadFromFileAsync(file, tab).ConfigureAwait(false);
-        }
-    }
-    
-    private async ValueTask OpenLastButtonOnClick()
-    {
-        var lastFile = Settings.StartUp.LastFile;
-        try
-        {
-            if (!string.IsNullOrEmpty(lastFile))
-            {
-                var vm = Dispatcher.UIThread.Invoke(() =>
-                {
-                    if (DataContext is not TabViewModel tab)
-                    {
-                        return null;
-                    }
-                    tab.CurrentView.Value = new ImageViewer2();
-                    return tab.ParentWindowContext as MainViewModel;
-                });
-                await vm.Tabs.LoadFromStringAsync(lastFile, DataContext as TabViewModel);
-            }
-            else
-            {
-                var lastEntry = FileHistoryManager.GetLastEntry();
-                if (lastEntry != null)
-                {
-                    var vm = await ChangeToImageViewer();
-                    await vm.Tabs.LoadFromStringAsync(lastEntry, DataContext as TabViewModel);
-                }
-            }
-        }
-        catch (Exception e)
-        {
-            DebugHelper.LogDebug(nameof(StartUpMenu), nameof(OpenLastButtonOnClick), e);
-            await ChangeToStartUpMenu();
-        }
-
         return;
-        
-        async ValueTask<MainViewModel?> ChangeToImageViewer()
-        {
-            return await Dispatcher.UIThread.InvokeAsync(() =>
-            {
-                var vm = Dispatcher.UIThread.Invoke(() =>
-                {
-                    if (DataContext is not TabViewModel tab)
-                    {
-                        return null;
-                    }
-                    return tab.ParentWindowContext as MainViewModel;
-                });
-                vm.Tabs.ActiveTab.Value.CurrentView.Value = new ImageViewer2();
-                return vm;
-            });
-        }
-        
-        async ValueTask ChangeToStartUpMenu(){
-        {
-            await Dispatcher.UIThread.InvokeAsync(() =>
-            {
-                if (DataContext is not TabViewModel { ParentWindowContext: MainViewModel vm })
-                {
-                    return;
-                }
-                vm.Tabs.ActiveTab.Value.CurrentView.Value = new StartUpMenu();
-            });
-        }}
     }
+
+    // Switch to ImageViewer and get the ViewModel in one go
+    var (vm, tab) = await Dispatcher.UIThread.InvokeAsync(() =>
+    {
+        if (DataContext is not TabViewModel currentTab || ParentContext is not { } parentVm)
+        {
+            return (null, null);
+        }
+
+        currentTab.CurrentView.Value = new ImageViewer2();
+        return (parentVm, currentTab);
+    });
+
+    if (vm is not null && tab is not null)
+    {
+        await vm.Tabs.LoadFromFileAsync(file, tab).ConfigureAwait(false);
+    }
+}
+
+private async ValueTask OpenLastButtonOnClick()
+{
+    var lastFile = Settings.StartUp.LastFile;
+    var lastEntry = FileHistoryManager.GetLastEntry();
+    
+    // determine which file source to use (prioritize LastFile, fallback to History)
+    var fileToLoad = !string.IsNullOrEmpty(lastFile) ? lastFile : lastEntry;
+
+    if (string.IsNullOrEmpty(fileToLoad))
+    {
+        return;
+    }
+
+    try
+    {
+        var (vm, tab) = await Dispatcher.UIThread.InvokeAsync(() =>
+        {
+            if (DataContext is not TabViewModel currentTab || ParentContext is not { } parentVm)
+            {
+                return (null, null);
+            }
+
+            currentTab.CurrentView.Value = new ImageViewer2();
+            return (parentVm, currentTab);
+        });
+
+        if (vm is not null && tab is not null)
+        {
+            await vm.Tabs.LoadFromStringAsync(fileToLoad, tab).ConfigureAwait(false);
+        }
+    }
+    catch (Exception e)
+    {
+        DebugHelper.LogDebug(nameof(StartUpMenu), nameof(OpenLastButtonOnClick), e);
+        await RestoreStartUpMenu();
+    }
+}
+
+private async ValueTask RestoreStartUpMenu()
+{
+    await Dispatcher.UIThread.InvokeAsync(() =>
+    {
+        if (DataContext is TabViewModel tab)
+        {
+            tab.CurrentView.Value = new StartUpMenu();
+        }
+    });
+}
 
     public void ResponsiveSize(double width, double height)
     {

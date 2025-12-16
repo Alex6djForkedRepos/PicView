@@ -85,4 +85,6 @@ public interface IImageCache
     /// Helper to clear resources specifically for a <see cref="TabViewModel"/>.
     /// </summary>
     ValueTask Clear(TabViewModel tab);
+
+    void TryRemove(string ownerId, int index);
 }

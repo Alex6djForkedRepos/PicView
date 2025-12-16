@@ -97,6 +97,14 @@ public class SharedImageCache : IImageCache
     public async ValueTask Clear(TabViewModel tab) =>
         await RemoveOwner(tab.Id);
 
+    public void TryRemove(string ownerId, int index)
+    {
+        if (_items.TryRemove(ownerId, index, out var value))
+        {
+            DisposeHelper(value);
+        }
+    }
+
     internal void DisposeHelper(PreLoadValue? item)
     {
         if (item?.ImageModel?.Image is not IDisposable disposable)

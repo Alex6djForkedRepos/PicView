@@ -88,6 +88,8 @@ public class Preloader2(Func<FileInfo, ValueTask<ImageModel>> imageModelLoader, 
         catch (Exception ex)
         {
             DebugHelper.LogDebug(nameof(PreLoader), nameof(AddAsync), ex);
+            // Remove the placeholder so we can try again later
+            _cache.TryRemove(ownerId, index);
             return null;
         }
         finally

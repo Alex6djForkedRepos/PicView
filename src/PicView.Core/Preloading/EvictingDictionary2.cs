@@ -264,6 +264,20 @@ public class EvictingDictionary2<TValue> : IEnumerable<KeyValuePair<(string Owne
         return default;
     }
 
+    public bool TryRemove(string ownerId, int index, [MaybeNullWhen(false)] out TValue value)
+    {
+        lock (_lock)
+        {
+            if (_indexMap.Remove(new CacheKey(ownerId, index), out var path))
+            {
+                value = _data[path];
+                return _data.Remove(path);
+            }
+            value = default;
+            return false;
+        }
+    }
+
     // Explicit TryGetValue for logic that just checks existence
     public bool TryGetValue(string ownerId, int index, [MaybeNullWhen(false)] out TValue value)
     {
