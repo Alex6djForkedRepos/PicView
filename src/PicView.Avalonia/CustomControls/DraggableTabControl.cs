@@ -399,7 +399,7 @@ public class DraggableTabControl : TabControl
 
     #endregion
 
-#region Ghost Window Logic
+    #region Ghost Window Logic
 
     private void CreateGhostWindow(TabItem tabItem)
     {
@@ -415,10 +415,12 @@ public class DraggableTabControl : TabControl
         }
 
         var (windowWidth, windowHeight) = CalculateGhostSize(contentBitmap.Size);
-
+        var cornerRadius = new CornerRadius(16);
+        var isMacOs = RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
         _ghostWindow = new Window
         {
-            SystemDecorations = SystemDecorations.None,
+            SystemDecorations = isMacOs ? SystemDecorations.BorderOnly : SystemDecorations.None,
+            CornerRadius = cornerRadius,
             ShowInTaskbar = false,
             Topmost = true,
             Background = Brushes.Transparent,
@@ -427,10 +429,11 @@ public class DraggableTabControl : TabControl
             Height = windowHeight,
             Content = new Border
             {
-                MaxHeight = GhostTargetHeight,
+                CornerRadius = cornerRadius,
                 Opacity = GhostOpacity,
                 Child = new Image
                 {
+                    MaxHeight = GhostTargetHeight,
                     Source = contentBitmap,
                     Stretch = Stretch.Uniform
                 }
