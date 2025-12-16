@@ -31,7 +31,7 @@ public class NavigationService : INavigationService
             var index = FindIndex(fileInfo, tab);
             tab.ImageIterator.SetCurrentIndex(index);
             tab.UpdateTabTitle();
-            _cache.Clear();
+            _cache.Clear(tab.Id);
             _cache.Add(tab.Id, index, new PreLoadValue(model), tab.ImageIterator.Files.Count, false);
         }
         catch (Exception e)
@@ -61,8 +61,10 @@ public class NavigationService : INavigationService
         if (iterator.Files is null || iterator.Files.Count == 0)
         {
             await Repopulate();
+            return;
         }
-        else if (iterator.Files.Contains(fileInfo))
+
+        if (iterator.Files.Contains(fileInfo))
         {
             var index = FindIndex(fileInfo, tab);
             await tab.ImageIterator.IterateToIndexAsync(index, ct).ConfigureAwait(false);

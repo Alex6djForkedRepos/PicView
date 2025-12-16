@@ -132,7 +132,7 @@ public partial class MacMainWindow2 : Window
         tab.UpdateTabTitle();
     }
 
-    private static void MainTabControlOnTabCreated(object? sender, TabCreatedEventArgs e)
+    private void MainTabControlOnTabCreated(object? sender, TabCreatedEventArgs e)
     {
         // Only set the StartUpMenu if the View is currently null.
         // This prevents overwriting the view (e.g. an image) when reordering tabs,
@@ -160,6 +160,7 @@ public partial class MacMainWindow2 : Window
             {
                 Tabs = new TabOverviewViewModel(tab)
             };
+            tab.ParentWindowContext = newVm;
 
             Dispatcher.UIThread.Invoke(() =>
             {

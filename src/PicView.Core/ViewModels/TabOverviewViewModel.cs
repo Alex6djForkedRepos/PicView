@@ -31,6 +31,9 @@ public class TabOverviewViewModel
     public IGalleryService? SharedGallery { get; private set; }
     public IThumbnailLoader? SharedThumbnailLoader { get; private set; }
 
+    // Needed for correct context in multi-window scenarios
+    private object? _parentVm;
+
     public TabOverviewViewModel()
     {
         ActiveTab = new BindableReactiveProperty<TabViewModel>(CreateInitialTab());
@@ -74,6 +77,7 @@ public class TabOverviewViewModel
     public void LoadAndInitialize(IGalleryService gallery, INavigationService navigationService, IImageCache cache, IThumbnailLoader thumbnailLoader)
     {
         Initialize(gallery, navigationService, cache, thumbnailLoader);
+        ActiveTab.Value.InitializeImageIterator([], cache, thumbnailLoader);
         ActiveTab.Value.Initialize(cache, thumbnailLoader);
     }
     
@@ -93,6 +97,7 @@ public class TabOverviewViewModel
     {
         var id = Guid.NewGuid().ToString("N");
         var tab = new TabViewModel(id, CloseTabAsync);
+        tab.ParentWindowContext = _parentVm;
         Tabs.Value.Add(tab);
         return tab;
     }
@@ -106,6 +111,16 @@ public class TabOverviewViewModel
         }
         SharedCache.RegisterOwner(tab.Id);
         SelectTab(tab);
+    }
+    
+    public void SetParentContext(object parent)
+    {
+        _parentVm = parent;
+        // Update existing tabs if any
+        foreach(var tab in Tabs.Value)
+        {
+            tab.ParentWindowContext = parent;
+        }
     }
     
     public void SelectTab(TabViewModel tab)
@@ -157,7 +172,14 @@ public class TabOverviewViewModel
 
     public void RemoveTab(TabViewModel tab)
     {
+        var wasActive = ReferenceEquals(tab, ActiveTab.Value);
         Tabs.Value.Remove(tab);
+        // If it was active and we still have tabs left, select a new one explicitly
+        if (wasActive && Tabs.Value.Count > 0)
+        {
+            var newIndex = Math.Clamp(ActiveTabIndex.Value, 0, Tabs.Value.Count - 1);
+            SelectTab(Tabs.Value[newIndex]);
+        }
     }
 
     #region Navigation
@@ -222,7 +244,8 @@ public class TabOverviewViewModel
         
         await SharedNavigation.LoadFromStringAsync(source, tab, ct)
             .ConfigureAwait(false);
-        CanActiveTabNavigate.Value = tab.ImageIterator?.Files?.Count > 1;
+        ActiveTab.Value = tab;
+        CanActiveTabNavigate.Value = tab.ImageIterator.Files.Count > 1;
     }
     
     public async ValueTask LoadFromFileAsync(FileInfo file, TabViewModel? senderTab = null)

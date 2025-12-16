@@ -17,6 +17,8 @@ namespace PicView.Core.ViewModels;
 /// </summary>
 public class TabViewModel(string id, Func<string, ValueTask> closeTab) : IAsyncDisposable
 {
+    // The MainViewModel that currently "owns" this tab
+    public object? ParentWindowContext { get; set; }
     private CompositeDisposable? Disposables { get; set; }
     public string Id { get; } = id;
     public bool IsClosing { get; private set; }

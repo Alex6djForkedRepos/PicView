@@ -172,6 +172,7 @@ public static class StartUpHelper2
         Task.Run(() =>
         {
             vm.Tabs ??= new TabOverviewViewModel();
+            vm.Tabs.SetParentContext(vm);
             _ = FileHistoryManager.InitializeAsync();
             HandleWindowControlSettings(vm, desktop);
             SettingsUpdater.ValidateGallerySettings(vm, settingsExists);
@@ -281,7 +282,14 @@ public static class StartUpHelper2
         void ShowStartUpMenu()
         {
             window.Show();
-            vm.Tabs.ActiveTab.Value.CurrentView.Value = new StartUpMenu();
+            var startUpMenu = new StartUpMenu
+            {
+                Buttons =
+                {
+                    DataContext = vm
+                }
+            };
+            vm.Tabs.ActiveTab.Value.CurrentView.Value = startUpMenu;
             TabNavigationInitializer.Initialize(vm);
         }
     }

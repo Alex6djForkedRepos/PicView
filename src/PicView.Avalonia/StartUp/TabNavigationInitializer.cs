@@ -55,6 +55,7 @@ public static class TabNavigationInitializer
         var files = vm.PlatformService.GetFiles(fileInfo);
         // 4. Initialize ViewModel
         vm.Tabs.LoadAndInitializeFromPath(files, galleryService, navService, sharedCache, thumbnailService);
+        vm.Tabs.SetParentContext(vm);
         vm.Tabs.ActiveTab.Value.UpdateTabTitle();
     }
 }

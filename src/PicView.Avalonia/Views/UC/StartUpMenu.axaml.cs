@@ -109,7 +109,7 @@ public partial class StartUpMenu : UserControl
         
         UIHelper.GetHoverBar?.IsVisible = false;
     }
-
+    
     private async ValueTask SelectFileButtonOnClick()
     {
         var file = await FilePicker.SelectFile().ConfigureAwait(false);
@@ -120,7 +120,7 @@ public partial class StartUpMenu : UserControl
 
         var vm = await Dispatcher.UIThread.InvokeAsync(() =>
         {
-            if (UIHelper.GetMainView.DataContext is not MainViewModel vm)
+            if (DataContext is not TabViewModel { ParentWindowContext: MainViewModel vm })
             {
                 return null;
             }
@@ -143,11 +143,12 @@ public partial class StartUpMenu : UserControl
             {
                 var vm = Dispatcher.UIThread.Invoke(() =>
                 {
-                    if (DataContext is TabViewModel tab)
+                    if (DataContext is not TabViewModel tab)
                     {
-                        tab.CurrentView.Value = new ImageViewer2();
+                        return null;
                     }
-                    return UIHelper.GetMainView.DataContext as MainViewModel;
+                    tab.CurrentView.Value = new ImageViewer2();
+                    return tab.ParentWindowContext as MainViewModel;
                 });
                 await vm.Tabs.LoadFromStringAsync(lastFile, DataContext as TabViewModel);
             }
@@ -173,10 +174,14 @@ public partial class StartUpMenu : UserControl
         {
             return await Dispatcher.UIThread.InvokeAsync(() =>
             {
-                if (UIHelper.GetMainView.DataContext is not MainViewModel vm)
+                var vm = Dispatcher.UIThread.Invoke(() =>
                 {
-                    return null;
-                }
+                    if (DataContext is not TabViewModel tab)
+                    {
+                        return null;
+                    }
+                    return tab.ParentWindowContext as MainViewModel;
+                });
                 vm.Tabs.ActiveTab.Value.CurrentView.Value = new ImageViewer2();
                 return vm;
             });
@@ -186,7 +191,7 @@ public partial class StartUpMenu : UserControl
         {
             await Dispatcher.UIThread.InvokeAsync(() =>
             {
-                if (UIHelper.GetMainView.DataContext is not MainViewModel vm)
+                if (DataContext is not TabViewModel { ParentWindowContext: MainViewModel vm })
                 {
                     return;
                 }
