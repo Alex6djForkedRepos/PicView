@@ -66,9 +66,14 @@ public partial class ImageViewer2 : UserControl
         if (DataContext is TabViewModel tab)
         {
             _disposable = Observable.EveryValueChanged(ZoomPanControl, zoom => zoom.ZoomLevel)
-                .Subscribe(z =>
+                .Subscribe(zoomLevel =>
                 {
-                    TitleManager.SetTabTitle(tab, z);
+                    TitleManager.SetTabTitle(tab, zoomLevel);
+                    if (Settings.Zoom.IsShowingZoomPercentagePopup)
+                    {
+                        _ = TooltipHelper.ShowTooltipMessageContinuallyAsync($"{zoomLevel}%", true,
+                            TimeSpan.FromSeconds(1));
+                    }
                 });
         }
     }

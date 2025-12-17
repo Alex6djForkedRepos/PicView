@@ -171,7 +171,7 @@ public class ZoomPanControl2 : Decorator
 
         ZoomPreviewer?.IsVisible = false;
 
-        ApplyZoomAndTitle(1.0, CenterPoint(), animated);
+        SetTransitionsAndScale(1.0, CenterPoint(), animated);
         SetZoomValue(100);
     }
 
@@ -336,22 +336,11 @@ public class ZoomPanControl2 : Decorator
         // Check if target scale is within deadzone
         if (!(targetScale >= lowerBound) || !(targetScale <= upperBound))
         {
-            ApplyZoomAndTitle(targetScale, center, animated);
+            SetTransitionsAndScale(targetScale, center, animated);
         }
         else
         {
             ResetZoom(animated);
-        }
-    }
-
-    private void ApplyZoomAndTitle(double targetScale, Point center, bool animated)
-    {
-        SetTransitionsAndScale(targetScale, center, animated);
-        // TitleManager.SetTitle(DataContext as MainViewModel); // TODO: Replace with reactive subscription update to zoom level
-        if (Settings.Zoom.IsShowingZoomPercentagePopup)
-        {
-            _ = TooltipHelper.ShowTooltipMessageContinuallyAsync($"{Math.Floor(ZoomLevel)}%", true,
-                TimeSpan.FromSeconds(1));
         }
     }
 
