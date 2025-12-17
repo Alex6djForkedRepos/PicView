@@ -1,12 +1,18 @@
 using System.Collections;
 using System.Diagnostics.CodeAnalysis;
-using PicView.Core.DebugTools;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using ZLinq;
 #if DEBUG
+using PicView.Core.DebugTools;
 using System.Diagnostics;
+// ReSharper disable ForeachCanBePartlyConvertedToQueryUsingAnotherGetEnumerator
+// ReSharper disable ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator
 #endif
 
 namespace PicView.Core.Preloading;
+
+
 
 /// <summary>
 /// A thread-safe, capacity-constrained container responsible for storing loaded images and managing eviction.
@@ -17,34 +23,29 @@ namespace PicView.Core.Preloading;
 /// </para>
 /// </summary>
 public class EvictingDictionary2<TValue> : IEnumerable<KeyValuePair<(string OwnerId, int Index), TValue>>
+    where TValue : class
 {
-    //  Data Store: Tracks the actual loaded images by FilePath
-    //    Controls the "Pixel" memory (large footprint)
+    private static readonly CacheKeyComparer Comparer = new();
     private readonly Dictionary<string, TValue> _data;
 
-    //  Logical Map: Tracks which Tab/Index points to which File
-    //    Controls the "Navigation" memory (small footprint)
-    private readonly Dictionary<CacheKey, string> _indexMap;
+    // Storing Tuple (Path, Value) to avoid double-lookups on reads
+    private readonly Dictionary<CacheKey, (string Path, TValue Value)> _indexMap;
 
     private readonly int _initialMaxSize;
-
     private readonly Lock _lock = new();
     private int _currentMaxSize;
 
     public EvictingDictionary2(int initialMaxSize)
     {
-        if (initialMaxSize <= 0)
-        {
-            throw new ArgumentOutOfRangeException(nameof(initialMaxSize), "Size must be positive.");
-        }
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(initialMaxSize);
 
         _initialMaxSize = initialMaxSize;
         _currentMaxSize = initialMaxSize;
 
-        _indexMap = new Dictionary<CacheKey, string>(initialMaxSize);
+        _indexMap = new Dictionary<CacheKey, (string, TValue)>(initialMaxSize, Comparer);
         _data = new Dictionary<string, TValue>(initialMaxSize);
     }
-
+    
     public int Count
     {
         get
@@ -62,7 +63,14 @@ public class EvictingDictionary2<TValue> : IEnumerable<KeyValuePair<(string Owne
         {
             lock (_lock)
             {
-                return _data.Values.ToArray();
+                if (_data.Count == 0)
+                {
+                    return Array.Empty<TValue>();
+                }
+
+                var arr = new TValue[_data.Count];
+                _data.Values.CopyTo(arr, 0);
+                return arr;
             }
         }
     }
@@ -72,15 +80,12 @@ public class EvictingDictionary2<TValue> : IEnumerable<KeyValuePair<(string Owne
         List<KeyValuePair<(string, int), TValue>> snapshot;
         lock (_lock)
         {
-            // Reconstruct the view: Iterate logical keys -> fetch data
             snapshot = new List<KeyValuePair<(string, int), TValue>>(_indexMap.Count);
+            // ReSharper disable once ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator
             foreach (var kvp in _indexMap)
             {
-                if (_data.TryGetValue(kvp.Value, out var val))
-                {
-                    snapshot.Add(new KeyValuePair<(string, int), TValue>(
-                        (kvp.Key.OwnerId, kvp.Key.Index), val));
-                }
+                snapshot.Add(new KeyValuePair<(string, int), TValue>(
+                    (kvp.Key.OwnerId, kvp.Key.Index), kvp.Value.Value));
             }
         }
 
@@ -96,12 +101,7 @@ public class EvictingDictionary2<TValue> : IEnumerable<KeyValuePair<(string Owne
     {
         lock (_lock)
         {
-            // Fix: Capacity should increase when a new tab acts as an owner
             _currentMaxSize += _initialMaxSize;
-#if DEBUG
-            DebugHelper.LogDebug(nameof(EvictingDictionary2<TValue>), nameof(ExpandCapacity),
-                $"Expanded by '{id}'. New Capacity: {_currentMaxSize}");
-#endif
         }
     }
 
@@ -109,7 +109,16 @@ public class EvictingDictionary2<TValue> : IEnumerable<KeyValuePair<(string Owne
     {
         lock (_lock)
         {
-            var keysToRemove = _indexMap.Keys.Where(k => k.OwnerId == id).ToArray();
+            // ALLOCATION FIX: Avoid LINQ
+            List<CacheKey> keysToRemove = [];
+            foreach (var key in _indexMap.Keys)
+            {
+                if (key.OwnerId == id)
+                {
+                    keysToRemove.Add(key);
+                }
+            }
+
             foreach (var key in keysToRemove)
             {
                 RemoveInternal(key);
@@ -134,46 +143,127 @@ public class EvictingDictionary2<TValue> : IEnumerable<KeyValuePair<(string Owne
         }
     }
 
+    // ------------------------------------------------------------------------
+    // HYBRID LOOKUP OPTIMIZATION
+    // ------------------------------------------------------------------------
+
+    /// <summary>
+    /// FAST PATH: Uses standard string lookup to benefit from cached hash codes.
+    /// Use this when you already have a string.
+    /// </summary>
+    public bool TryGetValueByPath(string filePath, [MaybeNullWhen(false)] out TValue value)
+    {
+        lock (_lock)
+        {
+            return _data.TryGetValue(filePath, out value);
+        }
+    }
+
+    /// <summary>
+    /// ALLOCATION-FREE PATH: Uses Span lookup.
+    /// Use this when your path is a slice of a larger buffer/span.
+    /// </summary>
+    public bool TryGetValueByPath(ReadOnlySpan<char> filePathSpan, [MaybeNullWhen(false)] out TValue value)
+    {
+        lock (_lock)
+        {
+            var lookup = _data.GetAlternateLookup<ReadOnlySpan<char>>();
+            return lookup.TryGetValue(filePathSpan, out value);
+        }
+    }
+
+    public bool TryGetValue(string ownerId, int index, [MaybeNullWhen(false)] out TValue value)
+    {
+        lock (_lock)
+        {
+            ref var entry = ref CollectionsMarshal.GetValueRefOrNullRef(_indexMap, new CacheKey(ownerId, index));
+            if (!Unsafe.IsNullRef(ref entry))
+            {
+                value = entry.Value;
+                return true;
+            }
+
+            value = default;
+            return false;
+        }
+    }
+
+    // ------------------------------------------------------------------------
+    // ADD / REMOVE LOGIC
+    // ------------------------------------------------------------------------
+
     public bool TryAdd(string ownerId, int index, string filePath, TValue value,
         int totalCount, bool isReverse, [MaybeNullWhen(false)] out TValue evictedValue)
     {
         lock (_lock)
         {
             var newKey = new CacheKey(ownerId, index);
-            evictedValue = default;
+            evictedValue = null;
 
-            // 1. Check for Overwrite
-            if (_indexMap.TryGetValue(newKey, out var oldPath))
+            ref var existingEntry = ref CollectionsMarshal.GetValueRefOrNullRef(_indexMap, newKey);
+
+            if (!Unsafe.IsNullRef(ref existingEntry))
             {
-                if (oldPath == filePath)
+                if (existingEntry.Path == filePath)
                 {
                     return false;
                 }
 
                 // Remove the old link. Capture the value if it was the last ref.
                 evictedValue = RemoveInternal(newKey);
-
-                // Note: capacity didn't change (removed 1, about to add 1), 
-                // so we don't need to run eviction logic below.
             }
-            // 2. Check Capacity (Only if we didn't just free up a slot)
             else if (_indexMap.Count >= _currentMaxSize)
             {
                 var keyToEvict = SelectEvictionCandidate(ownerId, index, totalCount, isReverse);
                 if (!EqualityComparer<CacheKey>.Default.Equals(keyToEvict, default))
                 {
-                    // If we already have an evictedValue from above? Impossible (due to 'else if')
                     evictedValue = RemoveInternal(keyToEvict);
                 }
             }
 
-            // 3. Add Data
             _data.TryAdd(filePath, value);
+            _indexMap[newKey] = (filePath, value);
 
-            // 4. Update Map
-            _indexMap[newKey] = filePath;
+            return evictedValue is not null;
+        }
+    }
 
-            return !EqualityComparer<TValue>.Default.Equals(evictedValue, default);
+    public bool TryRemove(string ownerId, int index, [MaybeNullWhen(false)] out TValue value)
+    {
+        lock (_lock)
+        {
+            value = RemoveInternal(new CacheKey(ownerId, index));
+            return value != null;
+        }
+    }
+
+    public void Clear()
+    {
+        lock (_lock)
+        {
+            _indexMap.Clear();
+            _data.Clear();
+        }
+    }
+
+    public void Clear(string ownerId)
+    {
+        lock (_lock)
+        {
+            // ALLOCATION FIX: Manual iteration instead of LINQ
+            List<CacheKey> toRemove = new();
+            foreach (var k in _indexMap.Keys)
+            {
+                if (k.OwnerId == ownerId)
+                {
+                    toRemove.Add(k);
+                }
+            }
+
+            foreach (var key in toRemove)
+            {
+                RemoveInternal(key);
+            }
         }
     }
 
@@ -183,34 +273,32 @@ public class EvictingDictionary2<TValue> : IEnumerable<KeyValuePair<(string Owne
     /// </summary>
     private TValue? RemoveInternal(CacheKey key)
     {
-        if (!_indexMap.Remove(key, out var path))
+        if (!_indexMap.Remove(key, out var entry))
         {
-            return default;
+            return null;
         }
 
-        // Check if any other keys point to this path
-        // Optimization: We could maintain a RefCount dictionary, but iterating _indexMap is acceptable 
-        // if capacity is small (~50-100 items). For larger caps, add a RefCount Dict.
-        var isReferenced = _indexMap.ContainsValue(path);
+        // Optimization: Check values manually to avoid LINQ/Lambdas
+        var isReferenced = false;
+        // ReSharper disable once ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator
+        foreach (var val in _indexMap.Values)
+        {
+            if (val.Path != entry.Path)
+            {
+                continue;
+            }
+
+            isReferenced = true;
+            break;
+        }
 
         if (isReferenced)
         {
-            return default;
+            return null;
         }
 
-        // Orphaned! Remove actual data.
-        if (!_data.Remove(path, out var val))
-        {
-            return default;
-        }
-
-#if DEBUG
-        if (DebugHelper.ShowCacheAdditionsAndRemovals)
-        {
-            Trace.WriteLine($"Fully Evicted file: {Path.GetFileName(path)}");
-        }
-#endif
-        return val;
+        _data.Remove(entry.Path, out var valOut);
+        return valOut;
     }
 
     private CacheKey SelectEvictionCandidate(string ownerId, int currentIndex, int totalCount, bool isReverse)
@@ -219,22 +307,22 @@ public class EvictingDictionary2<TValue> : IEnumerable<KeyValuePair<(string Owne
         var keyToEvict = default(CacheKey);
         var foundCandidate = false;
 
-        // Only evict items belonging to the current OwnerId (Polite Eviction)
-        // If we are desperate (no items for this owner), we might need to evict others,
-        // but typically we expand capacity per owner so this shouldn't happen.
-        var candidates = _indexMap.Keys.Where(k => k.OwnerId == ownerId);
-
-        foreach (var candidateKey in candidates)
+        // ALLOCATION FIX: Replaced LINQ .Where() with manual foreach
+        // This removes the Enumerator allocation on every eviction.
+        foreach (var candidateKey in _indexMap.Keys)
         {
+            if (candidateKey.OwnerId != ownerId)
+            {
+                continue;
+            }
+
             int distance;
             if (isReverse)
             {
-                // Moving backward: Evict furthest ahead
                 distance = (candidateKey.Index - currentIndex + totalCount) % totalCount;
             }
             else
             {
-                // Moving forward: Evict furthest behind
                 distance = (currentIndex - candidateKey.Index + totalCount) % totalCount;
             }
 
@@ -253,91 +341,71 @@ public class EvictingDictionary2<TValue> : IEnumerable<KeyValuePair<(string Owne
             return keyToEvict;
         }
 
-        // Fallback: If current owner has NO items (first load?), but cache is full of OTHER owners.
-        // We must evict someone else.
-        if (_indexMap.Count >= _currentMaxSize)
+        // Fallback: just remove first key if we are full and logic above failed
+        if (_indexMap.Count < _currentMaxSize)
         {
-            // Just pick the first one. (Or implement LRU for cross-tab eviction)
-            return _indexMap.Keys.FirstOrDefault();
+            return default;
+        }
+
+        foreach (var k in _indexMap.Keys)
+        {
+            return k;
         }
 
         return default;
     }
 
-    public bool TryRemove(string ownerId, int index, [MaybeNullWhen(false)] out TValue value)
-    {
-        lock (_lock)
-        {
-            if (_indexMap.Remove(new CacheKey(ownerId, index), out var path))
-            {
-                value = _data[path];
-                return _data.Remove(path);
-            }
-            value = default;
-            return false;
-        }
-    }
+    // -------------------------------------------------------------------------
+    //  Helpers
+    // -------------------------------------------------------------------------
 
-    // Explicit TryGetValue for logic that just checks existence
-    public bool TryGetValue(string ownerId, int index, [MaybeNullWhen(false)] out TValue value)
-    {
-        lock (_lock)
-        {
-            if (_indexMap.TryGetValue(new CacheKey(ownerId, index), out var path))
-            {
-                return _data.TryGetValue(path, out value);
-            }
-
-            value = default;
-            return false;
-        }
-    }
-
-    // Optimized: Direct lookup in Data dictionary
-    public bool TryGetValueByPath(string filePath, [MaybeNullWhen(false)] out TValue value)
-    {
-        lock (_lock)
-        {
-            return _data.TryGetValue(filePath, out value);
-        }
-    }
-
-    public bool TryFindKeyByPath(string filePath, out CacheKey key)
-    {
-        lock (_lock)
-        {
-            foreach (var kvp in _indexMap.Where(kvp => kvp.Value == filePath).AsValueEnumerable())
-            {
-                key = kvp.Key;
-                return true;
-            }
-
-            key = default;
-            return false;
-        }
-    }
-
-    public void Clear()
-    {
-        lock (_lock)
-        {
-            _indexMap.Clear();
-            _data.Clear();
-        }
-    }
-
-    public void Clear(string ownerId)
-    {
-        lock (_lock)
-        {
-            var keysToRemove = _indexMap.Keys.Where(k => k.OwnerId == ownerId).AsValueEnumerable();
-            foreach (var key in keysToRemove)
-            {
-                RemoveInternal(key);
-            }
-        }
-    }
-
-    // Composite key to ensure uniqueness across tabs for logical mapping
     public readonly record struct CacheKey(string OwnerId, int Index);
+
+    public readonly ref struct CacheKeyLookup
+    {
+        public readonly ReadOnlySpan<char> OwnerIdSpan;
+        public readonly int Index;
+
+        public CacheKeyLookup(ReadOnlySpan<char> ownerIdSpan, int index)
+        {
+            OwnerIdSpan = ownerIdSpan;
+            Index = index;
+        }
+    }
+
+    private class CacheKeyComparer : IEqualityComparer<CacheKey>, IAlternateEqualityComparer<CacheKey, CacheKeyLookup>
+    {
+        public CacheKeyLookup Create(CacheKey alternate)
+        {
+            return new CacheKeyLookup(alternate.OwnerId.AsSpan(), alternate.Index);
+        }
+
+        public bool Equals(CacheKey key, CacheKeyLookup lookup)
+        {
+            return key.Index == lookup.Index && key.OwnerId.AsSpan().SequenceEqual(lookup.OwnerIdSpan);
+        }
+
+        public bool Equals(CacheKey x, CacheKey y)
+        {
+            return x.Index == y.Index && string.Equals(x.OwnerId, y.OwnerId, StringComparison.Ordinal);
+        }
+
+        public int GetHashCode(CacheKey obj)
+        {
+            return HashCode.Combine(obj.OwnerId, obj.Index);
+        }
+
+        public int GetHashCode(CacheKeyLookup lookup)
+        {
+            var hash = new HashCode();
+            hash.Add(string.GetHashCode(lookup.OwnerIdSpan, StringComparison.Ordinal));
+            hash.Add(lookup.Index);
+            return hash.ToHashCode();
+        }
+
+        public CacheKey Create(CacheKeyLookup lookup)
+        {
+            return new CacheKey(lookup.OwnerIdSpan.ToString(), lookup.Index);
+        }
+    }
 }

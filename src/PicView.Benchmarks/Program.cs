@@ -1,4 +1,5 @@
 ﻿using BenchmarkDotNet.Running;
+using PicView.Benchmarks.ImageBenchmarks;
 using PicView.Benchmarks.StartupBenchmarks;
 
 /*
@@ -13,4 +14,5 @@ dotnet run -c Release --project src/PicView.Benchmarks
 // BenchmarkRunner.Run<TranslationBenchmarks>();
 //BenchmarkRunner.Run<LanguageBenchmark>();
 //BenchmarkRunner.Run<FileSizeBenchmark>();
-BenchmarkRunner.Run<ConfigBenchmark>();
+//BenchmarkRunner.Run<ConfigBenchmark>();
+BenchmarkRunner.Run<EvictingDictionaryBenchmark2>();
