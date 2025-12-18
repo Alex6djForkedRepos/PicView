@@ -246,7 +246,7 @@ public class TabOverviewViewModel
         {
             return;
         }
-        var ct = tab.ResetNavigationCts();
+        var ct = tab.GetTabCancellation();
         await SharedNavigation.NavigateAsync(tab, navigateTo, ct).ConfigureAwait(false);
     }
     
@@ -258,7 +258,7 @@ public class TabOverviewViewModel
         {
             return;
         }
-        var ct = tab.ResetNavigationCts();
+        var ct = tab.GetTabCancellation();
         await SharedNavigation.NavigateByIncrementsAsync(tab, skipAmount, forwards, ct).ConfigureAwait(false);
     }
 
@@ -270,7 +270,7 @@ public class TabOverviewViewModel
             return;
         }
         var tab = senderTab ?? ActiveTab.Value;
-        var ct = tab.ResetNavigationCts();
+        var ct = tab.GetTabCancellation();
         
         await SharedNavigation.LoadFromStringAsync(source, tab, ct)
             .ConfigureAwait(false);
@@ -285,7 +285,7 @@ public class TabOverviewViewModel
             return;
         }
         var tab = senderTab ?? ActiveTab.Value;
-        var ct = tab.ResetNavigationCts();
+        var ct = tab.GetTabCancellation();
         await SharedNavigation.LoadFromFileAsync(file, tab, ct).ConfigureAwait(false);
         CanActiveTabNavigate.Value = tab.ImageIterator?.Files?.Count > 1;
     }

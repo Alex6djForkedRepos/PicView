@@ -27,7 +27,11 @@ public class TabViewModel(string id, Func<string, ValueTask> closeTab) : IAsyncD
     public BindableReactiveProperty<ImageModel> Model { get; } = new(new ImageModel());
     public BindableReactiveProperty<object?> CurrentView { get; } = new(null);
     public IImageIterator? ImageIterator { get; private set; }
-    public CancellationTokenSource NavigationCts { get; private set; } = new();
+    
+    /// <summary>
+    /// Should be used when changing directory or closing the tab
+    /// </summary>
+    private CancellationTokenSource NavigationCts { get; set; } = new();
     
     // Titles
     public BindableReactiveProperty<string>? Title { get; } = new();
@@ -111,12 +115,15 @@ public class TabViewModel(string id, Func<string, ValueTask> closeTab) : IAsyncD
     {
         IsClosing = true; // Signal it to be removed from the UI
         await closeTab(Id);
+        await DisposeAsync();
     }
 
-    public CancellationTokenSource ResetNavigationCts()
+    public CancellationTokenSource GetTabCancellation()
     {
-        NavigationCts.Cancel();
-        NavigationCts = new CancellationTokenSource();
+        if (NavigationCts.IsCancellationRequested)
+        {
+            NavigationCts = new CancellationTokenSource();
+        }
         return NavigationCts;
     }
     
