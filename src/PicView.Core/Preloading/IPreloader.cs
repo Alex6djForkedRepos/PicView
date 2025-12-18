@@ -22,7 +22,7 @@ public interface IPreloader
     ValueTask<ImageModel?> AddAsync(string ownerId, int index, IReadOnlyList<FileInfo> list, bool isReverse = false,
         CancellationToken ct = default);
     
-    void Resynchronize(IReadOnlyList<FileInfo> files);
+    void Resynchronize(string ownerId, IReadOnlyList<FileInfo> files);
     
     /// <summary>
     /// Starts the predictive loop to load images ahead of the current view.

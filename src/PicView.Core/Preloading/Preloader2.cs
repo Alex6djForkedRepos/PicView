@@ -141,10 +141,9 @@ public class Preloader2 : IPreloader
         }
     }
 
-    // --- Unused Interface Implementations ---
-    public void Resynchronize(IReadOnlyList<FileInfo> files)
+    public void Resynchronize(string ownerId, IReadOnlyList<FileInfo> files)
     {
-        throw new NotImplementedException();
+        _cache.Resynchronize(ownerId, files);
     }
 
     private PreloadWorker CreateWorker(string ownerId)

@@ -664,39 +664,39 @@ public static class FunctionsMapper
 
     /// <inheritdoc cref="FileListManager.UpdateFileList(PicView.Avalonia.Interfaces.IPlatformSpecificService, MainViewModel, SortFilesBy)" />
     public static async ValueTask SortFilesByName() =>
-        await FileListManager.UpdateFileList(Vm.PlatformService, Vm, SortFilesBy.Name).ConfigureAwait(false);
+        await Vm.Tabs.SortAsync(SortFilesBy.Name).ConfigureAwait(false);
 
     /// <inheritdoc cref="FileListManager.UpdateFileList(PicView.Avalonia.Interfaces.IPlatformSpecificService, MainViewModel, SortFilesBy)" />
     public static async ValueTask SortFilesByCreationTime() =>
-        await FileListManager.UpdateFileList(Vm?.PlatformService, Vm, SortFilesBy.CreationTime).ConfigureAwait(false);
+        await Vm.Tabs.SortAsync(SortFilesBy.CreationTime).ConfigureAwait(false);
 
     /// <inheritdoc cref="FileListManager.UpdateFileList(PicView.Avalonia.Interfaces.IPlatformSpecificService, MainViewModel, SortFilesBy)" />
     public static async ValueTask SortFilesByLastAccessTime() =>
-        await FileListManager.UpdateFileList(Vm?.PlatformService, Vm, SortFilesBy.LastAccessTime).ConfigureAwait(false);
+        await Vm.Tabs.SortAsync(SortFilesBy.LastAccessTime).ConfigureAwait(false);
 
     /// <inheritdoc cref="FileListManager.UpdateFileList(PicView.Avalonia.Interfaces.IPlatformSpecificService, MainViewModel, SortFilesBy)" />
     public static async ValueTask SortFilesByLastWriteTime() =>
-        await FileListManager.UpdateFileList(Vm?.PlatformService, Vm, SortFilesBy.LastWriteTime).ConfigureAwait(false);
+        await Vm.Tabs.SortAsync(SortFilesBy.LastWriteTime).ConfigureAwait(false);
 
     /// <inheritdoc cref="FileListManager.UpdateFileList(PicView.Avalonia.Interfaces.IPlatformSpecificService, MainViewModel, SortFilesBy)" />
     public static async ValueTask SortFilesBySize() =>
-        await FileListManager.UpdateFileList(Vm?.PlatformService, Vm, SortFilesBy.FileSize).ConfigureAwait(false);
+        await Vm.Tabs.SortAsync(SortFilesBy.FileSize).ConfigureAwait(false);
 
     /// <inheritdoc cref="FileListManager.UpdateFileList(PicView.Avalonia.Interfaces.IPlatformSpecificService, MainViewModel, SortFilesBy)" />
     public static async ValueTask SortFilesByExtension() =>
-        await FileListManager.UpdateFileList(Vm?.PlatformService, Vm, SortFilesBy.Extension).ConfigureAwait(false);
+        await Vm.Tabs.SortAsync(SortFilesBy.Extension).ConfigureAwait(false);
 
     /// <inheritdoc cref="FileListManager.UpdateFileList(PicView.Avalonia.Interfaces.IPlatformSpecificService, MainViewModel, SortFilesBy)" />
     public static async ValueTask SortFilesRandomly() =>
-        await FileListManager.UpdateFileList(Vm?.PlatformService, Vm, SortFilesBy.Random).ConfigureAwait(false);
+        await Vm.Tabs.SortAsync(SortFilesBy.Random).ConfigureAwait(false);
 
     /// <inheritdoc cref="FileListManager.UpdateFileList(PicView.Avalonia.Interfaces.IPlatformSpecificService, MainViewModel, bool)" />
     public static async ValueTask SortFilesAscending() =>
-        await FileListManager.UpdateFileList(Vm?.PlatformService, Vm, ascending: true).ConfigureAwait(false);
-
+        await Vm.Tabs.SortAsync(ascending: true).ConfigureAwait(false);
+    
     /// <inheritdoc cref="FileListManager.UpdateFileList(PicView.Avalonia.Interfaces.IPlatformSpecificService, MainViewModel, bool)" />
     public static async ValueTask SortFilesDescending() =>
-        await FileListManager.UpdateFileList(Vm?.PlatformService, Vm, ascending: false).ConfigureAwait(false);
+        await Vm.Tabs.SortAsync(ascending: false).ConfigureAwait(false);
 
     #endregion Sorting
 

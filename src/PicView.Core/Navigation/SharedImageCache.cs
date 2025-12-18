@@ -71,7 +71,7 @@ public class SharedImageCache : IImageCache
         TryGet(value.ImageModel.FileInfo.FullName, out var preLoadValue) && preLoadValue == value;
 
     public bool Add(string ownerId, int index, PreLoadValue preLoadValue, int listCount, bool isReverse) =>
-        Contains(preLoadValue) || _items.TryAdd(ownerId, index, preLoadValue.ImageModel.FileInfo.FullName, preLoadValue, listCount, isReverse, out _);
+        _items.TryAdd(ownerId, index, preLoadValue.ImageModel.FileInfo.FullName, preLoadValue, listCount, isReverse, out _);
 
     public bool TryAdd(string ownerId, int index, PreLoadValue preLoadValue, int listCount, bool isReverse, out PreLoadValue? value)
     {
@@ -91,6 +91,15 @@ public class SharedImageCache : IImageCache
         if (_items.TryRemove(ownerId, index, out var value))
         {
             DisposeHelper(value);
+        }
+    }
+
+    public void Resynchronize(string ownerId, IReadOnlyList<FileInfo> files)
+    {
+        var evictedItems = _items.Resynchronize(ownerId, files);
+        foreach (var item in evictedItems)
+        {
+            DisposeHelper(item);
         }
     }
 

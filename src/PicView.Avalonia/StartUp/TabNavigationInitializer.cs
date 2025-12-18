@@ -23,7 +23,7 @@ public static class TabNavigationInitializer
         var sharedCache = new SharedImageCache(GetImageModel.GetImageModelAsync);
 
         // 3. Create NavigationService (Core)
-        var navService = new NavigationService(imageLoader, archiveService, sharedCache);
+        var navService = new NavigationService(imageLoader, archiveService, sharedCache, vm.PlatformService.CompareStrings);
 
         var thumbnailService = new AvaloniaThumbnailLoader();
 
@@ -48,7 +48,7 @@ public static class TabNavigationInitializer
         var sharedCache = new SharedImageCache(GetImageModel.GetImageModelAsync);
 
         // 3. Create NavigationService (Core)
-        var navService = new NavigationService(imageLoader, archiveService, sharedCache);
+        var navService = new NavigationService(imageLoader, archiveService, sharedCache, vm.PlatformService.CompareStrings);
 
         var thumbnailService = new AvaloniaThumbnailLoader();
 

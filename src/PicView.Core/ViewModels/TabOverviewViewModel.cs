@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using PicView.Core.FileSorting;
 using PicView.Core.Gallery;
 using PicView.Core.Navigation;
 using PicView.Core.Navigation.Interfaces;
@@ -294,5 +295,32 @@ public class TabOverviewViewModel
     {
         await LoadFromFileAsync(new FileInfo(file), senderTab).ConfigureAwait(false);
     }
+    #endregion
+
+    #region Sort
+
+    public async ValueTask SortAsync(SortFilesBy sortOrder)
+    {
+        if (SharedNavigation is null)
+        {
+            return;
+        }
+        var tab = ActiveTab.Value;
+        var ct = tab.GetTabCancellation();
+        await SharedNavigation.SortAsync(tab, sortOrder, ct).ConfigureAwait(false);
+    }
+    
+    public async ValueTask SortAsync(bool ascending)
+    {
+        if (SharedNavigation is null)
+        {
+            return;
+        }
+        var tab = ActiveTab.Value;
+        var ct = tab.GetTabCancellation();
+        await SharedNavigation.SortAsync(tab, ascending, ct).ConfigureAwait(false);
+    }
+    
+
     #endregion
 }

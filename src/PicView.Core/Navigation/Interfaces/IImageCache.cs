@@ -82,4 +82,9 @@ public interface IImageCache
     ValueTask Clear(TabViewModel tab);
 
     void TryRemove(string ownerId, int index);
+
+    /// <summary>
+    /// Resynchronizes the cache for a specific owner when the file list changes (e.g., sorting).
+    /// </summary>
+    void Resynchronize(string ownerId, IReadOnlyList<FileInfo> files);
 }

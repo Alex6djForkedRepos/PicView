@@ -12,12 +12,14 @@ public class NavigationService : INavigationService
     private readonly IArchiveService _archive;
     private readonly IImageCache _cache;
     private readonly IImageLoader _imageLoader;
+    private readonly Func<string, string, int> _stringComparer;
 
-    public NavigationService(IImageLoader imageLoader, IArchiveService archive, IImageCache cache)
+    public NavigationService(IImageLoader imageLoader, IArchiveService archive, IImageCache cache, Func<string, string, int> stringComparer)
     {
         _imageLoader = imageLoader;
         _archive = archive;
         _cache = cache;
+        _stringComparer = stringComparer ?? string.CompareOrdinal;
     }
     
     public async ValueTask RepopulateIterator(FileInfo fileInfo, TabViewModel tab, CancellationTokenSource ct)
@@ -28,24 +30,17 @@ public class NavigationService : INavigationService
             var model = await _imageLoader.GetImageModelAsync(fileInfo, ct.Token).ConfigureAwait(false);
             tab.Model.Value = model; // Image updated via reactive subscription
             
-            tab.ImageIterator.Files = FileListRetriever.RetrieveFiles(fileInfo, CompareStrings);
+            tab.ImageIterator.Files = FileListRetriever.RetrieveFiles(fileInfo, _stringComparer);
             var index = FindIndex(fileInfo, tab);
             tab.ImageIterator.SetCurrentIndex(index);
             tab.UpdateTabTitle();
             _cache.Clear(tab.Id);
             _cache.Add(tab.Id, index, new PreLoadValue(model), tab.ImageIterator.Files.Count, false);
+            _cache.Preload(tab.Id, index, false, tab.ImageIterator.Files);
         }
         catch (Exception e)
         {
             DebugHelper.LogDebug(nameof(NavigationService), nameof(RepopulateIterator), e);
-        }
-
-        return;
-
-        int CompareStrings(string str1, string str2)
-        {
-            // TODO: Integrate platform service file sorting
-            return string.CompareOrdinal(str1, str2);
         }
     }
 
@@ -120,6 +115,61 @@ public class NavigationService : INavigationService
     }
 
     public bool CanNavigate(TabViewModel tab) => tab?.ImageIterator?.Files?.Count > 0;
+
+    public async ValueTask SortAsync(TabViewModel tab, SortFilesBy sortOrder, CancellationTokenSource ct)
+    {
+        Settings.Sorting.SortPreference = (int)sortOrder;
+        await ApplySortAsync(tab, ct).ConfigureAwait(false);
+    }
+
+    public async ValueTask SortAsync(TabViewModel tab, bool ascending, CancellationTokenSource ct)
+    {
+        Settings.Sorting.Ascending = ascending;
+        await ApplySortAsync(tab, ct).ConfigureAwait(false);
+    }
+
+    private async ValueTask ApplySortAsync(TabViewModel tab, CancellationTokenSource ct)
+    {
+        if (!CanNavigate(tab))
+        {
+            return;
+        }
+
+        try
+        {
+            // Get current file to maintain position
+            var currentFile = tab.Model.Value?.FileInfo;
+            if (currentFile is null)
+            {
+                return;
+            }
+
+            // Retrieve and sort files based on new settings
+            var newFiles = await Task.Run(() => FileListRetriever.RetrieveFiles(currentFile, _stringComparer), ct.Token).ConfigureAwait(false);
+
+            if (newFiles.Count == 0)
+            {
+                return;
+            }
+
+            // Update files in iterator
+            tab.ImageIterator.Files = newFiles;
+
+            // Find new index of current file
+            var newIndex = FindIndex(currentFile, tab);
+            tab.ImageIterator.SetCurrentIndex(newIndex);
+            
+            // Update cache mapping
+            _cache.Resynchronize(tab.Id, newFiles);
+            
+            // Update title
+            tab.UpdateTabTitle();
+        }
+        catch (Exception e)
+        {
+            DebugHelper.LogDebug(nameof(NavigationService), nameof(ApplySortAsync), e);
+        }
+    }
 
     private static int FindIndex(FileInfo fileInfo, TabViewModel tab) =>
         tab.ImageIterator.Files.FindIndex(x =>

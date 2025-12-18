@@ -1,5 +1,7 @@
+using PicView.Core.Config;
 using PicView.Core.Models;
 using PicView.Core.Navigation;
+using PicView.Core.Preloading;
 
 namespace PicView.Tests.Navigation;
 
@@ -10,96 +12,107 @@ public class SharedImageCacheTests
 
     public SharedImageCacheTests()
     {
+        SettingsManager.SetDefaults(); // Initialize settings
         _mockLoader = f => new ValueTask<ImageModel>(new ImageModel { FileInfo = f });
-        _cache = new SharedImageCache(_mockLoader, maxItems: 3);
+        _cache = new SharedImageCache(_mockLoader);
     }
 
     [Fact]
-    public async Task GetOrLoadAsync_ShouldLoadImage()
+    public async Task LoadAsync_ShouldLoadImage()
     {
+        var ownerId = "tab1";
         var file = new FileInfo("test.jpg");
-        var model = await _cache.GetOrLoadAsync(file);
+        var list = new List<FileInfo> { file };
+        
+        var model = await _cache.LoadAsync(ownerId, 0, list);
 
         Assert.NotNull(model);
         Assert.Equal(file.FullName, model.FileInfo.FullName);
+        
+        // Verify it is in cache
         Assert.True(_cache.TryGet(file, out _));
+        Assert.True(_cache.TryGet(ownerId, 0, out _));
     }
 
     [Fact]
-    public void UpdatePriorities_ShouldTriggerLoad_AndEvict()
+    public void Add_ShouldAddDirectly()
     {
-        var owner1 = new object();
-        var files = new List<string> { "1.jpg", "2.jpg", "3.jpg", "4.jpg" };
+        var ownerId = "tab1";
+        var file = new FileInfo("direct.jpg");
+        var model = new ImageModel { FileInfo = file };
+        var preLoadValue = new PreLoadValue(model);
 
-        // Cache size is 3. We request 4. 
-        // 1, 2, 3 should be kept (indices 0, 1, 2).
-        // 4 (index 3) is furthest, so if we strictly follow "keep low index", 1,2,3 are safer. 
-        // Wait, maxItems is 3. 
-        // Priority list: 1(0), 2(1), 3(2), 4(3).
-        // 1, 2, 3 have lower scores. 4 has highest score (3).
-        // So 4 should be evicted or never added?
-        // UpdatePriorities triggers loads. So all 4 try to add.
-        // Then Evict runs. 
-        // Victim: Max Score.
-        // Scores: 1->0, 2->1, 3->2, 4->3.
-        // Victim is 4.
-        
-        _cache.UpdatePriorities(owner1, files);
+        _cache.Add(ownerId, 0, preLoadValue, 1, false);
 
-        // Allow async loads to complete (simulated delay not needed but let's wait a bit)
-        Thread.Sleep(100);
-
-        // 1, 2, 3 should be in cache
-        Assert.True(_cache.TryGet(new FileInfo("1.jpg"), out _));
-        Assert.True(_cache.TryGet(new FileInfo("2.jpg"), out _));
-        Assert.True(_cache.TryGet(new FileInfo("3.jpg"), out _));
-        
-        // 4 should be evicted
-        Assert.False(_cache.TryGet(new FileInfo("4.jpg"), out _));
+        Assert.True(_cache.TryGet(file, out var retrieved));
+        Assert.Same(model, retrieved!.ImageModel);
     }
 
     [Fact]
-    public void MultiOwner_Eviction_ShouldKeepClosestToAnyOwner()
+    public void Resynchronize_ShouldUpdateIndices()
     {
-        // Cache size 3.
-        // Owner A: [1, 2, 3, 4, 5] (Focus 1) -> Wants 1, 2, 3
-        // Owner B: [5, 4, 3, 2, 1] (Focus 5) -> Wants 5, 4, 3
-        
-        // Priorities A: 1:0, 2:1, 3:2, 4:3, 5:4
-        // Priorities B: 5:0, 4:1, 3:2, 2:3, 1:4
-        
-        // Combined Scores (Min):
-        // 1: Min(0, 4) = 0
-        // 2: Min(1, 3) = 1
-        // 3: Min(2, 2) = 2
-        // 4: Min(3, 1) = 1
-        // 5: Min(4, 0) = 0
-        
-        // Scores: 1(0), 2(1), 3(2), 4(1), 5(0).
-        // Sorted: 1(0), 5(0), 2(1), 4(1), 3(2).
-        // Victim should be 3 (Score 2).
-        // Kept: 1, 5, 2 (or 4).
-        
-        var ownerA = new object();
-        var ownerB = new object();
-        
-        // We add them one by one to simulate
-        _cache.UpdatePriorities(ownerA, new[] { "1.jpg", "2.jpg", "3.jpg", "4.jpg", "5.jpg" });
-        _cache.UpdatePriorities(ownerB, new[] { "5.jpg", "4.jpg", "3.jpg", "2.jpg", "1.jpg" });
-        
-        Thread.Sleep(100);
+        var ownerId = "tab1";
+        var files = new List<FileInfo>
+        {
+            new("0.jpg"),
+            new("1.jpg"),
+            new("2.jpg")
+        };
 
-        // 1 and 5 MUST be there (Score 0)
-        Assert.True(_cache.TryGet(new FileInfo("1.jpg"), out _), "1 should be kept");
-        Assert.True(_cache.TryGet(new FileInfo("5.jpg"), out _), "5 should be kept");
+        // Add item at index 0 (0.jpg)
+        var preLoadValue = new PreLoadValue(new ImageModel { FileInfo = files[0] });
+        _cache.Add(ownerId, 0, preLoadValue, files.Count, false);
+
+        // Resynchronize: Move 0.jpg to index 2
+        var newFiles = new List<FileInfo>
+        {
+            new("1.jpg"),
+            new("2.jpg"),
+            new("0.jpg")
+        };
+
+        _cache.Resynchronize(ownerId, newFiles);
+
+        Assert.False(_cache.TryGet(ownerId, 0, out _));
+        Assert.True(_cache.TryGet(ownerId, 2, out var moved));
+        Assert.Equal("0.jpg", moved!.ImageModel.FileInfo.Name);
+    }
+
+    [Fact]
+    public void Resynchronize_ShouldEvictRemovedItems()
+    {
+        var ownerId = "tab1";
+        var files = new List<FileInfo> { new("0.jpg") };
+
+        var preLoadValue = new PreLoadValue(new ImageModel { FileInfo = files[0] });
+        _cache.Add(ownerId, 0, preLoadValue, files.Count, false);
+
+        _cache.Resynchronize(ownerId, new List<FileInfo>());
+
+        Assert.False(_cache.TryGet(ownerId, 0, out _));
+        Assert.False(_cache.TryGet(files[0], out _));
+    }
+
+    [Fact]
+    public async Task MultiOwner_ShouldShareData()
+    {
+        var owner1 = "tab1";
+        var owner2 = "tab2";
+        var file = new FileInfo("shared.jpg");
+        var list = new List<FileInfo> { file };
+
+        // Load for Owner 1
+        var model1 = await _cache.LoadAsync(owner1, 0, list);
         
-        // 3 is worst (Score 2). It should be gone.
-        Assert.False(_cache.TryGet(new FileInfo("3.jpg"), out _), "3 should be evicted");
-        
-        // 2 and 4 have Score 1. One of them should be kept.
-        var has2 = _cache.TryGet(new FileInfo("2.jpg"), out _);
-        var has4 = _cache.TryGet(new FileInfo("4.jpg"), out _);
-        
-        Assert.True(has2 || has4, "Either 2 or 4 should be kept");
+        // Load for Owner 2 (same file)
+        var model2 = await _cache.LoadAsync(owner2, 0, list);
+
+        Assert.NotNull(model1);
+        Assert.Same(model1, model2); // Should be same instance
+
+        // Cache should map both
+        Assert.True(_cache.TryGet(owner1, 0, out var val1));
+        Assert.True(_cache.TryGet(owner2, 0, out var val2));
+        Assert.Same(val1, val2);
     }
 }
