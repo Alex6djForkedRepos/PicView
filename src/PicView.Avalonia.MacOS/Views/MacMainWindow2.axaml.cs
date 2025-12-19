@@ -290,7 +290,6 @@ public partial class MacMainWindow2 : Window
 
     protected override async void OnClosing(WindowClosingEventArgs e)
     {
-        e.Cancel = true;
         await WindowFunctions.WindowClosingBehavior(this);
         base.OnClosing(e);
     }

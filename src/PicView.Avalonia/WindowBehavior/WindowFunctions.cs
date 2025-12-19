@@ -85,8 +85,6 @@ public static class WindowFunctions
         {
             await vm.Window.BatchResizeWindowConfig.SaveAsync();
         }
-
-        Environment.Exit(0);
     }
 
     #region Window State
