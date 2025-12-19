@@ -11,7 +11,8 @@ public class ImageIterator(IImageCache cache, IThumbnailLoader thumbnailLoader, 
     private readonly IImageCache _cache = cache ?? throw new ArgumentNullException(nameof(cache));
     private readonly TabViewModel _tab = tab ?? throw new ArgumentNullException(nameof(tab));
     private readonly IThumbnailLoader _thumbnailLoader = thumbnailLoader ?? throw new ArgumentNullException(nameof(thumbnailLoader));
-    
+    private System.Timers.Timer? _timer;
+
     public IReadOnlyList<FileInfo> Files { get; set; } = [];
 
     public int CurrentIndex { get; private set; } = -1;
@@ -23,9 +24,33 @@ public class ImageIterator(IImageCache cache, IThumbnailLoader thumbnailLoader, 
         CurrentIndex = Math.Clamp(initialIndex, 0, Math.Max(0, Files.Count - 1));
     }
     
-    public ValueTask RepeatNavigateAsync(NavigateTo to, TimeSpan repeatInterval, CancellationToken ct)
+    public async ValueTask RepeatNavigateAsync(NavigateTo to, TimeSpan repeatInterval, CancellationToken ct)
     {
-        return ValueTask.FromException(new NotImplementedException());
+        if (_timer is null)
+        {
+            _timer = new System.Timers.Timer
+            {
+                AutoReset = false,
+                Enabled = true
+            };
+        }
+        else if (_timer.Enabled)
+        {
+            return;
+        }
+
+        _timer.Interval = repeatInterval.TotalMilliseconds;
+        _timer.Start();
+
+        var iteration = GetIteration(CurrentIndex, to, _tab.Id, SkipAmount.One);
+        await IterateToIndexAsync(iteration, CancellationTokenSource.CreateLinkedTokenSource(ct));
+    }
+    
+    public void StopRepeatedNavigation()
+    {
+        _timer?.Stop();
+        _timer?.Dispose();
+        _timer = null;
     }
 
     public async ValueTask IterateToIndexAsync(int index, CancellationTokenSource ct)
@@ -138,6 +163,7 @@ public class ImageIterator(IImageCache cache, IThumbnailLoader thumbnailLoader, 
 
     public async ValueTask DisposeAsync()
     {
+        _timer?.Dispose();
         await _cache.RemoveOwner(_tab.Id);
         GC.SuppressFinalize(this);
     }

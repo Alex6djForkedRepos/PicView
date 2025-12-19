@@ -13,10 +13,12 @@ using PicView.Avalonia.SettingsManagement;
 using PicView.Avalonia.UI;
 using PicView.Avalonia.ViewModels;
 using PicView.Avalonia.Views.UC;
+using PicView.Avalonia.Input;
 using PicView.Avalonia.WindowBehavior;
 using PicView.Core.FileHistory;
 using PicView.Core.FileSorting;
 using PicView.Core.Keybindings;
+using PicView.Core.Navigation;
 using PicView.Core.ProcessHandling;
 
 namespace PicView.Avalonia.Functions;
@@ -241,27 +243,29 @@ public static class FunctionsMapper
 
     /// <inheritdoc cref="Core.ViewModels.TabOverviewViewModel.NextFile()" />
     public static async ValueTask Next() =>
-        await Vm.Tabs.NextFile().ConfigureAwait(false);
-    
+        await Vm.Tabs.NavigateDirectionalAsync(MainKeyboardShortcuts.IsKeyHeldDown,
+            NavigateTo.Next).ConfigureAwait(false);
+
     /// <inheritdoc cref="NavigationManager.NavigateBetweenDirectories(bool, MainViewModel)" />
     public static async ValueTask NextFolder() =>
         await NavigationManager.NavigateBetweenDirectories(true, Vm).ConfigureAwait(false);
     
     /// <inheritdoc cref="NavigationManager.NavigateFirstOrLast(bool, MainViewModel)" />
     public static async ValueTask Last() =>
-        await NavigationManager.NavigateFirstOrLast(last: true, Vm).ConfigureAwait(false);
+        await Vm.Tabs.FirstFile().ConfigureAwait(false);
 
     /// <inheritdoc cref="Core.ViewModels.TabOverviewViewModel.PrevFile()" />
     public static async ValueTask Prev() =>
-        await Vm.Tabs.PrevFile().ConfigureAwait(false);
-    
+        await Vm.Tabs.NavigateDirectionalAsync(MainKeyboardShortcuts.IsKeyHeldDown,
+            NavigateTo.Previous).ConfigureAwait(false);
+
     /// <inheritdoc cref="NavigationManager.NavigateBetweenDirectories(bool, MainViewModel)" />
     public static async ValueTask PrevFolder() =>
         await NavigationManager.NavigateBetweenDirectories(false, Vm).ConfigureAwait(false);
 
     /// <inheritdoc cref="NavigationManager.NavigateFirstOrLast(bool, MainViewModel)" />
     public static async ValueTask First() =>
-        await NavigationManager.NavigateFirstOrLast(last: false, Vm).ConfigureAwait(false);
+        await Vm.Tabs.FirstFile().ConfigureAwait(false);
     
     /// <inheritdoc cref="Core.ViewModels.TabOverviewViewModel.Next10()" />
     public static async ValueTask Next10() =>
@@ -273,7 +277,7 @@ public static class FunctionsMapper
     
     /// <inheritdoc cref="NavigationManager.Prev10(MainViewModel)" />
     public static async ValueTask Prev10() =>
-        await NavigationManager.Prev10(Vm).ConfigureAwait(false);
+        await Vm.Tabs.Prev10().ConfigureAwait(false);
     
     /// <inheritdoc cref="NavigationManager.Prev100(MainViewModel)" />
     public static async ValueTask Prev100() =>
@@ -795,6 +799,11 @@ public static class FunctionsMapper
     public static async ValueTask CloseTab()
     {
         await Vm.Tabs.CloseTabAsync();
+    }
+    
+    public static void StopRepeatedNavigation()
+    {
+        Vm?.Tabs?.StopRepeatedNavigation();
     }
 
     #endregion

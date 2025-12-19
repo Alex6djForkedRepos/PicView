@@ -10,6 +10,7 @@ public class AvaloniaThumbnailLoader : IThumbnailLoader
 {
     public async ValueTask<object?> GetThumbnailAsync(FileInfo file)
     {
+        return null;
         var vm = await Dispatcher.UIThread.InvokeAsync(() => UIHelper.GetMainView.DataContext as MainViewModel);
         
         return await GetThumbnails.GetThumbAsync(file, (uint)vm.Gallery.GalleryItem.ItemHeight.Value).ConfigureAwait(false);

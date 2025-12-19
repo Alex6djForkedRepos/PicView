@@ -224,6 +224,32 @@ public class TabOverviewViewModel
 
     public async ValueTask PrevFile() =>
         await NextFileCore(NavigateTo.Previous).ConfigureAwait(false);
+
+    public async ValueTask NavigateDirectionalAsync(bool isKeyHeldDown, NavigateTo direction)
+    {
+        var tab = ActiveTab.Value;
+        if (!CanActiveTabNavigate.Value || SharedNavigation is null || tab.ImageIterator is null)
+        {
+            return;
+        }
+
+        if (isKeyHeldDown)
+        {
+            var ct = tab.GetTabCancellation();
+            await tab.ImageIterator.RepeatNavigateAsync(direction,
+                TimeSpan.FromSeconds(Settings.UIProperties.NavSpeed), ct.Token).ConfigureAwait(false);
+        }
+        else
+        {
+            await NextFileCore(direction).ConfigureAwait(false);
+        }
+    }
+
+    public void StopRepeatedNavigation()
+    {
+        var tab = ActiveTab.Value;
+        tab.ImageIterator?.StopRepeatedNavigation();
+    }
     
     public async ValueTask FirstFile() =>
         await NextFileCore(NavigateTo.First).ConfigureAwait(false);

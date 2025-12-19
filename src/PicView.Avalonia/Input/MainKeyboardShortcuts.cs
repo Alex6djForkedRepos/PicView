@@ -103,6 +103,7 @@ public static class MainKeyboardShortcuts
     /// <param name="e">The key event arguments.</param>
     public static void MainWindow_KeysUp(KeyEventArgs e)
     {
+        FunctionsMapper.StopRepeatedNavigation();
         UpdateModifierState(e.Key, false);
         Reset();
     }
