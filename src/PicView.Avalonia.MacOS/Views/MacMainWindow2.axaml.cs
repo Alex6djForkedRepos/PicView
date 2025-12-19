@@ -114,6 +114,11 @@ public partial class MacMainWindow2 : Window
                 {
                     vm.MainWindow.IsTabMenuVisible.Value = false;
                 }
+
+                if (vm.MainWindow.IsEditableTitlebarOpen.Value && !Titlebar.IsPointerOver)
+                {
+                   Titlebar.EditableTitlebar.CloseTitlebar();
+                }
             };
         };
     }

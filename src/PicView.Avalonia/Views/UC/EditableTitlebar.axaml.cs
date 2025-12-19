@@ -59,7 +59,7 @@ public partial class EditableTitlebar : UserControl
         vm.MainWindow.IsEditableTitlebarOpen.Value = false;
         Cursor = new Cursor(StandardCursorType.Arrow);
         MainKeyboardShortcuts.IsKeysEnabled = true;
-        TextBlock.Text = vm.PicViewer.Title.CurrentValue;
+        TextBlock.Text = vm.Tabs.ActiveTab.CurrentValue.Title.CurrentValue;
     }
 
     protected override void OnKeyDown(KeyEventArgs e)
