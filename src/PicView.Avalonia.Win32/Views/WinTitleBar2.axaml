@@ -1171,8 +1171,8 @@
                 <customControls:IconButton
                     Background="{DynamicResource WindowButtonBackgroundColor}"
                     BorderBrush="{DynamicResource MainBorderColor}"
-                    BorderThickness="0"
-                    Classes="altHover"
+                    BorderThickness="1,0,0,0"
+                    Classes="noBorderHover"
                     Command="{CompiledBinding MainWindow.ToggleTabsCommand}"
                     Data="{StaticResource FilledArrowDownGeometry}"
                     DockPanel.Dock="Right"
@@ -1187,8 +1187,8 @@
                 <customControls:IconButton
                     Background="{DynamicResource WindowButtonBackgroundColor}"
                     BorderBrush="{DynamicResource MainBorderColor}"
-                    BorderThickness="0"
-                    Classes="altHover"
+                    BorderThickness="1,0,0,0"
+                    Classes="noBorderHover"
                     Command="{CompiledBinding Tabs.CreateTab}"
                     Data="{StaticResource AddGeometry}"
                     DockPanel.Dock="Right"
