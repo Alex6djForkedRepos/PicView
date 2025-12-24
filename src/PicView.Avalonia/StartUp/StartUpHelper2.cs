@@ -10,7 +10,6 @@ using Avalonia.Interactivity;
 using Avalonia.Threading;
 using ImageMagick;
 using PicView.Avalonia.ColorManagement;
-using PicView.Avalonia.Functions;
 using PicView.Avalonia.Input;
 using PicView.Avalonia.Navigation;
 using PicView.Avalonia.SettingsManagement;
@@ -21,7 +20,6 @@ using PicView.Avalonia.WindowBehavior;
 using PicView.Core.FileAssociations;
 using PicView.Core.FileHistory;
 using PicView.Core.ProcessHandling;
-using PicView.Core.ViewModels;
 
 namespace PicView.Avalonia.StartUp;
 
@@ -122,6 +120,7 @@ public static class StartUpHelper2
         HandleWindowScalingMode(vm, window);
 
         StartUpMenuOrLastFile(vm, window);
+        window.Show();
 
         HandlePostWindowUpdates(vm, settingsExists, desktop, window);
     }
@@ -168,10 +167,9 @@ public static class StartUpHelper2
         SetWindowEventHandlers(window);
         HandleThemeUpdates(vm);
 
-        UIHelper.SetControls(desktop);
+        UIHelper.SetControls(window);
         Task.Run(() =>
         {
-            vm.Tabs ??= new TabOverviewViewModel();
             vm.Tabs.SetParentContext(vm);
             _ = FileHistoryManager.InitializeAsync();
             HandleWindowControlSettings(vm, desktop);

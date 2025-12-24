@@ -88,11 +88,19 @@ public class MainWindowViewModel : IDisposable
 
     public BindableReactiveProperty<IImage?> ChangeCtrlZoomImage { get; } = new();
 
-    public ReactiveCommand ExitCommand { get; } = new(Close);
+    public ReactiveCommand ExitCommand { get; } = new((_, _) =>
+    {
+        WindowFunctions.Close();
+        return ValueTask.CompletedTask;
+    });
 
     public ReactiveCommand MaximizeCommand { get; } = new(async (_, _) => { await FunctionsMapper.Maximize(); });
 
-    public ReactiveCommand MinimizeCommand { get; } = new(async (_, _) => { await WindowFunctions.Minimize(); });
+    public ReactiveCommand MinimizeCommand { get; } = new((_, _) =>
+    {
+        WindowFunctions.Minimize();
+        return ValueTask.CompletedTask;
+    });
 
     public ReactiveCommand RestoreCommand { get; } = new(async (_, _) => { await FunctionsMapper.Restore(); });
 

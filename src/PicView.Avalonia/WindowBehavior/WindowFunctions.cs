@@ -300,26 +300,56 @@ public static class WindowFunctions
         await SaveSettingsAsync().ConfigureAwait(false);
     }
 
-    public static async Task Minimize()
+    public static void Minimize()
     {
         if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop)
         {
             return;
         }
 
-        await Dispatcher.UIThread.InvokeAsync(() =>
-            desktop.MainWindow.WindowState = WindowState.Minimized);
+        if (desktop.Windows.Count > 1)
+        {
+            foreach (var window in desktop.Windows)
+            {
+                if (!window.IsActive)
+                {
+                    continue;
+                }
+
+                window.WindowState = WindowState.Minimized;
+                return;
+            }
+        }
+        else
+        {
+            desktop.Windows[0].WindowState = WindowState.Minimized;
+        }
     }
 
-    public static async Task Close()
+    public static void Close()
     {
         if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop)
         {
             return;
         }
 
-        await Dispatcher.UIThread.InvokeAsync(() =>
-            desktop.MainWindow.Close());
+        if (desktop.Windows.Count > 1)
+        {
+            foreach (var window in desktop.Windows)
+            {
+                if (!window.IsActive)
+                {
+                    continue;
+                }
+
+                window.Close();
+                return;
+            }
+        }
+        else
+        {
+            desktop.Windows[0].Close();
+        }
     }
 
     #endregion

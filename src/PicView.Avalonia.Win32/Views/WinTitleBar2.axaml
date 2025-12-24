@@ -1116,13 +1116,13 @@
                         IconHeight="12"
                         IconWidth="12"
                         IsRepeatEnabled="False"
+                        Margin="0,0"
                         Width="30"
                         x:Name="MinimizeButton" />
 
                     <customControls:IconButton
                         Background="{DynamicResource WindowButtonBackgroundColor}"
                         BorderBrush="{DynamicResource MainBorderColor}"
-                        BorderThickness="0,0,1,0"
                         Classes="hover"
                         ClickMode="Release"
                         Command="{CompiledBinding MainWindow.ToggleFullscreenCommand}"
@@ -1168,38 +1168,44 @@
 
                 </StackPanel>
 
-                <customControls:IconButton
-                    Background="{DynamicResource WindowButtonBackgroundColor}"
+                <Button
+                    Background="Transparent"
                     BorderBrush="{DynamicResource MainBorderColor}"
-                    BorderThickness="1,0,0,0"
                     Classes="noBorderHover"
                     Command="{CompiledBinding MainWindow.ToggleTabsCommand}"
-                    Data="{StaticResource FilledArrowDownGeometry}"
+                    CornerRadius="6"
                     DockPanel.Dock="Right"
-                    Foreground="{DynamicResource MainTextColor}"
-                    IconHeight="17"
-                    IconWidth="17"
-                    IsRepeatEnabled="False"
                     IsTabStop="False"
+                    Margin="2,3,7,3"
                     Width="30"
-                    x:Name="DropDownMenuButton" />
+                    x:Name="DropDownMenuButton">
+                    <Path
+                        Data="{StaticResource FilledArrowDownGeometry}"
+                        Fill="{DynamicResource MainTextColor}"
+                        Height="17"
+                        Stretch="Fill"
+                        Width="17" />
+                </Button>
 
-                <customControls:IconButton
-                    Background="{DynamicResource WindowButtonBackgroundColor}"
+                <Button
+                    Background="Transparent"
                     BorderBrush="{DynamicResource MainBorderColor}"
-                    BorderThickness="1,0,0,0"
                     Classes="noBorderHover"
                     Command="{CompiledBinding Tabs.CreateTab}"
-                    Data="{StaticResource AddGeometry}"
+                    CornerRadius="6"
                     DockPanel.Dock="Right"
                     Foreground="{DynamicResource MainTextColor}"
-                    IconHeight="13"
-                    IconWidth="13"
-                    IsRepeatEnabled="False"
                     IsTabStop="False"
-                    Margin="0"
+                    Margin="0,3,2,3"
                     Width="30"
-                    x:Name="CreateTabButton" />
+                    x:Name="CreateTabButton">
+                    <Path
+                        Data="{StaticResource AddGeometry}"
+                        Fill="{DynamicResource MainTextColor}"
+                        Height="13"
+                        Stretch="Fill"
+                        Width="13" />
+                </Button>
 
                 <uc:EditableTitlebar
                     Background="{DynamicResource WindowSecondaryBackgroundColor}"

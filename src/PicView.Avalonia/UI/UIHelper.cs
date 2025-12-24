@@ -43,13 +43,13 @@ public static class UIHelper
     /// <summary>
     /// Sets up control references from the main desktop application
     /// </summary>
-    public static void SetControls(IClassicDesktopStyleApplicationLifetime desktop)
+    public static void SetControls(Window mainWindow)
     {
-        GetMainView = desktop.MainWindow?.FindControl<MainView2>("MainView");
-        GetTitlebar = desktop.MainWindow?.FindControl<Control>("Titlebar");
+        GetMainView = mainWindow?.FindControl<MainView2>("MainView");
+        GetTitlebar = mainWindow?.FindControl<Control>("Titlebar");
         GetEditableTitlebar = GetTitlebar?.FindControl<EditableTitlebar>("EditableTitlebar");
         GetGalleryView = GetMainView?.MainGrid.GetControl<GalleryAnimationControlView>("GalleryView");
-        GetBottomBar = desktop.MainWindow?.FindControl<BottomBar2>("BottomBar");
+        GetBottomBar = mainWindow?.FindControl<BottomBar2>("BottomBar");
         GetToolTipMessage = GetMainView?.MainGrid.FindControl<ToolTipMessage>("ToolTipMessage");
     }
 

@@ -1068,7 +1068,7 @@
                                     Padding="9,0" />
                                 <TextBlock
                                     Classes="txt"
-                                    Margin="5,0,0,0"
+                                    Margin="7,0,0,0"
                                     Text="{CompiledBinding TabTitle.Value,
                                                            Mode=OneWay}"
                                     TextWrapping="NoWrap"
