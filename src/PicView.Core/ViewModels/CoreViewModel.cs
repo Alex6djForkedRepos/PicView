@@ -21,15 +21,15 @@ public class CoreViewModel
     public KeybindingsViewModel? Keybindings { get; set; }
     //public WindowViewModel Window { get; } = new();
 
-    // --- Collection of view models ---
-    
-    /// Tracks the correct position of the active window
-    public BindableReactiveProperty<int> MainWindowIndex  { get; } = new(); 
+    // --- Overview models ---
+    public MainWindowOverviewViewModel MainWindows { get; } = new();
     public List<TabOverviewViewModel> TabsCollection { get; } = [];
     /// Bindable reactive properties that are Exif related
     public List<ExifViewModel> Exifs { get; } = []; 
     /// View models for the image info view
     public List<ImageInfoWindowViewModel?> InfoWindows { get; } = [];  
+    
+    
     
     public CoreViewModel(IPlatformSpecificService? platformSpecificService, IPlatformWindowService? platformWindowService)
     {

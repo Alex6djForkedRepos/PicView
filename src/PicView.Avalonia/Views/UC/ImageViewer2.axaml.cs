@@ -4,6 +4,7 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.LogicalTree;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 using ImageMagick;
 using PicView.Avalonia.ImageTransformations;
 using PicView.Avalonia.ImageTransformations.Rotation;
@@ -44,8 +45,20 @@ public partial class ImageViewer2 : UserControl
     private void TouchMagnifyEvent(object? sender, PointerDeltaEventArgs e) =>
         ZoomPanControl.ZoomWithPointerWheelCore(e.Delta.Y > 0, e.GetPosition(this));
 
-    public static async Task PreviewOnPointerWheelChanged(object? sender, PointerWheelEventArgs e) =>
-        await MouseShortcuts.HandlePointerWheelChanged(e);
+    public async ValueTask PreviewOnPointerWheelChanged(object? sender, PointerWheelEventArgs e)
+    {
+        if (sender is Control control)
+        {
+            if (control.GetVisualRoot() is Window window)
+            {
+                if (window.DataContext is MainViewModel vm)
+                {
+                    await MouseShortcuts2.HandlePointerWheelChanged(e, vm);
+                }
+            }
+        }
+    }
+        
 
     private void InitializeImageTransformer()
     {
@@ -113,7 +126,7 @@ public partial class ImageViewer2 : UserControl
     }
 
     private void InitializeMouseInputHelper() =>
-        MouseShortcuts.InitializeMouseShortcuts(
+        MouseShortcuts2.InitializeMouseShortcuts(
             ImageScrollViewer,
             async e => { await Dispatcher.UIThread.InvokeAsync(() => { ZoomIn(e); }); },
             async e => { await Dispatcher.UIThread.InvokeAsync(() => { ZoomOut(e); }); });
