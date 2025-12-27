@@ -236,7 +236,7 @@ public static class StartUpHelper
         if (args.Length > 1)
         {
             vm.MainWindow.CurrentView.Value = vm.ImageViewer;
-            Task.Run(() => QuickLoad2.QuickLoadAsync(vm, args[1], window, false));
+            Task.Run(() => QuickLoad.QuickLoadAsync(vm, args[1], window, false));
         }
         else
         {
@@ -251,7 +251,7 @@ public static class StartUpHelper
         if (arg is not null)
         {
             vm.MainWindow.CurrentView.Value = vm.ImageViewer;
-            Task.Run(() => QuickLoad2.QuickLoadAsync(vm, arg,  window,false));
+            Task.Run(() => QuickLoad.QuickLoadAsync(vm, arg,  window,false));
         }
         else
         {
@@ -270,7 +270,7 @@ public static class StartUpHelper
             else
             {
                 vm.MainWindow.CurrentView.Value = vm.ImageViewer;
-                Task.Run(() => QuickLoad2.QuickLoadAsync(vm, Settings.StartUp.LastFile, window, true));
+                Task.Run(() => QuickLoad.QuickLoadAsync(vm, Settings.StartUp.LastFile, window, true));
             }
         }
         else
