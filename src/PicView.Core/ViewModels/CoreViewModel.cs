@@ -1,25 +1,25 @@
 ﻿using PicView.Core.IPlatform;
+using PicView.Core.Models;
+using PicView.Core.Navigation;
 using R3;
 
 namespace PicView.Core.ViewModels;
 
 public class CoreViewModel
 {
-    public readonly IPlatformSpecificService? PlatformService;
-    public readonly IPlatformWindowService? PlatformWindowService;
+    // Shared Services
+    public IPlatformSpecificService? PlatformService { get; }
+    public IPlatformWindowService? PlatformWindowService { get; }
+    public SharedImageCache SharedCache { get; }
     
-    // --- Shared view models ---
-    
+    // --- Globally Shared State ---
     public TranslationViewModel Translation { get; } = new();
-    public GlobalSettingsViewModel GlobalSettings { get; } = new(); // Bindable reactive properties for the entire UI
-    public SettingsViewModel? SettingsViewModel { get; set; } // View model for the settings view (max 1 window)
-    
-    public SharedNavigationViewModel SharedNavigation { get; } = new();
-    
-    //public AboutViewModel? AboutView { get; set; }
-
+    public GlobalSettingsViewModel GlobalSettings { get; } = new();
     public KeybindingsViewModel? Keybindings { get; set; }
-    //public WindowViewModel Window { get; } = new();
+    public SettingsViewModel? SettingsViewModel { get; set; } // Single settings window
+    
+    // --- Shared Navigation Services ---
+    public SharedNavigationViewModel SharedNavigation { get; } = new();
 
     // --- Overview models ---
     public MainWindowOverviewViewModel MainWindows { get; } = new();
@@ -29,12 +29,16 @@ public class CoreViewModel
     /// View models for the image info view
     public List<ImageInfoWindowViewModel?> InfoWindows { get; } = [];  
     
-    
-    
-    public CoreViewModel(IPlatformSpecificService? platformSpecificService, IPlatformWindowService? platformWindowService)
+    public CoreViewModel(
+        IPlatformSpecificService? platformSpecificService, 
+        IPlatformWindowService? platformWindowService,
+        Func<FileInfo, ValueTask<ImageModel>> imageLoader)
     {
         PlatformService = platformSpecificService;
         PlatformWindowService = platformWindowService;
+        
+        // Initialize Cache ONCE here
+        SharedCache = new SharedImageCache(imageLoader);
     }
 
     public CoreViewModel()

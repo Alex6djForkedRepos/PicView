@@ -69,6 +69,8 @@ public static class MacOsKeybindings
                                                 "Cmd+F": "Search",
                                                 "Cmd+T": "NewTab",
                                                 "Cmd+W": "CloseTab",
+                                                "Cmd+PageUp": "NextArchive",
+                                                "Cmd+PageDown": "PrevArchive"
                                               }
                                               """;
 }

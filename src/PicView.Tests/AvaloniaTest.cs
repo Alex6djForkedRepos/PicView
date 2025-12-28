@@ -23,7 +23,7 @@ public class AvaloniaTest
 
         var window = new MacMainWindow
         {
-            Styles = { new StyleInclude(new Uri("avares://PicView.Avalonia/DarkTheme/Main.axaml")) },
+            Styles = { new StyleInclude(new Uri("avares://PicView.Avalonia/PicViewTheme/AllControls.axaml")) },
             DataContext = new MainViewModel()
         };
 
