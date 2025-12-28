@@ -28,9 +28,6 @@ public partial class MainView : UserControl
 
         if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
         {
-            // TODO: Add macOS support
-            CopyFileMenuItem.IsVisible = false;
-            
             // Move alt hover to left side on macOS and switch button order
             AltButtonsPanel.HorizontalAlignment = HorizontalAlignment.Left; 
             AltButtonsPanel.Children.Move(AltButtonsPanel.Children.IndexOf(AltClose),0);
