@@ -36,8 +36,6 @@ public class CoreViewModel
     {
         PlatformService = platformSpecificService;
         PlatformWindowService = platformWindowService;
-        
-        // Initialize Cache ONCE here
         SharedCache = new SharedImageCache(imageLoader);
     }
 

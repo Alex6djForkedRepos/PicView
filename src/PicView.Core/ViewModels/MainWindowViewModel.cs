@@ -18,6 +18,8 @@ public class MainWindowViewModel : IDisposable
     public bool IsBottomToolbarRotationClicked { get; set; }
     
     public bool IsTitlebarRotationClicked { get; set; }
+    
+    public Subject<Unit> RequestActive { get; } = new();
 
     public BindableReactiveProperty<int> BackgroundChoice { get; } = new();
 
@@ -95,6 +97,12 @@ public class MainWindowViewModel : IDisposable
             IsTopToolbarShown,
             IsBottomToolbarShown,
             IsEditableTitlebarOpen);
+    }
+    
+    // Call this method from the View's "Activated" or "GotFocus" event
+    public void SetAsActive()
+    {
+        RequestActive.OnNext(Unit.Default);
     }
 
     public void LayoutButtonSubscription()
