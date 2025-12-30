@@ -8,6 +8,7 @@ public class MainWindowViewModel : IDisposable
     public TopTitlebarViewModel TopTitlebarViewModel { get; }  = new();
     
     public TabOverviewViewModel WindowTabs { get; } = new();
+    public GalleryViewModel Gallery  { get; } = new();
     
     public bool IsNavigationButtonLeftClicked { get; set; }
     public bool IsNavigationButtonRightClicked { get; set; }
@@ -32,6 +33,11 @@ public class MainWindowViewModel : IDisposable
     public BindableReactiveProperty<double> TitlebarHeight { get; } = new();
 
     public BindableReactiveProperty<double> BottombarHeight { get; } = new();
+    public BindableReactiveProperty<object?> ImageBackground { get; } = new();
+
+    public BindableReactiveProperty<object?> ConstrainedImageBackground { get; } = new();
+    public BindableReactiveProperty<object> RightControlOffSetMargin { get; } = new(0);
+
 
     // public BindableReactiveProperty<SizeToContent> SizeToContent { get; } = new();
     //

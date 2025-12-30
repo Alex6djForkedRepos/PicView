@@ -1,0 +1,50 @@
+<UserControl
+    Background="Transparent"
+    DragDrop.AllowDrop="True"
+    Focusable="True"
+    x:Class="PicView.Avalonia.Views.Main.MainView3"
+    x:DataType="viewModels:MainWindowViewModel"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:buttons="clr-namespace:PicView.Avalonia.Views.UC.Buttons"
+    xmlns:gallery="clr-namespace:PicView.Avalonia.Views.Gallery"
+    xmlns:uc="clr-namespace:PicView.Avalonia.Views.UC"
+    xmlns:viewModels="clr-namespace:PicView.Core.ViewModels;assembly=PicView.Core"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Panel x:Name="MainGrid">
+        <StackPanel
+            Background="Transparent"
+            Height="150"
+            HorizontalAlignment="Right"
+            IsVisible="{CompiledBinding !IsUIShown.Value}"
+            Margin="{CompiledBinding RightControlOffSetMargin.Value}"
+            Opacity="0"
+            Orientation="Horizontal"
+            VerticalAlignment="Top"
+            x:Name="AltButtonsPanel">
+            <buttons:AltMinimize x:Name="AltMinimize" />
+            <buttons:AltRestore x:Name="AltRestore" />
+            <buttons:AltClose x:Name="AltClose" />
+        </StackPanel>
+        <buttons:GalleryShortcut
+            HorizontalAlignment="Right"
+            Opacity="0"
+            VerticalAlignment="Bottom"
+            ZIndex="9"
+            x:Name="GalleryShortcut" />
+        <gallery:GalleryAnimationControlView
+            GalleryMode="{CompiledBinding Gallery.GalleryMode.Value,
+                                          Mode=OneWay}"
+            Height="NaN"
+            IsVisible="{CompiledBinding Gallery.IsBottomGalleryShown.Value,
+                                        Mode=OneWay}"
+            VerticalAlignment="{CompiledBinding Gallery.GalleryVerticalAlignment.Value,
+                                                Mode=OneWay}"
+            x:Name="GalleryView" />
+        <uc:ToolTipMessage
+            HorizontalAlignment="Center"
+            Opacity="0"
+            VerticalAlignment="Center"
+            x:Name="ToolTipMessage" />
+    </Panel>
+</UserControl>

@@ -160,6 +160,10 @@
         <Compile Update="Views\UC\Menus\DropDownMenu.axaml.cs">
             <DependentUpon>DropDownMenu.axaml</DependentUpon>
         </Compile>
+        <Compile Update="Views\Main\MainView3.axaml.cs">
+          <DependentUpon>MainView3.axaml</DependentUpon>
+          <SubType>Code</SubType>
+        </Compile>
     </ItemGroup>
 
 
