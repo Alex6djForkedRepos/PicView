@@ -1,4 +1,4 @@
-﻿﻿using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Input;
@@ -10,13 +10,14 @@ using PicView.Avalonia.UI;
 using PicView.Avalonia.ViewModels;
 using PicView.Avalonia.Views.UC;
 using PicView.Core.DebugTools;
+using PicView.Core.ViewModels;
 
 namespace PicView.Avalonia.Input;
 
 /// <summary>
-/// Handles keyboard shortcuts and tracks key modifier states.
+/// Handles keyboard shortcuts and tracks key modifier states for the new architecture.
 /// </summary>
-public static class MainKeyboardShortcuts
+public static class MainKeyboardShortcuts2
 {
     /// <summary>
     /// Indicates whether a key is held down.
@@ -53,9 +54,10 @@ public static class MainKeyboardShortcuts
     /// Processes the KeyDown event for the main window.
     /// </summary>
     /// <param name="e">The key event arguments.</param>
-    public static async Task MainWindow_KeysDownAsync(KeyEventArgs e)
+    /// <param name="mainWindowViewModel">The ViewModel of the active MainWindow.</param>
+    public static async ValueTask MainWindow_KeysDownAsync(KeyEventArgs e, Core.ViewModels.MainWindowViewModel? mainWindowViewModel)
     {
-        if (KeybindingManager.CustomShortcuts is null || !IsKeysEnabled)
+        if (KeybindingManager2.CustomShortcuts is null || !IsKeysEnabled)
         {
             return;
         }
@@ -84,21 +86,27 @@ public static class MainKeyboardShortcuts
         IsKeyHeldDown = _keyRepeatCount > KeyRepeatThreshold;
 
         // Handle special cases before processing shortcuts
-        if (await HandleSpecialCases(e))
+        if (await HandleSpecialCases(e, mainWindowViewModel))
+        {
+            return;
+        }
+        
+        if (mainWindowViewModel is null)
         {
             return;
         }
 
         // Handle registered shortcuts
-        await ExecuteShortcutIfRegistered();
+        await ExecuteShortcutIfRegistered(mainWindowViewModel);
     }
 
     /// <summary>
     /// Processes the KeyUp event for the main window.
     /// </summary>
     /// <param name="e">The key event arguments.</param>
-    public static void MainWindow_KeysUp(KeyEventArgs e)
+    public static void MainWindow_KeysUp(KeyEventArgs e, Core.ViewModels.MainWindowViewModel? mainWindowViewModel)
     {
+        mainWindowViewModel?.FunctionsMapper?.StopRepeatedNavigation();
         UpdateModifierState(e.Key, false);
         Reset();
     }
@@ -151,12 +159,7 @@ public static class MainKeyboardShortcuts
         {
             case Key.F12: // Show Avalonia DevTools in DEBUG mode
                 return true;
-            case Key.F9:
-                _ = FunctionsMapper.ShowStartUpMenu();
-                return true;
-            case Key.F7:
-                FunctionsMapper.Invalidate();
-                return true;
+            // Removed F9 and F7 as they were accessing static FunctionsMapper
         }
 #endif
         return false;
@@ -166,17 +169,23 @@ public static class MainKeyboardShortcuts
     /// Handles special cases like cropping, dialog handling, and escape key.
     /// </summary>
     /// <returns>True if the key event was handled by a special case handler.</returns>
-    private static async Task<bool> HandleSpecialCases(KeyEventArgs e)
+    private static async ValueTask<bool> HandleSpecialCases(KeyEventArgs e, Core.ViewModels.MainWindowViewModel? vm)
     {
+        if (vm is null) return false;
+
+        // TODO: Re-implement cropping logic with new architecture if needed
+        // For now, we stub this out or need to access the relevant View/ViewModel
+        /*
         // Handle cropping mode
         if (CropFunctions.IsCropping)
         {
-            if (UIHelper.GetMainView.MainGrid.DataContext is MainViewModel { MainWindow.CurrentView.CurrentValue: CropControl cropControl })
+            if (vm.MainWindow.CurrentView.CurrentValue is CropControl cropControl )
             {
                 await cropControl.KeyDownHandler(null, e);
             }
             return true;
         }
+        */
 
         // Handle open dialog
         if (DialogManager.IsDialogOpen)
@@ -191,13 +200,16 @@ public static class MainKeyboardShortcuts
         // Handle escape key
         if (e.Key == Key.Escape)
         {
-            if (UIHelper.GetMainView.DataContext as MainViewModel is { MainWindow.IsEditableTitlebarOpen.CurrentValue: true })
+            if (vm.IsEditableTitlebarOpen.CurrentValue)
             {
                 return true;
             }
             
             if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime { Windows.Count: > 1 } desktop)
             {
+                 // Check if the current window (associated with vm) is one of the secondary windows
+                 // This logic might need refinement to identify WHICH window is closing
+                 // For now, mirroring legacy behavior of checking count
                 desktop.Windows[^1].Close();
                 IsKeyHeldDown = true; // If closing the last window, make sure not to call Close()
                 return true;
@@ -205,13 +217,16 @@ public static class MainKeyboardShortcuts
 
             if (Slideshow.IsRunning)
             {
-                Slideshow.StopSlideshow(UIHelper.GetMainView.MainGrid.DataContext as MainViewModel);
+                // Slideshow.StopSlideshow(vm); // Needs refactor
                 return true;
             }
 
             if (!IsKeyHeldDown && IsEscKeyEnabled)
             {
-                _ = FunctionsMapper.Close();
+                if (vm.FunctionsMapper != null)
+                {
+                    await vm.FunctionsMapper.Close();
+                }
             }
         }
 
@@ -221,17 +236,19 @@ public static class MainKeyboardShortcuts
     /// <summary>
     /// Executes the registered shortcut action for the current key combination.
     /// </summary>
-    private static async ValueTask ExecuteShortcutIfRegistered()
+    private static async ValueTask ExecuteShortcutIfRegistered(Core.ViewModels.MainWindowViewModel vm)
     {
-        if (CurrentKeys is not null && KeybindingManager.CustomShortcuts.TryGetValue(CurrentKeys, out var action))
+        if (CurrentKeys is not null)
         {
-            if (action is null)
+            var functionName = KeybindingManager2.GetFunctionName(CurrentKeys);
+            if (!string.IsNullOrEmpty(functionName))
             {
-                DebugHelper.LogDebug(nameof(MainKeyboardShortcuts), nameof(ExecuteShortcutIfRegistered), $"error: Null action for {CurrentKeys}");
-                return;
+                var action = vm.FunctionsMapper?.GetFunctionByName(functionName);
+                if (action is not null)
+                {
+                    await action.Invoke().ConfigureAwait(false);
+                }
             }
-            
-            await action.Invoke().ConfigureAwait(false);
         }
     }
 

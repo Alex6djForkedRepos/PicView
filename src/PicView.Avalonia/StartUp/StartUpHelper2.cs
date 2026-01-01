@@ -10,6 +10,7 @@ using Avalonia.Interactivity;
 using Avalonia.Threading;
 using ImageMagick;
 using PicView.Avalonia.ColorManagement;
+using PicView.Avalonia.Functions;
 using PicView.Avalonia.Input;
 using PicView.Avalonia.Navigation;
 using PicView.Avalonia.SettingsManagement;
@@ -22,6 +23,7 @@ using PicView.Core.FileHistory;
 using PicView.Core.Localization;
 using PicView.Core.ProcessHandling;
 using PicView.Core.ViewModels;
+using MainWindowViewModel = PicView.Core.ViewModels.MainWindowViewModel;
 
 namespace PicView.Avalonia.StartUp;
 
@@ -157,13 +159,20 @@ public static class StartUpHelper2
         Task.Run(() => LanguageUpdater2.UpdateLanguageAsync(vm.Translation, settingsExists));
         if (settingsExists)
         {
-            //Task.Run(() => KeybindingManager.LoadKeybindings(vm.PlatformService));
+            Task.Run(async () =>
+            {
+               await KeybindingManager2.LoadKeybindings(vm.PlatformService);
+               vm.MainWindows.ActiveWindow.Value.FunctionsMapper =
+                   new FunctionsMapper2(vm.MainWindows.ActiveWindow.CurrentValue);
+            });
         }
         else
         {
             Task.Run(() =>
             {
-                //KeybindingManager.SetDefaultKeybindings(vm.PlatformService);
+                KeybindingManager2.SetDefaultKeybindings(vm.PlatformService);
+                vm.MainWindows.ActiveWindow.Value.FunctionsMapper =
+                    new FunctionsMapper2(vm.MainWindows.ActiveWindow.CurrentValue);
             });
         }
 
@@ -350,8 +359,8 @@ public static class StartUpHelper2
     private static async ValueTask MainWindow_KeysDownAsync(object? sender, KeyEventArgs e)
     {
         // Extract the ViewModel from the window that received the key press
-        var vm = (sender as Control)?.DataContext as MainViewModel;
-        await MainKeyboardShortcuts.MainWindow_KeysDownAsync(e, vm).ConfigureAwait(false);
+        var vm = (sender as Control)?.DataContext as MainWindowViewModel;
+        await MainKeyboardShortcuts2.MainWindow_KeysDownAsync(e, vm).ConfigureAwait(false);
     }
 
     private static void MainWindow_KeyUp(object? sender, KeyEventArgs e)

@@ -1,3 +1,4 @@
+﻿using PicView.Core.IPlatform;
 ﻿using PicView.Core.Sizing;
 using R3;
 
@@ -5,6 +6,10 @@ namespace PicView.Core.ViewModels;
 
 public class MainWindowViewModel(TranslationViewModel translations) : IDisposable
 {
+    public IFunctionsMapper? FunctionsMapper { get; set; }
+    public IPlatformWindowService? PlatformWindowService { get; set; }
+    public IPlatformSpecificService? PlatformSpecificService { get; set; }
+    
     public TranslationViewModel Translation { get;  } = translations; 
     public TopTitlebarViewModel TopTitlebarViewModel { get; }  = new();
     public TabOverviewViewModel WindowTabs { get; } = new();

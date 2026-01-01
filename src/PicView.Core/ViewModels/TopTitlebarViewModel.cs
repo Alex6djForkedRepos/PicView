@@ -26,7 +26,7 @@ public class TopTitlebarViewModel
         ToggleDropDownMenuCommand = new ReactiveCommand(ToggleDropDownMenu);
     }
 
-    private void ToggleDropDownMenu(Unit unit)
+    public void ToggleDropDownMenu(Unit unit)
     {
         DropDownMenu?.IsDropDownMenuVisible.Value = !DropDownMenu.IsDropDownMenuVisible.CurrentValue;
     }

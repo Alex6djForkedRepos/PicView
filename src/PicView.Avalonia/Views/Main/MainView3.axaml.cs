@@ -9,13 +9,11 @@ using PicView.Avalonia.Crop;
 using PicView.Avalonia.CustomControls;
 using PicView.Avalonia.DragAndDrop;
 using PicView.Avalonia.Input;
-using PicView.Avalonia.UI;
 using PicView.Avalonia.ViewModels;
 using PicView.Avalonia.Views.UC;
 using PicView.Avalonia.WindowBehavior;
 using PicView.Core.Conversion;
 using PicView.Core.ViewModels;
-using R3;
 using MainWindowViewModel = PicView.Core.ViewModels.MainWindowViewModel;
 
 namespace PicView.Avalonia.Views.Main;
