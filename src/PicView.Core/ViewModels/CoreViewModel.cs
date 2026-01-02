@@ -9,7 +9,6 @@ public class CoreViewModel
 {
     // Shared Services
     public IPlatformSpecificService? PlatformService { get; }
-    public IPlatformWindowService? PlatformWindowService { get; }
     public SharedImageCache SharedCache { get; }
     
     // --- Globally Shared State ---
@@ -29,13 +28,9 @@ public class CoreViewModel
     /// View models for the image info view
     public List<ImageInfoWindowViewModel?> InfoWindows { get; } = [];  
     
-    public CoreViewModel(
-        IPlatformSpecificService? platformSpecificService, 
-        IPlatformWindowService? platformWindowService,
-        Func<FileInfo, ValueTask<ImageModel>> imageLoader)
+    public CoreViewModel(IPlatformSpecificService? platformSpecificService, Func<FileInfo, ValueTask<ImageModel>> imageLoader)
     {
         PlatformService = platformSpecificService;
-        PlatformWindowService = platformWindowService;
         SharedCache = new SharedImageCache(imageLoader);
     }
 

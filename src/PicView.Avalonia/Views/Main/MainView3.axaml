@@ -19,7 +19,11 @@
         <ContextMenu x:Key="MainContextMenu">
 
             <!--  Open  -->
-            <MenuItem Header="{CompiledBinding Translation.Open.Value, Mode=OneWay}" MinWidth="180">
+            <MenuItem
+                Command="{CompiledBinding OpenCommand}"
+                Header="{CompiledBinding Translation.Open.Value,
+                                         Mode=OneWay}"
+                MinWidth="180">
                 <MenuItem.Icon>
                     <Path Classes="OpenPath" />
                 </MenuItem.Icon>

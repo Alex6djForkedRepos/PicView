@@ -1,16 +1,15 @@
 ﻿using PicView.Core.IPlatform;
-﻿using PicView.Core.Sizing;
+using PicView.Core.Sizing;
 using R3;
 
 namespace PicView.Core.ViewModels;
 
-public class MainWindowViewModel(TranslationViewModel translations) : IDisposable
+public class MainWindowViewModel : IDisposable
 {
-    public IFunctionsMapper? FunctionsMapper { get; set; }
+    public IFunctionsMapper? Mapper { get; set; }
     public IPlatformWindowService? PlatformWindowService { get; set; }
-    public IPlatformSpecificService? PlatformSpecificService { get; set; }
     
-    public TranslationViewModel Translation { get;  } = translations; 
+    public TranslationViewModel Translation { get;  } 
     public TopTitlebarViewModel TopTitlebarViewModel { get; }  = new();
     public TabOverviewViewModel WindowTabs { get; } = new();
     public GalleryViewModel Gallery  { get; } = new();
@@ -82,18 +81,54 @@ public class MainWindowViewModel(TranslationViewModel translations) : IDisposabl
 
     public BindableReactiveProperty<bool> IsEditableTitlebarOpen { get; } = new();
 
-    public ReactiveCommand ExitCommand { get; } =  new(async (_, _) => {  });
-
-    public ReactiveCommand MaximizeCommand { get; } =  new(async (_, _) => {  });
-
-    public ReactiveCommand MinimizeCommand { get; } =  new(async (_, _) => {  });
-
-    public ReactiveCommand RestoreCommand { get; } = new(async (_, _) => {  });
-
-    public ReactiveCommand ToggleFullscreenCommand { get; } = new(async (_, _) =>
+    public ReactiveCommand ExitCommand { get; }
+    
+    private async ValueTask Exit(Unit unit, CancellationToken cancellationToken)
     {
+        await Mapper.Exit();
+    }
+
+    public ReactiveCommand MaximizeCommand { get; }
+    private async ValueTask Maximize(Unit unit, CancellationToken cancellationToken)
+    {
+        await Mapper.Maximize();
+    }
+
+    public ReactiveCommand MinimizeCommand { get; }
+    private async ValueTask Minimize(Unit unit, CancellationToken cancellationToken)
+    {
+        await Mapper.Minimize();
+    }
+
+    public ReactiveCommand RestoreCommand { get; }
+    private async ValueTask Restore(Unit unit, CancellationToken cancellationToken)
+    {
+        await Mapper.Restore();
+    }
+
+    public ReactiveCommand ToggleFullscreenCommand { get; }
+    private async ValueTask ToggleFullscreen(Unit unit, CancellationToken cancellationToken)
+    {
+        await Mapper.ToggleFullscreen();
+    }
+    
+    public ReactiveCommand OpenCommand { get; }
+    private async ValueTask Open(Unit unit, CancellationToken cancellationToken)
+    {
+        await Mapper.Open();
+    }    
+    public MainWindowViewModel(TranslationViewModel translations, IPlatformWindowService windowService)
+    {
+        Translation = translations;
+        PlatformWindowService = windowService;
         
-    });
+        ExitCommand = new ReactiveCommand(Exit);
+        MaximizeCommand = new ReactiveCommand(Maximize);
+        MinimizeCommand = new ReactiveCommand(Minimize);
+        RestoreCommand = new ReactiveCommand(Restore);
+        ToggleFullscreenCommand = new ReactiveCommand(ToggleFullscreen);
+        OpenCommand = new ReactiveCommand(Open);
+    }
 
     public void Dispose()
     {

@@ -1,3 +1,4 @@
+using Avalonia;
 using Avalonia.Threading;
 using PicView.Avalonia.Clipboard;
 using PicView.Avalonia.ColorManagement;
@@ -17,6 +18,7 @@ using PicView.Core.FileSorting;
 using PicView.Core.IPlatform;
 using PicView.Core.Navigation;
 using PicView.Core.ProcessHandling;
+using PicView.Core.ViewModels;
 
 namespace PicView.Avalonia.Functions;
 
@@ -457,10 +459,16 @@ public class FunctionsMapper2(Core.ViewModels.MainWindowViewModel vm) : IFunctio
     }
     
     /// <inheritdoc cref="DialogManager.HandleShouldClosing" />
-    public async ValueTask Close()
+    public ValueTask Close()
     {
-        // await DialogManager.HandleShouldClosing(vm).ConfigureAwait(false);
-        return;
+        DialogManager2.CloseWithOptionalDialog();
+        return ValueTask.CompletedTask;
+    }
+    
+    public ValueTask Exit()
+    {
+        DialogManager2.Close();
+        return ValueTask.CompletedTask;
     }
 
     public async ValueTask Center()
@@ -479,6 +487,12 @@ public class FunctionsMapper2(Core.ViewModels.MainWindowViewModel vm) : IFunctio
     public async ValueTask Restore()
     {
         await vm.PlatformWindowService.Restore();
+    }
+
+    public ValueTask Minimize()
+    {
+        vm.PlatformWindowService.Minimize();
+        return ValueTask.CompletedTask;
     }
 
     /// <inheritdoc cref="ProcessHelper.StartNewProcess()" />
@@ -584,19 +598,32 @@ public class FunctionsMapper2(Core.ViewModels.MainWindowViewModel vm) : IFunctio
     /// <inheritdoc cref="FilePicker.SelectAndLoadFile(MainViewModel)" />
     public async ValueTask Open()
     {
-        // await FilePicker.SelectAndLoadFile(vm).ConfigureAwait(false);
-        return;
+        await FilePicker2.SelectAndLoadFile(vm).ConfigureAwait(false);
     }
 
     /// <inheritdoc cref="FileManager.OpenWith(string, MainViewModel)" />
-    public async ValueTask OpenWith() =>
-        await Task.Run(() => vm?.PlatformSpecificService?.OpenWith(vm.WindowTabs.ActiveTab?.CurrentValue?.Model?.CurrentValue?.FileInfo?.FullName))
-            .ConfigureAwait(false);
-    
+    public ValueTask OpenWith()
+    {
+        if (Application.Current.DataContext is not CoreViewModel core)
+        {
+            return ValueTask.CompletedTask;
+        }
+
+        core.PlatformService.OpenWith(vm.WindowTabs.ActiveTab.CurrentValue.Model.CurrentValue.FileInfo?.FullName);
+        return ValueTask.CompletedTask;
+    }
+
     /// <inheritdoc cref="FileManager.LocateOnDisk(string, MainViewModel)" />
-    public async ValueTask OpenInExplorer()=>
-        await Task.Run(() => vm?.PlatformSpecificService?.LocateOnDisk(vm.WindowTabs.ActiveTab.CurrentValue.Model.CurrentValue.FileInfo?.FullName))
-            .ConfigureAwait(false);
+    public ValueTask OpenInExplorer()
+    {
+        if (Application.Current.DataContext is not CoreViewModel core)
+        {
+            return ValueTask.CompletedTask;
+        }
+
+        core.PlatformService.LocateOnDisk(vm.WindowTabs.ActiveTab.CurrentValue.Model.CurrentValue.FileInfo?.FullName);
+        return ValueTask.CompletedTask;
+    }
 
     /// <inheritdoc cref="FileSaverHelper.SaveCurrentFile(MainViewModel)" />
     public async ValueTask Save()
@@ -638,11 +665,16 @@ public class FunctionsMapper2(Core.ViewModels.MainWindowViewModel vm) : IFunctio
             UIHelper.GetEditableTitlebar.SelectFileName();
         });
     }
-    
+
     /// <inheritdoc cref="FileManager.ShowFileProperties(string, MainViewModel)" />
-    public async ValueTask ShowFileProperties() =>
-        await Task.Run(() => vm?.PlatformSpecificService?.ShowFileProperties(vm.WindowTabs.ActiveTab.CurrentValue.Model.CurrentValue.FileInfo?.FullName)).ConfigureAwait(false);
-    
+    public ValueTask ShowFileProperties()
+    {
+        // await Task.Run(() =>
+        //     vm?.PlatformSpecificService?.ShowFileProperties(vm.WindowTabs.ActiveTab.CurrentValue.Model.CurrentValue
+        //         .FileInfo?.FullName)).ConfigureAwait(false);
+        return ValueTask.CompletedTask;
+    }
+
     #endregion
 
     #region Copy and Paste functions
@@ -877,26 +909,71 @@ public class FunctionsMapper2(Core.ViewModels.MainWindowViewModel vm) : IFunctio
     public async ValueTask SetAsWallpaper() =>
         await SetAsWallpaperFilled();
 
-    public async ValueTask SetAsWallpaperTiled() =>
-        await Task.Run(() => vm.PlatformSpecificService.SetAsWallpaper(vm.WindowTabs.ActiveTab.CurrentValue.Model.CurrentValue.FileInfo.FullName, 0)).ConfigureAwait(false);
+    public async ValueTask SetAsWallpaperTiled()
+    {
+        if (Application.Current.DataContext is not CoreViewModel core)
+        {
+            return;
+        }
+        await Task.Run(() => core.PlatformService.SetAsWallpaper(vm.WindowTabs.ActiveTab.CurrentValue.Model.CurrentValue.FileInfo.FullName, 0)).ConfigureAwait(false);
+    }
     
-    public async ValueTask SetAsWallpaperCentered() =>
-        await Task.Run(() => vm.PlatformSpecificService.SetAsWallpaper(vm.WindowTabs.ActiveTab.CurrentValue.Model.CurrentValue.FileInfo.FullName, 1)).ConfigureAwait(false);
+    public async ValueTask SetAsWallpaperCentered()     
+    {
+        if (Application.Current.DataContext is not CoreViewModel core)
+        {
+            return;
+        }
+        await Task.Run(() => core.PlatformService.SetAsWallpaper(vm.WindowTabs.ActiveTab.CurrentValue.Model.CurrentValue.FileInfo.FullName, 1)).ConfigureAwait(false);
+    }
     
-    public async ValueTask SetAsWallpaperStretched() =>
-        await Task.Run(() => vm.PlatformSpecificService.SetAsWallpaper(vm.WindowTabs.ActiveTab.CurrentValue.Model.CurrentValue.FileInfo.FullName, 2)).ConfigureAwait(false);
+    public async ValueTask SetAsWallpaperStretched()
+    {
+        if (Application.Current.DataContext is not CoreViewModel core)
+        {
+            return;
+        }
+        await Task.Run(() => core.PlatformService.SetAsWallpaper(vm.WindowTabs.ActiveTab.CurrentValue.Model.CurrentValue.FileInfo.FullName, 2)).ConfigureAwait(false);
+    }
     
-    public async ValueTask SetAsWallpaperFitted() =>
-        await Task.Run(() => vm.PlatformSpecificService.SetAsWallpaper(vm.WindowTabs.ActiveTab.CurrentValue.Model.CurrentValue.FileInfo.FullName, 3)).ConfigureAwait(false);
+    public async ValueTask SetAsWallpaperFitted()     
+    {
+        if (Application.Current.DataContext is not CoreViewModel core)
+        {
+            return;
+        }
+        await Task.Run(() => core.PlatformService.SetAsWallpaper(vm.WindowTabs.ActiveTab.CurrentValue.Model.CurrentValue.FileInfo.FullName, 3)).ConfigureAwait(false);
+    }
     
-    public async ValueTask SetAsWallpaperFilled() =>
-        await Task.Run(() => vm.PlatformSpecificService.SetAsWallpaper(vm.WindowTabs.ActiveTab.CurrentValue.Model.CurrentValue.FileInfo.FullName, 4)).ConfigureAwait(false);
+    public async ValueTask SetAsWallpaperFilled()
+    {
+        if (Application.Current.DataContext is not CoreViewModel core)
+        {
+            return;
+        }
+        await Task.Run(() => core.PlatformService.SetAsWallpaper(vm.WindowTabs.ActiveTab.CurrentValue.Model.CurrentValue.FileInfo.FullName, 4)).ConfigureAwait(false);
+    }
     
-    public async ValueTask SetAsLockscreenCentered() =>
-        await Task.Run(() => vm.PlatformSpecificService.SetAsLockScreen(vm.WindowTabs.ActiveTab.CurrentValue.Model.CurrentValue.FileInfo.FullName)).ConfigureAwait(false);
-    
-    public async ValueTask SetAsLockScreen() =>
-        await Task.Run(() => vm.PlatformSpecificService.SetAsLockScreen(vm.WindowTabs.ActiveTab.CurrentValue.Model.CurrentValue.FileInfo.FullName)).ConfigureAwait(false);
+    public async ValueTask SetAsLockscreenCentered()
+    {
+        if (Application.Current.DataContext is not CoreViewModel core)
+        {
+            return;
+        }
+        await Task.Run(() => core.PlatformService.SetAsLockScreen(vm.WindowTabs.ActiveTab.CurrentValue.Model.CurrentValue.FileInfo.FullName)).ConfigureAwait(false);
+    }
+
+    public async ValueTask SetAsLockScreen()
+    {
+        if (Application.Current.DataContext is not CoreViewModel core)
+        {
+            return;
+        }
+
+        await Task.Run(() =>
+            core.PlatformService.SetAsLockScreen(vm.WindowTabs.ActiveTab.CurrentValue.Model.CurrentValue.FileInfo
+                .FullName)).ConfigureAwait(false);
+    }
 
     #endregion
 

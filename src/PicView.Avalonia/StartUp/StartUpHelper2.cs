@@ -159,7 +159,7 @@ public static class StartUpHelper2
             Task.Run(async () =>
             {
                await KeybindingManager2.LoadKeybindings(vm.PlatformService);
-               vm.MainWindows.ActiveWindow.Value.FunctionsMapper =
+               vm.MainWindows.ActiveWindow.Value.Mapper =
                    new FunctionsMapper2(vm.MainWindows.ActiveWindow.CurrentValue);
             });
         }
@@ -168,7 +168,7 @@ public static class StartUpHelper2
             Task.Run(() =>
             {
                 KeybindingManager2.SetDefaultKeybindings(vm.PlatformService);
-                vm.MainWindows.ActiveWindow.Value.FunctionsMapper =
+                vm.MainWindows.ActiveWindow.Value.Mapper =
                     new FunctionsMapper2(vm.MainWindows.ActiveWindow.CurrentValue);
             });
         }
@@ -198,13 +198,13 @@ public static class StartUpHelper2
         // Need to delay setting fullscreen or maximized until after the window is shown to select the correct monitor
         if (Settings.WindowProperties.Maximized && !Settings.WindowProperties.Fullscreen)
         {
-            Dispatcher.UIThread
-                .InvokeAsync(() => { vm.PlatformWindowService.Maximize(false); }, DispatcherPriority.Background);
+            // Dispatcher.UIThread
+            //     .InvokeAsync(() => { window Maximize(false); }, DispatcherPriority.Background);
         }
         else if (Settings.WindowProperties.Fullscreen)
         {
-            Dispatcher.UIThread.InvokeAsync(() => { vm.PlatformWindowService.Fullscreen(false); },
-                DispatcherPriority.Background);
+            // Dispatcher.UIThread.InvokeAsync(() => { vm.PlatformWindowService.Fullscreen(false); },
+            //     DispatcherPriority.Background);
         }
 
         if (Settings.UIProperties.ShowHoverNavigationBar)

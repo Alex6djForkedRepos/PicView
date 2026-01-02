@@ -8,11 +8,9 @@ using PicView.Avalonia.ColorManagement;
 using PicView.Avalonia.ImageHandling;
 using PicView.Avalonia.StartUp;
 using PicView.Avalonia.Win32.Views;
-using PicView.Avalonia.Win32.WindowImpl;
 using PicView.Core.FileAssociations;
 using PicView.Core.FileSorting;
 using PicView.Core.IPlatform;
-using PicView.Core.Localization;
 using PicView.Core.ProcessHandling;
 using PicView.Core.ViewModels;
 using PicView.Core.WindowsNT;
@@ -24,11 +22,10 @@ using Win32Clipboard = PicView.Core.WindowsNT.Copy.Win32Clipboard;
 
 namespace PicView.Avalonia.Win32;
 
-public class App : Application, IPlatformSpecificService, IPlatformWindowService
+public class App : Application, IPlatformSpecificService
 {
     private static WinMainWindow2? _mainWindow;
-    private static CoreViewModel _coreViewModel;
-    private static WindowInitializer? _windowInitializer;
+    private static CoreViewModel? _coreViewModel;
     private static MainWindowViewModel? _mainWindowViewModel;
     private TaskbarProgress? _taskbarProgress;
      
@@ -53,27 +50,19 @@ public class App : Application, IPlatformSpecificService, IPlatformWindowService
             return;
         }
         var settingsExists = LoadSettings();
-        _coreViewModel = new CoreViewModel(this, this, GetImageModel.GetImageModelAsync);
+        _coreViewModel = new CoreViewModel(this, GetImageModel.GetImageModelAsync);
         DataContext = _coreViewModel;
-        _mainWindowViewModel = new MainWindowViewModel(_coreViewModel.Translation);
+
         ThemeManager.DetermineTheme(Current, settingsExists);
-        _coreViewModel.MainWindows.ActiveWindow.Value = _mainWindowViewModel;
-        _mainWindow = new WinMainWindow2
-        {
-            DataContext = _mainWindowViewModel
-        };
-        StartUpHelper2.StartWithArguments(Current.DataContext as CoreViewModel, settingsExists, desktop, _mainWindow);
+
+        _mainWindow = new WinMainWindow2();
+        _mainWindowViewModel = _mainWindow.DataContext as MainWindowViewModel;
         _coreViewModel.MainWindows.MainWindows.Add(_mainWindowViewModel);
         _coreViewModel.MainWindows.ActiveWindow.Value = _mainWindowViewModel;
-    }
+        StartUpHelper2.StartWithArguments(_coreViewModel, settingsExists, desktop, _mainWindow);
 
-    public int CombinedTitleButtonsWidth
-    {
-        get => (int)(Settings.WindowProperties.Maximized && !Settings.WindowProperties.Fullscreen
-            ? _mainWindow?.OffScreenMargin.Left + _mainWindow?.OffScreenMargin.Right + field ?? field
-            : field);
-        set;
-    } = 185;
+        desktop.MainWindow = _mainWindow;
+    }
 
     #region Interface Implementations
     
@@ -148,7 +137,7 @@ public class App : Application, IPlatformSpecificService, IPlatformWindowService
     {
         if (Settings.UIProperties.ShowPrintPreview)
         {
-            _windowInitializer?.ShowPrintPreviewWindow(null, path);
+            //_windowInitializer?.ShowPrintPreviewWindow(null, path);
         }
         else
         {
@@ -216,54 +205,6 @@ public class App : Application, IPlatformSpecificService, IPlatformWindowService
     {
         NativeMethods.EnableScreensaver();
     }
-
-    #endregion
-
-    #region Window interface implementations
-    
-    public void ShowAboutWindow() =>
-        _windowInitializer?.ShowAboutWindow(null);
-
-    public async Task ShowImageInfoWindow() =>
-        await _windowInitializer?.ShowImageInfoWindow(null);
-
-    public async Task ShowKeybindingsWindow() =>
-        await _windowInitializer?.ShowKeybindingsWindow(null);
-
-    public async Task ShowSettingsWindow() =>
-        await _windowInitializer?.ShowSettingsWindow(null);
-
-    public void ShowSingleImageResizeWindow() =>
-        _windowInitializer?.ShowSingleImageResizeWindow(null);
-
-    public async Task ShowBatchResizeWindow() =>
-       await _windowInitializer?.ShowBatchResizeWindow(null);
-
-    public void ShowEffectsWindow() =>
-        _windowInitializer?.ShowEffectsWindow(null);
-
-    public void ShowConvertWindow() =>
-        _windowInitializer?.ShowConvertWindow(null);
-
-    /// <inheritdoc />
-    public async Task Maximize(bool saveSetting = true) =>
-        await Win32Window.Maximize(_mainWindow, null, saveSetting);
-    
-    /// <inheritdoc />
-    public async Task MaximizeRestore(bool saveSetting = true) =>
-        await Win32Window.ToggleMaximize(_mainWindow, null, saveSetting);
-
-    /// <inheritdoc />
-    public async Task Fullscreen(bool saveSetting = true) =>
-        await Win32Window.Fullscreen(_mainWindow, null, saveSetting);
-    
-    /// <inheritdoc />
-    public async Task ToggleFullscreen(bool saveSetting = true) =>
-        await Win32Window.ToggleFullscreen(_mainWindow, null, saveSetting);
-    
-    /// <inheritdoc />
-    public async Task Restore() =>
-        await Win32Window.Restore(_mainWindow, null);
 
     #endregion
 

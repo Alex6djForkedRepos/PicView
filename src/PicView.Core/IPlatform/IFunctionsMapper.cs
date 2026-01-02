@@ -49,11 +49,6 @@ public interface IFunctionsMapper
     ValueTask GalleryClick();
 
     ValueTask ShowStartUpMenu();
-    ValueTask Close();
-    ValueTask Center();
-    ValueTask Maximize();
-    ValueTask Restore();
-    ValueTask NewWindow();
     ValueTask AboutWindow();
     ValueTask ConvertWindow();
     ValueTask KeybindingsWindow();
@@ -69,6 +64,13 @@ public interface IFunctionsMapper
     ValueTask ToggleFullscreen();
     ValueTask Fullscreen();
     ValueTask SetTopMost();
+    ValueTask Close();
+    ValueTask Exit();
+    ValueTask Center();
+    ValueTask Maximize();
+    ValueTask Minimize();
+    ValueTask Restore();
+    ValueTask NewWindow();
 
     ValueTask OpenLastFile();
     ValueTask OpenPreviousFileHistoryEntry();

@@ -149,4 +149,9 @@ public static class MacOSWindow2
             await SaveSettingsAsync().ConfigureAwait(false);
         }
     }
+    
+    public static void Minimize(MacMainWindow2? window)
+    {
+        window.WindowState = WindowState.Minimized;
+    }
 }

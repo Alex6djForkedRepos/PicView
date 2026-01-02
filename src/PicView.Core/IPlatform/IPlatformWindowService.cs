@@ -11,6 +11,7 @@ public interface IPlatformWindowService
     /// Platform specific maximize implementation.
     /// </summary>
     Task Maximize(bool saveSetting = true);
+    void Minimize();
     
     /// <summary>
     /// Platform specific toggle between maximize and restore implementation.

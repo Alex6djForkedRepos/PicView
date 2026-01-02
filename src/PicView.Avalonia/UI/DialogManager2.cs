@@ -8,7 +8,7 @@ using PicView.Avalonia.Views.UC.PopUps;
 
 namespace PicView.Avalonia.UI;
 
-public static class DialogManager2
+public static class DialogManager
 {
     public static bool IsDialogOpen { get; set; }
     
@@ -74,7 +74,7 @@ public static class DialogManager2
         }
 
         MenuManager.CloseMenus(UIHelper.GetMainView.DataContext as MainViewModel);
-        UIHelper.GetMainView.MainGrid.Children.Add(new FileSearchDialog());
+        UIHelper2.GetMainView.MainPanel.Children.Add(new FileSearchDialog());
     }
 
     public static void AddNavigationDialog()

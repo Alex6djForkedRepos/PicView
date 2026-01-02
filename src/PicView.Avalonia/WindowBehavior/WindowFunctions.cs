@@ -71,17 +71,17 @@ public static class WindowFunctions
         await FileHistoryManager.SaveToFileAsync();
         ArchiveExtraction.Cleanup();
 
-        if (vm.Window.SettingsWindowConfig is not null)
+        if (vm?.Window?.SettingsWindowConfig is not null)
         {
             await vm.Window.SettingsWindowConfig.SaveAsync();
         }
 
-        if (vm.Window.ImageInfoWindowConfig is not null)
+        if (vm?.Window?.ImageInfoWindowConfig is not null)
         {
             await vm.Window.ImageInfoWindowConfig.SaveAsync();
         }
 
-        if (vm.Window.BatchResizeWindowConfig is not null)
+        if (vm?.Window?.BatchResizeWindowConfig is not null)
         {
             await vm.Window.BatchResizeWindowConfig.SaveAsync();
         }

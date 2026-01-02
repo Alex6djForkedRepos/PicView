@@ -106,7 +106,7 @@ public static class MainKeyboardShortcuts2
     /// <param name="e">The key event arguments.</param>
     public static void MainWindow_KeysUp(KeyEventArgs e, Core.ViewModels.MainWindowViewModel? mainWindowViewModel)
     {
-        mainWindowViewModel?.FunctionsMapper?.StopRepeatedNavigation();
+        mainWindowViewModel?.Mapper?.StopRepeatedNavigation();
         UpdateModifierState(e.Key, false);
         Reset();
     }
@@ -223,9 +223,9 @@ public static class MainKeyboardShortcuts2
 
             if (!IsKeyHeldDown && IsEscKeyEnabled)
             {
-                if (vm.FunctionsMapper != null)
+                if (vm.Mapper != null)
                 {
-                    await vm.FunctionsMapper.Close();
+                    await vm.Mapper.Close();
                 }
             }
         }
@@ -243,7 +243,7 @@ public static class MainKeyboardShortcuts2
             var functionName = KeybindingManager2.GetFunctionName(CurrentKeys);
             if (!string.IsNullOrEmpty(functionName))
             {
-                var action = vm.FunctionsMapper?.GetFunctionByName(functionName);
+                var action = vm.Mapper?.GetFunctionByName(functionName);
                 if (action is not null)
                 {
                     await action.Invoke().ConfigureAwait(false);

@@ -9,6 +9,7 @@ using PicView.Avalonia.UI;
 using PicView.Avalonia.ViewModels;
 using PicView.Avalonia.Win32.WindowImpl;
 using PicView.Avalonia.WindowBehavior;
+using PicView.Core.IPlatform;
 using PicView.Core.ViewModels;
 using R3;
 using R3.Avalonia;
@@ -16,9 +17,10 @@ using MainWindowViewModel = PicView.Core.ViewModels.MainWindowViewModel;
 
 namespace PicView.Avalonia.Win32.Views;
 
-public partial class WinMainWindow2 : Window
+public partial class WinMainWindow2 : Window, IPlatformWindowService
 {
     private readonly AvaloniaRenderingFrameProvider? _frameProvider;
+    private static WindowInitializer? _windowInitializer;
 
     public WinMainWindow2()
     {
@@ -26,7 +28,7 @@ public partial class WinMainWindow2 : Window
         {
             return;
         }
-        var mainWindowViewModel = new MainWindowViewModel(core.Translation);
+        var mainWindowViewModel = new MainWindowViewModel(core.Translation, this);
         DataContext = mainWindowViewModel;
         
         // initialize RenderingFrameProvider
@@ -42,6 +44,7 @@ public partial class WinMainWindow2 : Window
     {
         Loaded += delegate
         {
+            _windowInitializer = new WindowInitializer();
             if (Application.Current.DataContext is not CoreViewModel vm)
             {
                 return;
@@ -66,28 +69,29 @@ public partial class WinMainWindow2 : Window
             };
             PointerExited += (_, _) => { DragAndDropHelper.RemoveDragDropView(); };
 
-            Observable.EveryValueChanged(this, x => x.WindowState, _frameProvider).Subscribe(state =>
+            Observable.EveryValueChanged(this, x => x.WindowState, _frameProvider)
+                .SubscribeAwait(async (state, _) =>
             {
                 switch (state)
                 {
                     case WindowState.FullScreen:
                         if (!Settings.WindowProperties.Fullscreen)
                         {
-                            vm.PlatformWindowService.Fullscreen();
+                             await Fullscreen();
                         }
 
                         break;
                     case WindowState.Maximized:
                         if (!Settings.WindowProperties.Maximized)
                         {
-                            vm.PlatformWindowService.Maximize();
+                            await Maximize();
                         }
 
                         break;
                     case WindowState.Normal:
                         if (Settings.WindowProperties.Fullscreen || Settings.WindowProperties.Maximized)
                         {
-                            vm.PlatformWindowService.Restore();
+                            await Restore();
                         }
 
                         break;
@@ -111,11 +115,12 @@ public partial class WinMainWindow2 : Window
 
     private void OnActivated(object? sender, EventArgs e)
     {
-        if (Application.Current.DataContext is not CoreViewModel core)
+        if (Application.Current.DataContext is not CoreViewModel core || Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop)
         {
             return;
         }
         core.MainWindows.ActiveWindow.Value = DataContext as MainWindowViewModel;
+        desktop.MainWindow = this;
     }
 
     private void MainTabControlOnTabDetached(object? sender, TabDetachEventArgs e)
@@ -214,6 +219,8 @@ public partial class WinMainWindow2 : Window
                 {
                     control.DataContext = tab;
                 }
+
+                desktop.MainWindow = newWindow;
             }, DispatcherPriority.Send);
 
             newVm.WindowTabs.Tabs.Value[0] = tab;
@@ -282,4 +289,62 @@ public partial class WinMainWindow2 : Window
         _frameProvider?.Dispose();
         base.OnClosed(e);
     }
+    
+    #region Window interface implementations
+    
+    public int CombinedTitleButtonsWidth
+    {
+        get => (int)(Settings.WindowProperties.Maximized && !Settings.WindowProperties.Fullscreen
+            ? OffScreenMargin.Left + OffScreenMargin.Right + field : field);
+        set;
+    } = 185;
+    
+    public void ShowAboutWindow() =>
+        _windowInitializer?.ShowAboutWindow(null);
+
+    public async Task ShowImageInfoWindow() =>
+        await _windowInitializer?.ShowImageInfoWindow(null);
+
+    public async Task ShowKeybindingsWindow() =>
+        await _windowInitializer?.ShowKeybindingsWindow(null);
+
+    public async Task ShowSettingsWindow() =>
+        await _windowInitializer?.ShowSettingsWindow(null);
+
+    public void ShowSingleImageResizeWindow() =>
+        _windowInitializer?.ShowSingleImageResizeWindow(null);
+
+    public async Task ShowBatchResizeWindow() =>
+        await _windowInitializer?.ShowBatchResizeWindow(null);
+
+    public void ShowEffectsWindow() =>
+        _windowInitializer?.ShowEffectsWindow(null);
+
+    public void ShowConvertWindow() =>
+        _windowInitializer?.ShowConvertWindow(null);
+
+    /// <inheritdoc />
+    public async Task Maximize(bool saveSetting = true) =>
+        await Win32Window.Maximize(this, null, saveSetting);
+    
+    /// <inheritdoc />
+    public async Task MaximizeRestore(bool saveSetting = true) =>
+        await Win32Window.ToggleMaximize(this, null, saveSetting);
+
+    /// <inheritdoc />
+    public async Task Fullscreen(bool saveSetting = true) =>
+        await Win32Window.Fullscreen(this, null, saveSetting);
+    
+    /// <inheritdoc />
+    public async Task ToggleFullscreen(bool saveSetting = true) =>
+        await Win32Window.ToggleFullscreen(this, null, saveSetting);
+    
+    /// <inheritdoc />
+    public async Task Restore() =>
+        await Win32Window.Restore(this, null);
+    
+    public void Minimize() =>
+        Win32Window.Minimize(this);
+
+    #endregion
 }

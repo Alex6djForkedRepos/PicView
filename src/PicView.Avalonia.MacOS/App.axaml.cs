@@ -6,7 +6,6 @@ using Avalonia.Threading;
 using PicView.Avalonia.ColorManagement;
 using PicView.Avalonia.ImageHandling;
 using PicView.Avalonia.MacOS.Views;
-using PicView.Avalonia.MacOS.WindowImpl;
 using PicView.Avalonia.StartUp;
 using PicView.Core.FileAssociations;
 using PicView.Core.FileSorting;
@@ -24,12 +23,11 @@ using MainWindowViewModel = PicView.Core.ViewModels.MainWindowViewModel;
 
 namespace PicView.Avalonia.MacOS;
 
-public class App : Application, IPlatformSpecificService, IPlatformWindowService
+public class App : Application, IPlatformSpecificService
 {
     private MacMainWindow2? _mainWindow;
-    private static WindowInitializer? _windowInitializer;
     private static MainWindowViewModel? _mainWindowViewModel;
-    private static CoreViewModel _coreViewModel;
+    private static CoreViewModel? _coreViewModel;
 
     public override void Initialize()
     {
@@ -55,18 +53,17 @@ public class App : Application, IPlatformSpecificService, IPlatformWindowService
             }
 
             var settingsExists = LoadSettings();
-            _coreViewModel = new CoreViewModel(this, this, GetImageModel.GetImageModelAsync);
+            _coreViewModel = new CoreViewModel(this, GetImageModel.GetImageModelAsync);
             DataContext = _coreViewModel;
-            _mainWindowViewModel = new MainWindowViewModel(_coreViewModel.Translation);
-            
-            ThemeManager.DetermineTheme(Current, settingsExists);
 
-            _coreViewModel.MainWindows.ActiveWindow.Value = _mainWindowViewModel;
+            ThemeManager.DetermineTheme(Current, settingsExists);
+            
             _mainWindow = new MacMainWindow2
             {
                 DataContext = _mainWindowViewModel
             };
-
+            _mainWindowViewModel = _mainWindow.DataContext as MainWindowViewModel;
+            _coreViewModel.MainWindows.ActiveWindow.Value = _mainWindowViewModel;
             if (string.IsNullOrWhiteSpace(startUpFilePath))
             {
                 StartUpHelper2.StartWithArguments(_coreViewModel, settingsExists, desktop, _mainWindow);
@@ -75,7 +72,6 @@ public class App : Application, IPlatformSpecificService, IPlatformWindowService
             {
                 StartUpHelper2.StartUpBlank(_coreViewModel, settingsExists,  true, desktop, _mainWindow);
             }
-            _windowInitializer = new WindowInitializer();
             _coreViewModel.MainWindows.MainWindows.Add(_mainWindowViewModel);
             _coreViewModel.MainWindows.ActiveWindow.Value = _mainWindowViewModel;
             
@@ -157,7 +153,7 @@ public class App : Application, IPlatformSpecificService, IPlatformWindowService
 
     public void Print(string path)
     {
-        _windowInitializer?.ShowPrintPreviewWindow(null, path);
+        //_windowInitializer?.ShowPrintPreviewWindow(null, path);
     }
 
     public async Task SetAsWallpaper(string path, int wallpaperStyle)
@@ -229,56 +225,6 @@ public class App : Application, IPlatformSpecificService, IPlatformWindowService
         await Task.Run(() => File.Delete(path));
         return !File.Exists(path); 
     }
-    
-    #endregion
-    
-    #region Window interface implementations
-
-    public int CombinedTitleButtonsWidth { get; set; } = 165;
-    
-    public void ShowAboutWindow() =>
-        _windowInitializer?.ShowAboutWindow(null);
-
-    public async Task ShowImageInfoWindow() =>
-        await _windowInitializer?.ShowImageInfoWindow(null);
-
-    public async Task ShowKeybindingsWindow() =>
-        _windowInitializer?.ShowKeybindingsWindow(null);
-
-    public async Task ShowSettingsWindow() =>
-        await _windowInitializer?.ShowSettingsWindow(null);
-
-    public void ShowSingleImageResizeWindow() =>
-        _windowInitializer?.ShowSingleImageResizeWindow(null);
-
-    public async Task ShowBatchResizeWindow() =>
-        await _windowInitializer?.ShowBatchResizeWindow(null);
-
-    public void ShowEffectsWindow() =>
-        _windowInitializer?.ShowEffectsWindow(null);
-
-    public void ShowConvertWindow() =>
-        _windowInitializer?.ShowConvertWindow(null);
-
-    /// <inheritdoc />
-    public async Task Maximize(bool saveSetting = true) =>
-        await MacOSWindow2.Maximize(_mainWindow, null, saveSetting);
-    
-    /// <inheritdoc />
-    public async Task MaximizeRestore(bool saveSetting = true) =>
-        await MacOSWindow2.ToggleMaximize(_mainWindow, null, saveSetting);
-
-    /// <inheritdoc />
-    public async Task Fullscreen(bool saveSetting = true) =>
-        await MacOSWindow2.Fullscreen(_mainWindow, null, saveSetting);
-    
-    /// <inheritdoc />
-    public async Task ToggleFullscreen(bool saveSetting = true) =>
-        await MacOSWindow2.ToggleFullscreen(_mainWindow, null, saveSetting);
-    
-    /// <inheritdoc />
-    public async Task Restore() =>
-        await MacOSWindow2.Restore(_mainWindow, null);
     
     #endregion
 }

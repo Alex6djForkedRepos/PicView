@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Threading;
 using PicView.Avalonia.UI;
 using PicView.Avalonia.ViewModels;
+using PicView.Avalonia.Win32.Views;
 using PicView.Avalonia.WindowBehavior;
 using PicView.Core.Sizing;
 
@@ -172,6 +173,11 @@ public static class Win32Window
         {
             await SaveSettingsAsync().ConfigureAwait(false);
         }
+    }
+    
+    public static void Minimize(WinMainWindow2? mainWindow)
+    {
+        mainWindow.WindowState = WindowState.Minimized;
     }
 
 
