@@ -2,7 +2,6 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Threading;
-using PicView.Avalonia.ColorManagement;
 using PicView.Avalonia.CustomControls;
 using PicView.Avalonia.DragAndDrop;
 using PicView.Avalonia.StartUp;
@@ -10,7 +9,6 @@ using PicView.Avalonia.UI;
 using PicView.Avalonia.ViewModels;
 using PicView.Avalonia.Win32.WindowImpl;
 using PicView.Avalonia.WindowBehavior;
-using PicView.Core.Localization;
 using PicView.Core.ViewModels;
 using R3;
 using R3.Avalonia;
@@ -20,9 +18,7 @@ namespace PicView.Avalonia.Win32.Views;
 
 public partial class WinMainWindow2 : Window
 {
-    private readonly CompositeDisposable _disposables = new();
-    private readonly AvaloniaRenderingFrameProvider _frameProvider;
-    private MainWindowViewModel _mainWindowViewModel;
+    private readonly AvaloniaRenderingFrameProvider? _frameProvider;
 
     public WinMainWindow2()
     {
@@ -30,69 +26,13 @@ public partial class WinMainWindow2 : Window
         {
             return;
         }
-        _mainWindowViewModel = new MainWindowViewModel(core.Translation);
-        DataContext = _mainWindowViewModel;
+        var mainWindowViewModel = new MainWindowViewModel(core.Translation);
+        DataContext = mainWindowViewModel;
         
         // initialize RenderingFrameProvider
         _frameProvider = new AvaloniaRenderingFrameProvider(GetTopLevel(this)!);
         UIHelper2.SetFrameProvider(_frameProvider);
 
-        Initialization();
-    }
-
-    // public WinMainWindow2(bool mainWindowAlreadyExists)
-    // {
-    //     if (Application.Current.DataContext is not CoreViewModel core)
-    //     {
-    //         return;
-    //     }
-    //     _mainWindowViewModel = new MainWindowViewModel(core.Translation);
-    //     DataContext = _mainWindowViewModel;
-    //     
-    //     if (mainWindowAlreadyExists)
-    //     {
-    //         // initialize RenderingFrameProvider
-    //         _frameProvider = new AvaloniaRenderingFrameProvider(GetTopLevel(this)!);
-    //         UIHelper.SetFrameProvider(_frameProvider);
-    //
-    //         if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop)
-    //         {
-    //             return;
-    //         }
-    //         
-    //         ThemeManager.DetermineTheme(Application.Current, true);
-    //         StartUpHelper2.StartUpBlank(Application.Current.DataContext as CoreViewModel, true, false, desktop, this);
-    //
-    //         Initialization();
-    //         return;
-    //     }
-    //
-    //     var settingsExists = LoadSettings();
-    //
-    //     // initialize RenderingFrameProvider
-    //     _frameProvider = new AvaloniaRenderingFrameProvider(GetTopLevel(this)!);
-    //     UIHelper.SetFrameProvider(_frameProvider);
-    //
-    //     Initialization();
-    //     WindowInitialization(settingsExists);
-    // }
-
-    private void WindowInitialization(bool settingsExists)
-    {
-        TranslationManager.Init();
-
-        if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop)
-        {
-            return;
-        }
-
-        ThemeManager.DetermineTheme(Application.Current, settingsExists);
-        // StartUpHelper2.StartWithArguments(_vm, settingsExists, desktop, this);
-        // _windowInitializer = new WindowInitializer();
-    }
-
-    private void Initialization()
-    {
         InitializeComponent();
 
         LoadedInitialization();
@@ -340,7 +280,6 @@ public partial class WinMainWindow2 : Window
     protected override void OnClosed(EventArgs e)
     {
         _frameProvider?.Dispose();
-        _disposables.Dispose();
         base.OnClosed(e);
     }
 }

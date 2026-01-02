@@ -17,9 +17,8 @@ namespace PicView.Avalonia.MacOS.Views;
 
 public partial class MacMainWindow2 : Window
 {
-    private readonly AvaloniaRenderingFrameProvider _frameProvider;
+    private readonly AvaloniaRenderingFrameProvider? _frameProvider;
     private readonly CompositeDisposable _disposables = new();
-    private MainWindowViewModel _mainWindowViewModel;
 
     public MacMainWindow2()
     {
@@ -27,8 +26,8 @@ public partial class MacMainWindow2 : Window
         {
             return;
         }
-        _mainWindowViewModel = new MainWindowViewModel(core.Translation);
-        DataContext = _mainWindowViewModel;
+        var mainWindowViewModel = new MainWindowViewModel(core.Translation);
+        DataContext = mainWindowViewModel;
         InitializeComponent();
 
         _frameProvider = new AvaloniaRenderingFrameProvider(GetTopLevel(this));

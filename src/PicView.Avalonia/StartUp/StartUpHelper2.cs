@@ -362,6 +362,8 @@ public static class StartUpHelper2
 
     private static void MainWindow_KeyUp(object? sender, KeyEventArgs e)
     {
-        MainKeyboardShortcuts.MainWindow_KeysUp(e);
+        // Extract the ViewModel from the window that received the key press
+        var vm = (sender as Control)?.DataContext as MainWindowViewModel;
+        MainKeyboardShortcuts2.MainWindow_KeysUp(e, vm);
     }
 }
