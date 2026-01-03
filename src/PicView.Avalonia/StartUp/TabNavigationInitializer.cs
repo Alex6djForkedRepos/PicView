@@ -32,6 +32,7 @@ public static class TabNavigationInitializer
 
         // 4. Initialize ViewModel
         vm.MainWindows.ActiveWindow.Value.WindowTabs.LoadAndInitialize(galleryService, navService, sharedCache, thumbnailService, fileWatcher);
+        vm.MainWindows.ActiveWindow.Value.WindowTabs.SetParentContext(vm);
         vm.MainWindows.ActiveWindow.Value.WindowTabs.ActiveTab.Value.UpdateTabTitle();
     }
     
