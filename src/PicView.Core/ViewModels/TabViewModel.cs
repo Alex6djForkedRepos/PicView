@@ -89,7 +89,7 @@ public class TabViewModel(string id, Func<string, ValueTask> closeTab, IFileWatc
             {
                 if (file is null)
                 {
-                    var noImage = TranslationManager.Translation.NoImage;
+                    var noImage = TranslationManager.Translation?.NoImage;
                     if (string.IsNullOrEmpty(noImage))
                     {
                         return;

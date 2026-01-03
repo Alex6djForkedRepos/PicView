@@ -22,13 +22,13 @@ public static class TabNavigationInitializer
         // 2. Create SharedImageCache
         // We use the same loading logic as AvaloniaImageLoader (via GetImageModel)
         var sharedCache = new SharedImageCache(GetImageModel.GetImageModelAsync);
+        
+        var fileWatcher = new FileWatcherService(vm.PlatformService.CompareStrings, sharedCache);
 
         // 3. Create NavigationService (Core)
-        var navService = new NavigationService(imageLoader, archiveService, sharedCache, vm.PlatformService.CompareStrings);
+        var navService = new NavigationService(imageLoader, archiveService, sharedCache, fileWatcher, vm.PlatformService.CompareStrings);
 
         var thumbnailService = new AvaloniaThumbnailLoader();
-
-        var fileWatcher = new FileWatcherService(vm.PlatformService.CompareStrings, sharedCache);
 
         // 4. Initialize ViewModel
         vm.MainWindows.ActiveWindow.Value.WindowTabs.LoadAndInitialize(galleryService, navService, sharedCache, thumbnailService, fileWatcher);
@@ -49,12 +49,13 @@ public static class TabNavigationInitializer
         // 2. Create SharedImageCache
         // We use the same loading logic as AvaloniaImageLoader (via GetImageModel)
         var sharedCache = new SharedImageCache(GetImageModel.GetImageModelAsync);
+        
+        var fileWatcher = new FileWatcherService(vm.PlatformService.CompareStrings, sharedCache);
 
         // 3. Create NavigationService (Core)
-        var navService = new NavigationService(imageLoader, archiveService, sharedCache, vm.PlatformService.CompareStrings);
+        var navService = new NavigationService(imageLoader, archiveService, sharedCache, fileWatcher, vm.PlatformService.CompareStrings);
 
         var thumbnailService = new AvaloniaThumbnailLoader();
-        var fileWatcher = new FileWatcherService(vm.PlatformService.CompareStrings, sharedCache);
 
         var files = vm.PlatformService.GetFiles(fileInfo);
         // 4. Initialize ViewModel

@@ -1,0 +1,125 @@
+﻿using PicView.Core.Models;
+using PicView.Core.Navigation;
+using PicView.Core.Navigation.Interfaces;
+using PicView.Core.Preloading;
+using PicView.Core.ViewModels;
+
+namespace PicView.Tests.Navigation;
+
+public class NavigationServiceTests
+{
+    private readonly MockImageLoader _mockImageLoader;
+    private readonly MockArchiveService _mockArchiveService;
+    private readonly MockImageCache _mockCache;
+    private readonly MockFileWatcherService _mockFileWatcherService;
+    private readonly NavigationService _navigationService;
+    private readonly string _testDirectory;
+
+    public NavigationServiceTests()
+    {
+        _testDirectory = Path.Combine(Path.GetTempPath(), "PicViewNavTests_" + Guid.NewGuid());
+        Directory.CreateDirectory(_testDirectory);
+
+        _mockImageLoader = new MockImageLoader();
+        _mockArchiveService = new MockArchiveService();
+        _mockCache = new MockImageCache();
+        _mockFileWatcherService = new MockFileWatcherService();
+
+        _navigationService = new NavigationService(
+            _mockImageLoader,
+            _mockArchiveService,
+            _mockCache,
+            _mockFileWatcherService,
+            string.CompareOrdinal
+        );
+    }
+
+    [Fact]
+    public async Task RepopulateIterator_UpdatesFileWatcher()
+    {
+        // Arrange
+        var tab = CreateTab(_testDirectory);
+        var fileInfo = new FileInfo(Path.Combine(_testDirectory, "test.jpg"));
+        var cts = new CancellationTokenSource();
+
+        // Act
+        await _navigationService.RepopulateIterator(fileInfo, tab, cts);
+
+        // Assert
+        Assert.True(_mockFileWatcherService.UnwatchCalled, "Unwatch should be called");
+        Assert.True(_mockFileWatcherService.WatchCalled, "Watch should be called");
+        Assert.Equal(_testDirectory, _mockFileWatcherService.WatchedDirectory);
+        Assert.Equal(tab, _mockFileWatcherService.WatchedTab);
+    }
+
+    private TabViewModel CreateTab(string directory)
+    {
+        var tab = new TabViewModel("test", _ => ValueTask.CompletedTask);
+        // Initialize with mocks to avoid null refs
+        tab.Initialize(_mockCache, new MockThumbnailLoader());
+        tab.ImageIterator.Files = new List<FileInfo>();
+        return tab;
+    }
+
+    // Mocks
+
+    private class MockFileWatcherService : IFileWatcherService
+    {
+        public bool WatchCalled { get; private set; }
+        public bool UnwatchCalled { get; private set; }
+        public TabViewModel? WatchedTab { get; private set; }
+        public string? WatchedDirectory { get; private set; }
+
+        public void Watch(TabViewModel tab, string? directory = null)
+        {
+            WatchCalled = true;
+            WatchedTab = tab;
+            WatchedDirectory = directory;
+        }
+
+        public void Unwatch(TabViewModel tab)
+        {
+            UnwatchCalled = true;
+        }
+    }
+
+    private class MockImageLoader : IImageLoader
+    {
+        public ValueTask<ImageModel> GetImageModelAsync(FileInfo file, CancellationToken ct)
+        {
+            return ValueTask.FromResult(new ImageModel { FileInfo = file });
+        }
+    }
+
+    private class MockArchiveService : IArchiveService
+    {
+        public Task<DirectoryInfo> ExtractToTempAsync(FileInfo archive, CancellationToken ct)
+        {
+            return Task.FromResult(new DirectoryInfo(Path.GetTempPath()));
+        }
+    }
+
+    private class MockImageCache : IImageCache
+    {
+        public Task<ImageModel?> LoadAsync(string ownerId, int index, IReadOnlyList<FileInfo> list, CancellationToken ct = default) => Task.FromResult<ImageModel?>(null);
+        public bool TryGet(FileInfo f, out PreLoadValue? value) { value = null; return false; }
+        public bool TryGet(string ownerId, int index, out PreLoadValue? value) { value = null; return false; }
+        public void Clear() { }
+        public void Clear(string ownerId) { }
+        public bool Contains(PreLoadValue value) => false;
+        public bool Add(string ownerId, int index, PreLoadValue preLoadValue, int listCount, bool isReverse) => false;
+        public bool TryAdd(string ownerId, int index, PreLoadValue preLoadValue, int listCount, bool isReverse, out PreLoadValue? value) { value = null; return false; }
+        public void Preload(string ownerId, int currentIndex, bool reversed, IReadOnlyList<FileInfo> files) { }
+        public ValueTask RemoveOwner(string ownerId) => ValueTask.CompletedTask;
+        public void RegisterOwner(string ownerId) { }
+        public ValueTask Clear(TabViewModel tab) => ValueTask.CompletedTask;
+        public void TryRemove(string ownerId, int index) { }
+        public void Resynchronize(string ownerId, IReadOnlyList<FileInfo> files) { }
+    }
+    
+    private class MockThumbnailLoader : IThumbnailLoader
+    {
+        public ValueTask<object?> GetThumbnailAsync(FileInfo file) => ValueTask.FromResult<object?>(null);
+        public ValueTask<object?> GetThumbnailAsync(FileInfo file, uint size) => ValueTask.FromResult<object?>(null);
+    }
+}

@@ -12,13 +12,15 @@ public class NavigationService : INavigationService
     private readonly IArchiveService _archive;
     private readonly IImageCache _cache;
     private readonly IImageLoader _imageLoader;
+    private readonly IFileWatcherService _fileWatcherService;
     private readonly Func<string, string, int> _stringComparer;
 
-    public NavigationService(IImageLoader imageLoader, IArchiveService archive, IImageCache cache, Func<string, string, int> stringComparer)
+    public NavigationService(IImageLoader imageLoader, IArchiveService archive, IImageCache cache, IFileWatcherService fileWatcherService, Func<string, string, int> stringComparer)
     {
         _imageLoader = imageLoader;
         _archive = archive;
         _cache = cache;
+        _fileWatcherService = fileWatcherService;
         _stringComparer = stringComparer ?? string.CompareOrdinal;
     }
     
@@ -26,6 +28,9 @@ public class NavigationService : INavigationService
     {
         try
         {
+            _fileWatcherService.Unwatch(tab);
+            _fileWatcherService.Watch(tab, fileInfo.DirectoryName);
+
             // Show image quickly to make it feel fast
             var model = await _imageLoader.GetImageModelAsync(fileInfo, ct.Token).ConfigureAwait(false);
             tab.Model.Value = model; // Image updated via reactive subscription
@@ -33,6 +38,7 @@ public class NavigationService : INavigationService
             tab.ImageIterator.Files = FileListRetriever.RetrieveFiles(fileInfo, _stringComparer);
             var index = FindIndex(fileInfo, tab);
             tab.ImageIterator.SetCurrentIndex(index);
+            
             tab.UpdateTabTitle();
             _cache.Clear(tab.Id);
             _cache.Add(tab.Id, index, new PreLoadValue(model), tab.ImageIterator.Files.Count, false);
