@@ -1,4 +1,6 @@
-﻿using PicView.Core.Models;
+﻿using PicView.Core.FileHandling.Interfaces;
+using PicView.Core.IPlatform;
+using PicView.Core.Models;
 using PicView.Core.Navigation;
 using PicView.Core.Navigation.Interfaces;
 using PicView.Core.Preloading;
@@ -30,6 +32,8 @@ public class NavigationServiceTests
             _mockArchiveService,
             _mockCache,
             _mockFileWatcherService,
+            new MockPlatformSpecificService(),
+            new MockTempFileService(),
             string.CompareOrdinal
         );
     }
@@ -121,5 +125,37 @@ public class NavigationServiceTests
     {
         public ValueTask<object?> GetThumbnailAsync(FileInfo file) => ValueTask.FromResult<object?>(null);
         public ValueTask<object?> GetThumbnailAsync(FileInfo file, uint size) => ValueTask.FromResult<object?>(null);
+    }
+
+    private class MockTempFileService : ITempFileService
+    {
+        public string GetNewTempFilePath(string fileName) => Path.Combine(Path.GetTempPath(), fileName);
+
+        public void Cleanup() { }
+    }
+
+    private class MockPlatformSpecificService : IPlatformSpecificService
+    {
+        public void SetTaskbarProgress(ulong progress, ulong maximum) { }
+        public void StopTaskbarProgress() { }
+        public void SetCursorPos(int x, int y) { }
+        public void DisableScreensaver() { }
+        public void EnableScreensaver() { }
+        public List<FileInfo> GetFiles(FileInfo fileInfo) => new();
+        public int CompareStrings(string str1, string str2) => string.CompareOrdinal(str1, str2);
+        public void OpenWith(string path) { }
+        public void LocateOnDisk(string path) { }
+        public void ShowFileProperties(string path) { }
+        public void Print(string path) { }
+        public Task SetAsWallpaper(string path, int wallpaperStyle) => Task.CompletedTask;
+        public bool SetAsLockScreen(string path) => false;
+        public bool CopyFile(string path) => false;
+        public bool CutFile(string path) => false;
+        public Task CopyImageToClipboard(object bitmap) => Task.CompletedTask;
+        public Task<object?> GetImageFromClipboard() => Task.FromResult<object?>(null);
+        public Task<bool> ExtractWithLocalSoftwareAsync(string path, string tempDirectory) => Task.FromResult(false);
+        public string DefaultJsonKeyMap() => "{}";
+        public void InitiateFileAssociationService() { }
+        public Task<bool> DeleteFile(string path, bool recycle) => Task.FromResult(false);
     }
 }
