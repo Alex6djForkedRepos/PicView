@@ -703,8 +703,8 @@ public class FunctionsMapper2(Core.ViewModels.MainWindowViewModel vm) : IFunctio
     /// <inheritdoc cref="ClipboardTextOperations.CopyTextToClipboard(string)" />
     public async ValueTask CopyFilePath()
     {
-        // await ClipboardTextOperations.CopyTextToClipboard(vm?.PicViewer.FileInfo?.CurrentValue.FullName).ConfigureAwait(false);
-        return;
+        await ClipboardTextOperations2.CopyTextToClipboard(vm.WindowTabs.ActiveTab.CurrentValue.Model.CurrentValue
+            .FileInfo?.FullName).ConfigureAwait(false);
     }
 
     /// <inheritdoc cref="ClipboardImageOperations.CopyImageToClipboard(MainViewModel)" />
@@ -726,7 +726,6 @@ public class FunctionsMapper2(Core.ViewModels.MainWindowViewModel vm) : IFunctio
     {
         await ClipboardFileOperations2.Duplicate(vm.WindowTabs.ActiveTab.CurrentValue.Model.CurrentValue
             .FileInfo?.FullName, vm).ConfigureAwait(false);
-        return;
     }
 
     /// <inheritdoc cref="ClipboardFileOperations.CutFile(string, MainViewModel)" />
@@ -743,7 +742,7 @@ public class FunctionsMapper2(Core.ViewModels.MainWindowViewModel vm) : IFunctio
     /// <inheritdoc cref="ClipboardPasteOperations.Paste(MainViewModel)" />
     public async ValueTask Paste()
     {
-        // await ClipboardPasteOperations.Paste(vm).ConfigureAwait(false);
+        await ClipboardPasteOperations2.Paste(vm).ConfigureAwait(false);
         return;
     }
     

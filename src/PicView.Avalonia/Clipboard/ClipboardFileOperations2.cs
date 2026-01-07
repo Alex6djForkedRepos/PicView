@@ -188,7 +188,7 @@ public static class ClipboardFileOperations2
     /// <param name="filePath">Path to the file</param>
     /// <param name="platformService">Platform specific service for cutting files</param>
     /// <returns>A task representing the asynchronous operation</returns>
-    public static Task<bool> CutFile(string filePath, PicView.Core.IPlatform.IPlatformSpecificService platformService)
+    public static Task<bool> CutFile(string filePath, Core.IPlatform.IPlatformSpecificService platformService)
     {
         if (string.IsNullOrWhiteSpace(filePath))
         {
@@ -198,5 +198,45 @@ public static class ClipboardFileOperations2
         return ClipboardService2.ExecuteClipboardOperation(
             () => Task.Run(() => platformService.CutFile(filePath))
         );
+    }
+
+    public static async ValueTask PasteFiles(object files, MainWindowViewModel vm)
+    {
+        try
+        {
+            switch (files)
+            {
+                case IEnumerable<IStorageItem> items:
+                    await ProcessStorageItems(items.ToArray(), vm);
+                    break;
+                case IStorageItem singleFile:
+                {
+                    await vm.WindowTabs.LoadFromFileAsync(singleFile.Path.AbsolutePath).ConfigureAwait(false);
+                    break;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            DebugHelper.LogDebug(nameof(ClipboardFileOperations2), nameof(PasteFiles), ex);
+        }
+    }
+    
+    private static async ValueTask ProcessStorageItems(IStorageItem[] storageItems, MainWindowViewModel vm)
+    {
+        if (storageItems.Length == 0)
+        {
+            return;
+        }
+
+        // Load the first file
+        await vm.WindowTabs.LoadFromFileAsync(storageItems[0].Path.AbsolutePath).ConfigureAwait(false);
+
+        // Open consecutive files in a new process
+        foreach (var file in storageItems.Skip(1))
+        {
+            await vm.WindowTabs.CreateNewTabFromFileAsync(file.Name);
+            file.Dispose();
+        }
     }
 }

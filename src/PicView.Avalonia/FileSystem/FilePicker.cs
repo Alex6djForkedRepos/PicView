@@ -1,4 +1,4 @@
-﻿using Avalonia;
+﻿﻿using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Platform.Storage;
 using Avalonia.Threading;
@@ -25,7 +25,8 @@ public static class FilePicker
             return;
         }
 
-        await vm.Tabs.LoadFromFileAsync(file).ConfigureAwait(false);
+        MenuManager.CloseMenus(vm);
+        await NavigationManager.LoadPicFromStringAsync(file, vm).ConfigureAwait(false);
     }
 
     public static async Task<string?> SelectFile()

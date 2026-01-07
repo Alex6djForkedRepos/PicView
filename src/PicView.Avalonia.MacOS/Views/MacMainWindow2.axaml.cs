@@ -6,13 +6,11 @@ using PicView.Avalonia.CustomControls;
 using PicView.Avalonia.MacOS.WindowImpl;
 using PicView.Avalonia.StartUp;
 using PicView.Avalonia.UI;
-using PicView.Avalonia.ViewModels;
 using PicView.Avalonia.WindowBehavior;
 using PicView.Core.IPlatform;
 using PicView.Core.ViewModels;
 using R3;
 using R3.Avalonia;
-using MainWindowViewModel = PicView.Core.ViewModels.MainWindowViewModel;
 
 namespace PicView.Avalonia.MacOS.Views;
 
@@ -158,7 +156,7 @@ public partial class MacMainWindow2 : Window, IPlatformWindowService
         // 2. If dropped on an existing window, attach the tab there
         if (targetWindow != null)
         {
-            if (targetWindow.DataContext is not MainViewModel targetVm)
+            if (targetWindow.DataContext is not MainWindowViewModel targetVm)
             {
                 return;
             }
@@ -167,12 +165,12 @@ public partial class MacMainWindow2 : Window, IPlatformWindowService
             parentVm.WindowTabs.RemoveTab(tab);
 
             // Add to new window (if not already added by drag preview)
-            if (!targetVm.Tabs.Tabs.Value.Contains(tab))
+            if (!targetVm.WindowTabs.Tabs.Value.Contains(tab))
             {
-                targetVm.Tabs.Tabs.Value.Add(tab);
+                targetVm.WindowTabs.Tabs.Value.Add(tab);
             }
 
-            targetVm.Tabs.SelectTab(tab);
+            targetVm.WindowTabs.SelectTab(tab);
 
             // Update context
             tab.ParentWindowContext = targetVm;

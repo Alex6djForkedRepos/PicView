@@ -9,8 +9,8 @@ using Avalonia.Metadata;
 using ImageMagick;
 using PicView.Avalonia.Navigation;
 using PicView.Avalonia.UI;
-using PicView.Avalonia.ViewModels;
 using PicView.Core.DebugTools;
+using PicView.Core.ViewModels;
 
 namespace PicView.Avalonia.CustomControls;
 
@@ -192,7 +192,7 @@ public class PicBox2 : Control
 
     private Size GetSizeFromAlternativeSources()
     {
-        if (UIHelper.GetMainView.DataContext is not MainViewModel vm)
+        if (UIHelper.GetMainView.DataContext is not MainWindowViewModel vm)
         {
             return new Size();
         }
@@ -203,7 +203,7 @@ public class PicBox2 : Control
             return new Size(preloadValue.ImageModel.PixelWidth, preloadValue.ImageModel.PixelHeight);
         }
 
-        if (vm.Tabs.ActiveTab.Value.Model.CurrentValue.FileInfo?.Exists != true)
+        if (vm.WindowTabs.ActiveTab.Value.Model.CurrentValue.FileInfo?.Exists != true)
         {
             return new Size();
         }
@@ -211,7 +211,7 @@ public class PicBox2 : Control
         try
         {
             using var magickImage = new MagickImage();
-            magickImage.Ping(vm.Tabs.ActiveTab.Value.Model.Value.FileInfo);
+            magickImage.Ping(vm.WindowTabs.ActiveTab.Value.Model.Value.FileInfo);
             return new Size(magickImage.Width, magickImage.Height);
         }
         catch (Exception exception)

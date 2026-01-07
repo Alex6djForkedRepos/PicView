@@ -1,4 +1,4 @@
-﻿using Avalonia.Controls;
+﻿﻿using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using PicView.Avalonia.ImageHandling;
@@ -24,7 +24,7 @@ public partial class EditableTitlebar : UserControl
 
     private void HandlePointerPressed(object? sender, PointerPressedEventArgs e)
     {
-        if (UIHelper.GetMainView?.DataContext is not MainViewModel vm ||
+        if (UIHelper.GetMainView.DataContext is not MainViewModel vm ||
             !e.GetCurrentPoint(this).Properties.IsRightButtonPressed ||
             vm.MainWindow.IsEditableTitlebarOpen.CurrentValue)
         {
@@ -36,7 +36,7 @@ public partial class EditableTitlebar : UserControl
 
     private void HandlePointerEntered(object? sender, PointerEventArgs e)
     {
-        if (UIHelper.GetMainView?.DataContext is not MainViewModel vm)
+        if (UIHelper.GetMainView.DataContext is not MainViewModel vm)
         {
             return;
         }
@@ -59,7 +59,7 @@ public partial class EditableTitlebar : UserControl
         vm.MainWindow.IsEditableTitlebarOpen.Value = false;
         Cursor = new Cursor(StandardCursorType.Arrow);
         MainKeyboardShortcuts.IsKeysEnabled = true;
-        TextBlock.Text = vm.Tabs.ActiveTab.CurrentValue.Title.CurrentValue;
+        TextBlock.Text = vm.PicViewer.Title.CurrentValue;
     }
 
     protected override void OnKeyDown(KeyEventArgs e)

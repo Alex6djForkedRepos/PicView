@@ -12,13 +12,10 @@ using PicView.Avalonia.Navigation;
 using PicView.Avalonia.SettingsManagement;
 using PicView.Avalonia.UI;
 using PicView.Avalonia.ViewModels;
-using PicView.Avalonia.Views.UC;
-using PicView.Avalonia.Input;
 using PicView.Avalonia.WindowBehavior;
 using PicView.Core.FileHistory;
 using PicView.Core.FileSorting;
 using PicView.Core.Keybindings;
-using PicView.Core.Navigation;
 using PicView.Core.ProcessHandling;
 
 namespace PicView.Avalonia.Functions;
@@ -28,7 +25,7 @@ namespace PicView.Avalonia.Functions;
 /// </summary>
 public static class FunctionsMapper
 {
-    public static MainViewModel? Vm { get; set; }
+    public static MainViewModel? Vm;
 
     public static Func<ValueTask>? GetFunctionByName(string functionName)
     {
@@ -167,10 +164,6 @@ public static class FunctionsMapper
             "SetAsWallpaperFilled" => SetAsWallpaperFilled,
             "SetAsWallpaperCentered" => SetAsWallpaperCentered,
             "SetAsWallpaperTiled" => SetAsWallpaperTiled,
-            
-            // Tabs
-            "NewTab" => NewTab,
-            "CloseTab" => CloseTab,
 
             // Misc
             "ChangeBackground" => ChangeBackground,
@@ -242,11 +235,10 @@ public static class FunctionsMapper
 
     #region Navigation, zoom and rotation
 
-    /// <inheritdoc cref="Core.ViewModels.TabOverviewViewModel.NextFile()" />
+    /// <inheritdoc cref="NavigationManager.Iterate(bool, MainViewModel)" />
     public static async ValueTask Next() =>
-        await Vm.Tabs.NavigateDirectionalAsync(MainKeyboardShortcuts.IsKeyHeldDown,
-            NavigateTo.Next).ConfigureAwait(false);
-
+        await NavigationManager.Iterate(true, Vm, CancellationToken.None).ConfigureAwait(false);
+    
     /// <inheritdoc cref="NavigationManager.NavigateBetweenDirectories(bool, MainViewModel)" />
     public static async ValueTask NextFolder() =>
         await NavigationManager.NavigateBetweenDirectories(true, Vm).ConfigureAwait(false);
@@ -256,13 +248,12 @@ public static class FunctionsMapper
     
     /// <inheritdoc cref="NavigationManager.NavigateFirstOrLast(bool, MainViewModel)" />
     public static async ValueTask Last() =>
-        await Vm.Tabs.FirstFile().ConfigureAwait(false);
+        await NavigationManager.NavigateFirstOrLast(last: true, Vm).ConfigureAwait(false);
 
-    /// <inheritdoc cref="Core.ViewModels.TabOverviewViewModel.PrevFile()" />
+    /// <inheritdoc cref="NavigationManager.Iterate(bool, MainViewModel)" />
     public static async ValueTask Prev() =>
-        await Vm.Tabs.NavigateDirectionalAsync(MainKeyboardShortcuts.IsKeyHeldDown,
-            NavigateTo.Previous).ConfigureAwait(false);
-
+        await NavigationManager.Iterate(false, Vm, CancellationToken.None).ConfigureAwait(false);
+    
     /// <inheritdoc cref="NavigationManager.NavigateBetweenDirectories(bool, MainViewModel)" />
     public static async ValueTask PrevFolder() =>
         await NavigationManager.NavigateBetweenDirectories(false, Vm).ConfigureAwait(false);
@@ -272,19 +263,19 @@ public static class FunctionsMapper
 
     /// <inheritdoc cref="NavigationManager.NavigateFirstOrLast(bool, MainViewModel)" />
     public static async ValueTask First() =>
-        await Vm.Tabs.FirstFile().ConfigureAwait(false);
+        await NavigationManager.NavigateFirstOrLast(last: false, Vm).ConfigureAwait(false);
     
-    /// <inheritdoc cref="Core.ViewModels.TabOverviewViewModel.Next10()" />
+    /// <inheritdoc cref="NavigationManager.Next10(MainViewModel)" />
     public static async ValueTask Next10() =>
-        await Vm.Tabs.Next10().ConfigureAwait(false);
+        await NavigationManager.Next10(Vm).ConfigureAwait(false);
 
-    /// <inheritdoc cref="Core.ViewModels.TabOverviewViewModel.Next100()" />
+    /// <inheritdoc cref="NavigationManager.Next100(MainViewModel)" />
     public static async ValueTask Next100() =>
-        await Vm.Tabs.Next100().ConfigureAwait(false);
+        await NavigationManager.Next100(Vm).ConfigureAwait(false);
     
     /// <inheritdoc cref="NavigationManager.Prev10(MainViewModel)" />
     public static async ValueTask Prev10() =>
-        await Vm.Tabs.Prev10().ConfigureAwait(false);
+        await NavigationManager.Prev10(Vm).ConfigureAwait(false);
     
     /// <inheritdoc cref="NavigationManager.Prev100(MainViewModel)" />
     public static async ValueTask Prev100() =>
@@ -346,22 +337,24 @@ public static class FunctionsMapper
         });
     }
 
-    public static ValueTask ZoomIn()
+    public static async ValueTask ZoomIn()
     {
-        if (Vm.Tabs.ActiveTab.CurrentValue.CurrentView.CurrentValue is ImageViewer2 imageViewer)
+        // TODO: ImageViewer Needs refactor
+        if (Vm is null)
         {
-            imageViewer.ZoomIn();
+            return;
         }
-        return ValueTask.CompletedTask;
+        await Dispatcher.UIThread.InvokeAsync(Vm.ImageViewer.ZoomIn);
     }
 
-    public static ValueTask ZoomOut()
+    public static async ValueTask ZoomOut()
     {
-        if (Vm.Tabs.ActiveTab.CurrentValue.CurrentView.CurrentValue is ImageViewer2 imageViewer)
+        // TODO: ImageViewer Needs refactor
+        if (Vm is null)
         {
-            imageViewer.ZoomOut();
+            return;
         }
-        return ValueTask.CompletedTask;
+        await Dispatcher.UIThread.InvokeAsync(Vm.ImageViewer.ZoomOut);
     }
 
     public static async ValueTask ResetZoom()
@@ -554,7 +547,7 @@ public static class FunctionsMapper
     
     /// <inheritdoc cref="FileManager.LocateOnDisk(string, MainViewModel)" />
     public static async ValueTask OpenInExplorer()=>
-        await Task.Run(() => Vm?.PlatformService?.LocateOnDisk(Vm.Tabs.ActiveTab.CurrentValue.Model.CurrentValue.FileInfo?.FullName))
+        await Task.Run(() => Vm?.PlatformService?.LocateOnDisk(Vm.PicViewer.FileInfo?.CurrentValue?.FullName))
             .ConfigureAwait(false);
 
     /// <inheritdoc cref="FileSaverHelper.SaveCurrentFile(MainViewModel)" />
@@ -667,39 +660,39 @@ public static class FunctionsMapper
 
     /// <inheritdoc cref="FileListManager.UpdateFileList(PicView.Avalonia.Interfaces.IPlatformSpecificService, MainViewModel, SortFilesBy)" />
     public static async ValueTask SortFilesByName() =>
-        await Vm.Tabs.SortAsync(SortFilesBy.Name).ConfigureAwait(false);
+        await FileListManager.UpdateFileList(Vm.PlatformService, Vm, SortFilesBy.Name).ConfigureAwait(false);
 
     /// <inheritdoc cref="FileListManager.UpdateFileList(PicView.Avalonia.Interfaces.IPlatformSpecificService, MainViewModel, SortFilesBy)" />
     public static async ValueTask SortFilesByCreationTime() =>
-        await Vm.Tabs.SortAsync(SortFilesBy.CreationTime).ConfigureAwait(false);
+        await FileListManager.UpdateFileList(Vm?.PlatformService, Vm, SortFilesBy.CreationTime).ConfigureAwait(false);
 
     /// <inheritdoc cref="FileListManager.UpdateFileList(PicView.Avalonia.Interfaces.IPlatformSpecificService, MainViewModel, SortFilesBy)" />
     public static async ValueTask SortFilesByLastAccessTime() =>
-        await Vm.Tabs.SortAsync(SortFilesBy.LastAccessTime).ConfigureAwait(false);
+        await FileListManager.UpdateFileList(Vm?.PlatformService, Vm, SortFilesBy.LastAccessTime).ConfigureAwait(false);
 
     /// <inheritdoc cref="FileListManager.UpdateFileList(PicView.Avalonia.Interfaces.IPlatformSpecificService, MainViewModel, SortFilesBy)" />
     public static async ValueTask SortFilesByLastWriteTime() =>
-        await Vm.Tabs.SortAsync(SortFilesBy.LastWriteTime).ConfigureAwait(false);
+        await FileListManager.UpdateFileList(Vm?.PlatformService, Vm, SortFilesBy.LastWriteTime).ConfigureAwait(false);
 
     /// <inheritdoc cref="FileListManager.UpdateFileList(PicView.Avalonia.Interfaces.IPlatformSpecificService, MainViewModel, SortFilesBy)" />
     public static async ValueTask SortFilesBySize() =>
-        await Vm.Tabs.SortAsync(SortFilesBy.FileSize).ConfigureAwait(false);
+        await FileListManager.UpdateFileList(Vm?.PlatformService, Vm, SortFilesBy.FileSize).ConfigureAwait(false);
 
     /// <inheritdoc cref="FileListManager.UpdateFileList(PicView.Avalonia.Interfaces.IPlatformSpecificService, MainViewModel, SortFilesBy)" />
     public static async ValueTask SortFilesByExtension() =>
-        await Vm.Tabs.SortAsync(SortFilesBy.Extension).ConfigureAwait(false);
+        await FileListManager.UpdateFileList(Vm?.PlatformService, Vm, SortFilesBy.Extension).ConfigureAwait(false);
 
     /// <inheritdoc cref="FileListManager.UpdateFileList(PicView.Avalonia.Interfaces.IPlatformSpecificService, MainViewModel, SortFilesBy)" />
     public static async ValueTask SortFilesRandomly() =>
-        await Vm.Tabs.SortAsync(SortFilesBy.Random).ConfigureAwait(false);
+        await FileListManager.UpdateFileList(Vm?.PlatformService, Vm, SortFilesBy.Random).ConfigureAwait(false);
 
     /// <inheritdoc cref="FileListManager.UpdateFileList(PicView.Avalonia.Interfaces.IPlatformSpecificService, MainViewModel, bool)" />
     public static async ValueTask SortFilesAscending() =>
-        await Vm.Tabs.SortAsync(ascending: true).ConfigureAwait(false);
-    
+        await FileListManager.UpdateFileList(Vm?.PlatformService, Vm, ascending: true).ConfigureAwait(false);
+
     /// <inheritdoc cref="FileListManager.UpdateFileList(PicView.Avalonia.Interfaces.IPlatformSpecificService, MainViewModel, bool)" />
     public static async ValueTask SortFilesDescending() =>
-        await Vm.Tabs.SortAsync(ascending: false).ConfigureAwait(false);
+        await FileListManager.UpdateFileList(Vm?.PlatformService, Vm, ascending: false).ConfigureAwait(false);
 
     #endregion Sorting
 
@@ -784,26 +777,6 @@ public static class FunctionsMapper
     
     public static async ValueTask SetAsLockScreen() =>
         await Task.Run(() => Vm.PlatformService.SetAsLockScreen(Vm.PicViewer.FileInfo.CurrentValue.FullName)).ConfigureAwait(false);
-
-    #endregion
-
-    #region Tabs
-
-    public static ValueTask NewTab()
-    {
-        Vm.Tabs.CreateTab();
-        return ValueTask.CompletedTask;
-    }
-    
-    public static async ValueTask CloseTab()
-    {
-        await Vm.Tabs.CloseTabAsync();
-    }
-    
-    public static void StopRepeatedNavigation()
-    {
-        Vm?.Tabs?.StopRepeatedNavigation();
-    }
 
     #endregion
 

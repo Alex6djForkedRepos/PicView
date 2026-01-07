@@ -8,6 +8,7 @@ using PicView.Core.Localization;
 using PicView.Core.Models;
 using PicView.Core.Titles;
 using PicView.Core.ViewModels;
+using MainWindowViewModel = PicView.Core.ViewModels.MainWindowViewModel;
 
 namespace PicView.Avalonia.UI;
 
@@ -282,9 +283,16 @@ public static class TitleManager
     /// </remarks>
     public static void SetNoImageTitle(MainViewModel vm)
     {
-        vm.Tabs.ActiveTab.CurrentValue.Title.Value = TranslationManager.Translation.NoImage ?? string.Empty;
-        vm.Tabs.ActiveTab.CurrentValue.WindowTitle.Value = TranslationManager.Translation.NoImage + " - PicView";
-        vm.Tabs.ActiveTab.CurrentValue.TitleTooltip.Value = TranslationManager.Translation.NoImage ?? string.Empty;
+        vm.PicViewer.Title.Value = TranslationManager.Translation.NoImage ?? string.Empty;
+        vm.PicViewer.WindowTitle.Value = TranslationManager.Translation.NoImage + " - PicView";
+        vm.PicViewer.TitleTooltip.Value = TranslationManager.Translation.NoImage ?? string.Empty;
+    }
+    
+    public static void SetNoImageTitle(MainWindowViewModel vm)
+    {
+        vm.WindowTabs.ActiveTab.CurrentValue.Title.Value = TranslationManager.Translation.NoImage ?? string.Empty;
+        vm.WindowTabs.ActiveTab.CurrentValue.WindowTitle.Value = TranslationManager.Translation.NoImage + " - PicView";
+        vm.WindowTabs.ActiveTab.CurrentValue.TitleTooltip.Value = TranslationManager.Translation.NoImage ?? string.Empty;
     }
 
     private static void ReturnError(MainViewModel vm)

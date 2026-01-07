@@ -14,13 +14,14 @@ using PicView.Core.FileHistory;
 using PicView.Core.Localization;
 using PicView.Core.Sizing;
 using PicView.Core.ViewModels;
+using MainWindowViewModel = PicView.Core.ViewModels.MainWindowViewModel;
 
 namespace PicView.Avalonia.Views.UC;
 
 public partial class StartUpMenu : UserControl
 {
-    private MainViewModel? ParentContext => 
-        (DataContext as TabViewModel)?.ParentWindowContext as MainViewModel;
+    private MainWindowViewModel? ParentContext => 
+        (DataContext as TabViewModel)?.ParentWindowContext as MainWindowViewModel;
     
     public StartUpMenu()
     {
@@ -136,7 +137,7 @@ public partial class StartUpMenu : UserControl
 
     if (vm is not null && tab is not null)
     {
-        await vm.Tabs.LoadFromFileAsync(file, tab).ConfigureAwait(false);
+        await vm.WindowTabs.LoadFromFileAsync(file, tab).ConfigureAwait(false);
     }
 }
 

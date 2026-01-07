@@ -31,8 +31,6 @@ public class MainViewModel
     public BatchResizeViewModel? BatchResizeViewModel { get; set; }
     public KeybindingsViewModel? Keybindings { get; set; }
 
-    public TabOverviewViewModel Tabs { get; } = new();
-
     public MainViewModel(IPlatformSpecificService? platformSpecificService, IPlatformWindowService? platformWindowService)
     {
         FunctionsMapper.Vm = this;

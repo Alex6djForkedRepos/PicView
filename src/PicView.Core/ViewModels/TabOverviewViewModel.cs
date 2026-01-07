@@ -107,7 +107,7 @@ public class TabOverviewViewModel
         return tab;
     }
 
-    public void CreateTab()
+    public TabViewModel CreateTab()
     {
         var tab = CreateTabInternal();
         if (SharedCache != null && SharedThumbnailLoader != null)
@@ -117,6 +117,20 @@ public class TabOverviewViewModel
         SharedCache.RegisterOwner(tab.Id);
         SelectTab(tab);
         IsTabPanelVisible.Value = Tabs.CurrentValue.Count > 1;
+        return tab;
+    }
+    public async ValueTask CreateNewTabFromFileAsync(string filePath)
+    {
+        var tab = CreateTab();
+        await SharedNavigation.LoadFromFileAsync(filePath, tab, tab.GetTabCancellation())
+            .ConfigureAwait(false);
+    }
+    
+    public async ValueTask CreateNewTabFromStringAsync(string source)
+    {
+        var tab = CreateTab();
+        await SharedNavigation.LoadFromStringAsync(source, tab, tab.GetTabCancellation())
+            .ConfigureAwait(false);
     }
     
     public void SetParentContext(object parent)

@@ -8,7 +8,7 @@ using PicView.Core.DebugTools;
 namespace PicView.Avalonia.Clipboard;
 
 /// <summary>
-/// Base service for clipboard operations (MVVM refactor)
+/// Base service for clipboard operations
 /// </summary>
 public static class ClipboardService2
 {
@@ -17,7 +17,7 @@ public static class ClipboardService2
     /// </summary>
     /// <param name="visual">The visual to find the TopLevel/Clipboard from</param>
     /// <returns>The clipboard instance or null if not available</returns>
-    public static IClipboard? GetClipboard(Visual? visual)
+    public static IClipboard? GetClipboard(Visual? visual = null)
     {
         if (visual is not null)
         {
@@ -31,7 +31,7 @@ public static class ClipboardService2
         // Fallback for when we don't have a visual, but maybe we can find one via Application (legacy style)
         if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-             // This might not be the *correct* window in multi-window, but it gives *a* clipboard.
+             // This should be the correct window, as the desktop.MainWindow is set on Activated()
             return desktop.MainWindow?.Clipboard;
         }
 
