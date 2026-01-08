@@ -8,8 +8,6 @@ using Avalonia.Interactivity;
 using Avalonia.LogicalTree;
 using Avalonia.Media;
 using PicView.Avalonia.UI;
-using PicView.Core.ViewModels;
-using R3;
 
 namespace PicView.Avalonia.CustomControls;
 
@@ -34,6 +32,7 @@ public class DraggableProgressBar : TemplatedControl
         AvaloniaProperty.Register<DraggableProgressBar, double>(nameof(DragSensitivity), 1.0);
     
     public event EventHandler<int>? ClickedOnTrack;
+    public event EventHandler<int>? DraggedOnTrack;
 
     private int _dragStartIndex;
     private Point _dragStartPoint;
@@ -199,6 +198,9 @@ public class DraggableProgressBar : TemplatedControl
         IsDragging = true;
         _dragStartPoint = e.GetPosition(this);
         _dragStartIndex = CurrentIndex;
+        
+
+        
         e.Pointer.Capture(_thumb);
     }
 
@@ -261,6 +263,9 @@ public class DraggableProgressBar : TemplatedControl
 
         // Set the property. This will trigger the Debounced subscription.
         CurrentIndex = clampedIndex;
+        
+        // Fire the event reporting the new index
+        DraggedOnTrack?.Invoke(this, CurrentIndex);
 
         // Manually update the thumb's visual position for smooth dragging.
         // OnPropertyChanged is skipped because IsDragging is true.

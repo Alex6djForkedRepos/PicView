@@ -118,12 +118,22 @@ public partial class ImageViewer2 : UserControl
                 }
             }).AddTo(_disposables);
         
-        // Observe the CurrentIndexProperty for changes,
-        // wait for a 25ms pause in changes (debounce), and then emit the last value.
+        // Correspond to change when index clicked on track
         Observable.FromEvent<EventHandler<int>, int>(
                 handler => (sender, index) => handler(index),
                 handler => HoverBar.ProgressBar.ClickedOnTrack += handler,
                 handler => HoverBar.ProgressBar.ClickedOnTrack -= handler)
+            .SubscribeAwait(async (x, _) =>
+            {
+                await tab.ImageIterator.IterateToIndexAsync(x, tab.GetTabCancellation()).ConfigureAwait(false);
+            }, AwaitOperation.Drop)
+            .AddTo(_disposables);
+        // Correspond to change when index dragged on track
+        // wait for a 25ms pause in changes (debounce), and then emit the last value.
+        Observable.FromEvent<EventHandler<int>, int>(
+                handler => (sender, index) => handler(index),
+                handler => HoverBar.ProgressBar.DraggedOnTrack += handler,
+                handler => HoverBar.ProgressBar.DraggedOnTrack -= handler)
             .Debounce(TimeSpan.FromMilliseconds(25)) // Debounce handles rapid events during drag
             .SubscribeAwait(async (x, _) =>
             {
