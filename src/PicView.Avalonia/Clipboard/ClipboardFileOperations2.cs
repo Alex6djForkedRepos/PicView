@@ -235,7 +235,7 @@ public static class ClipboardFileOperations2
         // Open consecutive files in a new process
         foreach (var file in storageItems.Skip(1))
         {
-            await vm.WindowTabs.CreateNewTabFromFileAsync(file.Name);
+            await vm.WindowTabs.CreateNewTabFromFileAsync(file.Path.AbsolutePath);
             file.Dispose();
         }
     }

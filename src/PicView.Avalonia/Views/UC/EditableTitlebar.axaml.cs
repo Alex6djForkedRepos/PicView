@@ -1,4 +1,4 @@
-﻿﻿using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using PicView.Avalonia.ImageHandling;
@@ -36,14 +36,14 @@ public partial class EditableTitlebar : UserControl
 
     private void HandlePointerEntered(object? sender, PointerEventArgs e)
     {
-        if (UIHelper.GetMainView.DataContext is not MainViewModel vm)
-        {
-            return;
-        }
-
-        Cursor = vm.MainWindow.IsEditableTitlebarOpen.CurrentValue
-            ? new Cursor(StandardCursorType.Ibeam)
-            : new Cursor(StandardCursorType.Arrow);
+        // if (UIHelper.GetMainView.DataContext is not MainViewModel vm)
+        // {
+        //     return;
+        // }
+        //
+        // Cursor = vm.MainWindow.IsEditableTitlebarOpen.CurrentValue
+        //     ? new Cursor(StandardCursorType.Ibeam)
+        //     : new Cursor(StandardCursorType.Arrow);
     }
 
     private void HandleLostFocus(object? sender, RoutedEventArgs e) => CloseTitlebar();

@@ -98,18 +98,22 @@ public class TabOverviewViewModel
         return tab;
     }
     
-    private TabViewModel CreateTabInternal()
+    private TabViewModel CreateTabInternal(FileInfo? file = null)
     {
         var id = Guid.NewGuid().ToString("N");
         var tab = new TabViewModel(id, CloseTabAsync, SharedFileWatcher);
         tab.ParentWindowContext = _parentVm;
+        if (file is not null)
+        {
+            tab.Model.Value.FileInfo = file;
+        }
         Tabs.Value.Add(tab);
         return tab;
     }
 
-    public TabViewModel CreateTab()
+    public TabViewModel CreateTab(FileInfo? file = null)
     {
-        var tab = CreateTabInternal();
+        var tab = CreateTabInternal(file);
         if (SharedCache != null && SharedThumbnailLoader != null)
         {
             tab.Initialize(SharedCache, SharedThumbnailLoader, SharedFileWatcher);
@@ -119,10 +123,13 @@ public class TabOverviewViewModel
         IsTabPanelVisible.Value = Tabs.CurrentValue.Count > 1;
         return tab;
     }
+
     public async ValueTask CreateNewTabFromFileAsync(string filePath)
+        => await CreateNewTabFromFileAsync(new FileInfo(filePath));
+    public async ValueTask CreateNewTabFromFileAsync(FileInfo file)
     {
-        var tab = CreateTab();
-        await SharedNavigation.LoadFromFileAsync(filePath, tab, tab.GetTabCancellation())
+        var tab = CreateTab(file);
+        await SharedNavigation.LoadFromFileAsync(file, tab, tab.GetTabCancellation())
             .ConfigureAwait(false);
     }
     

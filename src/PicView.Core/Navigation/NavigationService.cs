@@ -69,6 +69,11 @@ public class NavigationService : INavigationService
 
     public async ValueTask LoadFromFileAsync(FileInfo fileInfo, TabViewModel tab, CancellationTokenSource ct)
     {
+        if (!fileInfo.Exists)
+        {
+            DebugHelper.LogDebug(nameof(NavigationService), nameof(LoadFromFileAsync), $"Attempted to load a file that does not exist: {fileInfo}");
+            return;
+        }
         var iterator = tab.ImageIterator;
 
         if (iterator.Files is null || iterator.Files.Count == 0)

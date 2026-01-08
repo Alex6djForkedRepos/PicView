@@ -135,7 +135,7 @@ public partial class ImageViewer2 : UserControl
         RemoveHandler(PointerWheelChangedEvent, PreviewOnPointerWheelChanged);
         RemoveHandler(Gestures.PointerTouchPadGestureMagnifyEvent, TouchMagnifyEvent);
         RemoveHandler(Gestures.PinchEvent, TouchMagnifyEvent);
-        _disposables.Dispose();
+        _disposables?.Dispose();
     }
 
     #region Zoom

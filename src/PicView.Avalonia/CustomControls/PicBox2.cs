@@ -120,7 +120,7 @@ public class PicBox2 : Control
         {
             BitmapBlendingMode = BlendMode,
             BitmapInterpolationMode = Settings.ImageScaling.IsScalingSetToNearestNeighbor
-                ? BitmapInterpolationMode.Unspecified
+                ? BitmapInterpolationMode.None
                 : BitmapInterpolationMode.HighQuality
         };
         try
@@ -192,26 +192,31 @@ public class PicBox2 : Control
 
     private Size GetSizeFromAlternativeSources()
     {
-        if (UIHelper.GetMainView.DataContext is not MainWindowViewModel vm)
+        if (Application.Current.DataContext is not CoreViewModel core)
         {
             return new Size();
         }
 
-        var preloadValue = NavigationManager.GetCurrentPreLoadValue();
-        if (preloadValue?.ImageModel != null)
-        {
-            return new Size(preloadValue.ImageModel.PixelWidth, preloadValue.ImageModel.PixelHeight);
-        }
-
-        if (vm.WindowTabs.ActiveTab.Value.Model.CurrentValue.FileInfo?.Exists != true)
+        var tabs = core.MainWindows.ActiveWindow.CurrentValue.WindowTabs;
+        var model = tabs.ActiveTab.CurrentValue.Model.CurrentValue;
+        
+        if (model.FileInfo?.Exists != true)
         {
             return new Size();
+        }
+
+        if (tabs.SharedCache.TryGet(model.FileInfo, out var preloadValue))
+        {
+            if (preloadValue?.ImageModel != null)
+            {
+                return new Size(preloadValue.ImageModel.PixelWidth, preloadValue.ImageModel.PixelHeight);
+            }
         }
 
         try
         {
             using var magickImage = new MagickImage();
-            magickImage.Ping(vm.WindowTabs.ActiveTab.Value.Model.Value.FileInfo);
+            magickImage.Ping(model.FileInfo);
             return new Size(magickImage.Width, magickImage.Height);
         }
         catch (Exception exception)

@@ -67,7 +67,16 @@ public partial class MainView3 : UserControl
         // Only set the StartUpMenu if the View is currently null.
         // This prevents overwriting the view (e.g. an image) when reordering tabs,
         // as reordering triggers the TabCreated event again by recreating containers.
-        if (e.CreatedItem is TabViewModel { CurrentView.Value: null } tabViewModel)
+        if (e.CreatedItem is not TabViewModel { CurrentView.Value: null } tabViewModel)
+        {
+            return;
+        }
+
+        if (tabViewModel.Model.CurrentValue.FileInfo is not null)
+        {
+            tabViewModel.CurrentView.Value = new ImageViewer2();
+        }
+        else
         {
             tabViewModel.CurrentView.Value = new StartUpMenu();
         }
