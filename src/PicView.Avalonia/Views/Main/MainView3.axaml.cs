@@ -95,6 +95,7 @@ public partial class MainView3 : UserControl
 
         vm.WindowTabs.SelectTab(tab);
         tab.UpdateTabTitle();
+        tab.ImageIterator.UpdateNavigationProperties();
     }
 
     private void PointerPressedBehavior(object? sender, PointerPressedEventArgs e)

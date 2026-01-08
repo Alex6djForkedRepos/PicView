@@ -43,7 +43,10 @@ public class ImageIterator(IImageCache cache, IThumbnailLoader thumbnailLoader, 
             .AddTo(_disposable);
     }
 
-    private void UpdateNavigationProperties(int index, int count)
+    public void UpdateNavigationProperties()
+        => UpdateNavigationProperties(CurrentIndex, Files.Count);
+    
+    public void UpdateNavigationProperties(int index, int count)
     {
         if (count <= 1)
         {
