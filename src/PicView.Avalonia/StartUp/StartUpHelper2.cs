@@ -209,7 +209,8 @@ public static class StartUpHelper2
 
         if (Settings.UIProperties.ShowHoverNavigationBar)
         {
-//            UIHelper.AddHoverBar(vm);
+            vm.MainWindows.ActiveWindow.CurrentValue.WindowTabs.ActiveTab.CurrentValue.Hoverbar.IsHoverbarVisible
+                .Value = !Settings.UIProperties.ShowBottomNavBar;
         }
         
  //       TooltipHelper.StartTooltipSubscription(vm);

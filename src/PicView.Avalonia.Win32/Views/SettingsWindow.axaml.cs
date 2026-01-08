@@ -41,7 +41,6 @@ public partial class SettingsWindow : Window
                 }
             });
         });
-        ParentBorder.Height = ScreenHelper.GetWindowMaxHeight();
         if (Settings.Theme.GlassTheme)
         {
             SettingsView.Background = Brushes.Transparent;
@@ -112,7 +111,6 @@ public partial class SettingsWindow : Window
 
         Loaded += delegate
         {
-            MinWidth = Width;
             Title = TranslationManager.GetTranslation("Settings") + " - PicView";
             if (DataContext is not MainViewModel vm)
             {

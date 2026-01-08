@@ -174,6 +174,7 @@ public class ImageIterator(IImageCache cache, IThumbnailLoader thumbnailLoader, 
     public void SetCurrentIndex(int index)
     {
         CurrentIndex = index;
+        UpdateNavigationProperties();
     }
 
     public int GetIteration(int index, NavigateTo navigation, string tabId, SkipAmount skipAmount)

@@ -26,6 +26,10 @@
         <Setter Property="FontSize" Value="14" />
     </Style>
 
+    <Style Selector="TextBlock.regular">
+        <Setter Property="FontFamily" Value="/Assets/Fonts/Roboto-Regular.ttf#Roboto" />
+    </Style>
+
     <Style Selector="TextBlock.txtShadow">
         <Setter Property="Effect" Value="{StaticResource TextShadow}" />
     </Style>

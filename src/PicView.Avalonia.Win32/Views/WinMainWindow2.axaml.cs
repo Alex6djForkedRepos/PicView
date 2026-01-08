@@ -312,7 +312,7 @@ public partial class WinMainWindow2 : Window, IPlatformWindowService
         await _windowInitializer?.ShowKeybindingsWindow(null);
 
     public async Task ShowSettingsWindow() =>
-        await _windowInitializer?.ShowSettingsWindow(null);
+        await _windowInitializer?.ShowSettingsWindow();
 
     public void ShowSingleImageResizeWindow() =>
         _windowInitializer?.ShowSingleImageResizeWindow(null);

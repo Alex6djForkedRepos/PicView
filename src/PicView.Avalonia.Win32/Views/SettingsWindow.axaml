@@ -1,14 +1,14 @@
 <Window
-    CanResize="False"
-    SizeToContent="WidthAndHeight"
+    Height="32"
+    MinWidth="475"
     WindowStartupLocation="CenterOwner"
     x:Class="PicView.Avalonia.Win32.Views.SettingsWindow"
-    x:DataType="viewModels:MainViewModel"
+    x:DataType="viewModels:CoreViewModel"
     xmlns="https://github.com/avaloniaui"
     xmlns:buttons="clr-namespace:PicView.Avalonia.Views.UC.Buttons;assembly=PicView.Avalonia"
     xmlns:customControls="clr-namespace:PicView.Avalonia.CustomControls;assembly=PicView.Avalonia"
     xmlns:main="clr-namespace:PicView.Avalonia.Views.Main;assembly=PicView.Avalonia"
-    xmlns:viewModels="clr-namespace:PicView.Avalonia.ViewModels;assembly=PicView.Avalonia"
+    xmlns:viewModels="clr-namespace:PicView.Core.ViewModels;assembly=PicView.Core"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <Border
@@ -17,17 +17,16 @@
         PointerPressed="MoveWindow"
         PointerReleased="UpdateWindowPosition"
         x:Name="ParentBorder">
-        <StackPanel>
+        <DockPanel>
             <Border
                 BorderBrush="{DynamicResource MainBorderColor}"
                 BorderThickness="0,0,0,1"
+                DockPanel.Dock="Top"
                 Height="{StaticResource TopBorderHeight}"
                 VerticalAlignment="Top">
                 <DockPanel LastChildFill="True" VerticalAlignment="Top">
                     <Border
-                        Background="{DynamicResource WindowButtonBackgroundColor}"
-                        BorderBrush="{DynamicResource MainBorderColor}"
-                        BorderThickness="0,0,1,0"
+                        Background="{DynamicResource WindowSecondaryBackgroundColor}"
                         DockPanel.Dock="Left"
                         x:Name="LogoBorder">
                         <Image
@@ -37,14 +36,27 @@
                             Width="20" />
                     </Border>
 
-                    <Border
+                    <buttons:SettingsMenuButton DockPanel.Dock="Left" x:Name="SettingsButton" />
+
+                    <customControls:IconButton
                         Background="{DynamicResource WindowSecondaryBackgroundColor}"
+                        BorderBrush="{DynamicResource MainBorderColor}"
+                        BorderThickness="0,0,1,0"
+                        Classes="noBorderHover"
+                        DockPanel.Dock="Left"
+                        Foreground="{DynamicResource MainTextColor}"
+                        Icon="{StaticResource HomeImage}"
+                        IconHeight="12"
+                        IconWidth="12"
+                        Padding="8,0" />
+
+                    <Border
+                        Background="{DynamicResource WindowButtonBackgroundColor}"
                         DockPanel.Dock="Left"
                         x:Name="GoBackBorder">
                         <customControls:IconButton
                             Background="{DynamicResource WindowSecondaryBackgroundColor}"
                             Classes="noBorderHover"
-                            Command="{CompiledBinding SettingsViewModel.GoBackCommand}"
                             Data="{StaticResource ArrowLeftGeometry}"
                             Foreground="{DynamicResource MainTextColor}"
                             IconHeight="12"
@@ -54,7 +66,7 @@
                     </Border>
 
                     <Border
-                        Background="{DynamicResource WindowSecondaryBackgroundColor}"
+                        Background="{DynamicResource WindowButtonBackgroundColor}"
                         BorderBrush="{DynamicResource MainBorderColor}"
                         BorderThickness="0,0,1,0"
                         DockPanel.Dock="Left"
@@ -62,7 +74,6 @@
                         <customControls:IconButton
                             Background="{DynamicResource WindowSecondaryBackgroundColor}"
                             Classes="noBorderHover"
-                            Command="{CompiledBinding SettingsViewModel.GoForwardCommand}"
                             Data="{StaticResource ArrowRightGeometry}"
                             Foreground="{DynamicResource MainTextColor}"
                             IconHeight="12"
@@ -103,23 +114,54 @@
                         Width="30"
                         x:Name="MinimizeButton" />
 
-                    <buttons:SettingsMenuButton x:Name="SettingsButton" />
+                    <Border
+                        Background="{StaticResource WindowSecondaryBackgroundColor}"
+                        Cursor="Hand"
+                        DockPanel.Dock="Right"
+                        Width="200">
+                        <Panel Margin="5,0">
 
+                            <Image
+                                Height="12"
+                                HorizontalAlignment="Left"
+                                Margin="15,5,0,5"
+                                Source="{StaticResource SearchImage}"
+                                Width="12" />
+
+                            <Border
+                                BorderBrush="{DynamicResource MainBorderColor}"
+                                BorderThickness="1"
+                                CornerRadius="4"
+                                Margin="0,3">
+                                <TextBlock
+                                    Background="Transparent"
+                                    Classes="txt regular"
+                                    Foreground="{DynamicResource MainTextColorFaded}"
+                                    Opacity=".7"
+                                    Padding="35,0,4,0"
+                                    Text="Type / to search"
+                                    VerticalAlignment="Center"
+                                    x:Name="FilterBox" />
+                            </Border>
+                        </Panel>
+                    </Border>
                     <TextBlock
                         Background="{StaticResource WindowSecondaryBackgroundColor}"
                         Classes="txt"
                         Foreground="{DynamicResource MainTextColor}"
                         LineHeight="{StaticResource TopBorderHeight}"
-                        Padding="30,0,0,0"
+                        Padding="15,0"
                         Text="{CompiledBinding Translation.Settings.Value,
                                                Mode=OneWay}"
                         TextAlignment="Center"
                         x:Name="TitleText" />
+
+
                 </DockPanel>
             </Border>
 
-            <main:SettingsView Background="{DynamicResource NoisyTexture}" x:Name="SettingsView" />
+            <main:SettingsView2 Background="{DynamicResource WindowBackgroundColor}" x:Name="SettingsView" />
 
-        </StackPanel>
+        </DockPanel>
     </Border>
 </Window>

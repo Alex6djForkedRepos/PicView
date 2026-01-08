@@ -7,8 +7,6 @@ using PicView.Avalonia.Functions;
 using PicView.Avalonia.Input;
 using PicView.Avalonia.Interfaces;
 using PicView.Avalonia.Navigation;
-using PicView.Avalonia.Update;
-using PicView.Avalonia.ViewModels;
 using PicView.Avalonia.Win32.PlatformUpdate;
 using PicView.Avalonia.Win32.Printing;
 using PicView.Avalonia.Win32.Views;
@@ -37,7 +35,7 @@ public class WindowInitializer : IPlatformSpecificUpdate
         await WinUpdateHelper.HandleWindowsUpdate(updateInfo, tempPath);
     }
 
-    public void ShowAboutWindow(MainViewModel vm)
+    public void ShowAboutWindow(MainWindowViewModel vm)
     {
         if (Dispatcher.UIThread.CheckAccess())
         {
@@ -83,7 +81,7 @@ public class WindowInitializer : IPlatformSpecificUpdate
         }
     }
 
-    public async Task ShowImageInfoWindow(MainViewModel vm)
+    public async Task ShowImageInfoWindow(MainWindowViewModel vm)
     {
         if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop)
         {
@@ -92,30 +90,30 @@ public class WindowInitializer : IPlatformSpecificUpdate
 
         if (_imageInfoWindow is null)
         {
-            if (vm.Window.ImageInfoWindowConfig?.WindowProperties is null)
-            {
-                vm.Window.ImageInfoWindowConfig = new ImageInfoWindowConfig();
-                await vm.Window.ImageInfoWindowConfig.LoadAsync();
-            }
+            // if (vm.Window.ImageInfoWindowConfig?.WindowProperties is null)
+            // {
+            //     vm.Window.ImageInfoWindowConfig = new ImageInfoWindowConfig();
+            //     await vm.Window.ImageInfoWindowConfig.LoadAsync();
+            // }
 
-            await Dispatcher.UIThread.InvokeAsync(() =>
-            {
-                vm.Exif ??= new ExifViewModel();
-                vm.InfoWindow = new ImageInfoWindowViewModel();
-                _imageInfoWindow = new ImageInfoWindow(vm.Window.ImageInfoWindowConfig)
-                {
-                    DataContext = vm
-                };
-                Show();
-                _imageInfoWindow.Closing += (_, _) =>
-                {
-                    _imageInfoWindow = null;
-                    vm.Exif?.Dispose();
-                    vm.Exif = null;
-                    vm.InfoWindow.Dispose();
-                    vm.InfoWindow = null;
-                };
-            });
+            // await Dispatcher.UIThread.InvokeAsync(() =>
+            // {
+            //     vm.Exif ??= new ExifViewModel();
+            //     vm.InfoWindow = new ImageInfoWindowViewModel();
+            //     _imageInfoWindow = new ImageInfoWindow(vm.Window.ImageInfoWindowConfig)
+            //     {
+            //         DataContext = vm
+            //     };
+            //     Show();
+            //     _imageInfoWindow.Closing += (_, _) =>
+            //     {
+            //         _imageInfoWindow = null;
+            //         vm.Exif?.Dispose();
+            //         vm.Exif = null;
+            //         vm.InfoWindow.Dispose();
+            //         vm.InfoWindow = null;
+            //     };
+            // });
         }
         else
         {
@@ -138,13 +136,13 @@ public class WindowInitializer : IPlatformSpecificUpdate
 
         void Show()
         {
-            WindowFunctions.InitializeWindowSizeAndPosition(_imageInfoWindow,
-                vm.Window.ImageInfoWindowConfig.WindowProperties);
+            // WindowFunctions.InitializeWindowSizeAndPosition(_imageInfoWindow,
+            //     vm.Window.ImageInfoWindowConfig.WindowProperties);
             _imageInfoWindow.Show(desktop.MainWindow);
         }
     }
 
-    public async Task ShowKeybindingsWindow(MainViewModel vm)
+    public async Task ShowKeybindingsWindow(MainWindowViewModel vm)
     {
         if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop)
         {
@@ -153,38 +151,38 @@ public class WindowInitializer : IPlatformSpecificUpdate
 
         if (_keybindingsWindow is null)
         {
-            if (vm.Window.KeybindingWindowConfig?.WindowProperties is null)
-            {
-                vm.Window.KeybindingWindowConfig = new KeybindingWindowConfig();
-                await vm.Window.KeybindingWindowConfig.LoadAsync();
-            }
-            
-            if (vm.Keybindings is null)
-            {
-                vm.Keybindings = new KeybindingsViewModel();
-                vm.Keybindings.ResetKeybindingsCommand = new ReactiveCommand(async (_, _) =>
-                {
-                    _keybindingsWindow.Close();
-                    await Task.Run(() =>
-                    {
-                        KeybindingManager.SetDefaultKeybindings(vm.PlatformService);
-                        FunctionsKeyHelper.ResetKeybindings(vm.Keybindings);
-                    }, CancellationToken.None);
-                    await ShowKeybindingsWindow(vm);
-                });
-            }
+            // if (vm.Window.KeybindingWindowConfig?.WindowProperties is null)
+            // {
+            //     vm.Window.KeybindingWindowConfig = new KeybindingWindowConfig();
+            //     await vm.Window.KeybindingWindowConfig.LoadAsync();
+            // }
+            //
+            // if (vm.Keybindings is null)
+            // {
+            //     vm.Keybindings = new KeybindingsViewModel();
+            //     vm.Keybindings.ResetKeybindingsCommand = new ReactiveCommand(async (_, _) =>
+            //     {
+            //         _keybindingsWindow.Close();
+            //         await Task.Run(() =>
+            //         {
+            //             KeybindingManager.SetDefaultKeybindings(vm.PlatformService);
+            //             FunctionsKeyHelper.ResetKeybindings(vm.Keybindings);
+            //         }, CancellationToken.None);
+            //         await ShowKeybindingsWindow(vm);
+            //     });
+            // }
             
             _ = Task.Run(() =>
             {
-                FunctionsKeyHelper.LoadKeybindingsViewModel(vm.Keybindings);
+                //FunctionsKeyHelper.LoadKeybindingsViewModel(vm.Keybindings);
             });
 
             await Dispatcher.UIThread.InvokeAsync(() =>
             {
-                _keybindingsWindow = new KeybindingsWindow(vm.Window.KeybindingWindowConfig)
-                {
-                    DataContext = vm
-                };
+                // _keybindingsWindow = new KeybindingsWindow(vm.Window.KeybindingWindowConfig)
+                // {
+                //     DataContext = vm
+                // };
                 Show();
                 _keybindingsWindow.Closing += (_, _) =>
                 {
@@ -214,37 +212,37 @@ public class WindowInitializer : IPlatformSpecificUpdate
 
         void Show()
         {
-            WindowFunctions.InitializeWindowSizeAndPosition(_keybindingsWindow,
-                vm.Window.KeybindingWindowConfig.WindowProperties);
+            // WindowFunctions.InitializeWindowSizeAndPosition(_keybindingsWindow,
+            //     vm.Window.KeybindingWindowConfig.WindowProperties);
             _keybindingsWindow.Show(desktop.MainWindow);
         }
     }
 
-    public async Task ShowSettingsWindow(MainViewModel vm)
+    public async Task ShowSettingsWindow()
     {
-        if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop)
+        if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop || Application.Current.DataContext is not CoreViewModel core)
         {
             return;
         }
 
-        if (vm.Window.SettingsWindowConfig?.WindowProperties is null)
-        {
-            vm.Window.SettingsWindowConfig = new SettingsWindowConfig();
-            await vm.Window.SettingsWindowConfig.LoadAsync();
-        }
+        // if (vm.Window.SettingsWindowConfig?.WindowProperties is null)
+        // {
+        //     vm.Window.SettingsWindowConfig = new SettingsWindowConfig();
+        //     await vm.Window.SettingsWindowConfig.LoadAsync();
+        // }
 
         if (_settingsWindow is null)
         {
-            vm.AssociationsViewModel ??= new FileAssociationsViewModel();
-            vm.SettingsViewModel ??= new SettingsViewModel();
+            // vm.AssociationsViewModel ??= new FileAssociationsViewModel();
+            // vm.SettingsViewModel ??= new SettingsViewModel();
             await Dispatcher.UIThread.InvokeAsync(() =>
             {
-                _settingsWindow = new SettingsWindow(vm.Window.SettingsWindowConfig)
+                _settingsWindow = new SettingsWindow(new SettingsWindowConfig())
                 {
-                    DataContext = vm,
+                    DataContext = core,
                     WindowStartupLocation = WindowStartupLocation.CenterOwner
                 };
-
+            
                 Show();
                 _settingsWindow.Closing += (_, _) => _settingsWindow = null;
             });
@@ -270,13 +268,13 @@ public class WindowInitializer : IPlatformSpecificUpdate
 
         void Show()
         {
-            WindowFunctions.InitializeWindowSizeAndPosition(_settingsWindow,
-                vm.Window.SettingsWindowConfig.WindowProperties);
+            // WindowFunctions.InitializeWindowSizeAndPosition(_settingsWindow,
+            //     vm.Window.SettingsWindowConfig.WindowProperties);
             _settingsWindow.Show(desktop.MainWindow);
         }
     }
 
-    public void ShowSingleImageResizeWindow(MainViewModel vm)
+    public void ShowSingleImageResizeWindow(MainWindowViewModel vm)
     {
         if (Dispatcher.UIThread.CheckAccess())
         {
@@ -322,7 +320,7 @@ public class WindowInitializer : IPlatformSpecificUpdate
         }
     }
 
-    public async Task ShowBatchResizeWindow(MainViewModel vm)
+    public async Task ShowBatchResizeWindow(MainWindowViewModel vm)
     {
         if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop)
         {
@@ -331,29 +329,29 @@ public class WindowInitializer : IPlatformSpecificUpdate
 
         if (_batchResizeWindow is null)
         {
-            if (vm.Window.BatchResizeWindowConfig?.WindowProperties is null)
-            {
-                vm.Window.BatchResizeWindowConfig = new BatchResizeWindowConfig();
-                await vm.Window.BatchResizeWindowConfig.LoadAsync();
-            }
-
-            vm.BatchResizeViewModel = new BatchResizeViewModel(NavigationManager.CanNavigate(vm),
-                FilePicker.SelectDirectory, FilePicker.SelectFile, vm.PicViewer.FileInfo.CurrentValue,
-                vm.PlatformService.GetFiles);
+            // if (vm.Window.BatchResizeWindowConfig?.WindowProperties is null)
+            // {
+            //     vm.Window.BatchResizeWindowConfig = new BatchResizeWindowConfig();
+            //     await vm.Window.BatchResizeWindowConfig.LoadAsync();
+            // }
+            //
+            // vm.BatchResizeViewModel = new BatchResizeViewModel(NavigationManager.CanNavigate(vm),
+            //     FilePicker.SelectDirectory, FilePicker.SelectFile, vm.PicViewer.FileInfo.CurrentValue,
+            //     vm.PlatformService.GetFiles);
             await Dispatcher.UIThread.InvokeAsync(() =>
             {
-                _batchResizeWindow = new BatchResizeWindow(vm.Window.BatchResizeWindowConfig)
-                {
-                    DataContext = vm,
-                    WindowStartupLocation = WindowStartupLocation.CenterOwner
-                };
+                // _batchResizeWindow = new BatchResizeWindow(vm.Window.BatchResizeWindowConfig)
+                // {
+                //     DataContext = vm,
+                //     WindowStartupLocation = WindowStartupLocation.CenterOwner
+                // };
                 Show();
                 _batchResizeWindow.Closing += (_, _) =>
                 {
                     _batchResizeWindow.Dispose();
                     _batchResizeWindow = null;
-                    vm.BatchResizeViewModel.Dispose();
-                    vm.BatchResizeViewModel = null;
+                    // vm.BatchResizeViewModel.Dispose();
+                    // vm.BatchResizeViewModel = null;
                 };
             });
         }
@@ -379,13 +377,13 @@ public class WindowInitializer : IPlatformSpecificUpdate
 
         void Show()
         {
-            WindowFunctions.InitializeWindowSizeAndPosition(_batchResizeWindow,
-                vm.Window.BatchResizeWindowConfig.WindowProperties);
+            // WindowFunctions.InitializeWindowSizeAndPosition(_batchResizeWindow,
+            //     vm.Window.BatchResizeWindowConfig.WindowProperties);
             _batchResizeWindow.Show(desktop.MainWindow);
         }
     }
 
-    public void ShowEffectsWindow(MainViewModel vm)
+    public void ShowEffectsWindow(MainWindowViewModel vm)
     {
         if (Dispatcher.UIThread.CheckAccess())
         {
@@ -431,7 +429,7 @@ public class WindowInitializer : IPlatformSpecificUpdate
         }
     }
 
-    public void ShowConvertWindow(MainViewModel vm)
+    public void ShowConvertWindow(MainWindowViewModel vm)
     {
         if (Dispatcher.UIThread.CheckAccess())
         {
@@ -477,7 +475,7 @@ public class WindowInitializer : IPlatformSpecificUpdate
         }
     }
 
-    public void ShowPrintPreviewWindow(MainViewModel vm, string path)
+    public void ShowPrintPreviewWindow(MainWindowViewModel vm, string path)
     {
         if (Dispatcher.UIThread.CheckAccess())
         {
@@ -499,7 +497,7 @@ public class WindowInitializer : IPlatformSpecificUpdate
 
             if (_printPreviewWindow is null)
             {
-                vm.PrintPreview = new PrintPreviewViewModel();
+                // vm.PrintPreview = new PrintPreviewViewModel();
 
                 // TODO: Move this initialization to its own dedicated class
 
@@ -509,23 +507,23 @@ public class WindowInitializer : IPlatformSpecificUpdate
                     WindowStartupLocation = WindowStartupLocation.CenterOwner
                 };
 
-                vm.PrintPreview.PrintCommand.SubscribeAwait(async (_, _) =>
-                {
-                    await _printPreviewWindow?.RunPrintAsync(vm);
-                })
-                .AddTo(vm.PrintPreview.Disposables);
+                // vm.PrintPreview.PrintCommand.SubscribeAwait(async (_, _) =>
+                // {
+                //     await _printPreviewWindow?.RunPrintAsync(vm);
+                // })
+                // .AddTo(vm.PrintPreview.Disposables);
 
-                vm.PrintPreview.CancelCommand.SubscribeAwait(async (_, _) =>
-                {
-                    await Dispatcher.UIThread.InvokeAsync(() => _printPreviewWindow?.Close());
-                }).AddTo(vm.PrintPreview.Disposables);
+                // vm.PrintPreview.CancelCommand.SubscribeAwait(async (_, _) =>
+                // {
+                //     await Dispatcher.UIThread.InvokeAsync(() => _printPreviewWindow?.Close());
+                // }).AddTo(vm.PrintPreview.Disposables);
 
                 _printPreviewWindow.Show(desktop.MainWindow);
                 _printPreviewWindow.Closing += (_, _) => _printPreviewWindow = null;
 
                 Task.Run(() =>
                 {
-                    PrintInitialization.Initialize(vm, path, _printPreviewWindow);
+                    // PrintInitialization.Initialize(vm, path, _printPreviewWindow);
                 });
             }
             else

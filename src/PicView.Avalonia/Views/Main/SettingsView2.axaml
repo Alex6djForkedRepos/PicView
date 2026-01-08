@@ -1,0 +1,318 @@
+<UserControl
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d"
+    x:Class="PicView.Avalonia.Views.Main.SettingsView2"
+    x:DataType="viewModels1:CoreViewModel"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:customControls="clr-namespace:PicView.Avalonia.CustomControls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewModels1="clr-namespace:PicView.Core.ViewModels;assembly=PicView.Core"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <UserControl.ContextMenu>
+        <ContextMenu x:Name="ContextMenu">
+            <MenuItem
+                Foreground="{DynamicResource MainTextColor}"
+                Header="UserSettings.json"
+                x:Name="UserSettingsItem">
+                <MenuItem.Icon>
+                    <Image
+                        Height="12"
+                        Source="{StaticResource BracesImage}"
+                        Width="12" />
+                </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem
+                Foreground="{DynamicResource MainTextColor}"
+                Header="keybindings.json"
+                x:Name="KeybindingsItem">
+                <MenuItem.Icon>
+                    <Image
+                        Height="12"
+                        Source="{StaticResource BracesImage}"
+                        Width="12" />
+                </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Foreground="{DynamicResource MainTextColor}" Header="{CompiledBinding Translation.ResetButtonText.Value, Mode=OneWay}">
+                <MenuItem.Icon>
+                    <Image
+                        Height="12"
+                        Source="{StaticResource ResetImage}"
+                        Width="12" />
+                </MenuItem.Icon>
+            </MenuItem>
+            <Separator />
+            <MenuItem Header="{CompiledBinding Translation.Close.Value, Mode=OneWay}" x:Name="CloseItem">
+                <MenuItem.Icon>
+                    <Path
+                        Data="{StaticResource CloseGeometry}"
+                        Fill="{DynamicResource MainTextColor}"
+                        Height="12"
+                        Stretch="Fill"
+                        Width="12" />
+                </MenuItem.Icon>
+            </MenuItem>
+        </ContextMenu>
+    </UserControl.ContextMenu>
+
+    <customControls:AutoScrollViewer
+        Background="Transparent"
+        Focusable="True"
+        x:Name="ScrollViewer">
+        <Panel>
+
+            <WrapPanel
+                HorizontalAlignment="Center"
+                ItemHeight="100"
+                ItemSpacing="5"
+                ItemWidth="200"
+                LineSpacing="5"
+                Margin="15"
+                VerticalAlignment="Center">
+
+                <!--  General Settings  -->
+                <Button
+                    Background="{DynamicResource MainBackgroundColor}"
+                    BorderBrush="{DynamicResource MainBorderColor}"
+                    BorderThickness="1"
+                    Classes="altHover"
+                    CornerRadius="4"
+                    Padding="10">
+                    <StackPanel Spacing="5" VerticalAlignment="Center">
+                        <Image
+                            Height="25"
+                            Source="{StaticResource GeneralSettingsAltImage}"
+                            Width="25" />
+                        <TextBlock
+                            Classes="txt"
+                            HorizontalAlignment="Center"
+                            Text="{Binding Translation.GeneralSettings.Value, Mode=OneWay}" />
+                    </StackPanel>
+                </Button>
+
+                <!--  Appearance Settings  -->
+                <Button
+                    Background="{DynamicResource MainBackgroundColor}"
+                    BorderBrush="{DynamicResource MainBorderColor}"
+                    BorderThickness="1"
+                    Classes="altHover"
+                    CornerRadius="4"
+                    Padding="10">
+                    <StackPanel Spacing="5" VerticalAlignment="Center">
+                        <Image
+                            Height="25"
+                            Source="{StaticResource PaletteImage}"
+                            Width="25" />
+                        <TextBlock
+                            Classes="txt"
+                            HorizontalAlignment="Center"
+                            Text="{Binding Translation.Appearance.Value, Mode=OneWay}" />
+                    </StackPanel>
+                </Button>
+
+                <!--  UI Settings  -->
+                <Button
+                    Background="{DynamicResource MainBackgroundColor}"
+                    BorderBrush="{DynamicResource MainBorderColor}"
+                    BorderThickness="1"
+                    Classes="altHover"
+                    CornerRadius="4"
+                    Padding="10">
+                    <StackPanel Spacing="5" VerticalAlignment="Center">
+                        <Image
+                            Height="25"
+                            Source="{StaticResource ColumnsSettingsAltImage}"
+                            Width="25" />
+                        <TextBlock
+                            Classes="txt"
+                            HorizontalAlignment="Center"
+                            Text="{Binding Translation.InterfaceConfiguration.Value, Mode=OneWay}" />
+                    </StackPanel>
+                </Button>
+
+                <!--  Image Settings  -->
+                <Button
+                    Background="{DynamicResource MainBackgroundColor}"
+                    BorderBrush="{DynamicResource MainBorderColor}"
+                    BorderThickness="1"
+                    Classes="altHover"
+                    CornerRadius="4"
+                    Padding="10">
+                    <StackPanel Spacing="5" VerticalAlignment="Center">
+                        <Image
+                            Height="25"
+                            Source="{StaticResource ImageSettingAltImage}"
+                            Width="25" />
+                        <TextBlock
+                            Classes="txt"
+                            HorizontalAlignment="Center"
+                            Text="{Binding Translation.Image.Value, Mode=OneWay}" />
+                    </StackPanel>
+                </Button>
+
+                <!--  Navigation Settings  -->
+                <Button
+                    Background="{DynamicResource MainBackgroundColor}"
+                    BorderBrush="{DynamicResource MainBorderColor}"
+                    BorderThickness="1"
+                    Classes="altHover"
+                    CornerRadius="4"
+                    Padding="10">
+                    <StackPanel Spacing="5" VerticalAlignment="Center">
+                        <Image
+                            Height="25"
+                            Source="{StaticResource SignPostImage}"
+                            Width="25" />
+                        <TextBlock
+                            Classes="txt"
+                            HorizontalAlignment="Center"
+                            Text="{Binding Translation.Navigation.Value, Mode=OneWay}" />
+                    </StackPanel>
+                </Button>
+
+                <!--  Gallery Settings  -->
+                <Button
+                    Background="{DynamicResource MainBackgroundColor}"
+                    BorderBrush="{DynamicResource MainBorderColor}"
+                    BorderThickness="1"
+                    Classes="altHover"
+                    CornerRadius="4"
+                    Padding="10">
+                    <StackPanel Spacing="5" VerticalAlignment="Center">
+                        <Image
+                            Height="25"
+                            Source="{StaticResource GalleryAltImage}"
+                            Width="25" />
+                        <TextBlock
+                            Classes="txt"
+                            HorizontalAlignment="Center"
+                            Text="{Binding Translation.GallerySettings.Value, Mode=OneWay}" />
+                    </StackPanel>
+                </Button>
+
+                <!--  Slideshow Settings  -->
+                <Button
+                    Background="{DynamicResource MainBackgroundColor}"
+                    BorderBrush="{DynamicResource MainBorderColor}"
+                    BorderThickness="1"
+                    Classes="altHover"
+                    CornerRadius="4"
+                    Padding="10">
+                    <StackPanel Spacing="5" VerticalAlignment="Center">
+                        <Image
+                            Height="25"
+                            Source="{StaticResource SlideshowImage}"
+                            Width="25" />
+                        <TextBlock
+                            Classes="txt"
+                            HorizontalAlignment="Center"
+                            Text="{Binding Translation.Slideshow.Value, Mode=OneWay}" />
+                    </StackPanel>
+                </Button>
+
+                <!--  Window Settings  -->
+                <Button
+                    Background="{DynamicResource MainBackgroundColor}"
+                    BorderBrush="{DynamicResource MainBorderColor}"
+                    BorderThickness="1"
+                    Classes="altHover"
+                    CornerRadius="4"
+                    Padding="10">
+                    <StackPanel Spacing="5" VerticalAlignment="Center">
+                        <Image
+                            Height="25"
+                            Source="{StaticResource WindowImage}"
+                            Width="25" />
+                        <TextBlock
+                            Classes="txt"
+                            HorizontalAlignment="Center"
+                            Text="{Binding Translation.Window.Value, Mode=OneWay}" />
+                    </StackPanel>
+                </Button>
+
+                <!--  Zoom Settings  -->
+                <Button
+                    Background="{DynamicResource MainBackgroundColor}"
+                    BorderBrush="{DynamicResource MainBorderColor}"
+                    BorderThickness="1"
+                    Classes="altHover"
+                    CornerRadius="4"
+                    Padding="10">
+                    <StackPanel Spacing="5" VerticalAlignment="Center">
+                        <Image
+                            Height="25"
+                            Source="{StaticResource ZoomAltImage}"
+                            Width="25" />
+                        <TextBlock
+                            Classes="txt"
+                            HorizontalAlignment="Center"
+                            Text="{Binding Translation.Zoom.Value, Mode=OneWay}" />
+                    </StackPanel>
+                </Button>
+
+                <!--  Mouse Settings  -->
+                <Button
+                    Background="{DynamicResource MainBackgroundColor}"
+                    BorderBrush="{DynamicResource MainBorderColor}"
+                    BorderThickness="1"
+                    Classes="altHover"
+                    CornerRadius="4"
+                    Padding="10">
+                    <StackPanel Spacing="5" VerticalAlignment="Center">
+                        <Image
+                            Height="25"
+                            Source="{StaticResource MouseWheelIcon}"
+                            Width="25" />
+                        <TextBlock
+                            Classes="txt"
+                            HorizontalAlignment="Center"
+                            Text="{Binding Translation.Mouse.Value, Mode=OneWay}" />
+                    </StackPanel>
+                </Button>
+
+                <!--  Language Settings  -->
+                <Button
+                    Background="{DynamicResource MainBackgroundColor}"
+                    BorderBrush="{DynamicResource MainBorderColor}"
+                    BorderThickness="1"
+                    Classes="altHover"
+                    CornerRadius="4"
+                    Padding="10">
+                    <StackPanel Spacing="5" VerticalAlignment="Center">
+                        <Image
+                            Height="25"
+                            Source="{StaticResource LanguageSettingsAltImage}"
+                            Width="25" />
+                        <TextBlock
+                            Classes="txt"
+                            HorizontalAlignment="Center"
+                            Text="{Binding Translation.Language.Value, Mode=OneWay}" />
+                    </StackPanel>
+                </Button>
+
+                <!--  File association  -->
+                <Button
+                    Background="{DynamicResource MainBackgroundColor}"
+                    BorderBrush="{DynamicResource MainBorderColor}"
+                    BorderThickness="1"
+                    Classes="altHover"
+                    CornerRadius="4"
+                    Padding="10">
+                    <StackPanel Spacing="5" VerticalAlignment="Center">
+                        <Image
+                            Height="25"
+                            Source="{StaticResource FileAssociationAltImage}"
+                            Width="25" />
+                        <TextBlock
+                            Classes="txt"
+                            HorizontalAlignment="Center"
+                            Text="{Binding Translation.FileAssociations.Value, Mode=OneWay}" />
+                    </StackPanel>
+                </Button>
+
+
+            </WrapPanel>
+        </Panel>
+    </customControls:AutoScrollViewer>
+</UserControl>

@@ -1,6 +1,7 @@
 ﻿<UserControl
     Background="Transparent"
     Height="160"
+    IsVisible="{CompiledBinding Hoverbar.IsHoverbarVisible.Value}"
     Opacity="0"
     x:Class="PicView.Avalonia.Views.UC.HoverBar2"
     x:DataType="vm:TabViewModel"

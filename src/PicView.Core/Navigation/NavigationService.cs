@@ -12,48 +12,37 @@ using PicView.Core.ViewModels;
 
 namespace PicView.Core.Navigation;
 
-public class NavigationService : INavigationService
+public class NavigationService(
+    IImageLoader imageLoader,
+    IArchiveService archive,
+    IImageCache cache,
+    IFileWatcherService fileWatcherService,
+    IPlatformSpecificService platformService,
+    ITempFileService tempFileService,
+    Func<string, string, int> stringComparer)
+    : INavigationService
 {
-    private readonly IArchiveService _archive;
-    private readonly IImageCache _cache;
-    private readonly IImageLoader _imageLoader;
-    private readonly IFileWatcherService _fileWatcherService;
-    private readonly IPlatformSpecificService _platformService;
-    private readonly ITempFileService _tempFileService;
-    private readonly Func<string, string, int> _stringComparer;
+    private readonly IArchiveService _archive = archive;
 
-    public NavigationService(IImageLoader imageLoader, IArchiveService archive, IImageCache cache,
-        IFileWatcherService fileWatcherService, IPlatformSpecificService platformService,
-        ITempFileService tempFileService, Func<string, string, int> stringComparer)
-    {
-        _imageLoader = imageLoader;
-        _archive = archive;
-        _cache = cache;
-        _fileWatcherService = fileWatcherService;
-        _platformService = platformService;
-        _tempFileService = tempFileService;
-        _stringComparer = stringComparer ?? string.CompareOrdinal;
-    }
-    
     public async ValueTask RepopulateIterator(FileInfo fileInfo, TabViewModel tab, CancellationTokenSource ct, List<FileInfo>? files = null)
     {
         try
         {
-            _fileWatcherService.Unwatch(tab);
-            _fileWatcherService.Watch(tab, fileInfo.DirectoryName);
+            fileWatcherService.Unwatch(tab);
+            fileWatcherService.Watch(tab, fileInfo.DirectoryName);
 
             // Show image quickly to make it feel fast
-            var model = await _imageLoader.GetImageModelAsync(fileInfo, ct.Token).ConfigureAwait(false);
+            var model = await imageLoader.GetImageModelAsync(fileInfo, ct.Token).ConfigureAwait(false);
             tab.Model.Value = model; // Image updated via reactive subscription
             
-            tab.ImageIterator.Files = files ?? FileListRetriever.RetrieveFiles(fileInfo, _stringComparer);
+            tab.ImageIterator.Files = files ?? FileListRetriever.RetrieveFiles(fileInfo, stringComparer);
             var index = FindIndex(fileInfo, tab);
             tab.ImageIterator.SetCurrentIndex(index);
             
             tab.UpdateTabTitle();
-            _cache.Clear(tab.Id);
-            _cache.Add(tab.Id, index, new PreLoadValue(model), tab.ImageIterator.Files.Count, false);
-            _cache.Preload(tab.Id, index, false, tab.ImageIterator.Files);
+            cache.Clear(tab.Id);
+            cache.Add(tab.Id, index, new PreLoadValue(model), tab.ImageIterator.Files.Count, false);
+            cache.Preload(tab.Id, index, false, tab.ImageIterator.Files);
         }
         catch (Exception e)
         {
@@ -120,7 +109,7 @@ public class NavigationService : INavigationService
                 return;
             case FileTypeResolver.LoadAbleFileType.Directory:
             {
-                var files = await Task.Run(() => FileListRetriever.RetrieveFiles(new FileInfo(check.Value.Data), _stringComparer), ct.Token).ConfigureAwait(false);
+                var files = await Task.Run(() => FileListRetriever.RetrieveFiles(new FileInfo(check.Value.Data), stringComparer), ct.Token).ConfigureAwait(false);
                 if (files.Count == 0)
                 {
                     return;
@@ -148,9 +137,9 @@ public class NavigationService : INavigationService
             await tab.ImageIterator.DisposeAsync().ConfigureAwait(false);
         }
 
-        _platformService.StopTaskbarProgress();
+        platformService.StopTaskbarProgress();
         var safeFileName = HttpManager.GetSafeFileName(url);
-        var destPath = _tempFileService.GetNewTempFilePath(safeFileName);
+        var destPath = tempFileService.GetNewTempFilePath(safeFileName);
         
         using var client = new HttpClientDownloadWithProgress(url, destPath);
         client.ProgressChanged += (totalFileSize, totalBytesDownloaded, progressPercentage) =>
@@ -166,7 +155,7 @@ public class NavigationService : INavigationService
 
             if (totalBytesDownloaded.HasValue && totalFileSize.HasValue)
             {
-                _platformService.SetTaskbarProgress((ulong)totalBytesDownloaded.Value, (ulong)totalFileSize.Value);
+                platformService.SetTaskbarProgress((ulong)totalBytesDownloaded.Value, (ulong)totalFileSize.Value);
             }
         };
 
@@ -174,14 +163,14 @@ public class NavigationService : INavigationService
         {
             await client.StartDownloadAsync(ct.Token).ConfigureAwait(false);
             
-            _platformService.StopTaskbarProgress();
+            platformService.StopTaskbarProgress();
 
             if (ct.IsCancellationRequested)
             {
                 return;
             }
 
-            var model = await _imageLoader.GetImageModelAsync(new FileInfo(destPath), ct.Token).ConfigureAwait(false);
+            var model = await imageLoader.GetImageModelAsync(new FileInfo(destPath), ct.Token).ConfigureAwait(false);
             tab.Model.Value = model;
             tab.SecondaryModel.Value = null;
             
@@ -195,7 +184,7 @@ public class NavigationService : INavigationService
         catch (Exception e)
         {
             DebugHelper.LogDebug(nameof(NavigationService), nameof(LoadFromUrlAsync), e);
-            _platformService.StopTaskbarProgress();
+            platformService.StopTaskbarProgress();
             // Revert or show error state if needed
             tab.TabTitle.Value = TranslationManager.Translation?.ErrorLoadingImage ?? "Error";
         }
@@ -263,7 +252,7 @@ public class NavigationService : INavigationService
             }
 
             // Retrieve and sort files based on new settings
-            var newFiles = await Task.Run(() => FileListRetriever.RetrieveFiles(currentFile, _stringComparer), ct.Token).ConfigureAwait(false);
+            var newFiles = await Task.Run(() => FileListRetriever.RetrieveFiles(currentFile, stringComparer), ct.Token).ConfigureAwait(false);
 
             if (newFiles.Count == 0)
             {
@@ -278,7 +267,7 @@ public class NavigationService : INavigationService
             tab.ImageIterator.SetCurrentIndex(newIndex);
             
             // Update cache mapping
-            _cache.Resynchronize(tab.Id, newFiles);
+            cache.Resynchronize(tab.Id, newFiles);
             
             // Update title
             tab.UpdateTabTitle();

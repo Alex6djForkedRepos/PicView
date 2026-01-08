@@ -13,9 +13,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <customControls:IconButton
         Background="{DynamicResource WindowSecondaryBackgroundColor}"
-        BorderBrush="{DynamicResource MainBorderColor}"
-        BorderThickness="1,0,0,0"
-        Classes="hover"
+        Classes="noBorderHover"
         ClickMode="Press"
         Foreground="{DynamicResource MainTextColor}"
         Icon="{StaticResource MenuImage}"
