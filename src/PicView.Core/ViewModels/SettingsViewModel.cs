@@ -1,4 +1,5 @@
-﻿using PicView.Core.Localization;
+﻿using PicView.Core.Config;
+using PicView.Core.Localization;
 using R3;
 
 // ReSharper disable CompareOfFloatsByEqualityOperator
@@ -8,6 +9,9 @@ namespace PicView.Core.ViewModels;
 public class SettingsViewModel : IDisposable
 {
     private readonly CompositeDisposable _disposables = new();
+    
+    public SettingsWindowConfig? SettingsWindowConfig { get; set; }
+    
     public BindableReactiveProperty<bool> IsShowingRecycleDialog { get; } =
         new(Settings.UIProperties.ShowRecycleConfirmation);
 

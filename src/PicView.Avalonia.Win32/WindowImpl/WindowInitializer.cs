@@ -218,26 +218,27 @@ public class WindowInitializer : IPlatformSpecificUpdate
         }
     }
 
-    public async Task ShowSettingsWindow()
+    public async ValueTask ShowSettingsWindow()
     {
         if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop || Application.Current.DataContext is not CoreViewModel core)
         {
             return;
         }
 
-        // if (vm.Window.SettingsWindowConfig?.WindowProperties is null)
-        // {
-        //     vm.Window.SettingsWindowConfig = new SettingsWindowConfig();
-        //     await vm.Window.SettingsWindowConfig.LoadAsync();
-        // }
+        core.SettingsViewModel ??= new SettingsViewModel();
+        
+        if (core.SettingsViewModel.SettingsWindowConfig is null)
+        {
+            core.SettingsViewModel.SettingsWindowConfig = new SettingsWindowConfig();
+            await core.SettingsViewModel.SettingsWindowConfig.LoadAsync();
+        }
 
         if (_settingsWindow is null)
         {
             // vm.AssociationsViewModel ??= new FileAssociationsViewModel();
-            // vm.SettingsViewModel ??= new SettingsViewModel();
             await Dispatcher.UIThread.InvokeAsync(() =>
             {
-                _settingsWindow = new SettingsWindow(new SettingsWindowConfig())
+                _settingsWindow = new SettingsWindow(core.SettingsViewModel.SettingsWindowConfig)
                 {
                     DataContext = core,
                     WindowStartupLocation = WindowStartupLocation.CenterOwner
@@ -268,8 +269,8 @@ public class WindowInitializer : IPlatformSpecificUpdate
 
         void Show()
         {
-            // WindowFunctions.InitializeWindowSizeAndPosition(_settingsWindow,
-            //     vm.Window.SettingsWindowConfig.WindowProperties);
+            WindowFunctions.InitializeWindowSizeAndPosition(_settingsWindow,
+                core.SettingsViewModel.SettingsWindowConfig.WindowProperties);
             _settingsWindow.Show(desktop.MainWindow);
         }
     }

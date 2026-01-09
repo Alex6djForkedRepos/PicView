@@ -7,16 +7,19 @@ using Avalonia.Threading;
 using PicView.Avalonia.Input;
 using PicView.Avalonia.UI;
 using PicView.Avalonia.ViewModels;
+using PicView.Avalonia.WindowBehavior;
 using PicView.Core.Config;
 using PicView.Core.FileAssociations;
 using PicView.Core.Localization;
 using PicView.Core.WindowsNT.FileAssociation;
+using R3;
 
 namespace PicView.Avalonia.Win32.Views;
 
 public partial class SettingsWindow : Window
 {
     private readonly SettingsWindowConfig _config;
+    private readonly IDisposable? _disposable;
     public SettingsWindow(SettingsWindowConfig config)
     {
         _config = config;
@@ -140,7 +143,12 @@ public partial class SettingsWindow : Window
             Hide();
             await _config.SaveAsync();
             await SaveSettingsAsync();
+            _disposable?.Dispose();
         };
+
+        _disposable = ClientSizeProperty.Changed.ToObservable()
+            .ObserveOn(UIHelper2.GetFrameProvider)
+            .Subscribe(UpdateWindowSize);
 
         InitializeFileAssociationManager();
     }
@@ -167,11 +175,17 @@ public partial class SettingsWindow : Window
         hostWindow?.BeginMoveDrag(e);
     }
     
-    private void UpdateWindowPosition(object? sender, PointerReleasedEventArgs e)
+    private void UpdateWindowSizeAndPosition(object? sender, PointerReleasedEventArgs e)
     {
         _config.WindowProperties.Left = Position.X;
         _config.WindowProperties.Top = Position.Y;
+
+        _config.WindowProperties.Width = Bounds.Width;
+        _config.WindowProperties.Height = Bounds.Height;
     }
+    
+    private void UpdateWindowSize(AvaloniaPropertyChangedEventArgs<Size> size)
+        => WindowFunctions.SetWindowSize(this, size, _config.WindowProperties);
 
     private void Close(object? sender, RoutedEventArgs e) => Close();
 

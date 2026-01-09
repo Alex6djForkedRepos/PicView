@@ -259,7 +259,7 @@ public partial class MacMainWindow2 : Window, IPlatformWindowService
     public async Task ShowKeybindingsWindow() =>
         _windowInitializer?.ShowKeybindingsWindow(null);
 
-    public async Task ShowSettingsWindow() =>
+    public async ValueTask ShowSettingsWindow() =>
         await _windowInitializer?.ShowSettingsWindow(null);
 
     public void ShowSingleImageResizeWindow() =>

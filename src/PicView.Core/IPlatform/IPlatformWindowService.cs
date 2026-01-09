@@ -39,7 +39,7 @@ public interface IPlatformWindowService
 
     Task ShowKeybindingsWindow();
 
-    Task ShowSettingsWindow();
+    ValueTask ShowSettingsWindow();
     
     void ShowEffectsWindow();
     

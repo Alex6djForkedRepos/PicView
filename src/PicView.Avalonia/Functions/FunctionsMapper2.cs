@@ -522,7 +522,7 @@ public class FunctionsMapper2(Core.ViewModels.MainWindowViewModel vm) : IFunctio
         await vm?.PlatformWindowService?.ShowBatchResizeWindow();
 
     public async ValueTask SettingsWindow() =>
-        await vm?.PlatformWindowService?.ShowSettingsWindow();
+        await vm.PlatformWindowService.ShowSettingsWindow();
 
     #endregion Windows
 
