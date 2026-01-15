@@ -14,7 +14,7 @@
                     BorderThickness="{TemplateBinding BorderThickness}"
                     Content="{TemplateBinding Content}"
                     ContentTemplate="{TemplateBinding ContentTemplate}"
-                    CornerRadius="0"
+                    CornerRadius="{TemplateBinding CornerRadius}"
                     HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
                     Name="PART_ContentPresenter"
                     Padding="{TemplateBinding Padding}"

@@ -200,6 +200,14 @@
           <DependentUpon>NavigationView2.axaml</DependentUpon>
           <SubType>Code</SubType>
         </Compile>
+        <Compile Update="Views\Config\ZoomSettingsView2.axaml.cs">
+          <DependentUpon>ZoomSettingsView2.axaml</DependentUpon>
+          <SubType>Code</SubType>
+        </Compile>
+        <Compile Update="Views\Config\MouseView2.axaml.cs">
+          <DependentUpon>MouseView2.axaml</DependentUpon>
+          <SubType>Code</SubType>
+        </Compile>
     </ItemGroup>
 
 

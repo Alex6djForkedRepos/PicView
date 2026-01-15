@@ -1,4 +1,4 @@
-﻿using Avalonia;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Metadata;
 using Avalonia.Controls.Primitives;
@@ -45,6 +45,46 @@ public class AutoScrollViewer : ScrollViewer
     private readonly CompositeDisposable _disposables = new();
 
     /// <summary>
+    /// Defines the <see cref="CanScrollUp"/> property.
+    /// </summary>
+    public static readonly StyledProperty<bool> CanScrollUpProperty =
+        AvaloniaProperty.Register<AutoScrollViewer, bool>(nameof(CanScrollUp));
+
+    /// <summary>
+    /// Gets or sets a value indicating whether the viewer can scroll up.
+    /// </summary>
+    public bool CanScrollUp
+    {
+        get => GetValue(CanScrollUpProperty);
+        private set => SetValue(CanScrollUpProperty, value);
+    }
+
+    /// <summary>
+    /// Defines the <see cref="CanScrollDown"/> property.
+    /// </summary>
+    public static readonly StyledProperty<bool> CanScrollDownProperty =
+        AvaloniaProperty.Register<AutoScrollViewer, bool>(nameof(CanScrollDown));
+
+    /// <summary>
+    /// Gets or sets a value indicating whether the viewer can scroll down.
+    /// </summary>
+    public bool CanScrollDown
+    {
+        get => GetValue(CanScrollDownProperty);
+        private set => SetValue(CanScrollDownProperty, value);
+    }
+
+    /// <summary>
+    /// Gets the command to scroll to the top.
+    /// </summary>
+    public ReactiveCommand ScrollToTopCommand { get; }
+
+    /// <summary>
+    /// Gets the command to scroll to the bottom.
+    /// </summary>
+    public ReactiveCommand ScrollToBottomCommand { get; }
+
+    /// <summary>
     /// Gets or sets a value indicating whether auto-scrolling is active.
     /// </summary>
     public bool IsAutoScrolling
@@ -77,6 +117,9 @@ public class AutoScrollViewer : ScrollViewer
     /// </summary>
     public AutoScrollViewer()
     {
+        ScrollToTopCommand = new ReactiveCommand(_ => ScrollToHome());
+        ScrollToBottomCommand = new ReactiveCommand(_ => ScrollToEnd());
+
         AddHandler(
             PointerPressedEvent,
             PreviewPointerPressedEvent,
@@ -90,6 +133,24 @@ public class AutoScrollViewer : ScrollViewer
             handledEventsToo: true);
     }
 
+    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
+    {
+        base.OnPropertyChanged(change);
+
+        if (change.Property == OffsetProperty ||
+            change.Property == ExtentProperty ||
+            change.Property == ViewportProperty)
+        {
+            UpdateScrollButtonsState();
+        }
+    }
+
+    private void UpdateScrollButtonsState()
+    {
+        CanScrollUp = Offset.Y > 0;
+        CanScrollDown = Offset.Y < Extent.Height - Viewport.Height;
+    }
+
     /// <summary>
     /// Applies the control template and initializes the AutoScrollSign icon.
     /// </summary>
@@ -100,7 +161,7 @@ public class AutoScrollViewer : ScrollViewer
         var autoScrollSign = e.NameScope.Find<AutoScrollSign>("PART_AutoScrollSign");
 
         _autoScrollingSubject
-            .ObserveOn(UIHelper.GetFrameProvider)
+            .ObserveOn(UIHelper2.GetFrameProvider)
             .Subscribe(isAutoScrolling =>
             {
                 var canScroll = CanScroll();

@@ -5,6 +5,7 @@ using Avalonia.Threading;
 using PicView.Core.ViewModels;
 using R3;
 using System.Runtime.InteropServices;
+using Avalonia.Input;
 
 namespace PicView.Avalonia.Views.Main;
 
@@ -31,12 +32,41 @@ public partial class SettingsView2 : UserControl
         InitializeSectionsMap();
         CategoriesListBox.SelectionChanged += OnListBoxSelectionChanged;
         ContentScrollViewer.ScrollChanged += OnScrollChanged;
+        
+        KeyDown += OnKeyDown;
 
         if (DataContext is not CoreViewModel core)
         {
             return;
         }
         _subscription = core.SettingsViewModel.SelectedCategory.Subscribe(OnViewModelCategoryChanged);
+    }
+
+    private void OnKeyDown(object? sender, KeyEventArgs e)
+    {
+        if (DataContext is not CoreViewModel core)
+        {
+            return;
+        }
+
+        if (core.SettingsViewModel.IsOverviewVisible.CurrentValue)
+        {
+            // TODO: Use arrow keys to navigate overview categories
+            return;
+        }
+        switch (e.Key)
+        {
+            case Key.Down:
+            case Key.PageDown:
+                ContentScrollViewer.LineDown();
+                break;
+            case Key.Up:
+            case Key.PageUp:
+                ContentScrollViewer.LineUp();
+                break;
+                
+        }
+        
     }
 
     private void OnUnloaded(object? sender, RoutedEventArgs e)
@@ -131,10 +161,17 @@ public partial class SettingsView2 : UserControl
         
         SettingsCategory? bestMatch = null;
         
-        // Find the last section whose Top is <= offset (plus some buffer)
-        foreach (var kvp in from kvp in _sections let section = kvp.Value where section.Bounds.Y <= offset + 10 select kvp)
+        // Sort sections by their visual Y position.
+        // This ensures we iterate from top to bottom, so the "last match" 
+        // is always the deepest section that satisfies the condition.
+        var sortedSections = _sections.OrderBy(x => x.Value.Bounds.Y);
+
+        foreach (var kvp in sortedSections)
         {
-            bestMatch = kvp.Key;
+            if (kvp.Value.Bounds.Y <= offset)
+            {
+                bestMatch = kvp.Key;
+            }
         }
 
         // If no section is above offset (e.g. at very top), default to General

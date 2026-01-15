@@ -393,8 +393,11 @@
                 <!--  Categories  -->
                 <ListBox
                     Background="Transparent"
+                    BorderBrush="{DynamicResource MainBorderColor}"
+                    BorderThickness="1"
+                    CornerRadius="4"
                     Grid.Column="0"
-                    Padding="7,2,1,1"
+                    Margin="7,2,1,1"
                     SelectionMode="Single"
                     Theme="{StaticResource SlimListBox}"
                     x:Name="CategoriesListBox">
@@ -628,19 +631,19 @@
                             Margin="0,0,0,30"
                             x:Name="NavigationSection" />
 
-                        <Border x:Name="ZoomSection">
-                            <TextBlock
-                                Classes="txt bold"
-                                Text="{Binding Translation.Zoom.Value, Mode=OneWay}"
-                                VerticalAlignment="Top" />
-                        </Border>
+                        <!--  Zoom  -->
+                        <config:ZoomSettingsView2
+                            Background="Transparent"
+                            Focusable="True"
+                            Margin="0,0,0,30"
+                            x:Name="ZoomSection" />
 
-                        <Border x:Name="MouseSection">
-                            <TextBlock
-                                Classes="txt bold"
-                                Text="{Binding Translation.Mouse.Value, Mode=OneWay}"
-                                VerticalAlignment="Top" />
-                        </Border>
+                        <!--  Mouse  -->
+                        <config:MouseView2
+                            Background="Transparent"
+                            Focusable="True"
+                            Margin="0,0,0,30"
+                            x:Name="MouseSection" />
 
                         <Border x:Name="LanguageSection">
                             <TextBlock
