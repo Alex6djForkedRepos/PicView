@@ -1,11 +1,5 @@
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using Avalonia;
-using PicView.Avalonia.SettingsManagement;
-using PicView.Avalonia.ViewModels;
-using PicView.Core.Config;
+using Avalonia.Threading;
 using PicView.Core.Localization;
 using PicView.Core.ViewModels;
 using ZLinq;
@@ -17,21 +11,15 @@ public class LanguageService : ILanguageService
     public async ValueTask UpdateLanguageAsync(string languageCode)
     {
         await TranslationManager.LoadLanguage(languageCode).ConfigureAwait(false);
-        
-        var vm = Application.Current?.DataContext;
-        if (vm is MainViewModel mainVm)
-        {
-             await LanguageUpdater.UpdateLanguageAsync(mainVm.Translation, mainVm.PicViewer, true).ConfigureAwait(false);
-        }
-        else if (vm is CoreViewModel coreVm)
-        {
-             coreVm.Translation.UpdateLanguage();
-        }
+
+        var core = await Dispatcher.UIThread.InvokeAsync(() => Application.Current.DataContext as CoreViewModel);
+
+        core?.Translation.UpdateLanguage();
     }
 
     public IEnumerable<(string Code, string DisplayName)> GetAvailableLanguages()
     {
-        return TranslationManager.GetLanguages().ToList()
+        return TranslationManager.GetLanguages().ToArray()
                 .Select(filePath =>
                 {
                     var langCode = Path.GetFileNameWithoutExtension(filePath.Name);
