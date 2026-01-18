@@ -139,96 +139,242 @@ public class SettingsViewModel : IDisposable
         sb.Append(TranslationManager.Translation.Theme);
         ThemeSearchTags = new BindableReactiveProperty<string>(sb.ToString());
         
+        sb.Append(TranslationManager.Translation.ChangeBackground);
+        sb.Append(space);
+        sb.Append("Background Texture Wallpaper");
+        BackgroundSearchTags = new BindableReactiveProperty<string>(sb.ToString());
+        
         sb.Clear();
         
-        // InterfaceSearchTags = new BindableReactiveProperty<string[]>(
-        // [
-        //     TranslationManager.Translation.InterfaceConfiguration!,
-        //     TranslationManager.Translation.ShowBottomToolbar!,
-        //     TranslationManager.Translation.ShowUI!,
-        //     TranslationManager.Translation.ShowFadeInButtonsOnHover!,
-        //     TranslationManager.Translation.ShowHoverNavigationBar!,
-        //     "UI", "Hidden", "Toolbar", "Buttons", "Hover"
-        // ]);
+        sb.Append(TranslationManager.Translation.InterfaceConfiguration);
+        sb.Append(space);
+        sb.Append(TranslationManager.Translation.ShowBottomToolbar);
+        sb.Append(space);
+        sb.Append("Interface UI Toolbar");
+        ShowBottomToolbarSearchTags = new BindableReactiveProperty<string>(sb.ToString());
+        
+        sb.Clear();
+        
+        sb.Append(TranslationManager.Translation.InterfaceConfiguration);
+        sb.Append(space);
+        sb.Append(TranslationManager.Translation.ShowUI);
+        sb.Append(space);
+        sb.Append(TranslationManager.Translation.HideUI);
+        sb.Append(space);
+        sb.Append("Interface UI Hidden");
+        ShowUISearchTags = new BindableReactiveProperty<string>(sb.ToString());
+        
+        sb.Clear();
+        
+        sb.Append(TranslationManager.Translation.InterfaceConfiguration);
+        sb.Append(space);
+        sb.Append(TranslationManager.Translation.ShowFadeInButtonsOnHover);
+        sb.Append(space);
+        sb.Append("Interface UI Buttons Fade");
+        ShowFadeInButtonsSearchTags = new BindableReactiveProperty<string>(sb.ToString());
+        
+        sb.Clear();
+        
+        sb.Append(TranslationManager.Translation.InterfaceConfiguration);
+        sb.Append(space);
+        sb.Append(TranslationManager.Translation.ShowHoverNavigationBar);
+        sb.Append(space);
+        sb.Append("Interface UI Hover Navigation");
+        ShowHoverNavigationBarSearchTags = new BindableReactiveProperty<string>(sb.ToString());
+        
+        sb.Clear();
+        
+        sb.Append(TranslationManager.Translation.Image);
+        sb.Append(space);
+        sb.Append(TranslationManager.Translation.Stretch);
+        sb.Append(space);
+        sb.Append("Stretch");
+        ImageStretchSearchTags = new BindableReactiveProperty<string>(sb.ToString());
+        
+        sb.Clear();
+        
+        sb.Append(TranslationManager.Translation.Image);
+        sb.Append(space);
+        sb.Append(TranslationManager.Translation.Scrolling);
+        sb.Append(space);
+        sb.Append("Scroll");
+        ImageScrollingSearchTags = new BindableReactiveProperty<string>(sb.ToString());
+        
+        sb.Clear();
+        
+        sb.Append(TranslationManager.Translation.Image);
+        sb.Append(space);
+        sb.Append(TranslationManager.Translation.SideBySide);
+        sb.Append(space);
+        sb.Append("SideBySide");
+        ImageSideBySideSearchTags = new BindableReactiveProperty<string>(sb.ToString());
+        
+        sb.Clear();
+        
+        sb.Append(TranslationManager.Translation.ImageAliasing);
+        sb.Append(space);
+        sb.Append(TranslationManager.Translation.HighQuality);
+        sb.Append(space);
+        sb.Append("Scaling Pixelated Nearest Neighbor");
+        ImageScalingSearchTags = new BindableReactiveProperty<string>(sb.ToString());
 
-        // ImageSearchTags = new BindableReactiveProperty<string[]>(
-        // [
-        //     TranslationManager.Translation.Image!,
-        //     TranslationManager.Translation.Stretch!,
-        //     TranslationManager.Translation.Scrolling!,
-        //     TranslationManager.Translation.SideBySide!,
-        //     TranslationManager.Translation.ImageAliasing!,
-        //     TranslationManager.Translation.HighQuality!,
-        //     "Scaling", "Pixelated", "Nearest Neighbor"
-        // ]);
+        sb.Clear();
+        
+        sb.Append(TranslationManager.Translation.Navigation);
+        sb.Append(space);
+        sb.Append(TranslationManager.Translation.SearchSubdirectory);
+        sb.Append(space);
+        sb.Append(TranslationManager.Translation.ToggleLooping);
+        sb.Append(space);
+        sb.Append(TranslationManager.Translation.ToggleTaskbarProgress);
+        sb.Append(space);
+        sb.Append(TranslationManager.Translation.AdjustNavSpeed);
+        sb.Append(space);
+        sb.Append("Speed Progress Loop");
+        NavigationSearchTags = new BindableReactiveProperty<string>(sb.ToString());
+        
+        sb.Clear();
+        
+        sb.Append(TranslationManager.Translation.GallerySettings);
+        sb.Append(space);
+        sb.Append(TranslationManager.Translation.ShowBottomGallery);
+        sb.Append(space);
+        sb.Append(TranslationManager.Translation.ShowBottomGalleryWhenUiIsHidden);
+        sb.Append(space);
+        sb.Append(TranslationManager.Translation.ExpandedGalleryItemSize);
+        sb.Append(space);
+        sb.Append(TranslationManager.Translation.BottomGalleryItemSize);
+        sb.Append(space);
+        sb.Append(TranslationManager.Translation.GalleryThumbnailStretch);
+        sb.Append(space);
+        sb.Append("Thumbnail Size Height");
+        GallerySearchTags = new BindableReactiveProperty<string>(sb.ToString());
+        
+        sb.Clear();
 
-        NavigationSearchTags = new BindableReactiveProperty<string[]>(
-        [
-            TranslationManager.Translation.Navigation!,
-            TranslationManager.Translation.SearchSubdirectory!,
-            TranslationManager.Translation.ToggleLooping!,
-            TranslationManager.Translation.ToggleTaskbarProgress!,
-            TranslationManager.Translation.AdjustNavSpeed!,
-            "Speed", "Progress", "Loop"
-        ]);
+        sb.Append(TranslationManager.Translation.Slideshow);
+        sb.Append(space);
+        sb.Append(TranslationManager.Translation.AdjustTimingForSlideshow);
+        sb.Append(space);
+        sb.Append("Timer Speed Presentation");
+        SlideshowSearchTags = new BindableReactiveProperty<string>(sb.ToString());
+        
+        sb.Clear();
 
-        GallerySearchTags = new BindableReactiveProperty<string[]>(
-        [
-            TranslationManager.Translation.GallerySettings!,
-            TranslationManager.Translation.ShowBottomGallery!,
-            TranslationManager.Translation.ShowBottomGalleryWhenUiIsHidden!,
-            TranslationManager.Translation.ExpandedGalleryItemSize!,
-            TranslationManager.Translation.BottomGalleryItemSize!,
-            TranslationManager.Translation.GalleryThumbnailStretch!,
-            "Thumbnail", "Size", "Height"
-        ]);
+        sb.Append(TranslationManager.Translation.WindowScaling);
+        sb.Append(space);
+        sb.Append(TranslationManager.Translation.AutoFitWindow);
+        sb.Append(space);
+        sb.Append(TranslationManager.Translation.WindowMargin);
+        sb.Append(space);
+        sb.Append(TranslationManager.Translation.WindowManagement);
+        sb.Append(space);
+        sb.Append(TranslationManager.Translation.StayTopMost);
+        sb.Append(space);
+        sb.Append(TranslationManager.Translation.StayCentered);
+        sb.Append(space);
+        sb.Append(TranslationManager.Translation.OpenInSameWindow);
+        sb.Append(space);
+        sb.Append(TranslationManager.Translation.ShowConfirmationOnEsc);
+        sb.Append(space);
+        sb.Append("Margin Fit TopMost Center Escape");
+        WindowSearchTags = new BindableReactiveProperty<string>(sb.ToString());
+        
+        sb.Clear();
 
-        SlideshowSearchTags = new BindableReactiveProperty<string[]>(
-        [
-            TranslationManager.Translation.Slideshow!,
-            TranslationManager.Translation.AdjustTimingForSlideshow!,
-            "Timer", "Speed", "Presentation"
-        ]);
+        sb.Append(TranslationManager.Translation.Zoom);
+        sb.Append(space);
+        sb.Append(TranslationManager.Translation.ResetZoomOnChange);
+        sb.Append(space);
+        sb.Append("Reset");
+        ZoomResetSearchTags = new BindableReactiveProperty<string>(sb.ToString());
+        
+        sb.Clear();
+        
+        sb.Append(TranslationManager.Translation.Zoom);
+        sb.Append(space);
+        sb.Append(TranslationManager.Translation.AllowZoomOut);
+        sb.Append(space);
+        sb.Append("Out");
+        ZoomOutSearchTags = new BindableReactiveProperty<string>(sb.ToString());
+        
+        sb.Clear();
+        
+        sb.Append(TranslationManager.Translation.Zoom);
+        sb.Append(space);
+        sb.Append(TranslationManager.Translation.UseAnimatedZoom);
+        sb.Append(space);
+        sb.Append("Animation");
+        ZoomAnimationSearchTags = new BindableReactiveProperty<string>(sb.ToString());
+        
+        sb.Clear();
+        
+        sb.Append(TranslationManager.Translation.Zoom);
+        sb.Append(space);
+        sb.Append(TranslationManager.Translation.ShowZoomPercentagePopup);
+        sb.Append(space);
+        sb.Append("Percentage Popup");
+        ZoomPopupSearchTags = new BindableReactiveProperty<string>(sb.ToString());
+        
+        sb.Clear();
+        
+        sb.Append(TranslationManager.Translation.Zoom);
+        sb.Append(space);
+        sb.Append(TranslationManager.Translation.AdjustTimingForZoom);
+        sb.Append(space);
+        sb.Append("Speed Time");
+        ZoomSpeedSearchTags = new BindableReactiveProperty<string>(sb.ToString());
+        
+        sb.Clear();
 
-        WindowSearchTags = new BindableReactiveProperty<string[]>(
-        [
-            TranslationManager.Translation.WindowScaling!,
-            TranslationManager.Translation.AutoFitWindow!,
-            TranslationManager.Translation.WindowMargin!,
-            TranslationManager.Translation.WindowManagement!,
-            TranslationManager.Translation.StayTopMost!,
-            TranslationManager.Translation.StayCentered!,
-            TranslationManager.Translation.OpenInSameWindow!,
-            TranslationManager.Translation.ShowConfirmationOnEsc!,
-            "Margin", "Fit", "TopMost", "Center", "Escape"
-        ]);
-
-        ZoomSearchTags = new BindableReactiveProperty<string[]>(
-        [
-            TranslationManager.Translation.Zoom!,
-            TranslationManager.Translation.ResetZoomOnChange!,
-            TranslationManager.Translation.AllowZoomOut!,
-            TranslationManager.Translation.UseAnimatedZoom!,
-            TranslationManager.Translation.ShowZoomPercentagePopup!,
-            TranslationManager.Translation.AdjustTimingForZoom!,
-            "Animation", "Speed", "Popup"
-        ]);
-
-        MouseSearchTags = new BindableReactiveProperty<string[]>(
-        [
-            TranslationManager.Translation.DoubleClick!,
-            TranslationManager.Translation.MouseSideButtons!,
-            TranslationManager.Translation.MouseWheel!,
-            TranslationManager.Translation.ScrollDirection!,
-            TranslationManager.Translation.UsingTouchpad!,
-            "Click", "Wheel", "Scroll", "Trackpad", "Touchpad"
-        ]);
-
-        LanguageSearchTags = new BindableReactiveProperty<string[]>(
-        [
-            TranslationManager.Translation.Language!,
-            "Translate", "Locale"
-        ]);
+        sb.Append(TranslationManager.Translation.DoubleClick);
+        sb.Append(space);
+        sb.Append("Click");
+        MouseDoubleClickSearchTags = new BindableReactiveProperty<string>(sb.ToString());
+        
+        sb.Clear();
+        
+        sb.Append(TranslationManager.Translation.MouseSideButtons);
+        sb.Append(space);
+        sb.Append(TranslationManager.Translation.NavigateFileHistory);
+        sb.Append(space);
+        sb.Append(TranslationManager.Translation.NavigateBetweenDirectories);
+        MouseNavigationSearchTags = new BindableReactiveProperty<string>(sb.ToString());
+        
+        sb.Clear();
+        
+        sb.Append(TranslationManager.Translation.MouseWheel);
+        sb.Append(space);
+        sb.Append("Wheel Scroll");
+        MouseWheelBehaviorSearchTags = new BindableReactiveProperty<string>(sb.ToString());
+        
+        sb.Clear();
+        
+        sb.Append(TranslationManager.Translation.ScrollDirection);
+        sb.Append(space);
+        sb.Append("Scroll Direction Reverse");
+        MouseScrollDirectionSearchTags = new BindableReactiveProperty<string>(sb.ToString());
+        
+        sb.Clear();
+        
+        sb.Append(TranslationManager.Translation.UsingTouchpad);
+        sb.Append(space);
+        sb.Append("Trackpad Touchpad");
+        MouseTouchpadSearchTags = new BindableReactiveProperty<string>(sb.ToString());
+        
+        sb.Clear();
+        
+        sb.Append(TranslationManager.Translation.Language);
+        sb.Append(space);
+        sb.Append("Translate Locale");
+        LanguageSearchTags = new BindableReactiveProperty<string>(sb.ToString());
+        
+        sb.Clear();
+        
+        sb.Append(TranslationManager.Translation.ConstrainBackgroundToImage);
+        sb.Append(space);
+        sb.Append("Background Constrain");
+        BackgroundConstrainSearchTags = new BindableReactiveProperty<string>(sb.ToString());
         
         ClearSearchCommand = new ReactiveCommand(_ => SearchQuery.Value = string.Empty).AddTo(_disposables);
 
@@ -360,13 +506,35 @@ public class SettingsViewModel : IDisposable
     public BindableReactiveProperty<string> WhenDeletingFileSearchTags { get; }
     public BindableReactiveProperty<string> ThemeSearchTags { get; }
     public BindableReactiveProperty<string> ColorSearchTags { get; }
-    public BindableReactiveProperty<string[]> NavigationSearchTags { get; }
-    public BindableReactiveProperty<string[]> GallerySearchTags { get; }
-    public BindableReactiveProperty<string[]> SlideshowSearchTags { get; }
-    public BindableReactiveProperty<string[]> WindowSearchTags { get; }
-    public BindableReactiveProperty<string[]> ZoomSearchTags { get; }
-    public BindableReactiveProperty<string[]> MouseSearchTags { get; }
-    public BindableReactiveProperty<string[]> LanguageSearchTags { get; }
+    public BindableReactiveProperty<string> BackgroundSearchTags { get; }
+    public BindableReactiveProperty<string> BackgroundConstrainSearchTags { get; }
+    
+    public BindableReactiveProperty<string> ShowBottomToolbarSearchTags { get; }
+    public BindableReactiveProperty<string> ShowUISearchTags { get; }
+    public BindableReactiveProperty<string> ShowFadeInButtonsSearchTags { get; }
+    public BindableReactiveProperty<string> ShowHoverNavigationBarSearchTags { get; }
+    
+    public BindableReactiveProperty<string> ImageStretchSearchTags { get; }
+    public BindableReactiveProperty<string> ImageScrollingSearchTags { get; }
+    public BindableReactiveProperty<string> ImageSideBySideSearchTags { get; }
+    public BindableReactiveProperty<string> ImageScalingSearchTags { get; }
+    public BindableReactiveProperty<string> NavigationSearchTags { get; }
+    public BindableReactiveProperty<string> GallerySearchTags { get; }
+    public BindableReactiveProperty<string> SlideshowSearchTags { get; }
+    public BindableReactiveProperty<string> WindowSearchTags { get; }
+    
+    public BindableReactiveProperty<string> ZoomResetSearchTags { get; }
+    public BindableReactiveProperty<string> ZoomOutSearchTags { get; }
+    public BindableReactiveProperty<string> ZoomAnimationSearchTags { get; }
+    public BindableReactiveProperty<string> ZoomPopupSearchTags { get; }
+    public BindableReactiveProperty<string> ZoomSpeedSearchTags { get; }
+    
+    public BindableReactiveProperty<string> MouseDoubleClickSearchTags { get; }
+    public BindableReactiveProperty<string> MouseNavigationSearchTags { get; }
+    public BindableReactiveProperty<string> MouseWheelBehaviorSearchTags { get; }
+    public BindableReactiveProperty<string> MouseScrollDirectionSearchTags { get; }
+    public BindableReactiveProperty<string> MouseTouchpadSearchTags { get; }
+    public BindableReactiveProperty<string> LanguageSearchTags { get; }
     
     
 
@@ -430,12 +598,30 @@ public class SettingsViewModel : IDisposable
             SubDirectorySearchTags,
             FileHistorySearchTags,
             WhenDeletingFileSearchTags,
+            BackgroundSearchTags,
+            BackgroundConstrainSearchTags,
+            ShowBottomToolbarSearchTags,
+            ShowUISearchTags,
+            ShowFadeInButtonsSearchTags,
+            ShowHoverNavigationBarSearchTags,
+            ImageStretchSearchTags,
+            ImageScrollingSearchTags,
+            ImageSideBySideSearchTags,
+            ImageScalingSearchTags,
             NavigationSearchTags,
             GallerySearchTags,
             SlideshowSearchTags,
             WindowSearchTags,
-            ZoomSearchTags,
-            MouseSearchTags,
+            ZoomResetSearchTags,
+            ZoomOutSearchTags,
+            ZoomAnimationSearchTags,
+            ZoomPopupSearchTags,
+            ZoomSpeedSearchTags,
+            MouseDoubleClickSearchTags,
+            MouseNavigationSearchTags,
+            MouseWheelBehaviorSearchTags,
+            MouseScrollDirectionSearchTags,
+            MouseTouchpadSearchTags,
             LanguageSearchTags
             );
     }

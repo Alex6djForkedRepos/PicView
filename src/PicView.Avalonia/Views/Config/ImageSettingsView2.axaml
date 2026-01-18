@@ -14,60 +14,67 @@
             Text="{CompiledBinding Translation.Image.Value,
                                    Mode=OneWay}" />
 
-        <ToggleButton
-            Background="Transparent"
-            BorderThickness="0"
-            Classes="altHover changeColor"
-            IsChecked="{CompiledBinding GlobalSettings.IsStretched.Value}"
-            Margin="0,0,0,10"
-            ToolTip.Tip="{CompiledBinding Translation.Stretch.Value,
-                                          Mode=OneWay}"
-            Width="300">
-            <TextBlock
-                Classes="txt"
-                Margin="0"
-                MaxWidth="240"
-                Padding="0,1,5,0"
-                Text="{CompiledBinding Translation.Stretch.Value,
-                                       Mode=OneWay}" />
-        </ToggleButton>
+        <Border Classes="searchBorder" ui:SearchProperties.Keywords="{CompiledBinding SettingsViewModel.ImageStretchSearchTags.Value}">
+            <ToggleButton
+                Background="Transparent"
+                BorderThickness="0"
+                Classes="altHover changeColor"
+                IsChecked="{CompiledBinding GlobalSettings.IsStretched.Value}"
+                Margin="0,0,0,10"
+                ToolTip.Tip="{CompiledBinding Translation.Stretch.Value,
+                                              Mode=OneWay}"
+                Width="300">
+                <TextBlock
+                    Classes="txt"
+                    Margin="0"
+                    MaxWidth="240"
+                    Padding="0,1,5,0"
+                    Text="{CompiledBinding Translation.Stretch.Value,
+                                           Mode=OneWay}" />
+            </ToggleButton>
+        </Border>
 
-        <ToggleButton
-            Background="Transparent"
-            BorderThickness="0"
-            Classes="altHover changeColor"
-            Command="{CompiledBinding MainWindows.ActiveWindow.Value.ToggleScrollCommand}"
-            IsChecked="{CompiledBinding GlobalSettings.IsScrollingEnabled.Value}"
-            Margin="0,0,0,10"
-            Width="300">
-            <TextBlock
-                Classes="txt"
-                Margin="0"
-                MaxWidth="240"
-                Padding="0,1,5,0"
-                Text="{CompiledBinding Translation.IsScrolling.Value,
-                                       Mode=OneWay}" />
-        </ToggleButton>
+        <Border Classes="searchBorder" ui:SearchProperties.Keywords="{CompiledBinding SettingsViewModel.ImageScrollingSearchTags.Value}">
+            <ToggleButton
+                Background="Transparent"
+                BorderThickness="0"
+                Classes="altHover changeColor"
+                Command="{CompiledBinding MainWindows.ActiveWindow.Value.ToggleScrollCommand}"
+                IsChecked="{CompiledBinding GlobalSettings.IsScrollingEnabled.Value}"
+                Margin="0,0,0,10"
+                Width="300">
+                <TextBlock
+                    Classes="txt"
+                    Margin="0"
+                    MaxWidth="240"
+                    Padding="0,1,5,0"
+                    Text="{CompiledBinding Translation.IsScrolling.Value,
+                                           Mode=OneWay}" />
+            </ToggleButton>
+        </Border>
 
+        <Border Classes="searchBorder" ui:SearchProperties.Keywords="{CompiledBinding SettingsViewModel.ImageSideBySideSearchTags.Value}">
+            <ToggleButton
+                Background="Transparent"
+                BorderThickness="0"
+                Classes="altHover changeColor"
+                Command="{CompiledBinding MainWindows.ActiveWindow.Value.SideBySideCommand}"
+                Margin="0,0,0,10"
+                Width="300">
+                <TextBlock
+                    Classes="txt"
+                    Foreground="{StaticResource SecondaryTextColor}"
+                    Margin="0"
+                    MaxWidth="240"
+                    Padding="0,1,5,0"
+                    Text="{CompiledBinding Translation.SideBySide.Value,
+                                           Mode=OneWay}" />
+            </ToggleButton>
+        </Border>
 
-        <ToggleButton
-            Background="Transparent"
-            BorderThickness="0"
-            Classes="altHover changeColor"
-            Command="{CompiledBinding MainWindows.ActiveWindow.Value.SideBySideCommand}"
-            Margin="0,0,0,10"
-            Width="300">
-            <TextBlock
-                Classes="txt"
-                Foreground="{StaticResource SecondaryTextColor}"
-                Margin="0"
-                MaxWidth="240"
-                Padding="0,1,5,0"
-                Text="{CompiledBinding Translation.SideBySide.Value,
-                                       Mode=OneWay}" />
-        </ToggleButton>
-
-        <TextBlock
+        <Border Classes="searchBorder" ui:SearchProperties.Keywords="{CompiledBinding SettingsViewModel.ImageScalingSearchTags.Value}">
+            <StackPanel>
+                <TextBlock
             Classes="txt bold"
             Margin="0,20,0,20"
             Text="{CompiledBinding Translation.ImageAliasing.Value,
@@ -84,9 +91,11 @@
                                             Mode=TwoWay}"
             Width="300"
             x:Name="ImageAliasingBox">
-            <ComboBoxItem Content="{CompiledBinding Translation.HighQuality.Value, Mode=OneWay}" Foreground="{DynamicResource MainTextColor}" />
-            <ComboBoxItem Content="{CompiledBinding Translation.None.Value, Mode=OneWay}" Foreground="{DynamicResource MainTextColor}" />
-        </ComboBox>
+                    <ComboBoxItem Content="{CompiledBinding Translation.HighQuality.Value, Mode=OneWay}" Foreground="{DynamicResource MainTextColor}" />
+                    <ComboBoxItem Content="{CompiledBinding Translation.None.Value, Mode=OneWay}" Foreground="{DynamicResource MainTextColor}" />
+                </ComboBox>
+            </StackPanel>
+        </Border>
 
     </StackPanel>
 </UserControl>
