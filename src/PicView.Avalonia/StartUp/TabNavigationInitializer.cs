@@ -1,4 +1,3 @@
-using PicView.Avalonia.ImageHandling;
 using PicView.Avalonia.Navigation.Services;
 using PicView.Core.FileHandling;
 using PicView.Core.Navigation;
@@ -8,7 +7,7 @@ namespace PicView.Avalonia.StartUp;
 
 public static class TabNavigationInitializer
 {
-    public static void Initialize(CoreViewModel vm)
+    public static void Initialize(CoreViewModel core)
     {
         // --- Initialization Logic ---
         // This is the initialization logic for the navigation system.
@@ -21,23 +20,23 @@ public static class TabNavigationInitializer
 
         // 2. Create SharedImageCache
         // We use the same loading logic as AvaloniaImageLoader (via GetImageModel)
-        var sharedCache = new SharedImageCache(GetImageModel.GetImageModelAsync);
+        var sharedCache = core.SharedCache;
         
-        var fileWatcher = new FileWatcherService(vm.PlatformService.CompareStrings, sharedCache);
+        var fileWatcher = new FileWatcherService(core.PlatformService.CompareStrings, sharedCache);
 
         // 3. Create NavigationService (Core)
         var tempFileService = new TempFileService();
-        var navService = new NavigationService(imageLoader, archiveService, sharedCache, fileWatcher, vm.PlatformService, tempFileService, vm.PlatformService.CompareStrings);
+        var navService = new NavigationService(imageLoader, archiveService, sharedCache, fileWatcher, core.PlatformService, tempFileService, core.PlatformService.CompareStrings);
 
         var thumbnailService = new AvaloniaThumbnailLoader();
 
         // 4. Initialize ViewModel
-        vm.MainWindows.ActiveWindow.Value.WindowTabs.LoadAndInitialize(galleryService, navService, sharedCache, thumbnailService, fileWatcher);
-        vm.MainWindows.ActiveWindow.Value.WindowTabs.SetParentContext(vm);
-        vm.MainWindows.ActiveWindow.Value.WindowTabs.ActiveTab.Value.UpdateTabTitle();
+        core.MainWindows.ActiveWindow.Value.WindowTabs.LoadAndInitialize(galleryService, navService, sharedCache, thumbnailService, fileWatcher);
+        core.MainWindows.ActiveWindow.Value.WindowTabs.SetParentContext(core);
+        core.MainWindows.ActiveWindow.Value.WindowTabs.ActiveTab.Value.UpdateTabTitle();
     }
     
-    public static void Initialize(CoreViewModel vm, FileInfo fileInfo)
+    public static void Initialize(CoreViewModel core, FileInfo fileInfo)
     {
         // --- Initialization Logic ---
         // This is the initialization logic for the navigation system.
@@ -50,21 +49,21 @@ public static class TabNavigationInitializer
 
         // 2. Create SharedImageCache
         // We use the same loading logic as AvaloniaImageLoader (via GetImageModel)
-        var sharedCache = new SharedImageCache(GetImageModel.GetImageModelAsync);
+        var sharedCache = core.SharedCache;
         
-        var fileWatcher = new FileWatcherService(vm.PlatformService.CompareStrings, sharedCache);
+        var fileWatcher = new FileWatcherService(core.PlatformService.CompareStrings, sharedCache);
 
         // 3. Create NavigationService (Core)
         var tempFileService = new TempFileService();
-        var navService = new NavigationService(imageLoader, archiveService, sharedCache, fileWatcher, vm.PlatformService, tempFileService, vm.PlatformService.CompareStrings);
+        var navService = new NavigationService(imageLoader, archiveService, sharedCache, fileWatcher, core.PlatformService, tempFileService, core.PlatformService.CompareStrings);
 
         var thumbnailService = new AvaloniaThumbnailLoader();
 
-        var files = vm.PlatformService.GetFiles(fileInfo);
+        var files = core.PlatformService.GetFiles(fileInfo);
         // 4. Initialize ViewModel
-        vm.MainWindows.ActiveWindow.Value.WindowTabs.LoadAndInitializeFromPath(files, galleryService, navService, sharedCache, thumbnailService, fileWatcher);
-        vm.MainWindows.ActiveWindow.Value.WindowTabs.SetParentContext(vm);
-        vm.MainWindows.ActiveWindow.Value.WindowTabs.ActiveTab.Value.UpdateTabTitle();
+        core.MainWindows.ActiveWindow.Value.WindowTabs.LoadAndInitializeFromPath(files, galleryService, navService, sharedCache, thumbnailService, fileWatcher);
+        core.MainWindows.ActiveWindow.Value.WindowTabs.SetParentContext(core);
+        core.MainWindows.ActiveWindow.Value.WindowTabs.ActiveTab.Value.UpdateTabTitle();
     }
     
     public static void InitializeDetachedWindow(MainWindowViewModel parentVm, MainWindowViewModel newVm, TabViewModel tab)
