@@ -69,7 +69,7 @@
                     </FlyoutBase.AttachedFlyout>
                 </MenuItem>
                 <Separator />
-                <MenuItem Header="{CompiledBinding $parent[Window].((viewModels:MainWindowViewModel)DataContext).Translation.HideBottomGallery.Value, Mode=OneWay}" IsVisible="{CompiledBinding !$parent[Window].((viewModels:MainWindowViewModel)DataContext).Gallery.IsGalleryExpanded.Value}">
+                <MenuItem Header="{CompiledBinding $parent[Window].((viewModels:MainWindowViewModel)DataContext).Translation.HideBottomGallery.Value, Mode=OneWay}" IsVisible="{CompiledBinding !Gallery.IsGalleryExpanded.Value}">
                     <MenuItem.Icon>
                         <Path
                             Data="{StaticResource CloseGeometry}"
@@ -79,7 +79,7 @@
                             Width="12" />
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="{CompiledBinding $parent[Window].((viewModels:MainWindowViewModel)DataContext).Translation.CloseGallery.Value, Mode=OneWay}" IsVisible="{CompiledBinding $parent[Window].((viewModels:MainWindowViewModel)DataContext).Gallery.IsGalleryExpanded.Value}">
+                <MenuItem Header="{CompiledBinding $parent[Window].((viewModels:MainWindowViewModel)DataContext).Translation.CloseGallery.Value, Mode=OneWay}" IsVisible="{CompiledBinding Gallery.IsGalleryExpanded.Value}">
                     <MenuItem.Icon>
                         <Path
                             Data="{StaticResource CloseGeometry}"
@@ -99,7 +99,7 @@
             DockPanel.Dock="Right"
             Height="60"
             HorizontalAlignment="Right"
-            IsVisible="{CompiledBinding $parent[Window].((viewModels:MainWindowViewModel)DataContext).Gallery.IsGalleryExpanded.Value}"
+            IsVisible="{CompiledBinding Gallery.IsGalleryExpanded.Value}"
             VerticalAlignment="Top"
             Width="50"
             ZIndex="99">
@@ -122,20 +122,20 @@
             ScrollViewer.HorizontalScrollBarVisibility="Visible"
             ScrollViewer.IsScrollInertiaEnabled="True"
             ScrollViewer.VerticalScrollBarVisibility="Disabled"
-            VerticalAlignment="{CompiledBinding $parent[Window].((viewModels:MainWindowViewModel)DataContext).Gallery.GalleryVerticalAlignment.Value}"
+            VerticalAlignment="{CompiledBinding Gallery.GalleryVerticalAlignment.Value}"
             x:Name="GalleryListBox">
             <ListBox.ItemsPanel>
                 <ItemsPanelTemplate>
                     <WrapPanel
                         HorizontalAlignment="Left"
-                        Orientation="{CompiledBinding $parent[Window].((viewModels:MainWindowViewModel)DataContext).Gallery.GalleryOrientation.Value,
+                        Orientation="{CompiledBinding Gallery.GalleryOrientation.Value,
                                                       Mode=OneWay}"
                         VerticalAlignment="Center" />
                 </ItemsPanelTemplate>
             </ListBox.ItemsPanel>
             <ListBox.Styles>
                 <Style Selector="ListBoxItem">
-                    <Setter Property="Margin" Value="{CompiledBinding $parent[Window].((viewModels:MainWindowViewModel)DataContext).Gallery.GalleryItem.ItemMargin.Value}" />
+                    <Setter Property="Margin" Value="{CompiledBinding Gallery.GalleryItem.ItemMargin.Value}" />
                     <Setter Property="BorderThickness" Value="3" />
                 </Style>
             </ListBox.Styles>

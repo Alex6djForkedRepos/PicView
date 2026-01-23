@@ -8,7 +8,6 @@
     xmlns:buttons="clr-namespace:PicView.Avalonia.Views.UC.Buttons"
     xmlns:converters="clr-namespace:PicView.Avalonia.Converters"
     xmlns:customControls="clr-namespace:PicView.Avalonia.CustomControls"
-    xmlns:gallery="clr-namespace:PicView.Avalonia.Views.Gallery"
     xmlns:uc="clr-namespace:PicView.Avalonia.Views.UC"
     xmlns:viewModels="clr-namespace:PicView.Core.ViewModels;assembly=PicView.Core"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
@@ -328,7 +327,7 @@
                 </MenuItem>
 
                 <!--  Toggle bottom gallery  -->
-                <MenuItem Header="{CompiledBinding Translation.IsShowingBottomGallery.Value, Mode=OneWay}" IsChecked="{CompiledBinding Gallery.IsBottomGalleryShown.Value}">
+                <MenuItem Header="{CompiledBinding Translation.IsShowingBottomGallery.Value, Mode=OneWay}" IsChecked="{CompiledBinding WindowTabs.ActiveTab.Value.Gallery.IsDockedGalleryVisible.Value}">
                     <MenuItem.Icon>
                         <Image
                             Height="12"

@@ -9,7 +9,12 @@
     xmlns:viewModels1="clr-namespace:PicView.Core.ViewModels;assembly=PicView.Core"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <DockPanel LastChildFill="True">
-        <gallery:GalleryView2 x:Name="GalleryView" />
+        <gallery:GalleryView2
+            DockPanel.Dock="{CompiledBinding Gallery.GalleryDockPosition.Value,
+                                             FallbackValue=Bottom}"
+            IsVisible="{CompiledBinding Gallery.IsDockedGalleryVisible.Value,
+                                        FallbackValue=Bottom}"
+            x:Name="GalleryView" />
         <Panel x:Name="MainPanel">
             <customControls:ZoomPanControl2 x:Name="ZoomPanControl">
                 <customControls:AutoScrollViewer

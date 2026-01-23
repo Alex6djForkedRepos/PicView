@@ -12,7 +12,6 @@ public class MainWindowViewModel : IDisposable
     public TranslationViewModel Translation { get;  } 
     public TopTitlebarViewModel TopTitlebarViewModel { get; }  = new();
     public TabOverviewViewModel WindowTabs { get; } = new();
-    public GalleryViewModel Gallery  { get; } = new();
     
     public bool IsNavigationButtonLeftClicked { get; set; }
     public bool IsNavigationButtonRightClicked { get; set; }

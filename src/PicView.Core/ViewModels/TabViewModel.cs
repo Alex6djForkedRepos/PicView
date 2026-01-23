@@ -24,6 +24,8 @@ public class TabViewModel(string id, Func<string, ValueTask> closeTab, IFileWatc
     private CompositeDisposable? Disposables { get; set; }
 
     public HoverbarViewModel Hoverbar { get; } = new();
+    
+    public GalleryViewModel Gallery  { get; } = new();
 
     /// Unique identifier for this tab.
     public string Id { get; } = id;
