@@ -235,7 +235,7 @@ public partial class MacMainWindow2 : Window, IPlatformWindowService
 
     protected override async void OnClosing(WindowClosingEventArgs e)
     {
-        await WindowFunctions.WindowClosingBehavior(this);
+        await WindowFunctions2.WindowClosingBehavior(this);
         base.OnClosing(e);
     }
 
@@ -259,8 +259,14 @@ public partial class MacMainWindow2 : Window, IPlatformWindowService
     public async Task ShowKeybindingsWindow() =>
         _windowInitializer?.ShowKeybindingsWindow(null);
 
-    public async ValueTask ShowSettingsWindow() =>
-        await _windowInitializer?.ShowSettingsWindow(null);
+    public async ValueTask ShowSettingsWindow()
+    {
+        if (_windowInitializer is null)
+        {
+            return;
+        }
+        await _windowInitializer.ShowSettingsWindow();
+    }
 
     public void ShowSingleImageResizeWindow() =>
         _windowInitializer?.ShowSingleImageResizeWindow(null);

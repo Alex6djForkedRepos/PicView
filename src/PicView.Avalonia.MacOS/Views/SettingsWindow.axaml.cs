@@ -1,3 +1,4 @@
+using System;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
@@ -5,13 +6,13 @@ using Avalonia.Media;
 using Avalonia.Threading;
 using PicView.Avalonia.Input;
 using PicView.Avalonia.UI;
-using PicView.Avalonia.ViewModels;
 using PicView.Avalonia.WindowBehavior;
 using PicView.Core.Config;
 using PicView.Core.FileAssociations;
 using PicView.Core.Localization;
 using PicView.Core.MacOS.FileAssociation;
 using PicView.Core.Sizing;
+using PicView.Core.ViewModels;
 using R3;
 
 namespace PicView.Avalonia.MacOS.Views;
@@ -19,37 +20,34 @@ namespace PicView.Avalonia.MacOS.Views;
 public partial class SettingsWindow : Window
 {
     private readonly SettingsWindowConfig _config;
+    private readonly IDisposable? _disposable;
     
     public SettingsWindow(SettingsWindowConfig config)
     {
         _config = config;
         InitializeComponent();
-        Task.Run(async () =>
+
+        if (_config.WindowProperties.Maximized)
         {
-            await _config.LoadAsync();
-            await Dispatcher.UIThread.InvokeAsync(() =>
+            WindowState = WindowState.Maximized;
+        }
+        else
+        {
+            var left = _config.WindowProperties.Left;
+            var top = _config.WindowProperties.Top;
+            if (left.HasValue && top.HasValue)
             {
-                if (_config.WindowProperties.Maximized)
-                {
-                    WindowState = WindowState.Maximized;
-                }
-                else
-                {
-                    var left = _config.WindowProperties.Left;
-                    var top = _config.WindowProperties.Top;
-                    if (left.HasValue && top.HasValue)
-                    {
-                        Position = new PixelPoint(left.Value, top.Value);
-                    }
-                }
-            });
-        });
-        MinHeight = ScreenHelper.ScreenSize.WorkingAreaHeight switch
-        {
-            < 650 => 600,
-            >= 650 => 700,
-            _ => SizeDefaults.WindowMinSize
-        };
+                Position = new PixelPoint(left.Value, top.Value);
+            }
+
+            var width = _config.WindowProperties.Width;
+            var height = _config.WindowProperties.Height;
+            if (width.HasValue && height.HasValue)
+            {
+                Width = width.Value;
+                Height = height.Value;
+            }
+        }
         if (!Settings.Theme.Dark || Settings.Theme.GlassTheme)
         {
             TitleText.Background = Brushes.Transparent;
@@ -58,44 +56,49 @@ public partial class SettingsWindow : Window
         }
         Loaded += delegate
         {
-            MinWidth = MaxWidth = Bounds.Width;
-            Height = 500;
-            Title = TranslationManager.Translation.Settings + " - PicView";
-
-            if (DataContext is not MainViewModel vm)
+            if (DataContext is not CoreViewModel core)
             {
                 return;
             }
-
-            PositionChanged += (_, _) => UpdateWindowPosition();
+            core.SettingsViewModel.RestoreLastTab(_config.WindowProperties.LastTab);
             
-            GoForwardButton.Command = vm.SettingsViewModel.GoForwardCommand;
-            GoBackButton.Command = vm.SettingsViewModel.GoBackCommand;
+            Title = TranslationManager.GetTranslation("Settings") + " - PicView";
+            SettingsView.Focus();
+
+            GoForwardButton.Command = core.SettingsViewModel?.GoForwardCommand;
+            GoBackButton.Command = core.SettingsViewModel?.GoBackCommand;
+            HomeButton.Command = core.SettingsViewModel?.GoHomeCommand;
         };
         KeyDown += (_, e) =>
         {
-            if (e.Key is Key.Escape)
+            var ctrl = e.KeyModifiers.HasFlag(KeyModifiers.Control) || e.KeyModifiers.HasFlag(KeyModifiers.Meta);
+            switch (e.Key)
             {
-                e.Handled = true;
-                MainKeyboardShortcuts.IsEscKeyEnabled = false;
-                Close();
+                case Key.Escape:
+                    MainKeyboardShortcuts.IsEscKeyEnabled = false;
+                    Close();
+                    break;
+                case Key.F when ctrl:
+                    break;
             }
         };
-        
+
         Closing += async delegate
         {
             Hide();
-            if (VisualRoot is null)
+            if (DataContext is CoreViewModel vm)
             {
-                return;
+                _config.WindowProperties.LastTab = vm.SettingsViewModel.GetLastTabId();
             }
-
-            var hostWindow = (Window)VisualRoot;
-            hostWindow?.Focus();
             await _config.SaveAsync();
             await SaveSettingsAsync();
+            _disposable?.Dispose();
         };
-        
+
+        _disposable = ClientSizeProperty.Changed.ToObservable()
+            .ObserveOn(UIHelper2.GetFrameProvider)
+            .Subscribe(UpdateWindowSizeAndPosition);
+
         InitializeFileAssociationManager();
     }
 
@@ -104,10 +107,13 @@ public partial class SettingsWindow : Window
         BeginMoveDrag(e);
     }
     
-    private void UpdateWindowPosition()
+    private void UpdateWindowSizeAndPosition(AvaloniaPropertyChangedEventArgs<Size> size)
     {
         _config.WindowProperties.Left = Position.X;
         _config.WindowProperties.Top = Position.Y;
+
+        _config.WindowProperties.Width = Bounds.Width;
+        _config.WindowProperties.Height = Bounds.Height;
     }
     
     private static void InitializeFileAssociationManager()

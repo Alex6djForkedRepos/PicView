@@ -214,6 +214,8 @@ public static class StartUpHelper2
                 .Value = !Settings.UIProperties.ShowBottomNavBar;
         }
         
+        desktop.MainWindow = window;
+        
  //       TooltipHelper.StartTooltipSubscription(vm);
         
         if (!RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
