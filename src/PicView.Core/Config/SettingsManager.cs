@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using System.Runtime.InteropServices;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -228,6 +228,25 @@ public static class SettingsManager
     {
         existingSettings.UIProperties ??= GetDefaultUIProperties();
         existingSettings.Gallery ??= new Gallery();
+
+        if (existingSettings.Version < 2.0)
+        {
+            if (existingSettings.Gallery.ExtensionData?.TryGetValue("IsBottomGalleryShown", out var value) == true)
+            {
+                if (value is JsonElement element && element.ValueKind == JsonValueKind.True)
+                {
+                    existingSettings.Gallery.IsGalleryDocked = true;
+                }
+                else if (value is bool b && b)
+                {
+                    existingSettings.Gallery.IsGalleryDocked = true;
+                }
+                existingSettings.Gallery.ExtensionData.Remove("IsBottomGalleryShown");
+            }
+
+            existingSettings.Gallery.DockPosition = GalleryDockPosition.Bottom;
+        }
+
         existingSettings.Theme ??= new Theme();
         existingSettings.Sorting ??= new Sorting();
         existingSettings.ImageScaling ??= new ImageScaling();

@@ -1,4 +1,4 @@
-﻿<UserControl
+<UserControl
     Background="Transparent"
     Height="210"
     IsEnabled="{CompiledBinding !Gallery.IsBottomGalleryShown.Value}"

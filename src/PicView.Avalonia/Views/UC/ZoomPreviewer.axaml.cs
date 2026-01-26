@@ -1,4 +1,4 @@
-﻿using Avalonia;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
@@ -198,7 +198,7 @@ public partial class ZoomPreviewer : UserControl
                 // TODO: refactor
                 if (UIHelper.GetMainView.Bounds.Width > vm.HoverbarViewModel.MaxWidth + 300)
                 {
-                    var newBottomMargin = Settings.Gallery.IsBottomGalleryShown
+                    var newBottomMargin = Settings.Gallery.IsGalleryDocked
                         ? GalleryFunctions.GetGalleryHeight(vm) + UIHelper.GetHoverBar.BottomBorder.Bounds.Height + 5
                         : 25;
                     Margin = new Thickness(0, 0, 25,
@@ -206,7 +206,7 @@ public partial class ZoomPreviewer : UserControl
                 }
                 else
                 {
-                    var newBottomMargin = Settings.Gallery.IsBottomGalleryShown
+                    var newBottomMargin = Settings.Gallery.IsGalleryDocked
                         ? GalleryFunctions.GetGalleryHeight(vm) + UIHelper.GetHoverBar.BottomBorder.Bounds.Height + 10
                         : 115;
                     Margin = new Thickness(0, 0, 70,
@@ -214,7 +214,7 @@ public partial class ZoomPreviewer : UserControl
                 }
                 
             }
-            else if (Settings.Gallery.IsBottomGalleryShown)
+            else if (Settings.Gallery.IsGalleryDocked)
             {
                 Margin = new Thickness(0, 0, 25, vm.Gallery.GalleryMargin.CurrentValue.Bottom + 7);
             }

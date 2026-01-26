@@ -1,4 +1,4 @@
-﻿using Avalonia.Controls;
+using Avalonia.Controls;
 using Avalonia.Media;
 using PicView.Avalonia.Gallery;
 using PicView.Avalonia.ViewModels;
@@ -71,7 +71,7 @@ public partial class GalleryView : UserControl
             BottomGallerySlider.ValueChanged += (_, e) =>
             {
                 Settings.Gallery.BottomGalleryItemSize = e.NewValue;
-                if (!Settings.Gallery.IsBottomGalleryShown || GalleryFunctions.IsFullGalleryOpen)
+                if (!Settings.Gallery.IsGalleryDocked || GalleryFunctions.IsFullGalleryOpen)
                 {
                     return;
                 }

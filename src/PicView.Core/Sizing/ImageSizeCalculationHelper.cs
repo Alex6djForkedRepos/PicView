@@ -1,4 +1,4 @@
-﻿namespace PicView.Core.Sizing;
+namespace PicView.Core.Sizing;
 
 public static class ImageSizeCalculationHelper
 {
@@ -51,7 +51,7 @@ public static class ImageSizeCalculationHelper
         var scrollEnabled = Settings.Zoom.ScrollEnabled;
         var stretchImage = Settings.ImageScaling.StretchImage;
         var autoFit = Settings.WindowProperties.AutoFit;
-        var showBottomGallery = Settings.Gallery.IsBottomGalleryShown;
+        var showBottomGallery = Settings.Gallery.IsGalleryDocked;
         var showInterface = Settings.UIProperties.ShowInterface;
         var showGalleryInHiddenUI = Settings.Gallery.ShowBottomGalleryInHiddenUI;
 

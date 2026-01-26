@@ -1,4 +1,4 @@
-﻿using Avalonia.Media.Imaging;
+using Avalonia.Media.Imaging;
 using Avalonia.Svg.Skia;
 using Avalonia.Threading;
 using PicView.Avalonia.CustomControls;
@@ -79,7 +79,7 @@ public static class GalleryLoad
     {
         await Dispatcher.UIThread.InvokeAsync(() => UIHelper.GetGalleryView.IsVisible = true);
 
-        if (Settings.Gallery.IsBottomGalleryShown && !GalleryFunctions.IsFullGalleryOpen)
+        if (Settings.Gallery.IsGalleryDocked && !GalleryFunctions.IsFullGalleryOpen)
         {
             vm.Gallery.GalleryItem.ItemHeight.Value = vm.Gallery.GalleryItem.BottomGalleryItemHeight.CurrentValue;
         }
@@ -259,7 +259,7 @@ public static class GalleryLoad
     /// <returns>A task representing the asynchronous operation.</returns>
     public static async ValueTask CheckAndReloadGallery(FileInfo fileInfo, MainViewModel vm)
     {
-        if (Settings.Gallery.IsBottomGalleryShown || GalleryFunctions.IsFullGalleryOpen)
+        if (Settings.Gallery.IsGalleryDocked || GalleryFunctions.IsFullGalleryOpen)
         {
             // Check if the bottom gallery should be shown
             if (!GalleryFunctions.IsFullGalleryOpen &&

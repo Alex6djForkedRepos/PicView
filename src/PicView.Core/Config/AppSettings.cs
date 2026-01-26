@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 ﻿namespace PicView.Core.Config;
 
 public class AppSettings
@@ -234,18 +236,23 @@ public class Theme
 
 public class Gallery
 {
-    /// <summary>
-    /// A property indicating whether the bottom gallery is currently visible in the application.
-    /// </summary>
-    public bool IsBottomGalleryShown { get; set; } = false;
+    [JsonExtensionData]
+    public Dictionary<string, object>? ExtensionData { get; set; }
 
     /// <summary>
-    /// Determines whether the bottom gallery is shown when the user interface is hidden.
+    /// A property indicating whether the docked gallery is currently visible in the application.
+    /// </summary>
+    public bool IsGalleryDocked { get; set; } = false;
+
+    public GalleryDockPosition DockPosition { get; set; } = GalleryDockPosition.Bottom;
+
+    /// <summary>
+    /// Determines whether the docked gallery is shown when the user interface is hidden.
     /// </summary>
     public bool ShowBottomGalleryInHiddenUI { get; set; } = false;
 
     /// <summary>
-    /// Specifies the height of the gallery items displayed at the bottom section of the gallery view.
+    /// Specifies the height/width of the gallery items displayed at the docked section of the gallery view.
     /// </summary>
     public double BottomGalleryItemSize { get; set; } = 37;
 

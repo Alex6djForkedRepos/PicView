@@ -1,4 +1,4 @@
-﻿using Avalonia;
+using Avalonia;
 using Avalonia.Layout;
 using Avalonia.Media;
 using PicView.Avalonia.Functions;
@@ -23,7 +23,7 @@ public class GalleryViewModel : IDisposable
 
     public BindableReactiveProperty<bool> IsGalleryExpanded { get; } = new();
     
-    public BindableReactiveProperty<bool> IsBottomGalleryShown { get; } = new(Settings.Gallery.IsBottomGalleryShown);
+    public BindableReactiveProperty<bool> IsBottomGalleryShown { get; } = new();
     public BindableReactiveProperty<bool> IsBottomGalleryShownInHiddenUI { get; } =
         new(Settings.Gallery.ShowBottomGalleryInHiddenUI);
     
@@ -126,7 +126,7 @@ public class GalleryViewModel : IDisposable
         }
         vm.Gallery.GalleryItem.BottomGalleryItemHeight.Value = newValue;
         Settings.Gallery.BottomGalleryItemSize = newValue;
-        if (Settings.Gallery.IsBottomGalleryShown)
+        if (Settings.Gallery.IsGalleryDocked)
         {
             vm.Gallery.GalleryItem.ItemHeight.Value = Settings.Gallery.BottomGalleryItemSize;
         }

@@ -1,4 +1,4 @@
-﻿using PicView.Avalonia.Gallery;
+using PicView.Avalonia.Gallery;
 using PicView.Avalonia.Input;
 using PicView.Avalonia.UI;
 using PicView.Avalonia.ViewModels;
@@ -56,7 +56,7 @@ public static class Slideshow
             }
         }
 
-        if (Settings.Gallery.IsBottomGalleryShown)
+        if (Settings.Gallery.IsGalleryDocked)
         {
             vm.Gallery.GalleryMode.Value = GalleryMode.ClosedToBottom;
         }
@@ -116,7 +116,7 @@ public static class Slideshow
             Settings.WindowProperties.Fullscreen = false;
         }
 
-        if (GalleryFunctions.IsFullGalleryOpen || Settings.Gallery.IsBottomGalleryShown)
+        if (GalleryFunctions.IsFullGalleryOpen || Settings.Gallery.IsGalleryDocked)
         {
             vm.Gallery.GalleryMode.Value = GalleryMode.BottomToClosed;
         }

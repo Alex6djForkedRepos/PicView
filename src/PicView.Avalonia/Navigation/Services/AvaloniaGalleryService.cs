@@ -56,7 +56,7 @@ public class AvaloniaGalleryService : IGalleryService
                 return GalleryState.Fullscreen;
             }
 
-            if (Settings.Gallery.IsBottomGalleryShown)
+            if (Settings.Gallery.IsGalleryDocked)
             {
                 return GalleryState.Docked;
             }

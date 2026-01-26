@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using ImageMagick;
@@ -247,12 +247,12 @@ public class ImageIterator : IAsyncDisposable
             return;
         }
 
-        if (Settings.Gallery.IsBottomGalleryShown || GalleryFunctions.IsFullGalleryOpen)
+        if (Settings.Gallery.IsGalleryDocked || GalleryFunctions.IsFullGalleryOpen)
         {
             var isGalleryItemAdded = await GalleryFunctions.AddGalleryItem(index, fileInfo, _vm);
             if (isGalleryItemAdded)
             {
-                if (Settings.Gallery.IsBottomGalleryShown && ImagePaths.Count > 1)
+                if (Settings.Gallery.IsGalleryDocked && ImagePaths.Count > 1)
                 {
                     if (_vm.Gallery.GalleryMode.CurrentValue is GalleryMode.BottomToClosed or GalleryMode.FullToClosed)
                     {
@@ -311,7 +311,7 @@ public class ImageIterator : IAsyncDisposable
             var removed = GalleryFunctions.RemoveGalleryItem(index, _vm);
             if (removed)
             {
-                if (Settings.Gallery.IsBottomGalleryShown)
+                if (Settings.Gallery.IsGalleryDocked)
                 {
                     if (ImagePaths.Count == 1)
                     {
@@ -929,7 +929,7 @@ public class ImageIterator : IAsyncDisposable
             TitleManager.SetLoadingTitle(_vm);
 
             _vm.PicViewer.Index.Value = index;
-            if (Settings.Gallery.IsBottomGalleryShown)
+            if (Settings.Gallery.IsGalleryDocked)
             {
                 GalleryNavigation.CenterScrollToSelectedItem(_vm);
             }

@@ -1,4 +1,4 @@
-﻿using Avalonia;
+using Avalonia;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using PicView.Avalonia.Functions;
@@ -38,13 +38,13 @@ public static class CropFunctions
             return;
         }
 
-        var isBottomGalleryShown = Settings.Gallery.IsBottomGalleryShown;
+        var isBottomGalleryShown = Settings.Gallery.IsGalleryDocked;
         // Hide bottom gallery when entering crop mode
         if (isBottomGalleryShown)
         {
             vm.Gallery.GalleryMode.Value = GalleryMode.Closed;
             // Reset setting before resizing
-            Settings.Gallery.IsBottomGalleryShown = false;
+            Settings.Gallery.IsGalleryDocked = false;
             await WindowResizing.SetSizeAsync(vm);
         }
 
@@ -74,13 +74,13 @@ public static class CropFunctions
 
         if (isBottomGalleryShown)
         {
-            Settings.Gallery.IsBottomGalleryShown = true;
+            Settings.Gallery.IsGalleryDocked = true;
         }
     }
 
     public static void CloseCropControl(MainViewModel vm)
     {
-        if (Settings.Gallery.IsBottomGalleryShown)
+        if (Settings.Gallery.IsGalleryDocked)
         {
             if (vm.Gallery is {} gallery)
             {

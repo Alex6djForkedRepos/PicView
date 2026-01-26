@@ -23,14 +23,14 @@ public static class GalleryFunctions
             return 0;
         }
 
-        if (!Settings.Gallery.IsBottomGalleryShown || vm.PicViewer.IsSingleImage.CurrentValue || Slideshow.IsRunning)
+        if (!Settings.Gallery.IsGalleryDocked || vm.PicViewer.IsSingleImage.CurrentValue || Slideshow.IsRunning)
         {
             return 0;
         }
 
         if (Settings.WindowProperties.Fullscreen)
         {
-            return Settings.Gallery.IsBottomGalleryShown
+            return Settings.Gallery.IsGalleryDocked
                 ? gallery.GalleryItem.BottomGalleryItemHeight.CurrentValue + (SizeDefaults.ScrollbarSize - 1)
                 : 0;
         }
@@ -327,7 +327,7 @@ public static class GalleryFunctions
         }
 
         MenuManager.CloseMenus(vm);
-        if (Settings.Gallery.IsBottomGalleryShown)
+        if (Settings.Gallery.IsGalleryDocked)
         {
             if (IsFullGalleryOpen)
             {
@@ -374,17 +374,17 @@ public static class GalleryFunctions
 
         MenuManager.CloseMenus(vm);
 
-        if (Settings.Gallery.IsBottomGalleryShown)
+        if (Settings.Gallery.IsGalleryDocked)
         {
             vm.Gallery.GalleryMode.Value = GalleryMode.BottomToClosed;
             vm.Translation.IsShowingBottomGallery.Value = TranslationManager.Translation.ShowBottomGallery;
-            Settings.Gallery.IsBottomGalleryShown = false;
+            Settings.Gallery.IsGalleryDocked = false;
             IsFullGalleryOpen = false;
             return;
         }
 
         IsFullGalleryOpen = false;
-        Settings.Gallery.IsBottomGalleryShown = true;
+        Settings.Gallery.IsGalleryDocked = true;
         if (NavigationManager.CanNavigate(vm))
         {
             vm.Gallery.GalleryMode.Value = GalleryMode.ClosedToBottom;

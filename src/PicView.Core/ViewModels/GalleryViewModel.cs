@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using PicView.Core.Config;
 using PicView.Core.Gallery;
 using R3;
 
@@ -8,7 +9,7 @@ public class GalleryViewModel : IDisposable
 {
     public BindableReactiveProperty <ObservableCollection<GalleryItemViewModel>> GalleryItems { get; } = new([]);
 
-    public BindableReactiveProperty<object> GalleryDockPosition { get; } = new();
+    public BindableReactiveProperty<GalleryDockPosition> GalleryDockPosition { get; } = new(Settings.Gallery.DockPosition);
 
     public BindableReactiveProperty<GalleryMode> GalleryMode { get; } = new(Core.Gallery.GalleryMode.Closed);
 
@@ -18,7 +19,7 @@ public class GalleryViewModel : IDisposable
 
     public BindableReactiveProperty<bool> IsGalleryExpanded { get; } = new();
     
-    public BindableReactiveProperty<bool> IsDockedGalleryVisible { get; } = new(Settings.Gallery.IsBottomGalleryShown);
+    public BindableReactiveProperty<bool> IsDockedGalleryVisible { get; } = new(Settings.Gallery.IsGalleryDocked);
     public BindableReactiveProperty<bool> IsDockedGalleryHiddenUI { get; } =
         new(Settings.Gallery.ShowBottomGalleryInHiddenUI);
 

@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
@@ -99,7 +99,7 @@ public partial class HoverBar : UserControl
             });
 
         Debug.Assert(Settings.Gallery is not null);
-        Observable.EveryValueChanged(Settings.Gallery, x => x.IsBottomGalleryShown)
+        Observable.EveryValueChanged(Settings.Gallery, x => x.IsGalleryDocked)
             .Skip(1)
             .Subscribe(_ => { ApplyResponsiveResize(Bounds.Width); });
     }
@@ -158,7 +158,7 @@ public partial class HoverBar : UserControl
         IsVisible = true;
 
         // Make sure hover bar is above the bottom gallery if needed
-        var newHeight = Settings.Gallery.IsBottomGalleryShown ? 50 : 160;
+        var newHeight = Settings.Gallery.IsGalleryDocked ? 50 : 160;
         Height = UIHelper.GetMainView.Bounds.Height > SizeDefaults.WindowMinSize ? newHeight : double.NaN;
     }
 

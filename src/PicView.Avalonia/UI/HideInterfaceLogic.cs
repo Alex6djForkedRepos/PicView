@@ -1,4 +1,4 @@
-﻿using Avalonia.Threading;
+using Avalonia.Threading;
 using PicView.Avalonia.Gallery;
 using PicView.Avalonia.Navigation;
 using PicView.Avalonia.ViewModels;
@@ -65,7 +65,7 @@ public static class HideInterfaceLogic
             vm.MainWindow.TitlebarHeight.Value = SizeDefaults.MainTitlebarHeight;
             if (!GalleryFunctions.IsFullGalleryOpen)
             {
-                if (Settings.Gallery.IsBottomGalleryShown)
+                if (Settings.Gallery.IsGalleryDocked)
                 {
                     if (NavigationManager.CanNavigate(vm))
                     {
@@ -143,7 +143,7 @@ public static class HideInterfaceLogic
         }
         else
         {
-            gallery.IsBottomGalleryShown.Value = Settings.Gallery.IsBottomGalleryShown;
+            gallery.IsBottomGalleryShown.Value = Settings.Gallery.IsGalleryDocked;
         }
         
         await WindowResizing.SetSizeAsync(vm);

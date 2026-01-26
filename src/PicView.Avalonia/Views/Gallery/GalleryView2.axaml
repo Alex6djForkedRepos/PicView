@@ -2,10 +2,14 @@
     x:Class="PicView.Avalonia.Views.Gallery.GalleryView2"
     x:DataType="viewModels:TabViewModel"
     xmlns="https://github.com/avaloniaui"
+    xmlns:converters="clr-namespace:PicView.Avalonia.Converters"
     xmlns:customControls="clr-namespace:PicView.Avalonia.CustomControls"
     xmlns:gallery="clr-namespace:PicView.Avalonia.Views.Gallery"
     xmlns:viewModels="clr-namespace:PicView.Core.ViewModels;assembly=PicView.Core"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <UserControl.Resources>
+        <converters:DockToOrientationConverter x:Key="DockToOrientationConverter" />
+    </UserControl.Resources>
     <Panel>
 
         <Panel.ContextMenu>
@@ -116,18 +120,20 @@
             Background="{DynamicResource SecondaryBackgroundColor}"
             BorderBrush="{DynamicResource TertiaryBorderColor}"
             BorderThickness="0,1,0,0">
-            <ItemsControl ItemsSource="{CompiledBinding Gallery.GalleryItems.Value}">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <gallery:GalleryItem2 />
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <WrapPanel Orientation="Horizontal" />
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-            </ItemsControl>
+            <customControls:AutoScrollViewer x:Name="GalleryScrollViewer">
+                <ItemsControl ItemsSource="{CompiledBinding Gallery.GalleryItems.Value}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <gallery:GalleryItem2 />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel Orientation="{CompiledBinding Gallery.GalleryDockPosition.Value, Converter={StaticResource DockToOrientationConverter}}" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+            </customControls:AutoScrollViewer>
         </Border>
     </Panel>
 </customControls:GalleryAnimationControl>

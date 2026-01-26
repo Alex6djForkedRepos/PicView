@@ -1,4 +1,4 @@
-﻿﻿using Avalonia;
+﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Media;
@@ -119,7 +119,7 @@ public static class UIHelper
     /// <returns>A task representing the asynchronous operation.</returns>
     public static async Task ScrollToEndIfNecessary(bool last)
     {
-        if (!Settings.Gallery.IsBottomGalleryShown)
+        if (!Settings.Gallery.IsGalleryDocked)
         {
             return;
         }

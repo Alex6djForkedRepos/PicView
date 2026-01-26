@@ -1,4 +1,4 @@
-﻿using Avalonia;
+using Avalonia;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using ImageMagick;
@@ -162,7 +162,7 @@ public static class UpdateImage
         }
 
         vm.PicViewer.Index.Value = index;
-        if (Settings.Gallery.IsBottomGalleryShown)
+        if (Settings.Gallery.IsGalleryDocked)
         {
             GalleryNavigation.CenterScrollToItem(index);
         }
@@ -313,7 +313,7 @@ public static class UpdateImage
         vm.PicViewer.PixelWidth.Value = width;
         vm.PicViewer.PixelHeight.Value = height;
 
-        if (Settings.Gallery.IsBottomGalleryShown)
+        if (Settings.Gallery.IsGalleryDocked)
         {
             vm.Gallery.GalleryMode.Value = GalleryMode.Closed;
             vm.Gallery.GalleryMargin.Value = new Thickness(0);

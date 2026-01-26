@@ -1,4 +1,4 @@
-﻿using System.Runtime.InteropServices;
+using System.Runtime.InteropServices;
 using Avalonia.Controls;
 using Avalonia.Threading;
 using ImageMagick;
@@ -277,7 +277,7 @@ public static class QuickLoad
             await NavigationManager.PreloadAsync();
         }
 
-        if (Settings.Gallery.IsBottomGalleryShown)
+        if (Settings.Gallery.IsGalleryDocked)
         {
             bool loadGallery;
             if (!vm.MainWindow.IsUIShown.CurrentValue)
