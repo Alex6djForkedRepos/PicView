@@ -91,6 +91,7 @@
                 MaxHeight="300"
                 MinWidth="{Binding Bounds.Width, ElementName=FilterBox}"
                 PlacementTarget="{Binding ElementName=FilterBox}"
+                WindowManagerAddShadowHint="True"
                 x:Name="SuggestionsPopup">
                 <Border
                     Background="{DynamicResource MenuBackgroundColor}"

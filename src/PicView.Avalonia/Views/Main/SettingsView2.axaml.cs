@@ -40,7 +40,16 @@ public partial class SettingsView2 : UserControl
         Loaded += OnLoaded;
         Unloaded += OnUnloaded;
         FilterBox.TextChanged += OnSearchTextChanged;
-        FilterBox.KeyDown += OnFilterBoxKeyDown;
+        
+        // Keydown events are interrupted on macOS because of the Accent Menu
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        {
+            FilterBox.KeyUp += OnFilterBoxKeyDown;
+        }
+        else
+        {
+            FilterBox.KeyDown += OnFilterBoxKeyDown;
+        }
     }
 
     private void OnLoaded(object? sender, RoutedEventArgs e)
@@ -399,6 +408,12 @@ public partial class SettingsView2 : UserControl
     private void OnSearchTextChanged(object? sender, TextChangedEventArgs e)
     {
         var searchText = FilterBox.Text;
+
+        // Hide suggestions if the search text is empty
+        if (string.IsNullOrWhiteSpace(searchText))
+        {
+            SuggestionsPopup.IsOpen = false;
+        }
 
         // Auto-switch to list view if searching
         if (DataContext is CoreViewModel core &&
