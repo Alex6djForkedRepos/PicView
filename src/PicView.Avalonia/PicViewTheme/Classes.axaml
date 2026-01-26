@@ -133,6 +133,19 @@
         </Setter>
     </Style>
 
+    <Style Selector="TextBlock.searchHeader">
+        <Setter Property="Opacity" Value="1.0" />
+        <Setter Property="Transitions">
+            <Transitions>
+                <BrushTransition Duration="0:0:0.4" Property="Opacity" />
+            </Transitions>
+        </Setter>
+    </Style>
+
+    <Style Selector="TextBlock.searchHeaderDim">
+        <Setter Property="Opacity" Value="0.2" />
+    </Style>
+
     <Style Selector="Border.searchMatch">
         <Setter Property="Opacity" Value="1.0" />
         <Setter Property="BorderBrush" Value="{DynamicResource AccentColor}" />

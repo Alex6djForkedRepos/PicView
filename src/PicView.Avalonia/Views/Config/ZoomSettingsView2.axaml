@@ -10,7 +10,7 @@
     <StackPanel HorizontalAlignment="Center" Orientation="Vertical">
 
         <TextBlock
-            Classes="txt bold"
+            Classes="txt bold searchHeader"
             Margin="0,20,0,20"
             Text="{CompiledBinding Translation.Zoom.Value,
                                    Mode=OneWay}" />

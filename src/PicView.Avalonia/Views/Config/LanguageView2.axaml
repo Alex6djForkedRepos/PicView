@@ -2,7 +2,6 @@
     x:Class="PicView.Avalonia.Views.Config.LanguageView2"
     x:DataType="viewModels:CoreViewModel"
     xmlns="https://github.com/avaloniaui"
-    xmlns:converters="clr-namespace:PicView.Avalonia.Converters"
     xmlns:ui="clr-namespace:PicView.Avalonia.UI"
     xmlns:viewModels="clr-namespace:PicView.Core.ViewModels;assembly=PicView.Core"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
@@ -11,11 +10,7 @@
 
         <Border Classes="searchBorder" ui:SearchProperties.Keywords="{CompiledBinding SettingsViewModel.SearchData.LanguageSearchTags.Value}">
             <StackPanel>
-                <TextBlock
-                    Classes="txt bold"
-                    Margin="0,20,0,20"
-                    Text="{CompiledBinding Translation.Language.Value,
-                                           Mode=OneWay}" />
+                <TextBlock Margin="0,20,0,20" Text="{CompiledBinding Translation.Language.Value, Mode=OneWay}" />
                 <ComboBox
                     AutoScrollToSelectedItem="True"
                     Background="{DynamicResource SecondaryBackgroundColor}"

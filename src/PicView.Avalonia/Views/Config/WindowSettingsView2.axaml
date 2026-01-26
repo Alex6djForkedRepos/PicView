@@ -2,7 +2,6 @@
     x:Class="PicView.Avalonia.Views.Config.WindowSettingsView2"
     x:DataType="viewModels:CoreViewModel"
     xmlns="https://github.com/avaloniaui"
-    xmlns:converters="clr-namespace:PicView.Avalonia.Converters"
     xmlns:customControls="clr-namespace:PicView.Avalonia.CustomControls"
     xmlns:ui="clr-namespace:PicView.Avalonia.UI"
     xmlns:viewModels="clr-namespace:PicView.Core.ViewModels;assembly=PicView.Core"
@@ -66,7 +65,7 @@
         </Border>
 
         <TextBlock
-            Classes="txt bold"
+            Classes="txt bold searchHeader"
             Margin="0,20,0,20"
             Text="{CompiledBinding Translation.WindowManagement.Value,
                                    Mode=OneWay}" />
