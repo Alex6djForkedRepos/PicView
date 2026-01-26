@@ -41,7 +41,7 @@ public partial class SettingsView2 : UserControl
     private void MainPanelOnPointerPressed(object? sender, PointerPressedEventArgs e)
     {
         _controller?.ResetFilters();
-        SuggestionsPopup.Close();
+        _controller?.ClosePopup();
     }
 
     private void OnKeyDown(object? sender, KeyEventArgs e)

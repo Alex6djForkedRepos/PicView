@@ -95,6 +95,11 @@ public class SettingsSearchController(SettingsView2 view) : IDisposable
         }
     }
 
+    public void ClosePopup()
+    {
+        view.SuggestionsPopup.Close();
+    }
+
     public void OnViewModelCategoryChanged(SettingsCategory category)
     {
         // 1. Sync ListBox UI
