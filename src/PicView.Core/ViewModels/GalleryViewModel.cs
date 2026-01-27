@@ -21,15 +21,51 @@ public class GalleryViewModel : IDisposable
         
         // Initial set
         GalleryStretchService.SetStretch(this, Settings.Gallery.BottomGalleryStretchMode);
+
+        GalleryMode = new BindableReactiveProperty<GalleryMode2>(GalleryMode2.Closed);
+
+        // Sync old properties with new Mode for backward compatibility/UI binding
+        GalleryMode.Subscribe(mode =>
+        {
+            IsGalleryExpanded.Value = mode == GalleryMode2.Expanded;
+            IsDockedGalleryVisible.Value = mode == GalleryMode2.Docked;
+        }).AddTo(_disposables);
+        
+        // Commands
+        SetGalleryModeCommand = new ReactiveCommand<GalleryMode2>();
+        SetGalleryModeCommand.Subscribe(mode => GalleryMode.Value = mode).AddTo(_disposables);
+        
+        SetDockPositionCommand = new ReactiveCommand<GalleryDockPosition>();
+        SetDockPositionCommand.Subscribe(pos =>
+        {
+            GalleryDockPosition.Value = pos;
+            if (GalleryMode.Value != GalleryMode2.Expanded)
+            {
+                GalleryMode.Value = GalleryMode2.Docked;
+            }
+        }).AddTo(_disposables);
+
+        ToggleGalleryCommand = new ReactiveCommand<Unit>();
+        ToggleGalleryCommand.Subscribe(_ =>
+        {
+            GalleryMode.Value = GalleryMode.Value == GalleryMode2.Expanded ? GalleryMode2.Docked : GalleryMode2.Expanded;
+        }).AddTo(_disposables);
+        
+        CloseGalleryCommand = new ReactiveCommand<Unit>();
+        CloseGalleryCommand.Subscribe(_ => GalleryMode.Value = GalleryMode2.Closed).AddTo(_disposables);
     }
 
     public ReactiveCommand<string> SetStretchModeCommand { get; }
+    public ReactiveCommand<GalleryMode2> SetGalleryModeCommand { get; }
+    public ReactiveCommand<GalleryDockPosition> SetDockPositionCommand { get; }
+    public ReactiveCommand<Unit> ToggleGalleryCommand { get; }
+    public ReactiveCommand<Unit> CloseGalleryCommand { get; }
 
     public BindableReactiveProperty <ObservableCollection<GalleryItemViewModel>> GalleryItems { get; } = new([]);
 
     public BindableReactiveProperty<GalleryDockPosition> GalleryDockPosition { get; } = new(Settings.Gallery.DockPosition);
 
-    public BindableReactiveProperty<GalleryMode> GalleryMode { get; } = new(Core.Gallery.GalleryMode.Closed);
+    public BindableReactiveProperty<GalleryMode2> GalleryMode { get; }
 
     public BindableReactiveProperty<object> GalleryStretch { get; } = new();
     public BindableReactiveProperty<object> GalleryVerticalAlignment { get; } = new();
@@ -52,7 +88,8 @@ public class GalleryViewModel : IDisposable
             GalleryStretch,
             GalleryVerticalAlignment,
             GalleryOrientation,
-            IsGalleryExpanded
+            IsGalleryExpanded,
+            GalleryMode
             );
     }
 }

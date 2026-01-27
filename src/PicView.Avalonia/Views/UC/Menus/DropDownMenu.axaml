@@ -5,6 +5,7 @@
     x:DataType="viewModels:MainWindowViewModel"
     xmlns="https://github.com/avaloniaui"
     xmlns:customControls="clr-namespace:PicView.Avalonia.CustomControls"
+    xmlns:config="clr-namespace:PicView.Core.Config;assembly=PicView.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewModels="clr-namespace:PicView.Core.ViewModels;assembly=PicView.Core"
@@ -45,6 +46,7 @@
                         <customControls:TextIconButton
                             Background="Transparent"
                             Classes="altHover"
+                            Command="{CompiledBinding WindowTabs.ActiveTab.Value.Gallery.ToggleGalleryCommand}"
                             CornerRadius="8,0,0,0"
                             Icon="{StaticResource GalleryImage}"
                             IconHeight="12"
@@ -83,6 +85,8 @@
                         <customControls:TextIconButton
                             Background="Transparent"
                             Classes="altHover"
+                            Command="{CompiledBinding WindowTabs.ActiveTab.Value.Gallery.SetDockPositionCommand}"
+                            CommandParameter="{x:Static config:GalleryDockPosition.Bottom}"
                             CornerRadius="8,0,0,0"
                             Icon="{StaticResource GalleryImage}"
                             IconHeight="12"
@@ -93,6 +97,8 @@
                         <customControls:TextIconButton
                             Background="Transparent"
                             Classes="altHover"
+                            Command="{CompiledBinding WindowTabs.ActiveTab.Value.Gallery.SetDockPositionCommand}"
+                            CommandParameter="{x:Static config:GalleryDockPosition.Left}"
                             CornerRadius="8,0,0,0"
                             Icon="{StaticResource GalleryImage}"
                             IconHeight="12"
@@ -103,6 +109,8 @@
                         <customControls:TextIconButton
                             Background="Transparent"
                             Classes="altHover"
+                            Command="{CompiledBinding WindowTabs.ActiveTab.Value.Gallery.SetDockPositionCommand}"
+                            CommandParameter="{x:Static config:GalleryDockPosition.Right}"
                             CornerRadius="8,0,0,0"
                             Icon="{StaticResource GalleryImage}"
                             IconHeight="12"
@@ -113,6 +121,8 @@
                         <customControls:TextIconButton
                             Background="Transparent"
                             Classes="altHover"
+                            Command="{CompiledBinding WindowTabs.ActiveTab.Value.Gallery.SetDockPositionCommand}"
+                            CommandParameter="{x:Static config:GalleryDockPosition.Top}"
                             CornerRadius="8,0,0,0"
                             Icon="{StaticResource GalleryImage}"
                             IconHeight="12"
@@ -123,6 +133,7 @@
                         <customControls:TextIconButton
                             Background="Transparent"
                             Classes="altHover"
+                            Command="{CompiledBinding WindowTabs.ActiveTab.Value.Gallery.CloseGalleryCommand}"
                             CornerRadius="8,0,0,0"
                             Data="{StaticResource CloseGeometry}"
                             IconHeight="12"

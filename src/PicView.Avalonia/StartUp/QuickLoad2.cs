@@ -2,15 +2,11 @@
 using Avalonia.Threading;
 using ImageMagick;
 using PicView.Avalonia.ImageHandling;
-using PicView.Avalonia.Navigation;
-using PicView.Avalonia.Navigation.Services;
-using PicView.Avalonia.ViewModels;
 using PicView.Avalonia.Views.UC;
 using PicView.Core.DebugTools;
 using PicView.Core.FileHandling;
+using PicView.Core.Gallery;
 using PicView.Core.Localization;
-using PicView.Core.Models;
-using PicView.Core.Navigation;
 using PicView.Core.ViewModels;
 
 namespace PicView.Avalonia.StartUp;
@@ -65,20 +61,13 @@ public static class QuickLoad2
             // Just catching the exception here means it will still load correctly regardless
             DebugHelper.LogDebug(nameof(QuickLoad), nameof(QuickLoadAsync), e);
         }
-        
+
+        vm.MainWindows.ActiveWindow.Value.WindowTabs.ActiveTab.Value.Initialize();
+        vm.MainWindows.ActiveWindow.Value.WindowTabs.ActiveTab.Value.Gallery.GalleryMode.Value = GalleryMode2.Docked;
         var imageModel = await GetImageModel.GetImageModelAsync(fileInfo, magickImage).ConfigureAwait(false);
 
-        SetPicViewerValues(vm, imageModel, fileInfo);
-
+        vm.MainWindows.ActiveWindow.Value.WindowTabs.ActiveTab.Value.Model = imageModel;
         TabNavigationInitializer.Initialize(vm, fileInfo);
-    }
-    
-    private static void SetPicViewerValues(CoreViewModel vm, ImageModel imageModel, FileInfo fileInfo)
-    {
-       vm.MainWindows.ActiveWindow.Value.WindowTabs.ActiveTab.Value.Model = imageModel;
-       vm.MainWindows.ActiveWindow.Value.WindowTabs.ActiveTab.Value.Initialize();
-        
-        Settings.StartUp.LastFile = fileInfo.FullName;
         vm.MainWindows.ActiveWindow.Value.IsLoadingIndicatorShown.Value = false;
     }
 }

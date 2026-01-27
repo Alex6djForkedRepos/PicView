@@ -13,13 +13,7 @@
         <converters:DockConverter x:Key="DockConverter" />
     </UserControl.Resources>
     <DockPanel LastChildFill="True">
-        <gallery:GalleryView2
-            DockPanel.Dock="{CompiledBinding Gallery.GalleryDockPosition.Value,
-                                             Converter={StaticResource DockConverter},
-                                             FallbackValue=Bottom}"
-            IsVisible="{CompiledBinding Gallery.IsDockedGalleryVisible.Value,
-                                        FallbackValue=True}"
-            x:Name="GalleryView" />
+        <gallery:GalleryView2 DockPanel.Dock="{CompiledBinding Gallery.GalleryDockPosition.Value, Converter={StaticResource DockConverter}, FallbackValue=Bottom}" x:Name="GalleryView" />
         <Panel x:Name="MainPanel">
             <customControls:ZoomPanControl2 x:Name="ZoomPanControl">
                 <customControls:AutoScrollViewer
