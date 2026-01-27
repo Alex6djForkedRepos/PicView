@@ -7,6 +7,24 @@ namespace PicView.Core.ViewModels;
 
 public class GalleryViewModel : IDisposable
 {
+    private readonly CompositeDisposable _disposables = new();
+
+    public GalleryViewModel()
+    {
+        SetStretchModeCommand = new ReactiveCommand<string>();
+        SetStretchModeCommand.Subscribe(mode => GalleryStretchService.SetStretch(this, mode)).AddTo(_disposables);
+
+        GalleryItems.Subscribe(_ =>
+        {
+            GalleryStretchService.SetStretch(this, Settings.Gallery.BottomGalleryStretchMode);
+        }).AddTo(_disposables);
+        
+        // Initial set
+        GalleryStretchService.SetStretch(this, Settings.Gallery.BottomGalleryStretchMode);
+    }
+
+    public ReactiveCommand<string> SetStretchModeCommand { get; }
+
     public BindableReactiveProperty <ObservableCollection<GalleryItemViewModel>> GalleryItems { get; } = new([]);
 
     public BindableReactiveProperty<GalleryDockPosition> GalleryDockPosition { get; } = new(Settings.Gallery.DockPosition);
@@ -25,6 +43,7 @@ public class GalleryViewModel : IDisposable
 
     public void Dispose()
     {
+        _disposables.Dispose();
         Disposable.Dispose(GalleryItems,
             GalleryDockPosition,
             IsDockedGalleryVisible,

@@ -23,14 +23,12 @@
             x:Name="InnerBorder">
             <customControls:ThumbImage
                 Source="{CompiledBinding Image.Value}"
-                Stretch="Fill"
+                Stretch="{CompiledBinding $parent[Window].((viewModels:MainWindowViewModel)DataContext).WindowTabs.ActiveTab.Value.Gallery.GalleryStretch.Value}"
                 x:Name="GalleryImage" />
             <ToolTip.Tip>
                 <StackPanel MaxWidth="600">
                     <TextBlock
-                        Classes="txt"
-                        FontFamily="/Assets/Fonts/Roboto-Bold.ttf#Roboto"
-                        FontSize="14"
+                        Classes="txt bold"
                         Foreground="{DynamicResource MainTextColor}"
                         Margin="2,0,2,6"
                         Text="{CompiledBinding FileName.Value}"
@@ -38,21 +36,18 @@
                         x:Name="FileName" />
                     <TextBlock
                         Classes="txt"
-                        Foreground="{DynamicResource MainTextColor}"
                         Margin="2,0,2,2"
                         Text="{CompiledBinding FileLocation.Value}"
                         TextWrapping="NoWrap"
                         x:Name="FileLocation" />
                     <TextBlock
                         Classes="txt"
-                        Foreground="{DynamicResource MainTextColor}"
                         Margin="2,0,2,2"
                         Text="{CompiledBinding FileSize.Value}"
                         TextWrapping="NoWrap"
                         x:Name="FileSize" />
                     <TextBlock
                         Classes="txt"
-                        Foreground="{DynamicResource MainTextColor}"
                         Margin="2,0,2,4"
                         Text="{CompiledBinding FileDate.Value}"
                         TextWrapping="NoWrap"
@@ -281,31 +276,35 @@
                                 Width="12" />
                         </MenuItem.Icon>
                         <MenuItem
+                            Command="{Binding $parent[Window].((viewModels:MainWindowViewModel)DataContext).WindowTabs.ActiveTab.Value.Gallery.SetStretchModeCommand}"
                             CommandParameter="Uniform"
                             Header="{CompiledBinding $parent[Window].((viewModels:MainWindowViewModel)DataContext).Translation.Uniform.Value,
-                                                     Mode=OneWay}"
-                            ToggleType="Radio" />
+                                                     Mode=OneWay}" />
                         <MenuItem
+                            Command="{Binding $parent[Window].((viewModels:MainWindowViewModel)DataContext).WindowTabs.ActiveTab.Value.Gallery.SetStretchModeCommand}"
                             CommandParameter="UniformToFill"
                             Header="{CompiledBinding $parent[Window].((viewModels:MainWindowViewModel)DataContext).Translation.UniformToFill.Value,
-                                                     Mode=OneWay}"
-                            ToggleType="Radio" />
+                                                     Mode=OneWay}" />
                         <MenuItem
+                            Command="{Binding $parent[Window].((viewModels:MainWindowViewModel)DataContext).WindowTabs.ActiveTab.Value.Gallery.SetStretchModeCommand}"
                             CommandParameter="Fill"
                             Header="{CompiledBinding $parent[Window].((viewModels:MainWindowViewModel)DataContext).Translation.Fill.Value,
-                                                     Mode=OneWay}"
-                            ToggleType="Radio" />
-                        <MenuItem Header="{CompiledBinding $parent[Window].((viewModels:MainWindowViewModel)DataContext).Translation.None.Value, Mode=OneWay}" ToggleType="Radio" />
+                                                     Mode=OneWay}" />
                         <MenuItem
+                            Command="{Binding $parent[Window].((viewModels:MainWindowViewModel)DataContext).WindowTabs.ActiveTab.Value.Gallery.SetStretchModeCommand}"
+                            CommandParameter="None"
+                            Header="{CompiledBinding $parent[Window].((viewModels:MainWindowViewModel)DataContext).Translation.None.Value,
+                                                     Mode=OneWay}" />
+                        <MenuItem
+                            Command="{Binding $parent[Window].((viewModels:MainWindowViewModel)DataContext).WindowTabs.ActiveTab.Value.Gallery.SetStretchModeCommand}"
                             CommandParameter="Square"
                             Header="{CompiledBinding $parent[Window].((viewModels:MainWindowViewModel)DataContext).Translation.Square.Value,
-                                                     Mode=OneWay}"
-                            ToggleType="Radio" />
+                                                     Mode=OneWay}" />
                         <MenuItem
+                            Command="{Binding $parent[Window].((viewModels:MainWindowViewModel)DataContext).WindowTabs.ActiveTab.Value.Gallery.SetStretchModeCommand}"
                             CommandParameter="FillSquare"
                             Header="{CompiledBinding $parent[Window].((viewModels:MainWindowViewModel)DataContext).Translation.FillSquare.Value,
-                                                     Mode=OneWay}"
-                            ToggleType="Radio" />
+                                                     Mode=OneWay}" />
                     </MenuItem>
                     <MenuItem
                         Header="{CompiledBinding $parent[Window].((viewModels:MainWindowViewModel)DataContext).Translation.ExpandedGalleryItemSize.Value,

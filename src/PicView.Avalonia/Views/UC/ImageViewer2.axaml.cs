@@ -46,18 +46,26 @@ public partial class ImageViewer2 : UserControl
 
     public async ValueTask PreviewOnPointerWheelChanged(object? sender, PointerWheelEventArgs e)
     {
-        if (sender is Control control)
+        if (GalleryView.IsPointerOver)
         {
-            if (control.GetVisualRoot() is Window { DataContext: MainWindowViewModel vm })
-            {
-                await MouseShortcuts2.HandlePointerWheelChanged(
-                    e, 
-                    vm, 
-                    ImageScrollViewer,
-                    async args => await Dispatcher.UIThread.InvokeAsync(() => ZoomIn(args)),
-                    async args => await Dispatcher.UIThread.InvokeAsync(() => ZoomOut(args)));
-            }
+            return;
         }
+        
+        if (sender is not Control control)
+        {
+            return;
+        }
+        
+        if (control.GetVisualRoot() is not Window { DataContext: MainWindowViewModel vm })
+        {
+            return;
+        }
+        await MouseShortcuts2.HandlePointerWheelChanged(
+            e, 
+            vm, 
+            ImageScrollViewer,
+            async args => await Dispatcher.UIThread.InvokeAsync(() => ZoomIn(args)),
+            async args => await Dispatcher.UIThread.InvokeAsync(() => ZoomOut(args)));
     }
         
 

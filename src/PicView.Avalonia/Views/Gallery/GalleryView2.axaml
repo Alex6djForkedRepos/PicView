@@ -22,35 +22,35 @@
                             Width="12" />
                     </MenuItem.Icon>
                     <MenuItem
+                        Command="{CompiledBinding Gallery.SetStretchModeCommand}"
                         CommandParameter="Uniform"
                         Header="{CompiledBinding $parent[Window].((viewModels:MainWindowViewModel)DataContext).Translation.Uniform.Value,
-                                                 Mode=OneWay}"
-                        ToggleType="Radio" />
+                                                 Mode=OneWay}" />
                     <MenuItem
+                        Command="{CompiledBinding Gallery.SetStretchModeCommand}"
                         CommandParameter="UniformToFill"
                         Header="{CompiledBinding $parent[Window].((viewModels:MainWindowViewModel)DataContext).Translation.UniformToFill.Value,
-                                                 Mode=OneWay}"
-                        ToggleType="Radio" />
+                                                 Mode=OneWay}" />
                     <MenuItem
+                        Command="{CompiledBinding Gallery.SetStretchModeCommand}"
                         CommandParameter="Fill"
                         Header="{CompiledBinding $parent[Window].((viewModels:MainWindowViewModel)DataContext).Translation.Fill.Value,
-                                                 Mode=OneWay}"
-                        ToggleType="Radio" />
+                                                 Mode=OneWay}" />
                     <MenuItem
+                        Command="{CompiledBinding Gallery.SetStretchModeCommand}"
                         CommandParameter="None"
                         Header="{CompiledBinding $parent[Window].((viewModels:MainWindowViewModel)DataContext).Translation.None.Value,
-                                                 Mode=OneWay}"
-                        ToggleType="Radio" />
+                                                 Mode=OneWay}" />
                     <MenuItem
+                        Command="{CompiledBinding Gallery.SetStretchModeCommand}"
                         CommandParameter="Square"
                         Header="{CompiledBinding $parent[Window].((viewModels:MainWindowViewModel)DataContext).Translation.Square.Value,
-                                                 Mode=OneWay}"
-                        ToggleType="Radio" />
+                                                 Mode=OneWay}" />
                     <MenuItem
+                        Command="{CompiledBinding Gallery.SetStretchModeCommand}"
                         CommandParameter="FillSquare"
                         Header="{CompiledBinding $parent[Window].((viewModels:MainWindowViewModel)DataContext).Translation.FillSquare.Value,
-                                                 Mode=OneWay}"
-                        ToggleType="Radio" />
+                                                 Mode=OneWay}" />
                 </MenuItem>
                 <MenuItem Header="{CompiledBinding $parent[Window].((viewModels:MainWindowViewModel)DataContext).Translation.ExpandedGalleryItemSize.Value, Mode=OneWay}" StaysOpenOnClick="True">
                     <MenuItem.Icon>
@@ -120,7 +120,7 @@
             Background="{DynamicResource SecondaryBackgroundColor}"
             BorderBrush="{DynamicResource TertiaryBorderColor}"
             BorderThickness="0,1,0,0">
-            <customControls:AutoScrollViewer x:Name="GalleryScrollViewer">
+            <customControls:AutoScrollViewer PointerWheelChanged="GalleryScrollViewer_OnPointerWheelChanged" x:Name="GalleryScrollViewer">
                 <ItemsControl ItemsSource="{CompiledBinding Gallery.GalleryItems.Value}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
