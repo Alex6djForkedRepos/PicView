@@ -23,14 +23,18 @@ public partial class GalleryItem2 : UserControl
 
     private void GalleryContextMenuOnClosed(object? sender, RoutedEventArgs e)
     {
-        InnerBorder.BorderThickness = new Thickness(0);
-        InnerBorder.BorderBrush = Brushes.Transparent;
+        InnerBorder.BorderBrush = UIHelper.GetSolidColorBrush("MainBorderColor");
+        if (!GalleryContextMenu.IsOpen)
+        {
+            OuterBorder.BorderBrush = UIHelper.GetSolidColorBrush("MainBorderColor");
+        }
     }
 
     private void GalleryContextMenuOnOpened(object? sender, RoutedEventArgs e)
     {
-        InnerBorder.BorderThickness = new Thickness(2);
-        InnerBorder.BorderBrush = UIHelper.GetSolidColorBrush("SecondaryAccentColor");
+        var secondaryBrush = UIHelper.GetSolidColorBrush("SecondaryAccentColor");
+        InnerBorder.BorderBrush = secondaryBrush;
+        OuterBorder.BorderBrush = secondaryBrush;
     }
 
     private void OnPointerEntered(object? sender, PointerEventArgs e)
@@ -39,7 +43,10 @@ public partial class GalleryItem2 : UserControl
     }
     private void OnPointerExited(object? sender, PointerEventArgs e)
      {
-         OuterBorder.BorderBrush = Brushes.Transparent;
+         if (!GalleryContextMenu.IsOpen)
+         {
+             OuterBorder.BorderBrush = UIHelper.GetSolidColorBrush("MainBorderColor");
+         }
      }
 
     private void Flyout_OnPointerPressed(object? sender, PointerPressedEventArgs e)
