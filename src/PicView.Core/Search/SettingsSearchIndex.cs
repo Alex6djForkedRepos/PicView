@@ -102,18 +102,18 @@ public static class SettingsSearchIndex
             list.Add(new SettingsSearchItem(t.AdjustNavSpeed, data.NavigationSpeedSearchTags.Value));
 
         // Gallery
-        if (t.ShowBottomGallery != null)
-            list.Add(new SettingsSearchItem(t.ShowBottomGallery, data.GalleryVisibilitySearchTags.Value));
-        if (t.ShowBottomGalleryWhenUiIsHidden != null)
-            list.Add(new SettingsSearchItem(t.ShowBottomGalleryWhenUiIsHidden, data.GalleryVisibilitySearchTags.Value));
+        if (t.ShowDockedGallery != null)
+            list.Add(new SettingsSearchItem(t.ShowDockedGallery, data.GalleryVisibilitySearchTags.Value));
+        if (t.ShowDockedGalleryWhenUiIsHidden != null)
+            list.Add(new SettingsSearchItem(t.ShowDockedGalleryWhenUiIsHidden, data.GalleryVisibilitySearchTags.Value));
         if (t.ExpandedGalleryItemSize != null)
             list.Add(new SettingsSearchItem(t.ExpandedGalleryItemSize, data.GallerySizeSearchTags.Value));
-        if (t.BottomGalleryItemSize != null)
-            list.Add(new SettingsSearchItem(t.BottomGalleryItemSize, data.GallerySizeSearchTags.Value));
+        if (t.DockedGalleryItemSize != null)
+            list.Add(new SettingsSearchItem(t.DockedGalleryItemSize, data.GallerySizeSearchTags.Value));
         if (t.GalleryThumbnailStretch != null)
             list.Add(new SettingsSearchItem(t.GalleryThumbnailStretch, data.GalleryStretchSearchTags.Value));
-        if (t.BottomGalleryThumbnailStretch != null)
-            list.Add(new SettingsSearchItem(t.BottomGalleryThumbnailStretch, data.GalleryStretchSearchTags.Value));
+        if (t.DockedGalleryThumbnailStretch != null)
+            list.Add(new SettingsSearchItem(t.DockedGalleryThumbnailStretch, data.GalleryStretchSearchTags.Value));
 
         // Slideshow
         if (t.AdjustTimingForSlideshow != null)

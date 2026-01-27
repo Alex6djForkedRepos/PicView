@@ -346,11 +346,11 @@
                     IconMargin="9,0,9,0"
                     IconWidth="20"
                     IsEnabled="{CompiledBinding !PicViewer.IsSingleImage.Value}"
-                    Text="{CompiledBinding Translation.IsShowingBottomGallery.Value,
+                    Text="{CompiledBinding Translation.IsShowingDockedGallery.Value,
                                            Mode=OneWay}"
                     TextMargin="0,0,6,0"
                     TextMaxWidth="175"
-                    ToolTip.Tip="{CompiledBinding Translation.IsShowingBottomGallery.Value,
+                    ToolTip.Tip="{CompiledBinding Translation.IsShowingDockedGallery.Value,
                                                   Mode=OneWay}"
                     Width="300"
                     x:Name="GalleryButton" />

@@ -450,7 +450,7 @@
                 <!--  Toggle bottom gallery  -->
                 <MenuItem
                     Command="{CompiledBinding Gallery.ToggleBottomGalleryCommand}"
-                    Header="{CompiledBinding Translation.IsShowingBottomGallery.Value,
+                    Header="{CompiledBinding Translation.IsShowingDockedGallery.Value,
                                              Mode=OneWay}"
                     IsChecked="{CompiledBinding Gallery.IsBottomGalleryShown.Value}">
                     <MenuItem.Icon>

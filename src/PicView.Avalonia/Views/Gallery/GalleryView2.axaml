@@ -73,7 +73,7 @@
                     </FlyoutBase.AttachedFlyout>
                 </MenuItem>
                 <Separator />
-                <MenuItem Header="{CompiledBinding $parent[Window].((viewModels:MainWindowViewModel)DataContext).Translation.HideBottomGallery.Value, Mode=OneWay}" IsVisible="{CompiledBinding !Gallery.IsGalleryExpanded.Value}">
+                <MenuItem Header="{CompiledBinding $parent[Window].((viewModels:MainWindowViewModel)DataContext).Translation.HideDockedGallery.Value, Mode=OneWay}" IsVisible="{CompiledBinding !Gallery.IsGalleryExpanded.Value}">
                     <MenuItem.Icon>
                         <Path
                             Data="{StaticResource CloseGeometry}"

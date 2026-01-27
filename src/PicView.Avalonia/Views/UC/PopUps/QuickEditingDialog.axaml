@@ -1,4 +1,4 @@
-﻿<customControls:AnimatedPopUp
+<customControls:AnimatedPopUp
     ClickingOutsideCloses="True"
     Padding="20"
     d:DesignHeight="450"
@@ -212,13 +212,13 @@
                 IconMargin="15,0,10,0"
                 IconWidth="15"
                 Margin="6,0,4,8"
-                Text="{CompiledBinding Translation.IsShowingBottomGallery.Value,
+                Text="{CompiledBinding Translation.IsShowingDockedGallery.Value,
                                        Mode=OneWay}"
                 TextMaxWidth="145"
-                ToolTip.Tip="{CompiledBinding Translation.IsShowingBottomGallery.Value,
+                ToolTip.Tip="{CompiledBinding Translation.IsShowingDockedGallery.Value,
                                               Mode=OneWay}"
                 Width="175"
-                x:Name="ShowBottomGalleryButton" />
+                x:Name="ShowDockedGalleryButton" />
 
             <!--  Side by side  -->
             <ToggleButton

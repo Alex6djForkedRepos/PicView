@@ -327,7 +327,7 @@
                 </MenuItem>
 
                 <!--  Toggle bottom gallery  -->
-                <MenuItem Header="{CompiledBinding Translation.IsShowingBottomGallery.Value, Mode=OneWay}" IsChecked="{CompiledBinding WindowTabs.ActiveTab.Value.Gallery.IsDockedGalleryVisible.Value}">
+                <MenuItem Header="{CompiledBinding Translation.IsShowingDockedGallery.Value, Mode=OneWay}" IsChecked="{CompiledBinding WindowTabs.ActiveTab.Value.Gallery.IsDockedGalleryVisible.Value}">
                     <MenuItem.Icon>
                         <Image
                             Height="12"

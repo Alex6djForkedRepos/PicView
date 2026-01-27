@@ -40,7 +40,7 @@
                 Margin="0"
                 MaxWidth="240"
                 Padding="0,1,5,0"
-                Text="{CompiledBinding Translation.IsShowingBottomGallery.Value,
+                Text="{CompiledBinding Translation.IsShowingDockedGallery.Value,
                                        Mode=OneWay}" />
         </ToggleButton>
 
@@ -49,7 +49,7 @@
             BorderThickness="0"
             Classes="altHover changeColor"
             Command="{CompiledBinding Tools.ToggleBottomGalleryShownInHiddenUICommand}"
-            IsChecked="{CompiledBinding SettingsViewModel.IsBottomGalleryShownInHiddenUI.Value}"
+            IsChecked="{CompiledBinding SettingsViewModel.IsDockedGalleryShownInHiddenUI.Value}"
             Margin="0,0,0,10"
             Width="300">
             <TextBlock
@@ -58,7 +58,7 @@
                 Margin="0"
                 MaxWidth="240"
                 Padding="0,1,5,0"
-                Text="{CompiledBinding Translation.ShowBottomGalleryWhenUiIsHidden.Value,
+                Text="{CompiledBinding Translation.ShowDockedGalleryWhenUiIsHidden.Value,
                                        Mode=OneWay}" />
         </ToggleButton>
 
@@ -98,7 +98,7 @@
             Foreground="{StaticResource SecondaryTextColor}"
             Margin="0,10,0,10"
             MaxWidth="300"
-            Text="{CompiledBinding Translation.BottomGalleryItemSize.Value,
+            Text="{CompiledBinding Translation.DockedGalleryItemSize.Value,
                                    Mode=OneWay}" />
         <customControls:CustomSlider
             Height="30"
@@ -179,7 +179,7 @@
             Foreground="{StaticResource SecondaryTextColor}"
             Margin="0,3,0,15"
             MaxWidth="300"
-            Text="{CompiledBinding Translation.BottomGalleryThumbnailStretch.Value,
+            Text="{CompiledBinding Translation.DockedGalleryThumbnailStretch.Value,
                                    Mode=OneWay}" />
         <ComboBox
             Background="{DynamicResource SecondaryBackgroundColor}"

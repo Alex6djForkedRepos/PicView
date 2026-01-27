@@ -1,4 +1,4 @@
-﻿using Avalonia.Interactivity;
+using Avalonia.Interactivity;
 using Avalonia.LogicalTree;
 using PicView.Avalonia.CustomControls;
 using PicView.Avalonia.Functions;
@@ -77,8 +77,8 @@ public partial class QuickEditingDialog : AnimatedPopUp
             })
             .AddTo(_subscriptions);
                 
-        Observable.FromEventHandler<RoutedEventArgs>(h => ShowBottomGalleryButton.Click += h,
-                h => ShowBottomGalleryButton.Click -= h)
+        Observable.FromEventHandler<RoutedEventArgs>(h => ShowDockedGalleryButton.Click += h,
+                h => ShowDockedGalleryButton.Click -= h)
             .SubscribeAwait(async (_, _) =>
             {
                 _ = AnimatedClosing();

@@ -1,4 +1,4 @@
-﻿<UserControl
+<UserControl
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d"
@@ -416,7 +416,7 @@
                 <Separator />
                 <MenuItem
                     Command="{CompiledBinding Gallery.CloseGalleryCommand}"
-                    Header="{CompiledBinding Translation.HideBottomGallery.Value,
+                    Header="{CompiledBinding Translation.HideDockedGallery.Value,
                                              Mode=OneWay}"
                     IsVisible="{CompiledBinding !Gallery.IsGalleryExpanded.Value}">
                     <MenuItem.Icon>

@@ -259,11 +259,11 @@ public class SettingsSearchData : IDisposable
         
         sb.Append(TranslationManager.Translation.GallerySettings);
         sb.Append(space);
-        sb.Append(TranslationManager.Translation.ShowBottomGallery);
+        sb.Append(TranslationManager.Translation.ShowDockedGallery);
         sb.Append(space);
-        sb.Append(TranslationManager.Translation.ShowBottomGalleryWhenUiIsHidden);
+        sb.Append(TranslationManager.Translation.ShowDockedGalleryWhenUiIsHidden);
         sb.Append(space);
-        sb.Append("Gallery Hide Show UI");
+        sb.Append("Gallery Hide Show UI Docked Position");
         GalleryVisibilitySearchTags = new BindableReactiveProperty<string>(sb.ToString());
         
         sb.Clear();
@@ -272,7 +272,7 @@ public class SettingsSearchData : IDisposable
         sb.Append(space);
         sb.Append(TranslationManager.Translation.ExpandedGalleryItemSize);
         sb.Append(space);
-        sb.Append(TranslationManager.Translation.BottomGalleryItemSize);
+        sb.Append(TranslationManager.Translation.DockedGalleryItemSize);
         sb.Append(space);
         sb.Append("Size Height Thumbnail");
         GallerySizeSearchTags = new BindableReactiveProperty<string>(sb.ToString());
@@ -283,7 +283,7 @@ public class SettingsSearchData : IDisposable
         sb.Append(space);
         sb.Append(TranslationManager.Translation.GalleryThumbnailStretch);
         sb.Append(space);
-        sb.Append(TranslationManager.Translation.BottomGalleryThumbnailStretch);
+        sb.Append(TranslationManager.Translation.DockedGalleryThumbnailStretch);
         sb.Append(space);
         sb.Append("Stretch Fill Uniform");
         GalleryStretchSearchTags = new BindableReactiveProperty<string>(sb.ToString());

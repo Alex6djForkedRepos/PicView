@@ -24,9 +24,9 @@ public static class LanguageUpdater2
         translationViewModel.IsScrolling.Value = Settings.Zoom.ScrollEnabled ?
             TranslationManager.Translation.ScrollingEnabled : TranslationManager.Translation.ScrollingDisabled;
         
-        translationViewModel.IsShowingBottomGallery.Value = Settings.Gallery.IsGalleryDocked ?
-            TranslationManager.Translation.HideBottomGallery :
-            TranslationManager.Translation.ShowBottomGallery;
+        translationViewModel.IsShowingDockedGallery.Value = Settings.Gallery.IsGalleryDocked ?
+            TranslationManager.Translation.HideDockedGallery :
+            TranslationManager.Translation.ShowDockedGallery;
         
         translationViewModel.IsLooping.Value = Settings.UIProperties.Looping
             ? TranslationManager.Translation.LoopingEnabled

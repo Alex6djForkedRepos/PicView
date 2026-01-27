@@ -207,7 +207,7 @@
     <!--  ~1~  Toggle bottom gallery  @1@  -->
     <!--  <NativeMenuItem  -->
     <!--  Command="{CompiledBinding Gallery.ToggleBottomGalleryCommand}"  -->
-    <!--  Header="{CompiledBinding Translation.ShowBottomGallery.Value,  -->
+    <!--  Header="{CompiledBinding Translation.ShowDockedGallery.Value,  -->
     <!--  Mode=OneWay}"  -->
     <!--  IsChecked="{CompiledBinding Gallery.IsBottomGalleryShown.Value}"  -->
     <!--  ToggleType="CheckBox" />  -->

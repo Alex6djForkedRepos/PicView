@@ -1,4 +1,4 @@
-﻿// ReSharper disable PropertyCanBeMadeInitOnly.Global
+// ReSharper disable PropertyCanBeMadeInitOnly.Global
 
 namespace PicView.Core.Localization;
 
@@ -43,8 +43,6 @@ public class LanguageModel
     public string? BlackAndWhite { get; set; }
     public string? Blur { get; set; }
     public string? Bottom { get; set; }
-    public string? BottomGalleryItemSize { get; set; }
-    public string? BottomGalleryThumbnailStretch { get; set; }
     public string? Brightness { get; set; }
     public string? CameraMaker { get; set; }
     public string? CameraModel { get; set; }
@@ -111,6 +109,8 @@ public class LanguageModel
     public string? DisableFadeInButtonsOnHover { get; set; }
     public string? DiskSize { get; set; }
     public string? DoubleClick { get; set; }
+    public string? DockedGalleryItemSize { get; set; }
+    public string? DockedGalleryThumbnailStretch { get; set; }
     public string? Down { get; set; }
     public string? Downloading { get; set; }
     public string? Dpi { get; set; }
@@ -182,7 +182,7 @@ public class LanguageModel
     public string? Hard { get; set; }
     public string? Height { get; set; }
     public string? Help { get; set; }
-    public string? HideBottomGallery { get; set; }
+    public string? HideDockedGallery { get; set; }
     public string? HideBottomToolbar { get; set; }
     public string? HideHoverNavigationBar { get; set; }
     public string? HideUI { get; set; }
@@ -354,8 +354,8 @@ public class LanguageModel
     public string? Sharpness { get; set; }
     public string? Shift { get; set; }
     public string? ShowAllSettingsWindow { get; set; }
-    public string? ShowBottomGallery { get; set; }
-    public string? ShowBottomGalleryWhenUiIsHidden { get; set; }
+    public string? ShowDockedGallery { get; set; }
+    public string? ShowDockedGalleryWhenUiIsHidden { get; set; }
     public string? ShowBottomToolbar { get; set; }
     public string? ShowConfirmationDialogWhenMovingFileToRecycleBin { get; set; }
     public string? ShowConfirmationDialogWhenPermanentlyDeletingFile { get; set; }

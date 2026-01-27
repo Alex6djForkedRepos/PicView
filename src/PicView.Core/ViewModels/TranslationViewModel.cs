@@ -1,4 +1,4 @@
-﻿using PicView.Core.Localization;
+using PicView.Core.Localization;
 using R3;
 
 namespace PicView.Core.ViewModels;
@@ -43,8 +43,8 @@ public class TranslationViewModel : IDisposable
         BlackAndWhite.Value = t.BlackAndWhite;
         Blur.Value = t.Blur;
         Bottom.Value = t.Bottom;
-        BottomGalleryItemSize.Value = t.BottomGalleryItemSize;
-        BottomGalleryThumbnailStretch.Value = t.BottomGalleryThumbnailStretch;
+        DockedGalleryItemSize.Value = t.DockedGalleryItemSize;
+        DockedGalleryThumbnailStretch.Value = t.DockedGalleryThumbnailStretch;
         Brightness.Value = t.Brightness;
         CameraMaker.Value = t.CameraMaker;
         CameraModel.Value = t.CameraModel;
@@ -136,7 +136,7 @@ public class TranslationViewModel : IDisposable
         GoBackBy100Images.Value = t.GoBackBy100Images;
         Height.Value = t.Height;
         Help.Value = t.Help;
-        HideBottomGallery.Value = t.HideBottomGallery;
+        HideDockedGallery.Value = t.HideDockedGallery;
         HideBottomToolbar.Value = t.HideBottomToolbar;
         HideHoverNavigationBar.Value = t.HideHoverNavigationBar;
         HideUI.Value = t.HideUI;
@@ -269,8 +269,8 @@ public class TranslationViewModel : IDisposable
         Settings.Value = t.Settings;
         Sharpness.Value = t.Sharpness;
         ShowAllSettingsWindow.Value = t.ShowAllSettingsWindow;
-        ShowBottomGallery.Value = t.ShowBottomGallery;
-        ShowBottomGalleryWhenUiIsHidden.Value = t.ShowBottomGalleryWhenUiIsHidden;
+        ShowDockedGallery.Value = t.ShowDockedGallery;
+        ShowDockedGalleryWhenUiIsHidden.Value = t.ShowDockedGalleryWhenUiIsHidden;
         ShowBottomToolbar.Value = t.ShowBottomToolbar;
         ShowConfirmationDialogWhenMovingFileToRecycleBin.Value = t.ShowConfirmationDialogWhenMovingFileToRecycleBin;
         ShowConfirmationDialogWhenPermanentlyDeletingFile.Value = t.ShowConfirmationDialogWhenPermanentlyDeletingFile;
@@ -361,8 +361,8 @@ public class TranslationViewModel : IDisposable
     public BindableReactiveProperty<string?> BitDepth { get; } = new();
     public BindableReactiveProperty<string?> BlackAndWhite { get; } = new();
     public BindableReactiveProperty<string?> Blur { get; } = new();
-    public BindableReactiveProperty<string?> BottomGalleryItemSize { get; } = new();
-    public BindableReactiveProperty<string?> BottomGalleryThumbnailStretch { get; } = new();
+    public BindableReactiveProperty<string?> DockedGalleryItemSize { get; } = new();
+    public BindableReactiveProperty<string?> DockedGalleryThumbnailStretch { get; } = new();
     public BindableReactiveProperty<string?> Brightness { get; } = new();
     public BindableReactiveProperty<string?> CameraMaker { get; } = new();
     public BindableReactiveProperty<string?> CameraModel { get; } = new();
@@ -452,7 +452,7 @@ public class TranslationViewModel : IDisposable
     public BindableReactiveProperty<string?> GoBackBy10Images { get; } = new();
     public BindableReactiveProperty<string?> Height { get; } = new();
     public BindableReactiveProperty<string?> Help { get; } = new();
-    public BindableReactiveProperty<string?> HideBottomGallery { get; } = new();
+    public BindableReactiveProperty<string?> HideDockedGallery { get; } = new();
     public BindableReactiveProperty<string?> HideBottomToolbar { get; } = new();
     public BindableReactiveProperty<string?> HideHoverNavigationBar { get; } = new();
     public BindableReactiveProperty<string?> HideUI { get; } = new();
@@ -579,8 +579,8 @@ public class TranslationViewModel : IDisposable
     public BindableReactiveProperty<string?> Settings { get; } = new();
     public BindableReactiveProperty<string?> Sharpness { get; } = new();
     public BindableReactiveProperty<string?> ShowAllSettingsWindow { get; } = new();
-    public BindableReactiveProperty<string?> ShowBottomGallery { get; } = new();
-    public BindableReactiveProperty<string?> ShowBottomGalleryWhenUiIsHidden { get; } = new();
+    public BindableReactiveProperty<string?> ShowDockedGallery { get; } = new();
+    public BindableReactiveProperty<string?> ShowDockedGalleryWhenUiIsHidden { get; } = new();
     public BindableReactiveProperty<string?> ShowBottomToolbar { get; } = new();
     public BindableReactiveProperty<string?> ShowConfirmationDialogWhenMovingFileToRecycleBin { get; } = new();
     public BindableReactiveProperty<string?> ShowConfirmationDialogWhenPermanentlyDeletingFile { get; } = new();
@@ -660,7 +660,7 @@ public class TranslationViewModel : IDisposable
 
     public BindableReactiveProperty<string?> IsScrolling { get; } = new();
 
-    public BindableReactiveProperty<string?> IsShowingBottomGallery { get; } = new();
+    public BindableReactiveProperty<string?> IsShowingDockedGallery { get; } = new();
 
     public BindableReactiveProperty<string?> IsShowingBottomToolbar { get; } = new();
 

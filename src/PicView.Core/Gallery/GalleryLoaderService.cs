@@ -60,7 +60,7 @@ public class GalleryLoaderService
                 {
                     // Use a reasonable size for thumbnail loading
                     // We can check GalleryDefaults or use the current height
-                    var size = (uint)Math.Max(currentHeight, 100);
+                    var size = (uint)Math.Max(currentHeight, GalleryDefaults.MaxFullGalleryItemHeight);
                     
                     var thumb = await thumbnailLoader.GetThumbnailAsync(item.FileInfo, size).ConfigureAwait(false);
                     item.Image.Value = thumb;
