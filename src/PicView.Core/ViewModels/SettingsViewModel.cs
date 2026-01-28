@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using PicView.Core.Config;
 using PicView.Core.Localization;
 using PicView.Core.ColorHandling;
@@ -94,6 +95,11 @@ public class SettingsViewModel : IDisposable
         }).AddTo(_disposables);
 
         UpdateNavigationProperties();
+        
+        Debug.Assert(Settings.Gallery is not null);
+        Observable.EveryValueChanged(Settings.Gallery, gallery =>  gallery.DockPosition)
+            .Subscribe(position => DockPositionIndex.Value = (int)position)
+            .AddTo(_disposables);
     }
     
     public void Initialize(IThemeService themeService, ILanguageService languageService, IImageSettingsService imageSettingsService)
@@ -356,14 +362,16 @@ public class SettingsViewModel : IDisposable
         Observable.EveryValueChanged(this, x => x.DockedGalleryStretchIndex.CurrentValue)
             .SubscribeAwait(async (x, _) =>
             {
-                Settings.Gallery.BottomGalleryStretchMode = GetStretchString(x);
+                var mode = GetStretchString(x);
+                Settings.Gallery.BottomGalleryStretchMode = mode;
                 await SaveSettingsAsync();
             }).AddTo(_disposables);
 
         Observable.EveryValueChanged(this, x => x.FullGalleryStretchIndex.CurrentValue)
             .SubscribeAwait(async (x, _) =>
             {
-                Settings.Gallery.FullGalleryStretchMode = GetStretchString(x);
+                var mode = GetStretchString(x);
+                Settings.Gallery.FullGalleryStretchMode = mode;
                 await SaveSettingsAsync();
             }).AddTo(_disposables);
 

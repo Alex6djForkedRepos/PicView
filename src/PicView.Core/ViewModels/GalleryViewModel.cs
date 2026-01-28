@@ -30,7 +30,7 @@ public class GalleryViewModel : IDisposable
             IsGalleryExpanded.Value = mode == GalleryMode2.Expanded;
             IsDockedGalleryVisible.Value = mode == GalleryMode2.Docked;
         }).AddTo(_disposables);
-        
+
         // Commands
         SetGalleryModeCommand = new ReactiveCommand<GalleryMode2>();
         SetGalleryModeCommand.Subscribe(mode => GalleryMode.Value = mode).AddTo(_disposables);
@@ -38,11 +38,8 @@ public class GalleryViewModel : IDisposable
         SetDockPositionCommand = new ReactiveCommand<GalleryDockPosition>();
         SetDockPositionCommand.Subscribe(pos =>
         {
-            GalleryDockPosition.Value = pos;
-            if (GalleryMode.Value != GalleryMode2.Expanded)
-            {
-                GalleryMode.Value = GalleryMode2.Docked;
-            }
+            Settings.Gallery.DockPosition = pos;
+            GalleryMode.Value = GalleryMode2.Docked;
         }).AddTo(_disposables);
 
         ToggleGalleryCommand = new ReactiveCommand<Unit>();
@@ -62,9 +59,6 @@ public class GalleryViewModel : IDisposable
     public ReactiveCommand<Unit> CloseGalleryCommand { get; }
 
     public BindableReactiveProperty <ObservableCollection<GalleryItemViewModel>> GalleryItems { get; } = new([]);
-
-    public BindableReactiveProperty<GalleryDockPosition> GalleryDockPosition { get; } = new(Settings.Gallery.DockPosition);
-
     public BindableReactiveProperty<GalleryMode2> GalleryMode { get; }
 
     public BindableReactiveProperty<object> GalleryStretch { get; } = new();
@@ -72,6 +66,10 @@ public class GalleryViewModel : IDisposable
     public BindableReactiveProperty<object> GalleryOrientation { get; } = new();
 
     public BindableReactiveProperty<bool> IsGalleryExpanded { get; } = new();
+    public BindableReactiveProperty<bool> IsTopDocked { get; } = new();
+    public BindableReactiveProperty<bool> IsBottomDocked { get; } = new();
+    public BindableReactiveProperty<bool> IsLeftDocked { get; } = new();
+    public BindableReactiveProperty<bool> IsRightDocked { get; } = new();
     
     public BindableReactiveProperty<bool> IsDockedGalleryVisible { get; } = new(Settings.Gallery.IsGalleryDocked);
     public BindableReactiveProperty<bool> IsDockedGalleryShownInHiddenUI { get; } =
@@ -81,7 +79,6 @@ public class GalleryViewModel : IDisposable
     {
         _disposables.Dispose();
         Disposable.Dispose(GalleryItems,
-            GalleryDockPosition,
             IsDockedGalleryVisible,
             IsDockedGalleryShownInHiddenUI,
             GalleryMode,

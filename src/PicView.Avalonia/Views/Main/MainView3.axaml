@@ -842,19 +842,6 @@
                                      Mode=OneWay}"
         ContextMenu="{StaticResource MainContextMenu}"
         x:Name="MainPanel">
-        <buttons:ClickArrowRight2
-            HorizontalAlignment="Right"
-            Margin="{CompiledBinding RightControlOffSetMargin.Value}"
-            Opacity="0"
-            VerticalAlignment="Center"
-            ZIndex="2"
-            x:Name="ClickArrowRight" />
-        <buttons:ClickArrowLeft2
-            HorizontalAlignment="Left"
-            Opacity="0"
-            VerticalAlignment="Center"
-            ZIndex="2"
-            x:Name="ClickArrowLeft" />
         <uc:SpinWaiter
             HorizontalAlignment="Center"
             IsVisible="{CompiledBinding IsLoadingIndicatorShown.Value,

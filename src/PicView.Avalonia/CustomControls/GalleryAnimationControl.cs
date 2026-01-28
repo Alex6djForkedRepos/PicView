@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
@@ -64,7 +65,7 @@ public class GalleryAnimationControl : UserControl
 
     #region Constructors
 
-    public GalleryAnimationControl()
+    protected GalleryAnimationControl()
     {
         Loaded += OnControlLoaded;
     }
@@ -87,9 +88,10 @@ public class GalleryAnimationControl : UserControl
             .SubscribeAwait(async (mode, _) => await OnGalleryModeChanged(mode))
             .AddTo(_disposables);
         
+        Debug.Assert(Settings.Gallery is not null);
         // Also subscribe to DockPosition, as changing it while Docked might need layout updates
-        ViewModel.Gallery.GalleryDockPosition
-            .Subscribe(_ => UpdateLayoutForCurrentState())
+        Observable.EveryValueChanged(Settings.Gallery, gallery =>  gallery.DockPosition)
+            .Subscribe(SetDockedLayout)
             .AddTo(_disposables);
 
         if (Parent is Control parent)
@@ -147,29 +149,28 @@ public class GalleryAnimationControl : UserControl
              DebugHelper.LogDebug(nameof(GalleryAnimationControl), nameof(OnGalleryModeChanged), ex);
         }
     }
-
+    
     private void UpdateLayoutForCurrentState()
     {
         var mode = ViewModel.Gallery.GalleryMode.Value;
-        var dock = ViewModel.Gallery.GalleryDockPosition.Value;
+        var dock = Settings.Gallery.DockPosition;
 
         IsVisible = mode != GalleryMode2.Closed;
         Opacity = IsVisible ? FullOpacity : NoOpacity;
 
-        if (mode == GalleryMode2.Closed)
+        switch (mode)
         {
-            Width = ZeroSize;
-            Height = ZeroSize;
-            return;
-        }
-
-        if (mode == GalleryMode2.Expanded)
-        {
-            SetExpandedLayout(dock);
-        }
-        else // Docked
-        {
-            SetDockedLayout(dock);
+            case GalleryMode2.Closed:
+                Width = ZeroSize;
+                Height = ZeroSize;
+                return;
+            case GalleryMode2.Expanded:
+                SetExpandedLayout(dock);
+                break;
+            case GalleryMode2.Docked:
+            default:
+                SetDockedLayout(dock);
+                break;
         }
     }
     
@@ -182,11 +183,13 @@ public class GalleryAnimationControl : UserControl
             {
                 Width = double.NaN; 
                 Height = parent.Bounds.Height;
+                ViewModel.Gallery.GalleryOrientation.Value = Orientation.Vertical; 
             }
             else
             {
                 Width = parent.Bounds.Width;
                 Height = double.NaN;
+                ViewModel.Gallery.GalleryOrientation.Value = Orientation.Horizontal; 
             }
         }
         
@@ -196,11 +199,7 @@ public class GalleryAnimationControl : UserControl
             _scrollViewer.HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled;
             _scrollViewer.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
         }
-        
-        // Update ViewModel props
-        ViewModel!.Gallery.GalleryOrientation.Value = Orientation.Vertical; 
         ViewModel.Gallery.GalleryVerticalAlignment.Value = VerticalAlignment.Stretch;
-        // Margins etc can be set here or in VM
     }
 
     private void SetDockedLayout(GalleryDockPosition dock)
@@ -230,14 +229,38 @@ public class GalleryAnimationControl : UserControl
             
             // For side docking, typically we want vertical list? Or horizontal wrap in narrow col?
             // Usually side docked gallery is a vertical strip.
-            ViewModel!.Gallery.GalleryOrientation.Value = Orientation.Vertical; // Assuming vertical strip for side dock
-             ViewModel.Gallery.GalleryVerticalAlignment.Value = VerticalAlignment.Stretch;
+            ViewModel.Gallery.GalleryOrientation.Value = Orientation.Vertical; // Assuming vertical strip for side dock
+            ViewModel.Gallery.GalleryVerticalAlignment.Value = VerticalAlignment.Stretch;
 
-            if (_scrollViewer != null)
+            if (_scrollViewer == null)
             {
-                _scrollViewer.HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled;
-                _scrollViewer.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
+                return;
             }
+
+            _scrollViewer.HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled;
+            _scrollViewer.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
+        }
+        
+        ViewModel.Gallery.IsLeftDocked.Value = ViewModel.Gallery.IsRightDocked.Value = ViewModel.Gallery.IsBottomDocked.Value = ViewModel.Gallery.IsTopDocked.Value = false;
+        switch (dock)
+        {
+            case GalleryDockPosition.Top:
+                DockPanel.SetDock(this, Dock.Top);
+                ViewModel.Gallery.IsTopDocked.Value = true;
+                break;
+            case GalleryDockPosition.Left:
+                DockPanel.SetDock(this, Dock.Left);
+                ViewModel.Gallery.IsLeftDocked.Value = true;
+                break;
+            case GalleryDockPosition.Right:
+                DockPanel.SetDock(this, Dock.Right);
+                ViewModel.Gallery.IsRightDocked.Value = true;
+                break;
+            case GalleryDockPosition.Bottom:
+            default:
+                DockPanel.SetDock(this, Dock.Bottom);
+                ViewModel.Gallery.IsBottomDocked.Value = true;
+                break;
         }
     }
 
@@ -246,7 +269,7 @@ public class GalleryAnimationControl : UserControl
     private async Task ClosedToDocked()
     {
         if (ViewModel == null) return;
-        var dock = ViewModel.Gallery.GalleryDockPosition.Value;
+        var dock = Settings.Gallery.DockPosition;
         
         IsVisible = true;
         Opacity = FullOpacity;
@@ -285,8 +308,8 @@ public class GalleryAnimationControl : UserControl
 
     private async Task DockedToClosed()
     {
-         if (ViewModel == null) return;
-         var dock = ViewModel.Gallery.GalleryDockPosition.Value;
+         if (ViewModel == null) return;        
+         var dock = Settings.Gallery.DockPosition;
          
          var currentSize = Settings.Gallery.BottomGalleryItemSize + SizeDefaults.ScrollbarSize;
          
@@ -309,7 +332,7 @@ public class GalleryAnimationControl : UserControl
     private async Task DockedToExpanded()
     {
         if (ViewModel == null || Parent is not Control parent) return;
-        var dock = ViewModel.Gallery.GalleryDockPosition.Value;
+        var dock = Settings.Gallery.DockPosition;
         
         SetExpandedLayout(dock); // Set props
         
@@ -334,7 +357,7 @@ public class GalleryAnimationControl : UserControl
     private async Task ExpandedToDocked()
     {
         if (ViewModel == null || Parent is not Control parent) return;
-        var dock = ViewModel.Gallery.GalleryDockPosition.Value;
+        var dock = Settings.Gallery.DockPosition;
         
         // Animate from Full
         if (dock is GalleryDockPosition.Top or GalleryDockPosition.Bottom)
@@ -366,7 +389,7 @@ public class GalleryAnimationControl : UserControl
 
     private async Task ClosedToExpanded()
     {
-        var dock = ViewModel.Gallery.GalleryDockPosition.Value;
+        var dock = Settings.Gallery.DockPosition;
 
         IsVisible = true;
         Opacity = NoOpacity;

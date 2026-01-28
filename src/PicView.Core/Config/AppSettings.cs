@@ -236,9 +236,6 @@ public class Theme
 
 public class Gallery
 {
-    [JsonExtensionData]
-    public Dictionary<string, object>? ExtensionData { get; set; }
-
     /// <summary>
     /// A property indicating whether the docked gallery is currently visible in the application.
     /// </summary>

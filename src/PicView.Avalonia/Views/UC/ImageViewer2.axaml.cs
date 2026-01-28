@@ -11,6 +11,7 @@ using PicView.Avalonia.ImageTransformations;
 using PicView.Avalonia.ImageTransformations.Rotation;
 using PicView.Avalonia.Input;
 using PicView.Avalonia.UI;
+using PicView.Core.Config;
 using PicView.Core.Exif;
 using PicView.Core.ViewModels;
 using R3;
@@ -160,23 +161,23 @@ public partial class ImageViewer2 : UserControl
     }
 
     #region Zoom
-    /// <inheritdoc cref="Zoom.ZoomIn(MainViewModel)"/>
+    /// <inheritdoc cref="Zoom.ZoomIn(ViewModels.MainViewModel)"/>
     private void ZoomIn(PointerWheelEventArgs e) =>
         ZoomPanControl.ZoomWithPointerWheel(e);
 
-    /// <inheritdoc cref="Zoom.ZoomOut(MainViewModel)"/>
+    /// <inheritdoc cref="Zoom.ZoomOut(ViewModels.MainViewModel)"/>
     private void ZoomOut(PointerWheelEventArgs e) =>
         ZoomPanControl.ZoomWithPointerWheel(e);
 
-    /// <inheritdoc cref="Zoom.ZoomIn(MainViewModel)"/>
+    /// <inheritdoc cref="Zoom.ZoomIn(ViewModels.MainViewModel)"/>
     public void ZoomIn() =>
         ZoomPanControl.ZoomIn();
 
-    /// <inheritdoc cref="Zoom.ZoomOut(MainViewModel)"/>
+    /// <inheritdoc cref="Zoom.ZoomOut(ViewModels.MainViewModel)"/>
     public void ZoomOut() =>
         ZoomPanControl.ZoomOut();
 
-    /// <inheritdoc cref="Zoom.ResetZoom(bool, MainViewModel)"/>
+    /// <inheritdoc cref="Zoom.ResetZoom(bool, ViewModels.MainViewModel)"/>
     public void ResetZoom(bool enableAnimations = true) =>
         ZoomPanControl.ResetZoom(enableAnimations);
     

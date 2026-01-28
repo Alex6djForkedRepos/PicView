@@ -4,8 +4,8 @@
     x:Class="PicView.Avalonia.Views.UC.Menus.DropDownMenu"
     x:DataType="viewModels:MainWindowViewModel"
     xmlns="https://github.com/avaloniaui"
-    xmlns:customControls="clr-namespace:PicView.Avalonia.CustomControls"
     xmlns:config="clr-namespace:PicView.Core.Config;assembly=PicView.Core"
+    xmlns:customControls="clr-namespace:PicView.Avalonia.CustomControls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewModels="clr-namespace:PicView.Core.ViewModels;assembly=PicView.Core"
@@ -92,6 +92,7 @@
                             IconHeight="12"
                             IconMargin="0,0,7,0"
                             IconWidth="12"
+                            IsEnabled="{CompiledBinding !WindowTabs.ActiveTab.Value.Gallery.IsBottomDocked.Value}"
                             Padding="15,7,15,7"
                             Text="Show docked gallery at bottom" />
                         <customControls:TextIconButton
@@ -104,6 +105,7 @@
                             IconHeight="12"
                             IconMargin="0,0,7,0"
                             IconWidth="12"
+                            IsEnabled="{CompiledBinding !WindowTabs.ActiveTab.Value.Gallery.IsLeftDocked.Value}"
                             Padding="15,7,15,7"
                             Text="Show docked gallery to the left" />
                         <customControls:TextIconButton
@@ -116,6 +118,7 @@
                             IconHeight="12"
                             IconMargin="0,0,7,0"
                             IconWidth="12"
+                            IsEnabled="{CompiledBinding !WindowTabs.ActiveTab.Value.Gallery.IsRightDocked.Value}"
                             Padding="15,7,15,7"
                             Text="Show docked gallery to the right" />
                         <customControls:TextIconButton
@@ -128,6 +131,7 @@
                             IconHeight="12"
                             IconMargin="0,0,7,0"
                             IconWidth="12"
+                            IsEnabled="{CompiledBinding !WindowTabs.ActiveTab.Value.Gallery.IsTopDocked.Value}"
                             Padding="15,7,15,7"
                             Text="Show docked gallery at top" />
                         <customControls:TextIconButton

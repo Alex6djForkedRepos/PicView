@@ -2,8 +2,8 @@ namespace PicView.Core.Config;
 
 public enum GalleryDockPosition
 {
-    Left = 0,
-    Bottom = 1,
-    Right = 2,
-    Top = 3
+    Bottom = 0,
+    Top = 1,
+    Left = 2,
+    Right = 3,
 }

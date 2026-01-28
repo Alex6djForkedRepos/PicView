@@ -72,10 +72,10 @@
                     SelectedIndex="{CompiledBinding SettingsViewModel.DockPositionIndex.Value,
                                                     Mode=TwoWay}"
                     Width="300">
-                    <ComboBoxItem Content="{CompiledBinding Translation.Left.Value, Mode=OneWay}" />
                     <ComboBoxItem Content="{CompiledBinding Translation.Bottom.Value, Mode=OneWay}" />
-                    <ComboBoxItem Content="{CompiledBinding Translation.Right.Value, Mode=OneWay}" />
                     <ComboBoxItem Content="{CompiledBinding Translation.Top.Value, Mode=OneWay}" />
+                    <ComboBoxItem Content="{CompiledBinding Translation.Left.Value, Mode=OneWay}" />
+                    <ComboBoxItem Content="{CompiledBinding Translation.Right.Value, Mode=OneWay}" />
                 </ComboBox>
             </StackPanel>
         </Border>

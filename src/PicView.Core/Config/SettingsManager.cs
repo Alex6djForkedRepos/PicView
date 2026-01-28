@@ -231,19 +231,6 @@ public static class SettingsManager
 
         if (existingSettings.Version < 2.0)
         {
-            if (existingSettings.Gallery.ExtensionData?.TryGetValue("IsBottomGalleryShown", out var value) == true)
-            {
-                if (value is JsonElement element && element.ValueKind == JsonValueKind.True)
-                {
-                    existingSettings.Gallery.IsGalleryDocked = true;
-                }
-                else if (value is bool b && b)
-                {
-                    existingSettings.Gallery.IsGalleryDocked = true;
-                }
-                existingSettings.Gallery.ExtensionData.Remove("IsBottomGalleryShown");
-            }
-
             existingSettings.Gallery.DockPosition = GalleryDockPosition.Bottom;
         }
 

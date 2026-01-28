@@ -203,6 +203,28 @@ public class TabViewModel(string id, Func<string, ValueTask> closeTab, IFileWatc
         
         _ = _galleryLoader.LoadGalleryAsync(this, files, thumbnailLoader, GetTabCancellation().Token);
     }
+    
+    public async ValueTask Next()
+    {
+        if (!CanNavigateForwards.CurrentValue)
+        {
+            return;
+        }
+        var index = ImageIterator.CurrentIndex;
+        var next = ImageIterator.GetIteration(index, NavigateTo.Next, Id, SkipAmount.One);
+        await ImageIterator.IterateToIndexAsync(next, NavigationCts).ConfigureAwait(false);
+    }
+
+    public async ValueTask Prev()
+    {
+        if (!CanNavigateBackwards.CurrentValue)
+        {
+            return;
+        }
+        var index = ImageIterator.CurrentIndex;
+        var prev = ImageIterator.GetIteration(index, NavigateTo.Previous, Id, SkipAmount.One);
+        await ImageIterator.IterateToIndexAsync(prev, NavigationCts).ConfigureAwait(false);
+    }
 
     public async ValueTask CloseTab()
     {

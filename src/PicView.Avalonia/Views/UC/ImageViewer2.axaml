@@ -3,17 +3,13 @@
     x:DataType="viewModels1:TabViewModel"
     xmlns="https://github.com/avaloniaui"
     xmlns:buttons="clr-namespace:PicView.Avalonia.Views.UC.Buttons"
-    xmlns:converters="clr-namespace:PicView.Avalonia.Converters"
     xmlns:customControls="clr-namespace:PicView.Avalonia.CustomControls"
     xmlns:gallery="clr-namespace:PicView.Avalonia.Views.Gallery"
     xmlns:uc="clr-namespace:PicView.Avalonia.Views.UC"
     xmlns:viewModels1="clr-namespace:PicView.Core.ViewModels;assembly=PicView.Core"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <UserControl.Resources>
-        <converters:DockConverter x:Key="DockConverter" />
-    </UserControl.Resources>
     <DockPanel LastChildFill="True">
-        <gallery:GalleryView2 DockPanel.Dock="{CompiledBinding Gallery.GalleryDockPosition.Value, Converter={StaticResource DockConverter}, FallbackValue=Bottom}" x:Name="GalleryView" />
+        <gallery:GalleryView2 DockPanel.Dock="Bottom" x:Name="GalleryView" />
         <Panel x:Name="MainPanel">
             <customControls:ZoomPanControl2 x:Name="ZoomPanControl">
                 <customControls:AutoScrollViewer
@@ -41,6 +37,19 @@
                 ZIndex="90"
                 x:Name="ZoomPreview" />
             <uc:HoverBar2 VerticalAlignment="Bottom" x:Name="HoverBar" />
+            <buttons:ClickArrowRight2
+                HorizontalAlignment="Right"
+                Margin="{CompiledBinding $parent[Window].((viewModels1:MainWindowViewModel)DataContext).RightControlOffSetMargin.Value}"
+                Opacity="0"
+                VerticalAlignment="Center"
+                ZIndex="2"
+                x:Name="ClickArrowRight" />
+            <buttons:ClickArrowLeft2
+                HorizontalAlignment="Left"
+                Opacity="0"
+                VerticalAlignment="Center"
+                ZIndex="2"
+                x:Name="ClickArrowLeft" />
             <buttons:GalleryShortcut2
                 HorizontalAlignment="Right"
                 Opacity="0"
