@@ -33,6 +33,7 @@ public class SettingsSearchData : IDisposable
     public BindableReactiveProperty<string> NavigationTaskbarSearchTags { get; }
     public BindableReactiveProperty<string> NavigationSpeedSearchTags { get; }
     public BindableReactiveProperty<string> GalleryVisibilitySearchTags { get; }
+    public BindableReactiveProperty<string> GalleryDockSearchTags { get; }
     public BindableReactiveProperty<string> GallerySizeSearchTags { get; }
     public BindableReactiveProperty<string> GalleryStretchSearchTags { get; }
     public BindableReactiveProperty<string> SlideshowSearchTags { get; }
@@ -263,8 +264,25 @@ public class SettingsSearchData : IDisposable
         sb.Append(space);
         sb.Append(TranslationManager.Translation.ShowDockedGalleryWhenUiIsHidden);
         sb.Append(space);
-        sb.Append("Gallery Hide Show UI Docked Position");
+        sb.Append("Gallery Hide Show UI Docked");
         GalleryVisibilitySearchTags = new BindableReactiveProperty<string>(sb.ToString());
+        
+        sb.Clear();
+
+        sb.Append(TranslationManager.Translation.GallerySettings);
+        sb.Append(space);
+        sb.Append(TranslationManager.Translation.Orientation);
+        sb.Append(space);
+        sb.Append(TranslationManager.Translation.Bottom);
+        sb.Append(space);
+        sb.Append(TranslationManager.Translation.Top);
+        sb.Append(space);
+        sb.Append(TranslationManager.Translation.Left);
+        sb.Append(space);
+        sb.Append(TranslationManager.Translation.Right);
+        sb.Append(space);
+        sb.Append("Position Dock Gallery");
+        GalleryDockSearchTags = new BindableReactiveProperty<string>(sb.ToString());
         
         sb.Clear();
 
@@ -466,6 +484,7 @@ public class SettingsSearchData : IDisposable
             NavigationTaskbarSearchTags,
             NavigationSpeedSearchTags,
             GalleryVisibilitySearchTags,
+            GalleryDockSearchTags,
             GallerySizeSearchTags,
             GalleryStretchSearchTags,
             SlideshowSearchTags,

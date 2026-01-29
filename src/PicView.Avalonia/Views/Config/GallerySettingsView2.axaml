@@ -9,14 +9,14 @@
 
     <StackPanel HorizontalAlignment="Center">
 
+        <TextBlock
+            Classes="txt bold"
+            Margin="0,20,0,20"
+            Text="{CompiledBinding Translation.GallerySettings.Value,
+                                   Mode=OneWay}" />
+
         <Border Classes="searchBorder" ui:SearchProperties.Keywords="{CompiledBinding SettingsViewModel.SearchData.GalleryVisibilitySearchTags.Value}">
             <StackPanel>
-                <TextBlock
-                    Classes="txt bold"
-                    Margin="0,20,0,20"
-                    Text="{CompiledBinding Translation.GallerySettings.Value,
-                                           Mode=OneWay}" />
-
                 <ToggleButton
                     Background="Transparent"
                     BorderThickness="0"
@@ -52,7 +52,7 @@
             </StackPanel>
         </Border>
 
-        <Border Classes="searchBorder" ui:SearchProperties.Keywords="{CompiledBinding SettingsViewModel.SearchData.GalleryVisibilitySearchTags.Value}">
+        <Border Classes="searchBorder" ui:SearchProperties.Keywords="{CompiledBinding SettingsViewModel.SearchData.GalleryDockSearchTags.Value}">
             <StackPanel>
                 <TextBlock
                     Classes="txt"
