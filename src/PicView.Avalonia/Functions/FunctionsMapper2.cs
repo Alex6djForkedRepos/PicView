@@ -1,4 +1,5 @@
 using Avalonia;
+using Avalonia.Media;
 using Avalonia.Threading;
 using PicView.Avalonia.Clipboard;
 using PicView.Avalonia.ColorManagement;
@@ -13,7 +14,9 @@ using PicView.Avalonia.UI;
 using PicView.Avalonia.ViewModels;
 using PicView.Avalonia.Views.UC;
 using PicView.Avalonia.Input;
+using PicView.Avalonia.Services;
 using PicView.Avalonia.WindowBehavior;
+using PicView.Core.ColorHandling;
 using PicView.Core.FileSorting;
 using PicView.Core.IPlatform;
 using PicView.Core.Navigation;
@@ -408,10 +411,31 @@ public class FunctionsMapper2(Core.ViewModels.MainWindowViewModel vm) : IFunctio
     }
     
     /// <inheritdoc cref="SettingsUpdater.ToggleConstrainBackgroundColor(MainViewModel)" />
-    public async ValueTask ToggleConstrainBackgroundColor()
+    public ValueTask ToggleConstrainBackgroundColor()
     {
-        // await SettingsUpdater.ToggleConstrainBackgroundColor(vm).ConfigureAwait(false);
-        return;
+        Settings.UIProperties.IsConstrainBackgroundColorEnabled =
+            !Settings.UIProperties.IsConstrainBackgroundColorEnabled;
+        if (Application.Current.DataContext is not CoreViewModel core || core?.MainWindows.ActiveWindow.Value is not { } activeWindow)
+        {
+            return ValueTask.CompletedTask;
+        }
+
+        var brush = BackgroundManager.GetBackgroundBrush((BackgroundType)Settings.UIProperties.BgColorChoice);
+                 
+        if (Settings.UIProperties.IsConstrainBackgroundColorEnabled)
+        {
+            activeWindow.ImageBackground.Value = new SolidColorBrush(Colors.Transparent);
+            activeWindow.ConstrainedImageBackground.Value = brush;
+        }
+        else
+        {
+            activeWindow.ImageBackground.Value = brush;
+            activeWindow.ConstrainedImageBackground.Value = new SolidColorBrush(Colors.Transparent);
+        }
+                 
+        activeWindow.BackgroundChoice.Value = Settings.UIProperties.BgColorChoice;
+        
+        return ValueTask.CompletedTask;
     }
     
     #endregion

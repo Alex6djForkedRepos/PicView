@@ -32,7 +32,7 @@ public class ThemeService : IThemeService
 
         Settings.UIProperties.BgColorChoice = backgroundIndex;
                  
-        var brush = GetBackgroundBrush((BackgroundType)backgroundIndex);
+        var brush = BackgroundManager.GetBackgroundBrush((BackgroundType)backgroundIndex);
                  
         if (Settings.UIProperties.IsConstrainBackgroundColorEnabled)
         {
@@ -46,25 +46,6 @@ public class ThemeService : IThemeService
         }
                  
         activeWindow.BackgroundChoice.Value = backgroundIndex;
-    }
-
-    private Brush GetBackgroundBrush(BackgroundType backgroundType)
-    {
-        return backgroundType switch
-        {
-            BackgroundType.Transparent => new SolidColorBrush(Colors.Transparent),
-            BackgroundType.NoiseTexture => GetNoiseTextureBrush(),
-            BackgroundType.Checkerboard => BackgroundManager.CreateCheckerboardBrush(),
-            BackgroundType.CheckerboardAlternative => BackgroundManager.CreateCheckerboardBrushAlt(),
-            BackgroundType.White => new SolidColorBrush(Colors.White),
-            BackgroundType.LightGray => new SolidColorBrush(Color.FromRgb(200, 200, 200)),
-            BackgroundType.MediumGray => new SolidColorBrush(Color.FromRgb(155, 155, 155)),
-            BackgroundType.SemiTransparentDarkGray => new SolidColorBrush(Color.FromArgb(200, 100, 100, 100)),
-            BackgroundType.SemiTransparentDarkerGray => new SolidColorBrush(Color.FromArgb(200, 50, 50, 50)),
-            BackgroundType.NearBlack => new SolidColorBrush(Color.FromRgb(5, 5, 5)),
-            BackgroundType.DarkGray => new SolidColorBrush(Color.FromRgb(48, 48, 48)),
-            _ => new SolidColorBrush(Colors.Transparent)
-        };
     }
     
     private Brush GetNoiseTextureBrush()

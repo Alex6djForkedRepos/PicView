@@ -206,8 +206,8 @@ public class SettingsViewModel : IDisposable
     public BindableReactiveProperty<int> MouseDoubleClickBehaviorIndex { get; }
     
     // Commands for simple toggles or actions
-    public ReactiveCommand<ColorOptions> SetColorThemeCommand { get; } = new ReactiveCommand<ColorOptions>();
-    public ReactiveCommand<BackgroundType> SetBackgroundCommand { get; } = new ReactiveCommand<BackgroundType>();
+    public ReactiveCommand<ColorOptions> SetColorThemeCommand { get; } = new();
+    public ReactiveCommand<BackgroundType> SetBackgroundCommand { get; } = new();
     public ReactiveCommand ToggleUsingTouchpadCommand { get; }
 
     

@@ -292,7 +292,7 @@
     </UserControl.Resources>
 
     <Border
-        Background="{DynamicResource WindowBackgroundColor}"
+        Background="{DynamicResource MenuBackgroundColor}"
         BorderBrush="{DynamicResource WindowBorderColor}"
         BorderThickness="0,1,0,0"
         Height="{CompiledBinding BottombarHeight.Value,

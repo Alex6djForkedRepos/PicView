@@ -837,11 +837,7 @@
         </ContextMenu>
     </UserControl.Resources>
 
-    <Panel
-        Background="{CompiledBinding ImageBackground.Value,
-                                     Mode=OneWay}"
-        ContextMenu="{StaticResource MainContextMenu}"
-        x:Name="MainPanel">
+    <Panel ContextMenu="{StaticResource MainContextMenu}" x:Name="MainPanel">
         <uc:SpinWaiter
             HorizontalAlignment="Center"
             IsVisible="{CompiledBinding IsLoadingIndicatorShown.Value,

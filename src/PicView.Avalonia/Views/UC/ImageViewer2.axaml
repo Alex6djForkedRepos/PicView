@@ -10,17 +10,23 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <DockPanel LastChildFill="True">
         <gallery:GalleryView2
+            Background="{DynamicResource MenuBackgroundColor}"
             DockPanel.Dock="Bottom"
             ZIndex="1"
             x:Name="GalleryView" />
-        <Panel x:Name="MainPanel">
+        <Panel Background="{CompiledBinding $parent[Window].((viewModels1:MainWindowViewModel)DataContext).ImageBackground.Value, Mode=OneWay}" x:Name="MainPanel">
             <customControls:ZoomPanControl2 x:Name="ZoomPanControl">
                 <customControls:AutoScrollViewer
                     Focusable="False"
                     HorizontalScrollBarVisibility="Disabled"
                     VerticalScrollBarVisibility="Disabled"
                     x:Name="ImageScrollViewer">
-                    <Border x:Name="MainBorder">
+                    <Border
+                        Background="{CompiledBinding $parent[Window].((viewModels1:MainWindowViewModel)DataContext).ConstrainedImageBackground.Value,
+                                                     Mode=OneWay}"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        x:Name="MainBorder">
                         <UniformGrid Rows="1">
                             <LayoutTransformControl x:Name="MainTransform">
                                 <customControls:PicBox2 Source="{CompiledBinding Image.Value}" x:Name="MainImage" />

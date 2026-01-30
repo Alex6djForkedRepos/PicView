@@ -78,7 +78,6 @@
             </StackPanel>
         </Border>
 
-
         <Border Classes="searchBorder" ui:SearchProperties.Keywords="{CompiledBinding SettingsViewModel.SearchData.ColorSearchTags.Value}">
             <StackPanel>
                 <TextBlock

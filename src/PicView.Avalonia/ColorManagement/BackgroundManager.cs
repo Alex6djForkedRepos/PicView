@@ -28,7 +28,7 @@ public static class BackgroundManager
     /// <summary>
     /// Gets the appropriate brush for the current background setting
     /// </summary>
-    private static Brush GetBackgroundBrush(BackgroundType backgroundType) => backgroundType switch
+    public static Brush GetBackgroundBrush(BackgroundType backgroundType) => backgroundType switch
     {
         BackgroundType.Transparent => new SolidColorBrush(Colors.Transparent),
         BackgroundType.NoiseTexture => GetNoiseTextureBrush(),
