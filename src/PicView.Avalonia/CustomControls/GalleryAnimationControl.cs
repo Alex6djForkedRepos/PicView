@@ -204,6 +204,7 @@ public class GalleryAnimationControl : UserControl
         }
         ViewModel.Gallery.GalleryVerticalAlignment.Value = VerticalAlignment.Stretch;
         _itemsPanel?.Orientation = Orientation.Vertical;
+        ViewModel.Gallery.ItemSpacing.Value = Settings.Gallery.ItemSpacing;
     }
 
     private void SetDockedLayout(GalleryDockPosition dock)
@@ -265,6 +266,8 @@ public class GalleryAnimationControl : UserControl
                 ViewModel.Gallery.IsBottomDocked.Value = true;
                 break;
         }
+
+        ViewModel.Gallery.ItemSpacing.Value = 2;
     }
 
     // Animations

@@ -23,11 +23,23 @@ public class GalleryViewModel : IDisposable
         GalleryStretchService.SetStretch(this, Settings.Gallery.BottomGalleryStretchMode);
 
         Observable.EveryValueChanged(Settings.Gallery, g => g.ItemSpacing)
-            .Subscribe(x => ItemSpacing.Value = x)
+            .Subscribe(x =>
+            {
+                if (IsGalleryExpanded.CurrentValue)
+                {
+                    ItemSpacing.Value = x;
+                }
+            })
             .AddTo(_disposables);
 
         Observable.EveryValueChanged(Settings.Gallery, g => g.LineSpacing)
-            .Subscribe(x => LineSpacing.Value = x)
+            .Subscribe(x =>
+            {
+                if (IsGalleryExpanded.CurrentValue)
+                {
+                    LineSpacing.Value = x;
+                }
+            })
             .AddTo(_disposables);
 
         GalleryMode = new BindableReactiveProperty<GalleryMode2>(GalleryMode2.Closed);
