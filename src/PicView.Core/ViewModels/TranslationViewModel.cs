@@ -272,6 +272,10 @@ public class TranslationViewModel : IDisposable
         Sharpness.Value = t.Sharpness;
         ShowAllSettingsWindow.Value = t.ShowAllSettingsWindow;
         ShowDockedGallery.Value = t.ShowDockedGallery;
+        ShowDockedGalleryAtBottom.Value = t.ShowDockedGalleryAtBottom;
+        ShowDockedGalleryAtTop.Value = t.ShowDockedGalleryAtTop;
+        ShowDockedGalleryToTheLeft.Value = t.ShowDockedGalleryToTheLeft;
+        ShowDockedGalleryToTheRight.Value = t.ShowDockedGalleryToTheRight;
         ShowDockedGalleryWhenUiIsHidden.Value = t.ShowDockedGalleryWhenUiIsHidden;
         ShowBottomToolbar.Value = t.ShowBottomToolbar;
         ShowConfirmationDialogWhenMovingFileToRecycleBin.Value = t.ShowConfirmationDialogWhenMovingFileToRecycleBin;
@@ -585,6 +589,10 @@ public class TranslationViewModel : IDisposable
     public BindableReactiveProperty<string?> Sharpness { get; } = new();
     public BindableReactiveProperty<string?> ShowAllSettingsWindow { get; } = new();
     public BindableReactiveProperty<string?> ShowDockedGallery { get; } = new();
+    public BindableReactiveProperty<string?> ShowDockedGalleryAtBottom { get; } = new();
+    public BindableReactiveProperty<string?> ShowDockedGalleryAtTop { get; } = new();
+    public BindableReactiveProperty<string?> ShowDockedGalleryToTheLeft { get; } = new();
+    public BindableReactiveProperty<string?> ShowDockedGalleryToTheRight { get; } = new();
     public BindableReactiveProperty<string?> ShowDockedGalleryWhenUiIsHidden { get; } = new();
     public BindableReactiveProperty<string?> ShowBottomToolbar { get; } = new();
     public BindableReactiveProperty<string?> ShowConfirmationDialogWhenMovingFileToRecycleBin { get; } = new();

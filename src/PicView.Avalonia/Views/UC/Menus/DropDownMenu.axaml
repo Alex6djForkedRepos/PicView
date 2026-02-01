@@ -95,7 +95,7 @@
                             IconWidth="12"
                             IsEnabled="{CompiledBinding !GallerySettings.IsBottomDocked.Value}"
                             Padding="15,7,15,7"
-                            Text="Show docked gallery at bottom" />
+                            Text="{CompiledBinding Translation.ShowDockedGalleryAtBottom.Value}" />
                         <customControls:TextIconButton
                             Background="Transparent"
                             Classes="altHover"
@@ -108,7 +108,7 @@
                             IconWidth="12"
                             IsEnabled="{CompiledBinding !GallerySettings.IsLeftDocked.Value}"
                             Padding="15,7,15,7"
-                            Text="Show docked gallery to the left" />
+                            Text="{CompiledBinding Translation.ShowDockedGalleryToTheLeft.Value}" />
                         <customControls:TextIconButton
                             Background="Transparent"
                             Classes="altHover"
@@ -121,7 +121,7 @@
                             IconWidth="12"
                             IsEnabled="{CompiledBinding !GallerySettings.IsRightDocked.Value}"
                             Padding="15,7,15,7"
-                            Text="Show docked gallery to the right" />
+                            Text="{CompiledBinding Translation.ShowDockedGalleryToTheRight.Value}" />
                         <customControls:TextIconButton
                             Background="Transparent"
                             Classes="altHover"
@@ -134,7 +134,7 @@
                             IconWidth="12"
                             IsEnabled="{CompiledBinding !GallerySettings.IsTopDocked.Value}"
                             Padding="15,7,15,7"
-                            Text="Show docked gallery at top" />
+                            Text="{CompiledBinding Translation.ShowDockedGalleryAtTop.Value}" />
                         <customControls:TextIconButton
                             Background="Transparent"
                             Classes="altHover"
@@ -145,7 +145,7 @@
                             IconMargin="0,0,7,0"
                             IconWidth="12"
                             Padding="15,7,15,7"
-                            Text="Close docked gallery" />
+                            Text="{CompiledBinding Translation.HideDockedGallery.Value}" />
                     </StackPanel>
                 </Carousel.Items>
             </Carousel>

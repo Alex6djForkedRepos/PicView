@@ -357,6 +357,10 @@ public class LanguageModel
     public string? Shift { get; set; }
     public string? ShowAllSettingsWindow { get; set; }
     public string? ShowDockedGallery { get; set; }
+    public string? ShowDockedGalleryAtBottom { get; set; }
+    public string? ShowDockedGalleryAtTop { get; set; }
+    public string? ShowDockedGalleryToTheLeft { get; set; }
+    public string? ShowDockedGalleryToTheRight { get; set; }
     public string? ShowDockedGalleryWhenUiIsHidden { get; set; }
     public string? ShowBottomToolbar { get; set; }
     public string? ShowConfirmationDialogWhenMovingFileToRecycleBin { get; set; }
