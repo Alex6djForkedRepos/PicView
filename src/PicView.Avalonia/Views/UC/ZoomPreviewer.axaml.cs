@@ -309,6 +309,7 @@ public partial class ZoomPreviewer : UserControl
 
     public void SetInvisible()
     {
+        Opacity = 0;
         IsHitTestVisible = false;
     }
 
@@ -320,6 +321,13 @@ public partial class ZoomPreviewer : UserControl
         }
 
         var viewportRect = GetCurrentViewportRect();
+        if (viewportRect.X is 0 && viewportRect.Y is 0 && viewportRect.Width is 0 && viewportRect.Height is 0)
+        {
+            // Fixes incorrect size
+            UpdateSize(DataContext as MainViewModel);
+            IsHitTestVisible = false;
+            return;
+        }
 
         // Update the viewport border rectangle
         Canvas.SetLeft(ViewportBorder, viewportRect.X);
