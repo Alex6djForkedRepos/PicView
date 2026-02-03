@@ -117,6 +117,11 @@ public class ImageIterator(IImageCache cache, IThumbnailCache thumbCache, IThumb
         var targetFile = Files[index];
 
         var (status, model) = await TryLoadFromCacheAsync(index, targetFile, ct).ConfigureAwait(false);
+        if (index != CurrentIndex)
+        {
+            // User skipped
+            return;
+        }
         switch (status)
         {
             case CacheStatus.Cancelled:
@@ -317,12 +322,13 @@ public class ImageIterator(IImageCache cache, IThumbnailCache thumbCache, IThumb
             return await LoadThumbnailInternalAsync(index, file, ct, CacheStatus.NotInCache);
         }
 
-        // If we have the full image, show it and return
-        if (preLoadValue.IsLoading && preLoadValue.ImageModel.Image is null)
+        // Show thumb while loading
+        if (preLoadValue is { IsLoading: true, ImageModel.Image: null })
         {
             return await LoadThumbnailInternalAsync(index, file, ct, CacheStatus.IsLoadingInCache);
         }
 
+        // If we have the full image, show it and return
         return (CacheStatus.IsInCache, preLoadValue.ImageModel);
     }
 
@@ -360,13 +366,13 @@ public class ImageIterator(IImageCache cache, IThumbnailCache thumbCache, IThumb
     private async ValueTask<ImageModel?> LoadManuallyAsync(int index, CancellationTokenSource ct)
     {
         var imageModel = await _cache.LoadAsync(_tab.Id, index, Files, ct.Token).ConfigureAwait(false);
-
-        if (!ct.IsCancellationRequested && CurrentIndex == index && imageModel is not null)
+        if (index != CurrentIndex || ct.IsCancellationRequested)
         {
-            return imageModel;
+            // User skipped
+            return null;
         }
 
-        return null;
+        return imageModel;
     }
 
     #endregion
