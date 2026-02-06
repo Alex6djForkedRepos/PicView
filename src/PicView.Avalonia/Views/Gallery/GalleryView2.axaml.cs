@@ -1,10 +1,13 @@
 using System.Collections.Specialized;
 using Avalonia;
+using Avalonia.Input;
 using Avalonia.Threading;
 using ObservableCollections;
 using PicView.Avalonia.CustomControls;
+using PicView.Core.Navigation;
 using PicView.Core.Sizing;
 using PicView.Core.ViewModels;
+using R3;
 
 namespace PicView.Avalonia.Views.Gallery;
 
@@ -17,7 +20,24 @@ public partial class GalleryView2 : GalleryAnimationControl
         {
             return;
         }
-        core.MainWindows.ActiveWindow.CurrentValue.WindowTabs.ActiveTab.CurrentValue.Gallery.GalleryItems.CurrentValue.CollectionChanged += CurrentValueOnCollectionChanged;
+        var gallery = core.MainWindows.ActiveWindow.CurrentValue.WindowTabs.ActiveTab.CurrentValue.Gallery;
+        gallery.GalleryItems.CurrentValue.CollectionChanged += CurrentValueOnCollectionChanged;
+        
+        gallery.NavigateGalleryCommand.Subscribe(x =>
+        {
+            var direction = x switch
+            {
+                NavigateTo.Next => NavigationDirection.Right,
+                NavigateTo.Previous => NavigationDirection.Left,
+                NavigateTo.First => NavigationDirection.First,
+                NavigateTo.Last => NavigationDirection.Last,
+                NavigateTo.Up => NavigationDirection.Up,
+                NavigateTo.Down => NavigationDirection.Down,
+                _ => throw new ArgumentOutOfRangeException(nameof(x), x, null)
+            };
+            GalleryItemsControl.Navigate(direction);
+        });
+
          if (Settings.Gallery.IsGalleryDocked)
          {
              Height = Settings.Gallery.BottomGalleryItemSize + 2 + SizeDefaults.ScrollbarSize;

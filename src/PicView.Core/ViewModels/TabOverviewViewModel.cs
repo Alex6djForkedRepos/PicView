@@ -235,6 +235,13 @@ public class TabOverviewViewModel
     public async ValueTask NavigateDirectionalAsync(bool isKeyHeldDown, NavigateTo direction)
     {
         var tab = ActiveTab.Value;
+
+        if (tab.Gallery.IsGalleryExpanded.Value)
+        {
+            tab.Gallery.Navigate(direction);
+            return;
+        }
+        
         if (!CanActiveTabNavigate.Value || SharedNavigation is null || tab.ImageIterator is null)
         {
             return;

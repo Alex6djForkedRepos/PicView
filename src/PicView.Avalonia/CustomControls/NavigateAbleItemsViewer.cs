@@ -1,9 +1,12 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Metadata;
+using Avalonia.Controls.Presenters;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Data;
+using PicView.Avalonia.UI;
+using PicView.Avalonia.Views.Gallery;
 
 namespace PicView.Avalonia.CustomControls;
 
@@ -18,9 +21,6 @@ public readonly record struct ItemPosition(int index, Point pos, Size Size)
 public class NavigateAbleItemsViewer : ItemsControl
 {
     protected override Type StyleKeyOverride => typeof(NavigateAbleItemsViewer);
-    
-    private const string CurrentItemPseudoClass = ":currentItem";
-    private const string SelectedItemPseudoClass = ":selectedItem";
 
     private AutoScrollViewer? _scrollViewer;
     private int _internalSelectedIndex = -1;
@@ -84,7 +84,6 @@ public class NavigateAbleItemsViewer : ItemsControl
         }
 
         var oldIndex = e.OldValue is int val ? val : -1;
-        UpdatePseudoClasses(newIndex, CurrentItemPseudoClass, oldIndex);
             
         // Sync internal selection if changed externally (and valid)
         if (newIndex != _internalSelectedIndex && newIndex >= 0 && newIndex < ItemCount)
@@ -101,51 +100,54 @@ public class NavigateAbleItemsViewer : ItemsControl
     {
         var oldIndex = _internalSelectedIndex;
         _internalSelectedIndex = index;
-        UpdatePseudoClasses(index, SelectedItemPseudoClass, oldIndex);
         
         if (index >= 0)
         {
-            ScrollIndexIntoView(index);
+            SetSelectedItemAndScrollIntoView(index, oldIndex);
         }
     }
 
-    private void UpdatePseudoClasses(int newIndex, string pseudoClass, int oldIndex)
+    private void SetSelectedItemAndScrollIntoView(int index, int oldIndex)
     {
-        if (oldIndex >= 0 && oldIndex < ItemCount)
-        {
-            PseudoClasses.Set(pseudoClass, false);
-        }
-
-        if (newIndex < 0 || newIndex >= ItemCount)
+        if (_scrollViewer == null || index < 0 || index >= ItemCount)
         {
             return;
         }
+        
+        var newItem = ContainerFromIndex(index);
+        var oldItem = ContainerFromIndex(oldIndex);
 
-        var newContainer = ContainerFromIndex(newIndex);
-        if (newContainer is not null)
+        if (newItem is not ContentPresenter newPresenter || oldItem is not ContentPresenter oldPresenter)
         {
-            PseudoClasses.Set(pseudoClass, true);
+            return;
         }
-    }
-
-    private void ScrollIndexIntoView(int index)
-    {
-        if (_scrollViewer == null || index < 0 || index >= ItemCount) return;
-
-        var container = ContainerFromIndex(index);
-        // Use Dispatcher.Post to allow layout to settle if needed, or just run it. 
-        // AutoScrollViewer might not have BringIntoView support natively if it inherits ScrollViewer. 
-        // ScrollViewer has BringIntoView.
-        container?.BringIntoView();
-            
-        // Or use specific logic from GalleryNavigation if standard BringIntoView isn't enough?
-        // "it needs to... scroll items into view"
-        // Standard BringIntoView should work if items are in the ScrollViewer.
+        
+        newPresenter.BringIntoView();
+        if (newPresenter.Child is GalleryItem2 galleryItem)
+        {
+            galleryItem.OuterBorder.BorderBrush = UIHelper2.GetSolidColorBrush("SecondaryAccentColor");
+        }
+        if (oldPresenter.Child is GalleryItem2 galleryItem2)
+        {
+            galleryItem2.OuterBorder.BorderBrush = UIHelper2.GetSolidColorBrush("MainBorderColor");
+        }
     }
 
     public void Navigate(NavigationDirection direction)
     {
         if (ItemCount == 0) return;
+
+        if (direction == NavigationDirection.First)
+        {
+            SetInternalSelection(0);
+            return;
+        }
+
+        if (direction == NavigationDirection.Last)
+        {
+            SetInternalSelection(ItemCount - 1);
+            return;
+        }
 
         var startIndex = _internalSelectedIndex;
         if (startIndex < 0) startIndex = CurrentItemIndex;

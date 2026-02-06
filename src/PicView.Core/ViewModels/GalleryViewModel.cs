@@ -1,6 +1,7 @@
 using ObservableCollections;
 using PicView.Core.Config;
 using PicView.Core.Gallery;
+using PicView.Core.Navigation;
 using R3;
 
 namespace PicView.Core.ViewModels;
@@ -80,6 +81,13 @@ public class GalleryViewModel : IDisposable
             Settings.Gallery.DockPosition = GalleryDockPosition.Closed;
             GalleryMode.Value = GalleryMode2.Closed;
         }).AddTo(_disposables);
+
+        NavigateGalleryCommand = new ReactiveCommand<NavigateTo>();
+    }
+
+    public void Navigate(NavigateTo direction)
+    {
+        NavigateGalleryCommand.Execute(direction);
     }
     
     public ReactiveCommand<string> SetStretchModeCommand { get; }
@@ -88,6 +96,7 @@ public class GalleryViewModel : IDisposable
     public ReactiveCommand<GalleryDockPosition> SetDockPositionCommand { get; }
     public ReactiveCommand<Unit> ToggleGalleryCommand { get; }
     public ReactiveCommand<Unit> CloseGalleryCommand { get; }
+    public ReactiveCommand<NavigateTo> NavigateGalleryCommand { get; }
 
     public BindableReactiveProperty <ObservableList<GalleryItemViewModel>> GalleryItems { get; } = new([]);
     public BindableReactiveProperty<GalleryMode2> GalleryMode { get; }

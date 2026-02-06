@@ -266,6 +266,11 @@ public class FunctionsMapper2(Core.ViewModels.MainWindowViewModel vm) : IFunctio
     /// <inheritdoc cref="RotationNaRotationNavigationp(MainViewModel)" />
     public async ValueTask Up()
     {
+        if (vm.WindowTabs.ActiveTab.Value.Gallery.IsGalleryExpanded.Value)
+        {
+            await vm.WindowTabs.NavigateDirectionalAsync(MainKeyboardShortcuts2.IsKeyHeldDown, NavigateTo.Up).ConfigureAwait(false);
+            return;
+        }
         // await RotationNavigation.NavigateUp(vm).ConfigureAwait(false);
         return;
     }
@@ -287,6 +292,11 @@ public class FunctionsMapper2(Core.ViewModels.MainWindowViewModel vm) : IFunctio
     /// <inheritdoc cref="RotationNavigation.NavigateDown(MainViewModel)" />
     public async ValueTask Down()
     {
+        if (vm.WindowTabs.ActiveTab.Value.Gallery.IsGalleryExpanded.Value)
+        {
+            await vm.WindowTabs.NavigateDirectionalAsync(MainKeyboardShortcuts2.IsKeyHeldDown, NavigateTo.Down).ConfigureAwait(false);
+            return;
+        }
         // await RotationNavigation.NavigateDown(vm).ConfigureAwait(false);
         return;
     }
