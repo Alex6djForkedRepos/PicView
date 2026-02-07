@@ -20,14 +20,18 @@ public class Preloader2(Func<FileInfo, ValueTask<ImageModel>> imageModelLoader, 
             DebugHelper.LogDebug(nameof(Preloader2), nameof(Preload), "No files to preload");
             return;
         }
-
-        if (_isRunning)
+        lock (_lock)
         {
-            if (ownerId != _currentOwner)
+            if (_isRunning)
             {
-                return; // Already running
+                if (ownerId == _currentOwner)
+                {
+                    return; // Already running
+                }
             }
-            // Allow other tab s to preload
+        
+            _isRunning = true; // Mark running immediately so next caller is blocked
+            _currentOwner = ownerId;
         }
 
         Task.Run(() => PreLoadInternalAsync(ownerId, currentIndex, files, reversed, token), token);
@@ -47,10 +51,20 @@ public class Preloader2(Func<FileInfo, ValueTask<ImageModel>> imageModelLoader, 
 
     public void RemoveOwner(string ownerId)
     {
+        if (string.IsNullOrEmpty(ownerId))
+        {
+            DebugHelper.LogDebug(nameof(Preloader2), nameof(RemoveOwner), "Empty owner id string");
+            return;
+        }
         lock (_lock)
         {
-            var foundKey = _owners.FirstOrDefault(x => x.Value.Equals(ownerId)).Key;
-            _owners.Remove(foundKey);
+            var foundKey = _owners?.FirstOrDefault(x => x.Value.Equals(ownerId)).Key;
+            if (string.IsNullOrEmpty(foundKey))
+            {
+                DebugHelper.LogDebug(nameof(Preloader2), nameof(RemoveOwner), "No found key");
+                return;
+            }
+            _owners?.Remove(foundKey);
         }
     }
 
@@ -184,11 +198,13 @@ public class Preloader2(Func<FileInfo, ValueTask<ImageModel>> imageModelLoader, 
         }
         finally
         {
-            _isRunning = false;
+            lock (_lock)
+            {
+                _isRunning = false;
+            }
         }
 
         return;
-
 
         async Task LoopAsync(ParallelOptions parallelOptions, bool positive)
         {

@@ -179,16 +179,13 @@ public class NavigateAbleItemsViewer : ItemsControl
             
         switch (direction)
         {                
+            case NavigationDirection.Left:
             case NavigationDirection.Right:
                 if (validItem.Index is 0)
                 {
-                    // Don't loop
+                    // Don't loop or jump
                     return;
                 }
-                SetInternalSelection(validItem.Index);
-
-                break;
-            case NavigationDirection.Left:
                 SetInternalSelection(validItem.Index);
                 break;
                     

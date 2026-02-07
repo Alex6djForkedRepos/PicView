@@ -107,7 +107,6 @@ public class EvictingDictionary2<TValue> : IEnumerable<KeyValuePair<(string Owne
     {
         lock (_lock)
         {
-            // ALLOCATION FIX: Avoid LINQ
             List<CacheKey> keysToRemove = [];
             foreach (var key in _indexMap.Keys)
             {
@@ -161,7 +160,7 @@ public class EvictingDictionary2<TValue> : IEnumerable<KeyValuePair<(string Owne
     /// ALLOCATION-FREE PATH: Uses Span lookup.
     /// Use this when your path is a slice of a larger buffer/span.
     /// </summary>
-    public bool TryGetValueByPath(ReadOnlySpan<char> filePathSpan, [MaybeNullWhen(false)] out TValue value)
+    public bool TryGetValueByPath(ReadOnlySpan<char> filePathSpan, out TValue? value)
     {
         lock (_lock)
         {
@@ -170,7 +169,7 @@ public class EvictingDictionary2<TValue> : IEnumerable<KeyValuePair<(string Owne
         }
     }
 
-    public bool TryGetValue(string ownerId, int index, [MaybeNullWhen(false)] out TValue value)
+    public bool TryGetValue(string ownerId, int index, out TValue? value)
     {
         lock (_lock)
         {
@@ -181,7 +180,7 @@ public class EvictingDictionary2<TValue> : IEnumerable<KeyValuePair<(string Owne
                 return true;
             }
 
-            value = default;
+            value = null;
             return false;
         }
     }

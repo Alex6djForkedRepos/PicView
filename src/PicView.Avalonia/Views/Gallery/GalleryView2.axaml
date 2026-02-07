@@ -125,9 +125,9 @@
                 <ItemsPanelTemplate>
                     <WrapPanel
                         ItemSpacing="{CompiledBinding Gallery.ItemSpacing.Value}"
-                        ItemsAlignment="Center"
                         LineSpacing="{CompiledBinding Gallery.LineSpacing.Value}"
                         Margin="15,40,15,5"
+                        VerticalAlignment="Center"
                         x:Name="GalleryItemsPanel" />
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>

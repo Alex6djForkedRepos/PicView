@@ -80,7 +80,7 @@ public static class WindowFunctions2
         await FileHistoryManager.SaveToFileAsync();
         ArchiveExtraction.Cleanup();
         
-        if (core?.SettingsViewModel.SettingsWindowConfig is not null)
+        if (core?.SettingsViewModel?.SettingsWindowConfig is not null)
         {
             await core.SettingsViewModel.SettingsWindowConfig.SaveAsync();
         }
