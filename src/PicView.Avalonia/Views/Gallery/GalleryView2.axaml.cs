@@ -15,11 +15,12 @@ public partial class GalleryView2 : GalleryAnimationControl
 {
     public GalleryView2()
     {
-        InitializeComponent();
         if (Application.Current.DataContext is not CoreViewModel core)
         {
             return;
         }
+        InitializeComponent();
+
         var gallery = core.MainWindows.ActiveWindow.CurrentValue.WindowTabs.ActiveTab.CurrentValue.Gallery;
         gallery.GalleryItems.CurrentValue.CollectionChanged += CurrentValueOnCollectionChanged;
         

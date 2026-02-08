@@ -86,7 +86,6 @@ public class GalleryAnimationControl : UserControl
         _disposables = new CompositeDisposable();
 
         _viewer = this.FindControl<NavigateAbleItemsViewer>("GalleryItemsControl");
-        //_scrollViewer = _viewer.FindControl<AutoScrollViewer>("PART_ScrollViewer");
         if (_viewer.ItemsPanelRoot is WrapPanel panel)
         {
             _itemsPanel = panel;
@@ -100,6 +99,12 @@ public class GalleryAnimationControl : UserControl
         if (ViewModel == null)
         {
             return;
+        }
+
+        if (Settings.Gallery.IsGalleryDocked)
+        {
+            SetDockedLayout(Settings.Gallery.DockPosition);
+            _previousMode = GalleryMode2.Docked;
         }
 
         // Subscribe to Mode changes
@@ -124,6 +129,9 @@ public class GalleryAnimationControl : UserControl
     #endregion
 
     #region Logic
+
+    private static Thickness GetDockedMargin => new(0);
+    private static Thickness GetExpandedMargin => new(15,40,15,5);
 
     private static double GetDockedHeight =>
         Settings.Gallery.BottomGalleryItemSize + BorderTopAndBottomThickness + SizeDefaults.ScrollbarSize;
@@ -205,6 +213,8 @@ public class GalleryAnimationControl : UserControl
 
     private void SetExpandedLayoutCore(GalleryDockPosition dock)
     {
+        _itemsPanel.Margin = GetExpandedMargin;
+        
         if (Parent is Control parent)
         {
             // Full size relative to parent
@@ -270,6 +280,7 @@ public class GalleryAnimationControl : UserControl
 
     private void SetDockLayoutCore(GalleryDockPosition dock)
     {
+        _itemsPanel.Margin = GetDockedMargin;
         var size = GetDockedHeight;
 
         if (dock is GalleryDockPosition.Top or GalleryDockPosition.Bottom)
@@ -384,6 +395,8 @@ public class GalleryAnimationControl : UserControl
         var dock = Settings.Gallery.DockPosition;
 
         IsVisible = true;
+        
+        
 
         // Reset dimensions
         if (dock is GalleryDockPosition.Top or GalleryDockPosition.Bottom)
