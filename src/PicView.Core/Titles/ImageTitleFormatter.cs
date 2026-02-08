@@ -115,7 +115,9 @@ public static class ImageTitleFormatter
 
         var baseTitle = sb.ToString();
 
-        var fullTitle = $"{baseTitle} - {AppName}";
+        sb.Append(" - ");
+        sb.Append(AppName);
+        var fullTitle = sb.ToString();
         var filePathTitle = baseTitle.Replace(fileInfo.Name, fileInfo.FullName);
 
         return new WindowTitles
