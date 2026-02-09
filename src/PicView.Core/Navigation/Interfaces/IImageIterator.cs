@@ -1,4 +1,4 @@
-﻿namespace PicView.Core.Navigation.Interfaces;
+namespace PicView.Core.Navigation.Interfaces;
 
 /// <summary>
 /// Defines the contract for navigating a collection of files within a specific context (Tab).
@@ -44,6 +44,11 @@ public interface IImageIterator : IDisposable
     /// Moves the iterator to the specified index and triggers the loading of that image.
     /// </summary>
     ValueTask IterateToIndexAsync(int index, CancellationTokenSource ct);
+
+    /// <summary>
+    /// Checks if the target index is cached before iterating. If not cached, clears cache first.
+    /// </summary>
+    ValueTask SkipToIndexAsync(int index, CancellationTokenSource ct);
 
     ValueTask NavigateByIncrementsAsync(SkipAmount skipAmount, bool forwards, CancellationTokenSource ct);
 

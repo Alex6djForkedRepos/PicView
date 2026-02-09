@@ -190,10 +190,30 @@ public class ImageIterator(IImageCache cache, IThumbnailCache thumbCache, IThumb
         }
     }
 
+    public async ValueTask SkipToIndexAsync(int index, CancellationTokenSource ct)
+    {
+        if (index < 0 || index >= Files.Count)
+        {
+            return;
+        }
+
+        var file = Files[index];
+
+        if (_cache.TryGet(file, out var preLoadValue) && preLoadValue?.ImageModel?.Image != null)
+        {
+            await IterateToIndexAsync(index, ct).ConfigureAwait(false);
+        }
+        else
+        {
+            _cache.Clear(_tab.Id);
+            await IterateToIndexAsync(index, ct).ConfigureAwait(false);
+        }
+    }
+
     public async ValueTask NavigateByIncrementsAsync(SkipAmount skipAmount, bool forwards, CancellationTokenSource ct)
     {
         var iteration = GetIteration(CurrentIndex, forwards ? NavigateTo.Next : NavigateTo.Previous, _tab.Id, skipAmount);
-        await IterateToIndexAsync(iteration, ct).ConfigureAwait(false);
+        await SkipToIndexAsync(iteration, ct).ConfigureAwait(false);
     }
 
     public void SetCurrentIndex(int index)
@@ -213,13 +233,6 @@ public class ImageIterator(IImageCache cache, IThumbnailCache thumbCache, IThumb
             SkipAmount.Hundred => 100,
             _ => throw new ArgumentOutOfRangeException(nameof(skipAmount), skipAmount, null)
         };
-        if (skip is 100)
-        {
-            if (Files.Count > PreLoaderConfig.MaxCount)
-            {
-                _cache.Clear(tabId);
-            }
-        }
 
         switch (navigation)
         {
@@ -254,11 +267,6 @@ public class ImageIterator(IImageCache cache, IThumbnailCache thumbCache, IThumb
 
             case NavigateTo.First:
             case NavigateTo.Last:
-                if (Files.Count > PreLoaderConfig.MaxCount)
-                {
-                    _cache.Clear(tabId);
-                }
-
                 next = navigation == NavigateTo.First ? 0 : Files.Count - 1;
                 break;
 

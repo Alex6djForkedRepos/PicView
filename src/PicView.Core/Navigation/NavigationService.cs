@@ -1,4 +1,4 @@
-﻿using PicView.Core.DebugTools;
+using PicView.Core.DebugTools;
 using PicView.Core.Extensions;
 using PicView.Core.FileHandling.Interfaces;
 using PicView.Core.FileSorting;
@@ -199,7 +199,14 @@ public class NavigationService(
         }
 
         var nextFileIndex = tab.ImageIterator.GetIteration(tab.ImageIterator.CurrentIndex, to, tab.Id, SkipAmount.One);
-        await tab.ImageIterator.IterateToIndexAsync(nextFileIndex, ct).ConfigureAwait(false);
+        if (to is NavigateTo.First or NavigateTo.Last)
+        {
+            await tab.ImageIterator.SkipToIndexAsync(nextFileIndex, ct).ConfigureAwait(false);
+        }
+        else
+        {
+            await tab.ImageIterator.IterateToIndexAsync(nextFileIndex, ct).ConfigureAwait(false);
+        }
     }
 
     public ValueTask NavigateToIndexAsync(TabViewModel tab, int index, CancellationTokenSource ct)

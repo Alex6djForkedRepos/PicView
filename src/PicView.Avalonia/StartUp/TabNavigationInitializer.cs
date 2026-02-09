@@ -184,7 +184,7 @@ public static class TabNavigationInitializer
                             tabViewModel.Gallery.ToggleGalleryCommand.Execute(Unit.Default);
                         }
             
-                        await tabViewModel.ImageIterator.IterateToIndexAsync(index, tabViewModel.GetTabCancellation()).ConfigureAwait(false);
+                        await tabViewModel.ImageIterator.SkipToIndexAsync(index, tabViewModel.GetTabCancellation()).ConfigureAwait(false);
                     }).AddTo(disposable);
             });
         }
