@@ -1,9 +1,11 @@
 ﻿using Avalonia.Controls;
+using Avalonia.Controls.Presenters;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.LogicalTree;
 using PicView.Avalonia.CustomControls;
+using PicView.Core.ViewModels;
 
 namespace PicView.Avalonia.Views.Gallery;
 
@@ -34,6 +36,42 @@ public partial class GalleryItem2 : NavigateAbleItem
         }
 
         FlyoutBase.ShowAttachedFlyout(ctl);
+    }
+    
+    
+    protected override void OnPointerPressed(PointerPressedEventArgs e)
+    {
+        base.OnPointerPressed(e);
+
+        if (!e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
+        {
+            return;
+        }
+
+        var viewer = this.FindLogicalAncestorOfType<NavigateAbleItemsViewer>();
+        if (viewer is null)
+        {
+            return;
+        }
+
+        var container = this.FindLogicalAncestorOfType<ContentPresenter>();
+        if (container is null)
+        {
+            return;
+        }
+
+        var index = viewer.IndexFromContainer(container);
+        if (index == -1)
+        {
+            return;
+        }
+
+        viewer.SelectedItemIndex = index;
+
+        if (viewer.DataContext is TabViewModel tab)
+        {
+            tab.Gallery.OpenSelectedItemCommand.Execute(index);
+        }
     }
 
     protected override void OnDetachedFromLogicalTree(LogicalTreeAttachmentEventArgs e)

@@ -83,6 +83,7 @@ public class GalleryViewModel : IDisposable
         }).AddTo(_disposables);
 
         NavigateGalleryCommand = new ReactiveCommand<NavigateTo>();
+        OpenSelectedItemCommand = new ReactiveCommand<int>();
     }
 
     public void Navigate(NavigateTo direction)
@@ -97,6 +98,7 @@ public class GalleryViewModel : IDisposable
     public ReactiveCommand<Unit> ToggleGalleryCommand { get; }
     public ReactiveCommand<Unit> CloseGalleryCommand { get; }
     public ReactiveCommand<NavigateTo> NavigateGalleryCommand { get; }
+    public ReactiveCommand<int> OpenSelectedItemCommand { get; }
 
     public BindableReactiveProperty <ObservableList<GalleryItemViewModel>> GalleryItems { get; } = new([]);
     public BindableReactiveProperty<GalleryMode2> GalleryMode { get; }
@@ -109,6 +111,7 @@ public class GalleryViewModel : IDisposable
     
     public BindableReactiveProperty<GalleryItemViewModel?> CurrentGalleryItem { get; } = new();
     public BindableReactiveProperty<GalleryItemViewModel?> SelectedGalleryItem { get; } = new();
+    public BindableReactiveProperty<int> SelectedGalleryItemIndex { get; } = new(-1);
 
     public GalleryLoadingState LoadingState { get; set; }
 
@@ -122,7 +125,8 @@ public class GalleryViewModel : IDisposable
             IsGalleryExpanded,
             GalleryMode,
             CurrentGalleryItem,
-            SelectedGalleryItem
+            SelectedGalleryItem,
+            SelectedGalleryItemIndex
         );
     }
 }

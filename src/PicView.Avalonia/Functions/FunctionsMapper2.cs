@@ -473,10 +473,16 @@ public class FunctionsMapper2(Core.ViewModels.MainWindowViewModel vm) : IFunctio
     }
 
     /// <inheritdoc cref="GalleryNavigation.GalleryClick(MainViewModel)" />
-    public async ValueTask GalleryClick()
+    public ValueTask GalleryClick()
     {
-        // await GalleryNavigation.GalleryClick(vm).ConfigureAwait(false);
-        return;
+        var gallery = vm.WindowTabs.ActiveTab.CurrentValue.Gallery;
+        var index = gallery.SelectedGalleryItemIndex.Value;
+        if (index > -1)
+        {
+            gallery.OpenSelectedItemCommand.Execute(index);
+        }
+        
+        return ValueTask.CompletedTask;
     }
 
     #endregion

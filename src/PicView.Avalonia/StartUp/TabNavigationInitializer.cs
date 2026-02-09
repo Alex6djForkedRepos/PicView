@@ -172,6 +172,20 @@ public static class TabNavigationInitializer
                             }
                         }
                     }).AddTo(disposable);
+                tabViewModel.Gallery.OpenSelectedItemCommand
+                    .SubscribeAwait(async (index, _) =>
+                    {
+                        if (tabViewModel.ImageIterator is null)
+                        {
+                            return;
+                        }
+                        if (tabViewModel.Gallery.IsGalleryExpanded.Value)
+                        {
+                            tabViewModel.Gallery.ToggleGalleryCommand.Execute(Unit.Default);
+                        }
+            
+                        await tabViewModel.ImageIterator.IterateToIndexAsync(index, tabViewModel.GetTabCancellation()).ConfigureAwait(false);
+                    }).AddTo(disposable);
             });
         }
         catch (Exception e)

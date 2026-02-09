@@ -17,7 +17,14 @@ public class NavigateAbleItemsViewer : ItemsControl
 
     private AutoScrollViewer? _scrollViewer;
 
-    public int SelectedItemIndex { get; private set; } = -1;
+    public static readonly StyledProperty<int> SelectedItemIndexProperty =
+        AvaloniaProperty.Register<NavigateAbleItemsViewer, int>(nameof(SelectedItemIndex), defaultValue: -1);
+
+    public int SelectedItemIndex
+    {
+        get => GetValue(SelectedItemIndexProperty);
+        set => SetValue(SelectedItemIndexProperty, value);
+    }
 
     public static readonly StyledProperty<int> CurrentItemIndexProperty =
         AvaloniaProperty.Register<NavigateAbleItemsViewer, int>(nameof(CurrentItemIndex), defaultValue: -1);
@@ -37,14 +44,20 @@ public class NavigateAbleItemsViewer : ItemsControl
     {
         base.OnPropertyChanged(change);
 
-        if (change.Property != CurrentItemIndexProperty)
+        if (change.Property == CurrentItemIndexProperty)
         {
-            return;
+            if (change is { OldValue: int oldIndex, NewValue: int newIndex })
+            {
+                SetCurrentItem(newIndex, oldIndex);
+                SelectedItemIndex = newIndex;
+            }
         }
-
-        if (change is { OldValue: int oldIndex, NewValue: int newIndex })
+        else if (change.Property == SelectedItemIndexProperty)
         {
-            SetCurrentItem(newIndex, oldIndex);
+            if (change is { OldValue: int oldIndex, NewValue: int newIndex })
+            {
+                SetSelectedItemAndScrollIntoView(newIndex, oldIndex);
+            }
         }
     }
 
@@ -175,13 +188,7 @@ public class NavigateAbleItemsViewer : ItemsControl
 
     private void SetInternalSelection(int index)
     {
-        var prevIndex = SelectedItemIndex;
         SelectedItemIndex = index;
-        
-        if (index >= 0)
-        {
-            SetSelectedItemAndScrollIntoView(index, prevIndex);
-        }
     }
 
     private void SetSelectedItemAndScrollIntoView(int index, int prevIndex)

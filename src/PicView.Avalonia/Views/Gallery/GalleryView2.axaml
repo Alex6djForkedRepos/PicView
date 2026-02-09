@@ -118,6 +118,7 @@
         <customControls:NavigateAbleItemsViewer
             Background="{DynamicResource SecondaryBackgroundColor}"
             CurrentItemIndex="{CompiledBinding NavigationIndex.Value, Mode=OneWay}"
+            SelectedItemIndex="{CompiledBinding Gallery.SelectedGalleryItemIndex.Value, Mode=TwoWay}"
             x:Name="GalleryItemsControl">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
