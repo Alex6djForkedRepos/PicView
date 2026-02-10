@@ -1,18 +1,12 @@
 ﻿using System.Globalization;
 using System.Numerics;
 
-namespace PicView.Core.Extensions;
+namespace PicView.Benchmarks.Resources;
 
-public static class FileExtensions
+public static class FileExtensionsTestResource
 {
-     private static ReadOnlySpan<char> Suffixes => ['B', 'K', 'M', 'G', 'T', 'P', 'E'];
+    private static ReadOnlySpan<char> Suffixes => ['B', 'K', 'M', 'G', 'T', 'P', 'E'];
 
-     /// <summary>
-     /// Returns the human-readable file size for an arbitrary, 64-bit file size
-     /// The default format is "0.## XB", e.g. "4.2 KB" or "1.43 GB"
-     /// </summary>
-     /// <param name="fileSize">FileInfo.Length</param>
-     /// <returns>A formatted string representing the file size with a suffix (e.g., "4.2 KB").</returns>
     public static string GetReadableFileSize(this long fileSize)
     {
         if (fileSize <= 0)
