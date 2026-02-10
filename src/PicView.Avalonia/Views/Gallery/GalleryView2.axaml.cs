@@ -51,6 +51,9 @@ public partial class GalleryView2 : GalleryAnimationControl
 
     private void CurrentValueOnCollectionChanged(in NotifyCollectionChangedEventArgs<GalleryItemViewModel> e)
     {
+        var tab = Dispatcher.UIThread.Invoke(() =>
+            Application.Current.DataContext is not CoreViewModel core ? null : core.MainWindows.ActiveWindow.CurrentValue.WindowTabs.ActiveTab.CurrentValue);
+
         switch (e.Action)
         {
             case NotifyCollectionChangedAction.Add:
@@ -69,6 +72,15 @@ public partial class GalleryView2 : GalleryAnimationControl
                         Dispatcher.UIThread.Post(() =>
                         {
                             GalleryItemsControl.Items.Add(item);
+                        },DispatcherPriority.Background);
+                        if (tab.Model.FileInfo.FullName != item.FileInfo.FullName)
+                        {
+                            continue;
+                        }
+
+                        Dispatcher.UIThread.Post(() =>
+                        {
+                            GalleryItemsControl.SetSelectedItemAndScrollIntoView(tab.ImageIterator.CurrentIndex, -1);
                         },DispatcherPriority.Background);
                     }
                 }

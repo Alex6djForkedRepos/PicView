@@ -191,7 +191,7 @@ public class NavigateAbleItemsViewer : ItemsControl
         SelectedItemIndex = index;
     }
 
-    private void SetSelectedItemAndScrollIntoView(int index, int prevIndex)
+    public void SetSelectedItemAndScrollIntoView(int index, int prevIndex)
     {
         if (_scrollViewer == null || index < 0 || index >= ItemCount 
             || ContainerFromIndex(index) is not ContentPresenter presenter)
