@@ -168,7 +168,6 @@ public static class QuickLoad
         {
             await Dispatcher.UIThread.InvokeAsync(() =>
             {
-                vm.ImageViewer.SetTransform(vm.PicViewer.ExifOrientation.CurrentValue, magickImage.Format);
                 WindowResizing.SetSize(magickImage.Width, magickImage.Height, vm);
                 window.Show();
                 WindowFunctions.CenterWindowOnScreen();
@@ -176,11 +175,7 @@ public static class QuickLoad
         }
         else
         {
-            await Dispatcher.UIThread.InvokeAsync(() =>
-            {
-                vm.ImageViewer.SetTransform(vm.PicViewer.ExifOrientation.CurrentValue, magickImage.Format);
-                window.Show();
-            }, DispatcherPriority.Send);
+            await Dispatcher.UIThread.InvokeAsync(window.Show, DispatcherPriority.Send);
         }
         
         var imageModel = await GetImageModel.GetImageModelAsync(fileInfo, magickImage).ConfigureAwait(false);
@@ -216,7 +211,6 @@ public static class QuickLoad
         vm.PicViewer.SecondaryImageSource.Value = secondaryPreloadValue?.ImageModel?.Image;
         await Dispatcher.UIThread.InvokeAsync(() =>
         {
-            vm.ImageViewer.SetTransform(ExifOrientationHelper.GetImageOrientation(magickImage), magickImage.Format);
             WindowResizing.SetSize(magickImage.Width, magickImage.Height, secondaryPreloadValue.ImageModel.PixelWidth,
                 secondaryPreloadValue.ImageModel.PixelHeight, vm.PicViewer.RotationAngle.CurrentValue, vm);
         }, DispatcherPriority.Send);

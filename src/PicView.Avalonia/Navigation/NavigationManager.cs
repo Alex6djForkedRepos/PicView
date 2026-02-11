@@ -54,7 +54,6 @@ public static class NavigationManager
             var size = WindowResizing.GetSize(imageModel.PixelWidth, imageModel.PixelHeight, 0, 0, imageModel.Rotation, vm );
             await Dispatcher.UIThread.InvokeAsync(() =>
             {
-                vm.ImageViewer.SetTransform(imageModel.Orientation, imageModel.Format);
                 if (size.HasValue)
                 {
                     WindowResizing.SetSize(size.Value,
