@@ -187,16 +187,6 @@ public partial class ImageViewer2 : UserControl
     public void Rotate(bool clockWise) => _imageTransformer?.Rotate(clockWise);
     public void Rotate(double angle) => _imageTransformer?.Rotate(angle);
     public void Flip(bool animate) => _imageTransformer?.Flip(animate);
-
-    public void SetTransform(ExifOrientation? orientation, MagickFormat? format, bool reset = true)
-    {
-        if (_imageTransformer is null)
-        {
-            InitializeImageTransformer();
-        }
-
-        _imageTransformer.SetTransform(orientation, format, reset);
-    }
         
     #endregion
 }

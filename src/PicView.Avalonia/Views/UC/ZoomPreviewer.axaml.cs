@@ -285,13 +285,17 @@ public partial class ZoomPreviewer : UserControl
 
     private void RestartHideTimer()
     {
+        if (Opacity is 0)
+        {
+            return;
+        }
         _hideTimer?.Dispose();
         _hideTimer = new Timer(_ =>
         {
             Dispatcher.UIThread.Invoke(async () =>
             {
                 // Only hide if we're not dragging
-                if (!_isDragging && !IsPointerOver)
+                if (!_isDragging && !IsPointerOver && _zoomPanControl.Scale is not 1.0)
                 {
                     var opacityAnim = AnimationsHelper.OpacityAnimation(1, 0, TimeSpan.FromSeconds(0.5));
                     await opacityAnim.RunAsync(this);
@@ -309,6 +313,7 @@ public partial class ZoomPreviewer : UserControl
 
     public void SetInvisible()
     {
+        Opacity = 0;
         IsHitTestVisible = false;
     }
 
@@ -320,6 +325,13 @@ public partial class ZoomPreviewer : UserControl
         }
 
         var viewportRect = GetCurrentViewportRect();
+        if (viewportRect.X is 0 && viewportRect.Y is 0 && viewportRect.Width is 0 && viewportRect.Height is 0)
+        {
+            // Fixes incorrect size
+            UpdateSize(DataContext as MainViewModel);
+            IsHitTestVisible = false;
+            return;
+        }
 
         // Update the viewport border rectangle
         Canvas.SetLeft(ViewportBorder, viewportRect.X);

@@ -80,7 +80,6 @@ public static class UpdateImage
                 return;
             }
 
-            vm.ImageViewer.SetTransform(preLoadValue.ImageModel.Orientation, preLoadValue.ImageModel.Format);
             if (Settings.Zoom.ResetZoomOnChange)
             {
                 vm.ImageViewer.ZoomPanControl.ResetZoomSlim();
