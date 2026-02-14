@@ -35,6 +35,15 @@ public class NavigateAbleItemsViewer : ItemsControl
         set => SetValue(CurrentItemIndexProperty, value);
     }
 
+    public static readonly StyledProperty<bool> CenterCurrentItemProperty =
+        AvaloniaProperty.Register<NavigateAbleItemsViewer, bool>(nameof(CenterCurrentItem));
+
+    public bool CenterCurrentItem
+    {
+        get => GetValue(CenterCurrentItemProperty);
+        set => SetValue(CenterCurrentItemProperty, value);
+    }
+
     public NavigateAbleItemsViewer()
     {
         PointerWheelChanged += OnPointerWheelChanged;
@@ -64,32 +73,36 @@ public class NavigateAbleItemsViewer : ItemsControl
     protected override void PrepareContainerForItemOverride(Control container, object? item, int index)
     {
         base.PrepareContainerForItemOverride(container, item, index);
-        if (container is ContentPresenter presenter)
+        if (container is not ContentPresenter presenter)
         {
-            presenter.ApplyTemplate();
-            if (presenter.Child is NavigateAbleItem navItem)
-            {
-                if (index == CurrentItemIndex)
-                {
-                    navItem.SetCurrent(true);
-                    navItem.BringIntoView();
-                }
-
-                if (index == SelectedItemIndex) navItem.SetSelected(true);
-            }
+            return;
         }
+
+        presenter.ApplyTemplate();
+        if (presenter.Child is not NavigateAbleItem navItem)
+        {
+            return;
+        }
+
+        if (index == CurrentItemIndex)
+        {
+            navItem.SetCurrent(true);
+            navItem.BringIntoView();
+        }
+
+        if (index == SelectedItemIndex) navItem.SetSelected(true);
     }
     
     public void ScrollToCenterOfCurrentItem()
     {
+        if (_scrollViewer is null || CurrentItemIndex < 0 || CurrentItemIndex >= ItemCount)
+        {
+            return;
+        }
+        
         // Need to use Post to have calculations take place after render
         Dispatcher.UIThread.Post(() =>
         {
-            if (_scrollViewer is null || CurrentItemIndex < 0 || CurrentItemIndex >= ItemCount)
-            {
-                return;
-            }
-
             var container = ContainerFromIndex(CurrentItemIndex);
 
             // Get item position relative to the ScrollViewer's viewport
@@ -204,7 +217,15 @@ public class NavigateAbleItemsViewer : ItemsControl
             return;
         }
     
-        item.BringIntoView();
+        if (CenterCurrentItem)
+        {
+            ScrollToCenterOfCurrentItem();
+        }
+        else
+        {
+            item.BringIntoView();
+        }
+
         item.SetSelected(true);
 
         // Only clear the old item if we actually moved to a different index
