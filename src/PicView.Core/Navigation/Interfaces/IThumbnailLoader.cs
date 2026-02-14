@@ -4,4 +4,5 @@ public interface IThumbnailLoader
 {
     ValueTask<object?> GetThumbnailAsync(FileInfo file);
     ValueTask<object?> GetThumbnailAsync(FileInfo file, uint size);
+    object? GetExifThumbnail(FileInfo file);
 }

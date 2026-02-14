@@ -132,7 +132,7 @@ public class ImageIterator(IImageCache cache, IThumbnailCache thumbCache, IThumb
         CurrentIndex = index;
         var targetFile = Files[CurrentIndex];
 
-        var (status, model) = await TryLoadFromCacheAsync(CurrentIndex, targetFile, ct).ConfigureAwait(false);
+        var (status, model) = TryLoadFromCache(CurrentIndex, targetFile, ct);
         if (index != CurrentIndex)
         {
             // User skipped
@@ -149,6 +149,10 @@ public class ImageIterator(IImageCache cache, IThumbnailCache thumbCache, IThumb
                 break;
             case CacheStatus.NotInCache:
             case CacheStatus.IsLoadingInCache:
+                if (model is { Image: not null })
+                {
+                    _tab.Model = model;
+                }
                 var loadedModel = await LoadManuallyAsync(CurrentIndex, ct).ConfigureAwait(false);
                 if (loadedModel is null)
                 {
@@ -337,19 +341,19 @@ public class ImageIterator(IImageCache cache, IThumbnailCache thumbCache, IThumb
         }
     }
 
-    private async ValueTask<(CacheStatus Status, ImageModel? Model)> TryLoadFromCacheAsync(int index, FileInfo file,
+    private (CacheStatus Status, ImageModel? Model) TryLoadFromCache(int index, FileInfo file,
         CancellationTokenSource ct)
     {
         // Check if the item is in the cache
         if (!_cache.TryGet(file, out var preLoadValue) || preLoadValue is null)
         {
-            return await LoadThumbnailInternalAsync(index, file, ct, CacheStatus.NotInCache);
+            return LoadThumbnailInternal(index, file, ct, CacheStatus.NotInCache);
         }
 
         // Show thumb while loading
         if (preLoadValue is { IsLoading: true, ImageModel.Image: null })
         {
-            return await LoadThumbnailInternalAsync(index, file, ct, CacheStatus.IsLoadingInCache);
+            return LoadThumbnailInternal(index, file, ct, CacheStatus.IsLoadingInCache);
         }
 
         // If we have the full image, show it and return
@@ -359,7 +363,7 @@ public class ImageIterator(IImageCache cache, IThumbnailCache thumbCache, IThumb
     /// <summary>
     /// Loads and displays a thumbnail for immediate feedback, then returns the status needed for the next step.
     /// </summary>
-    private async ValueTask<(CacheStatus Status, ImageModel? Model)> LoadThumbnailInternalAsync(int index,
+    private (CacheStatus Status, ImageModel? Model) LoadThumbnailInternal(int index,
         FileInfo file, CancellationTokenSource ct, CacheStatus statusToReturn)
     {
         if (_thumbCache.TryGet(file.FullName, out var cachedThumb))
@@ -367,12 +371,12 @@ public class ImageIterator(IImageCache cache, IThumbnailCache thumbCache, IThumb
             return (statusToReturn, new ImageModel {Image = cachedThumb, FileInfo = file});
         }
         
-        var thumb = await _thumbnailLoader.GetThumbnailAsync(file).ConfigureAwait(false);
+        var thumb = _thumbnailLoader.GetExifThumbnail(file);
 
         // Check for cancellation or navigation change before updating UI
         if (ct.IsCancellationRequested || CurrentIndex != index)
         {
-            DebugHelper.LogDebug(nameof(ImageIterator), nameof(TryLoadFromCacheAsync), "Cancelled");
+            DebugHelper.LogDebug(nameof(ImageIterator), nameof(TryLoadFromCache), "Cancelled");
             return (CacheStatus.Cancelled, null);
         }
 
@@ -380,7 +384,7 @@ public class ImageIterator(IImageCache cache, IThumbnailCache thumbCache, IThumb
 
         if (statusToReturn == CacheStatus.IsLoadingInCache)
         {
-            DebugHelper.LogDebug(nameof(ImageIterator), nameof(TryLoadFromCacheAsync),
+            DebugHelper.LogDebug(nameof(ImageIterator), nameof(TryLoadFromCache),
                 "Showing thumbnail (waiting for load)");
         }
 

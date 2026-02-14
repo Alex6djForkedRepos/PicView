@@ -26,4 +26,9 @@ public class AvaloniaThumbnailLoader : IThumbnailLoader
     {
         return await GetThumbnails.GetThumbAsync(file, size).ConfigureAwait(false);
     }
+
+    public object? GetExifThumbnail(FileInfo file)
+    {
+        return GetThumbnails.GetExifThumb(file.FullName);
+    }
 }
