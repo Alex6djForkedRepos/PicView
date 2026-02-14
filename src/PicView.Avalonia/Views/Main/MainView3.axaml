@@ -121,6 +121,114 @@
                 </MenuItem.Icon>
             </MenuItem>
 
+            <!--  Locate on disk  -->
+            <MenuItem
+                Command="{CompiledBinding OpenInExplorerCommand}"
+                Header="{CompiledBinding Translation.ShowInFolder.Value,
+                                         Mode=OneWay}"
+                IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.FileInfo.Value,
+                                            Converter={x:Static ObjectConverters.IsNotNull},
+                                            FallbackValue=False}">
+                <MenuItem.Icon>
+                    <Path Classes="ShowInFolderPath" />
+                </MenuItem.Icon>
+            </MenuItem>
+
+            <Separator />
+
+            <!--  Sort files by  -->
+            <MenuItem Header="{CompiledBinding Translation.SortFilesBy.Value, Mode=OneWay}">
+                <MenuItem.Icon>
+                    <Path Classes="SortFilesPath" />
+                </MenuItem.Icon>
+
+                <!--  Sort files by name  -->
+                <MenuItem
+                    Command="{CompiledBinding SortFilesByNameCommand}"
+                    GroupName="SortType"
+                    Header="{CompiledBinding Translation.FileName.Value,
+                                             Mode=OneWay}"
+                    IsChecked="{CompiledBinding WindowTabs.SortOrder.Value,
+                                                Converter={StaticResource EnumToBoolConverter},
+                                                ConverterParameter=Name}"
+                    ToggleType="Radio" />
+
+                <!--  Sort files by size  -->
+                <MenuItem
+                    Command="{CompiledBinding SortFilesBySizeCommand}"
+                    GroupName="SortType"
+                    Header="{CompiledBinding Translation.FileSize.Value,
+                                             Mode=OneWay}"
+                    IsChecked="{CompiledBinding WindowTabs.SortOrder.Value,
+                                                Converter={StaticResource EnumToBoolConverter},
+                                                ConverterParameter=FileSize}"
+                    ToggleType="Radio" />
+
+                <!--  Sort files by extension  -->
+                <MenuItem
+                    Command="{CompiledBinding SortFilesByExtensionCommand}"
+                    GroupName="SortType"
+                    Header="{CompiledBinding Translation.FileExtension.Value,
+                                             Mode=OneWay}"
+                    IsChecked="{CompiledBinding WindowTabs.SortOrder.Value,
+                                                Converter={StaticResource EnumToBoolConverter},
+                                                ConverterParameter=Extension}"
+                    ToggleType="Radio" />
+
+                <!--  Sort files by creation time  -->
+                <MenuItem
+                    Command="{CompiledBinding SortFilesByCreationTimeCommand}"
+                    GroupName="SortType"
+                    Header="{CompiledBinding Translation.Created.Value,
+                                             Mode=OneWay}"
+                    IsChecked="{CompiledBinding WindowTabs.SortOrder.Value,
+                                                Converter={StaticResource EnumToBoolConverter},
+                                                ConverterParameter=CreationTime}"
+                    ToggleType="Radio" />
+
+                <!--  Sort files by last access time  -->
+                <MenuItem
+                    Command="{CompiledBinding SortFilesByLastAccessTimeCommand}"
+                    GroupName="SortType"
+                    Header="{CompiledBinding Translation.LastAccessTime.Value,
+                                             Mode=OneWay}"
+                    IsChecked="{CompiledBinding WindowTabs.SortOrder.Value,
+                                                Converter={StaticResource EnumToBoolConverter},
+                                                ConverterParameter=LastAccessTime}"
+                    ToggleType="Radio" />
+
+                <!--  Sort files randomly  -->
+                <MenuItem
+                    Command="{CompiledBinding SortFilesRandomlyCommand}"
+                    GroupName="SortType"
+                    Header="{CompiledBinding Translation.Random.Value,
+                                             Mode=OneWay}"
+                    IsChecked="{CompiledBinding WindowTabs.SortOrder.Value,
+                                                Converter={StaticResource EnumToBoolConverter},
+                                                ConverterParameter=Random}"
+                    ToggleType="Radio" />
+
+                <Separator />
+
+                <!--  Sort files ascending  -->
+                <MenuItem
+                    Command="{CompiledBinding SortFilesAscendingCommand}"
+                    GroupName="SortDirection"
+                    Header="{CompiledBinding Translation.Ascending.Value,
+                                             Mode=OneWay}"
+                    IsChecked="{CompiledBinding WindowTabs.IsAscending.Value}"
+                    ToggleType="Radio" />
+
+                <!--  Sort files descending  -->
+                <MenuItem
+                    Command="{CompiledBinding SortFilesDescendingCommand}"
+                    GroupName="SortDirection"
+                    Header="{CompiledBinding Translation.Descending.Value,
+                                             Mode=OneWay}"
+                    IsChecked="{CompiledBinding !WindowTabs.IsAscending.Value}"
+                    ToggleType="Radio" />
+            </MenuItem>
+
 
             <!--  Recent files  -->
             <MenuItem Header="{Binding Translation.RecentFiles, Mode=OneWay}">

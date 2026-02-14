@@ -349,6 +349,9 @@ public class TabOverviewViewModel
     #endregion
 
     #region Sort
+    
+    public BindableReactiveProperty<SortFilesBy> SortOrder { get; } = new();
+    public BindableReactiveProperty<bool> IsAscending { get; } = new(Settings.Sorting.Ascending);
 
     public async ValueTask SortAsync(SortFilesBy sortOrder)
     {
