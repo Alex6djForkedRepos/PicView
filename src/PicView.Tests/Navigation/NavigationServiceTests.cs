@@ -128,6 +128,7 @@ public class NavigationServiceTests
     {
         public ValueTask<object?> GetThumbnailAsync(FileInfo file) => ValueTask.FromResult<object?>(null);
         public ValueTask<object?> GetThumbnailAsync(FileInfo file, uint size) => ValueTask.FromResult<object?>(null);
+        public object? GetExifThumbnail(FileInfo file) => null;
     }
 
     private class MockTempFileService : ITempFileService
