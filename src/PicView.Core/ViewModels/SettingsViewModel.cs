@@ -96,15 +96,6 @@ public class SettingsViewModel : IDisposable
         }).AddTo(_disposables);
 
         UpdateNavigationProperties();
-        
-        Debug.Assert(Settings.Gallery is not null);
-        Observable.EveryValueChanged(Settings.Gallery, gallery =>  gallery.DockPosition)
-            .Subscribe(position => DockPositionIndex.Value = (int)position)
-            .AddTo(_disposables);
-
-        Observable.EveryValueChanged(Settings.Gallery, gallery => gallery.IsGalleryDocked)
-            .Subscribe(isDocked => IsGalleryDocked.Value = isDocked)
-            .AddTo(_disposables);
     }
     
     public void Initialize(IThemeService themeService, ILanguageService languageService, IImageSettingsService imageSettingsService)
@@ -169,8 +160,6 @@ public class SettingsViewModel : IDisposable
         new(Settings.Gallery.ShowBottomGalleryInHiddenUI);
 
     public BindableReactiveProperty<bool> IsGalleryDocked { get; } = new(Settings.Gallery.IsGalleryDocked);
-
-    public BindableReactiveProperty<int> DockPositionIndex { get; } = new((int)Settings.Gallery.DockPosition);
     public BindableReactiveProperty<double> DockedGalleryItemSize { get; } = new(Settings.Gallery.BottomGalleryItemSize);
     public BindableReactiveProperty<double> DockedGalleryMaxItemSize { get; } = new(GalleryDefaults.MaxBottomGalleryItemHeight);
     public BindableReactiveProperty<double> DockedGalleryMinItemSize { get; } = new(GalleryDefaults.MinBottomGalleryItemHeight);
@@ -302,20 +291,22 @@ public class SettingsViewModel : IDisposable
     /// </summary>
     public void SubscriptionSettingsUpdate()
     {
-        // Existing logic
         Observable.EveryValueChanged(this, x => x.NavSpeed.CurrentValue)
+            .Skip(1) // Skip initial
             .Subscribe(x =>
             {
                 Settings.UIProperties.NavSpeed = x;
                 GetNavSpeed.Value = Math.Round(Settings.UIProperties.NavSpeed, 2);
             }).AddTo(_disposables);
         Observable.EveryValueChanged(this, x => x.ZoomSpeed.CurrentValue)
+            .Skip(1) // Skip initial
             .Subscribe(x =>
             {
                 Settings.Zoom.ZoomSpeed = x;
                 GetZoomSpeed.Value = Math.Round(Settings.Zoom.ZoomSpeed, 2);
             }).AddTo(_disposables);
         Observable.EveryValueChanged(this, x => x.SlideshowSpeed.CurrentValue)
+            .Skip(1) // Skip initial
             .Subscribe(x =>
             {
                 var roundedValue = Math.Round(x, 2);
@@ -324,6 +315,7 @@ public class SettingsViewModel : IDisposable
             }).AddTo(_disposables);
 
         Observable.EveryValueChanged(this, x => x.IsShowingPermanentDeletionDialog.CurrentValue)
+            .Skip(1) // Skip initial
             .SubscribeAwait(async (x, _) =>
             {
                 Settings.UIProperties.ShowPermanentDeletionConfirmation = x;
@@ -331,6 +323,7 @@ public class SettingsViewModel : IDisposable
             }).AddTo(_disposables);
 
         Observable.EveryValueChanged(this, x => x.IsShowingRecycleDialog.CurrentValue)
+            .Skip(1) // Skip initial
             .SubscribeAwait(async (x, _) =>
             {
                 Settings.UIProperties.ShowRecycleConfirmation = x;
@@ -338,6 +331,7 @@ public class SettingsViewModel : IDisposable
             }).AddTo(_disposables);
 
         Observable.EveryValueChanged(this, x => x.IsDockedGalleryShownInHiddenUI.CurrentValue)
+            .Skip(1) // Skip initial
             .SubscribeAwait(async (x, _) =>
             {
                 Settings.Gallery.ShowBottomGalleryInHiddenUI = x;
@@ -345,19 +339,22 @@ public class SettingsViewModel : IDisposable
             }).AddTo(_disposables);
 
         Observable.EveryValueChanged(this, x => x.IsGalleryDocked.CurrentValue)
+            .Skip(1) // Skip initial
             .SubscribeAwait(async (isDocked, ct) =>
             {
                 await GalleryManager.UpdateGalleryDockedStatusAsync(isDocked, ct);
             }).AddTo(_disposables);
 
-        Observable.EveryValueChanged(this, x => x.DockPositionIndex.CurrentValue)
-            .SubscribeAwait(async (x, _) =>
-            {
-                Settings.Gallery.DockPosition = (GalleryDockPosition)x;
-                await SaveSettingsAsync();
-            }).AddTo(_disposables);
+        // Observable.EveryValueChanged(this, x => x.DockPositionIndex.CurrentValue)
+        //     .Skip(1) // Skip initial
+        //     .SubscribeAwait(async (x, _) =>
+        //     {
+        //         Settings.Gallery.DockPosition = (GalleryDockPosition)x;
+        //         await SaveSettingsAsync();
+        //     }).AddTo(_disposables);
 
         Observable.EveryValueChanged(this, x => x.DockedGalleryItemSize.CurrentValue)
+            .Skip(1) // Skip initial
             .SubscribeAwait(async (x, _) =>
             {
                 Settings.Gallery.BottomGalleryItemSize = x;
@@ -365,6 +362,7 @@ public class SettingsViewModel : IDisposable
             }).AddTo(_disposables);
 
         Observable.EveryValueChanged(this, x => x.ExpandedGalleryItemSize.CurrentValue)
+            .Skip(1) // Skip initial
             .SubscribeAwait(async (x, _) =>
             {
                 Settings.Gallery.ExpandedGalleryItemSize = x;
@@ -372,6 +370,7 @@ public class SettingsViewModel : IDisposable
             }).AddTo(_disposables);
 
         Observable.EveryValueChanged(this, x => x.GalleryItemSpacing.CurrentValue)
+            .Skip(1) // Skip initial
             .SubscribeAwait(async (x, _) =>
             {
                 Settings.Gallery.ItemSpacing = x;
@@ -379,6 +378,7 @@ public class SettingsViewModel : IDisposable
             }).AddTo(_disposables);
 
         Observable.EveryValueChanged(this, x => x.GalleryLineSpacing.CurrentValue)
+            .Skip(1) // Skip initial
             .SubscribeAwait(async (x, _) =>
             {
                 Settings.Gallery.LineSpacing = x;
@@ -386,6 +386,7 @@ public class SettingsViewModel : IDisposable
             }).AddTo(_disposables);
 
         Observable.EveryValueChanged(this, x => x.DockedGalleryStretchIndex.CurrentValue)
+            .Skip(1) // Skip initial
             .SubscribeAwait(async (x, _) =>
             {
                 var mode = GetStretchString(x);
@@ -394,6 +395,7 @@ public class SettingsViewModel : IDisposable
             }).AddTo(_disposables);
 
         Observable.EveryValueChanged(this, x => x.FullGalleryStretchIndex.CurrentValue)
+            .Skip(1) // Skip initial
             .SubscribeAwait(async (x, _) =>
             {
                 var mode = GetStretchString(x);
@@ -436,6 +438,7 @@ public class SettingsViewModel : IDisposable
         
         // General
         Observable.EveryValueChanged(this, x => x.StartUpIndex.CurrentValue)
+            .Skip(1) // Skip initial
              .SubscribeAwait(async (x, _) => {
                  OpenLastFile.Value = x == 1;
                  Settings.StartUp.OpenLastFile = x == 1;
@@ -443,6 +446,7 @@ public class SettingsViewModel : IDisposable
              }).AddTo(_disposables);
              
         Observable.EveryValueChanged(this, x => x.DeletionIndex.CurrentValue)
+            .Skip(1) // Skip initial
              .SubscribeAwait(async (x, _) => {
                  IsNavigatingBackwardsWhenDeleting.Value = x == 1;
                  Settings.Navigation.IsNavigatingBackwardsWhenDeleting = x == 1;
@@ -451,20 +455,26 @@ public class SettingsViewModel : IDisposable
              
         // Appearance
         Observable.EveryValueChanged(this, x => x.ThemeIndex.CurrentValue)
+            .Skip(1) // Skip initial
             .Subscribe(x => _themeService?.SetTheme(x)).AddTo(_disposables);
             
-        SetColorThemeCommand.Subscribe(x => {
+        SetColorThemeCommand
+            .Skip(1) // Skip initial
+            .Subscribe(x => {
             ColorThemeIndex.Value = (int)x;
             _themeService?.SetColorTheme((int)x);
         }).AddTo(_disposables);
 
-        SetBackgroundCommand.Subscribe(x => {
+        SetBackgroundCommand
+            .Skip(1) // Skip initial
+            .Subscribe(x => {
             BackgroundChoice.Value = (int)x;
             _themeService?.SetBackground((int)x);
         }).AddTo(_disposables);
 
         // Image
         Observable.EveryValueChanged(this, x => x.ImageScalingIndex.CurrentValue)
+            .Skip(1) // Skip initial
             .SubscribeAwait(async (x, _) => {
                 var isNearestNeighbor = x == 1;
                 IsScalingSetToNearestNeighbor.Value = isNearestNeighbor;
@@ -475,6 +485,7 @@ public class SettingsViewModel : IDisposable
             
         // Zoom
         Observable.EveryValueChanged(this, x => x.CtrlZoom.CurrentValue)
+            .Skip(1) // Skip initial
             .SubscribeAwait(async (x, _) => {
                 Settings.Zoom.CtrlZoom = x;
                 // Sync MouseWheelBehavior if needed
@@ -483,7 +494,8 @@ public class SettingsViewModel : IDisposable
             }).AddTo(_disposables);
 
         Observable.EveryValueChanged(this, x => x.ScrollDirectionIndex.CurrentValue)
-             .SubscribeAwait(async (x, _) => {
+            .Skip(1) // Skip initial 
+            .SubscribeAwait(async (x, _) => {
                  var reverse = x == 0;
                  HorizontalReverseScroll.Value = reverse;
                  Settings.Zoom.HorizontalReverseScroll = reverse;
@@ -492,6 +504,7 @@ public class SettingsViewModel : IDisposable
              
         // Mouse
         Observable.EveryValueChanged(this, x => x.MouseSideButtonBehavior.CurrentValue)
+            .Skip(1) // Skip initial
             .SubscribeAwait(async (x, _) => {
                 switch(x)
                 {
@@ -512,6 +525,7 @@ public class SettingsViewModel : IDisposable
             }).AddTo(_disposables);
 
         Observable.EveryValueChanged(this, x => x.MouseWheelBehavior.CurrentValue)
+            .Skip(1) // Skip initial
             .SubscribeAwait(async (x, _) => {
                 var ctrlZoom = x == 0;
                 Settings.Zoom.CtrlZoom = ctrlZoom;
@@ -521,6 +535,7 @@ public class SettingsViewModel : IDisposable
             
         // Language
         Observable.EveryValueChanged(this, x => x.UserLanguage.CurrentValue)
+            .Skip(1) // Skip initial
             .SubscribeAwait(async (x, _) => {
                 if (Settings.UIProperties.UserLanguage != x)
                 {

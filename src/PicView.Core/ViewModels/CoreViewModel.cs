@@ -14,7 +14,7 @@ public class CoreViewModel
     // --- Globally Shared State ---
     public TranslationViewModel Translation { get; } = new();
     public GlobalSettingsViewModel? GlobalSettings { get; } = new();
-    public GallerySharedSettingsViewModel GallerySettings = new();
+    public GallerySharedSettingsViewModel GallerySettings { get; } = new();
     public KeybindingsViewModel? Keybindings { get; set; }
     public SettingsViewModel? SettingsViewModel { get; set; } // Single settings window
 

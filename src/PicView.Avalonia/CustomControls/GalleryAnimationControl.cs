@@ -152,6 +152,7 @@ public class GalleryAnimationControl : UserControl
         {
             var oldMode = _previousMode;
             _previousMode = newMode;
+            IsVisible = true;
 
             switch (oldMode)
             {
@@ -279,7 +280,6 @@ public class GalleryAnimationControl : UserControl
     private void SetDockedLayout(GalleryDockPosition dock)
     {
         SetDockLayoutCore(dock);
-
         SetDockedThumbs(dock);
     }
 
@@ -359,6 +359,7 @@ public class GalleryAnimationControl : UserControl
                 IsVisible = false;
                 return;
         }
+        IsVisible = true;
 
         gallerySettings.ItemHeight.Value = Settings.Gallery.BottomGalleryItemSize;
         string stretchValue;
