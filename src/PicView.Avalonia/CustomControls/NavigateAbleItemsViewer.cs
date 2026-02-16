@@ -16,6 +16,7 @@ public class NavigateAbleItemsViewer : ItemsControl
     protected override Type StyleKeyOverride => typeof(NavigateAbleItemsViewer);
 
     private AutoScrollViewer? _scrollViewer;
+    private bool _isVerticalScrolling;
 
     public static readonly StyledProperty<int> SelectedItemIndexProperty =
         AvaloniaProperty.Register<NavigateAbleItemsViewer, int>(nameof(SelectedItemIndex), defaultValue: -1);
@@ -227,17 +228,31 @@ public class NavigateAbleItemsViewer : ItemsControl
             {
                 var pos = vector.Value;
                 var currentOffset = _scrollViewer.Offset;
+
+                if (_isVerticalScrolling)
+                {
+                    // --- Vertical Centering Logic ---
+                    var itemCenterY = pos.Y + (container!.Bounds.Height / 2);
+                    var viewportCenterY = _scrollViewer.Viewport.Height / 2;
                 
-                // Calculate the center of the item vs the center of the viewport
-                var itemCenter = pos.X + container!.Bounds.Width / 2;
-                var viewportCenter = _scrollViewer.Viewport.Width / 2;
-                
-                // Calculate the difference needed to align them
-                var diff = itemCenter - viewportCenter;
-                
-                // Apply the new offset
-                // This math works regardless of where the user has manually scrolled.
-                _scrollViewer.Offset = new Vector(currentOffset.X + diff, currentOffset.Y);
+                    // Calculate difference
+                    var diff = itemCenterY - viewportCenterY;
+
+                    // Apply to Y offset, keep X same
+                    _scrollViewer.Offset = new Vector(currentOffset.X, currentOffset.Y + diff);
+                }
+                else
+                {
+                    // --- Horizontal Centering Logic ---
+                    var itemCenterX = pos.X + (container!.Bounds.Width / 2);
+                    var viewportCenterX = _scrollViewer.Viewport.Width / 2;
+
+                    // Calculate difference
+                    var diff = itemCenterX - viewportCenterX;
+
+                    // Apply to X offset, keep Y same
+                    _scrollViewer.Offset = new Vector(currentOffset.X + diff, currentOffset.Y);
+                }
             }
             else
             {
@@ -459,5 +474,19 @@ public class NavigateAbleItemsViewer : ItemsControl
             .Where(item => Math.Abs(item.Position.X - prevColumnX) < 1.0) // Same column (account for floating point)
             .OrderByDescending(item => item.Position.Y)
             .FirstOrDefault();
+    }
+
+    public void SetVerticalScrolling()
+    {
+        _isVerticalScrolling = true;
+        _scrollViewer.HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled;
+        _scrollViewer.VerticalScrollBarVisibility = ScrollBarVisibility.Visible;
+    }
+    
+    public void SetHorizontalScrolling()
+    {
+        _isVerticalScrolling = false;
+        _scrollViewer.HorizontalScrollBarVisibility = ScrollBarVisibility.Visible;
+        _scrollViewer.VerticalScrollBarVisibility = ScrollBarVisibility.Disabled;
     }
 }

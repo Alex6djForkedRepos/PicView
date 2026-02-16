@@ -135,6 +135,17 @@
                             IsEnabled="{CompiledBinding !GallerySettings.IsLeftDocked.Value}"
                             Padding="15,7,15,7"
                             Text="{CompiledBinding Translation.ShowDockedGalleryToTheLeft.Value}" />
+                        <customControls:TextIconButton
+                            Background="Transparent"
+                            Classes="altHover"
+                            Command="{CompiledBinding GallerySettings.CloseGalleryCommand}"
+                            CornerRadius="8,0,0,0"
+                            Data="{StaticResource CloseGeometry}"
+                            IconHeight="12"
+                            IconMargin="0,0,7,0"
+                            IconWidth="12"
+                            Padding="15,7,15,7"
+                            Text="{CompiledBinding Translation.HideDockedGallery.Value}" />
                     </StackPanel>
                 </Carousel.Items>
             </Carousel>

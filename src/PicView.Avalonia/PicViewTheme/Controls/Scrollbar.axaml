@@ -92,15 +92,15 @@
                         Background="Transparent"
                         UseLayoutRounding="False"
                         x:Name="Border">
-                        <Grid RowDefinitions="Auto,*,Auto">
+                        <DockPanel>
                             <RepeatButton
                                 Background="Transparent"
                                 Classes="repeat"
+                                DockPanel.Dock="Top"
                                 Focusable="False"
-                                Grid.Row="0"
                                 HorizontalAlignment="Center"
                                 Interval="55"
-                                MinHeight="{StaticResource ScrollBarThickness}"
+                                MinHeight="25"
                                 Name="PART_LineUpButton">
                                 <PathIcon
                                     Data="{StaticResource FilledArrowUpGeometry}"
@@ -110,10 +110,27 @@
                                     VerticalAlignment="Center"
                                     Width="16" />
                             </RepeatButton>
+
+                            <RepeatButton
+                                Background="Transparent"
+                                Classes="repeat"
+                                DockPanel.Dock="Bottom"
+                                Focusable="False"
+                                HorizontalAlignment="Center"
+                                Interval="55"
+                                MinHeight="25"
+                                Name="PART_LineDownButton">
+                                <PathIcon
+                                    Data="{StaticResource FilledArrowDownGeometry}"
+                                    Foreground="{TemplateBinding Foreground}"
+                                    Height="16"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Width="16" />
+                            </RepeatButton>
+
                             <Track
                                 DeferThumbDrag="{TemplateBinding ScrollViewer.IsDeferredScrollingEnabled}"
-                                Grid.Column="1"
-                                Grid.Row="1"
                                 IsDirectionReversed="True"
                                 Maximum="{TemplateBinding Maximum}"
                                 Minimum="{TemplateBinding Minimum}"
@@ -139,25 +156,7 @@
                                 </Track.IncreaseButton>
                                 <Thumb Name="thumb" />
                             </Track>
-                            <RepeatButton
-                                Background="Transparent"
-                                Classes="repeat"
-                                Focusable="False"
-                                Grid.Column="2"
-                                Grid.Row="2"
-                                HorizontalAlignment="Center"
-                                Interval="55"
-                                MinHeight="{StaticResource ScrollBarThickness}"
-                                Name="PART_LineDownButton">
-                                <PathIcon
-                                    Data="{StaticResource FilledArrowDownGeometry}"
-                                    Foreground="{TemplateBinding Foreground}"
-                                    Height="16"
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Center"
-                                    Width="16" />
-                            </RepeatButton>
-                        </Grid>
+                        </DockPanel>
                     </Border>
                 </ControlTemplate>
             </Setter>

@@ -16,6 +16,7 @@
         CornerRadius="4"
         Height="{CompiledBinding $parent[Window].((viewModels:MainWindowViewModel)DataContext).GallerySettings.ItemHeight.Value,
                                  Mode=OneWay}"
+        MinHeight="25"
         MinWidth="25"
         ToolTip.HorizontalOffset="0"
         ToolTip.Placement="TopEdgeAlignedLeft"

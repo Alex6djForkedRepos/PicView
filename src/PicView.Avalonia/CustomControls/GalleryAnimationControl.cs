@@ -15,35 +15,6 @@ namespace PicView.Avalonia.CustomControls;
 
 public class GalleryAnimationControl : UserControl
 {
-    #region Cleanup
-
-    protected override void OnUnloaded(RoutedEventArgs e)
-    {
-        base.OnUnloaded(e);
-
-        if (Parent is Control parent)
-        {
-            parent.SizeChanged -= ParentSizeChanged;
-        }
-
-        Loaded -= OnControlLoaded;
-        _disposables?.Dispose();
-    }
-
-    #endregion
-
-    #region Events
-
-    private void ParentSizeChanged(object? sender, SizeChangedEventArgs e)
-    {
-        if (ViewModel?.Gallery.GalleryMode.Value == GalleryMode2.Expanded)
-        {
-            UpdateLayoutForCurrentState();
-        }
-    }
-
-    #endregion
-
     #region Fields and Properties
     
     private const int ZeroSize = 0;
@@ -247,6 +218,7 @@ public class GalleryAnimationControl : UserControl
 
         _itemsPanel?.Orientation = Orientation.Vertical;
         ViewModel.Gallery.ItemSpacing.Value = Settings.Gallery.ItemSpacing;
+        _viewer.SetHorizontalScrolling();
     }
 
     private void SetExpandedThumbs()
@@ -307,6 +279,8 @@ public class GalleryAnimationControl : UserControl
             ViewModel.Gallery.GalleryVerticalAlignment.Value = dock is GalleryDockPosition.Top
                 ? VerticalAlignment.Top
                 : VerticalAlignment.Bottom;
+            
+            _viewer.SetHorizontalScrolling();
         }
         else // Left or Right
         {
@@ -315,6 +289,8 @@ public class GalleryAnimationControl : UserControl
 
             _itemsPanel?.Orientation = Orientation.Vertical;
             ViewModel.Gallery.GalleryVerticalAlignment.Value = VerticalAlignment.Stretch;
+
+            _viewer.SetVerticalScrolling();
         }
     }
 
@@ -573,6 +549,32 @@ public class GalleryAnimationControl : UserControl
         );
 
         IsVisible = false;
+    }
+
+    private void ParentSizeChanged(object? sender, SizeChangedEventArgs e)
+    {
+        // Keep the layout correct when the view is resized
+        if (ViewModel?.Gallery.GalleryMode.Value == GalleryMode2.Expanded)
+        {
+            UpdateLayoutForCurrentState();
+        }
+    }
+
+    #endregion
+    
+    #region Cleanup
+
+    protected override void OnUnloaded(RoutedEventArgs e)
+    {
+        base.OnUnloaded(e);
+
+        if (Parent is Control parent)
+        {
+            parent.SizeChanged -= ParentSizeChanged;
+        }
+
+        Loaded -= OnControlLoaded;
+        _disposables?.Dispose();
     }
 
     #endregion
