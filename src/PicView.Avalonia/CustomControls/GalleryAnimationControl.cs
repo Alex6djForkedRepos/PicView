@@ -80,8 +80,6 @@ public class GalleryAnimationControl : UserControl
 
     private void OnControlLoaded(object? sender, RoutedEventArgs e)
     {
-        _disposables = new CompositeDisposable();
-
         _viewer = this.FindControl<NavigateAbleItemsViewer>("GalleryItemsControl");
         if (_viewer.ItemsPanelRoot is WrapPanel panel)
         {
@@ -92,22 +90,35 @@ public class GalleryAnimationControl : UserControl
             DebugHelper.LogDebug(nameof(GalleryAnimationControl), nameof(OnControlLoaded),
                 "Could not find ItemsControl.ItemsPanelRoot");
         }
-
-        if (ViewModel == null)
-        {
-            return;
-        }
-
+        
         if (Settings.Gallery.IsGalleryDocked)
         {
             SetDockedLayout(Settings.Gallery.DockPosition);
             _previousMode = GalleryMode2.Docked;
         }
-
+        else
+        {
+            // Don't take up space
+            IsVisible = false;
+        }
+        
+        if (ViewModel == null)
+        {
+            return;
+        }
+        _disposables = new CompositeDisposable();
         // Subscribe to Mode changes
         ViewModel.Gallery.GalleryMode
             .Skip(1) // Skip startup
-            .SubscribeAwait(async (mode, _) => await OnGalleryModeChanged(mode))
+            .SubscribeAwait(async (mode, _) => await OnGalleryModeChanged(mode), result =>
+            {
+#if DEBUG
+                if (result is { IsFailure: true, Exception: not null })
+                {
+                    DebugHelper.LogDebug(nameof(GalleryAnimationControl), nameof(OnGalleryModeChanged), result.Exception);
+                }
+#endif
+            })
             .AddTo(_disposables);
 
         Debug.Assert(Settings.Gallery is not null);
@@ -119,7 +130,7 @@ public class GalleryAnimationControl : UserControl
 #if DEBUG
                 if (result is { IsFailure: true, Exception: not null })
                 {
-                    DebugHelper.LogDebug(nameof(GalleryAnimationControl), nameof(OnControlLoaded), result.Exception);
+                    DebugHelper.LogDebug(nameof(GalleryAnimationControl), nameof(SetDockedLayout), result.Exception);
                 }
 #endif
             })
