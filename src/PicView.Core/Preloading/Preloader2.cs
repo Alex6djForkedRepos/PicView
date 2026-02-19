@@ -80,12 +80,9 @@ public class Preloader2(Func<FileInfo, ValueTask<ImageModel>> imageModelLoader, 
 
         var fileInfo = list[index];
 
-        // 1. Fast Path: Already cached?
+        // Check if it is already cached
         if (cache.TryGet(fileInfo, out var cachedValue) && cachedValue is not null)
         {
-            // Refresh LRU position
-            cache.Add(ownerId, index, cachedValue, list.Count, isReverse);
-
             if (cachedValue.IsLoading)
             {
                 // Piggyback on the existing load
@@ -100,56 +97,25 @@ public class Preloader2(Func<FileInfo, ValueTask<ImageModel>> imageModelLoader, 
             return null;
         }
 
-        // 2. Reserve the slot (Optimistic locking)
-        var placeholder = new PreLoadValue(new ImageModel { FileInfo = fileInfo }, true);
-
-        // 'evicted' tells us if we bumped someone out. 
-        // Note: The logic for SharedImageCache disposal is preserved here.
-        var evicted = cache.TryAdd(ownerId, index, placeholder, list.Count, isReverse, out var evictedValue);
-        if (evicted && cache is SharedImageCache shared)
+        // Load from disk
+        var preloadValue = new PreLoadValue(new ImageModel
         {
-            shared.DisposeHelper(evictedValue);
+            FileInfo = fileInfo
+        }, isLoading: true);
+            
+        if (cache.TryAdd(ownerId, index, preloadValue, list.Count, isReverse, out var evicted) && cache is SharedImageCache shared)
+        {
+            shared.DisposeHelper(evicted);
         }
-
-        // 3. Re-check: Did someone beat us to it?
-        cache.TryGet(ownerId, index, out var slotValue);
-        slotValue ??= placeholder;
-
-        if (!ReferenceEquals(slotValue, placeholder))
+        // Check cancel before IO
+        if (ct.IsCancellationRequested)
         {
-            // Lost the race, wait for winner
-            if (slotValue.IsLoading)
-            {
-                await slotValue.WaitForLoadingCompleteAsync().ConfigureAwait(false);
-            }
-
-            return slotValue.ImageModel;
-        }
-
-        // 4. Heavy Lift: Load from disk
-        try
-        {
-            // Check cancel before IO
-            if (ct.IsCancellationRequested)
-            {
-                cache.TryRemove(ownerId, index);
-                return null;
-            }
-
-            var imageModel = await imageModelLoader(fileInfo).ConfigureAwait(false);
-            slotValue.ImageModel = imageModel;
-            return imageModel;
-        }
-        catch (Exception ex)
-        {
-            DebugHelper.LogDebug(nameof(Preloader2), nameof(AddAsync), ex);
-            cache.TryRemove(ownerId, index); // Clean up failed load
             return null;
         }
-        finally
-        {
-            slotValue.IsLoading = false;
-        }
+        var imageModel = await imageModelLoader(fileInfo).ConfigureAwait(false);
+        preloadValue.ImageModel = imageModel;
+        preloadValue.IsLoading = false;
+        return imageModel;
     }
 
     public void Add(string ownerId, int index, ImageModel model, IReadOnlyList<FileInfo> list)

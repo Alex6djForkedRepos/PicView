@@ -380,13 +380,6 @@ public class ImageIterator(IImageCache cache, IThumbnailCache thumbCache, IThumb
         }
 
         var model = new ImageModel { Image = thumb, FileInfo = file };
-
-        if (statusToReturn == CacheStatus.IsLoadingInCache)
-        {
-            DebugHelper.LogDebug(nameof(ImageIterator), nameof(TryLoadFromCache),
-                "Showing thumbnail (waiting for load)");
-        }
-
         return (statusToReturn, model);
     }
 
