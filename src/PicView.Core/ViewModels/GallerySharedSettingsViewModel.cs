@@ -81,6 +81,7 @@ public class GallerySharedSettingsViewModel
         ToggleGalleryVisibilitySubscription();
 
         Observable.EveryValueChanged(Settings.Gallery, x => x.DockPosition)
+            .Skip(1)
             .Subscribe(_ => { UpdateDockPositionProperties(); }, result =>
             {
 #if DEBUG
@@ -105,7 +106,10 @@ public class GallerySharedSettingsViewModel
             });
 
         Observable.EveryValueChanged(Settings.Gallery, x => x.ExpandedGalleryItemSize)
-            .Subscribe(x => { ExpandedGalleryItemSize.Value = x; }, result =>
+            .Subscribe(x =>
+            {
+                ExpandedGalleryItemSize.Value = x;
+            }, result =>
             {
 #if DEBUG
                 if (result is { IsFailure: true, Exception: not null })

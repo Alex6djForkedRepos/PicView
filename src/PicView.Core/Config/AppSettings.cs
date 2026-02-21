@@ -241,7 +241,7 @@ public class Gallery
     /// </summary>
     public bool IsGalleryDocked { get; set; } = false;
 
-    public GalleryDockPosition DockPosition { get; set; } = GalleryDockPosition.Bottom;
+    public GalleryDockPosition DockPosition { get; set; } = GalleryDockPosition.Closed;
 
     /// <summary>
     /// Determines whether the docked gallery is shown when the user interface is hidden.
@@ -254,7 +254,7 @@ public class Gallery
     public double BottomGalleryItemSize { get; set; } = 37;
 
     /// <summary>
-    /// Specifies the height of gallery thumbnails, when the gallery is in full/expanded mode.
+    /// Specifies the height of gallery thumbnails, when the gallery is in expanded mode.
     /// </summary>
     public double ExpandedGalleryItemSize { get; set; } = 23;
 

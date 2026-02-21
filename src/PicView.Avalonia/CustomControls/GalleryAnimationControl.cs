@@ -5,6 +5,7 @@ using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Threading;
 using PicView.Avalonia.Animations;
+using PicView.Avalonia.UI;
 using PicView.Core.Config;
 using PicView.Core.DebugTools;
 using PicView.Core.Gallery;
@@ -20,7 +21,7 @@ public class GalleryAnimationControl : UserControl
     
     private const int ZeroSize = 0;
 
-    private TabViewModel? ViewModel => DataContext as TabViewModel;
+    private TabViewModel? TabViewModel => DataContext as TabViewModel;
 
     private CompositeDisposable? _disposables;
 
@@ -74,7 +75,7 @@ public class GalleryAnimationControl : UserControl
             IsVisible = false;
         }
         
-        if (ViewModel == null)
+        if (TabViewModel == null)
         {
             return;
         }
@@ -82,7 +83,7 @@ public class GalleryAnimationControl : UserControl
 
         Debug.Assert(Settings.Gallery is not null);
         // Also subscribe to DockPosition, as changing it while Docked might need layout updates
-        Observable.EveryValueChanged(Settings.Gallery, gallery => gallery.DockPosition)
+        Observable.EveryValueChanged(Settings.Gallery, gallery => gallery.DockPosition, UIHelper2.GetFrameProvider)
             .Skip(1) // Skip startup
             .Subscribe(SetDockedLayout, result =>
             {
@@ -94,6 +95,38 @@ public class GalleryAnimationControl : UserControl
 #endif
             })
             .AddTo(_disposables);
+        
+        if (Application.Current.DataContext is not CoreViewModel core)
+        {
+            return;
+        }
+
+        Observable.EveryValueChanged(core.GallerySettings, gallery => gallery.ExpandedGalleryItemSize.CurrentValue, UIHelper2.GetFrameProvider)
+            .Skip(1)
+            .Subscribe(UpdateExpandedItemHeight, result =>
+            {
+#if DEBUG
+                if (result is { IsFailure: true, Exception: not null })
+                {
+                    DebugHelper.LogDebug(nameof(GalleryAnimationControl), nameof(UpdateExpandedItemHeight), result.Exception);
+                }
+#endif
+            })
+            .AddTo(_disposables);
+        
+        Observable.EveryValueChanged(core.GallerySettings, gallery => gallery.DockedGalleryItemSize.CurrentValue, UIHelper2.GetFrameProvider)
+            .Skip(1)
+            .Subscribe(UpdateDockedItemHeight, result =>
+            {
+#if DEBUG
+                if (result is { IsFailure: true, Exception: not null })
+                {
+                    DebugHelper.LogDebug(nameof(GalleryAnimationControl), nameof(UpdateDockedItemHeight), result.Exception);
+                }
+#endif
+            })
+            .AddTo(_disposables);
+            
 
         if (Parent is Control parent)
         {
@@ -123,7 +156,7 @@ public class GalleryAnimationControl : UserControl
 
     private async ValueTask OnGalleryModeChanged(GalleryMode2 newMode)
     {
-        if (ViewModel == null)
+        if (TabViewModel == null)
         {
             return;
         }
@@ -215,7 +248,7 @@ public class GalleryAnimationControl : UserControl
         }
 
         _itemsPanel?.Orientation = Orientation.Vertical;
-        ViewModel?.Gallery.ItemSpacing.Value = Settings.Gallery.ItemSpacing;
+        TabViewModel?.Gallery.ItemSpacing.Value = Settings.Gallery.ItemSpacing;
         _viewer.SetHorizontalScrolling();
     }
 
@@ -256,6 +289,38 @@ public class GalleryAnimationControl : UserControl
         gallerySettings.ItemWidth.Value = isSquare ? gallerySettings.ItemHeight.CurrentValue : double.NaN;
         
         _itemsPanel.Margin = GetExpandedMargin;
+    }
+    
+    private void UpdateExpandedItemHeight(double itemHeight)
+    {
+        if (Application.Current.DataContext is not CoreViewModel core || !TabViewModel.Gallery.IsGalleryExpanded.CurrentValue)
+        {
+            return;
+        }
+        core.GallerySettings.ItemHeight.Value = itemHeight;
+    }
+    
+    private void UpdateDockedItemHeight(double itemHeight)
+    {
+        if (Application.Current.DataContext is not CoreViewModel core || TabViewModel.Gallery.IsGalleryExpanded.CurrentValue)
+        {
+            return;
+        }
+        core.GallerySettings.ItemHeight.Value = itemHeight;
+        
+        // Need to resize
+        var size = GetDockedSize;
+        var dock = Settings.Gallery.DockPosition;
+        if (dock is GalleryDockPosition.Top or GalleryDockPosition.Bottom)
+        {
+            Width = double.NaN;
+            Height = size;
+        }
+        else // Left or Right
+        {
+            Width = size;
+            Height = double.NaN;
+        }
     }
 
     private void SetDockedLayout(GalleryDockPosition dock)
@@ -370,7 +435,7 @@ public class GalleryAnimationControl : UserControl
         gallerySettings.GalleryStretch.Value = stretchValue;
         gallerySettings.ItemWidth.Value = isSquare ? gallerySettings.ItemHeight.CurrentValue : double.NaN;
 
-        ViewModel?.Gallery.ItemSpacing.Value = 2;
+        TabViewModel?.Gallery.ItemSpacing.Value = 2;
         _itemsPanel.Margin = GetDockedMargin;
     }
 
@@ -447,7 +512,7 @@ public class GalleryAnimationControl : UserControl
 
     private async Task DockedToExpanded()
     {
-        if (ViewModel == null || Parent is not Control parent) return;
+        if (TabViewModel == null || Parent is not Control parent) return;
         var dock = Settings.Gallery.DockPosition;
 
         SetExpandedLayoutCore(dock); // Set props
@@ -475,7 +540,7 @@ public class GalleryAnimationControl : UserControl
 
     private async Task ExpandedToDocked()
     {
-        if (ViewModel == null || Parent is not Control parent) return;
+        if (TabViewModel == null || Parent is not Control parent) return;
         var dock = Settings.Gallery.DockPosition;
 
         // Animate from Full
@@ -531,7 +596,7 @@ public class GalleryAnimationControl : UserControl
         );
 
         _itemsPanel?.Orientation = Orientation.Vertical;
-        ViewModel?.Gallery.ItemSpacing.Value = Settings.Gallery.ItemSpacing;
+        TabViewModel?.Gallery.ItemSpacing.Value = Settings.Gallery.ItemSpacing;
 
         SetExpandedThumbs();
         _viewer?.ScrollToCenterOfCurrentItem();
