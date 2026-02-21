@@ -218,10 +218,10 @@ public class TabOverviewViewModel
     #region Navigation
 
     public async ValueTask NextFile() =>
-        await NextFileCore(NavigateTo.Next).ConfigureAwait(false);
+        await NavigateDirectionalAsync(false, NavigateTo.Next).ConfigureAwait(false);
 
     public async ValueTask PrevFile() =>
-        await NextFileCore(NavigateTo.Previous).ConfigureAwait(false);
+        await NavigateDirectionalAsync(false, NavigateTo.Previous).ConfigureAwait(false);
 
     public async ValueTask NavigateDirectionalAsync(bool isKeyHeldDown, NavigateTo direction)
     {
@@ -324,18 +324,6 @@ public class TabOverviewViewModel
     public async ValueTask LoadFromFileAsync(string file, TabViewModel? senderTab = null)
     {
         await LoadFromFileAsync(new FileInfo(file), senderTab).ConfigureAwait(false);
-    }
-    
-    public async ValueTask NavigateToIndexAsync(int index, TabViewModel? senderTab = null)
-    {
-        if (SharedNavigation is null)
-        {
-            return;
-        }
-        var tab = senderTab ?? ActiveTab.Value;
-        var ct = tab.GetTabCancellation();
-        await SharedNavigation.NavigateToIndexAsync(tab, index, ct).ConfigureAwait(false);
-        CanActiveTabNavigate.Value = tab.ImageIterator?.Files?.Count > 1;
     }
     #endregion
 
