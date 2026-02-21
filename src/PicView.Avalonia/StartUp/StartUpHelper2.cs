@@ -84,7 +84,8 @@ public static class StartUpHelper2
 
             HandleWindowScalingMode(vm, window);
 
-            HandleStartImage(vm, window, filePath, disposable);
+            HandleStartImage(vm, filePath, disposable);
+            window.Show();
 
             HandlePostWindowUpdates(vm, settingsExists, desktop, window);
         }
@@ -121,7 +122,7 @@ public static class StartUpHelper2
 
         HandleWindowScalingMode(vm, window);
 
-        StartUpMenuOrLastFile(vm, window, disposable);
+        StartUpMenuOrLastFile(vm, disposable);
         window.Show();
 
         HandlePostWindowUpdates(vm, settingsExists, desktop, window);
@@ -263,12 +264,12 @@ public static class StartUpHelper2
         }
     }
 
-    private static void HandleStartImage(CoreViewModel vm, Window window, string arg, CompositeDisposable disposable)
+    private static void HandleStartImage(CoreViewModel vm, string arg, CompositeDisposable disposable)
     {
-        Task.Run(() => QuickLoad2.QuickLoadAsync(vm, arg, window, disposable, false));
+        Task.Run(() => QuickLoad2.QuickLoadAsync(vm, arg, disposable, false));
     }
 
-    private static void StartUpMenuOrLastFile(CoreViewModel vm, Window window, CompositeDisposable disposable)
+    private static void StartUpMenuOrLastFile(CoreViewModel vm, CompositeDisposable disposable)
     {
         if (Settings.StartUp.OpenLastFile)
         {
@@ -278,7 +279,7 @@ public static class StartUpHelper2
             }
             else
             {
-                Task.Run(() => QuickLoad2.QuickLoadAsync(vm, Settings.StartUp.LastFile, window,  disposable, true));
+                Task.Run(() => QuickLoad2.QuickLoadAsync(vm, Settings.StartUp.LastFile, disposable, true));
             }
         }
         else
@@ -290,7 +291,6 @@ public static class StartUpHelper2
 
         void ShowStartUpMenu()
         {
-            window.Show();
             var startUpMenu = new StartUpMenu
             {
                 Buttons =

@@ -27,24 +27,19 @@ public static class QuickLoad2
     /// <param name="file">The file, URL, or directory path to be loaded.</param>
     /// <param name="window">The main window used to optimize when it is shown, to avoid flickering from quick resizing.</param>
     /// <param name="continueFromLeftOff">A boolean indicating whether to continue loading from the last session folder structure.</param>
-    public static async ValueTask QuickLoadAsync(CoreViewModel vm, string file, Window window, CompositeDisposable disposable, bool continueFromLeftOff)
-    {
-        vm.MainWindows.ActiveWindow.Value.WindowTabs.ActiveTab.CurrentValue.WindowTitle.Value = vm.MainWindows.ActiveWindow.Value.WindowTabs.ActiveTab.CurrentValue.Title.Value =
-            TranslationManager.Translation.Loading ?? "Loading...";
-        
+    public static async ValueTask QuickLoadAsync(CoreViewModel vm, string file, CompositeDisposable disposable, bool continueFromLeftOff)
+    {        
         var fileInfo = new FileInfo(file);
         if (!fileInfo.Exists) // If not file, try to load if URL, base64 or directory
         {
   //          vm.MainWindow.IsLoadingIndicatorShown.Value = true;
-            Dispatcher.UIThread.Invoke(window.Show, DispatcherPriority.Send);
                 //          await NavigationManager.LoadPicFromStringAsync(file, vm).ConfigureAwait(false);
             return;
         }
 
         if (file.IsArchive()) // Handle if file exist and is an archive
         {
-     //       vm.MainWindow.IsLoadingIndicatorShown.Value = true;
-            Dispatcher.UIThread.Invoke(window.Show, DispatcherPriority.Send);
+     //       vm.MainWindow.IsLoadingIndicatorShown.Value = true;);
           //  await NavigationManager.LoadPicFromArchiveAsync(file, vm).ConfigureAwait(false);
             return;
         }
@@ -84,6 +79,10 @@ public static class QuickLoad2
                     vm.SharedThumbnailCache,
                     vm.MainWindows.ActiveWindow.Value.WindowTabs.ActiveTab.Value.GetTabCancellation().Token)
                 .ConfigureAwait(false);
+        }
+        else
+        {
+            Settings.Gallery.DockPosition = GalleryDockPosition.Closed;
         }
         
     }
