@@ -25,6 +25,7 @@ public class ImageIterator(IImageCache cache, IThumbnailCache thumbCache, IThumb
     {
         Files = files ?? [];
         CurrentIndex = initialIndex;
+        UpdateNavigationProperties();
     }
 
     public void UpdateNavigationProperties()
@@ -45,6 +46,14 @@ public class ImageIterator(IImageCache cache, IThumbnailCache thumbCache, IThumb
         }
     }
 
+    /// <summary>
+    /// Initiates the <see cref="IterateToIndexAsync"/> in a timer delay, intended for repeated navigation based on the specified direction and interval.
+    /// The navigation should continue until key is released, by calling the <see cref="StopRepeatedNavigation"/> or the cancellation token is triggered.
+    /// </summary>
+    /// <param name="to">The target direction or position for the navigation (e.g., Next, Previous, First, Last).</param>
+    /// <param name="repeatInterval">The time interval between each navigation cycle.</param>
+    /// <param name="ct">The cancellation token used to stop the navigation process.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
     public async ValueTask RepeatNavigateAsync(NavigateTo to, TimeSpan repeatInterval, CancellationToken ct)
     {
         if (_timer is null)
@@ -74,6 +83,13 @@ public class ImageIterator(IImageCache cache, IThumbnailCache thumbCache, IThumb
         _timer = null;
     }
 
+    /// <summary>
+    /// Navigates to the specified index within the collection of files and manages image caching, TIFF navigation, and updates the model.
+    /// Ensures that navigation actions like loading, preloading, or skipping are handled depending on the cache state and cancellation state.
+    /// </summary>
+    /// <param name="index">The target index of the file to navigate to in the collection.</param>
+    /// <param name="ct">The cancellation token source used to cancel the navigation process if needed.</param>
+    /// <returns>A task representing the asynchronous operation of navigating to the specified index.</returns>
     public async ValueTask IterateToIndexAsync(int index, CancellationTokenSource ct)
     {
         if (index < 0 || index >= Files.Count)
@@ -105,7 +121,7 @@ public class ImageIterator(IImageCache cache, IThumbnailCache thumbCache, IThumb
         switch (status)
         {
             case CacheStatus.Cancelled:
-                Cancel();
+                Preload();
                 break;
             case CacheStatus.IsInCache when model is not null:
                 _tab.Model = model;
@@ -120,20 +136,18 @@ public class ImageIterator(IImageCache cache, IThumbnailCache thumbCache, IThumb
                 var loadedModel = await LoadManuallyAsync(CurrentIndex, ct).ConfigureAwait(false);
                 if (loadedModel is null)
                 {
-                    Cancel();
+                    Preload();
                     return;
                 }
                 _tab.Model = loadedModel;
                 await Update();
                 break;
-            default:
-                Cancel();
-                break;
+            default: return;
         }
         
         return;
 
-        void Cancel()
+        void Preload()
         {
             _cache.Preload(_tab.Id, CurrentIndex, IsReversed, Files, _tab.GetTabCancellation().Token);
         }
@@ -149,7 +163,7 @@ public class ImageIterator(IImageCache cache, IThumbnailCache thumbCache, IThumb
                     var loadedModel = await LoadManuallyAsync(nextIndex, ct).ConfigureAwait(false);
                     if (loadedModel is null)
                     {
-                        Cancel();
+                        Preload();
                         return;
                     }
 
@@ -169,9 +183,8 @@ public class ImageIterator(IImageCache cache, IThumbnailCache thumbCache, IThumb
             _tab.NavigationIndex.Value = CurrentIndex;
             _tab.MaxIndex.Value = Files.Count;
             UpdateNavigationProperties();
-
-            // Queue Preloading. Call directly on the current thread; preloader writes to a channel immediately.
-            _cache.Preload(_tab.Id, CurrentIndex, IsReversed, Files, _tab.GetTabCancellation().Token);
+            
+            Preload();
         }
     }
 
