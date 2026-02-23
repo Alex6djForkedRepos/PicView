@@ -40,13 +40,11 @@ public class SharedImageCache : IImageCache
     public void RegisterOwner(string ownerId)
     {
         _items.ExpandCapacity(ownerId); 
-        _preLoader.RegisterOwner(ownerId);
     }
 
     public void RemoveOwner(string ownerId)
     {
         _items.DecreaseCapacity(ownerId);
-        _preLoader.RemoveOwner(ownerId);
     }
 
     public bool TryGet(FileInfo f, out PreLoadValue? value) =>

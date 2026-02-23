@@ -266,7 +266,7 @@ public static class StartUpHelper2
 
     private static void HandleStartImage(CoreViewModel vm, string arg, CompositeDisposable disposable)
     {
-        Task.Run(() => QuickLoad2.QuickLoadAsync(vm, arg, disposable, false));
+        Task.Run(() => QuickLoad2.QuickLoadAsync(vm, arg, false));
     }
 
     private static void StartUpMenuOrLastFile(CoreViewModel vm, CompositeDisposable disposable)
@@ -279,7 +279,7 @@ public static class StartUpHelper2
             }
             else
             {
-                Task.Run(() => QuickLoad2.QuickLoadAsync(vm, Settings.StartUp.LastFile, disposable, true));
+                Task.Run(() => QuickLoad2.QuickLoadAsync(vm, Settings.StartUp.LastFile, true));
             }
         }
         else

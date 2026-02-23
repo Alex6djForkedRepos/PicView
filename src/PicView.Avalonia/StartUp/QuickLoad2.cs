@@ -1,4 +1,3 @@
-using Avalonia.Controls;
 using Avalonia.Threading;
 using ImageMagick;
 using PicView.Avalonia.ImageHandling;
@@ -8,9 +7,7 @@ using PicView.Core.Config;
 using PicView.Core.DebugTools;
 using PicView.Core.FileHandling;
 using PicView.Core.Gallery;
-using PicView.Core.Localization;
 using PicView.Core.ViewModels;
-using R3;
 
 namespace PicView.Avalonia.StartUp;
 
@@ -25,9 +22,8 @@ public static class QuickLoad2
     /// </summary>
     /// <param name="vm">The main view model.</param>
     /// <param name="file">The file, URL, or directory path to be loaded.</param>
-    /// <param name="window">The main window used to optimize when it is shown, to avoid flickering from quick resizing.</param>
     /// <param name="continueFromLeftOff">A boolean indicating whether to continue loading from the last session folder structure.</param>
-    public static async ValueTask QuickLoadAsync(CoreViewModel vm, string file, CompositeDisposable disposable, bool continueFromLeftOff)
+    public static async ValueTask QuickLoadAsync(CoreViewModel vm, string file, bool continueFromLeftOff)
     {        
         var fileInfo = new FileInfo(file);
         if (!fileInfo.Exists) // If not file, try to load if URL, base64 or directory

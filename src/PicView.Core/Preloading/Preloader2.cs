@@ -8,7 +8,6 @@ namespace PicView.Core.Preloading;
 public class Preloader2(Func<FileInfo, ValueTask<ImageModel>> imageModelLoader, IImageCache cache) : IPreloader
 {
     private readonly Lock _lock = new();
-    private readonly Dictionary<string, string> _owners = new();
     private string? _currentOwner;
     private bool _isRunning;
 
@@ -30,41 +29,14 @@ public class Preloader2(Func<FileInfo, ValueTask<ImageModel>> imageModelLoader, 
                 }
             }
         
-            _isRunning = true; // Mark running immediately so next caller is blocked
+            _isRunning = true; // Mark running immediately so that the next caller (of the same id) is blocked
             _currentOwner = ownerId;
         }
 
-        Task.Run(() => PreLoadInternalAsync(ownerId, currentIndex, files, reversed, token), token);
+        Task.Run(() => PreLoadInternalAsync(_currentOwner, currentIndex, files, reversed, token), token);
         lock (_lock)
         {
             _currentOwner = ownerId;
-        }
-    }
-
-    public void RegisterOwner(string ownerId)
-    {
-        lock (_lock)
-        {
-            _owners.Add(ownerId, ownerId);
-        }
-    }
-
-    public void RemoveOwner(string ownerId)
-    {
-        if (string.IsNullOrEmpty(ownerId))
-        {
-            DebugHelper.LogDebug(nameof(Preloader2), nameof(RemoveOwner), "Empty owner id string");
-            return;
-        }
-        lock (_lock)
-        {
-            var foundKey = _owners?.FirstOrDefault(x => x.Value.Equals(ownerId)).Key;
-            if (string.IsNullOrEmpty(foundKey))
-            {
-                DebugHelper.LogDebug(nameof(Preloader2), nameof(RemoveOwner), "No found key");
-                return;
-            }
-            _owners?.Remove(foundKey);
         }
     }
 

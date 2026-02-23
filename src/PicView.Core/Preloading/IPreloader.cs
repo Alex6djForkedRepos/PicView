@@ -28,14 +28,4 @@ public interface IPreloader
     /// Starts the predictive loop to load images ahead of the current view.
     /// </summary>
     void Preload(string ownerId, int currentIndex, bool reversed, IReadOnlyList<FileInfo> files, CancellationToken cancellationToken);
-
-    /// <summary>
-    /// Registers a new owner to track cancellation tokens for their specific load tasks.
-    /// </summary>
-    void RegisterOwner(string ownerId);
-
-    /// <summary>
-    /// Cancels all running preload tasks for a specific owner.
-    /// </summary>
-    void RemoveOwner(string ownerId);
 }
