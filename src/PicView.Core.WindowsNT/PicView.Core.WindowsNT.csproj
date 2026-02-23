@@ -17,7 +17,7 @@
     <IsAotCompatible>True</IsAotCompatible>
     <IsTrimmable>True</IsTrimmable>
     <EventSourceSupport>false</EventSourceSupport>
-    <StackTraceSupport>false</StackTraceSupport>
+    <StackTraceSupport>true</StackTraceSupport>
     <EventSourceSupport>false</EventSourceSupport>
     <IlcTrimMetadata>true</IlcTrimMetadata>
       
