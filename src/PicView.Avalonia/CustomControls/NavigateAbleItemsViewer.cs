@@ -5,6 +5,7 @@ using Avalonia.Controls.Presenters;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Threading;
+using PicView.Core.DebugTools;
 
 namespace PicView.Avalonia.CustomControls;
 
@@ -38,6 +39,8 @@ public class NavigateAbleItemsViewer : ItemsControl
 
     public static readonly StyledProperty<bool> CenterCurrentItemProperty =
         AvaloniaProperty.Register<NavigateAbleItemsViewer, bool>(nameof(CenterCurrentItem));
+
+    private bool _isScrollbarCentered;
 
     public bool CenterCurrentItem
     {
@@ -192,6 +195,7 @@ public class NavigateAbleItemsViewer : ItemsControl
                 _scrollViewer.LineLeft();
             }
         }
+        _isScrollbarCentered = false;
     }
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
@@ -226,34 +230,45 @@ public class NavigateAbleItemsViewer : ItemsControl
             
             if (vector != null)
             {
-                var pos = vector.Value;
-                var currentOffset = _scrollViewer.Offset;
-
                 if (_isVerticalScrolling)
                 {
                     item.BringIntoView();
+                    _isScrollbarCentered = false;
                 }
                 else
                 {
                     // --- Horizontal Centering Logic ---
-                    var itemCenterX = pos.X + (container!.Bounds.Width / 2);
-                    var viewportCenterX = _scrollViewer.Viewport.Width / 2;
+                    if (_isScrollbarCentered)
+                    {
+                        var pos = vector.Value;
+                        var currentOffset = _scrollViewer.Offset;
+                        var itemCenterX = pos.X + container.Bounds.Width / 2;
+                        var viewportCenterX = _scrollViewer.Viewport.Width / 2;
 
-                    // Calculate difference
-                    var diff = itemCenterX - viewportCenterX;
+                        // Calculate difference
+                        var diff = itemCenterX - viewportCenterX;
 
-                    // Apply to X offset, keep Y same
-                    _scrollViewer.Offset = new Vector(currentOffset.X + diff, currentOffset.Y);
+                        // Apply to X offset, keep Y same
+                        _scrollViewer.Offset = new Vector(currentOffset.X + diff, currentOffset.Y);
+                    }
+                    else
+                    {
+                        ScrollToCenterOfItem(item);
+                    }
+
+                    _isScrollbarCentered = true;
                 }
             }
             else
             {
                 item.BringIntoView();
+                _isScrollbarCentered = false;
             }
         }
         else if (item.IsEffectivelyVisible)
         {
             item.BringIntoView();
+            _isScrollbarCentered = false;
         }
 
         item.SetSelected(true);
@@ -269,6 +284,62 @@ public class NavigateAbleItemsViewer : ItemsControl
         {
             prevItem.SetSelected(false);
         }
+    }
+    
+    public IEnumerable<Control?> GetVisibleItems()
+    {
+        return LogicalChildren.Cast<Control?>().Where(IsControlVisible);
+    }
+    
+    private bool IsControlVisible(Control? child)
+    {
+        if (child is null)
+        {
+            return false;
+        }
+        try
+        {
+            var parentBounds = new Rect(Bounds.Size);
+            var visual = child.TransformToVisual(this);
+            if (visual is null)
+            {
+                return false;
+            }
+            var childBounds = child.Bounds.TransformToAABB(visual.Value);
+            return parentBounds.Intersects(childBounds);
+        }
+        catch (Exception e)
+        {
+            DebugHelper.LogDebug(nameof(NavigateAbleItemsViewer), nameof(IsControlVisible), e);
+            return false;
+        }
+    }
+    
+    public void ScrollToCenterOfItem(NavigateAbleItem selectedItem)
+    {
+        var visibleItems = GetVisibleItems();
+        
+        var array = visibleItems as NavigateAbleItem[] ?? visibleItems.ToArray();
+        var visibleItemsCount = array.Length;
+        if (visibleItemsCount == 0)
+        {
+            return;
+        }
+        
+        var averageItemWidth = array.Sum(item => item.Bounds.Width);
+        averageItemWidth /= visibleItemsCount;
+        
+        var selectedScrollTo = selectedItem.TranslatePoint(new Point(), ItemsPanelRoot);
+        
+        if (!selectedScrollTo.HasValue)
+        {
+            return;
+        }
+
+        // ReSharper disable once PossibleLossOfFraction
+        var newScrollPosition = selectedScrollTo.Value.X - (visibleItemsCount + 1) / 2 * averageItemWidth + averageItemWidth / 2;
+
+        _scrollViewer.Offset = new Vector(newScrollPosition, _scrollViewer.Offset.Y);
     }
 
     public void Navigate(NavigationDirection direction)
