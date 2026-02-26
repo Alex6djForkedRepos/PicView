@@ -12,7 +12,6 @@ using PicView.Avalonia.Navigation;
 using PicView.Avalonia.StartUp;
 using PicView.Avalonia.ViewModels;
 using PicView.Avalonia.Views.UC;
-using PicView.Avalonia.WindowBehavior;
 using PicView.Core.FileAssociations;
 using PicView.Core.FileSorting;
 using PicView.Core.Localization;
@@ -32,8 +31,8 @@ public class App : Application, IPlatformSpecificService, IPlatformWindowService
     private static WindowInitializer? _windowInitializer;
 
     ///  Flag to track if we are processing the initial startup file
-    private bool _isInitialLoad = true;
-
+    private bool _isInitialLoad;
+    
     private MacMainWindow? _mainWindow;
     private MainViewModel? _vm;
 
@@ -51,35 +50,74 @@ public class App : Application, IPlatformSpecificService, IPlatformWindowService
     {
         try
         {
-            base.OnFrameworkInitializationCompleted();
-            
-            // --- CONTEXT & FIX EXPLANATION ---
-            // On macOS, when a file is double-clicked, the OS launches the app and then immediately fires the 'UrlsOpened' event.
-            // There is a race condition: The app might finish initializing (loading a "Blank" state or "Last File") 
-            // BEFORE the 'UrlsOpened' event arrives with the actual file the user clicked.
-            //
-            // This causes two issues:
-            // 1. Double Window: The app opens the "Last File" in Window 1, then receives the event and opens the "Clicked File" in Window 2.
-            // 2. Infinite Loop: If 'OpenInSameWindow' is false, the event handler spawns a new process, which repeats the cycle infinitely.
-            //
-            // SOLUTION: We capture the 'UrlsOpened' event early. If it fires during startup, we flag it as handled 
-            // and force the *current* window to display that file, overriding any default "Last File" or "Blank" state.
-            // ---------------------------------
-
-            // 1. Capture the startup file immediately if the event fires early
             string? startUpFilePath = null;
-
-            // We use a flag to track if THIS instance has handled its "startup" file yet.
-            var hasHandledInitialFile = false;
-
             if (ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop)
             {
                 return;
             }
 
-            // Capture the event early
-            EventHandler<UrlOpenedEventArgs> earlyHandler = (_, e) => { startUpFilePath = e.Urls[0]; };
-            Current.UrlsOpened += earlyHandler;
+            if (this.TryGetFeature<IActivatableLifetime>() is { } activatableLifetime)
+            {
+                activatableLifetime.Activated += async (_, e) =>
+                {
+                    if (e is ProtocolActivatedEventArgs protocolArgs)
+                    {
+                        startUpFilePath = protocolArgs.Uri.AbsolutePath;
+                        if (!_isInitialLoad)
+                        {
+                            _isInitialLoad = true;
+
+                            // Force switch to ImageViewer (in case we were sitting on the Start Menu)
+                            _vm.ImageViewer ??= new ImageViewer();
+                            _vm.MainWindow.CurrentView.Value = _vm.ImageViewer;
+
+                            await NavigationManager.LoadPicFromStringAsync(startUpFilePath, _vm).ConfigureAwait(false);
+                            _isInitialLoad = true;
+                            return;
+                        }
+                        if (Settings.UIProperties.OpenInSameWindow)
+                        {
+                            Dispatcher.UIThread.Invoke(() => { _mainWindow.Activate(); }, DispatcherPriority.Send);
+                            await NavigationManager.LoadPicFromStringAsync(startUpFilePath, _vm).ConfigureAwait(false);
+                        }
+                        else
+                        {
+                            ProcessHelper.StartNewProcess(startUpFilePath);
+                        }
+                    }
+                    else if (e is FileActivatedEventArgs fileArgs)
+                    {
+                        if (fileArgs.Files.Count <= 0)
+                        {
+                            return;
+                        }
+
+                        startUpFilePath = fileArgs.Files[0].Path.AbsolutePath;
+                        if (!_isInitialLoad)
+                        {
+                            _isInitialLoad = true;
+
+                            // Force switch to ImageViewer (in case we were sitting on the Start Menu)
+                            _vm.ImageViewer ??= new ImageViewer();
+                            _vm.MainWindow.CurrentView.Value = _vm.ImageViewer;
+
+                            await NavigationManager.LoadPicFromStringAsync(startUpFilePath, _vm).ConfigureAwait(false);
+                            _isInitialLoad = true;
+                            return;
+                        }
+                        if (Settings.UIProperties.OpenInSameWindow)
+                        {
+                            Dispatcher.UIThread.Invoke(() => { _mainWindow.Activate(); }, DispatcherPriority.Send);
+                            await NavigationManager.LoadPicFromStringAsync(startUpFilePath, _vm).ConfigureAwait(false);
+                        }
+                        else
+                        {
+                            ProcessHelper.StartNewProcess(startUpFilePath);
+                        }
+                    }
+                };
+            }
+            base.OnFrameworkInitializationCompleted();        
 
             var settingsExists = await Task.FromResult(LoadSettings()).ConfigureAwait(false);
             TranslationManager.Init();
@@ -98,70 +136,16 @@ public class App : Application, IPlatformSpecificService, IPlatformWindowService
             // 3. Decide Initial State
             await Dispatcher.UIThread.InvokeAsync(() =>
             {
-                // If the event fired BEFORE we got here, start with that file.
-                if (startUpFilePath is not null)
-                {
-                    StartUpHelper.StartWithArguments(_vm, settingsExists, desktop, _mainWindow);
-                    hasHandledInitialFile = true;
-
-                    if (Settings.WindowProperties.AutoFit)
-                    {
-                        WindowFunctions.CenterWindowOnScreen();
-                    }
-                }
-                else
-                {
-                    // If no file yet, start normally (Last File / StartUpMenu)
-                    StartUpHelper.StartWithoutArguments(_vm, settingsExists, desktop, _mainWindow);
-                }
-
+                StartUpHelper.StartUpBlank(_vm, settingsExists, desktop, _mainWindow);
                 _windowInitializer = new WindowInitializer();
             }, DispatcherPriority.Send);
-
-            // 4. Remove the temporary early handler
-            Current.UrlsOpened -= earlyHandler;
-
-            // 5. Register the PERMANENT handler with Logic to prevent double-opening
-            Current.UrlsOpened += async (_, e) =>
+            if (!_isInitialLoad && startUpFilePath is null)
             {
-                var incomingUrl = e.Urls[0];
-
-                // SCENARIO A: Startup Race Condition Fix
-                // If we haven't handled a startup file yet (meaning StartWithoutArguments ran),
-                // AND this event comes in shortly after launch, this IS our startup file.
-                // We must open it in THIS window, ignoring the "OpenInSameWindow=false" setting.
-                if (!hasHandledInitialFile)
+                await Dispatcher.UIThread.InvokeAsync(() =>
                 {
-                    hasHandledInitialFile = true;
-                    startUpFilePath = incomingUrl; // Mark this as our startup file
-
-                    // Force switch to ImageViewer (in case we were sitting on the Start Menu)
-                    _vm.ImageViewer ??= new ImageViewer();
-                    _vm.MainWindow.CurrentView.Value = _vm.ImageViewer;
-
-                    await NavigationManager.LoadPicFromStringAsync(incomingUrl, _vm).ConfigureAwait(false);
-                    return;
-                }
-
-                // SCENARIO B: Duplicate Event Fix
-                // macOS sometimes fires the event again for the file we just opened.
-                // If the incoming URL is the exact same one we started with, ignore it.
-                if (incomingUrl == startUpFilePath)
-                {
-                    return;
-                }
-
-                // SCENARIO C: Actual Drag & Drop / Next File
-                if (Settings.UIProperties.OpenInSameWindow)
-                {
-                    Dispatcher.UIThread.Invoke(() => { _mainWindow.Activate(); }, DispatcherPriority.Send);
-                    await NavigationManager.LoadPicFromStringAsync(incomingUrl, _vm).ConfigureAwait(false);
-                }
-                else
-                {
-                    ProcessHelper.StartNewProcess(incomingUrl);
-                }
-            };
+                    StartUpHelper.HandleStartUpMenuOrImage(_vm, _mainWindow);
+                }, DispatcherPriority.Send);
+            }
         }
         catch (Exception)
         {
