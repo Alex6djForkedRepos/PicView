@@ -80,16 +80,19 @@ public partial class GalleryView2 : GalleryAnimationControl
 
                         Dispatcher.UIThread.Post(() =>
                         {
-                            GalleryItemsControl.SetSelectedItemAndScrollIntoView(tab.ImageIterator.CurrentIndex, -1);
+                            GalleryItemsControl.SelectAndBringIntoView(tab.ImageIterator.CurrentIndex, -1);
                         },DispatcherPriority.Background);
                     }
                 }
                 break;
             case NotifyCollectionChangedAction.Reset:
-                Dispatcher.UIThread.Post(() =>
+                if (e.NewItems.IsEmpty)
                 {
-                    GalleryItemsControl.Items.Clear();
-                },DispatcherPriority.Background);
+                    Dispatcher.UIThread.Post(() =>
+                    {
+                        GalleryItemsControl.Items.Clear();
+                    },DispatcherPriority.Background);
+                }
                 break;
             // Remove, Replace, Move
             default:

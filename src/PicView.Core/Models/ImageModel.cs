@@ -5,7 +5,7 @@ using PicView.Core.Navigation.Tiff;
 
 namespace PicView.Core.Models;
 
-public class ImageModel
+public record ImageModel
 {
     public object? Image { get; set; }
     public FileInfo? FileInfo { get; set; }

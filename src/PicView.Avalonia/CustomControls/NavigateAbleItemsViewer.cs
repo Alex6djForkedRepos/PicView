@@ -14,10 +14,12 @@ public readonly record struct ItemPosition(int Index, Point Position, Size Size)
 [TemplatePart("PART_ScrollViewer", typeof(AutoScrollViewer))]
 public class NavigateAbleItemsViewer : ItemsControl
 {
-    protected override Type StyleKeyOverride => typeof(NavigateAbleItemsViewer);
-
+    #region Fields and  Avalonia Properties
+    
     private AutoScrollViewer? _scrollViewer;
     private bool _isVerticalScrolling;
+
+    protected override Type StyleKeyOverride => typeof(NavigateAbleItemsViewer);
 
     public static readonly StyledProperty<int> SelectedItemIndexProperty =
         AvaloniaProperty.Register<NavigateAbleItemsViewer, int>(nameof(SelectedItemIndex), defaultValue: -1);
@@ -40,17 +42,25 @@ public class NavigateAbleItemsViewer : ItemsControl
     public static readonly StyledProperty<bool> CenterCurrentItemProperty =
         AvaloniaProperty.Register<NavigateAbleItemsViewer, bool>(nameof(CenterCurrentItem));
 
-    private bool _isScrollbarCentered;
-
     public bool CenterCurrentItem
     {
         get => GetValue(CenterCurrentItemProperty);
         set => SetValue(CenterCurrentItemProperty, value);
     }
 
+    #endregion
+
+    #region Constructor and Control Overrides
+
     public NavigateAbleItemsViewer()
     {
         PointerWheelChanged += OnPointerWheelChanged;
+    }
+
+    protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
+    {
+        base.OnApplyTemplate(e);
+        _scrollViewer = e.NameScope.Find<AutoScrollViewer>("PART_ScrollViewer");
     }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
@@ -61,7 +71,7 @@ public class NavigateAbleItemsViewer : ItemsControl
         {
             if (change is { OldValue: int oldIndex, NewValue: int newIndex })
             {
-                SetCurrentItem(newIndex, oldIndex);
+                ApplyCurrentItemVisualState(newIndex, oldIndex);
                 SelectedItemIndex = newIndex;
             }
         }
@@ -69,7 +79,7 @@ public class NavigateAbleItemsViewer : ItemsControl
         {
             if (change is { OldValue: int oldIndex, NewValue: int newIndex })
             {
-                SetSelectedItemAndScrollIntoView(newIndex, oldIndex);
+                SelectAndBringIntoView(newIndex, oldIndex);
             }
         }
     }
@@ -96,7 +106,35 @@ public class NavigateAbleItemsViewer : ItemsControl
 
         if (index == SelectedItemIndex) navItem.SetSelected(true);
     }
+
+    #endregion
+
+    #region Scrolling & Viewport Logic
+
+    public void SetVerticalScrolling()
+    {
+        _isVerticalScrolling = true;
+        if (_scrollViewer == null)
+        {
+            return;
+        }
+
+        _scrollViewer.HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled;
+        _scrollViewer.VerticalScrollBarVisibility = ScrollBarVisibility.Visible;
+    }
     
+    public void SetHorizontalScrolling()
+    {
+        _isVerticalScrolling = false;
+        if (_scrollViewer == null)
+        {
+            return;
+        }
+
+        _scrollViewer.HorizontalScrollBarVisibility = ScrollBarVisibility.Visible;
+        _scrollViewer.VerticalScrollBarVisibility = ScrollBarVisibility.Disabled;
+    }
+
     public void ScrollToCenterOfCurrentItem()
     {
         if (_scrollViewer is null || CurrentItemIndex < 0 || CurrentItemIndex >= ItemCount)
@@ -143,32 +181,35 @@ public class NavigateAbleItemsViewer : ItemsControl
         });
     }
 
-    private void SetCurrentItem(int index, int prevIndex)
+    public void CenterItemHorizontally(NavigateAbleItem selectedItem)
     {
-        if (_scrollViewer == null || index < 0 || index >= ItemCount
-            || ContainerFromIndex(index) is not ContentPresenter presenter)
+        if (_scrollViewer == null)
         {
             return;
         }
 
-        if (presenter.Child is NavigateAbleItem item)
+        var visibleItems = GetVisibleItems();
+        var array = visibleItems as NavigateAbleItem[] ?? visibleItems.ToArray();
+        var visibleItemsCount = array.Length;
+        if (visibleItemsCount == 0)
         {
-            item.BringIntoView();
-            item.SetCurrent(true);
+            return;
         }
-
-        if (prevIndex == index || prevIndex < 0 || prevIndex >= ItemCount
-            || ContainerFromIndex(prevIndex) is not ContentPresenter prevPresenter)
+        
+        var averageItemWidth = array.Sum(item => item.Bounds.Width);
+        averageItemWidth /= visibleItemsCount;
+        
+        var selectedScrollTo = selectedItem.TranslatePoint(new Point(), ItemsPanelRoot);
+        
+        if (!selectedScrollTo.HasValue)
         {
             return;
         }
 
-        if (prevPresenter.Child is not NavigateAbleItem prevItem)
-        {
-            return;
-        }
+        // ReSharper disable once PossibleLossOfFraction
+        var newScrollPosition = selectedScrollTo.Value.X - (visibleItemsCount + 1) / 2 * averageItemWidth + averageItemWidth / 2;
 
-        prevItem.SetCurrent(false);
+        _scrollViewer.Offset = new Vector(newScrollPosition, _scrollViewer.Offset.Y);
     }
 
     private void OnPointerWheelChanged(object? sender, PointerWheelEventArgs e)
@@ -195,21 +236,38 @@ public class NavigateAbleItemsViewer : ItemsControl
                 _scrollViewer.LineLeft();
             }
         }
-        _isScrollbarCentered = false;
     }
 
-    protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
+    public IEnumerable<Control?> GetVisibleItems()
     {
-        base.OnApplyTemplate(e);
-        _scrollViewer = e.NameScope.Find<AutoScrollViewer>("PART_ScrollViewer");
+        return LogicalChildren.Cast<Control?>().Where(IsChildVisible);
     }
-
-    private void SetInternalSelection(int index)
+    
+    private bool IsChildVisible(Control? child)
     {
-        SelectedItemIndex = index;
+        if (child is null) return false;
+        
+        try
+        {
+            var parentBounds = new Rect(Bounds.Size);
+            var visual = child.TransformToVisual(this);
+            if (visual is null) return false;
+            
+            var childBounds = child.Bounds.TransformToAABB(visual.Value);
+            return parentBounds.Intersects(childBounds);
+        }
+        catch (Exception e)
+        {
+            DebugHelper.LogDebug(nameof(NavigateAbleItemsViewer), nameof(IsChildVisible), e);
+            return false;
+        }
     }
 
-    public void SetSelectedItemAndScrollIntoView(int index, int prevIndex)
+    #endregion
+
+    #region Selection & Visual State Management
+
+    public void SelectAndBringIntoView(int index, int prevIndex)
     {
         if (_scrollViewer == null || index < 0 || index >= ItemCount 
             || ContainerFromIndex(index) is not ContentPresenter presenter)
@@ -222,53 +280,26 @@ public class NavigateAbleItemsViewer : ItemsControl
             return;
         }
         
-        if (CenterCurrentItem)
+        item.BringIntoView();
+        
+        if (CenterCurrentItem && !_isVerticalScrolling)
         {
             var container = ContainerFromIndex(index); 
-
             var vector = container?.TranslatePoint(new Point(0, 0), _scrollViewer);
             
             if (vector != null)
             {
-                if (_isVerticalScrolling)
-                {
-                    item.BringIntoView();
-                    _isScrollbarCentered = false;
-                }
-                else
-                {
-                    // --- Horizontal Centering Logic ---
-                    if (_isScrollbarCentered)
-                    {
-                        var pos = vector.Value;
-                        var currentOffset = _scrollViewer.Offset;
-                        var itemCenterX = pos.X + container.Bounds.Width / 2;
-                        var viewportCenterX = _scrollViewer.Viewport.Width / 2;
-
-                        // Calculate difference
-                        var diff = itemCenterX - viewportCenterX;
-
-                        // Apply to X offset, keep Y same
-                        _scrollViewer.Offset = new Vector(currentOffset.X + diff, currentOffset.Y);
-                    }
-                    else
-                    {
-                        ScrollToCenterOfItem(item);
-                    }
-
-                    _isScrollbarCentered = true;
-                }
+                var pos = vector.Value;
+                var currentOffset = _scrollViewer.Offset;
+                var itemCenterX = pos.X + container.Bounds.Width / 2;
+                var viewportCenterX = _scrollViewer.Viewport.Width / 2;
+                    
+                // Calculate difference
+                var diff = itemCenterX - viewportCenterX;
+                    
+                // Apply to X offset, keep Y same
+                _scrollViewer.Offset = new Vector(currentOffset.X + diff, currentOffset.Y);
             }
-            else
-            {
-                item.BringIntoView();
-                _isScrollbarCentered = false;
-            }
-        }
-        else if (item.IsEffectivelyVisible)
-        {
-            item.BringIntoView();
-            _isScrollbarCentered = false;
         }
 
         item.SetSelected(true);
@@ -285,62 +316,41 @@ public class NavigateAbleItemsViewer : ItemsControl
             prevItem.SetSelected(false);
         }
     }
-    
-    public IEnumerable<Control?> GetVisibleItems()
+
+    private void ApplyCurrentItemVisualState(int index, int prevIndex)
     {
-        return LogicalChildren.Cast<Control?>().Where(IsControlVisible);
-    }
-    
-    private bool IsControlVisible(Control? child)
-    {
-        if (child is null)
-        {
-            return false;
-        }
-        try
-        {
-            var parentBounds = new Rect(Bounds.Size);
-            var visual = child.TransformToVisual(this);
-            if (visual is null)
-            {
-                return false;
-            }
-            var childBounds = child.Bounds.TransformToAABB(visual.Value);
-            return parentBounds.Intersects(childBounds);
-        }
-        catch (Exception e)
-        {
-            DebugHelper.LogDebug(nameof(NavigateAbleItemsViewer), nameof(IsControlVisible), e);
-            return false;
-        }
-    }
-    
-    public void ScrollToCenterOfItem(NavigateAbleItem selectedItem)
-    {
-        var visibleItems = GetVisibleItems();
-        
-        var array = visibleItems as NavigateAbleItem[] ?? visibleItems.ToArray();
-        var visibleItemsCount = array.Length;
-        if (visibleItemsCount == 0)
-        {
-            return;
-        }
-        
-        var averageItemWidth = array.Sum(item => item.Bounds.Width);
-        averageItemWidth /= visibleItemsCount;
-        
-        var selectedScrollTo = selectedItem.TranslatePoint(new Point(), ItemsPanelRoot);
-        
-        if (!selectedScrollTo.HasValue)
+        if (_scrollViewer == null || index < 0 || index >= ItemCount
+            || ContainerFromIndex(index) is not ContentPresenter presenter)
         {
             return;
         }
 
-        // ReSharper disable once PossibleLossOfFraction
-        var newScrollPosition = selectedScrollTo.Value.X - (visibleItemsCount + 1) / 2 * averageItemWidth + averageItemWidth / 2;
+        if (presenter.Child is NavigateAbleItem item)
+        {
+            item.BringIntoView();
+            item.SetCurrent(true);
+        }
 
-        _scrollViewer.Offset = new Vector(newScrollPosition, _scrollViewer.Offset.Y);
+        if (prevIndex == index || prevIndex < 0 || prevIndex >= ItemCount
+            || ContainerFromIndex(prevIndex) is not ContentPresenter prevPresenter)
+        {
+            return;
+        }
+
+        if (prevPresenter.Child is NavigateAbleItem prevItem)
+        {
+            prevItem.SetCurrent(false);
+        }
     }
+
+    private void UpdateSelectionIndex(int index)
+    {
+        SelectedItemIndex = index;
+    }
+
+    #endregion
+
+    #region Spatial Navigation Logic
 
     public void Navigate(NavigationDirection direction)
     {
@@ -348,18 +358,17 @@ public class NavigateAbleItemsViewer : ItemsControl
 
         if (direction == NavigationDirection.First)
         {
-            SetInternalSelection(0);
+            UpdateSelectionIndex(0);
             return;
         }
 
         if (direction == NavigationDirection.Last)
         {
-            SetInternalSelection(ItemCount - 1);
+            UpdateSelectionIndex(ItemCount - 1);
             return;
         }
 
         var startIndex = SelectedItemIndex == -1 ? CurrentItemIndex : SelectedItemIndex;
-        if (startIndex < 0) startIndex = SelectedItemIndex;
         if (startIndex < 0) startIndex = 0;
         if (startIndex >= ItemCount) startIndex = ItemCount - 1;
 
@@ -382,12 +391,7 @@ public class NavigateAbleItemsViewer : ItemsControl
             _ => null
         };
 
-        if (targetItem is not { } validItem)
-        {
-            return;
-        }
-
-        if (validItem.Index >= items.Count)
+        if (targetItem is not { } validItem || validItem.Index >= items.Count)
         {
             return;
         }
@@ -396,50 +400,43 @@ public class NavigateAbleItemsViewer : ItemsControl
         {                
             case NavigationDirection.Left:
             case NavigationDirection.Right:
-                if (validItem.Index is 0)
-                {
-                    // Don't loop or jump
-                    return;
-                }
-                SetInternalSelection(validItem.Index);
+                if (validItem.Index is 0) return; // Don't loop or jump
+                UpdateSelectionIndex(validItem.Index);
                 break;
                     
             case NavigationDirection.Down:
                 if (validItem.Index is 0)
                 {
                     // If at bottom of column, go to top of next column
-                    var nextColumnItem = GetNextColumnTopItem(currentItemPos, items);
-                    SetInternalSelection(nextColumnItem?.Index ?? startIndex);
+                    var nextColumnItem = GetTopItemInNextColumn(currentItemPos, items);
+                    UpdateSelectionIndex(nextColumnItem?.Index ?? startIndex);
                 }
                 else
                 {
-                    SetInternalSelection(validItem.Index);
+                    UpdateSelectionIndex(validItem.Index);
                 }
-
                 break;
                     
             case NavigationDirection.Up:
                 if (validItem.Index is 0)
                 {
                     // If at top of column, go to bottom of previous column
-                    var prevColumnItem = GetPreviousColumnBottomItem(currentItemPos, items);
+                    var prevColumnItem = GetBottomItemInPreviousColumn(currentItemPos, items);
                     if (currentItemPos.Index is 1)
                     {
-                        SetInternalSelection(0);
+                        UpdateSelectionIndex(0);
                     }
                     else
                     {
-                        SetInternalSelection(prevColumnItem?.Index ?? startIndex);
+                        UpdateSelectionIndex(prevColumnItem?.Index ?? startIndex);
                     }
                 }
                 else
                 {
-                    SetInternalSelection(validItem.Index);
+                    UpdateSelectionIndex(validItem.Index);
                 }
                 break;
-                    
-            default:
-                return;
+            default: return;
         }
     }
 
@@ -493,63 +490,39 @@ public class NavigateAbleItemsViewer : ItemsControl
         return candidates.OrderBy(item => item.Position.X).ThenBy(item => Math.Abs(item.Position.Y - currentItem.Position.Y)).FirstOrDefault();
     }
 
-    private static ItemPosition? GetNextColumnTopItem(ItemPosition currentItem, IEnumerable<ItemPosition> items)
+    private static ItemPosition? GetTopItemInNextColumn(ItemPosition currentItem, IEnumerable<ItemPosition> items)
     {
-        // Find items to the right of current item (next column)
         var nextColumnItems = items
             .Where(item => item.Position.X >= currentItem.Position.X + currentItem.Size.Width)
             .OrderBy(item => item.Position.X)
             .ToList();
 
-        if (nextColumnItems.Count is 0)
-        {
-            return null;
-        }
+        if (nextColumnItems.Count is 0) return null;
 
-        // Get the X position of the next column
         var nextColumnX = nextColumnItems.First().Position.X;
 
-        // Find the topmost item in that column
         return nextColumnItems
-            .Where(item => Math.Abs(item.Position.X - nextColumnX) < 1.0) // Same column (account for floating point)
+            .Where(item => Math.Abs(item.Position.X - nextColumnX) < 1.0)
             .OrderBy(item => item.Position.Y)
             .FirstOrDefault();
     }
 
-    private static ItemPosition? GetPreviousColumnBottomItem(ItemPosition currentItem, IEnumerable<ItemPosition> items)
+    private static ItemPosition? GetBottomItemInPreviousColumn(ItemPosition currentItem, IEnumerable<ItemPosition> items)
     {
-        // Find items to the left of current item (previous column)
         var prevColumnItems = items
             .Where(item => item.Position.X + item.Size.Width <= currentItem.Position.X)
             .OrderByDescending(item => item.Position.X)
             .ToList();
 
-        if (prevColumnItems.Count == 0)
-        {
-            return null;
-        }
+        if (prevColumnItems.Count == 0) return null;
 
-        // Get the X position of the previous column
         var prevColumnX = prevColumnItems.First().Position.X;
 
-        // Find the bottommost item in that column
         return prevColumnItems
-            .Where(item => Math.Abs(item.Position.X - prevColumnX) < 1.0) // Same column (account for floating point)
+            .Where(item => Math.Abs(item.Position.X - prevColumnX) < 1.0)
             .OrderByDescending(item => item.Position.Y)
             .FirstOrDefault();
     }
 
-    public void SetVerticalScrolling()
-    {
-        _isVerticalScrolling = true;
-        _scrollViewer.HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled;
-        _scrollViewer.VerticalScrollBarVisibility = ScrollBarVisibility.Visible;
-    }
-    
-    public void SetHorizontalScrolling()
-    {
-        _isVerticalScrolling = false;
-        _scrollViewer.HorizontalScrollBarVisibility = ScrollBarVisibility.Visible;
-        _scrollViewer.VerticalScrollBarVisibility = ScrollBarVisibility.Disabled;
-    }
+    #endregion
 }
