@@ -11,11 +11,17 @@
 
         <Border Classes="searchBorder" ui:SearchProperties.Keywords="{CompiledBinding SettingsViewModel.SearchData.SlideshowSearchTags.Value}">
             <StackPanel>
-                <TextBlock
-                    Classes="txt bold"
-                    Margin="0,20,0,20"
-                    Text="{CompiledBinding Translation.Slideshow.Value,
-                                           Mode=OneWay}" />
+                <StackPanel Orientation="Horizontal" Spacing="12">
+                    <Image
+                        Height="18"
+                        Source="{StaticResource SlideshowImage}"
+                        Width="18" />
+                    <TextBlock
+                        Classes="txt bold searchHeader"
+                        Margin="0,20,0,20"
+                        Text="{CompiledBinding Translation.Slideshow.Value,
+                                               Mode=OneWay}" />
+                </StackPanel>
                 <TextBlock
                     Classes="txt"
                     FontFamily="/Assets/Fonts/Roboto-Bold.ttf#Roboto"

@@ -51,6 +51,6 @@ public partial class SettingsView2 : UserControl
 
     private void OnScrollChanged(object? sender, ScrollChangedEventArgs e)
     {
-        _controller?.HandleScrollChanged(ContentScrollViewer.Offset.Y);
+        _controller?.HandleScrollChanged(ContentScrollViewer.Offset.Y, ContentPanel.Spacing * 2);
     }
 }

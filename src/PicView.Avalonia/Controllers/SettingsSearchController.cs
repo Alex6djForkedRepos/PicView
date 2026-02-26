@@ -118,7 +118,7 @@ public class SettingsSearchController(SettingsView2 view) : IDisposable
         }
     }
 
-    public void HandleScrollChanged(double offset)
+    public void HandleScrollChanged(double offset, double panelSpacing)
     {
          // Optimization: Exit early if logic is running, if data missing, or if pure UI scrolling
         if (_isScrollingProgrammatically || _orderedSections == null || view.DataContext is not CoreViewModel core)
@@ -137,7 +137,7 @@ public class SettingsSearchController(SettingsView2 view) : IDisposable
         // We look for the last section whose top is above the current scroll offset
         foreach (var kvp in _orderedSections)
         {
-            if (kvp.Value.Bounds.Y <= offset + 10) // +10 buffer for better feel
+            if (kvp.Value.Bounds.Y <= offset + panelSpacing)
             {
                 bestMatch = kvp.Key;
             }

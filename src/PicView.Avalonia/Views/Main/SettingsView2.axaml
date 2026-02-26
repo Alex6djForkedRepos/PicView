@@ -597,72 +597,64 @@
                 </ListBox>
 
                 <customControls:AutoScrollViewer Focusable="True" x:Name="ContentScrollViewer">
-                    <StackPanel>
+                    <StackPanel
+                        Margin="0,5"
+                        Spacing="80"
+                        x:Name="ContentPanel">
 
                         <config:GeneralSettingsView2
                             Background="Transparent"
                             Focusable="True"
-                            Margin="0,5,0,75"
                             x:Name="GeneralSection" />
 
                         <config:AppearanceView2
                             Background="Transparent"
                             Focusable="True"
-                            Margin="0,0,0,75"
                             x:Name="AppearanceSection" />
 
                         <config:InterfaceConfigurationView2
                             Background="Transparent"
                             Focusable="True"
-                            Margin="0,0,0,75"
                             x:Name="InterfaceSection" />
 
                         <config:ImageSettingsView2
                             Background="Transparent"
                             Focusable="True"
-                            Margin="0,0,0,75"
                             x:Name="ImageSection" />
 
                         <config:WindowSettingsView2
                             Background="Transparent"
                             Focusable="True"
-                            Margin="0,0,0,75"
                             x:Name="WindowSection" />
 
                         <config:GallerySettingsView2
                             Background="Transparent"
                             Focusable="True"
-                            Margin="0,0,0,75"
                             x:Name="GallerySection" />
 
                         <config:SlideshowSettingsView2
                             Background="Transparent"
                             Focusable="True"
-                            Margin="0,0,0,75"
                             x:Name="SlideshowSection" />
 
                         <config:NavigationView2
                             Background="Transparent"
                             Focusable="True"
-                            Margin="0,0,0,75"
                             x:Name="NavigationSection" />
 
                         <config:ZoomSettingsView2
                             Background="Transparent"
                             Focusable="True"
-                            Margin="0,0,0,75"
                             x:Name="ZoomSection" />
 
                         <config:MouseView2
                             Background="Transparent"
                             Focusable="True"
-                            Margin="0,0,0,75"
                             x:Name="MouseSection" />
 
                         <config:LanguageView2
                             Background="Transparent"
                             Focusable="True"
-                            Margin="0,0,0,75"
                             x:Name="LanguageSection" />
 
                     </StackPanel>

@@ -19,6 +19,18 @@
 
     <StackPanel HorizontalAlignment="Center">
 
+        <StackPanel Orientation="Horizontal" Spacing="12">
+            <Image
+                Height="18"
+                Source="{StaticResource PaletteImage}"
+                Width="18" />
+            <TextBlock
+                Classes="txt bold searchHeader"
+                Margin="0,20,0,20"
+                Text="{CompiledBinding Translation.Appearance.Value,
+                                       Mode=OneWay}" />
+        </StackPanel>
+
         <Border Classes="searchBorder" ui:SearchProperties.Keywords="{CompiledBinding SettingsViewModel.SearchData.ThemeSearchTags.Value}">
             <StackPanel>
                 <TextBlock
