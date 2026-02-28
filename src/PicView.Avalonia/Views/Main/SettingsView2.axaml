@@ -583,17 +583,6 @@
                         </ListBoxItem.Content>
                     </ListBoxItem>
 
-                    <ListBoxItem Tag="{x:Static viewModels1:SettingsCategory.FileAssociations}">
-                        <ListBoxItem.Content>
-                            <StackPanel Orientation="Horizontal" Spacing="8">
-                                <Image
-                                    Height="18"
-                                    Source="{StaticResource FileAssociationAltImage}"
-                                    Width="18" />
-                                <TextBlock Classes="txt" Text="{CompiledBinding Translation.FileAssociations.Value, Mode=OneWay}" />
-                            </StackPanel>
-                        </ListBoxItem.Content>
-                    </ListBoxItem>
                 </ListBox>
 
                 <customControls:AutoScrollViewer Focusable="True" x:Name="ContentScrollViewer">
