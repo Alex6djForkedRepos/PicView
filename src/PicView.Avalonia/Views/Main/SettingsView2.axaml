@@ -587,7 +587,7 @@
 
                 <customControls:AutoScrollViewer Focusable="True" x:Name="ContentScrollViewer">
                     <StackPanel
-                        Margin="0,5"
+                        Margin="0,25,0,100"
                         Spacing="80"
                         x:Name="ContentPanel">
 

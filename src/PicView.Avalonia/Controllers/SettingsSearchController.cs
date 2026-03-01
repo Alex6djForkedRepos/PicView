@@ -120,7 +120,7 @@ public class SettingsSearchController(SettingsView2 view) : IDisposable
 
     public void HandleScrollChanged(double offset, double panelSpacing)
     {
-         // Optimization: Exit early if logic is running, if data missing, or if pure UI scrolling
+        // Optimization: Exit early if logic is running, if data missing, or if pure UI scrolling
         if (_isScrollingProgrammatically || _orderedSections == null || view.DataContext is not CoreViewModel core)
         {
             return;
@@ -143,7 +143,6 @@ public class SettingsSearchController(SettingsView2 view) : IDisposable
             }
             else
             {
-                // Since list is ordered by Y, once we pass the offset, we can stop
                 break;
             }
         }
@@ -152,6 +151,23 @@ public class SettingsSearchController(SettingsView2 view) : IDisposable
         if (!bestMatch.HasValue && _orderedSections.Count > 0)
         {
             bestMatch = SettingsCategory.General;
+        }
+
+        // Fix never selecting last match
+        if (_orderedSections.Count > 1)
+        {
+            var secondLastMatch = _orderedSections[^2].Key;
+            if (bestMatch == secondLastMatch)
+            {
+                // Check if we have scrolled to the absolute bottom
+                var scrollViewer = view.ContentScrollViewer;
+
+                // Using a 1.0 tolerance for floating point rounding differences
+                if (offset + scrollViewer.Viewport.Height >= scrollViewer.Extent.Height - 1.0)
+                {
+                    bestMatch = _orderedSections.Last().Key;
+                }
+            }
         }
 
         // Only update ViewModel if value changed to avoid reactive loops
