@@ -1,12 +1,8 @@
 <Window
-    BorderBrush="{DynamicResource SecondaryBackgroundColor}"
-    BorderThickness="1"
-    CanResize="True"
-    ExtendClientAreaChromeHints="SystemChrome"
-    ExtendClientAreaTitleBarHeightHint="28"
     MinHeight="{CompiledBinding WindowMinHeight.Value}"
     MinWidth="{CompiledBinding WindowMinWidth.Value}"
     SystemDecorations="None"
+    Theme="{StaticResource SimpleWindow}"
     Title="{CompiledBinding WindowTabs.ActiveTab.Value.WindowTitle.Value,
                             FallbackValue=''}"
     TransparencyLevelHint="Transparent"
@@ -19,7 +15,8 @@
     xmlns:views="clr-namespace:PicView.Avalonia.Linux.Views"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Border
-        Background="Transparent"
+        Background="{CompiledBinding ImageBackground.Value,
+                                     Mode=OneWay}"
         BorderBrush="{DynamicResource WindowBorderColor}"
         BorderThickness="1"
         CornerRadius="6">
