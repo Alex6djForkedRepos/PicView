@@ -265,28 +265,28 @@ public partial class LinuxMainWindow : Window, IPlatformWindowService
     } = 185;
     
     public void ShowAboutWindow() =>
-        _windowInitializer?.ShowAboutWindow(null);
+        _windowInitializer?.ShowAboutWindow();
 
     public async Task ShowImageInfoWindow() =>
-        await _windowInitializer?.ShowImageInfoWindow(null);
+        await _windowInitializer?.ShowImageInfoWindow();
 
     public async Task ShowKeybindingsWindow() =>
-        await _windowInitializer?.ShowKeybindingsWindow(null);
+        await _windowInitializer?.ShowKeybindingsWindow();
 
     public async ValueTask ShowSettingsWindow() =>
         await _windowInitializer.ShowSettingsWindow();
 
     public void ShowSingleImageResizeWindow() =>
-        _windowInitializer?.ShowSingleImageResizeWindow(null);
+        _windowInitializer?.ShowSingleImageResizeWindow();
 
     public async Task ShowBatchResizeWindow() =>
-        await _windowInitializer?.ShowBatchResizeWindow(null);
+        await _windowInitializer?.ShowBatchResizeWindow();
 
     public void ShowEffectsWindow() =>
-        _windowInitializer?.ShowEffectsWindow(null);
+        _windowInitializer?.ShowEffectsWindow();
 
     public void ShowConvertWindow() =>
-        _windowInitializer?.ShowConvertWindow(null);
+        _windowInitializer?.ShowConvertWindow();
 
     /// <inheritdoc />
     public async Task Maximize(bool saveSetting = true) =>

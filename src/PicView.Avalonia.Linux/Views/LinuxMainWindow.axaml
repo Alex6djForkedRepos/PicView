@@ -1,7 +1,7 @@
 <Window
     MinHeight="{CompiledBinding WindowMinHeight.Value}"
     MinWidth="{CompiledBinding WindowMinWidth.Value}"
-    SystemDecorations="None"
+    SystemDecorations="BorderOnly"
     Theme="{StaticResource SimpleWindow}"
     Title="{CompiledBinding WindowTabs.ActiveTab.Value.WindowTitle.Value,
                             FallbackValue=''}"
@@ -18,8 +18,7 @@
         Background="{CompiledBinding ImageBackground.Value,
                                      Mode=OneWay}"
         BorderBrush="{DynamicResource WindowBorderColor}"
-        BorderThickness="1"
-        CornerRadius="6">
+        BorderThickness="1">
         <DockPanel LastChildFill="True">
             <views:LinuxTitlebar DockPanel.Dock="Top" x:Name="Titlebar" />
             <uc:BottomBar2 DockPanel.Dock="Bottom" x:Name="BottomBar" />
