@@ -1,4 +1,4 @@
-<Window1
+<Window
     MinHeight="{CompiledBinding WindowMinHeight.Value}"
     MinWidth="{CompiledBinding WindowMinWidth.Value}"
     SizeChanged="Control_OnSizeChanged"
