@@ -131,13 +131,6 @@ public partial class SettingsView : UserControl
         PointerPressed += OnPointerPressed;
     }
 
-    protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
-    {
-        base.OnDetachedFromVisualTree(e);
-        Disposable.Dispose(_marginSubscription, ViewModel.SettingsViewModel);
-        ViewModel.SettingsViewModel = null;
-    }
-
     #endregion
 
     #region Navigation

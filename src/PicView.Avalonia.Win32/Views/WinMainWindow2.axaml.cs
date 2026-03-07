@@ -8,6 +8,7 @@ using PicView.Avalonia.StartUp;
 using PicView.Avalonia.UI;
 using PicView.Avalonia.Win32.WindowImpl;
 using PicView.Avalonia.WindowBehavior;
+using PicView.Core.DebugTools;
 using PicView.Core.IPlatform;
 using PicView.Core.ViewModels;
 using R3;
@@ -59,7 +60,16 @@ public partial class WinMainWindow2 : Window, IPlatformWindowService
                         return;
                     }
 
-                    WindowResizing.HandleWindowResize(this, size);
+                    WindowResizing2.HandleWindowResize(this, size);
+                }, result =>
+                {
+#if DEBUG
+                    if (result is { IsFailure: true, Exception: not null })
+                    {
+                        DebugHelper.LogDebug(nameof(WinMainWindow2), nameof(ClientSizeProperty),
+                            result.Exception);
+                    }
+#endif
                 });
             ScalingChanged += (_, _) =>
             {

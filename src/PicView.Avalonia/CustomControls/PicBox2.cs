@@ -7,8 +7,6 @@ using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Metadata;
 using ImageMagick;
-using PicView.Avalonia.Navigation;
-using PicView.Avalonia.UI;
 using PicView.Core.DebugTools;
 using PicView.Core.ViewModels;
 
@@ -100,7 +98,7 @@ public class PicBox2 : Control
     {
         var source = Source;
 
-        if (source == null || !(Bounds.Width > 0) || !(Bounds.Height > 0))
+        if (source == null || Bounds.Width <= 0 || Bounds.Height <= 0)
         {
             return;
         }

@@ -7,7 +7,7 @@ namespace PicView.Core.ViewModels;
 public class MainWindowViewModel : IDisposable
 {
     public IFunctionsMapper? Mapper { get; set; }
-    public IPlatformWindowService? PlatformWindowService { get; set; }
+    public IPlatformWindowService? PlatformWindowService { get; }
     
     public TranslationViewModel Translation { get;  } 
     public GallerySharedSettingsViewModel GallerySettings { get; }
@@ -42,8 +42,6 @@ public class MainWindowViewModel : IDisposable
     public BindableReactiveProperty<object> TopScreenMargin { get; } = new(0);
 
     public BindableReactiveProperty<bool> CanResize { get; } = new();
-
-    public BindableReactiveProperty<object?> CurrentView { get; } = new();
 
     public BindableReactiveProperty<double> TitleMaxWidth { get; } = new();
 
@@ -650,7 +648,6 @@ public class MainWindowViewModel : IDisposable
             TitlebarHeight,
             BottombarHeight,
             CanResize,
-            CurrentView,
             TitleMaxWidth,
             IsLoadingIndicatorShown,
             IsUIShown,

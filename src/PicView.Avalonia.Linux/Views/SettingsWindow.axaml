@@ -1,5 +1,7 @@
 <Window
     MinWidth="600"
+    SystemDecorations="BorderOnly"
+    Theme="{StaticResource SimpleWindow}"
     WindowStartupLocation="CenterOwner"
     x:Class="PicView.Avalonia.Linux.Views.SettingsWindow"
     x:DataType="viewModels:CoreViewModel"
@@ -130,7 +132,7 @@
                 </DockPanel>
             </Border>
 
-            <main:SettingsView2 Background="{DynamicResource WindowBackgroundColor}" x:Name="SettingsView" />
+            <main:SettingsView2 Background="{DynamicResource SecondaryBackgroundColor}" x:Name="SettingsView" />
 
         </DockPanel>
     </Border>

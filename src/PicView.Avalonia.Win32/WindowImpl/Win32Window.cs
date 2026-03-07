@@ -114,26 +114,23 @@ public static class Win32Window
             vm.GlobalSettings.IsAutoFit.Value = true;
             if (Settings.WindowProperties.KeepCentered)
             {
-                WindowFunctions.CenterWindowOnScreen();
+                WindowFunctions2.CenterWindowOnScreen();
             }
             else
             {
-                WindowFunctions.InitializeWindowSizeAndPosition(window);
+                WindowFunctions2.InitializeWindowSizeAndPosition(window);
             }
-
-            await WindowFunctions.ResizeAndFixRenderingError(vm); // Fixes incorrect render size
         }
         else
         {
             vm.MainWindow.SizeToContent.Value = SizeToContent.Manual;
             vm.MainWindow.CanResize.Value = true;
-            WindowFunctions.InitializeWindowSizeAndPosition(window);
+            WindowFunctions2.InitializeWindowSizeAndPosition(window);
         }
 
         await WindowResizing.SetSizeAsync(vm);
 
         Dispatcher.UIThread.Post(() => IsChangingWindowState = false, DispatcherPriority.SystemIdle);
-
 
         if (saveSettings)
         {
