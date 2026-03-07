@@ -44,6 +44,8 @@ public class ImageIterator(IImageCache cache, IThumbnailCache thumbCache, IThumb
             _tab.CanNavigateForwards.Value = isLooping || index < count - 1;
             _tab.CanNavigateBackwards.Value = isLooping || index > 0;
         }
+        _tab.NavigationIndex.Value = index;
+        _tab.MaxIndex.Value = count;
     }
 
     /// <summary>
