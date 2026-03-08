@@ -154,33 +154,13 @@ public class PicBox2 : Control
     /// <returns>The desired size of the control.</returns>
     protected override Size MeasureOverride(Size availableSize)
     {
-        var source = Source;
-        var result = new Size();
-
-        if (source == null)
-        {
-            return result;
-        }
-
-        var size = GetImageSize(source);
-        result = Stretch.CalculateSize(availableSize, size, StretchDirection);
-
-        return result;
+        return Source == null ? new Size() : Stretch.CalculateSize(availableSize, GetImageSize(Source), StretchDirection);
     }
 
     /// <inheritdoc/>
     protected override Size ArrangeOverride(Size finalSize)
     {
-        var source = Source;
-
-        if (source is null)
-        {
-            return new Size();
-        }
-
-        var sourceSize = GetImageSize(source);
-        var result = Stretch.CalculateSize(finalSize, sourceSize);
-        return result;
+        return Source is null ? new Size() : Stretch.CalculateSize(finalSize, GetImageSize(Source));
     }
 
     protected override AutomationPeer OnCreateAutomationPeer()
