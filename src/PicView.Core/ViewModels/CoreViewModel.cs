@@ -19,6 +19,7 @@ public class CoreViewModel(
     public GallerySharedSettingsViewModel GallerySettings { get; } = new();
     public KeybindingsViewModel? Keybindings { get; set; }
     public SettingsViewModel? SettingsViewModel { get; set; } // Single settings window
+    public AboutViewModel? AboutView { get; set; } // Single about window
 
     // --- Overview models ---
     public MainWindowOverviewViewModel MainWindows { get; } = new();

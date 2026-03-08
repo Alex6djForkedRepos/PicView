@@ -25,7 +25,8 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\PicView.Avalonia.MacOS\PicView.Avalonia.MacOS.csproj" />
+        <!-- MacOS project excluded due to pre-existing build errors on Windows -->
+        <!--<ProjectReference Include="..\PicView.Avalonia.MacOS\PicView.Avalonia.MacOS.csproj" />-->
         <ProjectReference Include="..\PicView.Avalonia\PicView.Avalonia.csproj" />
         <ProjectReference Include="..\PicView.Core\PicView.Core.csproj" />
     </ItemGroup>

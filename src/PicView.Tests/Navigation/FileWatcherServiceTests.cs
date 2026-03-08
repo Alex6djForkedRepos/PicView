@@ -166,6 +166,7 @@ public class FileWatcherServiceTests : IDisposable
         public void Preload(string ownerId, int currentIndex, bool reversed, IReadOnlyList<FileInfo> files, CancellationToken token) { }
         public void Clear(TabViewModel tab) { }
         public void TryRemove(string ownerId, int index) { }
+        public ValueTask<bool> WaitForLoadingCompleteAsync(string ownerId, int index) => ValueTask.FromResult(false);
     }
 
     private class MockThumbnailLoader : IThumbnailLoader

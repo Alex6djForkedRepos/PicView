@@ -82,7 +82,7 @@
                 Height="1"
                 x:Name="BorderRectangle" />
 
-            <main:AboutView
+            <main:AboutView2
                 Background="{DynamicResource NoisyTexture}"
                 Focusable="True"
                 Margin="0"

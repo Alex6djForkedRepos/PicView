@@ -16,7 +16,7 @@ using R3;
 
 namespace PicView.Avalonia.Win32.WindowImpl;
 
-public class WindowInitializer : IPlatformSpecificUpdate
+public class WindowInitializer : IPlatformSpecificUpdate, PicView.Core.IPlatform.IPlatformSpecificUpdate
 {
     private AboutWindow2? _aboutWindow;
     private BatchResizeWindow? _batchResizeWindow;
@@ -31,6 +31,11 @@ public class WindowInitializer : IPlatformSpecificUpdate
     public async Task HandlePlatofrmUpdate(UpdateInfo updateInfo, string tempPath)
     {
         await WinUpdateHelper.HandleWindowsUpdate(updateInfo, tempPath);
+    }
+
+    Task PicView.Core.IPlatform.IPlatformSpecificUpdate.HandlePlatofrmUpdate(UpdateInfo updateInfo, string tempPath)
+    {
+        return HandlePlatofrmUpdate(updateInfo, tempPath);
     }
 
     public void ShowAboutWindow()
@@ -48,15 +53,18 @@ public class WindowInitializer : IPlatformSpecificUpdate
 
         void Set()
         {
-            if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop)
+            if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop ||
+                Application.Current.DataContext is not CoreViewModel core)
             {
                 return;
             }
 
             if (_aboutWindow is null)
             {
+                core.AboutView ??= new AboutViewModel(this);
                 _aboutWindow = new AboutWindow2
                 {
+                    DataContext = core,
                     WindowStartupLocation = WindowStartupLocation.CenterOwner
                 };
                 _aboutWindow.Show(desktop.MainWindow);

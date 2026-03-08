@@ -160,6 +160,7 @@ public class NavigationServiceTests
         public void Clear(TabViewModel tab) { }
         public void TryRemove(string ownerId, int index) { }
         public void Resynchronize(string ownerId, IReadOnlyList<FileInfo> files) { }
+        public ValueTask<bool> WaitForLoadingCompleteAsync(string ownerId, int index) => ValueTask.FromResult(false);
     }
     
     private class MockThumbnailLoader : IThumbnailLoader
