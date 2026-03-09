@@ -1,4 +1,4 @@
-﻿using PicView.Core.DebugTools;
+using PicView.Core.DebugTools;
 using PicView.Core.Models;
 using PicView.Core.Navigation;
 using PicView.Core.Navigation.Interfaces;
@@ -60,6 +60,9 @@ public class Preloader2(Func<FileInfo, ValueTask<ImageModel>> imageModelLoader, 
                 // Piggyback on the existing load
                 await cachedValue.WaitForLoadingCompleteAsync().ConfigureAwait(false);
             }
+            
+            // Ensure the requesting owner has a reference to this value in its dictionary
+            cache.Add(ownerId, index, cachedValue, list.Count, isReverse);
 
             return cachedValue.ImageModel;
         }

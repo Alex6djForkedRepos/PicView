@@ -164,7 +164,7 @@ public class FileWatcherServiceTests : IDisposable
         public bool Add(string ownerId, int index, PreLoadValue preLoadValue, int listCount, bool isReverse) => false;
         public bool TryAdd(string ownerId, int index, PreLoadValue preLoadValue, int listCount, bool isReverse, out PreLoadValue? value) { value = null; return false; }
         public void Preload(string ownerId, int currentIndex, bool reversed, IReadOnlyList<FileInfo> files, CancellationToken token) { }
-        public void Clear(TabViewModel tab) { }
+        public void Clear(TabViewModel tab, int currentIndex, string directory, IReadOnlyList<FileInfo> files) { }
         public void TryRemove(string ownerId, int index) { }
         public ValueTask<bool> WaitForLoadingCompleteAsync(string ownerId, int index) => ValueTask.FromResult(false);
     }

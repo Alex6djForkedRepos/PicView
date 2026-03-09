@@ -23,6 +23,7 @@ public class SharedImageCacheTests
         var ownerId = "tab1";
         var file = new FileInfo("test.jpg");
         var list = new List<FileInfo> { file };
+        _cache.RegisterOwner(ownerId);
         
         var model = await _cache.LoadAsync(ownerId, 0, list);
 
@@ -40,6 +41,7 @@ public class SharedImageCacheTests
         var ownerId = "tab1";
         var file = new FileInfo("direct.jpg");
         var model = new ImageModel { FileInfo = file };
+        _cache.RegisterOwner(ownerId);
         var preLoadValue = new PreLoadValue(model);
 
         _cache.Add(ownerId, 0, preLoadValue, 1, false);
@@ -52,6 +54,7 @@ public class SharedImageCacheTests
     public void Resynchronize_ShouldUpdateIndices()
     {
         var ownerId = "tab1";
+        _cache.RegisterOwner(ownerId);
         var files = new List<FileInfo>
         {
             new("0.jpg"),
@@ -82,6 +85,7 @@ public class SharedImageCacheTests
     public void Resynchronize_ShouldEvictRemovedItems()
     {
         var ownerId = "tab1";
+        _cache.RegisterOwner(ownerId);
         var files = new List<FileInfo> { new("0.jpg") };
 
         var preLoadValue = new PreLoadValue(new ImageModel { FileInfo = files[0] });
@@ -100,6 +104,8 @@ public class SharedImageCacheTests
         var owner2 = "tab2";
         var file = new FileInfo("shared.jpg");
         var list = new List<FileInfo> { file };
+        _cache.RegisterOwner(owner1);
+        _cache.RegisterOwner(owner2);
 
         // Load for Owner 1
         var model1 = await _cache.LoadAsync(owner1, 0, list);

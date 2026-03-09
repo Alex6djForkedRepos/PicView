@@ -7,7 +7,8 @@ namespace PicView.Core.Navigation;
 
 public class ImageIterator(IImageCache cache, IThumbnailCache thumbCache, IThumbnailLoader thumbnailLoader, TabViewModel tab) : IImageIterator
 {
-    private readonly IImageCache _cache = cache ?? throw new ArgumentNullException(nameof(cache));
+    public IImageCache Cache { get; } = cache ?? throw new ArgumentNullException(nameof(cache));
+    public string? CurrentDirectory => Files.Count > 0 ? Files[0].DirectoryName : null;
     private readonly IThumbnailCache _thumbCache = thumbCache ?? throw new ArgumentNullException(nameof(thumbCache));
     private readonly TabViewModel _tab = tab ?? throw new ArgumentNullException(nameof(tab));
 
@@ -128,7 +129,7 @@ public class ImageIterator(IImageCache cache, IThumbnailCache thumbCache, IThumb
                 await Update(model);
                 break;
             case CacheStatus.IsLoadingInCache:
-                var successFullyLoaded = await _cache.WaitForLoadingCompleteAsync(_tab.Id, index).ConfigureAwait(false);
+                var successFullyLoaded = await Cache.WaitForLoadingCompleteAsync(_tab.Id, index).ConfigureAwait(false);
                 if (!successFullyLoaded)
                 {
                     goto case CacheStatus.NotInCache;
@@ -157,7 +158,7 @@ public class ImageIterator(IImageCache cache, IThumbnailCache thumbCache, IThumb
 
         void Preload()
         {
-            _cache.Preload(_tab.Id, CurrentIndex, IsReversed, Files, _tab.GetTabCancellation().Token);
+            Cache.Preload(_tab.Id, CurrentIndex, IsReversed, Files, _tab.GetTabCancellation().Token);
         }
 
         async ValueTask Update(ImageModel newModel)
@@ -203,13 +204,13 @@ public class ImageIterator(IImageCache cache, IThumbnailCache thumbCache, IThumb
 
         var file = Files[index];
 
-        if (_cache.TryGet(file, out var preLoadValue) && preLoadValue?.ImageModel?.Image != null)
+        if (Cache.TryGet(file, out var preLoadValue) && preLoadValue?.ImageModel?.Image != null)
         {
             await IterateToIndexAsync(index, ct).ConfigureAwait(false);
         }
         else
         {
-            _cache.Clear(_tab.Id);
+            Cache.Clear(_tab.Id);
             await IterateToIndexAsync(index, ct).ConfigureAwait(false);
         }
     }
@@ -329,7 +330,7 @@ public class ImageIterator(IImageCache cache, IThumbnailCache thumbCache, IThumb
         CancellationTokenSource ct)
     {
         // Check if the item is in the cache
-        if (!_cache.TryGet(file, out var preLoadValue) || preLoadValue is null)
+        if (!Cache.TryGet(file, out var preLoadValue) || preLoadValue is null)
         {
             return LoadThumbnailInternal(index, file, ct, CacheStatus.NotInCache);
         }
@@ -369,7 +370,7 @@ public class ImageIterator(IImageCache cache, IThumbnailCache thumbCache, IThumb
     }
 
     private async ValueTask<ImageModel?> LoadManuallyAsync(int index, CancellationTokenSource ct) =>
-        await _cache.LoadAsync(_tab.Id, index, Files, ct.Token).ConfigureAwait(false);
+        await Cache.LoadAsync(_tab.Id, index, Files, ct.Token).ConfigureAwait(false);
 
     #endregion
 
@@ -378,7 +379,6 @@ public class ImageIterator(IImageCache cache, IThumbnailCache thumbCache, IThumb
     public void Dispose()
     {
         _timer?.Dispose();
-        _cache.RemoveOwner(_tab.Id);
         GC.SuppressFinalize(this);
     }
 

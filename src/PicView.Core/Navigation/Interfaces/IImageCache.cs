@@ -1,4 +1,4 @@
-﻿using PicView.Core.Models;
+using PicView.Core.Models;
 using PicView.Core.Preloading;
 using PicView.Core.ViewModels;
 
@@ -78,8 +78,9 @@ public interface IImageCache
 
     /// <summary>
     /// Helper to clear resources specifically for a <see cref="TabViewModel"/>.
+    /// Transfers relevant cache items to another eligible tab if possible before removing.
     /// </summary>
-    void Clear(TabViewModel tab);
+    void Clear(TabViewModel tab, int currentIndex, string directory, IReadOnlyList<FileInfo> files);
 
     void TryRemove(string ownerId, int index);
 

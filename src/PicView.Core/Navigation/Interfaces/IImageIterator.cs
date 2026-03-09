@@ -9,6 +9,9 @@ namespace PicView.Core.Navigation.Interfaces;
 /// </summary>
 public interface IImageIterator : IDisposable
 {
+    public IImageCache Cache { get; }
+    public string? CurrentDirectory { get; }
+
     /// <summary>
     /// The list of files currently being iterated.
     /// </summary>
