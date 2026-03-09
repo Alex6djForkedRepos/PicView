@@ -446,11 +446,6 @@ public class EvictingDictionary2<TValue> : IEnumerable<KeyValuePair<(string Owne
         // This removes the Enumerator allocation on every eviction.
         foreach (var candidateKey in _indexMap.Keys)
         {
-            if (candidateKey.OwnerId != ownerId)
-            {
-                continue;
-            }
-
             int distance;
             if (isReverse)
             {

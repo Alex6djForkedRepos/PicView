@@ -1,5 +1,6 @@
 using PicView.Core.Extensions;
 using PicView.Core.ImageDecoding;
+using PicView.Core.Localization;
 using PicView.Core.Models;
 using PicView.Core.Navigation;
 using PicView.Core.Navigation.Interfaces;
@@ -80,8 +81,14 @@ public class TabViewModel(string id, Action<string> closeTab, IFileWatcherServic
     /// </summary>
     public void UpdateTabTitle()
     {
-        if (ImageIterator?.Files is null || !IsSelected)
+        if (!IsSelected)
         {
+            return;
+        }
+
+        if (ImageIterator?.Files?.Count <= 0)
+        {
+            SetNewTabTitle();
             return;
         }
             
@@ -106,6 +113,19 @@ public class TabViewModel(string id, Action<string> closeTab, IFileWatcherServic
                 index, Model.FileInfo, 100, ImageIterator.Files);
         }
     }
+    
+    public void SetNewTabTitle()
+    {
+        var title = TranslationManager.Translation.NoImage;
+        if (string.IsNullOrEmpty(title))
+        {
+            return;
+        }
+        WindowTitle.Value = title + " - PicView";
+        Title.Value = title;
+        TitleTooltip.Value = title;
+        TabTitle.Value = title;
+     }
 
     public void Initialize(IImageCache cache, IThumbnailCache thumbCache, IThumbnailLoader thumbnailLoader, IFileWatcherService? fileWatcherService = null, IThumbnailCache? thumbnailCache = null)
     {
@@ -202,4 +222,5 @@ public class TabViewModel(string id, Action<string> closeTab, IFileWatcherServic
         return $"{Id}: {Model?.FileInfo?.FullName}";
     }
     #endif
+
 }

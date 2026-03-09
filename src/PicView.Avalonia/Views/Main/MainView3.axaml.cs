@@ -94,7 +94,15 @@ public partial class MainView3 : UserControl
         }
 
         vm.WindowTabs.SelectTab(tab);
-        tab.UpdateTabTitle();
+        if (tab.FileInfo?.CurrentValue?.Exists == true)
+        {
+            tab.UpdateTabTitle();
+        }
+        else
+        {
+            tab.SetNewTabTitle();
+        }
+
         tab.ImageIterator.UpdateNavigationProperties();
     }
 
