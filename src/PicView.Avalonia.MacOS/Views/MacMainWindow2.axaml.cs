@@ -251,13 +251,13 @@ public partial class MacMainWindow2 : Window, IPlatformWindowService
     public int CombinedTitleButtonsWidth { get; set; } = 165;
     
     public void ShowAboutWindow() =>
-        _windowInitializer?.ShowAboutWindow(null);
+        _windowInitializer?.ShowAboutWindow();
 
     public async Task ShowImageInfoWindow() =>
-        await _windowInitializer?.ShowImageInfoWindow(null);
+        await _windowInitializer?.ShowImageInfoWindow();
 
     public async Task ShowKeybindingsWindow() =>
-        _windowInitializer?.ShowKeybindingsWindow(null);
+        _windowInitializer?.ShowKeybindingsWindow();
 
     public async ValueTask ShowSettingsWindow()
     {
@@ -269,16 +269,16 @@ public partial class MacMainWindow2 : Window, IPlatformWindowService
     }
 
     public void ShowSingleImageResizeWindow() =>
-        _windowInitializer?.ShowSingleImageResizeWindow(null);
+        _windowInitializer?.ShowSingleImageResizeWindow();
 
     public async Task ShowBatchResizeWindow() =>
-        await _windowInitializer?.ShowBatchResizeWindow(null);
+        await _windowInitializer?.ShowBatchResizeWindow();
 
     public void ShowEffectsWindow() =>
-        _windowInitializer?.ShowEffectsWindow(null);
+        _windowInitializer?.ShowEffectsWindow();
 
     public void ShowConvertWindow() =>
-        _windowInitializer?.ShowConvertWindow(null);
+        _windowInitializer?.ShowConvertWindow();
 
     /// <inheritdoc />
     public async Task Maximize(bool saveSetting = true) =>
