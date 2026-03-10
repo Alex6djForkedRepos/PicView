@@ -47,12 +47,9 @@ public class SharedImageCache : IImageCache
 
         _preLoader = new Preloader2(imageLoader, this);
     }
-    
-    public async Task<ImageModel?> LoadAsync(string ownerId, int index, IReadOnlyList<FileInfo> list, CancellationToken ct = default)
-    {
-        return await _preLoader.AddAsync(ownerId, index, list, false, ct).ConfigureAwait(false);
-    }
 
+    #region Resynchronize and owner registration
+    
     public void RegisterOwner(string ownerId)
     {
         _ownerDictionaries.TryAdd(ownerId, new EvictingDictionary<PreLoadValue>(PreLoaderConfig.MaxCount));
@@ -64,6 +61,100 @@ public class SharedImageCache : IImageCache
         _ownerContexts.TryRemove(ownerId, out _);
     }
 
+    public void Resynchronize(string ownerId, IReadOnlyList<FileInfo> files)
+    {
+        if (!_ownerDictionaries.TryGetValue(ownerId, out var dict))
+        {
+            return;
+        }
+
+        var oldItems = dict.GetEnumerator();
+        using IDisposable oldItems1 = oldItems;
+        var currentItems = new List<KeyValuePair<int, PreLoadValue>>();
+        while (oldItems.MoveNext())
+        {
+            currentItems.Add(oldItems.Current);
+        }
+        dict.Clear();
+
+        var newFileMap = new Dictionary<string, int>(_pathLookup.Comparer);
+        for (var i = 0; i < files.Count; i++)
+        {
+            newFileMap[files[i].FullName] = i;
+        }
+
+        foreach (var item in currentItems)
+        {
+            if (newFileMap.TryGetValue(item.Value.ImageModel.FileInfo.FullName, out var newIndex))
+            {
+                // Put it back at new index
+                dict.TryAdd(newIndex, item.Value, files.Count, false, out var evicted);
+                if (evicted != null)
+                {
+                    CheckAndDisposeIfNotReferenced(evicted);
+                }
+            }
+            else
+            {
+                // File no longer exists in the list
+                CheckAndDisposeIfNotReferenced(item.Value);
+            }
+        }
+        
+        // Update context
+        if (files.Count <= 0)
+        {
+            return;
+        }
+
+        if (_ownerContexts.TryGetValue(ownerId, out var ctx))
+        {
+            _ownerContexts[ownerId] = (files[0].DirectoryName ?? string.Empty, files, ctx.CurrentIndex);
+        }
+    }
+    
+    #endregion
+
+    #region Add, Get, Remove, and Clear
+    
+    public bool Add(string ownerId, int index, PreLoadValue preLoadValue, int listCount, bool isReverse)
+    {
+        return TryAdd(ownerId, index, preLoadValue, listCount, isReverse, out _);
+    }
+
+    public bool TryAdd(string ownerId, int index, PreLoadValue preLoadValue, int listCount, bool isReverse, out PreLoadValue? value)
+    {
+        value = null;
+        if (!_ownerDictionaries.TryGetValue(ownerId, out var dict))
+        {
+            return false;
+        }
+
+        var path = preLoadValue.ImageModel.FileInfo.FullName;
+        
+        // Ensure path lookup has it
+        _pathLookup.TryAdd(path, preLoadValue);
+        
+        // Add to owner dictionary
+        var evicted = dict.TryAdd(index, preLoadValue, listCount, isReverse, out var evictedValue);
+
+        if (!evicted || evictedValue == null)
+        {
+            return evicted;
+        }
+
+        CheckAndDisposeIfNotReferenced(evictedValue);
+        value = evictedValue;
+
+        return evicted;
+    }
+    
+    public bool Contains(ReadOnlySpan<char> span, out PreLoadValue? value) =>
+        TryGet(span, out value);
+
+    public bool Contains(PreLoadValue value) =>
+        TryGet(value.ImageModel.FileInfo.FullName, out var preLoadValue) && preLoadValue == value;
+    
     public bool TryGet(FileInfo f, out PreLoadValue? value)
     {
         if (_pathLookup.TryGetValue(f.FullName, out value))
@@ -93,19 +184,22 @@ public class SharedImageCache : IImageCache
         return TryResurrect(f.ToString(), out value);
     }
 
-    private bool TryResurrect(string path, out PreLoadValue? value)
+    public void TryRemove(string ownerId, int index)
     {
-        // Check if it's in the disposal list
-        if (_disposalList.TryRemove(path, out var pendingDisposal))
+        if (!_ownerDictionaries.TryGetValue(ownerId, out var dict))
         {
-            value = pendingDisposal.Item;
-            // Add it back to path lookup
-            _pathLookup.TryAdd(path, value);
-            return true;
+            return;
         }
-        
-        value = null;
-        return false;
+
+        if (!dict.Remove(index, out var removedValue))
+        {
+            return;
+        }
+
+        if (removedValue != null)
+        {
+            CheckAndDisposeIfNotReferenced(removedValue);
+        }
     }
 
     public void Clear()
@@ -139,115 +233,6 @@ public class SharedImageCache : IImageCache
         }
     }
 
-    public bool Contains(ReadOnlySpan<char> span, out PreLoadValue? value) =>
-        TryGet(span, out value);
-
-    public bool Contains(PreLoadValue value) =>
-        TryGet(value.ImageModel.FileInfo.FullName, out var preLoadValue) && preLoadValue == value;
-
-    public bool Add(string ownerId, int index, PreLoadValue preLoadValue, int listCount, bool isReverse)
-    {
-        return TryAdd(ownerId, index, preLoadValue, listCount, isReverse, out _);
-    }
-
-    public bool TryAdd(string ownerId, int index, PreLoadValue preLoadValue, int listCount, bool isReverse, out PreLoadValue? value)
-    {
-        value = null;
-        if (!_ownerDictionaries.TryGetValue(ownerId, out var dict))
-        {
-            return false;
-        }
-
-        var path = preLoadValue.ImageModel.FileInfo.FullName;
-        
-        // Ensure path lookup has it
-        _pathLookup.TryAdd(path, preLoadValue);
-        
-        // Add to owner dictionary
-        var evicted = dict.TryAdd(index, preLoadValue, listCount, isReverse, out var evictedValue);
-
-        if (!evicted || evictedValue == null)
-        {
-            return evicted;
-        }
-
-        CheckAndDisposeIfNotReferenced(evictedValue);
-        value = evictedValue;
-
-        return evicted;
-    }
-
-    internal void CheckAndDisposeIfNotReferenced(PreLoadValue item)
-    {
-        var isReferenced = false;
-        foreach (var dict in _ownerDictionaries.Values)
-        {
-            foreach (var value in dict.Values)
-            {
-                if (value != item)
-                {
-                    continue;
-                }
-
-                isReferenced = true;
-                break;
-            }
-            if (isReferenced) break;
-        }
-
-        if (isReferenced)
-        {
-            return;
-        }
-
-        var path = item.ImageModel.FileInfo.FullName;
-        _pathLookup.TryRemove(path, out _);
-        
-        // Add to disposal queue instead of immediately disposing
-        _disposalList.AddOrUpdate(path, 
-            (item, DateTime.UtcNow.AddMinutes(1)), 
-            (_, existing) => existing.Item == item ? (existing.Item, DateTime.UtcNow.AddMinutes(1)) : existing);
-            
-        // Process any expired items lazily
-        ProcessDisposalQueue();
-    }
-
-    private void ProcessDisposalQueue()
-    {
-        var now = DateTime.UtcNow;
-        foreach (var kvp in _disposalList)
-        {
-            if (now >= kvp.Value.Expiration)
-            {
-                if (_disposalList.TryRemove(kvp.Key, out var removed))
-                {
-                    DisposeHelper(removed.Item);
-                }
-            }
-        }
-    }
-
-    public void Preload(string ownerId, int currentIndex, bool reversed, IReadOnlyList<FileInfo> files, CancellationToken token) 
-    {
-        // Update context for transfer logic
-        if (files.Count > 0)
-        {
-            _ownerContexts[ownerId] = (files[0].DirectoryName ?? string.Empty, files, currentIndex);
-        }
-        _preLoader.Preload(ownerId, currentIndex, reversed, files, token);
-    }
-
-    public async ValueTask<bool> WaitForLoadingCompleteAsync(string ownerId, int index)
-    {
-        if (!TryGet(ownerId, index, out var value) || value is null)
-        {
-            return false;
-        }
-
-        await value.WaitForLoadingCompleteAsync();
-        return true;
-    }
-    
     public void Clear(TabViewModel tab, int currentIndex, string directory, IReadOnlyList<FileInfo> files)
     {
         var id = tab.Id;
@@ -324,77 +309,106 @@ public class SharedImageCache : IImageCache
         RemoveOwner(id);
     }
 
-    public void TryRemove(string ownerId, int index)
+    #endregion
+
+    #region Loading, preloading and wait for loading
+
+    public async Task<ImageModel?> LoadAsync(string ownerId, int index, IReadOnlyList<FileInfo> list, CancellationToken ct = default)
     {
-        if (!_ownerDictionaries.TryGetValue(ownerId, out var dict))
-        {
-            return;
-        }
-
-        if (!dict.Remove(index, out var removedValue))
-        {
-            return;
-        }
-
-        if (removedValue != null)
-        {
-            CheckAndDisposeIfNotReferenced(removedValue);
-        }
+        return await _preLoader.AddAsync(ownerId, index, list, false, ct).ConfigureAwait(false);
     }
 
-    public void Resynchronize(string ownerId, IReadOnlyList<FileInfo> files)
+    public void Preload(string ownerId, int currentIndex, bool reversed, IReadOnlyList<FileInfo> files, CancellationToken token) 
     {
-        if (!_ownerDictionaries.TryGetValue(ownerId, out var dict))
+        // Update context for transfer logic
+        if (files.Count > 0)
         {
-            return;
+            _ownerContexts[ownerId] = (files[0].DirectoryName ?? string.Empty, files, currentIndex);
+        }
+        _preLoader.Preload(ownerId, currentIndex, reversed, files, token);
+    }
+
+    public async ValueTask<bool> WaitForLoadingCompleteAsync(string ownerId, int index)
+    {
+        if (!TryGet(ownerId, index, out var value) || value is null)
+        {
+            return false;
         }
 
-        var oldItems = dict.GetEnumerator();
-        using IDisposable oldItems1 = oldItems;
-        var currentItems = new List<KeyValuePair<int, PreLoadValue>>();
-        while (oldItems.MoveNext())
-        {
-            currentItems.Add(oldItems.Current);
-        }
-        dict.Clear();
+        await value.WaitForLoadingCompleteAsync();
+        return true;
+    }
 
-        var newFileMap = new Dictionary<string, int>(_pathLookup.Comparer);
-        for (var i = 0; i < files.Count; i++)
-        {
-            newFileMap[files[i].FullName] = i;
-        }
+    #endregion
 
-        foreach (var item in currentItems)
+    #region Disposal and ressurection
+    
+    private bool TryResurrect(string path, out PreLoadValue? value)
+    {
+        // Check if it's in the disposal list
+        if (_disposalList.TryRemove(path, out var pendingDisposal))
         {
-            if (newFileMap.TryGetValue(item.Value.ImageModel.FileInfo.FullName, out var newIndex))
-            {
-                // Put it back at new index
-                dict.TryAdd(newIndex, item.Value, files.Count, false, out var evicted);
-                if (evicted != null)
-                {
-                    CheckAndDisposeIfNotReferenced(evicted);
-                }
-            }
-            else
-            {
-                // File no longer exists in the list
-                CheckAndDisposeIfNotReferenced(item.Value);
-            }
+            value = pendingDisposal.Item;
+            // Add it back to path lookup
+            _pathLookup.TryAdd(path, value);
+            return true;
         }
         
-        // Update context
-        if (files.Count <= 0)
+        value = null;
+        return false;
+    }
+
+    internal void CheckAndDisposeIfNotReferenced(PreLoadValue item)
+    {
+        var isReferenced = false;
+        foreach (var dict in _ownerDictionaries.Values)
+        {
+            foreach (var value in dict.Values)
+            {
+                if (value != item)
+                {
+                    continue;
+                }
+
+                isReferenced = true;
+                break;
+            }
+            if (isReferenced) break;
+        }
+
+        if (isReferenced)
         {
             return;
         }
 
-        if (_ownerContexts.TryGetValue(ownerId, out var ctx))
+        var path = item.ImageModel.FileInfo.FullName;
+        _pathLookup.TryRemove(path, out _);
+        
+        // Add to disposal queue instead of immediately disposing with a 30-second delay
+        _disposalList.AddOrUpdate(path, 
+            (item, DateTime.UtcNow.AddSeconds(30)), 
+            (_, existing) => existing.Item == item ? (existing.Item, DateTime.UtcNow.AddSeconds(30)) : existing);
+            
+        // Process any expired items lazily
+        ProcessDisposalQueue();
+    }
+
+    private void ProcessDisposalQueue()
+    {
+        var now = DateTime.UtcNow;
+        foreach (var kvp in _disposalList)
         {
-            _ownerContexts[ownerId] = (files[0].DirectoryName ?? string.Empty, files, ctx.CurrentIndex);
+            if (now >= kvp.Value.Expiration)
+            {
+                if (_disposalList.TryRemove(kvp.Key, out var removed))
+                {
+                    DisposeHelper(removed.Item);
+                }
+            }
         }
     }
 
-    internal void DisposeHelper(PreLoadValue? item)
+    private void DisposeHelper(PreLoadValue? item)
     {
         if (item?.ImageModel?.Image is not IDisposable disposable)
         {
@@ -411,4 +425,6 @@ public class SharedImageCache : IImageCache
             _disposeLock.Exit();
         }
     }
+
+    #endregion
 }
