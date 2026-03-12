@@ -16,15 +16,23 @@ namespace PicView.Core.Navigation;
 /// </summary>
 public class SharedImageCache : IImageCache
 {
+    /// <summary>
+    /// A private dictionary that maps an owner identifier (string) to an instance
+    /// of <see cref="EvictingDictionary{TValue}"/> containing preloaded image data.
+    /// </summary>
+    /// <remarks>
+    /// This dictionary is used to store image cache data for individual owners,
+    /// enabling separate and efficient management of cached data for different contexts.
+    /// Each owner is associated with an instance of <see cref="EvictingDictionary{TValue}"/>
+    /// which provides eviction capabilities to limit memory usage.
+    /// </remarks>
     private readonly ConcurrentDictionary<string, EvictingDictionary<PreLoadValue>> _ownerDictionaries = new();
     
-    // Fast lookup by file path (using OS-specific string comparer)
+    /// Fast lookup by file path (using OS-specific string comparer)
     private readonly ConcurrentDictionary<string, PreLoadValue> _pathLookup;
-    // Lazy disposal list: FilePath -> (PreLoadValue, ExpirationTime)
+    /// Lazy disposal list: FilePath -> (PreLoadValue, ExpirationTime)
     private readonly ConcurrentDictionary<string, (PreLoadValue Item, DateTime Expiration)> _disposalList;
-
-    
-    // Keep track of which directories and file lists each owner has for transfer logic
+    /// Keep track of which directories and file lists each owner has for transfer logic
     private readonly ConcurrentDictionary<string, (string Directory, IReadOnlyList<FileInfo> Files, int CurrentIndex)> _ownerContexts = new();
     
     // The worker
