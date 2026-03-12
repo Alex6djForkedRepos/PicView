@@ -1,8 +1,8 @@
 <ResourceDictionary
-    x:ClassModifier="internal"
     xmlns="https://github.com/avaloniaui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <ControlTheme TargetType="ScrollBar" x:Key="{x:Type ScrollBar}">
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    x:ClassModifier="internal">
+    <ControlTheme x:Key="{x:Type ScrollBar}" TargetType="ScrollBar">
         <Setter Property="Cursor" Value="Arrow" />
 
         <Style Selector="^:horizontal">
@@ -16,67 +16,67 @@
                         UseLayoutRounding="False">
                         <Grid ColumnDefinitions="Auto,*,Auto">
                             <RepeatButton
+                                Name="PART_LineUpButton"
+                                Grid.Row="0"
+                                Grid.Column="0"
+                                Width="16"
+                                Height="16"
+                                MinWidth="30"
+                                VerticalAlignment="Center"
                                 Background="Transparent"
                                 Classes="repeat"
                                 Focusable="False"
-                                Grid.Column="0"
-                                Grid.Row="0"
-                                Height="16"
-                                Interval="55"
-                                MinWidth="30"
-                                Name="PART_LineUpButton"
-                                VerticalAlignment="Center"
-                                Width="16">
+                                Interval="55">
                                 <PathIcon
-                                    Data="{StaticResource FilledChevronLeftGeometry}"
-                                    Foreground="{TemplateBinding Foreground}"
+                                    Width="12"
                                     Height="12"
-                                    Width="12" />
+                                    Data="{StaticResource FilledChevronLeftGeometry}"
+                                    Foreground="{TemplateBinding Foreground}" />
                             </RepeatButton>
                             <Track
-                                DeferThumbDrag="{TemplateBinding ScrollViewer.IsDeferredScrollingEnabled}"
-                                Grid.Column="1"
                                 Grid.Row="1"
+                                Grid.Column="1"
+                                DeferThumbDrag="{TemplateBinding ScrollViewer.IsDeferredScrollingEnabled}"
                                 Maximum="{TemplateBinding Maximum}"
                                 Minimum="{TemplateBinding Minimum}"
                                 Orientation="{TemplateBinding Orientation}"
+                                ViewportSize="{TemplateBinding ViewportSize}"
                                 Value="{TemplateBinding Value,
-                                                        Mode=TwoWay}"
-                                ViewportSize="{TemplateBinding ViewportSize}">
+                                                        Mode=TwoWay}">
                                 <Track.DecreaseButton>
                                     <RepeatButton
+                                        Name="PART_PageUpButton"
                                         Background="Transparent"
                                         Classes="repeattrack"
                                         Focusable="False"
-                                        Interval="55"
-                                        Name="PART_PageUpButton" />
+                                        Interval="55" />
                                 </Track.DecreaseButton>
                                 <Track.IncreaseButton>
                                     <RepeatButton
+                                        Name="PART_PageDownButton"
                                         Background="Transparent"
                                         Classes="repeattrack"
                                         Focusable="False"
-                                        Interval="55"
-                                        Name="PART_PageDownButton" />
+                                        Interval="55" />
                                 </Track.IncreaseButton>
                                 <Thumb Name="thumb" />
                             </Track>
                             <RepeatButton
+                                Name="PART_LineDownButton"
+                                Grid.Column="2"
+                                Width="16"
+                                Height="16"
+                                MinWidth="30"
+                                VerticalAlignment="Center"
                                 Background="Transparent"
                                 Classes="repeat"
                                 Focusable="False"
-                                Grid.Column="2"
-                                Height="16"
-                                Interval="55"
-                                MinWidth="30"
-                                Name="PART_LineDownButton"
-                                VerticalAlignment="Center"
-                                Width="16">
+                                Interval="55">
                                 <PathIcon
-                                    Data="{StaticResource FilledChevronRightGeometry}"
-                                    Foreground="{TemplateBinding Foreground}"
+                                    Width="12"
                                     Height="12"
-                                    Width="12" />
+                                    Data="{StaticResource FilledChevronRightGeometry}"
+                                    Foreground="{TemplateBinding Foreground}" />
                             </RepeatButton>
                         </Grid>
                     </Border>
@@ -89,44 +89,44 @@
             <Setter Property="Template">
                 <ControlTemplate>
                     <Border
+                        x:Name="Border"
                         Background="Transparent"
-                        UseLayoutRounding="False"
-                        x:Name="Border">
+                        UseLayoutRounding="False">
                         <DockPanel>
                             <RepeatButton
+                                Name="PART_LineUpButton"
+                                MinHeight="25"
+                                HorizontalAlignment="Center"
                                 Background="Transparent"
                                 Classes="repeat"
                                 DockPanel.Dock="Top"
                                 Focusable="False"
-                                HorizontalAlignment="Center"
-                                Interval="55"
-                                MinHeight="25"
-                                Name="PART_LineUpButton">
+                                Interval="55">
                                 <PathIcon
-                                    Data="{StaticResource FilledArrowUpGeometry}"
-                                    Foreground="{TemplateBinding Foreground}"
+                                    Width="16"
                                     Height="16"
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Center"
-                                    Width="16" />
+                                    Data="{StaticResource FilledArrowUpGeometry}"
+                                    Foreground="{TemplateBinding Foreground}" />
                             </RepeatButton>
 
                             <RepeatButton
+                                Name="PART_LineDownButton"
+                                MinHeight="25"
+                                HorizontalAlignment="Center"
                                 Background="Transparent"
                                 Classes="repeat"
                                 DockPanel.Dock="Bottom"
                                 Focusable="False"
-                                HorizontalAlignment="Center"
-                                Interval="55"
-                                MinHeight="25"
-                                Name="PART_LineDownButton">
+                                Interval="55">
                                 <PathIcon
-                                    Data="{StaticResource FilledArrowDownGeometry}"
-                                    Foreground="{TemplateBinding Foreground}"
+                                    Width="16"
                                     Height="16"
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Center"
-                                    Width="16" />
+                                    Data="{StaticResource FilledArrowDownGeometry}"
+                                    Foreground="{TemplateBinding Foreground}" />
                             </RepeatButton>
 
                             <Track
@@ -135,24 +135,24 @@
                                 Maximum="{TemplateBinding Maximum}"
                                 Minimum="{TemplateBinding Minimum}"
                                 Orientation="{TemplateBinding Orientation}"
+                                ViewportSize="{TemplateBinding ViewportSize}"
                                 Value="{TemplateBinding Value,
-                                                        Mode=TwoWay}"
-                                ViewportSize="{TemplateBinding ViewportSize}">
+                                                        Mode=TwoWay}">
                                 <Track.DecreaseButton>
                                     <RepeatButton
+                                        Name="PART_PageUpButton"
                                         Background="Transparent"
                                         Classes="repeattrack"
                                         Focusable="False"
-                                        Interval="55"
-                                        Name="PART_PageUpButton" />
+                                        Interval="55" />
                                 </Track.DecreaseButton>
                                 <Track.IncreaseButton>
                                     <RepeatButton
+                                        Name="PART_PageDownButton"
                                         Background="Transparent"
                                         Classes="repeattrack"
                                         Focusable="False"
-                                        Interval="55"
-                                        Name="PART_PageDownButton" />
+                                        Interval="55" />
                                 </Track.IncreaseButton>
                                 <Thumb Name="thumb" />
                             </Track>
@@ -214,7 +214,7 @@
 
 
 
-    <ControlTheme TargetType="ScrollBar" x:Key="Floating">
+    <ControlTheme x:Key="Floating" TargetType="ScrollBar">
         <Setter Property="Cursor" Value="Arrow" />
 
         <Style Selector="^:horizontal">
@@ -225,9 +225,9 @@
                         Maximum="{TemplateBinding Maximum}"
                         Minimum="{TemplateBinding Minimum}"
                         Orientation="{TemplateBinding Orientation}"
+                        ViewportSize="{TemplateBinding ViewportSize}"
                         Value="{TemplateBinding Value,
-                                                Mode=TwoWay}"
-                        ViewportSize="{TemplateBinding ViewportSize}">
+                                                Mode=TwoWay}">
                         <Thumb Name="thumb" />
                     </Track>
                 </ControlTemplate>
@@ -244,9 +244,9 @@
                         Maximum="{TemplateBinding Maximum}"
                         Minimum="{TemplateBinding Minimum}"
                         Orientation="{TemplateBinding Orientation}"
+                        ViewportSize="{TemplateBinding ViewportSize}"
                         Value="{TemplateBinding Value,
-                                                Mode=TwoWay}"
-                        ViewportSize="{TemplateBinding ViewportSize}">
+                                                Mode=TwoWay}">
                         <Thumb Name="thumb" />
                     </Track>
                 </ControlTemplate>
@@ -288,7 +288,7 @@
 
     </ControlTheme>
 
-    <ControlTheme TargetType="ScrollBar" x:Key="FloatingSlim">
+    <ControlTheme x:Key="FloatingSlim" TargetType="ScrollBar">
         <Setter Property="Cursor" Value="Arrow" />
 
         <Style Selector="^:horizontal">
@@ -300,10 +300,13 @@
                             Maximum="{TemplateBinding Maximum}"
                             Minimum="{TemplateBinding Minimum}"
                             Orientation="{TemplateBinding Orientation}"
+                            ViewportSize="{TemplateBinding ViewportSize}"
                             Value="{TemplateBinding Value,
-                                                    Mode=TwoWay}"
-                            ViewportSize="{TemplateBinding ViewportSize}">
-                            <Thumb Name="thumb" />
+                                                    Mode=TwoWay}">
+                            <Thumb
+                                Name="thumb"
+                                Margin="0,0,0,2"
+                                VerticalAlignment="Bottom" />
                         </Track>
                     </Panel>
                 </ControlTemplate>
@@ -318,9 +321,9 @@
                         Maximum="{TemplateBinding Maximum}"
                         Minimum="{TemplateBinding Minimum}"
                         Orientation="{TemplateBinding Orientation}"
+                        ViewportSize="{TemplateBinding ViewportSize}"
                         Value="{TemplateBinding Value,
-                                                Mode=TwoWay}"
-                        ViewportSize="{TemplateBinding ViewportSize}">
+                                                Mode=TwoWay}">
                         <Thumb Name="thumb" />
                     </Track>
                 </ControlTemplate>

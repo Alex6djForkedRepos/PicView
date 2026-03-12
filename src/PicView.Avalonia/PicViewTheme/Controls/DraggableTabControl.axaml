@@ -14,13 +14,13 @@
                         CornerRadius="{TemplateBinding CornerRadius}"
                         DockPanel.Dock="Top"
                         HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
-                        IsVisible="{Binding Tag, RelativeSource={RelativeSource TemplatedParent}, FallbackValue=True, TargetNullValue=True}"
+                        IsVisible="{Binding Tag, RelativeSource={RelativeSource TemplatedParent}, FallbackValue=False, TargetNullValue=False}"
                         Padding="{TemplateBinding Padding}"
                         VerticalAlignment="{TemplateBinding VerticalAlignment}">
                         <customControls:AutoScrollViewer
                             DockPanel.Dock="Top"
                             HorizontalScrollBarVisibility="Auto"
-                            Theme="{StaticResource InlineSlim}"
+                            Theme="{StaticResource ClickableMenuScrollButtons}"
                             VerticalScrollBarVisibility="Disabled">
                             <ItemsPresenter ItemsPanel="{TemplateBinding ItemsPanel}" Name="PART_ItemsPresenter" />
                         </customControls:AutoScrollViewer>

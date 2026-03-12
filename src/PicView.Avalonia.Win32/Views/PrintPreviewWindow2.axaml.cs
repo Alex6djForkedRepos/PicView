@@ -20,7 +20,7 @@ using PaperSize = System.Drawing.Printing.PaperSize;
 
 namespace PicView.Avalonia.Win32.Views;
 
-public partial class PrintPreviewWindow2  : Window, IPrintWindow
+public partial class PrintPreviewWindow2 : Window, IPrintWindow
 {
     private const float PreviewDpi = 96f;
 
@@ -76,6 +76,7 @@ public partial class PrintPreviewWindow2  : Window, IPrintWindow
         var vm = Dispatcher.UIThread.Invoke(() => DataContext as MainWindowViewModel);
         
         vm.PrintPreview ??= new PrintPreviewViewModel();
+
 
         // Initial render
         UpdatePreview(vm.PrintPreview);
@@ -280,6 +281,7 @@ public partial class PrintPreviewWindow2  : Window, IPrintWindow
             preview.IsProcessing.Value = false;
         }
     }
+
     protected override void OnClosing(WindowClosingEventArgs e)
     {
         base.OnClosing(e);
