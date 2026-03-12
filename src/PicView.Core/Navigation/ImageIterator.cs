@@ -67,12 +67,45 @@ public class ImageIterator(IImageCache cache, IThumbnailCache thumbCache, IThumb
         }
 
         CurrentIndex = index;
-        var targetFile = Files[CurrentIndex];
-
-        // Fetch from cache, or show a thumbnail while we wait
-        var (status, model) = GetCachedImageOrThumbnail(CurrentIndex, targetFile, ct);
-        
-        await HandleCacheStatusAsync(status, model, index, ct).ConfigureAwait(false);
+        var targetFile = Files[index];
+        if (Cache.TryGet(targetFile, out var preLoadValue))
+        {
+            if (preLoadValue is { IsLoading: false, ImageModel.Image: not null })
+            {
+                // Is in cache
+                await UpdateModelAsync(preLoadValue.ImageModel, ct).ConfigureAwait(false);
+            }
+            else
+            {
+                // Is loading in cache, show thumbnail while loading
+                var thumb = _thumbnailLoader.GetExifThumbnail(targetFile);
+                _tab.Image.Value = thumb; // If it is null, it will just be blank
+                
+                // Wait for loading complete
+                var successfullyLoaded = await Cache.WaitForLoadingCompleteAsync(_tab.Id, index).ConfigureAwait(false);
+                if (successfullyLoaded && index == CurrentIndex && preLoadValue.ImageModel is not null)
+                {
+                    await UpdateModelAsync(preLoadValue.ImageModel, ct).ConfigureAwait(false);
+                }
+                else
+                {
+                    TriggerPreload();
+                }
+            }
+        }
+        else
+        {
+            // Not in cache
+            var manuallyLoaded = await Cache.LoadAsync(_tab.Id, index, Files, ct.Token).ConfigureAwait(false);
+            if (index == CurrentIndex && manuallyLoaded is not null)
+            {
+                await UpdateModelAsync(manuallyLoaded, ct).ConfigureAwait(false);
+            }
+            else
+            {
+                TriggerPreload();
+            }
+        }
     }
 
     public async ValueTask SkipToIndexAsync(int index, CancellationTokenSource ct)
@@ -172,73 +205,7 @@ public class ImageIterator(IImageCache cache, IThumbnailCache thumbCache, IThumb
 
     #endregion
 
-    #region Cache & Thumbnail Loading
-
-    /// <summary>
-    /// Checks the cache for the full image. If it's not ready, it attempts to load and return a thumbnail as a fallback.
-    /// </summary>
-    private (CacheStatus Status, ImageModel? Model) GetCachedImageOrThumbnail(int index, FileInfo file, CancellationTokenSource ct)
-    {
-        if (!Cache.TryGet(file, out var preLoadValue) || preLoadValue is null)
-        {
-            return LoadThumbnailInternal(index, file, ct, CacheStatus.NotInCache);
-        }
-
-        if (preLoadValue is { IsLoading: true, ImageModel.Image: null })
-        {
-            return LoadThumbnailInternal(index, file, ct, CacheStatus.IsLoadingInCache);
-        }
-
-        return (CacheStatus.IsInCache, preLoadValue.ImageModel);
-    }
-
-    private (CacheStatus Status, ImageModel? Model) LoadThumbnailInternal(int index, FileInfo file, CancellationTokenSource ct, CacheStatus statusToReturn)
-    {
-        if (_thumbCache.TryGet(file.FullName, out var cachedThumb))
-        {
-            return (statusToReturn, new ImageModel { Image = cachedThumb, FileInfo = file });
-        }
-        
-        var thumb = _thumbnailLoader.GetExifThumbnail(file);
-
-        if (ct.IsCancellationRequested || CurrentIndex != index)
-        {
-            DebugHelper.LogDebug(nameof(ImageIterator), nameof(GetCachedImageOrThumbnail), "Cancelled");
-            return (CacheStatus.Cancelled, null);
-        }
-
-        return (statusToReturn, new ImageModel { Image = thumb, FileInfo = file });
-    }
-
-    private async ValueTask HandleCacheStatusAsync(CacheStatus status, ImageModel? model, int targetIndex, CancellationTokenSource ct)
-    {
-        switch (status)
-        {
-            case CacheStatus.Cancelled:
-                TriggerPreload();
-                break;
-                
-            case CacheStatus.IsInCache:
-                if (model is not null) await UpdateModelAsync(model, ct).ConfigureAwait(false);
-                break;
-                
-            case CacheStatus.IsLoadingInCache:
-                var successfullyLoaded = await Cache.WaitForLoadingCompleteAsync(_tab.Id, targetIndex).ConfigureAwait(false);
-                if (successfullyLoaded && targetIndex == CurrentIndex && model is not null)
-                {
-                    await UpdateModelAsync(model, ct).ConfigureAwait(false);
-                }
-                break;
-                
-            case CacheStatus.NotInCache:
-                var manuallyLoaded = await Cache.LoadAsync(_tab.Id, targetIndex, Files, ct.Token).ConfigureAwait(false);
-                if (targetIndex == CurrentIndex && manuallyLoaded is not null)
-                {
-                    await UpdateModelAsync(manuallyLoaded, ct).ConfigureAwait(false);
-                }
-                break;
-        }
-    }
+    #region Update model & Loading
 
     private async ValueTask UpdateModelAsync(ImageModel newModel, CancellationTokenSource ct)
     {
