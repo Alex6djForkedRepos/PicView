@@ -137,6 +137,8 @@ public class DraggableTabControl : TabControl
         tabItem.AddHandler(PointerReleasedEvent, OnItemPointerReleased,
             RoutingStrategies.Tunnel | RoutingStrategies.Bubble);
         tabItem.PointerCaptureLost += OnPointerCaptureLost;
+
+        tabItem.AddHandler(PointerWheelChangedEvent, OnPointerWheelChanged, RoutingStrategies.Tunnel | RoutingStrategies.Bubble);
     }
 
     protected override void ClearContainerForItemOverride(Control container)
@@ -162,6 +164,18 @@ public class DraggableTabControl : TabControl
     #endregion
 
     #region Pointer Events
+
+    private void OnPointerWheelChanged(object? sender, PointerWheelEventArgs e)
+    {
+        if (e.Delta.Y > 0)
+        {
+            _scrollViewer.LineLeft();
+        }
+        else
+        {
+            _scrollViewer.LineRight();
+        }
+    }
 
     private void OnItemPointerPressed(object? sender, PointerPressedEventArgs e)
     {
