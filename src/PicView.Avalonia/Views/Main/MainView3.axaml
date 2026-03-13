@@ -994,7 +994,7 @@
 
             <customControls:DraggableTabControl.ItemTemplate>
                 <DataTemplate>
-                    <DockPanel LastChildFill="True">
+                    <DockPanel Background="Transparent" LastChildFill="True">
                         <customControls:IconButton
                             Height="32"
                             Padding="9,0"
@@ -1026,7 +1026,8 @@
                                     HorizontalAlignment="Center"
                                     DockPanel.Dock="Bottom"
                                     Source="{CompiledBinding Image.Value,
-                                                             Mode=OneWay}" />
+                                                             Mode=OneWay,
+                                                             TargetNullValue={StaticResource LogoImage}}" />
                             </DockPanel>
                         </ToolTip.Tip>
                     </DockPanel>
