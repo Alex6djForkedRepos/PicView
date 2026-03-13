@@ -135,7 +135,11 @@ public class PicBox2 : Control
             {
                 try
                 {
-                    context.DrawImage(image, sourceRect, destRect);
+                    using (context.PushRenderOptions(options))
+                    {
+                        context.DrawImage(source, sourceRect, destRect);
+                    }
+
                 }
                 catch (Exception exception)
                 {
