@@ -73,7 +73,7 @@ public class ImageIterator(IImageCache cache, IThumbnailCache thumbCache, IThumb
             if (preLoadValue is { IsLoading: false, ImageModel.Image: not null })
             {
                 // Is in cache
-                await UpdateModelAsync(preLoadValue.ImageModel, ct).ConfigureAwait(false);
+                await NavigateNextModelAsync();
             }
             else
             {
@@ -85,7 +85,7 @@ public class ImageIterator(IImageCache cache, IThumbnailCache thumbCache, IThumb
                 var successfullyLoaded = await Cache.WaitForLoadingCompleteAsync(_tab.Id, index).ConfigureAwait(false);
                 if (successfullyLoaded && index == CurrentIndex && preLoadValue.ImageModel.Image is not null)
                 {
-                    await UpdateModelAsync(preLoadValue.ImageModel, ct).ConfigureAwait(false);
+                    await NavigateNextModelAsync();
                 }
                 else
                 {
@@ -105,6 +105,14 @@ public class ImageIterator(IImageCache cache, IThumbnailCache thumbCache, IThumb
             {
                 TriggerPreload();
             }
+        }
+        
+        return;
+
+        async ValueTask NavigateNextModelAsync()
+        {
+            await UpdateModelAsync(preLoadValue.ImageModel, ct).ConfigureAwait(false);
+            // TODO: Add to file history
         }
     }
 
