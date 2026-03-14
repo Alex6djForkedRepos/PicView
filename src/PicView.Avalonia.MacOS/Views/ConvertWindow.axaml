@@ -1,7 +1,7 @@
 ﻿<Window
     CanResize="False"
-    ExtendClientAreaChromeHints="SystemChrome"
     ExtendClientAreaTitleBarHeightHint="-1"
+    ExtendClientAreaToDecorationsHint="True"
     SizeToContent="WidthAndHeight"
     x:Class="PicView.Avalonia.MacOS.Views.ConvertWindow"
     x:DataType="viewModels:MainViewModel"

@@ -1,8 +1,8 @@
 <Window
     BorderBrush="{DynamicResource SecondaryBackgroundColor}"
     BorderThickness="1"
-    ExtendClientAreaChromeHints="SystemChrome"
     ExtendClientAreaTitleBarHeightHint="-1"
+    ExtendClientAreaToDecorationsHint="True"
     MinHeight="{CompiledBinding WindowMinHeight.Value}"
     MinWidth="{CompiledBinding WindowMinWidth.Value}"
     SizeChanged="Control_OnSizeChanged"

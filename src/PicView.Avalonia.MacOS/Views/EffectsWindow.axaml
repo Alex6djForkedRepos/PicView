@@ -1,7 +1,7 @@
 <Window
     CanResize="False"
-    ExtendClientAreaChromeHints="SystemChrome"
     ExtendClientAreaTitleBarHeightHint="-1"
+    ExtendClientAreaToDecorationsHint="True"
     SizeToContent="WidthAndHeight"
     Title="Loading..."
     d:DesignHeight="450"

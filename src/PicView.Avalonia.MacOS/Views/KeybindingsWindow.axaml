@@ -1,7 +1,7 @@
 <Window
     CanResize="True"
-    ExtendClientAreaChromeHints="SystemChrome"
     ExtendClientAreaTitleBarHeightHint="-1"
+    ExtendClientAreaToDecorationsHint="True"
     MinHeight="200"
     SizeToContent="Width"
     Title="Loading..."

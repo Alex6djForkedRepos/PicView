@@ -1,6 +1,6 @@
 <Window
-    ExtendClientAreaChromeHints="SystemChrome"
     ExtendClientAreaTitleBarHeightHint="-1"
+    ExtendClientAreaToDecorationsHint="True"
     Height="385"
     MinHeight="320"
     MinWidth="400"

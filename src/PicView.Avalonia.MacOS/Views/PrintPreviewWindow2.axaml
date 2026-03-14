@@ -1,7 +1,7 @@
 <Window
     CanResize="False"
-    ExtendClientAreaChromeHints="SystemChrome"
     ExtendClientAreaTitleBarHeightHint="-1"
+    ExtendClientAreaToDecorationsHint="True"
     SizeToContent="WidthAndHeight"
     Title="PrintPreviewWindow2"
     x:Class="PicView.Avalonia.MacOS.Views.PrintPreviewWindow2"

@@ -85,11 +85,11 @@ public partial class MacMainWindow2 : Window, IPlatformWindowService
             {
                 if (Settings.WindowProperties.Fullscreen)
                 {
-                    SystemDecorations = SystemDecorations.Full;
+                    WindowDecorations = WindowDecorations.Full;
                 }
                 else
                 {
-                    SystemDecorations = shown ? SystemDecorations.Full : SystemDecorations.None;
+                    WindowDecorations = shown ? WindowDecorations.Full : WindowDecorations.None;
                 }
             });
             

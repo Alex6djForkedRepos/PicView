@@ -1,7 +1,7 @@
 <Window
     BorderThickness="1"
-    ExtendClientAreaChromeHints="SystemChrome"
     ExtendClientAreaTitleBarHeightHint="-1"
+    ExtendClientAreaToDecorationsHint="True"
     MinHeight="500"
     MinWidth="500"
     x:Class="PicView.Avalonia.MacOS.Views.BatchResizeWindow"

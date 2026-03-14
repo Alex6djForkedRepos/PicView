@@ -1,8 +1,8 @@
 <Window
     BorderThickness="1"
     CanResize="True"
-    ExtendClientAreaChromeHints="SystemChrome"
     ExtendClientAreaTitleBarHeightHint="-1"
+    ExtendClientAreaToDecorationsHint="True"
     MinWidth="600"
     Title="SettingsWindow"
     x:Class="PicView.Avalonia.MacOS.Views.SettingsWindow"
