@@ -166,13 +166,10 @@ public partial class SettingsWindow : Window
 
     private void MoveWindow(object? sender, PointerPressedEventArgs e)
     {
-        if (VisualRoot is null)
+        if (GetTopLevel(this) is Window hostWindow)
         {
-            return;
+            hostWindow.BeginMoveDrag(e);
         }
-
-        var hostWindow = (Window)VisualRoot;
-        hostWindow?.BeginMoveDrag(e);
     }
     
     private void UpdateWindowSizeAndPosition(object? sender, PointerReleasedEventArgs e)
