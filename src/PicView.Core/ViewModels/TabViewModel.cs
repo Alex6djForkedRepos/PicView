@@ -23,13 +23,15 @@ public class TabViewModel(string id, Action<string> closeTab, IFileWatcherServic
 {
     /// The MainViewModel that currently "owns" this tab
     public object? ParentWindowContext { get; set; }
-
-    public HoverbarViewModel Hoverbar { get; } = new();
     
-    public GalleryViewModel Gallery { get; } = new();
-
     /// Unique identifier for this tab.
     public string Id { get; } = id;
+    
+    public CompositeDisposable Disposables { get; } = new();
+    public bool IsInitialized { get; set; }
+    public HoverbarViewModel Hoverbar { get; } = new();
+    public GalleryViewModel Gallery { get; } = new();
+
     public bool IsClosing { get; private set; }
     public bool IsSelected { get; set; }
     public BindableReactiveProperty<object?> Image { get; } = new();
@@ -217,9 +219,6 @@ public class TabViewModel(string id, Action<string> closeTab, IFileWatcherServic
         }
         return NavigationCts;
     }
-    
-    public CompositeDisposable Disposables { get; } = new();
-    public bool IsInitialized { get; set; }
     
     public void Dispose()
     {

@@ -237,7 +237,7 @@ public static class ClipboardFileOperations2
         foreach (var file in storageItems.Skip(1))
         {
             var tab = await vm.WindowTabs.CreateNewTabFromFileAsync(file.Path.AbsolutePath);
-            TabNavigationInitializer.InitializeNewTab(tab);
+            TabNavigationInitializer.InitializeNewTab(tab, vm);
             file.Dispose();
         }
     }
