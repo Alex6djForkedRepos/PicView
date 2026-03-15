@@ -1,4 +1,8 @@
 <UserControl
+    Height="{CompiledBinding $parent[Window].((viewModels1:MainWindowViewModel)DataContext).ImageHeight.Value,
+                             Mode=OneWay}"
+    Width="{CompiledBinding $parent[Window].((viewModels1:MainWindowViewModel)DataContext).ImageWidth.Value,
+                            Mode=OneWay}"
     x:Class="PicView.Avalonia.Views.UC.ImageViewer2"
     x:DataType="viewModels1:TabViewModel"
     xmlns="https://github.com/avaloniaui"

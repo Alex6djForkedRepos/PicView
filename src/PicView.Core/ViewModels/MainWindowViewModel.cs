@@ -27,24 +27,37 @@ public class MainWindowViewModel : IDisposable
     public bool IsTitlebarRotationClicked { get; set; }
 
     public BindableReactiveProperty<int> BackgroundChoice { get; } = new();
+    
+    public BindableReactiveProperty<double> WindowWidth { get; } = new(double.NaN);
+    
+    public BindableReactiveProperty<double> WindowHeight{ get; } = new(double.NaN);
 
     public BindableReactiveProperty<double> WindowMinWidth { get; } = new(SizeDefaults.WindowMinSize);
-
-    public BindableReactiveProperty<double> SecondaryWindowMinWidth { get; } =
-        new(SizeDefaults.SecondaryWindowMinWidth);
     public BindableReactiveProperty<double> WindowMinHeight { get; } = new(SizeDefaults.WindowMinSize);
+    
+    /// <summary>
+    /// The width to scale the image to
+    /// </summary>
+    public BindableReactiveProperty<double> ImageWidth { get; } = new(double.NaN);
+
+    /// <summary>
+    /// The height to scale the image to
+    /// </summary>
+    public BindableReactiveProperty<double> ImageHeight { get; } = new(double.NaN);
 
     public BindableReactiveProperty<double> TitlebarHeight { get; } = new();
+    
+    public BindableReactiveProperty<double> TitleMaxWidth { get; } = new();
 
     public BindableReactiveProperty<double> BottombarHeight { get; } = new();
+    
+
     public BindableReactiveProperty<object?> ImageBackground { get; } = new();
 
     public BindableReactiveProperty<object?> ConstrainedImageBackground { get; } = new();
     public BindableReactiveProperty<object> TopScreenMargin { get; } = new(0);
 
-    public BindableReactiveProperty<bool> CanResize { get; } = new();
 
-    public BindableReactiveProperty<double> TitleMaxWidth { get; } = new();
 
     public BindableReactiveProperty<bool> IsFullscreen { get; } = new();
 
@@ -652,17 +665,12 @@ public class MainWindowViewModel : IDisposable
             WindowMinHeight,
             TitlebarHeight,
             BottombarHeight,
-            CanResize,
             TitleMaxWidth,
             IsLoadingIndicatorShown,
             IsUIShown,
             IsTopToolbarShown,
             IsBottomToolbarShown,
             IsEditableTitlebarOpen);
-    }
-
-    public void LayoutButtonSubscription()
-    {
     }
 
 

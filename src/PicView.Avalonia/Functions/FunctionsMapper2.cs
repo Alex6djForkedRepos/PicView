@@ -589,8 +589,7 @@ public class FunctionsMapper2(Core.ViewModels.MainWindowViewModel vm) : IFunctio
     /// <inheritdoc cref="WindowFunctions.ToggleAutoFit(MainViewModel)" />
     public async ValueTask AutoFitWindow()
     {
-        // await WindowFunctions.ToggleAutoFit(vm).ConfigureAwait(false);
-        return;
+        await WindowFunctions2.ToggleAutoFit(vm);
     }
 
     /// <inheritdoc cref="WindowFunctions.NormalWindow(MainViewModel)" />
@@ -631,7 +630,7 @@ public class FunctionsMapper2(Core.ViewModels.MainWindowViewModel vm) : IFunctio
                     vm.WindowTabs.ActiveTab.Value.CurrentView.Value = new ImageViewer2();
                 }
             });
-            TabNavigationInitializer.InitializeNewTab(vm.WindowTabs.ActiveTab.Value);
+            TabNavigationInitializer.InitializeNewTab(vm.WindowTabs.ActiveTab.Value, vm);
         }
         vm.IsLoadingIndicatorShown.Value = false;
     }
@@ -1061,7 +1060,7 @@ public class FunctionsMapper2(Core.ViewModels.MainWindowViewModel vm) : IFunctio
     public ValueTask NewTab()
     {
         var tab = vm.WindowTabs.CreateTab();
-        TabNavigationInitializer.InitializeNewTab(tab);
+        TabNavigationInitializer.InitializeNewTab(tab, vm);
         return ValueTask.CompletedTask;
     }
     

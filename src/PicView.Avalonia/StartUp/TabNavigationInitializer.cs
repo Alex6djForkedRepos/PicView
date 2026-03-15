@@ -2,6 +2,7 @@ using Avalonia;
 using Avalonia.Threading;
 using PicView.Avalonia.Navigation.Services;
 using PicView.Avalonia.UI;
+using PicView.Avalonia.WindowBehavior;
 using PicView.Core.DebugTools;
 using PicView.Core.FileHandling;
 using PicView.Core.Gallery;
@@ -36,13 +37,13 @@ public static class TabNavigationInitializer
         var thumbnailService = new AvaloniaThumbnailLoader();
         var navService = new NavigationService(imageLoader, archiveService, sharedCache, fileWatcher, core.PlatformService, tempFileService, thumbnailService, core.PlatformService.CompareStrings);
 
-        var tabOverView = core.MainWindows.ActiveWindow.Value.WindowTabs;
+        var tabOverView = core.MainWindows.ActiveWindow.CurrentValue.WindowTabs;
         var tab = tabOverView.ActiveTab.CurrentValue;
 
         // 4. Initialize ViewModel
         tabOverView.LoadAndInitialize(navService, sharedCache,thumbnailCache, thumbnailService, fileWatcher);
         tabOverView.SetParentContext(core);
-        InitializeNewTab(tab);
+        InitializeNewTab(tab, core.MainWindows.ActiveWindow.CurrentValue);
         tab.Gallery.Initialize();
         core.GallerySettings.Initialize();
     }
@@ -71,12 +72,12 @@ public static class TabNavigationInitializer
 
         var files = core.PlatformService.GetFiles(fileInfo);
         // 4. Initialize ViewModel
-        var tabOverView = core.MainWindows.ActiveWindow.Value.WindowTabs;
+        var tabOverView = core.MainWindows.ActiveWindow.CurrentValue.WindowTabs;
         var tab = tabOverView.ActiveTab.CurrentValue;
         tabOverView.LoadAndInitializeFromPath(files, navService, sharedCache, thumbnailCache, thumbnailService, fileWatcher);
         tabOverView.SetParentContext(core);
         tab.UpdateTabTitle();
-        InitializeNewTab(tab);
+        InitializeNewTab(tab, core.MainWindows.ActiveWindow.CurrentValue);
         tab.Gallery.Initialize();
         core.GallerySettings.Initialize();
     }
@@ -107,17 +108,17 @@ public static class TabNavigationInitializer
         parentVm.WindowTabs.IsTabPanelVisible.Value = parentVm.WindowTabs.Tabs.CurrentValue.Count > 1;
     }
     
-    public static void InitializeNewTab(TabViewModel newTab)
+    public static void InitializeNewTab(TabViewModel newTab, MainWindowViewModel mainWindowViewModel)
     {
         if (newTab.IsInitialized)
         {
             return;
         }
-        ModelSubscription(newTab);
+        ModelSubscription(newTab, mainWindowViewModel);
         newTab.IsInitialized = true;
     }
     
-    private static void ModelSubscription(TabViewModel tabViewModel)
+    private static void ModelSubscription(TabViewModel tabViewModel, MainWindowViewModel mainWindowViewModel)
     {
         // Subscribing with AvaloniaRenderingFrameProvider is faster and fixes not being able to navigate while gallery is loading
         try
@@ -167,6 +168,11 @@ public static class TabNavigationInitializer
                     {
                         // Trigger image change to UI
                         tabViewModel.Image.Value = image;
+
+                        if (Settings.WindowProperties.AutoFit)
+                        {
+                            WindowResizing2.SetSize(tabViewModel.Model.PixelWidth, tabViewModel.Model.PixelHeight, mainWindowViewModel);
+                        }
 
                         // Update tiff title if appropriate (there are no file changes in this instance
                         if (tabViewModel.Model.TiffNavigation is null)

@@ -33,7 +33,7 @@ public static class FilePicker2
                 vm.WindowTabs.ActiveTab.Value.CurrentView.Value = new ImageViewer2();
             }
         });
-        TabNavigationInitializer.InitializeNewTab(vm.WindowTabs.ActiveTab.Value);
+        TabNavigationInitializer.InitializeNewTab(vm.WindowTabs.ActiveTab.Value, vm);
     }
 
     public static async Task<string?> SelectFile()

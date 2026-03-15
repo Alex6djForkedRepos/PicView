@@ -74,7 +74,7 @@ public partial class WinMainWindow2 : Window, IPlatformWindowService
             ScalingChanged += (_, _) =>
             {
                 ScreenHelper.UpdateScreenSize(this);
-                //WindowResizing.SetSize(windowViewModel);
+                WindowResizing2.SetSize(windowViewModel);
             };
             PointerExited += (_, _) => { DragAndDropHelper.RemoveDragDropView(); };
 
@@ -133,6 +133,7 @@ public partial class WinMainWindow2 : Window, IPlatformWindowService
             };
             UIHelper2.GetMainTabControl.TabDetached += MainTabControlOnTabDetached;
             Activated += OnActivated;
+            SizeChanged += Control_OnSizeChanged;
         };
     }
 
@@ -277,7 +278,7 @@ public partial class WinMainWindow2 : Window, IPlatformWindowService
             return;
         }
 
-        //WindowResizing.SetSize(vm);
+        WindowResizing2.SetSize(vm);
     }
 
     protected override void OnClosed(EventArgs e)

@@ -1,9 +1,13 @@
 ﻿using System.Runtime.InteropServices;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Media.Imaging;
 using Avalonia.Threading;
+using ImageMagick;
 using PicView.Avalonia.CustomControls;
 using PicView.Avalonia.UI;
+using PicView.Core.DebugTools;
+using PicView.Core.Sizing;
 using PicView.Core.ViewModels;
 
 namespace PicView.Avalonia.WindowBehavior;
@@ -131,6 +135,194 @@ public static class WindowResizing2
         }
 
         setTrigger(false);
+    }
+
+    #endregion
+    
+    #region Set Window Size
+
+    public static void SetSize(MainWindowViewModel vm)
+    {
+        var size = GetSize(vm);
+
+        if (size is null)
+        {
+            return;
+        }
+
+        SetSize(size.Value, vm);
+    }
+
+    public static void SetSize(double width, double height, MainWindowViewModel vm)
+        => SetSize(width, height, 0, 0, 0, vm);
+
+    public static void SetSize(double width, double height, double secondWidth, double secondHeight, double rotation,
+        MainWindowViewModel vm)
+    {
+        var size = GetSize(width, height, secondWidth, secondHeight, rotation, vm);
+
+        if (size is null)
+        {
+            return;
+        }
+
+        SetSize(size.Value, vm);
+    }
+
+    public static void SetSize(ImageSize size, MainWindowViewModel vm)
+    {
+        if (Settings.WindowProperties.AutoFit)
+        {
+            vm.WindowWidth.Value = size.Width;
+            vm.WindowHeight.Value = size.Height;
+            vm.ImageWidth.Value = size.Width;
+            vm.ImageHeight.Value = size.Height;
+        }
+        else
+        {
+            vm.WindowWidth.Value = Settings.WindowProperties.Width;
+            vm.WindowHeight.Value = Settings.WindowProperties.Height;
+            vm.ImageWidth.Value =
+                vm.ImageHeight.Value = double.NaN;
+        }
+
+    }
+
+    public static ImageSize? GetSize(MainWindowViewModel vm)
+    {
+        double width, height;
+        if (vm.WindowTabs.SharedCache.TryGet(vm.WindowTabs.ActiveTab.CurrentValue.FileInfo.CurrentValue, out var preloadValue))
+        {
+            width = preloadValue.ImageModel.PixelWidth;
+            height = preloadValue.ImageModel.PixelHeight;
+        }
+        else
+        {
+            if (vm.WindowTabs.ActiveTab.CurrentValue.Image.CurrentValue is Bitmap bitmap)
+            {
+                width = bitmap.PixelSize.Width;
+                height = bitmap.PixelSize.Height;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        return GetSize(width, height, 0, 0, 0,
+            vm);
+    }
+
+    public static ImageSize? GetSize(double width, double height, double secondWidth, double secondHeight,
+        double rotation,
+        MainWindowViewModel vm)
+    {
+        var screenSize = ScreenHelper.ScreenSize;
+        var (containerWidth, containerHeight) = GetContainerSize();
+
+        if (double.IsNaN(width) || double.IsNaN(height))
+        {
+            return null;
+        }
+        
+        ImageSize size;
+        if (Settings.ImageScaling.ShowImageSideBySide && secondWidth > 0 && secondHeight > 0)
+        {
+            size = ImageSizeCalculationHelper.GetSideBySideImageSize(
+                width,
+                height,
+                secondWidth,
+                secondHeight,
+                screenSize,
+                SizeDefaults.WindowMinSize,
+                SizeDefaults.WindowMinSize,
+                vm.PlatformWindowService.CombinedTitleButtonsWidth,
+                rotation,
+                screenSize.Scaling,
+                vm.TitlebarHeight.CurrentValue,
+                vm.BottombarHeight.CurrentValue,
+                0,
+                containerWidth,
+                containerHeight);
+        }
+        else
+        {
+            size = ImageSizeCalculationHelper.GetImageSize(
+                width,
+                height,
+                screenSize,
+                SizeDefaults.WindowMinSize,
+                SizeDefaults.WindowMinSize,
+                vm.PlatformWindowService.CombinedTitleButtonsWidth,
+                rotation,
+                screenSize.Scaling,
+                vm.TitlebarHeight.CurrentValue,
+                vm.BottombarHeight.CurrentValue,
+                0,
+                containerWidth,
+                containerHeight);
+        }
+
+        return size;
+
+        (double containerWidth, double containerHeight) GetContainerSize()
+        {
+            return Dispatcher.CurrentDispatcher.CheckAccess() ? Get() : Dispatcher.CurrentDispatcher.Invoke(Get, DispatcherPriority.Send);
+
+            (double containerWidth, double containerHeight) Get()
+            {
+                var mainView = UIHelper.GetMainView;
+
+                if (mainView is null)
+                {
+                    return default;
+                }
+
+                containerWidth = mainView.Bounds.Width;
+                containerHeight = mainView.Bounds.Height;
+
+                if (double.IsNaN(containerWidth))
+                {
+                    containerWidth = mainView.Bounds.Width;
+                }
+
+                if (double.IsNaN(containerHeight))
+                {
+                    containerHeight = mainView.Bounds.Height;
+                }
+
+                return (containerWidth, containerHeight);
+            }
+        }
+    }
+
+    public static void SaveSize(Window window)
+    {
+        if (Settings.WindowProperties.Maximized || Settings.WindowProperties.Fullscreen)
+        {
+            return;
+        }
+
+        if (Dispatcher.CurrentDispatcher.CheckAccess())
+        {
+            Set();
+        }
+        else
+        {
+            Dispatcher.CurrentDispatcher.InvokeAsync(Set);
+        }
+
+        return;
+
+        void Set()
+        {
+            var top = window.Position.Y;
+            var left = window.Position.X;
+            Settings.WindowProperties.Top = top;
+            Settings.WindowProperties.Left = left;
+            Settings.WindowProperties.Width = window.Width;
+            Settings.WindowProperties.Height = window.Height;
+        }
     }
 
     #endregion

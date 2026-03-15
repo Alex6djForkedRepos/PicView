@@ -155,25 +155,25 @@ public static class WindowFunctions2
     {
         // TODO: Reimplement or figure out refactor
         
-        // if (Settings.WindowProperties.AutoFit)
-        // {
-        //     vm.MainWindow.SizeToContent.Value = SizeToContent.Manual;
-        //     vm.MainWindow.CanResize.Value = true;
-        //     Settings.WindowProperties.AutoFit = false;
-        //     vm.GlobalSettings.IsAutoFit.Value = false;
-        // }
-        // else
-        // {
-        //     vm.MainWindow.SizeToContent.Value = SizeToContent.WidthAndHeight;
-        //     vm.MainWindow.CanResize.Value = false;
-        //     Settings.WindowProperties.AutoFit = true;
-        //     vm.GlobalSettings.IsAutoFit.Value = true;
-        //
-        //     // Fix unpleasant window placement
-        //     Dispatcher.UIThread.Post(() => { CenterWindowOnScreen(); }, DispatcherPriority.Background);
-        // }
-        //
-        // await ResizeAndFixRenderingError(vm);
+        if (Settings.WindowProperties.AutoFit)
+        {
+            // vm.MainWindow.SizeToContent.Value = SizeToContent.Manual;
+            // vm.MainWindow.CanResize.Value = true;
+            Settings.WindowProperties.AutoFit = false;
+            // vm.GlobalSettings.IsAutoFit.Value = false;
+        }
+        else
+        {
+            // vm.MainWindow.SizeToContent.Value = SizeToContent.WidthAndHeight;
+            // vm.MainWindow.CanResize.Value = false;
+            Settings.WindowProperties.AutoFit = true;
+            // vm.GlobalSettings.IsAutoFit.Value = true;
+        
+            // Fix unpleasant window placement
+            Dispatcher.UIThread.Post(() => { CenterWindowOnScreen(); }, DispatcherPriority.Background);
+        }
+        WindowResizing2.SetSize(vm);
+        
         await SaveSettingsAsync().ConfigureAwait(false);
     }
 

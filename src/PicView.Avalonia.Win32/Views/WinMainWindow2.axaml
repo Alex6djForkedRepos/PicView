@@ -1,9 +1,10 @@
 <Window
+    Height="{CompiledBinding WindowHeight.Value}"
     MinHeight="{CompiledBinding WindowMinHeight.Value}"
     MinWidth="{CompiledBinding WindowMinWidth.Value}"
-    SizeChanged="Control_OnSizeChanged"
     Title="{CompiledBinding WindowTabs.ActiveTab.Value.WindowTitle.Value,
                             FallbackValue=''}"
+    Width="{CompiledBinding WindowWidth.Value}"
     x:Class="PicView.Avalonia.Win32.Views.WinMainWindow2"
     x:DataType="viewModels:MainWindowViewModel"
     xmlns="https://github.com/avaloniaui"
