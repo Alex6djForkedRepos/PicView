@@ -159,7 +159,7 @@ public static class StartUpHelper2
             {
                await KeybindingManager2.LoadKeybindings(vm.PlatformService);
                vm.MainWindows.ActiveWindow.Value.Mapper =
-                   new FunctionsMapper2(vm.MainWindows.ActiveWindow.CurrentValue);
+                   new FunctionsMapper2(vm.MainWindows.ActiveWindow.CurrentValue, window);
             });
         }
         else
@@ -168,7 +168,7 @@ public static class StartUpHelper2
             {
                 KeybindingManager2.SetDefaultKeybindings(vm.PlatformService);
                 vm.MainWindows.ActiveWindow.Value.Mapper =
-                    new FunctionsMapper2(vm.MainWindows.ActiveWindow.CurrentValue);
+                    new FunctionsMapper2(vm.MainWindows.ActiveWindow.CurrentValue, window);
             });
         }
 
@@ -304,8 +304,7 @@ public static class StartUpHelper2
 
     private static void HandleNormalWindow(CoreViewModel vm, Window window, bool setPos)
     {
-      //  vm.MainWindow.CanResize.Value = true;
-        vm.GlobalSettings.IsAutoFit.Value = false;
+        WindowFunctions2.SetManualWindow(vm.MainWindows.ActiveWindow.CurrentValue, window);
         if (Settings.UIProperties.ShowInterface)
         {
          //   vm.MainWindow.IsTopToolbarShown.Value = true;
@@ -320,8 +319,7 @@ public static class StartUpHelper2
 
     private static void HandleAutoFit(CoreViewModel vm, Window window)
     {
-    //    vm.MainWindow.SizeToContent.Value = SizeToContent.WidthAndHeight;
-   //    vm.MainWindow.CanResize.Value = false;
+        WindowFunctions2.SetAutoFit(vm.MainWindows.ActiveWindow.CurrentValue, window);
         vm.GlobalSettings.IsAutoFit.Value = true;
         if (Settings.UIProperties.ShowInterface)
         {

@@ -74,20 +74,15 @@ public static class WindowResizing2
             () => UIHelper2.GetHoverBar.GetControl<Button>("PreviousButton"),
             new Point(50, 10));
 
-        RepositionCursorIfTriggered(mainWindowVm.IsClickArrowLeftClicked,
-            clicked => mainWindowVm.IsClickArrowLeftClicked = clicked,
-            () => UIHelper2.GetMainView.GetControl<UserControl>("ClickArrowLeft"),
-            new Point(15, 95));
-
-        RepositionCursorIfTriggered(mainWindowVm.IsClickArrowRightClicked,
-            clicked => mainWindowVm.IsClickArrowRightClicked = clicked,
-            () => UIHelper2.GetMainView.GetControl<UserControl>("ClickArrowRight"),
-            new Point(65, 95));
-
-        RepositionCursorIfTriggered(mainWindowVm.IsBottomToolbarRotationClicked,
-            clicked => mainWindowVm.IsBottomToolbarRotationClicked = clicked,
-            () => UIHelper2.GetBottomBar.GetControl<IconButton>("RotateRightButton"),
-            new Point(11, 7));
+        // RepositionCursorIfTriggered(mainWindowVm.IsClickArrowLeftClicked,
+        //     clicked => mainWindowVm.IsClickArrowLeftClicked = clicked,
+        //     () => UIHelper2.GetMainView.GetControl<UserControl>("ClickArrowLeft"),
+        //     new Point(15, 95));
+        //
+        // RepositionCursorIfTriggered(mainWindowVm.IsClickArrowRightClicked,
+        //     clicked => mainWindowVm.IsClickArrowRightClicked = clicked,
+        //     () => UIHelper2.GetMainView.GetControl<UserControl>("ClickArrowRight"),
+        //     new Point(65, 95));
 
         RepositionCursorIfTriggered(mainWindowVm.WindowTabs.ActiveTab.CurrentValue.Hoverbar.IsHoverRotateRightClicked,
             clicked => mainWindowVm.WindowTabs.ActiveTab.CurrentValue.Hoverbar.IsHoverRotateRightClicked = clicked,
@@ -97,11 +92,6 @@ public static class WindowResizing2
         RepositionCursorIfTriggered(mainWindowVm.WindowTabs.ActiveTab.CurrentValue.Hoverbar.IsHoverRotateLeftClicked,
             clicked => mainWindowVm.WindowTabs.ActiveTab.CurrentValue.Hoverbar.IsHoverRotateLeftClicked = clicked,
             () => UIHelper2.GetHoverBar.GetControl<IconButton>("RotateLeftButton"),
-            new Point(11, 7));
-        
-        RepositionCursorIfTriggered(mainWindowVm.IsTitlebarRotationClicked,
-            clicked => mainWindowVm.IsTitlebarRotationClicked = clicked,
-            () => UIHelper2.GetTitlebar.GetControl<IconButton>("RotateRightButton"),
             new Point(11, 7));
     }
 
@@ -141,7 +131,7 @@ public static class WindowResizing2
     
     #region Set Window Size
 
-    public static void SetSize(MainWindowViewModel vm)
+    public static void SetSize(MainWindowViewModel vm, WindowResizeReason reason)
     {
         var size = GetSize(vm);
 
@@ -150,31 +140,38 @@ public static class WindowResizing2
             return;
         }
 
-        SetSize(size.Value, vm);
+        SetSize(size.Value, reason, vm);
     }
 
-    public static void SetSize(double width, double height, MainWindowViewModel vm)
-        => SetSize(width, height, 0, 0, 0, vm);
-
-    public static void SetSize(double width, double height, double secondWidth, double secondHeight, double rotation,
-        MainWindowViewModel vm)
+    public static void SetSize(double width, double height, WindowResizeReason reason, MainWindowViewModel vm)
     {
-        var size = GetSize(width, height, secondWidth, secondHeight, rotation, vm);
+        var size = GetSize(width, height, 0, 0, 0, vm);
 
         if (size is null)
         {
             return;
         }
 
-        SetSize(size.Value, vm);
+        SetSize(size.Value, reason, vm);
     }
 
-    public static void SetSize(ImageSize size, MainWindowViewModel vm)
+    public static void SetSize(ImageSize2 size, WindowResizeReason reason, MainWindowViewModel vm)
     {
+        vm.ScrollViewerWidth.Value = size.ScrollViewerWidth;
+        vm.ScrollViewerHeight.Value = size.ScrollViewerHeight;
         if (Settings.WindowProperties.AutoFit)
         {
-            vm.WindowWidth.Value = size.Width;
-            vm.WindowHeight.Value = size.Height;
+            if (reason is not WindowResizeReason.User)
+            {
+                vm.WindowWidth.Value = size.WindowWidth;
+                vm.WindowHeight.Value = size.WindowHeight;
+            }
+            else
+            {
+                vm.ImageWidth.Value =
+                    vm.ImageHeight.Value = double.NaN;
+            }
+
             vm.ImageWidth.Value = size.Width;
             vm.ImageHeight.Value = size.Height;
         }
@@ -188,7 +185,7 @@ public static class WindowResizing2
 
     }
 
-    public static ImageSize? GetSize(MainWindowViewModel vm)
+    public static ImageSize2? GetSize(MainWindowViewModel vm)
     {
         double width, height;
         if (vm.WindowTabs.SharedCache.TryGet(vm.WindowTabs.ActiveTab.CurrentValue.FileInfo.CurrentValue, out var preloadValue))
@@ -213,7 +210,7 @@ public static class WindowResizing2
             vm);
     }
 
-    public static ImageSize? GetSize(double width, double height, double secondWidth, double secondHeight,
+    public static ImageSize2? GetSize(double width, double height, double secondWidth, double secondHeight,
         double rotation,
         MainWindowViewModel vm)
     {
@@ -225,10 +222,10 @@ public static class WindowResizing2
             return null;
         }
         
-        ImageSize size;
+        ImageSize2 size;
         if (Settings.ImageScaling.ShowImageSideBySide && secondWidth > 0 && secondHeight > 0)
         {
-            size = ImageSizeCalculationHelper.GetSideBySideImageSize(
+            size = ImageSizeCalculationHelper2.GetSideBySideImageSize(
                 width,
                 height,
                 secondWidth,
@@ -247,7 +244,7 @@ public static class WindowResizing2
         }
         else
         {
-            size = ImageSizeCalculationHelper.GetImageSize(
+            size = ImageSizeCalculationHelper2.GetImageSize(
                 width,
                 height,
                 screenSize,

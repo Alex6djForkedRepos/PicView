@@ -151,30 +151,45 @@ public static class WindowFunctions2
         await SaveSettingsAsync().ConfigureAwait(false);
     }
 
-    public static async Task ToggleAutoFit(MainWindowViewModel vm)
+    public static async Task ToggleAutoFit(MainWindowViewModel vm, Window window)
     {
-        // TODO: Reimplement or figure out refactor
-        
         if (Settings.WindowProperties.AutoFit)
         {
-            // vm.MainWindow.SizeToContent.Value = SizeToContent.Manual;
-            // vm.MainWindow.CanResize.Value = true;
-            Settings.WindowProperties.AutoFit = false;
-            // vm.GlobalSettings.IsAutoFit.Value = false;
+            SetManualWindow(vm, window);
         }
         else
         {
-            // vm.MainWindow.SizeToContent.Value = SizeToContent.WidthAndHeight;
-            // vm.MainWindow.CanResize.Value = false;
-            Settings.WindowProperties.AutoFit = true;
-            // vm.GlobalSettings.IsAutoFit.Value = true;
-        
-            // Fix unpleasant window placement
-            Dispatcher.UIThread.Post(() => { CenterWindowOnScreen(); }, DispatcherPriority.Background);
+            SetAutoFit(vm, window);
         }
-        WindowResizing2.SetSize(vm);
-        
+        WindowResizing2.SetSize(vm, WindowResizeReason.Application);
         await SaveSettingsAsync().ConfigureAwait(false);
+    }
+
+    public static void SetAutoFit(MainWindowViewModel vm, Window window)
+    {
+        window.SizeToContent = SizeToContent.WidthAndHeight;
+        // vm.MainWindow.CanResize.Value = false;
+        Settings.WindowProperties.AutoFit = true;
+        if (Application.Current.DataContext is not CoreViewModel core)
+        {
+            return;
+        }
+        core.GlobalSettings.IsAutoFit.Value = true;
+
+        // Fix unpleasant window placement
+        Dispatcher.CurrentDispatcher.Post(() => { CenterWindowOnScreen(); }, DispatcherPriority.Background);
+    }
+
+    public static void SetManualWindow(MainWindowViewModel vm, Window window)
+    {
+        vm.WindowWidth.Value = vm.WindowHeight.Value = double.NaN;
+        window.SizeToContent = SizeToContent.Manual;
+        Settings.WindowProperties.AutoFit = false;
+        if (Application.Current.DataContext is not CoreViewModel core)
+        {
+            return;
+        }
+        core.GlobalSettings.IsAutoFit.Value = false;
     }
 
     public static async Task Stretch(MainWindowViewModel vm)

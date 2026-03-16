@@ -45,7 +45,7 @@ public partial class MacMainWindow2 : Window, IPlatformWindowService
                         return;
                     }
 
-                    WindowResizing.HandleWindowResize(this, size);
+                    WindowResizing2.HandleWindowResize(this, size);
                 }).AddTo(Disposables);
             if (DataContext is not MainWindowViewModel vm)
             {

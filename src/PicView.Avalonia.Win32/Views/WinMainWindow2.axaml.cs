@@ -74,7 +74,7 @@ public partial class WinMainWindow2 : Window, IPlatformWindowService
             ScalingChanged += (_, _) =>
             {
                 ScreenHelper.UpdateScreenSize(this);
-                WindowResizing2.SetSize(windowViewModel);
+                WindowResizing2.SetSize(windowViewModel, WindowResizeReason.DpiChange);
             };
             PointerExited += (_, _) => { DragAndDropHelper.RemoveDragDropView(); };
 
@@ -133,7 +133,7 @@ public partial class WinMainWindow2 : Window, IPlatformWindowService
             };
             UIHelper2.GetMainTabControl.TabDetached += MainTabControlOnTabDetached;
             Activated += OnActivated;
-            SizeChanged += Control_OnSizeChanged;
+            Resized += WindowSizeChanged;
         };
     }
 
@@ -256,15 +256,17 @@ public partial class WinMainWindow2 : Window, IPlatformWindowService
         base.OnClosing(e);
     }
 
-    private void Control_OnSizeChanged(object? sender, SizeChangedEventArgs e)
+    private void WindowSizeChanged(object? sender, WindowResizedEventArgs e)
     {
-        if (DataContext == null)
+        if (DataContext is not MainWindowViewModel vm)
         {
             return;
         }
 
-        if (e is { HeightChanged: false, WidthChanged: false })
+        if (e.Reason is WindowResizeReason.User)
         {
+            // Reset to manual window
+            Dispatcher.CurrentDispatcher.Post(() => WindowFunctions2.SetManualWindow(vm, this));
             return;
         }
 
@@ -273,12 +275,7 @@ public partial class WinMainWindow2 : Window, IPlatformWindowService
             return;
         }
 
-        if (DataContext is not MainWindowViewModel vm)
-        {
-            return;
-        }
-
-        WindowResizing2.SetSize(vm);
+        WindowResizing2.SetSize(vm, e.Reason);
     }
 
     protected override void OnClosed(EventArgs e)

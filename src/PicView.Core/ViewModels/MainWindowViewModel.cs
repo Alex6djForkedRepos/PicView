@@ -28,13 +28,17 @@ public class MainWindowViewModel : IDisposable
 
     public BindableReactiveProperty<int> BackgroundChoice { get; } = new();
     
-    public BindableReactiveProperty<double> WindowWidth { get; } = new(double.NaN);
+    public BindableReactiveProperty<double> ScrollViewerWidth { get; } = new(double.NaN);
     
-    public BindableReactiveProperty<double> WindowHeight{ get; } = new(double.NaN);
+    public BindableReactiveProperty<double> ScrollViewerHeight { get; } = new(double.NaN);
 
     public BindableReactiveProperty<double> WindowMinWidth { get; } = new(SizeDefaults.WindowMinSize);
     public BindableReactiveProperty<double> WindowMinHeight { get; } = new(SizeDefaults.WindowMinSize);
-    
+
+    public BindableReactiveProperty<double> WindowWidth { get; } = new(double.NaN);
+
+    public BindableReactiveProperty<double> WindowHeight { get; } = new(double.NaN);
+
     /// <summary>
     /// The width to scale the image to
     /// </summary>

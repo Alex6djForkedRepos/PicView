@@ -1,4 +1,5 @@
 using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Threading;
 using PicView.Avalonia.Navigation.Services;
 using PicView.Avalonia.UI;
@@ -171,7 +172,10 @@ public static class TabNavigationInitializer
 
                         if (Settings.WindowProperties.AutoFit)
                         {
-                            WindowResizing2.SetSize(tabViewModel.Model.PixelWidth, tabViewModel.Model.PixelHeight, mainWindowViewModel);
+                            WindowResizing2.SetSize(tabViewModel.Model.PixelWidth,
+                                                    tabViewModel.Model.PixelHeight,
+                                                    WindowResizeReason.Application,
+                                                    mainWindowViewModel);
                         }
 
                         // Update tiff title if appropriate (there are no file changes in this instance

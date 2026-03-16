@@ -1,4 +1,5 @@
 using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia.Threading;
 using PicView.Avalonia.Clipboard;
@@ -26,7 +27,7 @@ using R3;
 
 namespace PicView.Avalonia.Functions;
 
-public class FunctionsMapper2(Core.ViewModels.MainWindowViewModel vm) : IFunctionsMapper
+public class FunctionsMapper2(Core.ViewModels.MainWindowViewModel vm, Window window) : IFunctionsMapper
 {
     public Func<ValueTask>? GetFunctionByName(string functionName)
     {
@@ -589,7 +590,7 @@ public class FunctionsMapper2(Core.ViewModels.MainWindowViewModel vm) : IFunctio
     /// <inheritdoc cref="WindowFunctions.ToggleAutoFit(MainViewModel)" />
     public async ValueTask AutoFitWindow()
     {
-        await WindowFunctions2.ToggleAutoFit(vm);
+        await WindowFunctions2.ToggleAutoFit(vm, window);
     }
 
     /// <inheritdoc cref="WindowFunctions.NormalWindow(MainViewModel)" />
