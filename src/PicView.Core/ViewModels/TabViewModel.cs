@@ -38,7 +38,7 @@ public class TabViewModel(string id, Action<string> closeTab, IFileWatcherServic
     public BindableReactiveProperty<ImageType> ImageType { get; } = new(ImageDecoding.ImageType.Invalid);
     public BindableReactiveProperty<FileInfo?> FileInfo { get; } = new();
     public BindableReactiveProperty<object?> SecondaryImage { get; } = new();
-    public BindableReactiveProperty<object?> SecondaryFileInfo { get; } = new();
+    public BindableReactiveProperty<FileInfo?> SecondaryFileInfo { get; } = new();
     public ImageModel Model { get; set; } = new();
     public ImageModel? SecondaryModel { get; set; }
     public BindableReactiveProperty<object?> CurrentView { get; } = new(null);

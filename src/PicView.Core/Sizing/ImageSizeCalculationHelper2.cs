@@ -201,9 +201,6 @@ public static class ImageSizeCalculationHelper2
         double secondaryWidth,
         double secondaryHeight,
         ScreenSize screenSize,
-        double minWidth,
-        double minHeight,
-        double interfaceSize,
         double rotationAngle,
         double dpiScaling,
         double uiTopSize,
@@ -322,7 +319,7 @@ public static class ImageSizeCalculationHelper2
             scrollHeight = double.NaN;
         }
 
-        return new ImageSize2(0,0, combinedWidth, xHeight, xWidth2, scrollWidth, scrollHeight,
+        return new ImageSize2(combinedWidth, xHeight, combinedWidth, xHeight, xWidth2, scrollWidth, scrollHeight,
             firstSize.AspectRatio);
     }
 }

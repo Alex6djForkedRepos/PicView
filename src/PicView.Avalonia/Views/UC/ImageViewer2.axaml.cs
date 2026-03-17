@@ -119,7 +119,7 @@ public partial class ImageViewer2 : UserControl
             {
                 if (isSideBySide)
                 {
-                    SecondaryImage.IsVisible = true;
+                    SecondaryTransform.IsVisible = true;
                     if (SecondaryImage.Source is null)
                     {
                         var ct = CancellationTokenSource.CreateLinkedTokenSource(c, tab.GetTabCancellation().Token);
@@ -128,7 +128,7 @@ public partial class ImageViewer2 : UserControl
                 }
                 else
                 {
-                    SecondaryImage.IsVisible = false;
+                    SecondaryTransform.IsVisible = false;
                 }
             }).AddTo(_disposables);
         

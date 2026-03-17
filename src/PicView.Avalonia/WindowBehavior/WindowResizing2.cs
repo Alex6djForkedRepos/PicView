@@ -162,15 +162,16 @@ public static class WindowResizing2
         vm.ScrollViewerHeight.Value = size.ScrollViewerHeight;
         if (Settings.WindowProperties.AutoFit)
         {
-            if (reason is not WindowResizeReason.User)
-            {
-                vm.WindowWidth.Value = size.WindowWidth;
-                vm.WindowHeight.Value = size.WindowHeight;
-            }
-            else
+            if (reason is WindowResizeReason.User)
             {
                 vm.ImageWidth.Value =
                     vm.ImageHeight.Value = double.NaN;
+            }
+            else
+            {
+                vm.WindowWidth.Value = size.WindowWidth;
+                vm.WindowHeight.Value = size.WindowHeight;
+
             }
 
             vm.ImageWidth.Value = size.Width;
@@ -188,7 +189,7 @@ public static class WindowResizing2
 
     public static ImageSize2? GetSize(MainWindowViewModel vm)
     {
-        double width, height;
+        double width, height, secondaryWidth, secondaryHeight;
         if (vm.WindowTabs.SharedCache.TryGet(vm.WindowTabs.ActiveTab.CurrentValue.FileInfo.CurrentValue, out var preloadValue))
         {
             width = preloadValue.ImageModel.PixelWidth;
@@ -207,7 +208,32 @@ public static class WindowResizing2
             }
         }
 
-        return GetSize(width, height, 0, 0, 0,
+        if (Settings.ImageScaling.ShowImageSideBySide)
+        {
+            if (vm.WindowTabs.SharedCache.TryGet(vm.WindowTabs.ActiveTab.CurrentValue.SecondaryFileInfo.CurrentValue, out var secondaryPreloadValue))
+            {
+                secondaryWidth = secondaryPreloadValue.ImageModel.PixelWidth;
+                secondaryHeight = secondaryPreloadValue.ImageModel.PixelHeight;
+            }
+            else
+            {
+                if (vm.WindowTabs.ActiveTab.CurrentValue.Image.CurrentValue is Bitmap bitmap)
+                {
+                    secondaryWidth = bitmap.PixelSize.Width;
+                    secondaryHeight = bitmap.PixelSize.Height;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+        }
+        else
+        {
+            secondaryWidth = secondaryHeight = 0;
+        }
+
+        return GetSize(width, height, secondaryWidth, secondaryHeight, 0,
             vm);
     }
 
@@ -232,9 +258,6 @@ public static class WindowResizing2
                 secondWidth,
                 secondHeight,
                 screenSize,
-                SizeDefaults.WindowMinSize,
-                SizeDefaults.WindowMinSize,
-                vm.PlatformWindowService.CombinedTitleButtonsWidth,
                 rotation,
                 screenSize.Scaling,
                 vm.TitlebarHeight.CurrentValue,

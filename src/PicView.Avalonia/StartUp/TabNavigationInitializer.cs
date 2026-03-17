@@ -195,6 +195,21 @@ public static class TabNavigationInitializer
 #endif
                     })
                     .AddTo(tabViewModel.Disposables);
+//                Observable.EveryValueChanged(tabViewModel, tab => tab.SecondaryModel.Image, UIHelper2.GetFrameProvider)
+//                    .Subscribe(image =>
+//                    {
+//                        // Trigger image change to UI
+//                        tabViewModel.SecondaryImage.Value = image;
+//                    }, static result =>
+//                    {
+//#if DEBUG
+//                        if (result is { IsFailure: true, Exception: not null })
+//                        {
+//                            DebugHelper.LogDebug(nameof(TabNavigationInitializer), nameof(ModelSubscription), result.Exception);
+//                        }
+//#endif
+//                    })
+//                    .AddTo(tabViewModel.Disposables);
                 Observable.EveryValueChanged(tabViewModel, tab => tab.Gallery.GalleryMode.Value, UIHelper2.GetFrameProvider)
                     .Skip(1)
                     .SubscribeAwait(async (mode, _) =>
