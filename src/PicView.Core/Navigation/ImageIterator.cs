@@ -11,7 +11,7 @@ public class ImageIterator(IImageCache cache, IThumbnailCache thumbCache, IThumb
 
     public IImageCache Cache { get; } = cache ?? throw new ArgumentNullException(nameof(cache));
     public string? CurrentDirectory => Files.Count > 0 ? Files[0].DirectoryName : null;
-    
+
     private readonly IThumbnailCache _thumbCache = thumbCache ?? throw new ArgumentNullException(nameof(thumbCache));
     private readonly TabViewModel _tab = tab ?? throw new ArgumentNullException(nameof(tab));
     private readonly IThumbnailLoader _thumbnailLoader = thumbnailLoader ?? throw new ArgumentNullException(nameof(thumbnailLoader));
@@ -45,8 +45,16 @@ public class ImageIterator(IImageCache cache, IThumbnailCache thumbCache, IThumb
         else
         {
             var isLooping = Settings.UIProperties.Looping;
-            _tab.CanNavigateForwards.Value = isLooping || index < count - 1;
-            _tab.CanNavigateBackwards.Value = isLooping || index > 0;
+            if (Settings.ImageScaling.ShowImageSideBySide)
+            {
+                _tab.CanNavigateForwards.Value = isLooping || index < count - 2;
+                _tab.CanNavigateBackwards.Value = isLooping || index > 0;
+            }
+            else
+            {
+                _tab.CanNavigateForwards.Value = isLooping || index < count - 1;
+                _tab.CanNavigateBackwards.Value = isLooping || index > 0;
+            }
         }
         _tab.NavigationIndex.Value = index;
         _tab.MaxIndex.Value = count;
@@ -80,7 +88,7 @@ public class ImageIterator(IImageCache cache, IThumbnailCache thumbCache, IThumb
                 // Is loading in cache, show thumbnail while loading
                 var thumb = _thumbnailLoader.GetExifThumbnail(targetFile);
                 _tab.Image.Value = thumb; // If it is null, it will just be blank
-                
+
                 // Wait for loading complete
                 var successfullyLoaded = await Cache.WaitForLoadingCompleteAsync(_tab.Id, index).ConfigureAwait(false);
                 if (successfullyLoaded && index == CurrentIndex && preLoadValue.ImageModel.Image is not null)
@@ -106,7 +114,7 @@ public class ImageIterator(IImageCache cache, IThumbnailCache thumbCache, IThumb
                 TriggerPreload();
             }
         }
-        
+
         return;
 
         async ValueTask NavigateNextModelAsync(ImageModel model)
@@ -155,6 +163,11 @@ public class ImageIterator(IImageCache cache, IThumbnailCache thumbCache, IThumb
             _ => throw new ArgumentOutOfRangeException(nameof(skipAmount), skipAmount, null)
         };
 
+        if (Settings.ImageScaling.ShowImageSideBySide && skipAmount == SkipAmount.One)
+        {
+            skip = 2;
+        }
+
         switch (navigation)
         {
             case NavigateTo.Next:
@@ -164,17 +177,39 @@ public class ImageIterator(IImageCache cache, IThumbnailCache thumbCache, IThumb
 
                 if (Settings.UIProperties.Looping)
                 {
-                    return (index + indexChange + Files.Count) % Files.Count;
+                    var loopedIndex = (index + indexChange) % Files.Count;
+                    if (loopedIndex < 0)
+                    {
+                        loopedIndex += Files.Count;
+                    }
+                    return loopedIndex;
                 }
-                
+
                 var newIndex = index + indexChange;
+
+                if (Settings.ImageScaling.ShowImageSideBySide && skipAmount == SkipAmount.One)
+                {
+                    // Special non-looping clamping logic for side-by-side mode.
+                    if (navigation == NavigateTo.Next && newIndex >= Files.Count - 1 && Files.Count > 1)
+                    {
+                        // Ensure we don't go out of bounds but still show the very last item on the right.
+                        newIndex = Files.Count - 2;
+                    }
+                    else if (navigation == NavigateTo.Previous && newIndex < 0)
+                    {
+                        // If going backwards skips past the beginning, clamp to 0 
+                        // so we cleanly show the first two images.
+                        newIndex = 0;
+                    }
+                }
+
                 return Math.Clamp(newIndex, 0, Files.Count - 1);
 
             case NavigateTo.First:
                 return 0;
 
             case NavigateTo.Last:
-                return Files.Count - 1;
+                return Settings.ImageScaling.ShowImageSideBySide && Files.Count > 1 ? Files.Count - 2 : Files.Count - 1;
 
             default:
 #if DEBUG
@@ -220,13 +255,16 @@ public class ImageIterator(IImageCache cache, IThumbnailCache thumbCache, IThumb
     private async ValueTask UpdateModelAsync(ImageModel newModel, CancellationTokenSource ct)
     {
         _tab.Model = newModel;
-            
+
         // Load Secondary Image (if Side-by-Side is enabled)
-        if (Settings.ImageScaling.ShowImageSideBySide && CurrentIndex + 1 < Files.Count)
+        var hasNextImage = CurrentIndex + 1 < Files.Count;
+        var loopToStart = !hasNextImage && Settings.UIProperties.Looping && Files.Count > 1;
+
+        if (Settings.ImageScaling.ShowImageSideBySide && (hasNextImage || loopToStart))
         {
-            var nextIndex = CurrentIndex + 1;
+            var nextIndex = hasNextImage ? CurrentIndex + 1 : 0;
             var loadedModel = await Cache.LoadAsync(_tab.Id, nextIndex, Files, ct.Token).ConfigureAwait(false);
-            
+
             if (loadedModel is null)
             {
                 TriggerPreload();
@@ -243,7 +281,7 @@ public class ImageIterator(IImageCache cache, IThumbnailCache thumbCache, IThumb
             _tab.SecondaryFileInfo.Value = null;
             _tab.SecondaryImage.Value = null;
         }
-            
+
         UpdateNavigationProperties();
         TriggerPreload();
     }
@@ -256,7 +294,7 @@ public class ImageIterator(IImageCache cache, IThumbnailCache thumbCache, IThumb
     #endregion
 
     #region TIFF Handling & Helpers
-    
+
     private static bool ShouldNavigateTiffEntry(ImageModel model, bool isPrevious)
     {
         if (model.TiffNavigation is null)
@@ -288,7 +326,7 @@ public class ImageIterator(IImageCache cache, IThumbnailCache thumbCache, IThumb
 
     private static void UpdateImageFromPage(ImageModel model)
     {
-        if (model.TiffNavigation is { Pages: not null, CurrentPage: >= 0 } && 
+        if (model.TiffNavigation is { Pages: not null, CurrentPage: >= 0 } &&
             model.TiffNavigation.CurrentPage < model.TiffNavigation.Pages.Length)
         {
             model.Image = model.TiffNavigation.Pages[model.TiffNavigation.CurrentPage];
