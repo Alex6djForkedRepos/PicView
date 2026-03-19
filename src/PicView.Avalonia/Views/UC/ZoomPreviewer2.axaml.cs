@@ -47,7 +47,7 @@ public partial class ZoomPreviewer2 : UserControl
         CloseButton.Classes.Add("hover");
     }
 
-    protected override void OnGotFocus(GotFocusEventArgs e)
+    protected override void OnGotFocus(FocusChangedEventArgs e)
     {
         // Don't call base to prevent focus
         e.Handled = true;

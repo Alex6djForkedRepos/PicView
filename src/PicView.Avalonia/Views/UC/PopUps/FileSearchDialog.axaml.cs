@@ -82,9 +82,9 @@ public partial class FileSearchDialog : AnimatedPopUp
         {
             return;
         }
-
-        //var next = KeyboardNavigationHandler.GetNext(focused, direction);
-        //next?.Focus();
+        
+        var next = focusManager.FindNextElement(direction);
+        next?.Focus();
     }
 
     protected override void OnDetachedFromLogicalTree(LogicalTreeAttachmentEventArgs e)

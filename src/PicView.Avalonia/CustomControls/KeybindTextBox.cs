@@ -137,7 +137,7 @@ public class KeybindTextBox : TextBox
         }
     }
 
-    private void OnGotFocus(object? sender, GotFocusEventArgs e)
+    private void OnGotFocus(object? sender, FocusChangedEventArgs e)
     {
         if (IsReadOnly)
         {

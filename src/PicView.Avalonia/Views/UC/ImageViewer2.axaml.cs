@@ -5,14 +5,11 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.LogicalTree;
 using Avalonia.Threading;
-using Avalonia.VisualTree;
-using ImageMagick;
 using PicView.Avalonia.ImageTransformations;
 using PicView.Avalonia.ImageTransformations.Rotation;
 using PicView.Avalonia.Input;
 using PicView.Avalonia.UI;
 using PicView.Core.Config;
-using PicView.Core.Exif;
 using PicView.Core.ViewModels;
 using R3;
 
