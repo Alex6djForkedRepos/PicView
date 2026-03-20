@@ -1,8 +1,5 @@
-using System.Runtime.CompilerServices;
 using Cysharp.Text;
-using PicView.Core.DebugTools;
 using PicView.Core.Extensions;
-using PicView.Core.ImageDecoding;
 using PicView.Core.Localization;
 
 namespace PicView.Core.Titles;
@@ -75,6 +72,129 @@ public static class ImageTitleFormatter
         sb.Append(AppName);
         var fullTitle = sb.ToString();
         var filePathTitle = baseTitle.Replace(namePart, fileInfo.FullName);
+
+        return new WindowTitles
+        {
+            BaseTitle = baseTitle,
+            TitleWithAppName = fullTitle,
+            FilePathTitle = filePathTitle
+        };
+    }
+    
+    public static WindowTitles GenerateTitleStrings(ImageTitleInfo info, IReadOnlyList<FileInfo> filesList)
+    {
+        using var sb = ZString.CreateStringBuilder(true);
+
+        sb.Append(info.FileInfo.Name);
+        sb.Append(' ');
+        sb.Append(info.Index + 1);
+        sb.Append('/');
+        sb.Append(filesList.Count);
+        sb.Append(' ');
+        sb.Append(filesList.Count == 1 ? TranslationManager.Translation?.File : TranslationManager.Translation?.Files);
+        sb.Append(" (");
+        sb.Append(info.Width);
+        sb.Append(" x ");
+        sb.Append(info.Height);
+        sb.Append(AspectRatioFormatter.FormatAspectRatio(info.Width, info.Height));
+        sb.Append(") "); 
+        if (info.FileInfo is not null)
+        {
+            sb.Append(info.FileInfo.Length.GetReadableFileSize());
+        }
+
+        var zoomString = FormatZoomPercentage(info.ZoomValue);
+        if (zoomString is not null)
+        {
+            sb.Append(", ");
+            sb.Append(zoomString);
+        }
+
+        var baseTitle = sb.ToString();
+
+        sb.Append(" - ");
+        sb.Append(AppName);
+        var fullTitle = sb.ToString();
+        var filePathTitle = baseTitle.Replace(info.FileInfo.Name, info.FileInfo.FullName);
+
+        return new WindowTitles
+        {
+            BaseTitle = baseTitle,
+            TitleWithAppName = fullTitle,
+            FilePathTitle = filePathTitle
+        };
+    }
+    
+        /// <summary>
+    /// Generates window title strings for two images displayed side-by-side.
+    /// The resulting format is similar to: image.png (753 x 1090) 209.99 KB ⇜ || ⇝ image2.jpg (1024 x 1440) 201.8 KB [99 & 100 / 100 Files]
+    /// </summary>
+    /// <param name="first">Information about the first image.</param>
+    /// <param name="second">Information about the second image.</param>
+    /// <param name="filesList">A read-only list of all files in the current file collection.</param>
+    /// <returns>A <see cref="WindowTitles"/> struct containing the generated side-by-side titles.</returns>
+    public static WindowTitles GenerateTitleForSideBySide(ImageTitleInfo first, ImageTitleInfo second, IReadOnlyList<FileInfo> filesList)
+    {
+        using var sb = ZString.CreateStringBuilder(true);
+
+        // First image details
+        sb.Append(first.FileInfo.Name);
+        sb.Append(" (");
+        sb.Append(first.Width);
+        sb.Append(" x ");
+        sb.Append(first.Height);
+        sb.Append(AspectRatioFormatter.FormatAspectRatio(first.Width, first.Height));
+        sb.Append(") ");
+        sb.Append(first.FileInfo.Length.GetReadableFileSize());
+
+        var firstZoomString = FormatZoomPercentage(first.ZoomValue);
+        if (firstZoomString is not null)
+        {
+            sb.Append(", ");
+            sb.Append(firstZoomString);
+        }
+
+        // Separator
+        sb.Append(" \u21dc || \u21dd ");
+
+        // Second image details
+        sb.Append(second.FileInfo.Name);
+        sb.Append(" (");
+        sb.Append(second.Width);
+        sb.Append(" x ");
+        sb.Append(second.Height);
+        sb.Append(AspectRatioFormatter.FormatAspectRatio(second.Width, second.Height));
+        sb.Append(") ");
+        if (second.FileInfo is not null)
+        {
+            sb.Append(second.FileInfo.Length.GetReadableFileSize());
+        }
+
+        var secondZoomString = FormatZoomPercentage(second.ZoomValue);
+        if (secondZoomString is not null)
+        {
+            sb.Append(", ");
+            sb.Append(secondZoomString);
+        }
+
+        // File count group
+        sb.Append(" [");
+        sb.Append(first.Index + 1);
+        sb.Append(" & ");
+        sb.Append(second.Index + 1);
+        sb.Append(" / ");
+        sb.Append(filesList.Count);
+        sb.Append(' ');
+        sb.Append(filesList.Count == 1 ? TranslationManager.Translation?.File : TranslationManager.Translation?.Files);
+        sb.Append(']');
+
+        var baseTitle = sb.ToString();
+        var fullTitle = $"{baseTitle} - {AppName}";
+        
+        // Construct FilePathTitle replacing the file names with their full paths
+        var filePathTitle = baseTitle;
+        filePathTitle = filePathTitle.Replace(first.FileInfo.Name, first.FileInfo.FullName);
+        filePathTitle = filePathTitle.Replace(second.FileInfo.Name, second.FileInfo.FullName);
 
         return new WindowTitles
         {

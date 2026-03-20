@@ -117,10 +117,11 @@ public class TabViewModel(string id, Action<string> closeTab, IFileWatcherServic
                     index, Model.FileInfo, 100, ImageIterator.Files, tiff.CurrentPage, tiff.PageCount);
             }
 
-            if (Settings.ImageScaling.ShowImageSideBySide)
+            if (Settings.ImageScaling.ShowImageSideBySide && SecondaryModel is not null)
             {
-                return ImageTitleFormatter.GenerateTitleStrings(width, height,
-                    index, Model.FileInfo, 100, ImageIterator.Files);
+                var firstInfo = new ImageTitleInfo(width, height, index, Model.FileInfo, 100);
+                var secondInfo = new ImageTitleInfo(SecondaryModel.PixelWidth, SecondaryModel.PixelHeight, index + 1, SecondaryModel.FileInfo, 100);
+                return ImageTitleFormatter.GenerateTitleForSideBySide(firstInfo, secondInfo, ImageIterator.Files);
             }
 
             return ImageTitleFormatter.GenerateTitleStrings(width, height,
