@@ -32,9 +32,10 @@ public static class WindowFunctions2
 
     public static async Task WindowClosingBehavior(Window window)
     {
-        WindowResizing.SaveSize(window);
+        WindowResizing2.SaveSize(window);
 
         CoreViewModel? core = null;
+        MainWindowViewModel? mainWindowViewModel = null;
         await Dispatcher.UIThread.InvokeAsync(() =>
         {
             window.Hide();
@@ -45,41 +46,37 @@ public static class WindowFunctions2
             }
 
             core = coreViewModel;
-            if (window.DataContext is not MainWindowViewModel mainWindowViewModel)
+            if (window.DataContext is not MainWindowViewModel viewModel)
             {
                 return;
             }
-
-            core.MainWindows.MainWindows.Remove(mainWindowViewModel);
+            mainWindowViewModel = viewModel;
         });
         
-        string? lastFile;
-        // TODO: Reimplement or figure out refactor
-        
-        // if (NavigationManager.CanNavigate(vm))
-        // {
-        //     if (!string.IsNullOrEmpty(ArchiveExtraction.LastOpenedArchive))
-        //     {
-        //         lastFile = ArchiveExtraction.LastOpenedArchive;
-        //     }
-        //     else
-        //     {
-        //         lastFile = vm?.PicViewer.FileInfo?.CurrentValue.FullName ?? FileHistoryManager.GetLastEntry();
-        //     }
-        // }
-        // else
-        // {
-        //     var url = vm?.PicViewer.Title?.CurrentValue?.GetURL();
-        //     lastFile = !string.IsNullOrWhiteSpace(url) ? url : FileHistoryManager.GetLastEntry();
-        // }
+        string lastFile;
 
-        //Settings.StartUp.LastFile = lastFile ?? "";
+        if (!string.IsNullOrEmpty(ArchiveExtraction.LastOpenedArchive))
+        {
+            lastFile = ArchiveExtraction.LastOpenedArchive;
+        }
+        else if (mainWindowViewModel.WindowTabs.ActiveTab.CurrentValue.TabTitle.CurrentValue.TryGetURL(out var url))
+        {
+            lastFile = url;
+        }
+        else
+        {
+            lastFile = mainWindowViewModel.WindowTabs.ActiveTab.CurrentValue.FileInfo?.CurrentValue?.FullName ?? FileHistoryManager.GetLastEntry() ?? string.Empty;
+        }
+
+
+        Settings.StartUp.LastFile = lastFile;
         await SaveSettingsAsync();
         await KeybindingManager.UpdateKeyBindingsFile(); // Save keybindings
         TempFileHelper.DeleteTempFiles();
         await FileHistoryManager.SaveToFileAsync();
         ArchiveExtraction.Cleanup();
-        
+        core.MainWindows.MainWindows.Remove(mainWindowViewModel);
+
         if (core?.SettingsViewModel?.SettingsWindowConfig is not null)
         {
             await core.SettingsViewModel.SettingsWindowConfig.SaveAsync();
