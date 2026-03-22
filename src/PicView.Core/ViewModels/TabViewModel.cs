@@ -117,7 +117,6 @@ public class TabViewModel(string id, Action<string> closeTab, IFileWatcherServic
             TabTitle.Value = Model.FileInfo.Name;
             TabTooltip.Value = Model.FileInfo.FullName;
         }
-
         
         return;
         
