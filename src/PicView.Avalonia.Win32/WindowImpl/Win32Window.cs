@@ -40,6 +40,13 @@ public static class Win32Window
 
         // Apply fullscreen state
         await Dispatcher.UIThread.InvokeAsync(() => window.WindowState = WindowState.FullScreen, DispatcherPriority.Send);
+        
+        // Needs to reset decorations from potentially being changed from maximized state
+        Dispatcher.UIThread.Post(() =>
+        {
+            window.WindowDecorations = WindowDecorations.Full;
+            window.ExtendClientAreaToDecorationsHint = true;
+        }, DispatcherPriority.ApplicationIdle);
 
         var size = WindowResizing.GetSize(vm);
         if (size.HasValue)
