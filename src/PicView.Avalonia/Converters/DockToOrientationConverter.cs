@@ -4,6 +4,7 @@ using Avalonia.Controls;
 using Avalonia.Data.Converters;
 using Avalonia.Layout;
 using PicView.Core.Config;
+using PicView.Core.Gallery;
 
 namespace PicView.Avalonia.Converters;
 

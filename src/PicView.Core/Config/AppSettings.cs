@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using PicView.Core.Gallery;
 
 ﻿namespace PicView.Core.Config;
 
@@ -271,6 +272,8 @@ public class Gallery
     public double ItemSpacing { get; set; } = 25;
 
     public double LineSpacing { get; set; } = 20;
+    
+    public GalleryMouseWheel GalleryMouseWheelBehavior { get; set; } = 0;
 }
 
 public class ImageScaling

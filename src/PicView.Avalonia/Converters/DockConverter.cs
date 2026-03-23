@@ -3,6 +3,7 @@ using System.Globalization;
 using Avalonia.Controls;
 using Avalonia.Data.Converters;
 using PicView.Core.Config;
+using PicView.Core.Gallery;
 
 namespace PicView.Avalonia.Converters;
 

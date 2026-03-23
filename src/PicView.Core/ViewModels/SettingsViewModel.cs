@@ -138,6 +138,8 @@ public class SettingsViewModel : IDisposable
         Settings.Navigation.IsNavigatingFileHistory ? 0 : 
         Settings.Navigation.IsNavigatingBetweenDirectories ? 1 : 2);
     
+    public BindableReactiveProperty<int> GalleryMouseWheelBehavior { get; } = new((int)Settings.Gallery.GalleryMouseWheelBehavior);
+    
     public BindableReactiveProperty<int> MouseWheelBehavior { get; } = new(Settings.Zoom.CtrlZoom ? 0 : 1);
 
     // Language

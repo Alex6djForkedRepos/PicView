@@ -1,4 +1,4 @@
-namespace PicView.Core.Config;
+namespace PicView.Core.Gallery;
 
 public enum GalleryDockPosition
 {

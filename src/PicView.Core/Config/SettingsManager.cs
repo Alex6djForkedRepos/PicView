@@ -5,6 +5,7 @@ using System.Text.Json.Serialization;
 using PicView.Core.Config.ConfigFileManagement;
 using PicView.Core.DebugTools;
 using PicView.Core.FileHandling;
+using PicView.Core.Gallery;
 
 namespace PicView.Core.Config;
 
