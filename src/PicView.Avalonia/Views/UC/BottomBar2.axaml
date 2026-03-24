@@ -11,7 +11,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <UserControl.Resources>
-        <SolidColorBrush Color="{DynamicResource MainTextColor}" x:Key="ImageMenuBrush" />
 
         <ContextMenu x:Key="MainContextMenu">
 
@@ -225,7 +224,7 @@
                 BorderThickness="1,0,1,0"
                 Classes="noBorderHover"
                 Command="{CompiledBinding OpenCommand}"
-                Data="{StaticResource FolderGeometry}"
+                Data="{StaticResource AltFolderGeometry}"
                 Foreground="{DynamicResource MainTextColor}"
                 Height="{CompiledBinding BottombarHeight.Value}"
                 IconHeight="17"
@@ -341,33 +340,11 @@
                 BorderBrush="{DynamicResource MainBorderColor}"
                 BorderThickness="0,0,1,0"
                 Classes="noBorderHover"
-                Command="{CompiledBinding RotateLeftCommand}"
-                Data="{StaticResource RotateLeftGeometry}"
-                DockPanel.Dock="Left"
-                Foreground="{DynamicResource MainTextColor}"
-                Height="{CompiledBinding BottombarHeight.Value}"
-                IconHeight="16"
-                IconWidth="16"
-                IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.Image.Value,
-                                            Converter={x:Static ObjectConverters.IsNotNull},
-                                            FallbackValue=False,
-                                            Mode=OneWay}"
-                IsRepeatEnabled="False"
-                Margin="0"
-                ToolTip.HorizontalOffset="15"
-                ToolTip.Tip="{CompiledBinding Translation.RotateRight.Value,
-                                              Mode=OneWay}"
-                Width="38"
-                x:Name="RotateLeftButton" />
-
-            <customControls:IconButton
-                Background="{DynamicResource AltBackgroundColor}"
-                Classes="noBorderHover"
                 Command="{CompiledBinding RotateRightCommand}"
-                Data="{StaticResource RotateRightGeometry}"
                 DockPanel.Dock="Left"
                 Foreground="{DynamicResource MainTextColor}"
                 Height="{CompiledBinding BottombarHeight.Value}"
+                Icon="{StaticResource RotateCwImage}"
                 IconHeight="16"
                 IconWidth="16"
                 IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.Image.Value,
@@ -382,6 +359,30 @@
                 Width="38"
                 x:Name="RotateRightButton" />
 
+            <customControls:IconButton
+                Background="{DynamicResource AltBackgroundColor}"
+                Classes="noBorderHover"
+                Command="{CompiledBinding RotateLeftCommand}"
+                DockPanel.Dock="Left"
+                Foreground="{DynamicResource MainTextColor}"
+                Height="{CompiledBinding BottombarHeight.Value}"
+                Icon="{StaticResource RotateCcwImage}"
+                IconHeight="16"
+                IconWidth="16"
+                IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.Image.Value,
+                                            Converter={x:Static ObjectConverters.IsNotNull},
+                                            FallbackValue=False,
+                                            Mode=OneWay}"
+                IsRepeatEnabled="False"
+                Margin="0"
+                ToolTip.HorizontalOffset="15"
+                ToolTip.Tip="{CompiledBinding Translation.RotateLeft.Value,
+                                              Mode=OneWay}"
+                Width="38"
+                x:Name="RotateLeftButton" />
+
+
+
 
 
             <customControls:IconButton
@@ -390,10 +391,10 @@
                 BorderThickness="1,0,1,0"
                 Classes="noBorderHover"
                 Command="{CompiledBinding FlipCommand}"
-                Data="{StaticResource FlipGeometry}"
                 DockPanel.Dock="Left"
                 Foreground="{DynamicResource MainTextColor}"
                 Height="{CompiledBinding BottombarHeight.Value}"
+                Icon="{StaticResource RepeatImage}"
                 IconHeight="16"
                 IconWidth="16"
                 IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.Image.Value,

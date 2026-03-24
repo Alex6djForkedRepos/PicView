@@ -13,6 +13,7 @@
         CornerRadius="6,6,1,1"
         x:Name="MainBorder">
         <StackPanel>
+
             <Border
                 Background="{DynamicResource MainBackgroundColor}"
                 BorderBrush="{DynamicResource MainBorderColor}"
@@ -21,13 +22,14 @@
                 <Grid ColumnDefinitions="*,*">
                     <customControls:IconButton
                         Classes="altHover mainBtn"
+                        Command="{CompiledBinding $parent[Window].((vm:MainWindowViewModel)DataContext).ResetZoomCommand}"
                         CornerRadius="6,0,0,0"
-                        Data="{StaticResource ReloadGeometry}"
                         Foreground="{DynamicResource MainTextColor}"
                         Grid.Column="0"
-                        Height="22"
-                        IconHeight="11"
-                        IconWidth="11"
+                        Height="25"
+                        Icon="{StaticResource RefreshCcwOff}"
+                        IconHeight="15"
+                        IconWidth="15"
                         Padding="1"
                         ToolTip.Tip="{CompiledBinding $parent[Window].((vm:MainWindowViewModel)DataContext).Translation.ResetZoom.Value}"
                         x:Name="ResetZoomButton" />
@@ -38,14 +40,15 @@
                         Data="{StaticResource CloseGeometry}"
                         Foreground="{DynamicResource MainTextColor}"
                         Grid.Column="1"
-                        Height="22"
-                        IconHeight="10"
-                        IconWidth="10"
+                        Height="25"
+                        IconHeight="12"
+                        IconWidth="12"
                         Padding="1"
                         ToolTip.Tip="{CompiledBinding $parent[Window].((vm:MainWindowViewModel)DataContext).Translation.Close.Value}"
                         x:Name="CloseButton" />
                 </Grid>
             </Border>
+
             <LayoutTransformControl>
                 <LayoutTransformControl.LayoutTransform>
                     <RotateTransform Angle="{CompiledBinding Model.Rotation}" />
