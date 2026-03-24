@@ -1,8 +1,6 @@
-using System.Diagnostics;
 using PicView.Core.Config;
 using PicView.Core.Localization;
 using PicView.Core.ColorHandling;
-using PicView.Core.Gallery;
 using PicView.Core.ISettings;
 using PicView.Core.Search;
 using R3;
