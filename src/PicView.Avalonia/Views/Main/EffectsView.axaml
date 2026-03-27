@@ -171,7 +171,7 @@
                 <TabControl x:Name="EffectsTabs">
 
                     <!--  COLOR TAB  -->
-                    <TabItem Margin="0" Header="{Binding Translation.Color}">
+                    <TabItem Margin="0" Header="{Binding Translation.Color.Value}">
                         <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
                             <StackPanel Margin="15,10">
 
@@ -194,11 +194,11 @@
                                     <TextBlock
                                         Classes="txt sectionHeader"
                                         DockPanel.Dock="Left"
-                                        Text="Color" />
+                                        Text="{Binding Translation.Color.Value}" />
                                 </DockPanel>
 
                                 <!--  Hue  -->
-                                <TextBlock Classes="txt fieldLabel" Text="Hue" />
+                                <TextBlock Classes="txt fieldLabel" Text="{Binding Translation.Hue.Value}" />
                                 <StackPanel Orientation="Horizontal">
                                     <customControls:CustomSlider
                                         x:Name="HueSlider"
@@ -290,7 +290,7 @@
                                 </StackPanel>
 
                                 <!--  Temperature  -->
-                                <TextBlock Classes="txt fieldLabel" Text="Temperature" />
+                                <TextBlock Classes="txt fieldLabel" Text="{Binding Translation.Temperature.Value}" />
                                 <StackPanel Orientation="Horizontal">
                                     <customControls:CustomSlider
                                         x:Name="TemperatureSlider"
@@ -334,7 +334,7 @@
                                 </StackPanel>
 
                                 <!--  Tint  -->
-                                <TextBlock Classes="txt fieldLabel" Text="Tint" />
+                                <TextBlock Classes="txt fieldLabel" Text="{Binding Translation.Tint.Value}" />
                                 <StackPanel Orientation="Horizontal">
                                     <customControls:CustomSlider
                                         x:Name="TintSlider"
@@ -378,7 +378,7 @@
                                 </StackPanel>
 
                                 <!--  Vibrance  -->
-                                <TextBlock Classes="txt fieldLabel" Text="Vibrance" />
+                                <TextBlock Classes="txt fieldLabel" Text="{Binding Translation.Tint.Value}" />
                                 <StackPanel Orientation="Horizontal">
                                     <customControls:CustomSlider
                                         x:Name="VibranceSlider"
@@ -431,7 +431,7 @@
 
                                 <TabControl x:Name="ColorBalanceTabs" Margin="0,6,0,0">
 
-                                    <TabItem Margin="0" Header="Shadows">
+                                    <TabItem Margin="0" Header="{Binding Translation.Shadows.Value}">
                                         <StackPanel Margin="0,8,0,0">
 
                                             <TextBlock Classes="txt fieldLabel" Text="Red" />

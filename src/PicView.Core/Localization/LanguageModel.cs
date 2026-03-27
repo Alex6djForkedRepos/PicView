@@ -192,6 +192,7 @@ public class LanguageModel
     public string? HighlightColor { get; set; }
     public string? Highlights { get; set; }
     public string? HighQuality { get; set; }
+    public string? Hue { get; set; }
     public string? Image { get; set; }
     public string? ImageAliasing { get; set; }
     public string? ImageControl { get; set; }
@@ -398,9 +399,11 @@ public class LanguageModel
     public string? StrobeReturnLightDetected { get; set; }
     public string? StrobeReturnLightNotDetected { get; set; }
     public string? Subject { get; set; }
+    public string? Temperature { get; set; }
     public string? Theme { get; set; }
     public string? Thumbnail { get; set; }
     public string? Tile { get; set; }
+    public string? Tint { get; set; }
     public string? Title { get; set; }
     public string? ToggleBackgroundColor { get; set; }
     public string? ToggleFullscreen { get; set; }
@@ -426,6 +429,7 @@ public class LanguageModel
     public string? UsingMouse { get; set; }
     public string? UsingTouchpad { get; set; }
     public string? Version { get; set; }
+    public string? Vibrance { get; set; }
     public string? View { get; set; }
     public string? ViewLicenseFile { get; set; }
     public string? WhenDeletingAFile { get; set; }
@@ -440,6 +444,5 @@ public class LanguageModel
     public string? Zoom { get; set; }
     public string? ZoomIn { get; set; }
     public string? ZoomOut { get; set; }
-
-#endregion
+    #endregion
 }

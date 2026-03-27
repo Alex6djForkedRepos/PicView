@@ -144,6 +144,7 @@ public class TranslationViewModel : IDisposable
         Highlights.Value = t.Highlights;
         HighlightColor.Value = t.HighlightColor;
         HighQuality.Value = t.HighQuality;
+        Hue.Value = t.Hue;
         Image.Value = t.Image;
         ImageAliasing.Value = t.ImageAliasing;
         ImageControl.Value = t.ImageControl;
@@ -301,9 +302,11 @@ public class TranslationViewModel : IDisposable
         StayTopMost.Value = t.StayTopMost;
         Stretch.Value = t.Stretch;
         Subject.Value = t.Subject;
+        Temperature.Value = t.Temperature;
         Theme.Value = t.Theme;
         Thumbnail.Value = t.Thumbnail;
         Tile.Value = t.Tile;
+        Tint.Value = t.Tint;
         Title.Value = t.Title;
         ToggleFullscreen.Value = t.ToggleFullscreen;
         ToggleLooping.Value = t.ToggleLooping;
@@ -321,6 +324,7 @@ public class TranslationViewModel : IDisposable
         UsingMouse.Value = t.UsingMouse;
         UsingTouchpad.Value = t.UsingTouchpad;
         Version.Value = t.Version;
+        Vibrance.Value = t.Vibrance;
         View.Value = t.View;
         ViewLicenseFile.Value = t.ViewLicenseFile;
         WhenDeletingAFile.Value = t.WhenDeletingAFile;
@@ -468,6 +472,7 @@ public class TranslationViewModel : IDisposable
     public BindableReactiveProperty<string?> HighlightColor { get; } = new();
     public BindableReactiveProperty<string?> Highlights { get; } = new();
     public BindableReactiveProperty<string?> HighQuality { get; } = new();
+    public BindableReactiveProperty<string?> Hue { get; } = new();
     public BindableReactiveProperty<string?> Image { get; } = new();
     public BindableReactiveProperty<string?> ImageAliasing { get; } = new();
     public BindableReactiveProperty<string?> ImageControl { get; } = new();
@@ -625,9 +630,11 @@ public class TranslationViewModel : IDisposable
     public BindableReactiveProperty<string?> StayTopMost { get; } = new();
     public BindableReactiveProperty<string?> Stretch { get; } = new();
     public BindableReactiveProperty<string?> Subject { get; } = new();
+    public BindableReactiveProperty<string?> Temperature { get; } = new();
     public BindableReactiveProperty<string?> Theme { get; } = new();
     public BindableReactiveProperty<string?> Thumbnail { get; } = new();
     public BindableReactiveProperty<string?> Tile { get; } = new();
+    public BindableReactiveProperty<string?> Tint { get; } = new();
     public BindableReactiveProperty<string?> Title { get; } = new();
     public BindableReactiveProperty<string?> ToggleFileHistory { get; } = new();
     public BindableReactiveProperty<string?> ToggleFullscreen { get; } = new();
@@ -646,6 +653,7 @@ public class TranslationViewModel : IDisposable
     public BindableReactiveProperty<string?> UsingMouse { get; } = new();
     public BindableReactiveProperty<string?> UsingTouchpad { get; } = new();
     public BindableReactiveProperty<string?> Version { get; } = new();
+    public BindableReactiveProperty<string?> Vibrance { get; } = new();
     public BindableReactiveProperty<string?> View { get; } = new();
     public BindableReactiveProperty<string?> ViewLicenseFile { get; } = new();
     public BindableReactiveProperty<string?> WhenDeletingAFile { get; } = new();
