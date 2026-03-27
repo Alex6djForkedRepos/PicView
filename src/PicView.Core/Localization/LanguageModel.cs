@@ -43,6 +43,8 @@ public class LanguageModel
     public string? BatchResize { get; set; }
     public string? BitDepth { get; set; }
     public string? BlackAndWhite { get; set; }
+    public string? Blacks { get; set; }
+    public string? Blue { get; set; }
     public string? Blur { get; set; }
     public string? Bottom { get; set; }
     public string? BottomGalleryItemSize { get; set; }
@@ -174,6 +176,7 @@ public class LanguageModel
     public string? Fullscreen { get; set; }
     public string? GallerySettings { get; set; }
     public string? GalleryThumbnailStretch { get; set; }
+    public string? Gamma { get; set; }
     public string? GeneralSettings { get; set; }
     public string? GenerateThumbnails { get; set; }
     public string? GithubRepo { get; set; }
@@ -181,6 +184,7 @@ public class LanguageModel
     public string? GoBackBy100Images { get; set; }
     public string? GoBackBy10Images { get; set; }
     public string? Graphics { get; set; }
+    public string? Green { get; set; }
     public string? Hard { get; set; }
     public string? Height { get; set; }
     public string? Help { get; set; }
@@ -302,6 +306,7 @@ public class LanguageModel
     public string? Random { get; set; }
     public string? RawCamera { get; set; }
     public string? RecentFiles { get; set; }
+    public string? Red { get; set; }
     public string? RedEyeReduction { get; set; }
     public string? Reload { get; set; }
     public string? RemoveAll { get; set; }
@@ -410,6 +415,7 @@ public class LanguageModel
     public string? ToggleLooping { get; set; }
     public string? ToggleScroll { get; set; }
     public string? ToggleTaskbarProgress { get; set; }
+    public string? Tonal { get; set; }
     public string? ToolWindows { get; set; }
     public string? Top { get; set; }
     public string? UnableToRender { get; set; }
@@ -435,6 +441,7 @@ public class LanguageModel
     public string? WhenDeletingAFile { get; set; }
     public string? WhiteBalance { get; set; }
     public string? WhiteFluorescent { get; set; }
+    public string? Whites { get; set; }
     public string? Width { get; set; }
     public string? WidthAndHeight { get; set; }
     public string? Window { get; set; }

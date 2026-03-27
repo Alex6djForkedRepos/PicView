@@ -434,7 +434,7 @@
                                     <TabItem Margin="0" Header="{Binding Translation.Shadows.Value}">
                                         <StackPanel Margin="0,8,0,0">
 
-                                            <TextBlock Classes="txt fieldLabel" Text="Red" />
+                                            <TextBlock Classes="txt fieldLabel" Text="{Binding Translation.Red.Value}" />
                                             <StackPanel Orientation="Horizontal">
                                                 <customControls:CustomSlider
                                                     x:Name="CBShadowsCR"
@@ -454,7 +454,7 @@
                                             <TextBlock
                                                 Margin="0,8,0,0"
                                                 Classes="txt fieldLabel"
-                                                Text="Green" />
+                                                Text="{Binding Translation.Green.Value}" />
                                             <StackPanel Orientation="Horizontal">
                                                 <customControls:CustomSlider
                                                     x:Name="CBShadowsMG"
@@ -475,7 +475,7 @@
                                             <TextBlock
                                                 Margin="0,8,0,0"
                                                 Classes="txt fieldLabel"
-                                                Text="Blue" />
+                                                Text="{Binding Translation.Blue.Value}" />
                                             <StackPanel Orientation="Horizontal">
                                                 <customControls:CustomSlider
                                                     x:Name="CBShadowsYB"
@@ -498,7 +498,7 @@
                                     <TabItem Margin="0" Header="{Binding Translation.Midtones.Value}">
                                         <StackPanel Margin="0,8,0,0">
 
-                                            <TextBlock Classes="txt fieldLabel" Text="Red" />
+                                            <TextBlock Classes="txt fieldLabel" Text="{Binding Translation.Red.Value}" />
                                             <StackPanel Orientation="Horizontal">
                                                 <customControls:CustomSlider
                                                     x:Name="CBMidCR"
@@ -518,7 +518,7 @@
                                             <TextBlock
                                                 Margin="0,8,0,0"
                                                 Classes="txt fieldLabel"
-                                                Text="Green" />
+                                                Text="{Binding Translation.Green.Value}" />
                                             <StackPanel Orientation="Horizontal">
                                                 <customControls:CustomSlider
                                                     x:Name="CBMidMG"
@@ -538,7 +538,7 @@
                                             <TextBlock
                                                 Margin="0,8,0,0"
                                                 Classes="txt fieldLabel"
-                                                Text="Blue" />
+                                                Text="{Binding Translation.Blue.Value}" />
                                             <StackPanel Orientation="Horizontal">
                                                 <customControls:CustomSlider
                                                     x:Name="CBMidYB"
@@ -561,7 +561,7 @@
                                     <TabItem Margin="0" Header="{Binding Translation.Highlights.Value}">
                                         <StackPanel Margin="0,8,0,0">
 
-                                            <TextBlock Classes="txt fieldLabel" Text="Red" />
+                                            <TextBlock Classes="txt fieldLabel" Text="{Binding Translation.Red.Value}" />
                                             <StackPanel Orientation="Horizontal">
                                                 <customControls:CustomSlider
                                                     x:Name="CBHighCR"
@@ -581,7 +581,7 @@
                                             <TextBlock
                                                 Margin="0,8,0,0"
                                                 Classes="txt fieldLabel"
-                                                Text="Green" />
+                                                Text="{Binding Translation.Green.Value}" />
                                             <StackPanel Orientation="Horizontal">
                                                 <customControls:CustomSlider
                                                     x:Name="CBHighMG"
@@ -601,7 +601,7 @@
                                             <TextBlock
                                                 Margin="0,8,0,0"
                                                 Classes="txt fieldLabel"
-                                                Text="Blue" />
+                                                Text="{Binding Translation.Blue.Value}" />
                                             <StackPanel Orientation="Horizontal">
                                                 <customControls:CustomSlider
                                                     x:Name="CBHighYB"
@@ -789,7 +789,7 @@
                                 </StackPanel>
 
                                 <!--  Gamma  -->
-                                <TextBlock Classes="txt fieldLabel" Text="Gamma" />
+                                <TextBlock Classes="txt fieldLabel" Text="{Binding Translation.Gamma.Value}" />
                                 <StackPanel Orientation="Horizontal">
                                     <customControls:CustomSlider
                                         x:Name="GammaSlider"
@@ -833,10 +833,10 @@
                                         IconWidth="12" />
                                 </StackPanel>
 
-                                <TextBlock Classes="txt sectionHeader" Text="Tonal" />
+                                <TextBlock Classes="txt sectionHeader" Text="{Binding Translation.Tonal.Value}" />
 
                                 <!--  Highlights  -->
-                                <TextBlock Classes="txt fieldLabel" Text="Highlights" />
+                                <TextBlock Classes="txt fieldLabel" Text="{Binding Translation.Highlights.Value}" />
                                 <StackPanel Orientation="Horizontal">
                                     <customControls:CustomSlider
                                         x:Name="HighlightsSlider"
@@ -908,7 +908,7 @@
                                 </StackPanel>
 
                                 <!--  Blacks / Whites  -->
-                                <TextBlock Classes="txt fieldLabel" Text="Blacks" />
+                                <TextBlock Classes="txt fieldLabel" Text="{Binding Translation.Blacks.Value}" />
                                 <StackPanel Orientation="Horizontal">
                                     <customControls:CustomSlider
                                         x:Name="BlacksSlider"
@@ -944,7 +944,7 @@
                                         IconWidth="12" />
                                 </StackPanel>
 
-                                <TextBlock Classes="txt fieldLabel" Text="Whites" />
+                                <TextBlock Classes="txt fieldLabel" Text="{Binding Translation.Whites.Value}" />
                                 <StackPanel Orientation="Horizontal">
                                     <customControls:CustomSlider
                                         x:Name="WhitesSlider"
