@@ -125,6 +125,11 @@ public partial class ImageViewer2 : UserControl
                         var ct = CancellationTokenSource.CreateLinkedTokenSource(c, tab.GetTabCancellation().Token);
                         await tab.ImageIterator.IterateToIndexAsync(tab.ImageIterator.CurrentIndex, ct);   
                     }
+                    SecondaryImage.IsVisible = true;
+                }
+                else
+                {
+                    SecondaryImage.IsVisible = false;
                 }
             }).AddTo(_disposables);
         

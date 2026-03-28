@@ -32,12 +32,7 @@
 
                                 <customControls:PicBox2 x:Name="MainImage" Source="{CompiledBinding Image.Value}" />
 
-                                <customControls:PicBox2
-                                    x:Name="SecondaryImage"
-                                    IsVisible="{CompiledBinding SecondaryImage.Value,
-                                                                Converter={x:Static ObjectConverters.IsNotNull},
-                                                                FallbackValue=False}"
-                                    Source="{CompiledBinding SecondaryImage.Value}" />
+                                <customControls:PicBox2 x:Name="SecondaryImage" Source="{CompiledBinding SecondaryImage.Value}" />
                             </UniformGrid>
                         </Border>
                     </customControls:AutoScrollViewer>
