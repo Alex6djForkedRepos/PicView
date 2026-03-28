@@ -4,6 +4,7 @@ using Avalonia.Media;
 using PicView.Avalonia.CustomControls;
 using PicView.Avalonia.WindowBehavior;
 using PicView.Core.ImageTransformations;
+using PicView.Core.Localization;
 using MainWindowViewModel = PicView.Core.ViewModels.MainWindowViewModel;
 
 namespace PicView.Avalonia.ImageTransformations.Rotation;
@@ -79,6 +80,8 @@ public class RotationTransformer2(
         imageLayoutTransformControl.RenderTransform = _scaleTransform;
         _scaleTransform.ScaleX = newScaleX;
         vm.WindowTabs.ActiveTab.CurrentValue.ScaleX.Value = newScaleX;
+        vm.Translation.IsFlipped.Value =
+            newScaleX is -1 ? TranslationManager.Translation.Flip : TranslationManager.Translation.Unflip;
     }
 
 }

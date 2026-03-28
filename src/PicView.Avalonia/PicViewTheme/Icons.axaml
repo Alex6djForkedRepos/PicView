@@ -802,6 +802,7 @@
             <GeometryDrawing Geometry="F1 M17 2L21 6L17 10">
                 <GeometryDrawing.Pen>
                     <Pen
+                        Brush="{DynamicResource MainTextColor}"
                         LineCap="Round"
                         LineJoin="Round"
                         MiterLimit="4"
@@ -811,6 +812,7 @@
             <GeometryDrawing Geometry="F1 M3 11L3 10Q3 9.80349 3.01926 9.60793Q3.03852 9.41237 3.07686 9.21964Q3.1152 9.02691 3.17224 8.83886Q3.22928 8.65082 3.30448 8.46927Q3.37968 8.28772 3.47232 8.11441Q3.56495 7.94111 3.67412 7.77772Q3.7833 7.61433 3.90796 7.46243Q4.03262 7.31053 4.17157 7.17157Q4.31052 7.03262 4.46243 6.90796Q4.61433 6.7833 4.77772 6.67412Q4.94111 6.56495 5.11441 6.47232Q5.28772 6.37968 5.46927 6.30448Q5.65082 6.22928 5.83886 6.17224Q6.02691 6.1152 6.21964 6.07686Q6.41237 6.03852 6.60793 6.01926Q6.80349 6 7 6L21 6">
                 <GeometryDrawing.Pen>
                     <Pen
+                        Brush="{DynamicResource MainTextColor}"
                         LineCap="Round"
                         LineJoin="Round"
                         MiterLimit="4"
@@ -820,6 +822,7 @@
             <GeometryDrawing Geometry="F1 M7 22L3 18L7 14">
                 <GeometryDrawing.Pen>
                     <Pen
+                        Brush="{DynamicResource MainTextColor}"
                         LineCap="Round"
                         LineJoin="Round"
                         MiterLimit="4"
@@ -829,6 +832,7 @@
             <GeometryDrawing Geometry="F1 M21 13L21 14Q21 14.1965 20.9807 14.3921Q20.9615 14.5876 20.9231 14.7804Q20.8848 14.9731 20.8278 15.1611Q20.7707 15.3492 20.6955 15.5307Q20.6203 15.7123 20.5277 15.8856Q20.4351 16.0589 20.3259 16.2223Q20.2167 16.3857 20.092 16.5376Q19.9674 16.6895 19.8284 16.8284Q19.6895 16.9674 19.5376 17.092Q19.3857 17.2167 19.2223 17.3259Q19.0589 17.4351 18.8856 17.5277Q18.7123 17.6203 18.5307 17.6955Q18.3492 17.7707 18.1611 17.8278Q17.9731 17.8848 17.7804 17.9231Q17.5876 17.9615 17.3921 17.9807Q17.1965 18 17 18L3 18">
                 <GeometryDrawing.Pen>
                     <Pen
+                        Brush="{DynamicResource MainTextColor}"
                         LineCap="Round"
                         LineJoin="Round"
                         MiterLimit="4"

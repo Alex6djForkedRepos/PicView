@@ -4,7 +4,6 @@
     x:Class="PicView.Avalonia.Views.UC.Menus.DropDownMenu"
     x:DataType="viewModels:MainWindowViewModel"
     xmlns="https://github.com/avaloniaui"
-    xmlns:config="clr-namespace:PicView.Core.Config;assembly=PicView.Core"
     xmlns:customControls="clr-namespace:PicView.Avalonia.CustomControls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:gallery="clr-namespace:PicView.Core.Gallery;assembly=PicView.Core"
@@ -19,7 +18,7 @@
         Effect="{DynamicResource MenuShadowButtonBorder}"
         x:Name="MainBorder">
 
-        <DockPanel MinHeight="400" MinWidth="315">
+        <DockPanel MinWidth="315">
 
             <!--  Gallery Carousel  -->
             <Carousel
@@ -319,71 +318,73 @@
                 </Carousel.Items>
             </Carousel>
 
-            <ToggleButton
-                Background="Transparent"
-                Classes="altHover"
-                Command="{CompiledBinding SideBySideCommand}"
-                DockPanel.Dock="Top"
-                IsChecked="{CompiledBinding GlobalSettings.IsScrollingEnabled.Value}"
+            <StackPanel
                 IsVisible="{CompiledBinding !TopTitlebarViewModel.DropDownMenu.IsExpandedOptionsOpened.Value}"
-                Padding="7,3,0,3"
-                ToolTip.Tip="{CompiledBinding Translation.SideBySideTooltip.Value}"
-                VerticalAlignment="Top"
-                x:Name="SideBySideButton">
-                <TextBlock Classes="txt" Text="{CompiledBinding Translation.SideBySide.Value}" />
-            </ToggleButton>
-            <customControls:TextIconButton
-                Background="Transparent"
-                Classes="altHover"
-                ClickMode="Release"
-                DockPanel.Dock="Top"
-                Icon="{StaticResource FlaskImage}"
-                IconHeight="12"
-                IconMargin="0,0,7,0"
-                IconWidth="12"
-                IsVisible="{CompiledBinding !TopTitlebarViewModel.DropDownMenu.IsExpandedOptionsOpened.Value}"
-                Padding="15,7,15,7"
-                Text="{CompiledBinding Translation.Effects.Value}"
-                VerticalAlignment="Top" />
-            <customControls:TextIconButton
-                Background="Transparent"
-                Classes="altHover"
-                ClickMode="Release"
-                DockPanel.Dock="Top"
-                Icon="{StaticResource ShortcutsImage}"
-                IconHeight="12"
-                IconMargin="0,0,7,0"
-                IconWidth="12"
-                IsVisible="{CompiledBinding !TopTitlebarViewModel.DropDownMenu.IsExpandedOptionsOpened.Value}"
-                Padding="15,7,15,7"
-                Text="{CompiledBinding Translation.ApplicationShortcuts.Value}"
-                VerticalAlignment="Top" />
-            <customControls:TextIconButton
-                Background="Transparent"
-                Classes="altHover"
-                ClickMode="Release"
-                Data="{StaticResource CogGeometry}"
-                DockPanel.Dock="Top"
-                IconHeight="12"
-                IconMargin="0,0,7,0"
-                IconWidth="12"
-                IsVisible="{CompiledBinding !TopTitlebarViewModel.DropDownMenu.IsExpandedOptionsOpened.Value}"
-                Padding="15,7,15,7"
-                Text="{CompiledBinding Translation.Settings.Value}"
-                VerticalAlignment="Top" />
-            <customControls:TextIconButton
-                Background="Transparent"
-                Classes="altHover"
-                ClickMode="Release"
-                DockPanel.Dock="Top"
-                Icon="{StaticResource AboutImage}"
-                IconHeight="12"
-                IconMargin="0,0,7,0"
-                IconWidth="12"
-                IsVisible="{CompiledBinding !TopTitlebarViewModel.DropDownMenu.IsExpandedOptionsOpened.Value}"
-                Padding="15,7,15,7"
-                Text="{CompiledBinding Translation.About.Value}"
-                VerticalAlignment="Top" />
+                Margin="0,0,0,5"
+                VerticalAlignment="Top">
+                <Rectangle
+                    Fill="{DynamicResource MainBorderColor}"
+                    Height="2"
+                    Margin="10,5,0,5" />
+
+                <DockPanel>
+                    <customControls:IconButton
+                        Classes="errorHover"
+                        Data="{StaticResource RecycleGeometry}"
+                        DockPanel.Dock="Right"
+                        Foreground="{DynamicResource MainTextColor}"
+                        IconHeight="12"
+                        IconWidth="12"
+                        Margin="0,0,5,0"
+                        Padding="8,4"
+                        ToolTip.Tip="{CompiledBinding Translation.Clear.Value,
+                                                      Mode=OneWay}"
+                        x:Name="HistoryClearButton" />
+
+
+                    <customControls:IconButton
+                        Background="Transparent"
+                        Classes="hover"
+                        DockPanel.Dock="Right"
+                        Foreground="{DynamicResource MainTextColor}"
+                        Icon="{StaticResource SortDescImage}"
+                        IconHeight="12"
+                        IconWidth="12"
+                        Margin="0,0,15,0"
+                        Padding="8,5"
+                        x:Name="HistorySortButton" />
+
+
+                    <customControls:IconButton
+                        Classes="hover"
+                        ClickMode="Release"
+                        DockPanel.Dock="Right"
+                        Foreground="{DynamicResource MainTextColor}"
+                        Icon="{StaticResource SquareLibrary}"
+                        IconHeight="12"
+                        IconWidth="12"
+                        Margin="0,0,5,0"
+                        Padding="8,5"
+                        ToolTip.Tip="{CompiledBinding Translation.OpenFileHistory.Value,
+                                                      Mode=OneWay}"
+                        x:Name="HistoryFileButton" />
+
+                    <TextBlock
+                        Classes="txt"
+                        DockPanel.Dock="Left"
+                        Padding="15,5,0,5"
+                        Text="{CompiledBinding Translation.RecentFiles.Value}" />
+
+                </DockPanel>
+
+                <customControls:AutoScrollViewer>
+                    <Rectangle />
+                </customControls:AutoScrollViewer>
+
+            </StackPanel>
+
+
+
         </DockPanel>
     </Border>
 </customControls:AnimatedMenu>

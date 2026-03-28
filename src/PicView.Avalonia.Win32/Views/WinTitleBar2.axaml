@@ -411,22 +411,19 @@
                     </MenuItem>
 
 
-                    <!--  Toggle bottom gallery  -->
-                    <!--  <MenuItem  -->
-                    <!--  Command="{CompiledBinding Gallery.ToggleBottomGalleryCommand}"  -->
-                    <!--  Header="{CompiledBinding Translation.IsShowingDockedGallery.Value,  -->
-                    <!--  Mode=OneWay}"  -->
-                    <!--  IsChecked="{CompiledBinding Gallery.IsBottomGalleryShown.Value}"  -->
-                    <!--  Theme="{StaticResource MainBg}">  -->
-                    <!--     <MenuItem.Icon> -->
-                    <!--  <Image  -->
-                    <!--  Height="12"  -->
-                    <!--  Source="{StaticResource GalleryImage}"  -->
-                    <!--  Width="12" />  -->
-                    <!--     </MenuItem.Icon> -->
-                    <!-- </MenuItem> -->
-
-
+                    <!--  Toggle gallery  -->
+                    <MenuItem
+                        Command="{CompiledBinding ToggleGalleryCommand}"
+                        Header="{CompiledBinding Translation.ShowImageGallery.Value,
+                                                 Mode=OneWay}"
+                        Theme="{StaticResource MainBg}">
+                        <MenuItem.Icon>
+                            <Image
+                                Width="12"
+                                Height="12"
+                                Source="{StaticResource GalleryImage}" />
+                        </MenuItem.Icon>
+                    </MenuItem>
 
 
                 </MenuItem>
@@ -544,11 +541,11 @@
                         StaysOpenOnClick="True"
                         Theme="{StaticResource MainBg}">
                         <MenuItem.Icon>
-                            <Path Classes="FlipPath">
-                                <Path.RenderTransform>
-                                    <!-- <ScaleTransform ScaleX="{CompiledBinding PicViewer.ScaleX.Value}" /> -->
-                                </Path.RenderTransform>
-                            </Path>
+                            <Image Classes="FlipImage">
+                                <Image.RenderTransform>
+                                    <ScaleTransform ScaleX="{CompiledBinding WindowTabs.ActiveTab.CurrentValue.ScaleX.Value}" />
+                                </Image.RenderTransform>
+                            </Image>
                         </MenuItem.Icon>
                     </MenuItem>
 
@@ -767,123 +764,18 @@
                     </MenuItem>
                 </MenuItem>
 
-                <!--  Sort files by  -->
-                <!-- <MenuItem Header="{CompiledBinding Translation.SortFilesBy.Value, Mode=OneWay}"> -->
-                <!--     <MenuItem.Icon> -->
-                <!--         <Path Classes="SortFilesPath" /> -->
-                <!--     </MenuItem.Icon> -->
-                <!--    -->
-                <!--  ~1~  Sort files by name  @1@  -->
-                <!--  <MenuItem  -->
-                <!--  Command="{CompiledBinding SortFilesByNameCommand}"  -->
-                <!--  GroupName="SortType"  -->
-                <!--  Header="{CompiledBinding Translation.FileName.Value,  -->
-                <!--  Mode=OneWay}"  -->
-                <!--  IsChecked="{CompiledBinding Sorting.SortOrder.Value,  -->
-                <!--  Converter={StaticResource EnumToBoolConverter},  -->
-                <!--  ConverterParameter=Name}"  -->
-                <!--  Theme="{StaticResource MainBg}"  -->
-                <!--  ToggleType="Radio" />  -->
-                <!--    -->
-                <!--  ~1~  Sort files by size  @1@  -->
-                <!--  <MenuItem  -->
-                <!--  Command="{CompiledBinding Sorting.SortFilesBySizeCommand}"  -->
-                <!--  GroupName="SortType"  -->
-                <!--  Header="{CompiledBinding Translation.FileSize.Value,  -->
-                <!--  Mode=OneWay}"  -->
-                <!--  IsChecked="{CompiledBinding Sorting.SortOrder.Value,  -->
-                <!--  Converter={StaticResource EnumToBoolConverter},  -->
-                <!--  ConverterParameter=FileSize}"  -->
-                <!--  Theme="{StaticResource MainBg}"  -->
-                <!--  ToggleType="Radio" />  -->
-                <!--    -->
-                <!--  ~1~  Sort files by extension  @1@  -->
-                <!--  <MenuItem  -->
-                <!--  Command="{CompiledBinding Sorting.SortFilesByExtensionCommand}"  -->
-                <!--  GroupName="SortType"  -->
-                <!--  Header="{CompiledBinding Translation.FileExtension.Value,  -->
-                <!--  Mode=OneWay}"  -->
-                <!--  IsChecked="{CompiledBinding Sorting.SortOrder.Value,  -->
-                <!--  Converter={StaticResource EnumToBoolConverter},  -->
-                <!--  ConverterParameter=Extension}"  -->
-                <!--  Theme="{StaticResource MainBg}"  -->
-                <!--  ToggleType="Radio" />  -->
-                <!--    -->
-                <!--  ~1~  Sort files by creation time  @1@  -->
-                <!--  <MenuItem  -->
-                <!--  Command="{CompiledBinding Sorting.SortFilesByCreationTimeCommand}"  -->
-                <!--  GroupName="SortType"  -->
-                <!--  Header="{CompiledBinding Translation.Created.Value,  -->
-                <!--  Mode=OneWay}"  -->
-                <!--  IsChecked="{CompiledBinding Sorting.SortOrder.Value,  -->
-                <!--  Converter={StaticResource EnumToBoolConverter},  -->
-                <!--  ConverterParameter=CreationTime}"  -->
-                <!--  Theme="{StaticResource MainBg}"  -->
-                <!--  ToggleType="Radio" />  -->
-                <!--    -->
-                <!--  ~1~  Sort files by last access time  @1@  -->
-                <!--  <MenuItem  -->
-                <!--  Command="{CompiledBinding Sorting.SortFilesByLastAccessTimeCommand}"  -->
-                <!--  GroupName="SortType"  -->
-                <!--  Header="{CompiledBinding Translation.LastAccessTime.Value,  -->
-                <!--  Mode=OneWay}"  -->
-                <!--  IsChecked="{CompiledBinding Sorting.SortOrder.Value,  -->
-                <!--  Converter={StaticResource EnumToBoolConverter},  -->
-                <!--  ConverterParameter=LastAccessTime}"  -->
-                <!--  Theme="{StaticResource MainBg}"  -->
-                <!--  ToggleType="Radio" />  -->
-                <!--    -->
-                <!--  ~1~  Sort files randomly  @1@  -->
-                <!--  <MenuItem  -->
-                <!--  Command="{CompiledBinding Sorting.SortFilesRandomlyCommand}"  -->
-                <!--  GroupName="SortType"  -->
-                <!--  Header="{CompiledBinding Translation.Random.Value,  -->
-                <!--  Mode=OneWay}"  -->
-                <!--  IsChecked="{CompiledBinding Sorting.SortOrder.Value,  -->
-                <!--  Converter={StaticResource EnumToBoolConverter},  -->
-                <!--  ConverterParameter=Random}"  -->
-                <!--  Theme="{StaticResource MainBg}"  -->
-                <!--  ToggleType="Radio" />  -->
-                <!--    -->
-                <!--  <Separator  -->
-                <!--  Background="{DynamicResource ContextMenuBackgroundColor}"  -->
-                <!--  Margin="0"  -->
-                <!--  Opacity=".9" />  -->
-                <!--    -->
-                <!--  ~1~  Sort files ascending  @1@  -->
-                <!--  <MenuItem  -->
-                <!--  Command="{CompiledBinding Sorting.SortFilesAscendingCommand}"  -->
-                <!--  GroupName="SortDirection"  -->
-                <!--  Header="{CompiledBinding Translation.Ascending.Value,  -->
-                <!--  Mode=OneWay}"  -->
-                <!--  IsChecked="{CompiledBinding Sorting.IsAscending.Value}"  -->
-                <!--  Theme="{StaticResource MainBg}"  -->
-                <!--  ToggleType="Radio" />  -->
-                <!--    -->
-                <!--  ~1~  Sort files descending  @1@  -->
-                <!--  <MenuItem  -->
-                <!--  Command="{CompiledBinding Sorting.SortFilesDescendingCommand}"  -->
-                <!--  GroupName="SortDirection"  -->
-                <!--  Header="{CompiledBinding Translation.Descending.Value,  -->
-                <!--  Mode=OneWay}"  -->
-                <!--  IsChecked="{CompiledBinding !Sorting.IsAscending.Value}"  -->
-                <!--  Theme="{StaticResource MainBg}"  -->
-                <!--  ToggleType="Radio" />  -->
-                <!--    -->
-                <!-- </MenuItem> -->
-
                 <!--  Settings  -->
                 <MenuItem Header="{CompiledBinding Translation.Settings.Value, Mode=OneWay}">
 
                     <!--  Toggle Subdirectories  -->
-                    <!--  <MenuItem  -->
-                    <!--  Command="{CompiledBinding ToggleSubdirectoriesCommand}"  -->
-                    <!--  Header="{CompiledBinding Translation.SearchSubdirectory.Value,  -->
-                    <!--  Mode=OneWay}"  -->
-                    <!--  IsChecked="{Binding GlobalSettings.IsIncludingSubdirectories.Value}"  -->
-                    <!--  Theme="{StaticResource MainBg}"  -->
-                    <!--  ToggleType="CheckBox" />  -->
-                    <!--    -->
+                    <MenuItem
+                        Command="{CompiledBinding ToggleSubdirectoriesCommand}"
+                        Header="{CompiledBinding Translation.SearchSubdirectory.Value,
+                                                 Mode=OneWay}"
+                        IsChecked="{Binding GlobalSettings.IsIncludingSubdirectories.Value}"
+                        Theme="{StaticResource MainBg}"
+                        ToggleType="CheckBox" />
+
                     <!--  <Separator  -->
                     <!--  Background="{DynamicResource ContextMenuBackgroundColor}"  -->
                     <!--  Margin="0"  -->

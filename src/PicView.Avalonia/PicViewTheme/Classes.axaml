@@ -1,7 +1,7 @@
 <Styles
     xmlns="https://github.com/avaloniaui"
-    xmlns:customControls="clr-namespace:PicView.Avalonia.CustomControls"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:customControls="clr-namespace:PicView.Avalonia.CustomControls">
 
     <Style Selector="Border.borderStyle">
         <Setter Property="BorderBrush" Value="{DynamicResource MainBorderColor}" />
@@ -128,7 +128,7 @@
         <Setter Property="Margin" Value="0" />
         <Setter Property="Transitions">
             <Transitions>
-                <BrushTransition Duration="0:0:0.4" Property="BorderBrush" />
+                <BrushTransition Property="BorderBrush" Duration="0:0:0.4" />
             </Transitions>
         </Setter>
     </Style>
@@ -257,9 +257,8 @@
         <Setter Property="Stretch" Value="Fill" />
     </Style>
 
-    <Style Selector="Path.FlipPath">
-        <Setter Property="Data" Value="{StaticResource FlipGeometry}" />
-        <Setter Property="Fill" Value="{DynamicResource MainTextColor}" />
+    <Style Selector="Image.FlipImage">
+        <Setter Property="Source" Value="{StaticResource RepeatImage}" />
         <Setter Property="Height" Value="12" />
         <Setter Property="Width" Value="12" />
         <Setter Property="Stretch" Value="Fill" />

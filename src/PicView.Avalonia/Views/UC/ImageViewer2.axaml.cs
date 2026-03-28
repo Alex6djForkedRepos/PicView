@@ -10,6 +10,7 @@ using PicView.Avalonia.ImageTransformations.Rotation;
 using PicView.Avalonia.Input;
 using PicView.Avalonia.UI;
 using PicView.Core.Config;
+using PicView.Core.Localization;
 using PicView.Core.ViewModels;
 using R3;
 
@@ -83,6 +84,10 @@ public partial class ImageViewer2 : UserControl
         {
             return;
         }
+
+        // The image is not flipped by default, update translation to reflect that
+        core.Translation.IsFlipped.Value = TranslationManager.Translation.Flip;
+
         _imageTransformer = new RotationTransformer2(
             MainTransform,
             MainImage,
