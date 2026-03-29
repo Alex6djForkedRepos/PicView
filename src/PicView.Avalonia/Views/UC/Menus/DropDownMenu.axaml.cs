@@ -1,7 +1,8 @@
 using Avalonia.Interactivity;
+using System;
 using Avalonia.LogicalTree;
 using PicView.Avalonia.CustomControls;
-using PicView.Avalonia.UI;
+using PicView.Avalonia.UI.FileHistory2;
 using PicView.Core.Localization;
 using R3;
 using MainWindowViewModel = PicView.Core.ViewModels.MainWindowViewModel;
@@ -10,6 +11,9 @@ namespace PicView.Avalonia.Views.UC.Menus;
 
 public partial class DropDownMenu : AnimatedMenu
 {
+    private IDisposable? _menuVisibilitySubscription;
+    private FileHistoryMenuController? _fileHistoryMenuController;
+
     public DropDownMenu()
     {
         InitializeComponent();
@@ -26,12 +30,34 @@ public partial class DropDownMenu : AnimatedMenu
         SlideShow60Sec.Text = $"60 {TranslationManager.Translation.SecAbbreviation}";
         SlideShow90Sec.Text = $"90 {TranslationManager.Translation.SecAbbreviation}";
         SlideShow120Sec.Text = $"120 {TranslationManager.Translation.SecAbbreviation}";
+
+        if (DataContext is MainWindowViewModel vm)
+        {
+            _fileHistoryMenuController = new FileHistoryMenuController(
+                FileHistoryContainer, 
+                HistorySortButton, 
+                HistoryClearButton, 
+                HistoryFileButton, 
+                vm);
+
+            _menuVisibilitySubscription = vm.TopTitlebarViewModel.DropDownMenu.IsDropDownMenuVisible
+                .Subscribe(isVisible =>
+                {
+                    if (isVisible)
+                    {
+                        _fileHistoryMenuController?.UpdateFileHistoryMenu();
+                    }
+                });
+        }
     }
 
     protected override void OnDetachedFromLogicalTree(LogicalTreeAttachmentEventArgs e)
     {
         base.OnDetachedFromLogicalTree(e);
         Loaded -= OnLoaded;
+        _menuVisibilitySubscription?.Dispose();
+        _fileHistoryMenuController?.Dispose();
+        _fileHistoryMenuController = null;
     }
 
     private void Close_OnClick(object? sender, RoutedEventArgs e)

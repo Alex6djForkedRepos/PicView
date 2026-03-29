@@ -18,7 +18,7 @@
         CornerRadius="8"
         Effect="{DynamicResource MenuShadowButtonBorder}">
 
-        <DockPanel MinWidth="315">
+        <DockPanel>
 
             <!--  Gallery Carousel  -->
             <Carousel
@@ -318,16 +318,19 @@
                 </Carousel.Items>
             </Carousel>
 
-            <StackPanel
+            <DockPanel
                 Margin="0,0,0,5"
                 VerticalAlignment="Top"
-                IsVisible="{CompiledBinding !TopTitlebarViewModel.DropDownMenu.IsExpandedOptionsOpened.Value}">
+                IsVisible="{CompiledBinding !TopTitlebarViewModel.DropDownMenu.IsExpandedOptionsOpened.Value}"
+                LastChildFill="False">
+
                 <Rectangle
                     Height="2"
                     Margin="10,5,0,5"
+                    DockPanel.Dock="Top"
                     Fill="{DynamicResource MainBorderColor}" />
 
-                <DockPanel>
+                <DockPanel DockPanel.Dock="Top">
 
                     <customControls:IconButton
                         x:Name="HistorySortButton"
@@ -378,175 +381,11 @@
 
                 </DockPanel>
 
-                <customControls:AutoScrollViewer>
-                    <StackPanel>
-                        <TextBlock
-                            Margin="15,5"
-                            Classes="txt"
-                            Text="{Binding Translation.Pinned}" />
-
-                        <DockPanel LastChildFill="True">
-                            <customControls:IconButton
-                                Padding="5,0"
-                                Background="Transparent"
-                                Classes="hover"
-                                ClickMode="Release"
-                                DockPanel.Dock="Right"
-                                Foreground="{DynamicResource MainTextColor}"
-                                Icon="{StaticResource UnPinImage}"
-                                IconHeight="12"
-                                IconWidth="12"
-                                ToolTip.Tip="{CompiledBinding Translation.Unpin.Value,
-                                                              Mode=OneWay}" />
-
-                            <customControls:IconButton
-                                Padding="5,0"
-                                Background="Transparent"
-                                Classes="errorHover"
-                                ClickMode="Release"
-                                Data="{StaticResource CloseGeometry}"
-                                DockPanel.Dock="Right"
-                                Foreground="{DynamicResource MainTextColor}"
-                                IconHeight="12"
-                                IconWidth="12" />
-
-                            <Button
-                                Background="Transparent"
-                                Classes="hover"
-                                DockPanel.Dock="Left">
-                                <TextBlock
-                                    Margin="15,5"
-                                    Classes="txt"
-                                    Text="file1.jpg" />
-                            </Button>
-                        </DockPanel>
-
-                        <DockPanel LastChildFill="True">
-                            <customControls:IconButton
-                                Padding="5,0"
-                                Background="Transparent"
-                                Classes="hover"
-                                ClickMode="Release"
-                                DockPanel.Dock="Right"
-                                Foreground="{DynamicResource MainTextColor}"
-                                Icon="{StaticResource UnPinImage}"
-                                IconHeight="12"
-                                IconWidth="12"
-                                ToolTip.Tip="{CompiledBinding Translation.Unpin.Value,
-                                                              Mode=OneWay}" />
-
-                            <customControls:IconButton
-                                Padding="5,0"
-                                Background="Transparent"
-                                Classes="errorHover"
-                                ClickMode="Release"
-                                Data="{StaticResource CloseGeometry}"
-                                DockPanel.Dock="Right"
-                                Foreground="{DynamicResource MainTextColor}"
-                                IconHeight="12"
-                                IconWidth="12" />
-
-                            <Button
-                                Background="Transparent"
-                                Classes="hover"
-                                DockPanel.Dock="Left">
-                                <TextBlock
-                                    Margin="15,5"
-                                    Classes="txt"
-                                    Text="file2.jpg" />
-                            </Button>
-                        </DockPanel>
-
-                        <Rectangle
-                            Height="1"
-                            Margin="10,5,0,5"
-                            Fill="{DynamicResource MainBorderColor}"
-                            Opacity=".7" />
-
-                        <DockPanel LastChildFill="True">
-                            <customControls:IconButton
-                                Padding="5,0"
-                                Background="Transparent"
-                                Classes="hover"
-                                ClickMode="Release"
-                                DockPanel.Dock="Right"
-                                Foreground="{DynamicResource MainTextColor}"
-                                Icon="{StaticResource PinImage}"
-                                IconHeight="12"
-                                IconWidth="12"
-                                ToolTip.Tip="{CompiledBinding Translation.Pin.Value,
-                                                              Mode=OneWay}" />
-
-                            <customControls:IconButton
-                                Padding="5,0"
-                                Background="Transparent"
-                                Classes="errorHover"
-                                ClickMode="Release"
-                                Data="{StaticResource CloseGeometry}"
-                                DockPanel.Dock="Right"
-                                Foreground="{DynamicResource MainTextColor}"
-                                IconHeight="12"
-                                IconWidth="12" />
-
-                            <Button
-                                Background="Transparent"
-                                Classes="hover"
-                                DockPanel.Dock="Left">
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock
-                                        Margin="15,5,5,5"
-                                        Classes="txt"
-                                        Text="1" />
-                                    <TextBlock Classes="txt" Text="file3.jpg" />
-                                </StackPanel>
-                            </Button>
-                        </DockPanel>
-
-                        <DockPanel LastChildFill="True">
-                            <customControls:IconButton
-                                Padding="5,0"
-                                Background="Transparent"
-                                Classes="hover"
-                                ClickMode="Release"
-                                DockPanel.Dock="Right"
-                                Foreground="{DynamicResource MainTextColor}"
-                                Icon="{StaticResource PinImage}"
-                                IconHeight="12"
-                                IconWidth="12"
-                                ToolTip.Tip="{CompiledBinding Translation.Pin.Value,
-                                                              Mode=OneWay}" />
-
-                            <customControls:IconButton
-                                Padding="5,0"
-                                Background="Transparent"
-                                Classes="errorHover"
-                                ClickMode="Release"
-                                Data="{StaticResource CloseGeometry}"
-                                DockPanel.Dock="Right"
-                                Foreground="{DynamicResource MainTextColor}"
-                                IconHeight="12"
-                                IconWidth="12" />
-
-                            <Button
-                                Background="Transparent"
-                                Classes="hover"
-                                DockPanel.Dock="Left">
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock
-                                        Margin="15,5,5,5"
-                                        Classes="txt"
-                                        Text="1" />
-                                    <TextBlock Classes="txt" Text="file4.jpg" />
-                                </StackPanel>
-                            </Button>
-                        </DockPanel>
-
-
-                    </StackPanel>
-
+                <customControls:AutoScrollViewer DockPanel.Dock="Top">
+                    <StackPanel x:Name="FileHistoryContainer" />
                 </customControls:AutoScrollViewer>
 
-            </StackPanel>
+            </DockPanel>
 
 
 
