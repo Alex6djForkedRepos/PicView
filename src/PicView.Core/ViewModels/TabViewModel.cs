@@ -21,7 +21,7 @@ namespace PicView.Core.ViewModels;
 /// </summary>
 public class TabViewModel(string id, Action<string> closeTab, IFileWatcherService? fileWatcherService = null) : IDisposable
 {
-    /// The MainViewModel that currently "owns" this tab
+    /// The CoreViewModel that currently "owns" this tab
     public object? ParentWindowContext { get; set; }
     
     /// Unique identifier for this tab.

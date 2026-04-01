@@ -8,11 +8,13 @@ using Avalonia.Threading;
 using PicView.Avalonia.ImageHandling;
 using PicView.Avalonia.UI;
 using PicView.Avalonia.Views.UC;
+using PicView.Core.Extensions;
 using PicView.Core.FileHandling;
 using PicView.Core.Preloading;
 using PicView.Core.ProcessHandling;
 using PicView.Core.Sizing;
 using PicView.Core.ViewModels;
+using PicView.Core.FileSorting;
 
 namespace PicView.Avalonia.DragAndDrop;
 
@@ -83,7 +85,7 @@ public static class DragAndDropManager
         }
     }
 
-    public static void DragLeave(DragEventArgs e, Control control)
+    public static void DragLeave(Control control)
     {
         if (control.IsPointerOver)
         {
@@ -245,26 +247,23 @@ public static class DragAndDropManager
             UpdateThumbnailUI(thumb);
             
             // Load full image in background
-            PreloadFullImage(fileInfo, preLoadValue, thumb);
+            await PreloadFullImageAsync(fileInfo, preLoadValue, thumb);
         }
     }
 
-    private static void PreloadFullImage(FileInfo fileInfo, PreLoadValue? preload, Bitmap? thumb)
+    private static async ValueTask PreloadFullImageAsync(FileInfo fileInfo, PreLoadValue? preload, Bitmap? thumb)
     {
-        Task.Run(async () =>
+        if (preload is null)
         {
-            if (preload is null)
-            {
-                var model = await GetImageModel.GetImageModelAsync(fileInfo);
-                UpdateThumbnailUI(thumb);
-                _preLoadValue = new PreLoadValue(model);
-            }
-            else
-            {
-                _preLoadValue = preload;
-                UpdateThumbnailUI(thumb);
-            }
-        });
+            var model = await GetImageModel.GetImageModelAsync(fileInfo);
+            UpdateThumbnailUI(thumb);
+            _preLoadValue = new PreLoadValue(model);
+        }
+        else
+        {
+            _preLoadValue = preload;
+            UpdateThumbnailUI(thumb);
+        }
     }
 
     private static void UpdateThumbnailUI(Bitmap? thumb) =>
@@ -316,13 +315,30 @@ public static class DragAndDropManager
 
     private static async Task LoadSupportedFile(string path, TabOverviewViewModel tabOverview)
     {
+        var tab = tabOverview.ActiveTab.CurrentValue;
         if (_preLoadValue is not null)
         {
-             // TODO: Add to shared cache
-             // if (Application.Current.DataContext is CoreViewModel core)
-             // {
-             //     core.SharedCache.Add() = _preLoadValue;
-             // }
+             if (Application.Current?.DataContext is CoreViewModel core)
+             {
+                 var droppedFileInfo = new FileInfo(path);
+                 var droppedDir = droppedFileInfo.DirectoryName ?? string.Empty;
+                 var currentDir = tab.ImageIterator?.CurrentDirectory ?? string.Empty;
+
+                 IReadOnlyList<FileInfo> files;
+                 
+                 if (string.Equals(droppedDir, currentDir, StringComparison.OrdinalIgnoreCase))
+                 {
+                     files = tab.ImageIterator?.Files ?? [];
+                 }
+                 else
+                 {
+                     files = FileListRetriever.RetrieveFiles(droppedFileInfo, core.PlatformService.CompareStrings);
+                 }
+
+                 var index = files.FindIndex(x => x.FullName.AsSpan().Equals(droppedFileInfo.FullName.AsSpan(), StringComparison.OrdinalIgnoreCase));
+
+                 core.SharedCache.Add(tab.Id, index, _preLoadValue, files.Count, false);
+             }
         }
         
         await tabOverview.LoadFromFileAsync(path);

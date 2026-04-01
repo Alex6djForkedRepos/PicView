@@ -171,6 +171,7 @@ public partial class MainView3 : UserControl
         {
             return;
         }
+        
         await DragAndDropManager.Drop(e, vm.WindowTabs);
     }
     
@@ -181,6 +182,6 @@ public partial class MainView3 : UserControl
     
     private void DragLeave(object? sender, DragEventArgs e)
     {
-        DragAndDropManager.DragLeave(e, this);
+        DragAndDropManager.DragLeave(this);
     }
 }
