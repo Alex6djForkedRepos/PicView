@@ -74,4 +74,18 @@
             <Setter Property="Opacity" Value="{DynamicResource ThemeDisabledOpacity}" />
         </Style>
     </ControlTheme>
+
+    <ControlTheme TargetType="ListBox" x:Key="NoScrollListBox">
+        <Setter Property="Template">
+            <ControlTemplate>
+                <ItemsPresenter
+                    ItemsPanel="{TemplateBinding ItemsPanel}"
+                    Margin="{TemplateBinding Padding}"
+                    Name="PART_ItemsPresenter" />
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:disabled /template/ Border#border">
+            <Setter Property="Opacity" Value="{DynamicResource ThemeDisabledOpacity}" />
+        </Style>
+    </ControlTheme>
 </ResourceDictionary>

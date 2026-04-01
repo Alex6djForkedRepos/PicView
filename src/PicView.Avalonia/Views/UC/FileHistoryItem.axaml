@@ -1,0 +1,82 @@
+<UserControl
+    x:Class="PicView.Avalonia.Views.UC.FileHistoryItem"
+    x:DataType="vm:FileHistoryEntryViewModel"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:customControls="clr-namespace:PicView.Avalonia.CustomControls"
+    xmlns:vm="clr-namespace:PicView.Core.ViewModels;assembly=PicView.Core"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Border BorderThickness="0,1,1,1" x:Name="AppBorder">
+        <Panel>
+
+            <Button
+                Background="Transparent"
+                BorderThickness="1"
+                Classes="accentHover"
+                Command="{Binding OpenCommand}"
+                Padding="5,6"
+                ToolTip.Tip="{Binding FilePath.Value}"
+                x:Name="MainButton">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock
+                        Classes="txt"
+                        IsVisible="{Binding !IsPinned.Value}"
+                        Padding="5,0,2,0"
+                        Text="{Binding Index.Value}" />
+                    <TextBlock
+                        Classes="txt"
+                        Padding="5,0,0,0"
+                        Text="{Binding FileName.Value}" />
+                </StackPanel>
+            </Button>
+
+            <StackPanel
+                Background="{DynamicResource MenuBackgroundColor}"
+                HorizontalAlignment="Right"
+                IsVisible="False"
+                Orientation="Horizontal"
+                x:Name="ButtonPanel">
+
+                <customControls:IconButton
+                    Background="Transparent"
+                    Classes="errorHover"
+                    ClickMode="Release"
+                    Command="{CompiledBinding RemoveCommand}"
+                    Data="{StaticResource CloseGeometry}"
+                    Foreground="{DynamicResource MainTextColor}"
+                    HorizontalAlignment="Right"
+                    IconHeight="12"
+                    IconWidth="12"
+                    Padding="7,0" />
+
+                <customControls:IconButton
+                    Background="Transparent"
+                    Classes="accentHover"
+                    ClickMode="Release"
+                    Command="{Binding PinCommand}"
+                    Foreground="{DynamicResource MainTextColor}"
+                    Icon="{StaticResource PinImage}"
+                    IconHeight="12"
+                    IconWidth="12"
+                    IsVisible="{Binding !IsPinned.Value}"
+                    Padding="7,0"
+                    ToolTip.Tip="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).Translation.Pin.Value}" />
+
+                <customControls:IconButton
+                    Background="Transparent"
+                    Classes="accentHover"
+                    ClickMode="Release"
+                    Command="{Binding UnpinCommand}"
+                    Foreground="{DynamicResource MainTextColor}"
+                    HorizontalAlignment="Right"
+                    Icon="{StaticResource UnPinImage}"
+                    IconHeight="12"
+                    IconWidth="12"
+                    IsVisible="{Binding IsPinned.Value}"
+                    Padding="7,0"
+                    ToolTip.Tip="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).Translation.Unpin.Value}" />
+
+            </StackPanel>
+
+        </Panel>
+    </Border>
+</UserControl>

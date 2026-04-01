@@ -1,9 +1,12 @@
 using Avalonia.Interactivity;
-using System;
+using System.Collections.Specialized;
+using Avalonia.Controls;
 using Avalonia.LogicalTree;
+using Avalonia.Threading;
+using ObservableCollections;
 using PicView.Avalonia.CustomControls;
-using PicView.Avalonia.UI.FileHistory2;
 using PicView.Core.Localization;
+using PicView.Core.ViewModels;
 using R3;
 using MainWindowViewModel = PicView.Core.ViewModels.MainWindowViewModel;
 
@@ -12,7 +15,6 @@ namespace PicView.Avalonia.Views.UC.Menus;
 public partial class DropDownMenu : AnimatedMenu
 {
     private IDisposable? _menuVisibilitySubscription;
-    private FileHistoryMenuController? _fileHistoryMenuController;
 
     public DropDownMenu()
     {
@@ -33,21 +35,75 @@ public partial class DropDownMenu : AnimatedMenu
 
         if (DataContext is MainWindowViewModel vm)
         {
-            _fileHistoryMenuController = new FileHistoryMenuController(
-                FileHistoryContainer, 
-                HistorySortButton, 
-                HistoryClearButton, 
-                HistoryFileButton, 
-                vm);
-
+            vm.FileHistory.PinnedEntries.CollectionChanged += PinnedEntriesOnCollectionChanged;
+            vm.FileHistory.UnpinnedEntries.CollectionChanged += UnPinnedEntriesOnCollectionChanged;   
+            
             _menuVisibilitySubscription = vm.TopTitlebarViewModel.DropDownMenu.IsDropDownMenuVisible
                 .Subscribe(isVisible =>
                 {
                     if (isVisible)
                     {
-                        _fileHistoryMenuController?.UpdateFileHistoryMenu();
+                        vm.FileHistory.UpdateHistory();
                     }
                 });
+        }
+    }
+
+    private void PinnedEntriesOnCollectionChanged(in NotifyCollectionChangedEventArgs<FileHistoryEntryViewModel> e)
+    {
+        UpdateCollection(e, PinnedEntriesCollection);
+    }
+    
+    private void UnPinnedEntriesOnCollectionChanged(in NotifyCollectionChangedEventArgs<FileHistoryEntryViewModel> e)
+    {
+        UpdateCollection(e, UnPinnedEntriesCollection);
+    }
+
+    private void UpdateCollection(in NotifyCollectionChangedEventArgs<FileHistoryEntryViewModel> e, ItemsControl collection)
+    {
+        switch (e.Action)
+        {
+            case NotifyCollectionChangedAction.Add:
+                if (e.IsSingleItem)
+                {
+                    var newItem = e.NewItem;
+                    Dispatcher.CurrentDispatcher.Post(() => { collection.Items.Add(newItem); },
+                        DispatcherPriority.Background);
+                }
+                else
+                {
+                    foreach (var item in e.NewItems)
+                    {
+                        Dispatcher.CurrentDispatcher.Post(() => { collection.Items.Add(item); },
+                            DispatcherPriority.Background);
+                    }
+                }
+                break;
+            case NotifyCollectionChangedAction.Remove:
+                if (e.IsSingleItem)
+                {
+                    var removedItem = e.OldItem;
+                    Dispatcher.CurrentDispatcher.Post(() => { collection.Items.Remove(removedItem); },
+                        DispatcherPriority.Background);
+                }
+                else
+                {
+                    foreach (var item in e.OldItems)
+                    {
+                        Dispatcher.CurrentDispatcher.Post(() => { collection.Items.Remove(item); },
+                            DispatcherPriority.Background);
+                    }
+                }
+                break;
+            case NotifyCollectionChangedAction.Replace:
+                break;
+            case NotifyCollectionChangedAction.Move:
+                break;
+            case NotifyCollectionChangedAction.Reset:
+                collection.Items.Clear();
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
         }
     }
 
@@ -56,8 +112,11 @@ public partial class DropDownMenu : AnimatedMenu
         base.OnDetachedFromLogicalTree(e);
         Loaded -= OnLoaded;
         _menuVisibilitySubscription?.Dispose();
-        _fileHistoryMenuController?.Dispose();
-        _fileHistoryMenuController = null;
+        if (DataContext is MainWindowViewModel vm)
+        {
+            vm.FileHistory.PinnedEntries.CollectionChanged -= PinnedEntriesOnCollectionChanged;
+            vm.FileHistory.UnpinnedEntries.CollectionChanged -= UnPinnedEntriesOnCollectionChanged;   
+        }
     }
 
     private void Close_OnClick(object? sender, RoutedEventArgs e)

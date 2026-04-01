@@ -16,6 +16,7 @@ public class MainWindowViewModel : IDisposable
     public TabOverviewViewModel WindowTabs { get; } = new();
     public ToolTipViewModel? ToolTip { get; set; }
     public PrintPreviewViewModel? PrintPreview { get; set; }
+    public FileHistoryViewModel FileHistory { get; }
     
     public bool IsNavigationButtonLeftClicked { get; set; }
     public bool IsNavigationButtonRightClicked { get; set; }
@@ -512,6 +513,7 @@ public class MainWindowViewModel : IDisposable
         GallerySettings = gallerySettings;
         
         // Navigation
+        FileHistory = new FileHistoryViewModel(this);
         NextCommand = new ReactiveCommand(Next);
         NextFolderCommand = new ReactiveCommand(NextFolder);
         NextArchiveCommand = new ReactiveCommand(NextArchive);

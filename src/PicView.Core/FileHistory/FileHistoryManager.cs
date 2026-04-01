@@ -4,6 +4,8 @@ using PicView.Core.ArchiveHandling;
 using PicView.Core.Config.ConfigFileManagement;
 using PicView.Core.DebugTools;
 using PicView.Core.FileHandling;
+using ZLinq;
+using ZLinq.Linq;
 
 namespace PicView.Core.FileHistory;
 
@@ -37,6 +39,9 @@ public static class FileHistoryManager
     ///     Gets all history entries.
     /// </summary>
     public static IReadOnlyList<Entry> AllEntries => _entries.AsReadOnly();
+
+    public static ValueEnumerable<FromEnumerable<Entry>, Entry> PinnedEntries => _entries.Where(e => e.IsPinned).AsValueEnumerable();
+    public static ValueEnumerable<FromEnumerable<Entry>, Entry> UnPinnedEntries => _entries.Where(e => !e.IsPinned).AsValueEnumerable();
 
     /// <summary>
     /// Gets or sets the index of the current file entry in the history.
@@ -173,7 +178,7 @@ public static class FileHistoryManager
             }
         }
 
-        _entries.Add(new Entry { Path = path });
+        _entries.Add(new Entry { Path = path, IsPinned = false });
         CurrentIndex = _entries.Count - 1;
     }
 
