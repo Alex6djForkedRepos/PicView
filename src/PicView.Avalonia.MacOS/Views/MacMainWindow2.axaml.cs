@@ -102,6 +102,12 @@ public partial class MacMainWindow2 : Window, IPlatformWindowService
                 {
                     Titlebar.EditableTitlebar.CloseTitlebar();
                 }
+                
+                if (!UIHelper2.GetDropDownMenu.IsPointerOver)
+                {
+                    vm.TopTitlebarViewModel.CloseDropDownMenu();
+                }
+                
             };
             UIHelper2.GetMainTabControl.TabDetached += MainTabControlOnTabDetached;
             Activated += OnActivated;

@@ -21,6 +21,7 @@ public partial class ClickArrowLeft2 : UserControl
             PolyButton.Click += (_, _) =>
             {
                 core.MainWindows.ActiveWindow.CurrentValue.IsClickArrowLeftClicked = true;
+                core.MainWindows.ActiveWindow.CurrentValue.TopTitlebarViewModel.CloseDropDownMenu();
                 UIHelper.SetButtonInterval(PolyButton);
             };
             

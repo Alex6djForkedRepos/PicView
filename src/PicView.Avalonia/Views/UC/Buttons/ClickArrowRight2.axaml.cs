@@ -21,6 +21,7 @@ public partial class ClickArrowRight2 : UserControl
             PolyButton.Click += (_, _) =>
             {
                 core.MainWindows.ActiveWindow.CurrentValue.IsClickArrowRightClicked = true;
+                core.MainWindows.ActiveWindow.CurrentValue.TopTitlebarViewModel.CloseDropDownMenu();
                 UIHelper.SetButtonInterval(PolyButton);
             };
             _ = new HoverFadeButtonHandler2(this, core.MainWindows.ActiveWindow.Value, PolyButton);

@@ -38,16 +38,56 @@ public partial class BottomBar2 : UserControl
             PreviousButton.Click += (_, _) =>
             {
                 vm.IsNavigationButtonLeftClicked = true;
+                vm.TopTitlebarViewModel.CloseDropDownMenu();
                 UIHelper.SetButtonInterval((IconButton?)PreviousButton);
             };
             NextButton.Click += (_, _) =>
             {
                 vm.IsNavigationButtonRightClicked = true;
+                vm.TopTitlebarViewModel.CloseDropDownMenu();
                 UIHelper.SetButtonInterval((IconButton?)NextButton);
             };
 
-            RotateRightButton.Click += (_, _) => { vm.IsBottomToolbarRightRotationClicked = true; };
-            RotateLeftButton.Click += (_, _) => { vm.IsBottomToolbarLeftRotationClicked = true; };
+            RotateRightButton.Click += (_, _) =>
+            {
+                vm.TopTitlebarViewModel.CloseDropDownMenu();
+                vm.IsBottomToolbarRightRotationClicked = true;
+            };
+            RotateLeftButton.Click += (_, _) =>
+            {
+                vm.TopTitlebarViewModel.CloseDropDownMenu();
+                vm.IsBottomToolbarLeftRotationClicked = true;
+            };
+            
+            FileMenuButton.Click += (_, _) =>
+            {
+                vm.TopTitlebarViewModel.CloseDropDownMenu();
+            };
+            
+            ZoomInButton.Click += (_, _) =>
+            {
+                vm.TopTitlebarViewModel.CloseDropDownMenu();
+            };
+            
+            ZoomOutButton.Click += (_, _) =>
+            {
+                vm.TopTitlebarViewModel.CloseDropDownMenu();
+            };
+            
+            ResetZoomButton.Click += (_, _) =>
+            {
+                vm.TopTitlebarViewModel.CloseDropDownMenu();
+            };
+            
+            FlipButton.Click += (_, _) =>
+            {
+                vm.TopTitlebarViewModel.CloseDropDownMenu();
+            };
+            
+            SettingsMenuButton.Click += (_, _) =>
+            {
+                vm.TopTitlebarViewModel.CloseDropDownMenu();
+            };
 
             if (!Application.Current.TryGetResource("SecondaryTextColor",
                     Application.Current.RequestedThemeVariant, out var textColor))
@@ -148,6 +188,11 @@ public partial class BottomBar2 : UserControl
         if (e.GetCurrentPoint(this).Properties.IsRightButtonPressed)
         {
             return;
+        }
+
+        if (DataContext is MainWindowViewModel vm)
+        {
+            vm.TopTitlebarViewModel.CloseDropDownMenu();
         }
 
         if (TopLevel.GetTopLevel(this) is Window window)
