@@ -18,7 +18,7 @@ namespace PicView.Avalonia.DragAndDrop;
 
 public static class DragAndDropHelper
 {
-    private static DragDrogView? _dragDropView;
+    private static DragDropView? _dragDropView;
     private static PreLoadValue? _preLoadValue;
 
     #region Public Entry Points
@@ -309,7 +309,7 @@ public static class DragAndDropHelper
 
         await Dispatcher.UIThread.InvokeAsync(() =>
         {
-            _dragDropView ??= new DragDrogView { DataContext = vm };
+            _dragDropView ??= new DragDropView { DataContext = vm };
             if (!_dragDropView.IsLinkChainVisible)
             {
                 _dragDropView.AddLinkChain();
@@ -330,7 +330,7 @@ public static class DragAndDropHelper
         {
             if (_dragDropView == null)
             {
-                _dragDropView = new DragDrogView { DataContext = vm };
+                _dragDropView = new DragDropView { DataContext = vm };
                 if (!control.IsPointerOver)
                 {
                     UIHelper.GetMainView.MainGrid.Children.Add(_dragDropView);

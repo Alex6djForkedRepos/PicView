@@ -23,7 +23,7 @@ public static class DragAndDropManager
 
     #region Public Entry Points
 
-    public static async Task Drop(DragEventArgs e, TabOverviewViewModel tabOverview)
+    public static async ValueTask Drop(DragEventArgs e, TabOverviewViewModel tabOverview)
     {
         RemoveDragDropView();
 
@@ -34,17 +34,21 @@ public static class DragAndDropManager
             return;
         }
 
-        var filesArray = files as IStorageItem[] ?? files.ToArray();
-        var firstFile = filesArray.FirstOrDefault();
+        if (files.Length < 1)
+        {
+            return;
+        }
+
+        var firstFile = files[0];
         if (firstFile == null)
         {
             return;
         }
         
         // Handle opening additional files in new windows if needed
-        if (filesArray.Length > 1)
+        if (files.Length > 1)
         {
-            _ = Task.Run(() => HandleAdditionalFiles(filesArray.Skip(1)));
+            _ = Task.Run(() => HandleAdditionalFiles(files.Skip(1)));
         }
 
         var path = firstFile.Path.LocalPath;
@@ -59,7 +63,7 @@ public static class DragAndDropManager
         }
     }
 
-    public static async Task DragEnter(DragEventArgs e, Control control)
+    public static async ValueTask DragEnter(DragEventArgs e, Control control)
     {
         var files = e.DataTransfer.TryGetFiles();
         if (files != null)
@@ -71,7 +75,7 @@ public static class DragAndDropManager
             // // Try handling as URL
             var value = e.DataTransfer.Items[0];
 
-            var handled = await HandleDragEnterFromUrl(value);
+            var handled = HandleDragEnterFromUrl(value);
             if (!handled)
             {
                 RemoveDragDropView();
@@ -141,9 +145,6 @@ public static class DragAndDropManager
         // Remove preview first and show loading
         RemoveDragDropView();
         
-        // We might not have direct access to MainWindowViewModel here easily without passing it,
-        // but we can use TabOverviewViewModel to load.
-        
         if (url.StartsWith("file://"))
         {
             var file = url[7..];
@@ -175,11 +176,11 @@ public static class DragAndDropManager
 
         if (Directory.Exists(path))
         {
-            await ShowDirectoryIcon(control);
+            ShowDirectoryIcon(control);
         }
         else if (path.IsArchive())
         {
-            await ShowArchiveIcon(control);
+            ShowArchiveIcon(control);
         }
         else if (path.IsSupported())
         {
@@ -187,9 +188,9 @@ public static class DragAndDropManager
         }
     }
 
-    private static async Task ShowDirectoryIcon(Control control)
+    private static void ShowDirectoryIcon(Control control)
     {
-        await Dispatcher.CurrentDispatcher.InvokeAsync(() =>
+        Dispatcher.CurrentDispatcher.InvokeAsync(() =>
         {
             if (!control.IsPointerOver)
             {
@@ -198,9 +199,9 @@ public static class DragAndDropManager
         });
     }
 
-    private static async Task ShowArchiveIcon(Control control)
+    private static void ShowArchiveIcon(Control control)
     {
-        await Dispatcher.CurrentDispatcher.InvokeAsync(() =>
+        Dispatcher.CurrentDispatcher.Invoke(() =>
         {
             if (!control.IsPointerOver)
             {
@@ -215,7 +216,7 @@ public static class DragAndDropManager
         if (ext.Equals(".svg", StringComparison.InvariantCultureIgnoreCase) ||
             ext.Equals(".svgz", StringComparison.InvariantCultureIgnoreCase))
         {
-            await Dispatcher.CurrentDispatcher.InvokeAsync(() => _dragDropView?.UpdateSvgThumbnail(fileInfo.FullName));
+            Dispatcher.CurrentDispatcher.Invoke(() => _dragDropView?.UpdateSvgThumbnail(fileInfo.FullName));
             return;
         }
 
@@ -234,42 +235,42 @@ public static class DragAndDropManager
         if (preload && preLoadValue?.ImageModel?.Image is Bitmap bmp)
         {
             thumb = bmp;
-            await UpdateThumbnailUI(thumb);
+            UpdateThumbnailUI(thumb);
         }
         else
         {
             // Generate thumbnail
             thumb = await GetThumbnails.GetThumbAsync(fileInfo, SizeDefaults.WindowMinSize - 30)
                 .ConfigureAwait(false);
-            await UpdateThumbnailUI(thumb);
+            UpdateThumbnailUI(thumb);
             
             // Load full image in background
-            await PreloadFullImage(fileInfo, preLoadValue, thumb);
+            PreloadFullImage(fileInfo, preLoadValue, thumb);
         }
     }
 
-    private static async Task PreloadFullImage(FileInfo fileInfo, PreLoadValue? preload, Bitmap? thumb)
+    private static void PreloadFullImage(FileInfo fileInfo, PreLoadValue? preload, Bitmap? thumb)
     {
-        await Task.Run(async () =>
+        Task.Run(async () =>
         {
             if (preload is null)
             {
                 var model = await GetImageModel.GetImageModelAsync(fileInfo);
-                await UpdateThumbnailUI(thumb);
+                UpdateThumbnailUI(thumb);
                 _preLoadValue = new PreLoadValue(model);
             }
             else
             {
                 _preLoadValue = preload;
-                await UpdateThumbnailUI(thumb);
+                UpdateThumbnailUI(thumb);
             }
         });
     }
 
-    private static async Task UpdateThumbnailUI(Bitmap? thumb) =>
-        await Dispatcher.CurrentDispatcher.InvokeAsync(() => _dragDropView?.UpdateThumbnail(thumb));
+    private static void UpdateThumbnailUI(Bitmap? thumb) =>
+        Dispatcher.CurrentDispatcher.Invoke(() => _dragDropView?.UpdateThumbnail(thumb));
 
-    private static async Task<bool> HandleDragEnterFromUrl(object? urlObject)
+    private static bool HandleDragEnterFromUrl(object? urlObject)
     {
         if (urlObject is null)
         {
@@ -277,7 +278,7 @@ public static class DragAndDropManager
             return false;
         }
 
-        await Dispatcher.CurrentDispatcher.InvokeAsync(() =>
+        Dispatcher.CurrentDispatcher.Invoke(() =>
         {
             _dragDropView ??= new DragDropView();
             if (!_dragDropView.IsLinkChainVisible)
