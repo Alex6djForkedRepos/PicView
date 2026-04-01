@@ -393,7 +393,7 @@
                         <TextBlock
                             Classes="txt"
                             IsVisible="{CompiledBinding FileHistory.HasPinnedEntries.Value}"
-                            Margin="15,5"
+                            Margin="15,10,15,5"
                             Text="{Binding Translation.Pinned.Value}" />
 
                         <ListBox
@@ -416,8 +416,8 @@
                             Fill="{DynamicResource MainBorderColor}"
                             Height="1"
                             IsVisible="{CompiledBinding FileHistory.HasPinnedEntries.Value}"
-                            Margin="10,5,0,5"
-                            Opacity=".7" />
+                            Margin="10,5,0,10"
+                            Opacity=".85" />
 
                         <!--  Unpinned entries  -->
                         <ListBox Theme="{StaticResource NoScrollListBox}" x:Name="UnPinnedEntriesCollection">

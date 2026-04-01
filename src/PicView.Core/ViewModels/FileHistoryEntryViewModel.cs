@@ -37,28 +37,20 @@ public class FileHistoryEntryViewModel : IDisposable
     {
         IsPinned.Value = true;
         FileHistoryManager.Pin(FilePath.CurrentValue);
-        _mainWindow.FileHistory.PinnedEntries.Add(this);
-        _mainWindow.FileHistory.HasPinnedEntries.Value = _mainWindow.FileHistory.PinnedEntries.Count is 0;
-        
-        _mainWindow.FileHistory.UnpinnedEntries.Remove(this);
-        _mainWindow.FileHistory.HasUnpinnedEntries.Value = _mainWindow.FileHistory.UnpinnedEntries.Count is 0;
+        _mainWindow.FileHistory.UpdateHistory();
     }
 
     private void Unpin(Unit unit)
     {
         IsPinned.Value = false;
         FileHistoryManager.UnPin(FilePath.CurrentValue);
-        _mainWindow.FileHistory.PinnedEntries.Remove(this);
-        _mainWindow.FileHistory.HasPinnedEntries.Value = _mainWindow.FileHistory.PinnedEntries.Count is 0;
+        _mainWindow.FileHistory.UpdateHistory();
     }
 
     private void Remove(Unit unit)
     {
         FileHistoryManager.Remove(FilePath.CurrentValue);
-        _mainWindow.FileHistory.PinnedEntries.Remove(this);
-        _mainWindow.FileHistory.UnpinnedEntries.Remove(this);
-        _mainWindow.FileHistory.HasPinnedEntries.Value = _mainWindow.FileHistory.PinnedEntries.Count is 0;
-        _mainWindow.FileHistory.HasUnpinnedEntries.Value = _mainWindow.FileHistory.UnpinnedEntries.Count is 0;
+        _mainWindow.FileHistory.UpdateHistory();
     }
 
     private async ValueTask Open(Unit unit, CancellationToken ct)
