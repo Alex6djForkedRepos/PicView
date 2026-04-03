@@ -70,11 +70,7 @@ public static class SettingsUpdater2
         
         //MainWindowViewModel.GetAndSetWindowMinSize(vm);
         
-        // Set corner radius on macOS
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-        {
-            vm.BottomCornerRadius.Value = new CornerRadius(0, 0, 8, 8);
-        }
+
         
         vm.TitlebarHeight.Value = Settings.WindowProperties.Fullscreen
                                        || !Settings.UIProperties.ShowInterface
