@@ -20,12 +20,12 @@
         <Panel>
 
             <Button
-                x:Name="MainButton"
                 BorderThickness="1"
                 Classes.isCurrent="{Binding IsCurrentItem.Value}"
                 Command="{Binding OpenCommand}"
                 Padding="5,6"
-                ToolTip.Tip="{Binding FilePath.Value}">
+                ToolTip.Tip="{Binding FilePath.Value}"
+                x:Name="MainButton">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock
                         Classes="txt"
@@ -66,8 +66,8 @@
                     Command="{Binding PinCommand}"
                     Foreground="{DynamicResource MainTextColor}"
                     Icon="{StaticResource PinImage}"
-                    IconHeight="12"
-                    IconWidth="12"
+                    IconHeight="14"
+                    IconWidth="14"
                     IsVisible="{Binding !IsPinned.Value}"
                     Padding="7,0"
                     ToolTip.Tip="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).Translation.Pin.Value}" />
@@ -80,8 +80,8 @@
                     Foreground="{DynamicResource MainTextColor}"
                     HorizontalAlignment="Right"
                     Icon="{StaticResource UnPinImage}"
-                    IconHeight="12"
-                    IconWidth="12"
+                    IconHeight="14"
+                    IconWidth="14"
                     IsVisible="{Binding IsPinned.Value}"
                     Padding="7,0"
                     ToolTip.Tip="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).Translation.Unpin.Value}" />

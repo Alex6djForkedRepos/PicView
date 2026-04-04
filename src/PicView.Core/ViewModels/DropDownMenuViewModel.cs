@@ -12,15 +12,20 @@ public class DropDownMenuViewModel
 
     public BindableReactiveProperty<int> SlideshowCarouselIndex { get; } = new(0);
     public BindableReactiveProperty<bool> IsSlideshowCarouselVisible { get; } = new(true);
+    
+    public BindableReactiveProperty<int> ToolWindowsCarouselIndex { get; } = new(0);
+    public BindableReactiveProperty<bool> IsToolWindowsCarouselVisible { get; } = new(true);
 
     private const int DefaultDelay = 95;
     public void OpenGalleryOptions()
     {
         GalleryCarouselIndex.Value = 1;
         SlideshowCarouselIndex.Value = 0;
+        ToolWindowsCarouselIndex.Value = 0;
         IsGalleryCarouselVisible.Value = true;
         IsExpandedOptionsOpened.Value = true;
         IsSlideshowCarouselVisible.Value = false;
+        IsToolWindowsCarouselVisible.Value = false;
     }
 
     public async ValueTask CloseGalleryOptions()
@@ -33,9 +38,11 @@ public class DropDownMenuViewModel
     {
         SlideshowCarouselIndex.Value = 1;
         GalleryCarouselIndex.Value = 0;
+        ToolWindowsCarouselIndex.Value = 0;
         IsExpandedOptionsOpened.Value = true;
         IsSlideshowCarouselVisible.Value = true;
         IsGalleryCarouselVisible.Value = false;
+        IsToolWindowsCarouselVisible.Value = false;
     }
 
     public async ValueTask CloseSlideshowOptions()
@@ -50,6 +57,24 @@ public class DropDownMenuViewModel
         IsExpandedOptionsOpened.Value = false;
         IsGalleryCarouselVisible.Value = true;
         IsSlideshowCarouselVisible.Value = true;
+        IsToolWindowsCarouselVisible.Value = true;
+    }
+    
+    public void OpenToolWindowsOptions()
+    {
+        ToolWindowsCarouselIndex.Value = 1;
+        GalleryCarouselIndex.Value = 0;
+        SlideshowCarouselIndex.Value = 0;
+        IsExpandedOptionsOpened.Value = true;
+        IsToolWindowsCarouselVisible.Value = true;
+        IsGalleryCarouselVisible.Value = false;
+        IsSlideshowCarouselVisible.Value = false;
+    }
+    
+    public async ValueTask CloseToolWindowsOptions()
+    {
+        ToolWindowsCarouselIndex.Value = 0;
+        await CloseCarousel();
     }
 
 }
