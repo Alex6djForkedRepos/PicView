@@ -4,6 +4,7 @@ using Avalonia.LogicalTree;
 using Avalonia.Threading;
 using PicView.Avalonia.Animations;
 using PicView.Avalonia.Gallery;
+using PicView.Avalonia.Views.UC;
 using PicView.Core.ViewModels;
 
 namespace PicView.Avalonia.UI;
@@ -78,7 +79,7 @@ public class HoverFadeButtonHandler2 : IDisposable
         }
         
         // Delay fade-out to ensure pointer is truly outside both parent and child
-        Dispatcher.UIThread.Post(async () =>
+        Dispatcher.CurrentDispatcher.Post(async () =>
         {
             await Task.Delay(30); // short delay to allow pointer transitions
             if (!IsPointerOver())
@@ -93,6 +94,14 @@ public class HoverFadeButtonHandler2 : IDisposable
         if (!Settings.UIProperties.ShowAltInterfaceButtons || GalleryFunctions.IsFullGalleryOpen)
         {
             return false;
+        }
+
+        if (_mainButton is HoverBar2)
+        {
+            if (Settings.UIProperties.ShowBottomNavBar)
+            {
+                return false;
+            }
         }
 
         return _childButton == null || _vm.WindowTabs.CanActiveTabNavigate.Value;

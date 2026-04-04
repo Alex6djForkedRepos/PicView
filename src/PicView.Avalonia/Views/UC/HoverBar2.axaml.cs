@@ -16,6 +16,7 @@ namespace PicView.Avalonia.Views.UC;
 
 public partial class HoverBar2 : UserControl
 {
+    IDisposable _disposable;
     public HoverBar2()
     {
         InitializeComponent();
@@ -80,7 +81,7 @@ public partial class HoverBar2 : UserControl
             return;
         }
         
-        _ = new HoverFadeButtonHandler2(this, core.MainWindows.ActiveWindow.CurrentValue, BottomBorder);
+        _disposable = new HoverFadeButtonHandler2(this, core.MainWindows.ActiveWindow.CurrentValue, BottomBorder);
 
         Observable.FromEventHandler<RoutedEventArgs>(h => NextButton.Click += h,
                 h => NextButton.Click -= h)
@@ -263,5 +264,6 @@ public partial class HoverBar2 : UserControl
         base.OnDetachedFromLogicalTree(e);
         Loaded -= OnLoaded;
         RemoveHandler(PointerPressedEvent, ManagePointerPressed);
+        _disposable?.Dispose();
     }
 }
