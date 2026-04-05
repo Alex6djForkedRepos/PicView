@@ -1,20 +1,16 @@
 using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Input;
-using Avalonia.Interactivity;
 using Avalonia.Media;
+using PicView.Avalonia.CustomControls;
 using PicView.Avalonia.UI;
-using PicView.Avalonia.ViewModels;
-using PicView.Avalonia.Views.UC;
-using PicView.Avalonia.WindowBehavior;
 
 namespace PicView.Avalonia.MacOS.Views;
 
-public partial class MacOSTitlebar : UserControl
+public partial class MacOSTitlebar : MainTitleBar
 {
     public MacOSTitlebar()
     {
         InitializeComponent();
+        
         Loaded += (_, _) =>
         {
             if (!Settings.Theme.GlassTheme)
@@ -39,17 +35,5 @@ public partial class MacOSTitlebar : UserControl
             CreateTabButton.Foreground = brush;
             MenuButton.Foreground = brush;
         };
-        PointerPressed += (_, e) => MoveWindow(e);
-    }
-
-    private void MoveWindow(PointerPressedEventArgs e)
-    {
-        if (VisualRoot is null || DataContext is not MainViewModel vm)
-        {
-            return;
-        }
-
-        var hostWindow = (Window)VisualRoot;
-        WindowFunctions.WindowDragAndDoubleClickBehavior(hostWindow, e, vm.PlatformWindowService);
     }
 }

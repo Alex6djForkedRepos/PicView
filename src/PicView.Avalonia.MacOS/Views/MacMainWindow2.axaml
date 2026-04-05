@@ -1,4 +1,4 @@
-<Window
+<customControls:MainWindow
     ExtendClientAreaTitleBarHeightHint="-1"
     ExtendClientAreaToDecorationsHint="True"
     MaxHeight="{CompiledBinding WindowHeight.Value}"
@@ -11,6 +11,7 @@
     x:DataType="viewModels:MainWindowViewModel"
     xmlns="https://github.com/avaloniaui"
     xmlns:converters="clr-namespace:PicView.Avalonia.Converters;assembly=PicView.Avalonia"
+    xmlns:customControls="clr-namespace:PicView.Avalonia.CustomControls;assembly=PicView.Avalonia"
     xmlns:main="clr-namespace:PicView.Avalonia.Views.Main;assembly=PicView.Avalonia"
     xmlns:uc="clr-namespace:PicView.Avalonia.Views.UC;assembly=PicView.Avalonia"
     xmlns:viewModels="clr-namespace:PicView.Core.ViewModels;assembly=PicView.Core"
@@ -562,4 +563,4 @@
         <uc:BottomBar2 DockPanel.Dock="Bottom" x:Name="BottomBar" />
         <main:MainView3 x:Name="MainView" />
     </DockPanel>
-</Window>
+</customControls:MainWindow>

@@ -1,4 +1,4 @@
-<UserControl
+<customControls:MainTitleBar
     IsVisible="{CompiledBinding IsTopToolbarShown.Value,
                                 Mode=OneWay}"
     mc:Ignorable="d"
@@ -73,4 +73,4 @@
             Foreground="{DynamicResource MainTextColor}"
             x:Name="EditableTitlebar" />
     </DockPanel>
-</UserControl>
+</customControls:MainTitleBar>

@@ -14,10 +14,9 @@ using R3.Avalonia;
 
 namespace PicView.Avalonia.MacOS.Views;
 
-public partial class MacMainWindow2 : Window, IPlatformWindowService
+public partial class MacMainWindow2 : MainWindow, IPlatformWindowService
 {
     private readonly AvaloniaRenderingFrameProvider? _frameProvider;
-    public readonly CompositeDisposable Disposables = new();
     private static WindowInitializer? _windowInitializer;
 
     public MacMainWindow2()
@@ -34,21 +33,13 @@ public partial class MacMainWindow2 : Window, IPlatformWindowService
 
         _frameProvider = new AvaloniaRenderingFrameProvider(GetTopLevel(this));
         UIHelper2.SetFrameProvider(_frameProvider);
+        SharedBottomBar = BottomBar;
+        SharedTitleBar = Titlebar;
 
         Loaded += delegate
         {
             _windowInitializer = new WindowInitializer();
-            // Keep window position when resizing
-            ClientSizeProperty.Changed.ToObservable()
-                .Subscribe(size =>
-                {
-                    if (MacOSWindow.IsChangingWindowState || WindowState != WindowState.Normal)
-                    {
-                        return;
-                    }
-                    WindowResizing2.HandleWindowResize(this, size);
-                    BottomBar.ResponsiveNavigationBtnSize(size);
-                }).AddTo(Disposables);
+
             if (DataContext is not MainWindowViewModel vm)
             {
                 return;
@@ -94,7 +85,6 @@ public partial class MacMainWindow2 : Window, IPlatformWindowService
                     WindowDecorations = shown ? WindowDecorations.Full : WindowDecorations.None;
                 }
             });
-            Resized += WindowSizeChanged;
             
             UIHelper2.AddDropDownMenu();
 
@@ -227,27 +217,7 @@ public partial class MacMainWindow2 : Window, IPlatformWindowService
         });
     }
     
-    private void WindowSizeChanged(object? sender, WindowResizedEventArgs e)
-    {
-        if (DataContext is not MainWindowViewModel vm)
-        {
-            return;
-        }
 
-        if (e.Reason is WindowResizeReason.User)
-        {
-            // Reset to manual window
-            Dispatcher.CurrentDispatcher.Post(() => WindowFunctions2.SetManualWindow(vm, this));
-            return;
-        }
-
-        if (Settings.WindowProperties.AutoFit)
-        {
-            return;
-        }
-
-        WindowResizing2.SetSize(vm, e.Reason);
-    }
 
 
     protected override async void OnClosing(WindowClosingEventArgs e)
