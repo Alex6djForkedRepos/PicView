@@ -243,11 +243,11 @@
           <DependentUpon>AboutView2.axaml</DependentUpon>
           <SubType>Code</SubType>
         </Compile>
+        <Compile Update="Views\UC\DragDropView.axaml.cs">
+          <DependentUpon>DragDropView.axaml</DependentUpon>
+          <SubType>Code</SubType>
+        </Compile>
     </ItemGroup>
-    <Compile Update="Views\UC\DragDropView.axaml.cs">
-      <DependentUpon>DragDropView.axaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
 
 
     <ItemGroup>
