@@ -44,7 +44,7 @@ public partial class ClickArrowLeft2 : UserControl
         {
             if (props.IsRightButtonPressed)
             {
-                UIHelper.ShowMainContextMenu();
+                UIHelper2.ShowMainContextMenu();
             }
         }
     }

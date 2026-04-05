@@ -42,12 +42,15 @@ public partial class PrintPreviewWindow2 : Window, IPrintWindow
     {
         var vm = Dispatcher.UIThread.Invoke(() => DataContext as MainWindowViewModel);
         
-        if (vm?.PrintPreview == null)
-        {
-            return;
-        }
+        vm.PrintPreview ??= new PrintPreviewViewModel();
         
-        WindowFunctions.CenterWindowOnScreen(this);
+        ClientSizeProperty.Changed.ToObservable()
+            .ObserveOn(UIHelper2.GetFrameProvider)
+            .Subscribe(_ =>
+            {
+                WindowFunctions2.CenterWindowOnOwnerWindow(this, Owner as Window);
+            })
+            .AddTo(vm.PrintPreview.Disposables);
 
         var ps = vm.PrintPreview.PrintSettings.Value;
 
@@ -74,6 +77,8 @@ public partial class PrintPreviewWindow2 : Window, IPrintWindow
             .ThrottleLast(TimeSpan.FromMilliseconds(100))
             .SubscribeAwait(async (_, _) =>{ await UpdatePreviewAsync(vm.PrintPreview); })
             .AddTo(vm.PrintPreview.Disposables);
+        
+        vm.PrintPreview.IsProcessing.Value = false;
     }
 
     // -----------------------------------------------------------

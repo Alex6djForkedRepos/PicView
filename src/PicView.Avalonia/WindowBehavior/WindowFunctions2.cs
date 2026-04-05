@@ -307,6 +307,10 @@ public static class WindowFunctions2
 
     public static void CenterWindowOnOwnerWindow(Window windowToCenter, Window ownerWindow)
     {
+        if (ownerWindow is null || windowToCenter is null)
+        {
+            return;
+        }
         var windowSize = windowToCenter.ClientSize;
         var ownerSize = ownerWindow.ClientSize;
         var x = ownerWindow.Bounds.X is 0 ? Settings.WindowProperties.Left : ownerWindow.Bounds.X;
