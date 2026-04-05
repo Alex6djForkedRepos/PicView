@@ -98,11 +98,13 @@ public static class DragAndDropManager
 
     public static void RemoveDragDropView()
     {
-        if (_dragDropView != null)
+        if (_dragDropView is null)
         {
-            UIHelper2.GetMainView?.MainPanel.Children.Remove(_dragDropView);
-            _dragDropView = null;
+            return;
         }
+
+        UIHelper2.GetMainView?.MainPanel.Children.Remove(_dragDropView);
+        _dragDropView = null;
     }
 
     #endregion

@@ -6,6 +6,7 @@ using Avalonia.Threading;
 using PicView.Avalonia.Interfaces;
 using PicView.Avalonia.Views.UC;
 using PicView.Avalonia.WindowBehavior;
+using PicView.Core.DebugTools;
 using PicView.Core.ViewModels;
 using R3;
 
@@ -27,15 +28,16 @@ public class MainWindow : Window, IMainWindow
     {
         // Keep window position when resizing
         ClientSizeProperty.Changed.ToObservable()
-            .Subscribe(size =>
+            .Subscribe(HandleWindowResize, static result =>
             {
-                if (IsChangingWindowState || WindowState != WindowState.Normal)
+#if DEBUG
+                if (result is { IsFailure: true, Exception: not null })
                 {
-                    return;
+                    DebugHelper.LogDebug(nameof(MainWindow), nameof(HandleWindowResize), result.Exception);
                 }
-                WindowResizing2.HandleWindowResize(this, size);
-                SharedBottomBar.ResponsiveNavigationBtnSize(size);
-            }).AddTo(Disposables);
+#endif
+            })
+            .AddTo(Disposables);
     }
 
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
@@ -50,13 +52,18 @@ public class MainWindow : Window, IMainWindow
         Disposables?.Dispose();
         Loaded -= OnLoaded;
     }
+
+    #region Sizing
     
+    // Window has been resized
     private void WindowSizeChanged(object? sender, WindowResizedEventArgs e)
     {
         if (DataContext is not MainWindowViewModel vm)
         {
             return;
         }
+        
+        SharedBottomBar.ResponsiveNavigationBtnSize(e.ClientSize);
 
         if (e.Reason is WindowResizeReason.User)
         {
@@ -72,4 +79,16 @@ public class MainWindow : Window, IMainWindow
 
         WindowResizing2.SetSize(vm, e.Reason);
     }
+    
+    // Window is being resized
+    private void HandleWindowResize(AvaloniaPropertyChangedEventArgs<Size> size)
+    {
+        if (IsChangingWindowState || WindowState != WindowState.Normal)
+        {
+            return;
+        }
+        WindowResizing2.HandleWindowResize(this, size);
+    }
+    
+    #endregion
 }

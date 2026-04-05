@@ -212,9 +212,18 @@ public partial class BottomBar2 : UserControl
         _rotationContextMenu.Open();
     }
 
-    public void ResponsiveNavigationBtnSize(AvaloniaPropertyChangedEventArgs<Size> size)
+    public void ResponsiveNavigationBtnSize(Size size)
     {
-        if (size.NewValue.Value.Width < 450)
+        if (size.Width < 380)
+        {
+            ResetZoomButton.IsVisible = RotateLeftButton.IsVisible = false;
+        }
+        else
+        {
+            ResetZoomButton.IsVisible = RotateLeftButton.IsVisible = true;
+        }
+        
+        if (size.Width < 450)
         {
             PreviousButton.Width = NextButton.Width = 65;
         }

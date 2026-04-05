@@ -23,10 +23,10 @@ public class MainTitleBar : UserControl, ITitleBar
 
     private void OnPointerPressed(object? sender, PointerPressedEventArgs e)
     {
-        TryDragWindow(e);
+        WindowDragAndDoubleClickBehavior(e);
     }
 
-    private void TryDragWindow(PointerPressedEventArgs e)
+    private void WindowDragAndDoubleClickBehavior(PointerPressedEventArgs e)
     {
         if (VisualRoot is null || DataContext is not MainWindowViewModel vm)
         {
