@@ -454,7 +454,7 @@
 
             <!--  File history  -->
             <DockPanel
-                IsVisible="{CompiledBinding !TopTitlebarViewModel.DropDownMenu.IsExpandedOptionsOpened.Value}"
+                IsVisible="{CompiledBinding TopTitlebarViewModel.DropDownMenu.IsFileHistoryVisible.Value}"
                 LastChildFill="False"
                 Margin="0,0,0,5"
                 VerticalAlignment="Top">

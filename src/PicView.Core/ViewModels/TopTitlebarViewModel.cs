@@ -29,7 +29,18 @@ public class TopTitlebarViewModel
 
     public void ToggleDropDownMenu(Unit unit)
     {
-        DropDownMenu?.IsDropDownMenuVisible.Value = !DropDownMenu.IsDropDownMenuVisible.CurrentValue;
+        if (DropDownMenu is null) 
+        {
+            return;
+        }
+
+        if (DropDownMenu.IsDropDownMenuVisible.CurrentValue)
+        {
+            CloseDropDownMenu();
+            return;
+        }
+        DropDownMenu.IsDropDownMenuVisible.Value = true;
+        DropDownMenu.IsFileHistoryVisible.Value = Settings.Navigation.IsFileHistoryEnabled && !DropDownMenu.IsExpandedOptionsOpened.CurrentValue;
     }
     public void CloseDropDownMenu()
     {

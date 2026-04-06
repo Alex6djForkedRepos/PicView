@@ -15,6 +15,8 @@ public class DropDownMenuViewModel
     
     public BindableReactiveProperty<int> ToolWindowsCarouselIndex { get; } = new(0);
     public BindableReactiveProperty<bool> IsToolWindowsCarouselVisible { get; } = new(true);
+    
+    public BindableReactiveProperty<bool> IsFileHistoryVisible { get; } = new(false);
 
     private const int DefaultDelay = 95;
     public void OpenGalleryOptions()
