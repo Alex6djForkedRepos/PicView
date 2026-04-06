@@ -3,6 +3,7 @@ using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media.Imaging;
+using Avalonia.Platform;
 using Avalonia.Threading;
 using PicView.Avalonia.ColorManagement;
 using PicView.Avalonia.Interfaces;
@@ -39,10 +40,6 @@ public class App : Application, IPlatformSpecificService, IPlatformWindowService
     public override void Initialize()
     {
         AvaloniaXamlLoader.Load(this);
-
-#if DEBUG
-        this.AttachDeveloperTools();
-#endif
     }
 
     // The startup procedure for macOS is a bit different than Windows.
