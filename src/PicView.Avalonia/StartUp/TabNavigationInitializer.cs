@@ -107,7 +107,6 @@ public static class TabNavigationInitializer
         
         // Need to properly remove it from the previous location
         parentVm.WindowTabs.RemoveTab(tab);
-        parentVm.WindowTabs.IsTabPanelVisible.Value = parentVm.WindowTabs.Tabs.CurrentValue.Count > 1;
     }
     
     public static void InitializeNewTab(TabViewModel newTab, MainWindowViewModel mainWindowViewModel)

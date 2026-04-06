@@ -20,11 +20,6 @@ public class TabOverviewViewModel
     public BindableReactiveProperty<TabViewModel> ActiveTab { get; }
     public BindableReactiveProperty<bool> CanActiveTabNavigate { get; } = new();
     
-    /// <summary>
-    /// The tab panel should only be visible when there are more than one tab. It should not be possible to close the last tab.
-    /// </summary>
-    public BindableReactiveProperty<bool> IsTabPanelVisible { get; } = new();
-    
     public INavigationService? SharedNavigation { get; private set; }
     public IImageCache? SharedCache { get; private set; }
     public IThumbnailCache? SharedThumbnailCache { get; private set; }
@@ -109,7 +104,6 @@ public class TabOverviewViewModel
         }
         SharedCache!.RegisterOwner(tab.Id);
         SelectTab(tab);
-        IsTabPanelVisible.Value = Tabs.CurrentValue.Count > 1;
         return tab;
     }
 
@@ -171,8 +165,6 @@ public class TabOverviewViewModel
         // 2. Capture the index BEFORE removing the item
         var indexToRemove = Tabs.Value.IndexOf(tab);
         Tabs.Value.Remove(tab);
-
-        IsTabPanelVisible.Value = Tabs.Value.Count > 1;
 
         if (wasActive && Tabs.Value.Count > 0)
         {

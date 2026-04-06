@@ -14,7 +14,7 @@
                         CornerRadius="{TemplateBinding CornerRadius}"
                         DockPanel.Dock="Top"
                         HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
-                        IsVisible="{Binding Tag, RelativeSource={RelativeSource TemplatedParent}, FallbackValue=False, TargetNullValue=False}"
+                        Name="border"
                         Padding="{TemplateBinding Padding}"
                         VerticalAlignment="{TemplateBinding VerticalAlignment}">
                         <customControls:AutoScrollViewer
@@ -41,5 +41,9 @@
                 <customControls:ResponsiveTabPanel MinTabWidth="140" />
             </ItemsPanelTemplate>
         </Setter>
+
+        <Style Selector="^:singleitem  /template/ Border#border">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
     </ControlTheme>
 </ResourceDictionary>
