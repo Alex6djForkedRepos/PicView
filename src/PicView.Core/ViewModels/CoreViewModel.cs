@@ -23,8 +23,4 @@ public class CoreViewModel(
 
     // --- Overview models ---
     public MainWindowOverviewViewModel MainWindows { get; } = new();
-    /// Bindable reactive properties that are Exif related
-    public List<ExifViewModel> Exifs { get; } = []; 
-    /// View models for the image info view
-    public List<ImageInfoWindowViewModel?> InfoWindows { get; } = [];
 }

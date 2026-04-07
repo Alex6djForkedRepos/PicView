@@ -281,7 +281,7 @@ public class DateTimeInput : TemplatedControl
 
     private void HideTextBlockWhenNotEnabledSubscription(TextBlock textBlock)
     {
-        Observable.EveryValueChanged(this, x => x.IsEffectivelyEnabled, UIHelper.GetFrameProvider)
+        Observable.EveryValueChanged(this, x => x.IsEffectivelyEnabled, UIHelper2.GetFrameProvider)
             .Subscribe(b => textBlock.IsVisible = b)
             .AddTo(_disposables);
     }

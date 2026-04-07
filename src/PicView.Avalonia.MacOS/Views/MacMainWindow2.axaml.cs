@@ -242,7 +242,7 @@ public partial class MacMainWindow2 : MainWindow, IPlatformWindowService
         _windowInitializer?.ShowAboutWindow();
 
     public async Task ShowImageInfoWindow() =>
-        await _windowInitializer?.ShowImageInfoWindow();
+        await _windowInitializer?.ShowImageInfoWindow(DataContext as MainWindowViewModel);
 
     public async Task ShowKeybindingsWindow() =>
         _windowInitializer?.ShowKeybindingsWindow();

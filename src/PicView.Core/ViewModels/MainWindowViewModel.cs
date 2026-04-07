@@ -17,6 +17,8 @@ public class MainWindowViewModel : IDisposable
     public ToolTipViewModel? ToolTip { get; set; }
     public PrintPreviewViewModel? PrintPreview { get; set; }
     public FileHistoryViewModel FileHistory { get; }
+    public ImageInfoWindowViewModel? InfoWindow { get; set; } 
+    public ExifViewModel? Exif { get; set; }
     
     public bool IsNavigationButtonLeftClicked { get; set; }
     public bool IsNavigationButtonRightClicked { get; set; }

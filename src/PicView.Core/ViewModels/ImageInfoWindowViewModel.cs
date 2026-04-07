@@ -1,9 +1,12 @@
-﻿using R3;
+﻿using PicView.Core.Config;
+using R3;
 
 namespace PicView.Core.ViewModels;
 
 public class ImageInfoWindowViewModel : IDisposable
 {
+    public ImageInfoWindowConfig? ImageInfoWindowConfig { get; set; }
+    
     public int TextWidth => 100;
     public int CopyButtonWidth => 37;
     
