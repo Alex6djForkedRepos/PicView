@@ -448,6 +448,197 @@
                             IconWidth="14"
                             Padding="15,7,15,7"
                             Text="{Binding Translation.ImageInfo.Value}" />
+                        <customControls:TextIconButton
+                            Background="Transparent"
+                            Classes="altHover"
+                            Command="{Binding CropCommand}"
+                            CornerRadius="8,0,0,0"
+                            Data="{StaticResource CropGeometry}"
+                            IconHeight="14"
+                            IconMargin="0,0,7,0"
+                            IconWidth="14"
+                            Padding="15,7,15,7"
+                            Text="{Binding Translation.Crop.Value}" />
+                    </StackPanel>
+                </Carousel.Items>
+            </Carousel>
+
+            <!--  Settings Carousel  -->
+            <Carousel DockPanel.Dock="Top" SelectedIndex="{Binding TopTitlebarViewModel.DropDownMenu.SettingsCarouselIndex.Value}">
+                <Carousel.PageTransition>
+                    <CompositePageTransition>
+                        <PageSlide Duration="0:00:00.200" Orientation="Horizontal" />
+                    </CompositePageTransition>
+                </Carousel.PageTransition>
+                <Carousel.Items>
+                    <DockPanel
+                        IsVisible="{Binding TopTitlebarViewModel.DropDownMenu.IsSettingsCarouselVisible.Value}"
+                        LastChildFill="True"
+                        VerticalAlignment="Top">
+
+                        <customControls:IconButton
+                            Background="{DynamicResource SecondaryButtonBackgroundColor}"
+                            BorderBrush="{DynamicResource MainBorderColor}"
+                            BorderThickness="0,0,1,0"
+                            Classes="noBorderHover"
+                            Command="{CompiledBinding TopTitlebarViewModel.DropDownMenu.OpenSettingsOptions}"
+                            CornerRadius="0,8,0,0"
+                            Data="{StaticResource FilledArrowRightGeometry}"
+                            DockPanel.Dock="Right"
+                            Foreground="{DynamicResource MainTextColor}"
+                            IconHeight="12"
+                            IconWidth="12"
+                            Width="35" />
+
+                        <customControls:TextIconButton
+                            Background="Transparent"
+                            Classes="altHover"
+                            ClickMode="Release"
+                            CornerRadius="8,0,0,0"
+                            Icon="{StaticResource SettingsImage}"
+                            IconHeight="14"
+                            IconMargin="0,0,7,0"
+                            IconWidth="14"
+                            Padding="15,7,15,7"
+                            Text="{CompiledBinding Translation.Settings.Value}" />
+                    </DockPanel>
+                    <StackPanel VerticalAlignment="Top">
+                        <Panel Height="30">
+                            <customControls:IconButton
+                                Background="{DynamicResource SecondaryButtonBackgroundColor}"
+                                BorderBrush="{DynamicResource MainBorderColor}"
+                                BorderThickness="0,0,1,0"
+                                Classes="noBorderHover"
+                                Command="{CompiledBinding TopTitlebarViewModel.DropDownMenu.CloseSettingsOptions}"
+                                CornerRadius="8,0,0,0"
+                                Data="{StaticResource FilledArrowLeftGeometry}"
+                                Foreground="{DynamicResource MainTextColor}"
+                                HorizontalAlignment="Left"
+                                IconHeight="14"
+                                IconWidth="14"
+                                Width="35" />
+                            <TextBlock
+                                Classes="txt"
+                                HorizontalAlignment="Center"
+                                Text="{CompiledBinding Translation.Settings.Value,
+                                                       Mode=OneWay}" />
+                        </Panel>
+                        <Rectangle
+                            Fill="{DynamicResource MainBorderColor}"
+                            Height="1"
+                            Margin="5,2" />
+                        <ToggleButton
+                            Background="Transparent"
+                            Classes="altHover"
+                            Command="{Binding AutoFitWindowCommand}"
+                            CornerRadius="8,0,0,0"
+                            Padding="7,4"
+                            ToolTip.Tip="{CompiledBinding Translation.AutoFitWindow.Value,
+                                                          Mode=OneWay}">
+                            <TextBlock
+                                Classes="txt"
+                                Margin="0,0,7,0"
+                                Text="{Binding Translation.AutoFitWindow.Value}" />
+                        </ToggleButton>
+                        <ToggleButton
+                            Background="Transparent"
+                            Classes="altHover"
+                            Command="{Binding SetTopMostCommand}"
+                            CornerRadius="8,0,0,0"
+                            Padding="7,4"
+                            ToolTip.Tip="{CompiledBinding Translation.StayTopMost.Value,
+                                                          Mode=OneWay}">
+                            <TextBlock
+                                Classes="txt"
+                                Margin="0,0,7,0"
+                                Text="{Binding Translation.StayTopMost.Value}" />
+                        </ToggleButton>
+                        <ToggleButton
+                            Background="Transparent"
+                            Classes="altHover"
+                            Command="{Binding ToggleLoopingCommand}"
+                            CornerRadius="8,0,0,0"
+                            Padding="7,4"
+                            ToolTip.Tip="{CompiledBinding Translation.ToggleLooping.Value,
+                                                          Mode=OneWay}">
+                            <TextBlock
+                                Classes="txt"
+                                Margin="0,0,7,0"
+                                Text="{Binding Translation.ToggleLooping.Value}" />
+                        </ToggleButton>
+                        <ToggleButton
+                            Background="Transparent"
+                            Classes="altHover"
+                            Command="{Binding ToggleScrollCommand}"
+                            CornerRadius="8,0,0,0"
+                            Padding="7,4"
+                            ToolTip.Tip="{CompiledBinding Translation.ToggleScroll.Value,
+                                                          Mode=OneWay}">
+                            <TextBlock
+                                Classes="txt"
+                                Margin="0,0,7,0"
+                                Text="{Binding Translation.ToggleScroll.Value}" />
+                        </ToggleButton>
+                        <ToggleButton
+                            Background="Transparent"
+                            Classes="altHover"
+                            Command="{Binding StretchCommand}"
+                            CornerRadius="8,0,0,0"
+                            Padding="7,4"
+                            ToolTip.Tip="{CompiledBinding Translation.Stretch.Value,
+                                                          Mode=OneWay}">
+                            <TextBlock
+                                Classes="txt"
+                                Margin="0,0,7,0"
+                                Text="{Binding Translation.Stretch.Value}" />
+                        </ToggleButton>
+                        <ToggleButton
+                            Background="Transparent"
+                            Classes="altHover"
+                            Command="{Binding SideBySideCommand}"
+                            CornerRadius="8,0,0,0"
+                            Padding="7,4"
+                            ToolTip.Tip="{CompiledBinding Translation.SideBySideTooltip.Value,
+                                                          Mode=OneWay}">
+                            <TextBlock
+                                Classes="txt"
+                                Margin="0,0,7,0"
+                                Text="{Binding Translation.SideBySide.Value}" />
+                        </ToggleButton>
+                        <customControls:TextIconButton
+                            Background="Transparent"
+                            Classes="altHover"
+                            Command="{Binding AboutWindowCommand}"
+                            Icon="{StaticResource AboutImage}"
+                            IconHeight="14"
+                            IconMargin="0,0,7,0"
+                            IconWidth="14"
+                            Padding="15,7,15,7"
+                            Text="{Binding Translation.About.Value}"
+                            ToolTip.Tip="{Binding Translation.AboutWindow.Value}" />
+                        <customControls:TextIconButton
+                            Background="Transparent"
+                            Classes="altHover"
+                            Command="{Binding KeybindingsWindowCommand}"
+                            Icon="{StaticResource ShortcutsImage}"
+                            IconHeight="14"
+                            IconMargin="0,0,7,0"
+                            IconWidth="14"
+                            Padding="15,7,15,7"
+                            Text="{Binding Translation.ApplicationShortcuts.Value}"
+                            ToolTip.Tip="{Binding Translation.ApplicationShortcuts.Value}" />
+                        <customControls:TextIconButton
+                            Background="Transparent"
+                            Classes="altHover"
+                            Command="{Binding SettingsWindowCommand}"
+                            CornerRadius="0,0,8,8"
+                            Data="{StaticResource CogGeometry}"
+                            IconHeight="14"
+                            IconMargin="0,0,7,0"
+                            IconWidth="14"
+                            Padding="15,7,15,7"
+                            Text="{Binding Translation.ShowAllSettingsWindow.Value}"
+                            ToolTip.Tip="{Binding Translation.ShowAllSettingsWindow.Value}" />
                     </StackPanel>
                 </Carousel.Items>
             </Carousel>
