@@ -243,6 +243,8 @@ https://github.com/Ruben2776/PicView/issues/13.
 
 ## Code Signing Policy
 
+macOS app bundles are notarized, signed and stapled.
+
 All Windows releases are built via GitHub Actions, virus scanned and digitally signed.
 
 Free code signing is provided by [SignPath.io](https://about.signpath.io/), certificate by [SignPath Foundation](https://signpath.org/).
