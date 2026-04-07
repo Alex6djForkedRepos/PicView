@@ -252,7 +252,7 @@ public partial class ZoomPreviewer2 : UserControl
         {
             return;
         }
-        if (model.PixelWidth is 0 || model.PixelHeight is 0)
+        if (model.CurrentValue.PixelWidth is 0 || model.CurrentValue.PixelHeight is 0)
         {
             return;
         }
@@ -269,8 +269,8 @@ public partial class ZoomPreviewer2 : UserControl
         }
         else
         {
-            OverlayImage.Width = model.PixelWidth * defaultHeight /
-                                 model.PixelHeight;
+            OverlayImage.Width = model.CurrentValue.PixelWidth * defaultHeight /
+                                 model.CurrentValue.PixelHeight;
             //OverlayImage.SecondaryImageWidth = 0;
         }
     }

@@ -1,70 +1,70 @@
 <UserControl
     x:Class="PicView.Avalonia.Views.UC.ImageViewer2"
+    x:DataType="viewModels1:TabViewModel"
     xmlns="https://github.com/avaloniaui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:buttons="clr-namespace:PicView.Avalonia.Views.UC.Buttons"
     xmlns:customControls="clr-namespace:PicView.Avalonia.CustomControls"
     xmlns:gallery="clr-namespace:PicView.Avalonia.Views.Gallery"
     xmlns:uc="clr-namespace:PicView.Avalonia.Views.UC"
     xmlns:viewModels1="clr-namespace:PicView.Core.ViewModels;assembly=PicView.Core"
-    x:DataType="viewModels1:TabViewModel">
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <DockPanel LastChildFill="True">
-        <gallery:GalleryView2 x:Name="GalleryView" ZIndex="1" />
+        <gallery:GalleryView2 ZIndex="1" x:Name="GalleryView" />
 
-        <Panel x:Name="MainPanel" Background="{CompiledBinding $parent[Window].((viewModels1:MainWindowViewModel)DataContext).ImageBackground.Value, Mode=OneWay}">
+        <Panel Background="{CompiledBinding $parent[Window].((viewModels1:MainWindowViewModel)DataContext).ImageBackground.Value, Mode=OneWay}" x:Name="MainPanel">
             <LayoutTransformControl x:Name="MainTransform">
                 <LayoutTransformControl.LayoutTransform>
                     <RotateTransform Angle="{Binding RotationAngle.Value}" />
                 </LayoutTransformControl.LayoutTransform>
                 <customControls:ZoomPanControl2 x:Name="ZoomPanControl">
                     <customControls:AutoScrollViewer
-                        x:Name="ImageScrollViewer"
                         Focusable="False"
                         HorizontalScrollBarVisibility="Disabled"
-                        VerticalScrollBarVisibility="Disabled">
+                        VerticalScrollBarVisibility="Disabled"
+                        x:Name="ImageScrollViewer">
                         <Border
-                            x:Name="MainBorder"
+                            Background="{CompiledBinding $parent[Window].((viewModels1:MainWindowViewModel)DataContext).ConstrainedImageBackground.Value,
+                                                         Mode=OneWay}"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
-                            Background="{CompiledBinding $parent[Window].((viewModels1:MainWindowViewModel)DataContext).ConstrainedImageBackground.Value,
-                                                         Mode=OneWay}">
+                            x:Name="MainBorder">
                             <UniformGrid Rows="1">
 
-                                <customControls:PicBox2 x:Name="MainImage" Source="{CompiledBinding Image.Value}" />
+                                <customControls:PicBox2 Source="{CompiledBinding Model.Value.Image}" x:Name="MainImage" />
 
-                                <customControls:PicBox2 x:Name="SecondaryImage" Source="{CompiledBinding SecondaryImage.Value}" />
+                                <customControls:PicBox2 Source="{CompiledBinding SecondaryModel.Value.Image}" x:Name="SecondaryImage" />
                             </UniformGrid>
                         </Border>
                     </customControls:AutoScrollViewer>
                 </customControls:ZoomPanControl2>
             </LayoutTransformControl>
             <uc:ZoomPreviewer2
-                x:Name="ZoomPreview"
-                Margin="0,0,25,25"
                 HorizontalAlignment="Right"
-                VerticalAlignment="Bottom"
                 IsVisible="False"
-                ZIndex="90" />
-            <uc:HoverBar2 x:Name="HoverBar" VerticalAlignment="Bottom" />
-            <buttons:ClickArrowRight2
-                x:Name="ClickArrowRight"
-                HorizontalAlignment="Right"
-                VerticalAlignment="Center"
-                Opacity="0"
-                ZIndex="2" />
-            <buttons:ClickArrowLeft2
-                x:Name="ClickArrowLeft"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Center"
-                Opacity="0"
-                ZIndex="2" />
-            <buttons:GalleryShortcut2
-                x:Name="GalleryShortcut"
-                HorizontalAlignment="Right"
+                Margin="0,0,25,25"
                 VerticalAlignment="Bottom"
+                ZIndex="90"
+                x:Name="ZoomPreview" />
+            <uc:HoverBar2 VerticalAlignment="Bottom" x:Name="HoverBar" />
+            <buttons:ClickArrowRight2
+                HorizontalAlignment="Right"
+                Opacity="0"
+                VerticalAlignment="Center"
+                ZIndex="2"
+                x:Name="ClickArrowRight" />
+            <buttons:ClickArrowLeft2
+                HorizontalAlignment="Left"
+                Opacity="0"
+                VerticalAlignment="Center"
+                ZIndex="2"
+                x:Name="ClickArrowLeft" />
+            <buttons:GalleryShortcut2
+                HorizontalAlignment="Right"
                 IsVisible="{CompiledBinding !$parent[Window].((viewModels1:MainWindowViewModel)DataContext).IsUIShown.Value}"
                 Opacity="0"
-                ZIndex="9" />
+                VerticalAlignment="Bottom"
+                ZIndex="9"
+                x:Name="GalleryShortcut" />
         </Panel>
     </DockPanel>
 </UserControl>

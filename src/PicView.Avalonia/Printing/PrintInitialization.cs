@@ -9,7 +9,7 @@ public static class PrintInitialization
     public static void Initialize(MainWindowViewModel vm, string path, IPrintWindow printWindow,
         List<string> installedPrinters, List<string> paperSizes, bool supportsColor, string printerName, PrinterPageSettings pageSettings)
     {
-        if (vm.WindowTabs.ActiveTab.CurrentValue.Image.CurrentValue != null && File.Exists(path))
+        if (vm.WindowTabs.ActiveTab.CurrentValue.Model.CurrentValue.Image != null && File.Exists(path))
         {
             using var fs = File.OpenRead(path);
             vm.PrintPreview.PreviewImage.Value = new Bitmap(fs);

@@ -58,7 +58,7 @@ public static class QuickLoad2
 
         var imageModel = await GetImageModel.GetImageModelAsync(fileInfo, magickImage).ConfigureAwait(false);
 
-        vm.MainWindows.ActiveWindow.Value.WindowTabs.ActiveTab.Value.Model = imageModel;
+        vm.MainWindows.ActiveWindow.Value.WindowTabs.ActiveTab.Value.Model.Value = imageModel;
         TabNavigationInitializer.Initialize(vm, fileInfo);
         vm.MainWindows.ActiveWindow.Value.IsLoadingIndicatorShown.Value = false;
 

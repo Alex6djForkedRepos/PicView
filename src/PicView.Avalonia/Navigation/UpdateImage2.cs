@@ -9,7 +9,7 @@ public static class UpdateImage2
 {
     public static void UpdateFileInfo(TabViewModel tabViewModel, FileInfo? file)
     {
-        if (tabViewModel.Model.Image is null || tabViewModel.Model.PixelHeight is 0 || tabViewModel.Model.PixelWidth is 0)
+        if (tabViewModel.Model.CurrentValue.Image is null || tabViewModel.Model.CurrentValue.PixelHeight is 0 || tabViewModel.Model.CurrentValue.PixelWidth is 0)
         {
             return;
         }
@@ -26,30 +26,22 @@ public static class UpdateImage2
             tabViewModel.TabTooltip.Value = noImage;
             return;
         }
-
-        // Trigger file changes to UI
-        tabViewModel.FileInfo.Value = file;
                         
         tabViewModel.UpdateTabTitle();
-        
-        tabViewModel.Format.Value = tabViewModel.Model.Format;
     }
 
     public static void ChangeImage(TabViewModel tabViewModel, object image, MainWindowViewModel mainWindowViewModel)
     {
-        // Trigger image change to UI
-        tabViewModel.Image.Value = image;
-
         if (Settings.WindowProperties.AutoFit)
         {
-            WindowResizing2.SetSize(tabViewModel.Model.PixelWidth,
-                tabViewModel.Model.PixelHeight,
+            WindowResizing2.SetSize(tabViewModel.Model.CurrentValue.PixelWidth,
+                tabViewModel.Model.CurrentValue.PixelHeight,
                 WindowResizeReason.Application,
                 mainWindowViewModel);
         }
 
         // Update tiff title if appropriate (there are no file changes in this instance
-        if (tabViewModel.Model.TiffNavigation is null)
+        if (tabViewModel.Model.CurrentValue.TiffNavigation is null)
         {
             return;
         }

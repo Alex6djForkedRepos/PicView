@@ -213,13 +213,13 @@ public partial class ImageInfoView2 : UserControl
             DirectoryNameTextBox.Text = fileInfo.DirectoryName;
         }
 
-        FileSizeBox.Text = vm.WindowTabs.ActiveTab.Value.Model.FileInfo?.Length.GetReadableFileSize();
+        FileSizeBox.Text = vm.WindowTabs.ActiveTab.Value.Model.CurrentValue.FileInfo?.Length.GetReadableFileSize();
         // vm.WindowTabs.ActiveTab.Value.Model.ShouldOptimizeImageBeEnabled.Value =
         //     ConversionHelper.DetermineIfOptimizeImageShouldBeEnabled(vm.WindowTabs.ActiveTab.Value.Model.FileInfo?.CurrentValue);
         GoogleLinkButton.IsEnabled = !string.IsNullOrWhiteSpace(vm.Exif.GoogleLink.CurrentValue);
         BingLinkButton.IsEnabled = !string.IsNullOrWhiteSpace(vm.Exif.BingLink.CurrentValue);
 
-        vm.Exif.IsExifAvailable.Value = vm.WindowTabs.ActiveTab.Value.Model.Format.IsExifImage();
+        vm.Exif.IsExifAvailable.Value = vm.WindowTabs.ActiveTab.Value.Model.CurrentValue.Format.IsExifImage();
     }
 
 
@@ -240,7 +240,7 @@ public partial class ImageInfoView2 : UserControl
             return;
         }
 
-        var aspectRatio = (double)vm.WindowTabs.ActiveTab.Value.Model.PixelWidth / vm.WindowTabs.ActiveTab.Value.Model.PixelHeight;
+        var aspectRatio = (double)vm.WindowTabs.ActiveTab.Value.Model.CurrentValue.PixelWidth / vm.WindowTabs.ActiveTab.Value.Model.CurrentValue.PixelHeight;
         // AspectRatioHelper.SetAspectRatioForTextBox(PixelWidthTextBox, PixelHeightTextBox, sender == PixelWidthTextBox,
         //     aspectRatio, DataContext as MainWindowViewModel);
 
@@ -263,8 +263,8 @@ public partial class ImageInfoView2 : UserControl
 
         var gcd = AspectRatioFormatter.GCD(width, height);
         AspectRatioTextBox.Text =
-            AspectRatioFormatter.GetFormattedAspectRatio(gcd, vm.WindowTabs.ActiveTab.Value.Model.PixelWidth,
-                vm.WindowTabs.ActiveTab.Value.Model.PixelHeight);
+            AspectRatioFormatter.GetFormattedAspectRatio(gcd, vm.WindowTabs.ActiveTab.Value.Model.CurrentValue.PixelWidth,
+                vm.WindowTabs.ActiveTab.Value.Model.CurrentValue.PixelHeight);
     }
 
     private static async Task DoResize(MainWindowViewModel vm, bool isWidth, object width, object height)
@@ -278,7 +278,7 @@ public partial class ImageInfoView2 : UserControl
 
             if (widthValue > 0)
             {
-                var success = await ConversionHelper.ResizeByWidth(vm.WindowTabs.ActiveTab.Value.Model.FileInfo, widthValue)
+                var success = await ConversionHelper.ResizeByWidth(vm.WindowTabs.ActiveTab.Value.Model.CurrentValue.FileInfo, widthValue)
                     .ConfigureAwait(false);
                 if (success)
                 {
@@ -295,7 +295,7 @@ public partial class ImageInfoView2 : UserControl
 
             if (heightValue > 0)
             {
-                var success = await ConversionHelper.ResizeByHeight(vm.WindowTabs.ActiveTab.Value.Model.FileInfo, heightValue)
+                var success = await ConversionHelper.ResizeByHeight(vm.WindowTabs.ActiveTab.Value.Model.CurrentValue.FileInfo, heightValue)
                     .ConfigureAwait(false);
                 if (success)
                 {
@@ -404,10 +404,10 @@ public partial class ImageInfoView2 : UserControl
             return;
         }
 
-        var isAdded = await addAction(vm.WindowTabs.ActiveTab.Value.Model.FileInfo, value);
+        var isAdded = await addAction(vm.WindowTabs.ActiveTab.Value.Model.CurrentValue.FileInfo, value);
         if (isAdded)
         {
-            await UpdateValuesAsync(vm.WindowTabs.ActiveTab.Value.Model.FileInfo, CancellationToken.None);
+            await UpdateValuesAsync(vm.WindowTabs.ActiveTab.Value.Model.CurrentValue.FileInfo, CancellationToken.None);
         }
     }
 
@@ -418,10 +418,10 @@ public partial class ImageInfoView2 : UserControl
             return;
         }
 
-        var isRemoved = await ExifWriter.RemoveExifProfile(vm.WindowTabs.ActiveTab.Value.Model.FileInfo);
+        var isRemoved = await ExifWriter.RemoveExifProfile(vm.WindowTabs.ActiveTab.Value.Model.CurrentValue.FileInfo);
         if (isRemoved)
         {
-            await UpdateValuesAsync(vm.WindowTabs.ActiveTab.Value.Model.FileInfo, CancellationToken.None);
+            await UpdateValuesAsync(vm.WindowTabs.ActiveTab.Value.Model.CurrentValue.FileInfo, CancellationToken.None);
         }
     }
 

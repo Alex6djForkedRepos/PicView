@@ -17,7 +17,7 @@ public static class NavigationSubscriptions
         {
             Dispatcher.UIThread.Invoke(() =>
             {
-                Observable.EveryValueChanged(tabViewModel, tab => tab.Model.FileInfo, UIHelper2.GetFrameProvider)
+                Observable.EveryValueChanged(tabViewModel, tab => tab.Model.CurrentValue.FileInfo, UIHelper2.GetFrameProvider)
                     .Subscribe(file =>
                     {
                         UpdateImage2.UpdateFileInfo(tabViewModel, file);
@@ -31,7 +31,7 @@ public static class NavigationSubscriptions
 #endif
                     })
                     .AddTo(tabViewModel.Disposables);
-                Observable.EveryValueChanged(tabViewModel, tab => tab.Model.Image, UIHelper2.GetFrameProvider)
+                Observable.EveryValueChanged(tabViewModel, tab => tab.Model.CurrentValue.Image, UIHelper2.GetFrameProvider)
                     .Subscribe(image =>
                     {
                         UpdateImage2.ChangeImage(tabViewModel, image, mainWindowViewModel);

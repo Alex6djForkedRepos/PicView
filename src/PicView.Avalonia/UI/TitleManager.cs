@@ -138,9 +138,9 @@ public static class TitleManager
     
     public static void SetTabTitle(TabViewModel tab, double zoomValue)
     {
-        var titles = ImageTitleFormatter.GenerateTitleStrings(tab.Model.PixelWidth, tab.Model.PixelHeight,
+        var titles = ImageTitleFormatter.GenerateTitleStrings(tab.Model.CurrentValue.PixelWidth, tab.Model.CurrentValue.PixelHeight,
             tab.ImageIterator.CurrentIndex,
-            tab.Model.FileInfo, zoomValue, tab.ImageIterator.Files);
+            tab.Model.CurrentValue.FileInfo, zoomValue, tab.ImageIterator.Files);
         tab.WindowTitle.Value = titles.TitleWithAppName;
         tab.Title.Value = titles.BaseTitle;
         tab.TitleTooltip.Value = titles.FilePathTitle;

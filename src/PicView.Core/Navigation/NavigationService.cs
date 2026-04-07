@@ -35,7 +35,7 @@ public class NavigationService(
 
             // Show image quickly to make it feel fast
             var model = await imageLoader.GetImageModelAsync(fileInfo, ct.Token).ConfigureAwait(false);
-            tab.Model = model; // Image updated via reactive subscription
+            tab.Model.Value = model; // Image updated via reactive subscription
             
             tab.ImageIterator.Files = files ?? FileListRetriever.RetrieveFiles(fileInfo, stringComparer);
             var index = FindIndex(fileInfo, tab);
@@ -176,7 +176,7 @@ public class NavigationService(
             }
 
             var model = await imageLoader.GetImageModelAsync(new FileInfo(destPath), ct.Token).ConfigureAwait(false);
-            tab.Model = model;
+            tab.Model.Value = model;
             tab.SecondaryModel = null;
             
             // Set titles to filename after successful load
@@ -274,7 +274,7 @@ public class NavigationService(
         try
         {
             // Get current file to maintain position
-            var currentFile = tab.Model?.FileInfo;
+            var currentFile = tab.Model?.CurrentValue.FileInfo;
             if (currentFile is null)
             {
                 return;

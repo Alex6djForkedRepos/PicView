@@ -27,7 +27,7 @@
                 Command="{CompiledBinding SaveCommand}"
                 Header="{CompiledBinding Translation.Save.Value,
                                          Mode=OneWay}"
-                IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.Image.Value,
+                IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.Model.Value.Image,
                                             Converter={x:Static ObjectConverters.IsNotNull},
                                             FallbackValue=False}">
                 <MenuItem.Icon>
@@ -40,7 +40,7 @@
                 Command="{CompiledBinding SaveAsCommand}"
                 Header="{CompiledBinding Translation.SaveAs.Value,
                                          Mode=OneWay}"
-                IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.Image.Value,
+                IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.Model.Value.Image,
                                             Converter={x:Static ObjectConverters.IsNotNull},
                                             FallbackValue=False}">
                 <MenuItem.Icon>
@@ -54,7 +54,7 @@
                 Command="{CompiledBinding PrintCommand}"
                 Header="{CompiledBinding Translation.Print.Value,
                                          Mode=OneWay}"
-                IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.Image.Value,
+                IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.Model.Value.Image,
                                             Converter={x:Static ObjectConverters.IsNotNull},
                                             FallbackValue=False}">
                 x:Name="PrintMenuItem">
@@ -110,7 +110,7 @@
             <MenuItem
                 Header="{CompiledBinding Translation.SetAsWallpaper.Value,
                                          Mode=OneWay}"
-                IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.Image.Value,
+                IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.Model.Value.Image,
                                             Converter={x:Static ObjectConverters.IsNotNull},
                                             FallbackValue=False}"
                 IsVisible="{CompiledBinding GlobalSettings.ShowSetAsWallpaper.Value}"
@@ -129,7 +129,7 @@
                     Command="{CompiledBinding SetAsWallpaperFilledCommand}"
                     Header="{CompiledBinding Translation.Fill.Value,
                                              Mode=OneWay}"
-                    IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.Image.Value,
+                    IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.Model.Value.Image,
                                                 Converter={x:Static ObjectConverters.IsNotNull},
                                                 FallbackValue=False}"
                     IsVisible="{CompiledBinding GlobalSettings.ShowSetAsWallpaper.Value}">
@@ -148,7 +148,7 @@
                     Command="{CompiledBinding SetAsWallpaperFittedCommand}"
                     Header="{CompiledBinding Translation.Fit.Value,
                                              Mode=OneWay}"
-                    IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.Image.Value,
+                    IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.Model.Value.Image,
                                                 Converter={x:Static ObjectConverters.IsNotNull},
                                                 FallbackValue=False}"
                     IsVisible="{CompiledBinding GlobalSettings.ShowSetAsWallpaper.Value}">
@@ -167,7 +167,7 @@
                     Command="{CompiledBinding SetAsWallpaperStretchedCommand}"
                     Header="{CompiledBinding Translation.Stretch.Value,
                                              Mode=OneWay}"
-                    IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.Image.Value,
+                    IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.Model.Value.Image,
                                                 Converter={x:Static ObjectConverters.IsNotNull},
                                                 FallbackValue=False}"
                     IsVisible="{CompiledBinding GlobalSettings.ShowSetAsWallpaper.Value}">
@@ -187,7 +187,7 @@
                     Command="{CompiledBinding SetAsWallpaperCenteredCommand}"
                     Header="{CompiledBinding Translation.Center.Value,
                                              Mode=OneWay}"
-                    IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.Image.Value,
+                    IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.Model.Value.Image,
                                                 Converter={x:Static ObjectConverters.IsNotNull},
                                                 FallbackValue=False}"
                     IsVisible="{CompiledBinding GlobalSettings.ShowSetAsWallpaper.Value}">
@@ -206,7 +206,7 @@
                     Command="{CompiledBinding SetAsWallpaperTiledCommand}"
                     Header="{CompiledBinding Translation.Tile.Value,
                                              Mode=OneWay}"
-                    IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.Image.Value,
+                    IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.Model.Value.Image,
                                                 Converter={x:Static ObjectConverters.IsNotNull},
                                                 FallbackValue=False}"
                     IsVisible="{CompiledBinding GlobalSettings.ShowSetAsWallpaper.Value}">
@@ -388,7 +388,6 @@
 
                 <StackPanel x:Name="MainContainer">
 
-
                     <WrapPanel>
 
                         <!--  File name  -->
@@ -481,7 +480,7 @@
                                 Width="{CompiledBinding InfoWindow.TextWidth}" />
                             <customControls:NumTextBox
                                 Classes="hover TStyle x"
-                                Text="{CompiledBinding WindowTabs.ActiveTab.Value.Model.PixelWidth,
+                                Text="{CompiledBinding WindowTabs.ActiveTab.Value.Model.Value.PixelWidth,
                                                        Mode=OneWay}"
                                 ToolTip.Tip="{CompiledBinding Translation.SizeTooltip.Value,
                                                               Mode=OneWay}"
@@ -489,7 +488,7 @@
                                 x:Name="PixelWidthTextBox" />
                             <customControls:CopyButton
                                 Classes="altHover BorderStyle"
-                                CopyText="{CompiledBinding WindowTabs.ActiveTab.Value.Model.PixelWidth,
+                                CopyText="{CompiledBinding WindowTabs.ActiveTab.Value.Model.Value.PixelWidth,
                                                            Mode=OneWay}"
                                 IsVisible="{CompiledBinding InfoWindow.IsCopyButtonEnabled.Value}"
                                 ToolTip.Tip="{CompiledBinding Translation.Copy,
@@ -508,7 +507,7 @@
                                 Width="{CompiledBinding InfoWindow.TextWidth}" />
                             <customControls:NumTextBox
                                 Classes="hover TStyle x"
-                                Text="{CompiledBinding WindowTabs.ActiveTab.Value.Model.PixelHeight,
+                                Text="{CompiledBinding WindowTabs.ActiveTab.Value.Model.Value.PixelHeight,
                                                        Mode=OneWay}"
                                 ToolTip.Tip="{CompiledBinding Translation.SizeTooltip.Value,
                                                               Mode=OneWay}"
@@ -516,7 +515,7 @@
                                 x:Name="PixelHeightTextBox" />
                             <customControls:CopyButton
                                 Classes="altHover BorderStyle"
-                                CopyText="{CompiledBinding WindowTabs.ActiveTab.Value.Model.PixelHeight,
+                                CopyText="{CompiledBinding WindowTabs.ActiveTab.Value.Model.Value.PixelHeight,
                                                            Mode=OneWay}"
                                 IsVisible="{CompiledBinding InfoWindow.IsCopyButtonEnabled.Value}"
                                 ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
@@ -729,12 +728,12 @@
                                 Background="{DynamicResource DisabledBackgroundColor}"
                                 Classes="TStyle x"
                                 IsReadOnly="True"
-                                Text="{CompiledBinding WindowTabs.ActiveTab.Value.Format.Value,
+                                Text="{CompiledBinding WindowTabs.ActiveTab.Value.Model.Value.Format,
                                                        Mode=OneWay}"
                                 Width="{CompiledBinding InfoWindow.TextBoxWidth.Value}" />
                             <customControls:CopyButton
                                 Classes="altHover BorderStyle"
-                                CopyText="{CompiledBinding WindowTabs.ActiveTab.Value.Format.Value,
+                                CopyText="{CompiledBinding WindowTabs.ActiveTab.Value.Model.Value.Format,
                                                            Mode=OneWay}"
                                 IsVisible="{CompiledBinding InfoWindow.IsCopyButtonEnabled.Value}"
                                 ToolTip.Tip="{CompiledBinding Translation.Copy.Value,

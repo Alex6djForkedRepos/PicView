@@ -69,7 +69,7 @@ public class ImageIterator(IImageCache cache, IThumbnailCache thumbCache, IThumb
         if (index < 0 || index >= Files.Count) return;
 
         // Handle internal TIFF navigation
-        if (_tab.Model?.TiffNavigation is not null && ShouldNavigateTiffEntry(_tab.Model, IsReversed))
+        if (_tab.Model?.CurrentValue.TiffNavigation is not null && ShouldNavigateTiffEntry(_tab.Model.CurrentValue, IsReversed))
         {
             return;
         }
@@ -87,7 +87,6 @@ public class ImageIterator(IImageCache cache, IThumbnailCache thumbCache, IThumb
             {
                 // Is loading in cache, show thumbnail while loading
                 var thumb = _thumbnailLoader.GetExifThumbnail(targetFile);
-                _tab.Image.Value = thumb; // If it is null, it will just be blank
 
                 // Wait for loading complete
                 var successfullyLoaded = await Cache.WaitForLoadingCompleteAsync(_tab.Id, index).ConfigureAwait(false);
@@ -254,7 +253,7 @@ public class ImageIterator(IImageCache cache, IThumbnailCache thumbCache, IThumb
 
     private async ValueTask UpdateModelAsync(ImageModel newModel, CancellationTokenSource ct)
     {
-        _tab.Model = newModel;
+        _tab.Model.Value = newModel;
 
         // Load Secondary Image (if Side-by-Side is enabled)
         var hasNextImage = CurrentIndex + 1 < Files.Count;
@@ -271,15 +270,13 @@ public class ImageIterator(IImageCache cache, IThumbnailCache thumbCache, IThumb
                 return;
             }
 
-            _tab.SecondaryModel = loadedModel;
-            _tab.SecondaryImage.Value = loadedModel.Image;
+            _tab.SecondaryModel.Value = loadedModel;
             _tab.SecondaryFileInfo.Value = loadedModel.FileInfo;
         }
         else
         {
-            _tab.SecondaryModel = null;
+            _tab.SecondaryModel.Value = null;
             _tab.SecondaryFileInfo.Value = null;
-            _tab.SecondaryImage.Value = null;
         }
 
         UpdateNavigationProperties();

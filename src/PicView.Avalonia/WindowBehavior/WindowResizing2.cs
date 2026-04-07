@@ -216,7 +216,7 @@ public static class WindowResizing2
         }
         else
         {
-            if (vm.WindowTabs.ActiveTab.CurrentValue.Image.CurrentValue is Bitmap bitmap)
+            if (vm.WindowTabs.ActiveTab.CurrentValue.Model.CurrentValue.Image is Bitmap bitmap)
             {
                 width = bitmap.PixelSize.Width;
                 height = bitmap.PixelSize.Height;
@@ -236,7 +236,7 @@ public static class WindowResizing2
             }
             else
             {
-                if (vm.WindowTabs.ActiveTab.CurrentValue.Image.CurrentValue is Bitmap bitmap)
+                if (vm.WindowTabs.ActiveTab.CurrentValue.Model.CurrentValue.Image is Bitmap bitmap)
                 {
                     secondaryWidth = bitmap.PixelSize.Width;
                     secondaryHeight = bitmap.PixelSize.Height;

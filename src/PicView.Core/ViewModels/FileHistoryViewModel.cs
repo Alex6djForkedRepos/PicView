@@ -52,7 +52,7 @@ public class FileHistoryViewModel
         HasPinnedEntries.Value = pinnedEntries.Any();
         HasUnpinnedEntries.Value = unpinnedEntries.Any();
         
-        var currentFilePath = _mainWindow.WindowTabs.ActiveTab.Value?.Model.FileInfo?.FullName;
+        var currentFilePath = _mainWindow.WindowTabs.ActiveTab.Value?.Model.CurrentValue.FileInfo?.FullName;
 
         foreach (var entry in pinnedEntries)
         {

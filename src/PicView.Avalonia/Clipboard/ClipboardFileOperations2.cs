@@ -26,7 +26,7 @@ public static class ClipboardFileOperations2
     /// <param name="vm">The main window view model</param>
     public static async Task Duplicate(string? path, MainWindowViewModel vm)
     {
-        var currentFile = vm.WindowTabs.ActiveTab.CurrentValue.Model.FileInfo?.FullName;
+        var currentFile = vm.WindowTabs.ActiveTab.CurrentValue.Model.CurrentValue.FileInfo?.FullName;
         
         // If path is null/empty, we assume we want to duplicate the current file
         var targetPath = string.IsNullOrWhiteSpace(path) ? currentFile : path;
@@ -76,7 +76,7 @@ public static class ClipboardFileOperations2
 
         try
         {
-            var currentPath = activeTab.Model.FileInfo?.FullName;
+            var currentPath = activeTab.Model.CurrentValue.FileInfo?.FullName;
             if (string.IsNullOrWhiteSpace(currentPath)) return;
 
             var duplicatedPath =

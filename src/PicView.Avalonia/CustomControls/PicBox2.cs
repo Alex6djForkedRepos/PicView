@@ -205,12 +205,12 @@ public class PicBox2 : Control
         var tabs = core.MainWindows.ActiveWindow.CurrentValue.WindowTabs;
         var model = tabs.ActiveTab.CurrentValue.Model;
         
-        if (model.FileInfo?.Exists != true)
+        if (model.CurrentValue.FileInfo?.Exists != true)
         {
             return new Size();
         }
 
-        if (tabs.SharedCache.TryGet(model.FileInfo, out var preloadValue))
+        if (tabs.SharedCache.TryGet(model.CurrentValue.FileInfo, out var preloadValue))
         {
             if (preloadValue?.ImageModel != null)
             {
@@ -221,7 +221,7 @@ public class PicBox2 : Control
         try
         {
             using var magickImage = new MagickImage();
-            magickImage.Ping(model.FileInfo);
+            magickImage.Ping(model.CurrentValue.FileInfo);
             return new Size(magickImage.Width, magickImage.Height);
         }
         catch (Exception exception)

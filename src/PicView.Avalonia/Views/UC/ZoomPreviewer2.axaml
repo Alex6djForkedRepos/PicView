@@ -51,14 +51,14 @@
 
             <LayoutTransformControl>
                 <LayoutTransformControl.LayoutTransform>
-                    <RotateTransform Angle="{CompiledBinding Model.Rotation}" />
+                    <RotateTransform Angle="{CompiledBinding Model.Value.Rotation}" />
                 </LayoutTransformControl.LayoutTransform>
                 <Panel>
                     <customControls:PicBox
-                        ImageType="{CompiledBinding ImageType.Value,
+                        ImageType="{CompiledBinding Model.Value.ImageType,
                                                     Mode=OneWay,
                                                     FallbackValue=0}"
-                        Source="{CompiledBinding Image.Value}"
+                        Source="{CompiledBinding Model.Value.Image}"
                         x:Name="OverlayImage" />
                     <Canvas x:Name="OverlayCanvas">
                         <Rectangle

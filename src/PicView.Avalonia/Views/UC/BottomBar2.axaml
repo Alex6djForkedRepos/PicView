@@ -245,7 +245,7 @@
                 Icon="{StaticResource ZoomOutImage}"
                 IconHeight="16"
                 IconWidth="18"
-                IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.Image.Value,
+                IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.Model.Value.Image,
                                             Converter={x:Static ObjectConverters.IsNotNull},
                                             FallbackValue=False,
                                             Mode=OneWay}"
@@ -265,7 +265,7 @@
                 Icon="{StaticResource ZoomAltImage}"
                 IconHeight="16"
                 IconWidth="18"
-                IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.Image.Value,
+                IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.Model.Value.Image,
                                             Converter={x:Static ObjectConverters.IsNotNull},
                                             FallbackValue=False,
                                             Mode=OneWay}"
@@ -285,7 +285,7 @@
                 Icon="{StaticResource RefreshCcwOff}"
                 IconHeight="17"
                 IconWidth="17"
-                IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.Image.Value,
+                IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.Model.Value.Image,
                                             Converter={x:Static ObjectConverters.IsNotNull},
                                             FallbackValue=False,
                                             Mode=OneWay}"
@@ -346,7 +346,7 @@
                 Icon="{StaticResource RotateCwImage}"
                 IconHeight="16"
                 IconWidth="16"
-                IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.Image.Value,
+                IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.Model.Value.Image,
                                             Converter={x:Static ObjectConverters.IsNotNull},
                                             FallbackValue=False,
                                             Mode=OneWay}"
@@ -368,7 +368,7 @@
                 Icon="{StaticResource RotateCcwImage}"
                 IconHeight="16"
                 IconWidth="16"
-                IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.Image.Value,
+                IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.Model.Value.Image,
                                             Converter={x:Static ObjectConverters.IsNotNull},
                                             FallbackValue=False,
                                             Mode=OneWay}"
@@ -396,7 +396,7 @@
                 Icon="{StaticResource RepeatImage}"
                 IconHeight="16"
                 IconWidth="16"
-                IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.Image.Value,
+                IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.Model.Value.Image,
                                             Converter={x:Static ObjectConverters.IsNotNull},
                                             FallbackValue=False,
                                             Mode=OneWay}"
