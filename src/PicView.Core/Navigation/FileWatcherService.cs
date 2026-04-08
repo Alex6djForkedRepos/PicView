@@ -30,6 +30,16 @@ public class FileWatcherService : IFileWatcherService, IDisposable
 
     public void Watch(TabViewModel tab, string? directory = null)
     {
+        if (tab?.ImageIterator is null)
+        {
+            return;
+        }
+
+        if (tab.Model.CurrentValue is null)
+        {
+            return;
+        }
+        
         if (string.IsNullOrEmpty(directory))
         {
             var fileInfo = tab.Model?.CurrentValue.FileInfo;

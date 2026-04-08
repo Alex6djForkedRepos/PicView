@@ -53,7 +53,7 @@ public static class WindowFunctions2
             mainWindowViewModel = viewModel;
         });
         
-        string lastFile;
+        string? lastFile;
 
         if (!string.IsNullOrEmpty(ArchiveExtraction.LastOpenedArchive))
         {
@@ -65,11 +65,15 @@ public static class WindowFunctions2
         }
         else
         {
-            lastFile = mainWindowViewModel.WindowTabs.ActiveTab.CurrentValue.Model.CurrentValue.FileInfo?.FullName ?? FileHistoryManager.GetLastEntry() ?? string.Empty;
+            lastFile = mainWindowViewModel.WindowTabs.ActiveTab.CurrentValue?.Model.CurrentValue?.FileInfo?.FullName ?? FileHistoryManager.GetLastEntry() ?? null;
         }
 
 
-        Settings.StartUp.LastFile = lastFile;
+        if (lastFile is not null)
+        {
+            Settings.StartUp.LastFile = lastFile;
+        }
+        
         await SaveSettingsAsync();
         await KeybindingManager.UpdateKeyBindingsFile(); // Save keybindings
         TempFileHelper.DeleteTempFiles();

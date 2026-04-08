@@ -252,6 +252,11 @@ public partial class ZoomPreviewer2 : UserControl
         {
             return;
         }
+
+        if (model.CurrentValue is null)
+        {
+            return;
+        }
         if (model.CurrentValue.PixelWidth is 0 || model.CurrentValue.PixelHeight is 0)
         {
             return;
