@@ -82,7 +82,7 @@ public static class SettingsUpdater2
         // vm.PicViewer.IsShowingSideBySide.Value = Settings.ImageScaling.ShowImageSideBySide;
         vm.IsUIShown.Value  = Settings.UIProperties.ShowInterface;
         vm.IsTopToolbarShown.Value  = Settings.UIProperties.ShowInterface;
-        vm.IsBottomToolbarShown.Value   = Settings.UIProperties.ShowBottomNavBar &&
+        vm.GlobalSettings.IsBottomToolbarShown.Value   = Settings.UIProperties.ShowBottomNavBar &&
                                     Settings.UIProperties.ShowInterface;
         vm.IsFullscreen.Value  = Settings.WindowProperties.Fullscreen;
         vm.BackgroundChoice.Value = Settings.UIProperties.BgColorChoice;

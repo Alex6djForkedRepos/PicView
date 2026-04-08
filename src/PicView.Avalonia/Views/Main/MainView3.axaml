@@ -358,10 +358,11 @@
 
                 <!--  Toggle bottom bar  -->
                 <MenuItem
+                    Command="{Binding ToggleBottomToolbarCommand}"
                     Header="{CompiledBinding Translation.ShowBottomToolbar.Value,
                                              Mode=OneWay}"
-                    IsChecked="{CompiledBinding IsBottomToolbarShown.Value}"
-                    IsVisible="{CompiledBinding !IsBottomToolbarShown.Value}"
+                    IsChecked="{CompiledBinding GlobalSettings.IsBottomToolbarShown.Value}"
+                    IsVisible="{CompiledBinding !GlobalSettings.IsBottomToolbarShown.Value}"
                     ToggleType="CheckBox">
                     <MenuItem.Icon>
                         <Image

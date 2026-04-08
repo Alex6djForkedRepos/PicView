@@ -199,13 +199,7 @@
                         ToggleType="CheckBox" />
 
                     <!--  Toggle bottom bar  -->
-                    <NativeMenuItem
-                        Command="{Binding ToggleBottomToolbarCommand}"
-                        Header="{CompiledBinding Translation.IsShowingBottomToolbar.Value,
-                                                 Mode=OneWay}"
-                        IsEnabled="{CompiledBinding IsBottomToolbarShown.Value,
-                                                    Mode=OneWay}"
-                        ToggleType="CheckBox" />
+                    <NativeMenuItem Command="{Binding ToggleBottomToolbarCommand}" Header="{CompiledBinding Translation.IsShowingBottomToolbar.Value, Mode=OneWay}" />
 
                     <!--  Toggle gallery  -->
                     <NativeMenuItem Command="{Binding ToggleGalleryCommand}" Header="{CompiledBinding Translation.ShowImageGallery.Value, Mode=OneWay}" />

@@ -30,6 +30,7 @@
                 Background="Transparent"
                 BorderThickness="0"
                 Classes="altHover"
+                Command="{Binding MainWindows.ActiveWindow.Value.ToggleBottomToolbarCommand}"
                 Margin="0,0,0,10"
                 Padding="0,10,0,10"
                 Width="300">

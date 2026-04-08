@@ -62,9 +62,6 @@ public class MainWindowViewModel : IDisposable
     public BindableReactiveProperty<object?> ImageBackground { get; } = new();
 
     public BindableReactiveProperty<object?> ConstrainedImageBackground { get; } = new();
-    public BindableReactiveProperty<object> TopScreenMargin { get; } = new(0);
-
-
 
     public BindableReactiveProperty<bool> IsFullscreen { get; } = new();
 
@@ -78,8 +75,6 @@ public class MainWindowViewModel : IDisposable
 
     public BindableReactiveProperty<bool> IsUIShown { get; } = new();
     public BindableReactiveProperty<bool> IsTopToolbarShown { get; } = new();
-
-    public BindableReactiveProperty<bool> IsBottomToolbarShown { get; } = new(Settings.UIProperties.ShowBottomNavBar);
 
     public BindableReactiveProperty<bool> IsEditableTitlebarOpen { get; } = new();
 
@@ -676,7 +671,6 @@ public class MainWindowViewModel : IDisposable
             IsLoadingIndicatorShown,
             IsUIShown,
             IsTopToolbarShown,
-            IsBottomToolbarShown,
             IsEditableTitlebarOpen);
     }
 

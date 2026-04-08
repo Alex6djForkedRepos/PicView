@@ -123,7 +123,7 @@ public static class WindowResizing2
                 {
                     var screenPoint = control.PointToScreen(offset);
                     core.PlatformService.SetCursorPos(screenPoint.X, screenPoint.Y);
-                }, DispatcherPriority.Render);
+                }, DispatcherPriority.Loaded + 1);
 
             }
             else
@@ -346,7 +346,7 @@ public static class WindowResizing2
         }
         else
         {
-            Dispatcher.CurrentDispatcher.InvokeAsync(Set);
+            Dispatcher.CurrentDispatcher.Invoke(Set);
         }
 
         return;

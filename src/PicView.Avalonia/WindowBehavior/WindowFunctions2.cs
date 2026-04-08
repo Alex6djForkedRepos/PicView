@@ -115,7 +115,7 @@ public static class WindowFunctions2
             return;
         }
 
-        vm.IsBottomToolbarShown.Value = true;
+        vm.GlobalSettings.IsBottomToolbarShown.Value = true;
         vm.BottombarHeight.Value = SizeDefaults.BottombarHeight;
     }
 

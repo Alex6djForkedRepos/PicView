@@ -9,7 +9,7 @@ public class GlobalSettingsViewModel
     public BindableReactiveProperty<bool> IsIncludingSubdirectories { get; } =
         new(Settings.Sorting.IncludeSubDirectories);
 
-    public BindableReactiveProperty<bool> IsScrollingEnabled { get; } = new();
+    public BindableReactiveProperty<bool> IsScrollingEnabled { get; } = new(Settings.Zoom.ScrollEnabled);
 
     public BindableReactiveProperty<bool> IsStretched { get; } = new(Settings.ImageScaling.StretchImage);
 
@@ -23,4 +23,6 @@ public class GlobalSettingsViewModel
     public BindableReactiveProperty<bool> IsShowingTaskbarProgress { get; } = new(Settings.UIProperties.IsTaskbarProgressEnabled);
     
     public BindableReactiveProperty<bool> ShowSetAsWallpaper { get; } = new(Settings.UIProperties.ShowSetAsWallpaper);
+    
+    public BindableReactiveProperty<bool> IsBottomToolbarShown { get; } = new(Settings.UIProperties.ShowBottomNavBar);
 }

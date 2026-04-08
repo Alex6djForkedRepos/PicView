@@ -424,8 +424,7 @@ public class FunctionsMapper2(Core.ViewModels.MainWindowViewModel vm, Window win
     /// <inheritdoc cref="HideInterfaceLogic.ToggleBottomToolbar(MainViewModel)" />
     public async ValueTask ToggleBottomToolbar()
     {
-        // await HideInterfaceLogic.ToggleBottomToolbar(vm).ConfigureAwait(false);
-        return;
+        await ToggleUIVisibility.ToggleBottomBar(vm);
     }
     
     /// <inheritdoc cref="SettingsUpdater.ToggleValueTaskbarProgress(MainViewModel)" />

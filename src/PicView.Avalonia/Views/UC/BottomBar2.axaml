@@ -1,6 +1,6 @@
 <UserControl
     Height="{CompiledBinding BottombarHeight.Value}"
-    IsVisible="{CompiledBinding IsBottomToolbarShown.Value}"
+    IsVisible="{CompiledBinding GlobalSettings.IsBottomToolbarShown.Value}"
     x:Class="PicView.Avalonia.Views.UC.BottomBar2"
     x:DataType="viewModels:MainWindowViewModel"
     xmlns="https://github.com/avaloniaui"
@@ -194,7 +194,7 @@
             <Separator />
 
             <!--  Hide bottom bar  -->
-            <MenuItem Header="{CompiledBinding Translation.HideBottomToolbar.Value, Mode=OneWay}">
+            <MenuItem Command="{Binding ToggleBottomToolbarCommand}" Header="{CompiledBinding Translation.HideBottomToolbar.Value, Mode=OneWay}">
                 <MenuItem.Icon>
                     <Image
                         Height="12"

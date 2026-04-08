@@ -367,7 +367,7 @@ public class TabOverviewViewModel
 
     #region Retrieval
 
-    public object? GetCurrentSource() => GetSourceFromFile(ActiveTab.CurrentValue.Model.CurrentValue.FileInfo);
+    public object? GetCurrentSource() => GetSourceFromFile(ActiveTab.CurrentValue.Model.CurrentValue?.FileInfo);
 
     public object? GetSourceFromFile(FileInfo fileInfo)
     {
@@ -377,6 +377,12 @@ public class TabOverviewViewModel
             {
                 return preLoadValue.ImageModel.Image;
             }
+        }
+
+        if (ActiveTab.CurrentValue.ImageIterator is null || ActiveTab.CurrentValue.ImageIterator.CurrentIndex < 0 
+            || ActiveTab.CurrentValue.ImageIterator.CurrentIndex >= ActiveTab.CurrentValue.ImageIterator.Files.Count)
+        {
+            return null;
         }
 
         return SharedCache.LoadAsync(ActiveTab.CurrentValue.Id, ActiveTab.CurrentValue.ImageIterator.CurrentIndex,
