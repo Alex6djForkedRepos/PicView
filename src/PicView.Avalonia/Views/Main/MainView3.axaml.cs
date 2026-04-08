@@ -71,7 +71,7 @@ public partial class MainView3 : UserControl
             return;
         }
 
-        if (tabViewModel.Model.CurrentValue.FileInfo is not null)
+        if (tabViewModel.Model?.CurrentValue?.FileInfo is not null)
         {
             tabViewModel.CurrentView.Value = new ImageViewer2();
         }
@@ -93,7 +93,7 @@ public partial class MainView3 : UserControl
         }
 
         vm.WindowTabs.SelectTab(tab);
-        if (tab.Model.CurrentValue.FileInfo?.Exists == true)
+        if (tab.Model?.CurrentValue?.FileInfo?.Exists == true)
         {
             tab.UpdateTabTitle();
         }

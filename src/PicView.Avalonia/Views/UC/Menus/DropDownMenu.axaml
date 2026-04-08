@@ -1,13 +1,10 @@
 <customControls:AnimatedMenu
     IsOpen="{CompiledBinding TopTitlebarViewModel.DropDownMenu.IsDropDownMenuVisible.Value}"
-    mc:Ignorable="d"
     x:Class="PicView.Avalonia.Views.UC.Menus.DropDownMenu"
     x:DataType="viewModels:MainWindowViewModel"
     xmlns="https://github.com/avaloniaui"
     xmlns:customControls="clr-namespace:PicView.Avalonia.CustomControls"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:gallery="clr-namespace:PicView.Core.Gallery;assembly=PicView.Core"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:uc="clr-namespace:PicView.Avalonia.Views.UC"
     xmlns:viewModels="clr-namespace:PicView.Core.ViewModels;assembly=PicView.Core"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
@@ -351,6 +348,7 @@
                             Background="Transparent"
                             Classes="altHover"
                             ClickMode="Release"
+                            Command="{CompiledBinding TopTitlebarViewModel.DropDownMenu.OpenToolWindowsOptions}"
                             CornerRadius="8,0,0,0"
                             Padding="15,7,15,7">
                             <StackPanel Orientation="Horizontal" Spacing="7">
@@ -494,8 +492,9 @@
                             Background="Transparent"
                             Classes="altHover"
                             ClickMode="Release"
+                            Command="{CompiledBinding SettingsWindowCommand}"
                             CornerRadius="8,0,0,0"
-                            Icon="{StaticResource SettingsImage}"
+                            Data="{StaticResource CogGeometry}"
                             IconHeight="14"
                             IconMargin="0,0,7,0"
                             IconWidth="14"
@@ -532,6 +531,7 @@
                             Classes="altHover"
                             Command="{Binding AutoFitWindowCommand}"
                             CornerRadius="8,0,0,0"
+                            IsChecked="{Binding GlobalSettings.IsAutoFit.Value, Mode=TwoWay}"
                             Padding="7,4"
                             ToolTip.Tip="{CompiledBinding Translation.AutoFitWindow.Value,
                                                           Mode=OneWay}">
@@ -545,6 +545,7 @@
                             Classes="altHover"
                             Command="{Binding SetTopMostCommand}"
                             CornerRadius="8,0,0,0"
+                            IsChecked="{Binding GlobalSettings.IsTopMost.Value, Mode=TwoWay}"
                             Padding="7,4"
                             ToolTip.Tip="{CompiledBinding Translation.StayTopMost.Value,
                                                           Mode=OneWay}">
@@ -558,6 +559,7 @@
                             Classes="altHover"
                             Command="{Binding ToggleLoopingCommand}"
                             CornerRadius="8,0,0,0"
+                            IsChecked="{Binding GlobalSettings.IsLooping.Value, Mode=TwoWay}"
                             Padding="7,4"
                             ToolTip.Tip="{CompiledBinding Translation.ToggleLooping.Value,
                                                           Mode=OneWay}">
@@ -571,6 +573,7 @@
                             Classes="altHover"
                             Command="{Binding ToggleScrollCommand}"
                             CornerRadius="8,0,0,0"
+                            IsChecked="{Binding GlobalSettings.IsScrollingEnabled.Value, Mode=TwoWay}"
                             Padding="7,4"
                             ToolTip.Tip="{CompiledBinding Translation.ToggleScroll.Value,
                                                           Mode=OneWay}">
@@ -584,6 +587,7 @@
                             Classes="altHover"
                             Command="{Binding StretchCommand}"
                             CornerRadius="8,0,0,0"
+                            IsChecked="{Binding GlobalSettings.IsStretched.Value, Mode=TwoWay}"
                             Padding="7,4"
                             ToolTip.Tip="{CompiledBinding Translation.Stretch.Value,
                                                           Mode=OneWay}">
@@ -597,6 +601,7 @@
                             Classes="altHover"
                             Command="{Binding SideBySideCommand}"
                             CornerRadius="8,0,0,0"
+                            IsChecked="{Binding GlobalSettings.IsSideBySide.Value, Mode=TwoWay}"
                             Padding="7,4"
                             ToolTip.Tip="{CompiledBinding Translation.SideBySideTooltip.Value,
                                                           Mode=OneWay}">
