@@ -231,10 +231,10 @@ public class TiffNavigationTests : IDisposable
     
     private class MockThumbnailCache : IThumbnailCache
     {
-        public void Add(string ownerId, string path, object thumbnail) { }
+        public void Add(uint ownerId, string path, object thumbnail) { }
         public bool TryGet(string path, out object? thumbnail) { thumbnail = null; return false; }
         public void Remove(string path) { }
-        public void RemoveOwner(string ownerId) { }
+        public void RemoveOwner(uint ownerId) { }
         public void Clear() { }
         public bool IsEmpty() => true;
     }

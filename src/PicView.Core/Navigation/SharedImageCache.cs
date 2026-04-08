@@ -26,14 +26,14 @@ public class SharedImageCache : IImageCache
     /// Each owner is associated with an instance of <see cref="EvictingDictionary{TValue}"/>
     /// which provides eviction capabilities to limit memory usage.
     /// </remarks>
-    private readonly ConcurrentDictionary<string, EvictingDictionary<PreLoadValue>> _ownerDictionaries = new();
+    private readonly ConcurrentDictionary<uint, EvictingDictionary<PreLoadValue>> _ownerDictionaries = new();
     
     /// Fast lookup by file path (using OS-specific string comparer)
     private readonly ConcurrentDictionary<string, PreLoadValue> _pathLookup;
     /// Lazy disposal list: FilePath -> (PreLoadValue, ExpirationTime)
     private readonly ConcurrentDictionary<string, (PreLoadValue Item, DateTime Expiration)> _disposalList;
     /// Keep track of which directories and file lists each owner has for transfer logic
-    private readonly ConcurrentDictionary<string, (string Directory, IReadOnlyList<FileInfo> Files, int CurrentIndex)> _ownerContexts = new();
+    private readonly ConcurrentDictionary<uint, (string Directory, IReadOnlyList<FileInfo> Files, int CurrentIndex)> _ownerContexts = new();
     
     // The worker
     private readonly Preloader2 _preLoader;
@@ -58,18 +58,18 @@ public class SharedImageCache : IImageCache
 
     #region Resynchronize and owner registration
     
-    public void RegisterOwner(string ownerId)
+    public void RegisterOwner(uint ownerId)
     {
         _ownerDictionaries.TryAdd(ownerId, new EvictingDictionary<PreLoadValue>(PreLoaderConfig.MaxCount));
     }
 
-    public void RemoveOwner(string ownerId)
+    public void RemoveOwner(uint ownerId)
     {
         _ownerDictionaries.TryRemove(ownerId, out _);
         _ownerContexts.TryRemove(ownerId, out _);
     }
 
-    public void Resynchronize(string ownerId, IReadOnlyList<FileInfo> files)
+    public void Resynchronize(uint ownerId, IReadOnlyList<FileInfo> files)
     {
         if (!_ownerDictionaries.TryGetValue(ownerId, out var dict))
         {
@@ -125,12 +125,12 @@ public class SharedImageCache : IImageCache
 
     #region Add, Get, Remove, and Clear
     
-    public bool Add(string ownerId, int index, PreLoadValue preLoadValue, int listCount, bool isReverse)
+    public bool Add(uint ownerId, int index, PreLoadValue preLoadValue, int listCount, bool isReverse)
     {
         return TryAdd(ownerId, index, preLoadValue, listCount, isReverse, out _);
     }
 
-    public bool TryAdd(string ownerId, int index, PreLoadValue preLoadValue, int listCount, bool isReverse, out PreLoadValue? value)
+    public bool TryAdd(uint ownerId, int index, PreLoadValue preLoadValue, int listCount, bool isReverse, out PreLoadValue? value)
     {
         value = null;
         if (!_ownerDictionaries.TryGetValue(ownerId, out var dict))
@@ -172,7 +172,7 @@ public class SharedImageCache : IImageCache
         return TryResurrect(f.FullName, out value);
     }
 
-    public bool TryGet(string ownerId, int index, out PreLoadValue? value)
+    public bool TryGet(uint ownerId, int index, out PreLoadValue? value)
     {
         if (_ownerDictionaries.TryGetValue(ownerId, out var dict))
         {
@@ -192,7 +192,7 @@ public class SharedImageCache : IImageCache
         return TryResurrect(f.ToString(), out value);
     }
 
-    public void TryRemove(string ownerId, int index)
+    public void TryRemove(uint ownerId, int index)
     {
         if (!_ownerDictionaries.TryGetValue(ownerId, out var dict))
         {
@@ -225,7 +225,7 @@ public class SharedImageCache : IImageCache
         _disposalList.Clear();
     }
 
-    public void Clear(string ownerId)
+    public void Clear(uint ownerId)
     {
         if (!_ownerDictionaries.TryGetValue(ownerId, out var dict))
         {
@@ -251,7 +251,7 @@ public class SharedImageCache : IImageCache
             dict.Clear();
             
             // Find another eligible tab
-            string? targetOwnerId = null;
+            uint targetOwnerId = 0;
             IReadOnlyList<FileInfo>? targetFiles = null;
             var targetCurrentIndex = 0;
             
@@ -268,7 +268,7 @@ public class SharedImageCache : IImageCache
                 break;
             }
             
-            if (targetOwnerId != null && targetFiles != null && _ownerDictionaries.TryGetValue(targetOwnerId, out var targetDict))
+            if (targetFiles != null && _ownerDictionaries.TryGetValue(targetOwnerId, out var targetDict))
             {
                 var fileIndexMap = new Dictionary<string, int>(_pathLookup.Comparer);
                 for (var i = 0; i < targetFiles.Count; i++)
@@ -321,12 +321,12 @@ public class SharedImageCache : IImageCache
 
     #region Loading, preloading and wait for loading
 
-    public async Task<ImageModel?> LoadAsync(string ownerId, int index, IReadOnlyList<FileInfo> list, CancellationToken ct = default)
+    public async Task<ImageModel?> LoadAsync(uint ownerId, int index, IReadOnlyList<FileInfo> list, CancellationToken ct = default)
     {
         return await _preLoader.AddAsync(ownerId, index, list, false, ct).ConfigureAwait(false);
     }
 
-    public void Preload(string ownerId, int currentIndex, bool reversed, IReadOnlyList<FileInfo> files, CancellationToken token) 
+    public void Preload(uint ownerId, int currentIndex, bool reversed, IReadOnlyList<FileInfo> files, CancellationToken token) 
     {
         // Update context for transfer logic
         if (files.Count > 0)
@@ -336,7 +336,7 @@ public class SharedImageCache : IImageCache
         _preLoader.Preload(ownerId, currentIndex, reversed, files, token);
     }
 
-    public async ValueTask<bool> WaitForLoadingCompleteAsync(string ownerId, int index)
+    public async ValueTask<bool> WaitForLoadingCompleteAsync(uint ownerId, int index)
     {
         if (!TryGet(ownerId, index, out var value) || value is null)
         {

@@ -22,7 +22,7 @@ public interface IImageCache
     /// <param name="list">The list of files to resolve the index against.</param>
     /// <param name="ct">Token to cancel the load operation.</param>
     /// <returns>The loaded or cached <see cref="ImageModel"/>, or null if loading failed.</returns>
-    Task<ImageModel?> LoadAsync(string ownerId, int index, IReadOnlyList<FileInfo> list,
+    Task<ImageModel?> LoadAsync(uint ownerId, int index, IReadOnlyList<FileInfo> list,
         CancellationToken ct = default);
     
     /// <summary>
@@ -33,7 +33,7 @@ public interface IImageCache
     /// <summary>
     /// Attempts to retrieve a preload value by owner ID and index.
     /// </summary>
-    bool TryGet(string ownerId, int index, out PreLoadValue? value);
+    bool TryGet(uint ownerId, int index, out PreLoadValue? value);
 
     /// <summary>
     /// Clears the entire cache across all owners.
@@ -43,7 +43,7 @@ public interface IImageCache
     /// <summary>
     /// Clears cache items associated specifically with the given owner ID.
     /// </summary>
-    void Clear(string ownerId);
+    void Clear(uint ownerId);
 
     /// <summary>
     /// Checks if the cache contains a file with the specified path.
@@ -53,28 +53,28 @@ public interface IImageCache
     /// <summary>
     /// Adds a value to the cache, potentially triggering eviction of distant items.
     /// </summary>
-    bool Add(string ownerId, int index, PreLoadValue preLoadValue, int listCount, bool isReverse);
+    bool Add(uint ownerId, int index, PreLoadValue preLoadValue, int listCount, bool isReverse);
 
     /// <summary>
     /// Tries to add a value to the cache, returning the evicted value if capacity was exceeded.
     /// </summary>
-    bool TryAdd(string ownerId, int index, PreLoadValue preLoadValue, int listCount, bool isReverse, out PreLoadValue? value);
+    bool TryAdd(uint ownerId, int index, PreLoadValue preLoadValue, int listCount, bool isReverse, out PreLoadValue? value);
 
     /// <summary>
     /// Initiates the background predictive loading (pre-fetching) process.
     /// </summary>
-    void Preload(string ownerId, int currentIndex, bool reversed, IReadOnlyList<FileInfo> files, CancellationToken token);
+    void Preload(uint ownerId, int currentIndex, bool reversed, IReadOnlyList<FileInfo> files, CancellationToken token);
     
     /// <summary>
     /// Removes an owner from the cache tracking. 
     /// Should be called when a Tab is closed to free up reserved capacity.
     /// </summary>
-    void RemoveOwner(string ownerId);
+    void RemoveOwner(uint ownerId);
 
     /// <summary>
     /// Registers a new owner (tab) to allow it to reserve capacity in the cache.
     /// </summary>
-    void RegisterOwner(string ownerId);
+    void RegisterOwner(uint ownerId);
 
     /// <summary>
     /// Helper to clear resources specifically for a <see cref="TabViewModel"/>.
@@ -82,12 +82,12 @@ public interface IImageCache
     /// </summary>
     void Clear(TabViewModel tab, int currentIndex, string directory, IReadOnlyList<FileInfo> files);
 
-    void TryRemove(string ownerId, int index);
+    void TryRemove(uint ownerId, int index);
 
     /// <summary>
     /// Resynchronizes the cache for a specific owner when the file list changes (e.g., sorting).
     /// </summary>
-    void Resynchronize(string ownerId, IReadOnlyList<FileInfo> files);
+    void Resynchronize(uint ownerId, IReadOnlyList<FileInfo> files);
 
-    ValueTask<bool> WaitForLoadingCompleteAsync(string ownerId, int index);
+    ValueTask<bool> WaitForLoadingCompleteAsync(uint ownerId, int index);
 }

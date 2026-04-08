@@ -84,8 +84,7 @@ public class TabOverviewViewModel
     
     private TabViewModel CreateTabInternal(FileInfo? file = null)
     {
-        var id = Guid.NewGuid().ToString("N");
-        var tab = new TabViewModel(id, CloseTab, SharedFileWatcher);
+        var tab = new TabViewModel(CloseTab, SharedFileWatcher);
         tab.ParentWindowContext = _parentVm;
         if (file is not null)
         {
@@ -141,7 +140,7 @@ public class TabOverviewViewModel
         CloseTab(tab);
     }
     
-    public void CloseTab(string tabId)
+    public void CloseTab(uint tabId)
     {
         var tab = Tabs.Value.FirstOrDefault(t => t.Id == tabId);
         if (tab is null)

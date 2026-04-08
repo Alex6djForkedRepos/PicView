@@ -8,6 +8,7 @@ using PicView.Core.Navigation.Interfaces;
 using PicView.Core.Preloading;
 using PicView.Core.Titles;
 using PicView.Core.FileHistory;
+using PicView.Core.Generators;
 using R3;
 
 namespace PicView.Core.ViewModels;
@@ -20,13 +21,13 @@ namespace PicView.Core.ViewModels;
 /// lifecycle of resources specific to this tab instance.
 /// </para>
 /// </summary>
-public class TabViewModel(string id, Action<string> closeTab, IFileWatcherService? fileWatcherService = null) : IDisposable
+public class TabViewModel(Action<uint> closeTab, IFileWatcherService? fileWatcherService = null) : IDisposable
 {
     /// The CoreViewModel that currently "owns" this tab
     public object? ParentWindowContext { get; set; }
     
     /// Unique identifier for this tab.
-    public string Id { get; } = id;
+    public uint Id { get; } = TabIDGenerator.GetNextId();
     
     public CompositeDisposable Disposables { get; } = new();
     public bool IsInitialized { get; set; }

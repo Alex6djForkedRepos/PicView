@@ -6,7 +6,7 @@ public interface IThumbnailCache
     /// Adds a thumbnail to the cache for a specific owner.
     /// If the thumbnail already exists, it registers the owner for that thumbnail.
     /// </summary>
-    void Add(string ownerId, string path, object thumbnail);
+    void Add(uint ownerId, string path, object thumbnail);
 
     /// <summary>
     /// Retrieves a thumbnail from the cache if it exists.
@@ -21,7 +21,7 @@ public interface IThumbnailCache
     /// <summary>
     /// Removes an owner. If a thumbnail has no more owners, it is removed from memory.
     /// </summary>
-    void RemoveOwner(string ownerId);
+    void RemoveOwner(uint ownerId);
 
     /// <summary>
     /// Clears the entire cache.

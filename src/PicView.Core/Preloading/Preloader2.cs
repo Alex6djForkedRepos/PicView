@@ -8,10 +8,10 @@ namespace PicView.Core.Preloading;
 public class Preloader2(Func<FileInfo, ValueTask<ImageModel>> imageModelLoader, IImageCache cache) : IPreloader
 {
     private readonly Lock _lock = new();
-    private string? _currentOwner;
+    private uint _currentOwner;
     private bool _isRunning;
 
-    public void Preload(string ownerId, int currentIndex, bool reversed, IReadOnlyList<FileInfo> files,
+    public void Preload(uint ownerId, int currentIndex, bool reversed, IReadOnlyList<FileInfo> files,
         CancellationToken token)
     {
         if (files is null || files.Count == 0)
@@ -42,7 +42,7 @@ public class Preloader2(Func<FileInfo, ValueTask<ImageModel>> imageModelLoader, 
 
     // --- Core Loading Logic (AddAsync) ---
 
-    public async ValueTask<ImageModel?> AddAsync(string ownerId, int index, IReadOnlyList<FileInfo> list,
+    public async ValueTask<ImageModel?> AddAsync(uint ownerId, int index, IReadOnlyList<FileInfo> list,
         bool isReverse = false, CancellationToken ct = default)
     {
         if (list == null || index < 0 || index >= list.Count)
@@ -93,7 +93,7 @@ public class Preloader2(Func<FileInfo, ValueTask<ImageModel>> imageModelLoader, 
         return imageModel;
     }
 
-    public void Add(string ownerId, int index, ImageModel model, IReadOnlyList<FileInfo> list)
+    public void Add(uint ownerId, int index, ImageModel model, IReadOnlyList<FileInfo> list)
     {
         var evicted = cache.TryAdd(ownerId, index, new PreLoadValue(model), list.Count, false, out var evictedValue);
         if (evicted && cache is SharedImageCache shared)
@@ -102,12 +102,12 @@ public class Preloader2(Func<FileInfo, ValueTask<ImageModel>> imageModelLoader, 
         }
     }
 
-    public void Resynchronize(string ownerId, IReadOnlyList<FileInfo> files)
+    public void Resynchronize(uint ownerId, IReadOnlyList<FileInfo> files)
     {
         cache.Resynchronize(ownerId, files);
     }
 
-    private async Task PreLoadInternalAsync(string ownerId, int currentIndex, IReadOnlyList<FileInfo> list,
+    private async Task PreLoadInternalAsync(uint ownerId, int currentIndex, IReadOnlyList<FileInfo> list,
         bool reversed, CancellationToken token)
     {
         var count = list.Count;

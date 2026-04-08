@@ -8,14 +8,14 @@ public class ThumbnailCache : IThumbnailCache
     private readonly ConcurrentDictionary<string, object> _thumbnails = new();
     
     // Path -> Set of Owners
-    private readonly Dictionary<string, HashSet<string>> _ownersByFile = new();
+    private readonly Dictionary<string, HashSet<uint>> _ownersByFile = new();
     
     // Owner -> Set of Paths
-    private readonly Dictionary<string, HashSet<string>> _filesByOwner = new();
+    private readonly Dictionary<uint, HashSet<string>> _filesByOwner = new();
     
     private readonly Lock _lock = new();
 
-    public void Add(string ownerId, string path, object thumbnail)
+    public void Add(uint ownerId, string path, object thumbnail)
     {
         lock (_lock)
         {
@@ -23,14 +23,14 @@ public class ThumbnailCache : IThumbnailCache
 
             if (!_ownersByFile.TryGetValue(path, out var owners))
             {
-                owners = new HashSet<string>();
+                owners = [];
                 _ownersByFile[path] = owners;
             }
             owners.Add(ownerId);
 
             if (!_filesByOwner.TryGetValue(ownerId, out var files))
             {
-                files = new HashSet<string>();
+                files = [];
                 _filesByOwner[ownerId] = files;
             }
             files.Add(path);
@@ -62,7 +62,7 @@ public class ThumbnailCache : IThumbnailCache
         }
     }
 
-    public void RemoveOwner(string ownerId)
+    public void RemoveOwner(uint ownerId)
     {
         lock (_lock)
         {

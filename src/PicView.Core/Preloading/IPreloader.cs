@@ -14,18 +14,18 @@ public interface IPreloader
     /// <summary>
     /// Adds a fully loaded item directly to the cache.
     /// </summary>
-    void Add(string ownerId, int index, ImageModel model, IReadOnlyList<FileInfo> list);
+    void Add(uint ownerId, int index, ImageModel model, IReadOnlyList<FileInfo> list);
 
     /// <summary>
     /// Asynchronously loads an item and adds it to the cache.
     /// </summary>
-    ValueTask<ImageModel?> AddAsync(string ownerId, int index, IReadOnlyList<FileInfo> list, bool isReverse = false,
+    ValueTask<ImageModel?> AddAsync(uint ownerId, int index, IReadOnlyList<FileInfo> list, bool isReverse = false,
         CancellationToken ct = default);
     
-    void Resynchronize(string ownerId, IReadOnlyList<FileInfo> files);
+    void Resynchronize(uint ownerId, IReadOnlyList<FileInfo> files);
     
     /// <summary>
     /// Starts the predictive loop to load images ahead of the current view.
     /// </summary>
-    void Preload(string ownerId, int currentIndex, bool reversed, IReadOnlyList<FileInfo> files, CancellationToken cancellationToken);
+    void Preload(uint ownerId, int currentIndex, bool reversed, IReadOnlyList<FileInfo> files, CancellationToken cancellationToken);
 }

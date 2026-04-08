@@ -180,10 +180,10 @@ public class FileWatcherServiceTests : IDisposable
     {
         public List<string> RemovedPaths { get; } = new();
 
-        public void Add(string ownerId, string path, object thumbnail) { }
+        public void Add(uint ownerId, string path, object thumbnail) { }
         public bool TryGet(string path, out object? thumbnail) { thumbnail = null; return false; }
         public void Remove(string path) => RemovedPaths.Add(path);
-        public void RemoveOwner(string ownerId) { }
+        public void RemoveOwner(uint ownerId) { }
         public void Clear() { }
         public bool IsEmpty() => true;
     }
