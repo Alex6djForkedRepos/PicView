@@ -18,9 +18,7 @@ namespace PicView.Avalonia.Win32.Views;
 
 public partial class WinMainWindow2 : MainWindow, IPlatformWindowService
 {
-    private readonly AvaloniaRenderingFrameProvider? _frameProvider;
     private static WindowInitializer? _windowInitializer;
-    public readonly CompositeDisposable Disposables = new();
 
     public WinMainWindow2()
     {
@@ -30,10 +28,6 @@ public partial class WinMainWindow2 : MainWindow, IPlatformWindowService
         }
         var mainWindowViewModel = new MainWindowViewModel(core.Translation, this, core.GlobalSettings, core.GallerySettings);
         DataContext = mainWindowViewModel;
-        
-        // initialize RenderingFrameProvider
-        _frameProvider = new AvaloniaRenderingFrameProvider(GetTopLevel(this)!);
-        UIHelper2.SetFrameProvider(_frameProvider);
 
         InitializeComponent();
         
@@ -119,8 +113,6 @@ public partial class WinMainWindow2 : MainWindow, IPlatformWindowService
 #endif
             });
 
-            UIHelper2.AddDropDownMenu();
-
             // Close tabMenu when clicking outside of it
             PointerPressed += (_, _) =>
             {
@@ -135,19 +127,7 @@ public partial class WinMainWindow2 : MainWindow, IPlatformWindowService
                 }
             };
             UIHelper2.GetMainTabControl.TabDetached += MainTabControlOnTabDetached;
-            Activated += OnActivated;
-            Resized += WindowSizeChanged;
         };
-    }
-
-    private void OnActivated(object? sender, EventArgs e)
-    {
-        if (Application.Current.DataContext is not CoreViewModel core || Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop)
-        {
-            return;
-        }
-        core.MainWindows.ActiveWindow.Value = DataContext as MainWindowViewModel;
-        desktop.MainWindow = this;
     }
 
     private void MainTabControlOnTabDetached(object? sender, TabDetachEventArgs e)

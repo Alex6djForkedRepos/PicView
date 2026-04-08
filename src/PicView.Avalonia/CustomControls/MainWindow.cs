@@ -1,14 +1,17 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Interactivity;
 using Avalonia.LogicalTree;
 using Avalonia.Threading;
 using PicView.Avalonia.Interfaces;
+using PicView.Avalonia.UI;
 using PicView.Avalonia.Views.UC;
 using PicView.Avalonia.WindowBehavior;
 using PicView.Core.DebugTools;
 using PicView.Core.ViewModels;
 using R3;
+using R3.Avalonia;
 
 namespace PicView.Avalonia.CustomControls;
 
@@ -18,14 +21,19 @@ public class MainWindow : Window, IMainWindow
     public bool IsChangingWindowState { get; set; } = false;
     public BottomBar2? SharedBottomBar { get; set; }
     public UserControl? SharedTitleBar { get; set; }
+    public AvaloniaRenderingFrameProvider? FrameProvider { get; set; }
 
     public MainWindow()
     {
+        FrameProvider = new AvaloniaRenderingFrameProvider(GetTopLevel(this));
+        UIHelper2.SetFrameProvider(FrameProvider);
         Loaded += OnLoaded;
     }
 
     private void OnLoaded(object? sender, RoutedEventArgs e)
     {
+        Resized += WindowSizeChanged;
+        
         // Keep window position when resizing
         ClientSizeProperty.Changed.ToObservable()
             .Subscribe(HandleWindowResize, static result =>
@@ -38,19 +46,35 @@ public class MainWindow : Window, IMainWindow
 #endif
             })
             .AddTo(Disposables);
+            
+        UIHelper2.AddDropDownMenu();
+        Activated += OnActivated;
     }
-
-    protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
+    
+    private void OnActivated(object? sender, EventArgs e)
     {
-        Resized += WindowSizeChanged;
+        if (Application.Current.DataContext is not CoreViewModel core || Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop)
+        {
+            return;
+        }
+        core.MainWindows.ActiveWindow.Value = DataContext as MainWindowViewModel;
+        desktop.MainWindow = this;
     }
-
-    protected override void OnDetachedFromLogicalTree(LogicalTreeAttachmentEventArgs e)
+    
+    protected override async void OnClosing(WindowClosingEventArgs e)
     {
-        base.OnDetachedFromLogicalTree(e);
+        await WindowFunctions2.WindowClosingBehavior(this);
+        base.OnClosing(e);
+    }
+    
+    protected override void OnClosed(EventArgs e)
+    {
+        FrameProvider?.Dispose();
         Resized -= WindowSizeChanged;
         Disposables?.Dispose();
         Loaded -= OnLoaded;
+        Activated -= OnActivated;
+        base.OnClosed(e);
     }
 
     #region Sizing

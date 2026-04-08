@@ -6,17 +6,15 @@ using PicView.Avalonia.CustomControls;
 using PicView.Avalonia.MacOS.WindowImpl;
 using PicView.Avalonia.StartUp;
 using PicView.Avalonia.UI;
-using PicView.Avalonia.WindowBehavior;
+using PicView.Core.DebugTools;
 using PicView.Core.IPlatform;
 using PicView.Core.ViewModels;
 using R3;
-using R3.Avalonia;
 
 namespace PicView.Avalonia.MacOS.Views;
 
 public partial class MacMainWindow2 : MainWindow, IPlatformWindowService
 {
-    private readonly AvaloniaRenderingFrameProvider? _frameProvider;
     private static WindowInitializer? _windowInitializer;
 
     public MacMainWindow2()
@@ -30,9 +28,7 @@ public partial class MacMainWindow2 : MainWindow, IPlatformWindowService
         core.MainWindows.MainWindows.Add(mainWindowViewModel);
         core.MainWindows.ActiveWindow.Value = mainWindowViewModel;
         InitializeComponent();
-
-        _frameProvider = new AvaloniaRenderingFrameProvider(GetTopLevel(this));
-        UIHelper2.SetFrameProvider(_frameProvider);
+        
         SharedBottomBar = BottomBar;
         SharedTitleBar = Titlebar;
 
@@ -44,7 +40,7 @@ public partial class MacMainWindow2 : MainWindow, IPlatformWindowService
             {
                 return;
             }
-            Observable.EveryValueChanged(this, x => x.WindowState, _frameProvider)
+            Observable.EveryValueChanged(this, x => x.WindowState, FrameProvider)
                 .Skip(1)
                 .SubscribeAwait(async (state, _) =>
             {
@@ -73,8 +69,8 @@ public partial class MacMainWindow2 : MainWindow, IPlatformWindowService
                 }
             }).AddTo(Disposables);
             
-            // Hide macOS buttons when interface is hidden
-            Observable.EveryValueChanged(vm, x => x.IsTopToolbarShown.CurrentValue, _frameProvider).Subscribe(shown =>
+            // Hide macOS traffic lights buttons when interface is hidden
+            Observable.EveryValueChanged(vm, x => x.IsTopToolbarShown.CurrentValue, FrameProvider).Subscribe(shown =>
             {
                 if (Settings.WindowProperties.Fullscreen)
                 {
@@ -84,9 +80,16 @@ public partial class MacMainWindow2 : MainWindow, IPlatformWindowService
                 {
                     WindowDecorations = shown ? WindowDecorations.Full : WindowDecorations.None;
                 }
-            });
-            
-            UIHelper2.AddDropDownMenu();
+            }, static result =>
+            {
+#if DEBUG
+                if (result is { IsFailure: true, Exception: not null })
+                {
+                    DebugHelper.LogDebug(nameof(MacMainWindow2), nameof(vm.IsTopToolbarShown), result.Exception);
+                }
+#endif
+            })
+            .AddTo(Disposables);
 
             // Close tabMenu when clicking outside of it
             PointerPressed += (_, _) =>
@@ -103,17 +106,8 @@ public partial class MacMainWindow2 : MainWindow, IPlatformWindowService
                 
             };
             UIHelper2.GetMainTabControl.TabDetached += MainTabControlOnTabDetached;
-            Activated += OnActivated;
+            
         };
-    }
-
-    private void OnActivated(object? sender, EventArgs e)
-    {
-        if (Application.Current.DataContext is not CoreViewModel core)
-        {
-            return;
-        }
-        core.MainWindows.ActiveWindow.Value = DataContext as MainWindowViewModel;
     }
     
     private void MainTabControlOnTabDetached(object? sender, TabDetachEventArgs e)
@@ -216,22 +210,6 @@ public partial class MacMainWindow2 : MainWindow, IPlatformWindowService
 
             TabNavigationInitializer.InitializeDetachedWindow(parentVm, newVm, tab);
         });
-    }
-    
-
-
-
-    protected override async void OnClosing(WindowClosingEventArgs e)
-    {
-        await WindowFunctions2.WindowClosingBehavior(this);
-        base.OnClosing(e);
-    }
-
-    protected override void OnClosed(EventArgs e)
-    {
-        _frameProvider?.Dispose();
-        Disposables.Dispose();
-        base.OnClosed(e);
     }
     
     #region Window interface implementations
