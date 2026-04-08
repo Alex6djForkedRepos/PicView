@@ -8,6 +8,7 @@ using Avalonia.Media;
 using Avalonia.Threading;
 using PicView.Avalonia.UI;
 using PicView.Avalonia.Views.UC.PopUps;
+using PicView.Core.DebugTools;
 using PicView.Core.Sizing;
 using PicView.Core.ViewModels;
 using R3;
@@ -16,7 +17,7 @@ namespace PicView.Avalonia.Views.UC;
 
 public partial class HoverBar2 : UserControl
 {
-    IDisposable _disposable;
+    private DisposableBag _disposables;
     public HoverBar2()
     {
         InitializeComponent();
@@ -81,7 +82,7 @@ public partial class HoverBar2 : UserControl
             return;
         }
         
-        _disposable = new HoverFadeButtonHandler2(this, core.MainWindows.ActiveWindow.CurrentValue, BottomBorder);
+        _disposables.Add(new HoverFadeButtonHandler2(this, core.MainWindows.ActiveWindow.CurrentValue, BottomBorder));
 
         Observable.FromEventHandler<RoutedEventArgs>(h => NextButton.Click += h,
                 h => NextButton.Click -= h)
@@ -89,19 +90,49 @@ public partial class HoverBar2 : UserControl
             {
                 core.MainWindows.ActiveWindow.CurrentValue.WindowTabs.ActiveTab.CurrentValue.Hoverbar.IsHoverNavigationButtonNextClicked = true;
                 await core.MainWindows.ActiveWindow.CurrentValue.WindowTabs.NextFile();
-            });
+            }, static result =>
+            {
+#if DEBUG
+                if (result is { IsFailure: true, Exception: not null })
+                {
+                    DebugHelper.LogDebug(nameof(HoverBar2), nameof(OnLoaded), result.Exception);
+                }
+#endif
+            })
+            .AddTo(ref _disposables);
         Observable.FromEventHandler<RoutedEventArgs>(h => PreviousButton.Click += h,
                 h => PreviousButton.Click -= h)
             .SubscribeAwait(async (_, c) =>
             {
                 core.MainWindows.ActiveWindow.CurrentValue.WindowTabs.ActiveTab.CurrentValue.Hoverbar.IsHoverNavigationButtonPreviousClicked = true;
                 await core.MainWindows.ActiveWindow.CurrentValue.WindowTabs.PrevFile();
-            });
+            }, static result =>
+            {
+#if DEBUG
+                if (result is { IsFailure: true, Exception: not null })
+                {
+                    DebugHelper.LogDebug(nameof(HoverBar2), nameof(OnLoaded), result.Exception);
+                }
+#endif
+            })
+            .AddTo(ref _disposables);
 
         Debug.Assert(Settings.Gallery is not null);
         Observable.EveryValueChanged(Settings.Gallery, x => x.IsGalleryDocked)
             .Skip(1)
-            .Subscribe(_ => { ApplyResponsiveResize(Bounds.Width); });
+            .Subscribe(_ =>
+            {
+                ApplyResponsiveResize(Bounds.Width);
+            }, static result =>
+            {
+#if DEBUG
+                if (result is { IsFailure: true, Exception: not null })
+                {
+                    DebugHelper.LogDebug(nameof(HoverBar2), nameof(OnLoaded), result.Exception);
+                }
+#endif
+            })
+            .AddTo(ref _disposables);
     }
 
     private void ApplyResponsiveResize(double width)
@@ -264,6 +295,6 @@ public partial class HoverBar2 : UserControl
         base.OnDetachedFromLogicalTree(e);
         Loaded -= OnLoaded;
         RemoveHandler(PointerPressedEvent, ManagePointerPressed);
-        _disposable?.Dispose();
+        _disposables.Dispose();
     }
 }

@@ -99,7 +99,7 @@ public class HoverFadeButtonHandler2 : IDisposable
 
         if (_mainButton is HoverBar2 hoverBar)
         {
-            if (Settings.WindowProperties.AutoFit)
+            if (Settings.UIProperties.ShowBottomNavBar || !Settings.UIProperties.ShowHoverNavigationBar)
             {
                 hoverBar.IsVisible = false;
                 return false;
@@ -150,17 +150,11 @@ public class HoverFadeButtonHandler2 : IDisposable
         }
 
         var anim = AnimationsHelper.OpacityAnimation(from, targetOpacity, durationSeconds);
-        try
+        await anim.RunAsync(control, token);
+        // After fade out, ensure fully hidden (in case animation didn't complete)
+        if (Math.Abs(targetOpacity) < 0.01)
         {
-            await anim.RunAsync(control, token);
-            // After fade out, ensure fully hidden (in case animation didn't complete)
-            if (Math.Abs(targetOpacity) < 0.01)
-            {
-                control.Opacity = 0;
-            }
-        }
-        catch (TaskCanceledException)
-        {
+            control.Opacity = 0;
         }
     }
 
