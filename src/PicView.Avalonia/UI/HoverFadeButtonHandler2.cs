@@ -5,6 +5,7 @@ using Avalonia.Threading;
 using PicView.Avalonia.Animations;
 using PicView.Avalonia.Gallery;
 using PicView.Avalonia.Views.UC;
+using PicView.Core.DebugTools;
 using PicView.Core.ViewModels;
 
 namespace PicView.Avalonia.UI;
@@ -181,8 +182,15 @@ public class HoverFadeButtonHandler2 : IDisposable
             _childButton.PointerExited -= OnPointerExited;
         }
 
-        _fadeCts?.Cancel();
-        _fadeCts?.Dispose();
+        try
+        {
+            _fadeCts?.Cancel();
+            _fadeCts?.Dispose();
+        }
+        catch (Exception e)
+        {
+            DebugHelper.LogDebug(nameof(HoverFadeButtonHandler2), nameof(Dispose), e);
+        }
         
         GC.SuppressFinalize(this);
     }
