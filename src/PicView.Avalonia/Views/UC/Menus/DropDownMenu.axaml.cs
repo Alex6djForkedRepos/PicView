@@ -5,6 +5,8 @@ using Avalonia.LogicalTree;
 using Avalonia.Threading;
 using ObservableCollections;
 using PicView.Avalonia.CustomControls;
+using PicView.Avalonia.UI;
+using PicView.Core.DebugTools;
 using PicView.Core.Localization;
 using PicView.Core.ViewModels;
 using R3;
@@ -43,8 +45,17 @@ public partial class DropDownMenu : AnimatedMenu
                 {
                     if (isVisible)
                     {
+                        MaxHeight = UIHelper2.GetMainView.Bounds.Height - 5;
                         vm.FileHistory.UpdateHistory();
                     }
+                }, static result =>
+                {
+#if DEBUG
+                    if (result is { IsFailure: true, Exception: not null })
+                    {
+                        DebugHelper.LogDebug(nameof(DropDownMenu), nameof(_menuVisibilitySubscription), result.Exception);
+                    }
+#endif
                 });
         }
     }
