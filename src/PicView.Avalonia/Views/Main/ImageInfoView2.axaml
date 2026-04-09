@@ -913,6 +913,8 @@
                                     Width="{CompiledBinding InfoWindow.TextWidth}" />
                                 <customControls:FuncTextBox
                                     Classes=" TStyle x"
+                                    Command="{CompiledBinding Exif.SetAuthorsCommand}"
+                                    CommandParameter="{Binding $self.Text}"
                                     Text="{CompiledBinding Exif.Authors.Value,
                                                            Mode=TwoWay}"
                                     Width="{CompiledBinding InfoWindow.TextBoxWidth.Value}"
@@ -938,6 +940,8 @@
                                     Width="{CompiledBinding InfoWindow.TextWidth}" />
                                 <customControls:FuncTextBox
                                     Classes=" TStyle x"
+                                    Command="{CompiledBinding Exif.SetCopyrightCommand}"
+                                    CommandParameter="{Binding $self.Text}"
                                     Text="{CompiledBinding Exif.Copyright.Value,
                                                            Mode=TwoWay}"
                                     Width="{CompiledBinding InfoWindow.TextBoxWidth.Value}"
@@ -963,6 +967,8 @@
                                     Width="{CompiledBinding InfoWindow.TextWidth}" />
                                 <customControls:FuncTextBox
                                     Classes="TStyle x"
+                                    Command="{CompiledBinding Exif.SetSoftwareCommand}"
+                                    CommandParameter="{Binding $self.Text}"
                                     Text="{CompiledBinding Exif.Software.Value,
                                                            Mode=TwoWay}"
                                     Width="{CompiledBinding InfoWindow.TextBoxWidth.Value}"
@@ -988,6 +994,8 @@
                                     Width="{CompiledBinding InfoWindow.TextWidth}" />
                                 <customControls:FuncTextBox
                                     Classes=" TStyle x"
+                                    Command="{CompiledBinding Exif.SetSubjectCommand}"
+                                    CommandParameter="{Binding $self.Text}"
                                     Text="{CompiledBinding Exif.Subject.Value,
                                                            Mode=TwoWay}"
                                     Width="{CompiledBinding InfoWindow.TextBoxXxlWidth.Value}"
@@ -1013,6 +1021,8 @@
                                     Width="{CompiledBinding InfoWindow.TextWidth}" />
                                 <customControls:FuncTextBox
                                     Classes=" TStyle x"
+                                    Command="{CompiledBinding Exif.SetTitleCommand}"
+                                    CommandParameter="{Binding $self.Text}"
                                     Text="{CompiledBinding Exif.Title.Value,
                                                            Mode=TwoWay}"
                                     Width="{CompiledBinding InfoWindow.TextBoxXxlWidth.Value}"
@@ -1038,6 +1048,8 @@
                                 <customControls:FuncTextBox
                                     Classes=" TStyle x"
                                     MaxHeight="600"
+                                    Command="{CompiledBinding Exif.SetCommentCommand}"
+                                    CommandParameter="{Binding $self.Text}"
                                     Text="{CompiledBinding Exif.Comment.Value,
                                                            Mode=TwoWay}"
                                     Width="{CompiledBinding InfoWindow.TextBoxXxlWidth.Value}"
@@ -1093,6 +1105,8 @@
                                     Background="{DynamicResource DisabledBackgroundColor}"
                                     Classes=" TStyle x"
                                     IsReadOnly="True"
+                                    Command="{CompiledBinding Exif.SetLatitudeCommand}"
+                                    CommandParameter="{Binding $self.Text}"
                                     Text="{CompiledBinding Exif.Latitude.Value,
                                                            Mode=TwoWay}"
                                     Width="{CompiledBinding InfoWindow.TextBoxWidth.Value}"
@@ -1120,6 +1134,8 @@
                                     Background="{DynamicResource DisabledBackgroundColor}"
                                     Classes=" TStyle x"
                                     IsReadOnly="True"
+                                    Command="{CompiledBinding Exif.SetLongitudeCommand}"
+                                    CommandParameter="{Binding $self.Text}"
                                     Text="{CompiledBinding Exif.Longitude.Value,
                                                            Mode=TwoWay}"
                                     Width="{CompiledBinding InfoWindow.TextBoxWidth.Value}"
@@ -1147,6 +1163,8 @@
                                     Background="{DynamicResource DisabledBackgroundColor}"
                                     Classes=" TStyle x"
                                     IsReadOnly="True"
+                                    Command="{CompiledBinding Exif.SetAltitudeCommand}"
+                                    CommandParameter="{Binding $self.Text}"
                                     Text="{CompiledBinding Exif.Altitude.Value,
                                                            Mode=TwoWay}"
                                     Width="{CompiledBinding InfoWindow.TextBoxWidth.Value}"
@@ -1318,6 +1336,8 @@
                                     Background="{DynamicResource DisabledBackgroundColor}"
                                     Classes=" TStyle x"
                                     IsReadOnly="True"
+                                    Command="{CompiledBinding Exif.SetCompressedBitsPixelCommand}"
+                                    CommandParameter="{Binding $self.Text}"
                                     Text="{CompiledBinding Exif.CompressedBitsPixel.Value,
                                                            Mode=TwoWay}"
                                     Width="{CompiledBinding InfoWindow.TextBoxWidth.Value}"
@@ -1371,6 +1391,8 @@
                                         Width="{CompiledBinding InfoWindow.TextWidth}" />
                                     <customControls:FuncTextBox
                                         Classes=" TStyle x"
+                                        Command="{CompiledBinding Exif.SetCameraMakerCommand}"
+                                        CommandParameter="{Binding $self.Text}"
                                         Text="{CompiledBinding Exif.CameraMaker.Value,
                                                                Mode=TwoWay}"
                                         Width="{CompiledBinding InfoWindow.TextBoxWidth.Value}"
@@ -1396,6 +1418,8 @@
                                         Width="{CompiledBinding InfoWindow.TextWidth}" />
                                     <customControls:FuncTextBox
                                         Classes=" TStyle x"
+                                        Command="{CompiledBinding Exif.SetCameraModelCommand}"
+                                        CommandParameter="{Binding $self.Text}"
                                         Text="{CompiledBinding Exif.CameraModel.Value,
                                                                Mode=TwoWay}"
                                         Width="{CompiledBinding InfoWindow.TextBoxWidth.Value}"
@@ -1424,6 +1448,8 @@
                                             Width="{CompiledBinding InfoWindow.TextWidth}" />
                                         <customControls:FuncTextBox
                                             Classes=" TStyle x"
+                                            Command="{CompiledBinding Exif.SetFNumberCommand}"
+                                            CommandParameter="{Binding $self.Text}"
                                             Text="{CompiledBinding Exif.FNumber.Value,
                                                                    Mode=TwoWay}"
                                             Width="{CompiledBinding InfoWindow.TextBoxWidth.Value}"
@@ -1449,6 +1475,8 @@
                                             Width="{CompiledBinding InfoWindow.TextWidth}" />
                                         <customControls:FuncTextBox
                                             Classes=" TStyle x"
+                                            Command="{CompiledBinding Exif.SetMaxApertureCommand}"
+                                            CommandParameter="{Binding $self.Text}"
                                             Text="{CompiledBinding Exif.MaxAperture.Value,
                                                                    Mode=TwoWay}"
                                             Width="{CompiledBinding InfoWindow.TextBoxWidth.Value}"
@@ -1478,6 +1506,8 @@
                                             Width="{CompiledBinding InfoWindow.TextWidth}" />
                                         <customControls:FuncTextBox
                                             Classes=" TStyle x"
+                                            Command="{CompiledBinding Exif.SetExposureBiasCommand}"
+                                            CommandParameter="{Binding $self.Text}"
                                             Text="{CompiledBinding Exif.ExposureBias.Value,
                                                                    Mode=TwoWay}"
                                             Width="{CompiledBinding InfoWindow.TextBoxWidth.Value}"
@@ -1503,6 +1533,8 @@
                                             Width="{CompiledBinding InfoWindow.TextWidth}" />
                                         <customControls:FuncTextBox
                                             Classes=" TStyle x"
+                                            Command="{CompiledBinding Exif.SetExposureTimeCommand}"
+                                            CommandParameter="{Binding $self.Text}"
                                             Text="{CompiledBinding Exif.ExposureTime.Value,
                                                                    Mode=TwoWay}"
                                             Width="{CompiledBinding InfoWindow.TextBoxWidth.Value}"
@@ -1532,6 +1564,8 @@
                                             Width="{CompiledBinding InfoWindow.TextWidth}" />
                                         <customControls:FuncTextBox
                                             Classes=" TStyle x"
+                                            Command="{CompiledBinding Exif.SetExposureProgramCommand}"
+                                            CommandParameter="{Binding $self.Text}"
                                             Text="{CompiledBinding Exif.ExposureProgram.Value,
                                                                    Mode=TwoWay}"
                                             Width="{CompiledBinding InfoWindow.TextBoxWidth.Value}"
@@ -1556,6 +1590,8 @@
                                             Width="{CompiledBinding InfoWindow.TextWidth}" />
                                         <customControls:FuncTextBox
                                             Classes=" TStyle x"
+                                            Command="{CompiledBinding Exif.SetDigitalZoomCommand}"
+                                            CommandParameter="{Binding $self.Text}"
                                             Text="{CompiledBinding Exif.DigitalZoom.Value,
                                                                    Mode=TwoWay}"
                                             Width="{CompiledBinding InfoWindow.TextBoxWidth.Value}"
@@ -1585,6 +1621,8 @@
                                             Width="{CompiledBinding InfoWindow.TextWidth}" />
                                         <customControls:FuncTextBox
                                             Classes=" TStyle x"
+                                            Command="{CompiledBinding Exif.SetFocalLengthCommand}"
+                                            CommandParameter="{Binding $self.Text}"
                                             Text="{CompiledBinding Exif.FocalLength.Value,
                                                                    Mode=TwoWay}"
                                             Width="{CompiledBinding InfoWindow.TextBoxWidth.Value}"
@@ -1610,6 +1648,8 @@
                                             Width="{CompiledBinding InfoWindow.TextWidth}" />
                                         <customControls:FuncTextBox
                                             Classes=" TStyle x"
+                                            Command="{CompiledBinding Exif.SetFocalLength35MmCommand}"
+                                            CommandParameter="{Binding $self.Text}"
                                             Text="{CompiledBinding Exif.FocalLength35Mm.Value,
                                                                    Mode=TwoWay}"
                                             Width="{CompiledBinding InfoWindow.TextBoxWidth.Value}"
@@ -1639,6 +1679,8 @@
                                             Width="{CompiledBinding InfoWindow.TextWidth}" />
                                         <customControls:FuncTextBox
                                             Classes=" TStyle x"
+                                            Command="{CompiledBinding Exif.SetISOSpeedCommand}"
+                                            CommandParameter="{Binding $self.Text}"
                                             Text="{CompiledBinding Exif.ISOSpeed.Value,
                                                                    Mode=TwoWay}"
                                             Width="{CompiledBinding InfoWindow.TextBoxWidth.Value}"
@@ -1664,6 +1706,8 @@
                                             Width="{CompiledBinding InfoWindow.TextWidth}" />
                                         <customControls:FuncTextBox
                                             Classes=" TStyle x"
+                                            Command="{CompiledBinding Exif.SetMeteringModeCommand}"
+                                            CommandParameter="{Binding $self.Text}"
                                             Text="{CompiledBinding Exif.MeteringMode.Value,
                                                                    Mode=TwoWay}"
                                             Width="{CompiledBinding InfoWindow.TextBoxWidth.Value}"
@@ -1693,6 +1737,8 @@
                                             Width="{CompiledBinding InfoWindow.TextWidth}" />
                                         <customControls:FuncTextBox
                                             Classes=" TStyle x"
+                                            Command="{CompiledBinding Exif.SetContrastCommand}"
+                                            CommandParameter="{Binding $self.Text}"
                                             Text="{CompiledBinding Exif.Contrast.Value,
                                                                    Mode=TwoWay}"
                                             Width="{CompiledBinding InfoWindow.TextBoxWidth.Value}"
@@ -1718,6 +1764,8 @@
                                             Width="{CompiledBinding InfoWindow.TextWidth}" />
                                         <customControls:FuncTextBox
                                             Classes=" TStyle x"
+                                            Command="{CompiledBinding Exif.SetSaturationCommand}"
+                                            CommandParameter="{Binding $self.Text}"
                                             Text="{CompiledBinding Exif.Saturation.Value,
                                                                    Mode=TwoWay}"
                                             Width="{CompiledBinding InfoWindow.TextBoxWidth.Value}"
@@ -1747,6 +1795,8 @@
                                             Width="{CompiledBinding InfoWindow.TextWidth}" />
                                         <customControls:FuncTextBox
                                             Classes=" TStyle x"
+                                            Command="{CompiledBinding Exif.SetSharpnessCommand}"
+                                            CommandParameter="{Binding $self.Text}"
                                             Text="{CompiledBinding Exif.Sharpness.Value,
                                                                    Mode=TwoWay}"
                                             Width="{CompiledBinding InfoWindow.TextBoxWidth.Value}"
@@ -1772,6 +1822,8 @@
                                             Width="{CompiledBinding InfoWindow.TextWidth}" />
                                         <customControls:FuncTextBox
                                             Classes=" TStyle x"
+                                            Command="{CompiledBinding Exif.SetWhiteBalanceCommand}"
+                                            CommandParameter="{Binding $self.Text}"
                                             Text="{CompiledBinding Exif.WhiteBalance.Value,
                                                                    Mode=TwoWay}"
                                             Width="{CompiledBinding InfoWindow.TextBoxWidth.Value}"
@@ -1800,6 +1852,8 @@
                                             Width="{CompiledBinding InfoWindow.TextWidth}" />
                                         <customControls:FuncTextBox
                                             Classes=" TStyle x"
+                                            Command="{CompiledBinding Exif.SetFlashEnergyCommand}"
+                                            CommandParameter="{Binding $self.Text}"
                                             Text="{CompiledBinding Exif.FlashEnergy.Value,
                                                                    Mode=TwoWay}"
                                             Width="{CompiledBinding InfoWindow.TextBoxWidth.Value}"
@@ -1825,6 +1879,8 @@
                                             Width="{CompiledBinding InfoWindow.TextWidth}" />
                                         <customControls:FuncTextBox
                                             Classes=" TStyle x"
+                                            Command="{CompiledBinding Exif.SetFlashModeCommand}"
+                                            CommandParameter="{Binding $self.Text}"
                                             Text="{CompiledBinding Exif.FlashMode.Value,
                                                                    Mode=TwoWay}"
                                             Width="{CompiledBinding InfoWindow.TextBoxWidth.Value}"
@@ -1854,6 +1910,8 @@
                                             Width="{CompiledBinding InfoWindow.TextWidth}" />
                                         <customControls:FuncTextBox
                                             Classes=" TStyle x"
+                                            Command="{CompiledBinding Exif.SetLightSourceCommand}"
+                                            CommandParameter="{Binding $self.Text}"
                                             Text="{CompiledBinding Exif.LightSource.Value,
                                                                    Mode=TwoWay}"
                                             Width="{CompiledBinding InfoWindow.TextBoxWidth.Value}"
@@ -1879,6 +1937,8 @@
                                             Width="{CompiledBinding InfoWindow.TextWidth}" />
                                         <customControls:FuncTextBox
                                             Classes=" TStyle x"
+                                            Command="{CompiledBinding Exif.SetBrightnessCommand}"
+                                            CommandParameter="{Binding $self.Text}"
                                             Text="{CompiledBinding Exif.Brightness.Value,
                                                                    Mode=TwoWay}"
                                             Width="{CompiledBinding InfoWindow.TextBoxWidth.Value}"
@@ -1908,6 +1968,8 @@
                                             Width="{CompiledBinding InfoWindow.TextWidth}" />
                                         <customControls:FuncTextBox
                                             Classes=" TStyle x"
+                                            Command="{CompiledBinding Exif.SetPhotometricInterpretationCommand}"
+                                            CommandParameter="{Binding $self.Text}"
                                             Text="{CompiledBinding Exif.PhotometricInterpretation.Value,
                                                                    Mode=TwoWay}"
                                             Width="{CompiledBinding InfoWindow.TextBoxWidth.Value}"
@@ -1939,6 +2001,8 @@
                                             Width="{CompiledBinding InfoWindow.TextWidth}" />
                                         <customControls:FuncTextBox
                                             Classes=" TStyle x"
+                                            Command="{CompiledBinding Exif.SetLensMakerCommand}"
+                                            CommandParameter="{Binding $self.Text}"
                                             Text="{CompiledBinding Exif.LensMaker.Value,
                                                                    Mode=TwoWay}"
                                             Width="{CompiledBinding InfoWindow.TextBoxWidth.Value}"
@@ -1966,6 +2030,8 @@
                                     Width="{CompiledBinding InfoWindow.TextWidth}" />
                                 <customControls:FuncTextBox
                                     Classes=" TStyle x"
+                                    Command="{CompiledBinding Exif.SetLensModelCommand}"
+                                    CommandParameter="{Binding $self.Text}"
                                     Text="{CompiledBinding Exif.LensModel.Value,
                                                            Mode=TwoWay}"
                                     Width="{CompiledBinding InfoWindow.TextBoxWidth.Value}"
@@ -1992,6 +2058,8 @@
                                         Width="{CompiledBinding InfoWindow.TextWidth}" />
                                     <customControls:FuncTextBox
                                         Classes=" TStyle x"
+                                        Command="{CompiledBinding Exif.SetExifVersionCommand}"
+                                        CommandParameter="{Binding $self.Text}"
                                         Text="{CompiledBinding Exif.ExifVersion.Value,
                                                                Mode=TwoWay}"
                                         Width="{CompiledBinding InfoWindow.TextBoxWidth.Value}"
