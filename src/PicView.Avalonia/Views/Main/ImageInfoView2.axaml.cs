@@ -2,12 +2,11 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Threading;
-using PicView.Avalonia.Views.UC;
 using PicView.Core.ViewModels;
 using PicView.Core.Conversion;
 using PicView.Core.Exif;
 using PicView.Core.Extensions;
-using PicView.Core.FileHandling;
+using PicView.Core.Models;
 using PicView.Core.Sizing;
 using PicView.Core.Titles;
 using R3;
@@ -16,7 +15,7 @@ namespace PicView.Avalonia.Views.Main;
 
 public partial class ImageInfoView2 : UserControl
 {
-    private readonly CompositeDisposable _disposables = new();
+    private DisposableBag _disposables;
 
     public ImageInfoView2()
     {
@@ -70,12 +69,9 @@ public partial class ImageInfoView2 : UserControl
             PixelWidthTextBox.KeyUp += delegate { AdjustAspectRatio(PixelWidthTextBox); };
             PixelHeightTextBox.KeyUp += delegate { AdjustAspectRatio(PixelHeightTextBox); };
 
-            Observable.EveryValueChanged(vm.WindowTabs.ActiveTab.Value.Model.CurrentValue.FileInfo, x => x)
-                .SubscribeAwait(UpdateValuesAsync).AddTo(_disposables);
+            vm.WindowTabs.ActiveTab.CurrentValue.Model.SubscribeAwait(UpdateValuesAsync).AddTo(ref _disposables);
 
             SizeChanged += (_, _) => ResponsiveResizeUpdate(vm);
-
-            RemoveImageDataMenuItem.Click += async (_, _) => { await RemoveImageDataAsync(); };
             
             FileNameTextBox.KeyDown += async (_, e) =>
                 await HandleRenameOnEnterAsync(e, () =>
@@ -119,61 +115,61 @@ public partial class ImageInfoView2 : UserControl
 
     private async Task HandleRenameOnEnterAsync(KeyEventArgs e, Func<string> getNewPath)
     {
-        if (e.Key is not Key.Enter || DataContext is not MainWindowViewModel vm)
-        {
-            return;
-        }
-
-        try
-        {
-            var newPath = getNewPath();
-            if (string.IsNullOrWhiteSpace(newPath))
-            {
-                return;
-            }
-
-            await Dispatcher.UIThread.InvokeAsync(() => SetLoadingState(true));
-            vm.IsLoadingIndicatorShown.Value = true;
-            //NavigationManager.DisableWatcher();
-
-            var fileInfo = vm.WindowTabs.ActiveTab.Value.Model.CurrentValue.FileInfo;
-            var oldPath = fileInfo.FullName;
-
-            // Avoid renaming if the path hasn't changed
-            if (oldPath.Equals(newPath, StringComparison.OrdinalIgnoreCase))
-            {
-                return;
-            }
-
-            var currentExtension = Path.GetExtension(oldPath);
-            var newExtension = Path.GetExtension(newPath);
-            if (currentExtension.Equals(newExtension, StringComparison.OrdinalIgnoreCase))
-            {
-                // Same file, handle simple rename
-
-                // Make sure the old file is discarded from being cached
-                //NavigationManager.RemoveFromPreloader(oldPath);
-
-                FileHelper.RenameFile(oldPath, newPath);
-
-                vm.WindowTabs.ActiveTab.Value.Model.CurrentValue.FileInfo = new FileInfo(newPath);
-            }
-            else
-            {
-                // Convert and reload
-                // await SaveImageHandler.SaveImageWithPossibleNavigation(vm, vm.WindowTabs.ActiveTab.Value.FileInfo.CurrentValue.FullName,
-                //     newPath, true, newExtension);
-            }
-
-            //await NavigationManager.QuickReload();
-
-            await UpdateValuesAsync(vm.WindowTabs.ActiveTab.Value.Model.CurrentValue.FileInfo, CancellationToken.None);
-        }
-        finally
-        {
-            await Dispatcher.UIThread.InvokeAsync(() => SetLoadingState(false));
-            vm.IsLoadingIndicatorShown.Value = false;
-        }
+        // if (e.Key is not Key.Enter || DataContext is not MainWindowViewModel vm)
+        // {
+        //     return;
+        // }
+        //
+        // try
+        // {
+        //     var newPath = getNewPath();
+        //     if (string.IsNullOrWhiteSpace(newPath))
+        //     {
+        //         return;
+        //     }
+        //
+        //     await Dispatcher.UIThread.InvokeAsync(() => SetLoadingState(true));
+        //     vm.IsLoadingIndicatorShown.Value = true;
+        //     //NavigationManager.DisableWatcher();
+        //
+        //     var fileInfo = vm.WindowTabs.ActiveTab.Value.Model.CurrentValue.FileInfo;
+        //     var oldPath = fileInfo.FullName;
+        //
+        //     // Avoid renaming if the path hasn't changed
+        //     if (oldPath.Equals(newPath, StringComparison.OrdinalIgnoreCase))
+        //     {
+        //         return;
+        //     }
+        //
+        //     var currentExtension = Path.GetExtension(oldPath);
+        //     var newExtension = Path.GetExtension(newPath);
+        //     if (currentExtension.Equals(newExtension, StringComparison.OrdinalIgnoreCase))
+        //     {
+        //         // Same file, handle simple rename
+        //
+        //         // Make sure the old file is discarded from being cached
+        //         //NavigationManager.RemoveFromPreloader(oldPath);
+        //
+        //         FileHelper.RenameFile(oldPath, newPath);
+        //
+        //         vm.WindowTabs.ActiveTab.Value.Model.CurrentValue.FileInfo = new FileInfo(newPath);
+        //     }
+        //     else
+        //     {
+        //         // Convert and reload
+        //         // await SaveImageHandler.SaveImageWithPossibleNavigation(vm, vm.WindowTabs.ActiveTab.Value.FileInfo.CurrentValue.FullName,
+        //         //     newPath, true, newExtension);
+        //     }
+        //
+        //     //await NavigationManager.QuickReload();
+        //
+        //     await UpdateValuesAsync(vm.WindowTabs.ActiveTab.Value.Model.CurrentValue.FileInfo, CancellationToken.None);
+        // }
+        // finally
+        // {
+        //     await Dispatcher.UIThread.InvokeAsync(() => SetLoadingState(false));
+        //     vm.IsLoadingIndicatorShown.Value = false;
+        // }
     }
 
 
@@ -196,21 +192,20 @@ public partial class ImageInfoView2 : UserControl
         vm.InfoWindow.ResponsiveResizeUpdate(panelWidth, scrollBarThickness);
     }
 
-    private async ValueTask UpdateValuesAsync(FileInfo? fileInfo, CancellationToken cancellationToken)
+    private async ValueTask UpdateValuesAsync(ImageModel imageModel, CancellationToken cancellationToken)
     {
-        if (DataContext is not MainWindowViewModel vm || fileInfo is null)
+        if (DataContext is not MainWindowViewModel vm)
         {
             return;
         }
-        
-        //var preLoadValue = await NavigationManager.GetPreLoadValueAsync(fileInfo);
+
         await Task.Run(() =>
         {
-            //vm.Exif.UpdateExifValues(preLoadValue.ImageModel);
+            vm.Exif.UpdateExifValues(imageModel);
         }, cancellationToken);
-        if (DirectoryNameTextBox.Text != fileInfo.DirectoryName)
+        if (DirectoryNameTextBox.Text != imageModel.FileInfo.DirectoryName)
         {
-            DirectoryNameTextBox.Text = fileInfo.DirectoryName;
+            DirectoryNameTextBox.Text = imageModel.FileInfo.DirectoryName;
         }
 
         FileSizeBox.Text = vm.WindowTabs.ActiveTab.Value.Model.CurrentValue.FileInfo?.Length.GetReadableFileSize();
@@ -221,17 +216,13 @@ public partial class ImageInfoView2 : UserControl
 
         vm.Exif.IsExifAvailable.Value = vm.WindowTabs.ActiveTab.Value.Model.CurrentValue.Format.IsExifImage();
     }
-
-
-
+    
     private void SetLoadingState(bool isLoading)
     {
         ParentPanel.Opacity = isLoading ? 0.1 : 1;
         ParentPanel.IsHitTestVisible = !isLoading;
         SpinWaiter.IsVisible = isLoading;
     }
-
-
 
     private void AdjustAspectRatio(TextBox sender)
     {
@@ -330,7 +321,7 @@ public partial class ImageInfoView2 : UserControl
     protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnDetachedFromVisualTree(e);
-        Disposable.Dispose(_disposables);
+        _disposables.Dispose();
     }
 
     #region EXIF Update Registration
@@ -399,29 +390,9 @@ public partial class ImageInfoView2 : UserControl
     /// </summary>
     private async Task AddExifPropertyAsync<T>(Func<FileInfo?, T, Task<bool>> addAction, T value)
     {
-        if (DataContext is not MainWindowViewModel vm)
+        if (DataContext is MainWindowViewModel vm)
         {
-            return;
-        }
-
-        var isAdded = await addAction(vm.WindowTabs.ActiveTab.Value.Model.CurrentValue.FileInfo, value);
-        if (isAdded)
-        {
-            await UpdateValuesAsync(vm.WindowTabs.ActiveTab.Value.Model.CurrentValue.FileInfo, CancellationToken.None);
-        }
-    }
-
-    public async Task RemoveImageDataAsync()
-    {
-        if (DataContext is not MainWindowViewModel vm)
-        {
-            return;
-        }
-
-        var isRemoved = await ExifWriter.RemoveExifProfile(vm.WindowTabs.ActiveTab.Value.Model.CurrentValue.FileInfo);
-        if (isRemoved)
-        {
-            await UpdateValuesAsync(vm.WindowTabs.ActiveTab.Value.Model.CurrentValue.FileInfo, CancellationToken.None);
+            await addAction(vm.WindowTabs.ActiveTab.Value.Model.CurrentValue.FileInfo, value);
         }
     }
 

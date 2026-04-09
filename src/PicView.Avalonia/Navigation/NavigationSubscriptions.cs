@@ -51,7 +51,7 @@ public static class NavigationSubscriptions
                     .SubscribeAwait(async (mode, _) =>
                     {
                         await UpdateGallery.LoadGalleryIfDockedOrExpanded(tabViewModel, mode);
-                    }, result =>
+                    },  static result =>
                     {
 #if DEBUG
                         if (result is { IsFailure: true, Exception: not null })
@@ -65,7 +65,7 @@ public static class NavigationSubscriptions
                     .SubscribeAwait(async (index, _) =>
                     {
                         await UpdateGallery.ToggleGalleryAndLoadItem(tabViewModel, index);
-                    }, result =>
+                    }, static result =>
                     {
 #if DEBUG
                         if (result is { IsFailure: true, Exception: not null })

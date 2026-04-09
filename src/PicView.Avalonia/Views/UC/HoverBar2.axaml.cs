@@ -21,60 +21,19 @@ public partial class HoverBar2 : UserControl
     public HoverBar2()
     {
         InitializeComponent();
-        Loaded += OnLoaded;
-        if (Settings.Theme.Dark)
+        
+        if (!Settings.Theme.Dark)
         {
-            return;
+            ChangeHoverClasses();
         }
-
-        FileMenuButton.Classes.Remove("noBorderHover");
-        FileMenuButton.Classes.Add("hover");
-
-        ZoomOutMenuButton.Classes.Remove("noBorderHover");
-        ZoomOutMenuButton.Classes.Add("hover");
-
-        ZoomInMenuButton.Classes.Remove("noBorderHover");
-        ZoomInMenuButton.Classes.Add("hover");
-
-        RotateLeftButton.Classes.Remove("noBorderHover");
-        RotateLeftButton.Classes.Add("hover");
-
-        RotateRightButton.Classes.Remove("noBorderHover");
-        RotateRightButton.Classes.Add("hover");
-
-        FlipButton.Classes.Remove("noBorderHover");
-        FlipButton.Classes.Add("hover");
-
-        ImageMenuButton.Classes.Remove("noBorderHover");
-        ImageMenuButton.Classes.Add("hover");
-
-        SettingsMenuButton.Classes.Remove("noBorderHover");
-        SettingsMenuButton.Classes.Add("hover");
-    }
-
-    private void OnLoaded(object? sender, RoutedEventArgs e)
-    {
+        
         AddHandler(PointerPressedEvent, ManagePointerPressed, RoutingStrategies.Tunnel);
         UIHelper2.GetMainView.SizeChanged += (_, args) => ApplyResponsiveResize(args.NewSize.Width);
         ApplyResponsiveResize(Bounds.Width);
 
         if (Settings.Theme.GlassTheme)
         {
-            var brush = new SolidColorBrush(Color.Parse("#D1333333"));
-            NextButton.Background = brush;
-            PreviousButton.Background = brush;
-
-            var noThickness = new Thickness(0);
-            FileMenuButton.BorderThickness = noThickness;
-            ZoomOutMenuButton.BorderThickness = noThickness;
-            ZoomInMenuButton.BorderThickness = noThickness;
-            RotateLeftButton.BorderThickness = noThickness;
-            RotateRightButton.BorderThickness = noThickness;
-            FlipButton.BorderThickness = noThickness;
-            ImageMenuButton.BorderThickness = noThickness;
-            SettingsMenuButton.BorderThickness = noThickness;
-            NextButton.BorderThickness = noThickness;
-            PreviousButton.BorderThickness = noThickness;
+            GlassThemeUpdates();
         }
 
         if (Application.Current.DataContext is not CoreViewModel core)
@@ -134,7 +93,57 @@ public partial class HoverBar2 : UserControl
             })
             .AddTo(ref _disposables);
     }
+    
+    #region Theming
 
+    private void ChangeHoverClasses()
+    {
+        FileMenuButton.Classes.Remove("noBorderHover");
+        FileMenuButton.Classes.Add("hover");
+
+        ZoomOutMenuButton.Classes.Remove("noBorderHover");
+        ZoomOutMenuButton.Classes.Add("hover");
+
+        ZoomInMenuButton.Classes.Remove("noBorderHover");
+        ZoomInMenuButton.Classes.Add("hover");
+
+        RotateLeftButton.Classes.Remove("noBorderHover");
+        RotateLeftButton.Classes.Add("hover");
+
+        RotateRightButton.Classes.Remove("noBorderHover");
+        RotateRightButton.Classes.Add("hover");
+
+        FlipButton.Classes.Remove("noBorderHover");
+        FlipButton.Classes.Add("hover");
+
+        ImageMenuButton.Classes.Remove("noBorderHover");
+        ImageMenuButton.Classes.Add("hover");
+
+        SettingsMenuButton.Classes.Remove("noBorderHover");
+        SettingsMenuButton.Classes.Add("hover");
+    }
+
+    private void GlassThemeUpdates()
+    {
+        var brush = new SolidColorBrush(Color.Parse("#D1333333"));
+        NextButton.Background = brush;
+        PreviousButton.Background = brush;
+
+        var noThickness = new Thickness(0);
+        FileMenuButton.BorderThickness = noThickness;
+        ZoomOutMenuButton.BorderThickness = noThickness;
+        ZoomInMenuButton.BorderThickness = noThickness;
+        RotateLeftButton.BorderThickness = noThickness;
+        RotateRightButton.BorderThickness = noThickness;
+        FlipButton.BorderThickness = noThickness;
+        ImageMenuButton.BorderThickness = noThickness;
+        SettingsMenuButton.BorderThickness = noThickness;
+        NextButton.BorderThickness = noThickness;
+        PreviousButton.BorderThickness = noThickness;
+    }
+    
+    #endregion
+    
     private void ApplyResponsiveResize(double width)
     {
         const int firstBreakpoint = 475;
@@ -293,7 +302,6 @@ public partial class HoverBar2 : UserControl
     protected override void OnDetachedFromLogicalTree(LogicalTreeAttachmentEventArgs e)
     {
         base.OnDetachedFromLogicalTree(e);
-        Loaded -= OnLoaded;
         RemoveHandler(PointerPressedEvent, ManagePointerPressed);
         _disposables.Dispose();
     }
