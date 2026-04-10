@@ -1,21 +1,20 @@
 <UserControl
     mc:Ignorable="d"
     x:Class="PicView.Avalonia.Views.Main.PrintPreviewView"
-    x:DataType="viewModels:MainViewModel"
+    x:DataType="viewModels:MainWindowViewModel"
     xmlns="https://github.com/avaloniaui"
     xmlns:customControls="clr-namespace:PicView.Avalonia.CustomControls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:uc="clr-namespace:PicView.Avalonia.Views.UC"
-    xmlns:viewModels="clr-namespace:PicView.Avalonia.ViewModels"
+    xmlns:viewModels="clr-namespace:PicView.Core.ViewModels;assembly=PicView.Core"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <Panel>
         <!--  Spinner overlay  -->
         <uc:SpinWaiter
             HorizontalAlignment="Center"
-            IsVisible="{CompiledBinding PrintPreview.IsProcessing.Value,
-                                        Mode=OneWay}"
+            IsVisible="{Binding PrintPreview.IsProcessing.Value, Mode=OneWay}"
             VerticalAlignment="Center"
             ZIndex="100" />
 
@@ -265,7 +264,9 @@
                     CornerRadius="6"
                     Grid.Column="1"
                     Grid.Row="0"
-                    Margin="10">
+                    Margin="10"
+                    MinHeight="300"
+                    MinWidth="350">
                     <Viewbox
                         Margin="10"
                         Stretch="Uniform"

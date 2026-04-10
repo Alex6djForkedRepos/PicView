@@ -17,11 +17,11 @@ using R3;
 
 namespace PicView.Avalonia.MacOS.Views;
 
-public partial class PrintPreviewWindow2 : Window, IPrintWindow
+public partial class PrintPreviewWindow : Window, IPrintWindow
 {
     private const float PreviewDpi = 96f;
 
-    public PrintPreviewWindow2()
+    public PrintPreviewWindow()
     {
         InitializeComponent();
         GenericWindowHelper.GenericWindowInitialize(this,
@@ -126,7 +126,7 @@ public partial class PrintPreviewWindow2 : Window, IPrintWindow
         }
         catch (Exception e)
         {
-            DebugHelper.LogDebug(nameof(PrintPreviewView2), nameof(UpdatePreviewAsync), e);
+            DebugHelper.LogDebug(nameof(PrintPreviewView), nameof(UpdatePreviewAsync), e);
         }
 
         if (printLayout == null)
@@ -202,7 +202,7 @@ public partial class PrintPreviewWindow2 : Window, IPrintWindow
         }
         catch (Exception ex)
         {
-            DebugHelper.LogDebug(nameof(PrintPreviewView2), nameof(RunPrintAsync), ex);
+            DebugHelper.LogDebug(nameof(PrintPreviewView), nameof(RunPrintAsync), ex);
         }
         finally
         {

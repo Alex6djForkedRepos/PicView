@@ -1,22 +1,20 @@
-﻿using System.Drawing;
-using System.Drawing.Printing;
-using PicView.Avalonia.ViewModels;
-using PicView.Avalonia.Win32.Views;
+﻿using PicView.Avalonia.Win32.Views;
+using PicView.Core.FileHandling;
 using PicView.Core.Printing;
+using System.Drawing;
+using System.Drawing.Printing;
+using MainWindowViewModel = PicView.Core.ViewModels.MainWindowViewModel;
 
 namespace PicView.Avalonia.Win32.Printing;
 
 public static class PrintInitialization
 {
-    public static void Initialize(MainViewModel vm, string path, PrintPreviewWindow printPreviewWindow)
+    public static async ValueTask InitializeAsync(MainWindowViewModel vm, string path, PrintPreviewWindow2 printPreviewWindow)
     {
-        if (vm.PicViewer.FileInfo.Value != null && File.Exists(path))
+        if (vm.WindowTabs.ActiveTab.CurrentValue.Image.CurrentValue != null && File.Exists(path))
         {
-            using var fs = File.OpenRead(path);
+            await using var fs = FileStreamUtils.GetOptimizedFileStream(new FileInfo(path));
             vm.PrintPreview.PreviewImage.Value = new Bitmap(fs);
-            // Prefill page sizes to avoid excessive resize
-            vm.PrintPreview.PageWidth.Value = 650;
-            vm.PrintPreview.PageHeight.Value = 950;
         }
         
         var printerSettings = new PrinterSettings();
@@ -32,7 +30,7 @@ public static class PrintInitialization
         var currentPrintSettings =
             new PrintSettings // TODO: Add print settings to its own config class to remember user preference
             {
-                ImagePath = { Value = vm.PicViewer.FileInfo?.Value?.FullName },
+                ImagePath = { Value = vm.WindowTabs.ActiveTab.CurrentValue.FileInfo?.Value?.FullName },
                 PrinterName = { Value = printerSettings.PrinterName },
                 PaperSize = { Value = pageSettings.PaperSize.PaperName },
                 ColorMode =

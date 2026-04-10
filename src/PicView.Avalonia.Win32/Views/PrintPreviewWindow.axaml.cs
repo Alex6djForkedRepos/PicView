@@ -4,22 +4,25 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.LogicalTree;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
+using PicView.Avalonia.Printing;
 using PicView.Avalonia.UI;
-using PicView.Avalonia.ViewModels;
 using PicView.Avalonia.Win32.Printing;
+using PicView.Avalonia.WindowBehavior;
 using PicView.Core.DebugTools;
 using PicView.Core.Localization;
 using PicView.Core.Printing;
 using PicView.Core.ViewModels;
 using R3;
+using MainWindowViewModel = PicView.Core.ViewModels.MainWindowViewModel;
 using PaperSize = System.Drawing.Printing.PaperSize;
 
 namespace PicView.Avalonia.Win32.Views;
 
-public partial class PrintPreviewWindow : Window
+public partial class PrintPreviewWindow : Window, IPrintWindow
 {
     private const float PreviewDpi = 96f;
 
@@ -72,12 +75,17 @@ public partial class PrintPreviewWindow : Window
 
     public void Initialize()
     {
-        var vm = Dispatcher.UIThread.Invoke(() => DataContext as MainViewModel);
+        var vm = Dispatcher.UIThread.Invoke(() => DataContext as MainWindowViewModel);
         
-        if (vm.PrintPreview == null)
-        {
-            return;
-        }
+        vm.PrintPreview ??= new PrintPreviewViewModel();
+
+        ClientSizeProperty.Changed.ToObservable()
+            .ObserveOn(UIHelper2.GetFrameProvider)
+            .Subscribe(_ =>
+            {
+                WindowFunctions2.CenterWindowOnOwnerWindow(this, Owner as Window);
+            })
+            .AddTo(vm.PrintPreview.Disposables);
 
         // Initial render
         UpdatePreview(vm.PrintPreview);
@@ -108,6 +116,7 @@ public partial class PrintPreviewWindow : Window
             .ThrottleLast(TimeSpan.FromMilliseconds(100))
             .Subscribe(_ => UpdatePreview(vm.PrintPreview))
             .AddTo(vm.PrintPreview.Disposables);
+        vm.PrintPreview.IsProcessing.Value = false;
     }
 
 
@@ -170,9 +179,9 @@ public partial class PrintPreviewWindow : Window
                 return;
             }
 
-            var mainVm = Dispatcher.UIThread.Invoke(() => DataContext as MainViewModel);
+            var mainVm = Dispatcher.UIThread.Invoke(() => DataContext as MainWindowViewModel);
 
-            if (mainVm.PicViewer?.ImageSource.Value is not Bitmap avaloniaBmp)
+            if (mainVm.WindowTabs.ActiveTab.CurrentValue.Image.CurrentValue is not Bitmap avaloniaBmp)
             {
                 return;
             }
@@ -247,7 +256,7 @@ public partial class PrintPreviewWindow : Window
     //   Print command
     // -----------------------------------------------------------
 
-    public async Task RunPrintAsync(MainViewModel vm)
+    public async Task RunPrintAsync(MainWindowViewModel vm)
     {
         if (vm.PrintPreview == null)
         {
@@ -256,12 +265,12 @@ public partial class PrintPreviewWindow : Window
 
         var preview = vm.PrintPreview;
         var settings = preview.PrintSettings.Value!;
-        if (DataContext is not MainViewModel mainVm)
+        if (DataContext is not MainWindowViewModel mainVm)
         {
             return;
         }
 
-        if (mainVm.PicViewer?.ImageSource.Value is not Bitmap avaloniaBmp)
+        if (mainVm.WindowTabs.ActiveTab.CurrentValue.Image.CurrentValue is not Bitmap avaloniaBmp)
         {
             return;
         }
@@ -281,5 +290,15 @@ public partial class PrintPreviewWindow : Window
         {
             preview.IsProcessing.Value = false;
         }
+    }
+
+    protected override void OnClosing(WindowClosingEventArgs e)
+    {
+        base.OnClosing(e);
+        if (DataContext is not MainWindowViewModel vm)
+        {
+            return;
+        }
+        vm.PrintPreview?.Dispose();
     }
 }
