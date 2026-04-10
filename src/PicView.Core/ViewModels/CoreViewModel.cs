@@ -1,6 +1,7 @@
 using PicView.Core.IPlatform;
 using PicView.Core.Models;
 using PicView.Core.Navigation;
+using PicView.Core.Navigation.Interfaces;
 
 namespace PicView.Core.ViewModels;
 
@@ -12,6 +13,7 @@ public class CoreViewModel(
     public IPlatformSpecificService? PlatformService { get; } = platformSpecificService;
     public SharedImageCache SharedCache { get; } = new(imageLoader);
     public ThumbnailCache SharedThumbnailCache { get; } = new();
+    public INavigationService? SharedNavigationService { get; set; }
     
     // --- Globally Shared State ---
     public TranslationViewModel Translation { get; } = new();

@@ -25,9 +25,9 @@ public class FileHistoryViewModel
         OpenFileHistoryCommand = new ReactiveCommand(OpenFileHistory);
     }
 
-    private void OpenFileHistory(Unit obj)
+    private async ValueTask OpenFileHistory(Unit arg1, CancellationToken arg2)
     {
-        _core.MainWindows.ActiveWindow.CurrentValue.Mapper.ShowRecentHistoryFile();
+        await _core.MainWindows.ActiveWindow.CurrentValue.Mapper.ShowRecentHistoryFile();
     }
 
     private void ToggleSort(Unit obj)
@@ -57,17 +57,18 @@ public class FileHistoryViewModel
         
         HasPinnedEntries.Value = pinnedEntries.Any();
         
-        var currentFilePath = _core.MainWindows.ActiveWindow.CurrentValue.WindowTabs.ActiveTab.Value?.Model.CurrentValue.FileInfo?.FullName;
-
+        var currentFilePath = _core.MainWindows.ActiveWindow.CurrentValue.WindowTabs.ActiveTab.Value?.Model?.CurrentValue?.FileInfo?.FullName;
+        
         foreach (var entry in pinnedEntries)
         {
             var fileName = Path.GetFileName(entry.Path);
             var pinnedEntry = new FileHistoryEntryViewModel();
+            var isCurrentItem = currentFilePath is not null && entry.Path == currentFilePath;
             pinnedEntry.Initialize(
                 entry.Path, 
                 fileName, 
                 true, 
-                entry.Path == currentFilePath,
+                isCurrentItem,
                 -1, 
                 _core);
             PinnedEntries.Add(pinnedEntry);
@@ -82,11 +83,12 @@ public class FileHistoryViewModel
                 var index = i + 1;
                 var fileName = Path.GetFileName(path);
                 var entry = new FileHistoryEntryViewModel();
+                var isCurrentItem = currentFilePath is not null && path == currentFilePath;
                 entry.Initialize(
                     path, 
                     fileName, 
                     false, 
-                    path == currentFilePath,
+                    isCurrentItem,
                     index, 
                     _core);
                 Entries.Add(entry);
@@ -100,11 +102,13 @@ public class FileHistoryViewModel
                 var index = i + 1;
                 var fileName = Path.GetFileName(entry.Path);
                 var unpinnedEntry = new FileHistoryEntryViewModel();
+                
+                var isCurrentItem = currentFilePath is not null && entry.Path == currentFilePath;
                 unpinnedEntry.Initialize(
                     entry.Path, 
                     fileName, 
                     false, 
-                    entry.Path == currentFilePath,
+                    isCurrentItem,
                     index,
                     _core);
                 Entries.Add(unpinnedEntry);
