@@ -5,7 +5,7 @@ using PicView.Core.ViewModels;
 
 namespace PicView.Avalonia.MacOS.Printing;
 
-public static class MacPrintInitialization2
+public static class MacPrintInitialization
 {
     public static async Task Initialize(MainWindowViewModel vm, string path, PrintPreviewWindow printPreviewWindow)
     {

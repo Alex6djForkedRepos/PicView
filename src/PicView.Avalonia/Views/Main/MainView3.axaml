@@ -937,7 +937,6 @@
                                     DockPanel.Dock="Bottom"
                                     HorizontalAlignment="Center"
                                     Source="{CompiledBinding Model.Value.Image,
-                                                             Mode=OneWay,
                                                              TargetNullValue={StaticResource LogoImage}}" />
                             </DockPanel>
                         </ToolTip.Tip>

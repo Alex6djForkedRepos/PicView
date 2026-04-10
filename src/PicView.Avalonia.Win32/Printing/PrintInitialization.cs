@@ -9,7 +9,7 @@ namespace PicView.Avalonia.Win32.Printing;
 
 public static class PrintInitialization
 {
-    public static async ValueTask InitializeAsync(MainWindowViewModel vm, string path, PrintPreviewWindow2 printPreviewWindow)
+    public static async ValueTask InitializeAsync(MainWindowViewModel vm, string path, PrintPreviewWindow printPreviewWindow)
     {
         if (vm.WindowTabs.ActiveTab.CurrentValue.Image.CurrentValue != null && File.Exists(path))
         {

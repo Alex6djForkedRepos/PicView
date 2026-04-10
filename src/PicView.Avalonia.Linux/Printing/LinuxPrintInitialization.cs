@@ -11,7 +11,7 @@ public static class LinuxPrintInitialization
 {
     public static async Task Initialize(MainWindowViewModel vm, string path, PrintPreviewWindow printPreviewWindow)
     {
-        if (vm.WindowTabs.ActiveTab.CurrentValue.Image.CurrentValue != null && File.Exists(path))
+        if (vm.WindowTabs.ActiveTab.CurrentValue.Model?.CurrentValue?.Image != null && File.Exists(path))
         {
             await using var fs = File.OpenRead(path);
             vm.PrintPreview.PreviewImage.Value = new Bitmap(fs);
