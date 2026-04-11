@@ -52,8 +52,6 @@ public class MainWindowViewModel : IDisposable
     public BindableReactiveProperty<double> ImageHeight { get; } = new(double.NaN);
 
     public BindableReactiveProperty<double> TitlebarHeight { get; } = new();
-    
-    public BindableReactiveProperty<double> TitleMaxWidth { get; } = new();
 
     public BindableReactiveProperty<double> BottombarHeight { get; } = new();
     
@@ -77,7 +75,9 @@ public class MainWindowViewModel : IDisposable
 
     public BindableReactiveProperty<bool> IsEditableTitlebarOpen { get; } = new();
 
-    #region Navigation Commands
+    #region Commands
+
+    #region Navigation
 
     public ReactiveCommand NextCommand { get; }
     private async ValueTask Next(Unit unit, CancellationToken cancellationToken) { if (Mapper is null) return; await Mapper.Next(); }
@@ -117,7 +117,7 @@ public class MainWindowViewModel : IDisposable
 
     #endregion
 
-    #region Viewport / Zoom Commands
+    #region Viewport / Zoom
 
     public ReactiveCommand SearchCommand { get; }
     private async ValueTask Search(Unit unit, CancellationToken cancellationToken) { if (Mapper is null) return; await Mapper.Search(); }
@@ -498,6 +498,8 @@ public class MainWindowViewModel : IDisposable
     private async ValueTask ToggleFileHistory(Unit unit, CancellationToken cancellationToken) { if (Mapper is null) return; await Mapper.ToggleFileHistory(); }
 
     #endregion
+    
+    #endregion
 
     public MainWindowViewModel(TranslationViewModel translations, IPlatformWindowService windowService, GlobalSettingsViewModel globalSettings, GallerySharedSettingsViewModel gallerySettings)
     {
@@ -661,21 +663,148 @@ public class MainWindowViewModel : IDisposable
     {
         Disposable.Dispose(
             BackgroundChoice,
+            ScrollViewerWidth,
+            ScrollViewerHeight,
             WindowMinWidth,
             WindowMinHeight,
+            WindowWidth,
+            WindowHeight,
+            ImageWidth,
+            ImageHeight,
             TitlebarHeight,
             BottombarHeight,
-            TitleMaxWidth,
+            ImageBackground,
+            ConstrainedImageBackground,
+            IsFullscreen,
+            IsMaximized,
+            ShouldRestore,
+            ShouldMaximizeBeShown,
             IsLoadingIndicatorShown,
             IsUIShown,
             IsTopToolbarShown,
-            IsEditableTitlebarOpen);
-    }
-
-
-    private void SetButtonValues()
-    {
-        ShouldRestore.Value = IsFullscreen.CurrentValue || IsMaximized.CurrentValue;
-        ShouldMaximizeBeShown.Value = !IsFullscreen.CurrentValue && !IsMaximized.CurrentValue;
+            IsEditableTitlebarOpen,
+            NextCommand,
+            NextFolderCommand,
+            NextArchiveCommand,
+            LastCommand,
+            PrevCommand,
+            PrevFolderCommand,
+            PrevArchiveCommand,
+            FirstCommand,
+            Next10Command,
+            Next100Command,
+            Prev10Command,
+            Prev100Command,
+            SearchCommand,
+            UpCommand,
+            RotateRightCommand,
+            RotateLeftCommand,
+            DownCommand,
+            ScrollDownCommand,
+            ScrollUpCommand,
+            ScrollToTopCommand,
+            ScrollToBottomCommand,
+            ZoomInCommand,
+            ZoomOutCommand,
+            ResetZoomCommand,
+            ToggleScrollCommand,
+            ChangeCtrlZoomCommand,
+            ToggleLoopingCommand,
+            ToggleInterfaceCommand,
+            ToggleSubdirectoriesCommand,
+            ToggleBottomToolbarCommand,
+            ToggleTaskbarProgressCommand,
+            ToggleConstrainBackgroundColorCommand,
+            ToggleGalleryCommand,
+            OpenCloseBottomGalleryCommand,
+            CloseGalleryCommand,
+            GalleryClickCommand,
+            ShowStartUpMenuCommand,
+            AboutWindowCommand,
+            ConvertWindowCommand,
+            KeybindingsWindowCommand,
+            EffectsWindowCommand,
+            ImageInfoWindowCommand,
+            ResizeWindowCommand,
+            BatchResizeWindowCommand,
+            SettingsWindowCommand,
+            CheckForUpdatesCommand,
+            StretchCommand,
+            AutoFitWindowCommand,
+            NormalWindowCommand,
+            ToggleFullscreenCommand,
+            FullscreenCommand,
+            SetTopMostCommand,
+            CloseCommand,
+            ExitCommand,
+            CenterCommand,
+            MaximizeCommand,
+            MinimizeCommand,
+            RestoreCommand,
+            NewWindowCommand,
+            OpenLastFileCommand,
+            OpenPreviousFileHistoryEntryCommand,
+            OpenNextFileHistoryEntryCommand,
+            PrintCommand,
+            OpenCommand,
+            OpenWithCommand,
+            OpenInExplorerCommand,
+            SaveCommand,
+            SaveAsCommand,
+            DeleteFileCommand,
+            DeleteFilePermanentlyCommand,
+            RenameCommand,
+            ShowFilePropertiesCommand,
+            CopyFileCommand,
+            CopyFilePathCommand,
+            CopyImageCommand,
+            CopyBase64Command,
+            DuplicateFileCommand,
+            CutFileCommand,
+            PasteCommand,
+            ChangeBackgroundCommand,
+            SideBySideCommand,
+            ReloadCommand,
+            ResizeImageCommand,
+            CropCommand,
+            FlipCommand,
+            OptimizeImageCommand,
+            SlideshowCommand,
+            ColorPickerCommand,
+            SortFilesByNameCommand,
+            SortFilesByCreationTimeCommand,
+            SortFilesByLastAccessTimeCommand,
+            SortFilesByLastWriteTimeCommand,
+            SortFilesBySizeCommand,
+            SortFilesByExtensionCommand,
+            SortFilesRandomlyCommand,
+            SortFilesAscendingCommand,
+            SortFilesDescendingCommand,
+            Set0StarCommand,
+            Set1StarCommand,
+            Set2StarCommand,
+            Set3StarCommand,
+            Set4StarCommand,
+            Set5StarCommand,
+            OpenGoogleMapsCommand,
+            OpenBingMapsCommand,
+            SetAsWallpaperCommand,
+            SetAsWallpaperTiledCommand,
+            SetAsWallpaperCenteredCommand,
+            SetAsWallpaperStretchedCommand,
+            SetAsWallpaperFittedCommand,
+            SetAsWallpaperFilledCommand,
+            SetAsLockscreenCenteredCommand,
+            SetAsLockScreenCommand,
+            NewTabCommand,
+            CloseTabCommand,
+            ResetSettingsCommand,
+            RestartCommand,
+            ShowSettingsFileCommand,
+            ShowKeybindingsFileCommand,
+            ShowRecentHistoryFileCommand,
+            ToggleOpeningInSameWindowCommand,
+            ToggleFileHistoryCommand
+        );
     }
 }
