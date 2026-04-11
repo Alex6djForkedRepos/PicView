@@ -49,5 +49,5 @@ public interface IPlatformWindowService
 
     void ShowConvertWindow();
     
-    void ShowPrintWindow(string path);
+    Task ShowPrintWindow(string path);
 }

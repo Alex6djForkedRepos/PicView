@@ -7,7 +7,6 @@ using Avalonia.Threading;
 using PicView.Avalonia.MacOS.Printing;
 using PicView.Avalonia.Printing;
 using PicView.Avalonia.UI;
-using PicView.Avalonia.Views.Main;
 using PicView.Avalonia.WindowBehavior;
 using PicView.Core.DebugTools;
 using PicView.Core.Localization;
@@ -60,7 +59,7 @@ public partial class PrintPreviewWindow : Window, IPrintWindow
             .DistinctUntilChanged()
             .SubscribeAwait(async (_, _) =>{ await UpdatePreviewAsync(vm.PrintPreview); })
             .AddTo(vm.PrintPreview.Disposables);
-
+        
         // Any setting change triggers preview update
         // ReSharper disable once InvokeAsExtensionMethod
         Observable.CombineLatest(
@@ -74,7 +73,6 @@ public partial class PrintPreviewWindow : Window, IPrintWindow
                 ps.PaperSize.AsObservable(),
                 (orientation, top, bottom, left, right, scale, color, paper)
                     => (orientation, top, bottom, left, right, scale, color, paper))
-            .ThrottleLast(TimeSpan.FromMilliseconds(100))
             .SubscribeAwait(async (_, _) =>{ await UpdatePreviewAsync(vm.PrintPreview); })
             .AddTo(vm.PrintPreview.Disposables);
         
@@ -160,10 +158,10 @@ public partial class PrintPreviewWindow : Window, IPrintWindow
                 destRect);
         });
         
-        if (vm.PreviewImage.Value is Bitmap old)
-        {
-            old.Dispose();
-        }
+        // if (vm.PreviewImage.Value is Bitmap old)
+        // {
+        //     old.Dispose();
+        // }
 
         vm.PreviewImage.Value = rtb;
         vm.PageWidth.Value = layout.PageWidthPx;
@@ -212,9 +210,44 @@ public partial class PrintPreviewWindow : Window, IPrintWindow
 
     private void MoveWindow(object? sender, PointerPressedEventArgs e)
     {
-        if (VisualRoot is Window hostWindow)
+        var topLevel = GetTopLevel(this);
+        
+        if (topLevel is Window hostWindow)
         {
             hostWindow.BeginMoveDrag(e);
+        }
+    }
+    
+    protected override void OnClosing(WindowClosingEventArgs e)
+    {
+        base.OnClosing(e);
+        if (DataContext is not MainWindowViewModel vm)
+        {
+            return;
+        }
+
+        if (vm.PrintPreview != null)
+        {
+            var ps = vm.PrintPreview.PrintSettings.Value;
+            var config = vm.PrintPreview.PrintWindowConfig;
+            if (ps != null && config != null && config.PrintProperties != null)
+            {
+                var props = config.PrintProperties;
+                props.PrinterName = ps.PrinterName.Value;
+                props.PaperSize = ps.PaperSize.Value;
+                props.Orientation = ps.Orientation.Value;
+                props.ScaleMode = ps.ScaleMode.Value;
+                props.ColorMode = ps.ColorMode.Value;
+                props.Copies = ps.Copies.Value;
+                props.MarginTop = ps.MarginTop.Value;
+                props.MarginBottom = ps.MarginBottom.Value;
+                props.MarginLeft = ps.MarginLeft.Value;
+                props.MarginRight = ps.MarginRight.Value;
+
+                _ = config.SaveAsync();
+            }
+
+            vm.PrintPreview.Dispose();
         }
     }
 }

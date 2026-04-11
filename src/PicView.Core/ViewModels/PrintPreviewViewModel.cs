@@ -1,4 +1,5 @@
-﻿using PicView.Core.Localization;
+﻿using PicView.Core.Config;
+using PicView.Core.Localization;
 using PicView.Core.Printing;
 using R3;
 
@@ -7,6 +8,7 @@ namespace PicView.Core.ViewModels;
 public class PrintPreviewViewModel : IDisposable
 {
     public readonly CompositeDisposable Disposables = new();
+    public PrintWindowConfig? PrintWindowConfig { get; set; }
 
     public PrintPreviewViewModel()
     {

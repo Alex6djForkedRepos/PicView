@@ -246,10 +246,10 @@ public partial class MacMainWindow2 : MainWindow, IPlatformWindowService
     public void ShowConvertWindow() =>
         _windowInitializer?.ShowConvertWindow();
     
-    public void ShowPrintWindow(string path)
+    public async Task ShowPrintWindow(string path)
     {
         var vm = Dispatcher.UIThread.Invoke(() => DataContext as MainWindowViewModel);
-        _windowInitializer.ShowPrintPreviewWindow(path, vm);
+        await _windowInitializer.ShowPrintPreviewWindow(path, vm);
     }
 
     /// <inheritdoc />
