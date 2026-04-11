@@ -18,6 +18,7 @@ using PicView.Avalonia.Views.UC;
 using PicView.Avalonia.WindowBehavior;
 using PicView.Core.FileAssociations;
 using PicView.Core.FileHistory;
+using PicView.Core.FileSorting;
 using PicView.Core.Localization;
 using PicView.Core.ProcessHandling;
 using PicView.Core.ViewModels;
@@ -151,38 +152,12 @@ public static class StartUpHelper2
     {
         SetMemorySettings();
         
-        if (settingsExists)
-        {
-            Task.Run(async () =>
-            {
-               await KeybindingManager2.LoadKeybindings(vm.PlatformService);
-               vm.MainWindows.ActiveWindow.Value.Mapper =
-                   new FunctionsMapper2(vm.MainWindows.ActiveWindow.CurrentValue, window);
-            });
-        }
-        else
-        {
-            Task.Run(() =>
-            {
-                KeybindingManager2.SetDefaultKeybindings(vm.PlatformService);
-                vm.MainWindows.ActiveWindow.Value.Mapper =
-                    new FunctionsMapper2(vm.MainWindows.ActiveWindow.CurrentValue, window);
-            });
-        }
+        BackGroundLoadings(settingsExists);
 
         SetWindowEventHandlers(window);
         HandleThemeUpdates(vm);
 
         UIHelper2.SetControls(window);
-        Task.Run(() =>
-        {
-            FileHistoryManager.Initialize();
-            HandleWindowControlSettings(vm, desktop);
-     //     SettingsUpdater.ValidateGallerySettings(vm, settingsExists);
-
-            // vm.MainWindow.LayoutButtonSubscription(vm);
-            // vm.Gallery.GalleryItemSizeUpdateSubscription(vm);
-        });
 
         if (!Settings.WindowProperties.AutoFit)
         {
@@ -224,6 +199,28 @@ public static class StartUpHelper2
         }
         
         Application.Current.Name = "PicView";
+        
+        return;
+        
+        void BackGroundLoadings(bool defaultKeybindings)
+        {
+            Task.Run(async() =>
+            {
+                if (defaultKeybindings)
+                {
+                    KeybindingManager2.SetDefaultKeybindings(vm.PlatformService);
+                }
+                else
+                {
+                    await KeybindingManager2.LoadKeybindings(vm.PlatformService);
+                }
+                vm.MainWindows.ActiveWindow.Value.Mapper =
+                    new FunctionsMapper2(vm.MainWindows.ActiveWindow.CurrentValue, window);
+                FileHistoryManager.Initialize();
+                HandleWindowControlSettings(vm, desktop);
+                vm.MainWindows.ActiveWindow.CurrentValue.WindowTabs.SetSortOrder((SortFilesBy)Settings.Sorting.SortPreference);
+            });
+        }
     }
 
     private static void SetMemorySettings()

@@ -6,13 +6,11 @@
     x:DataType="viewModels:MainWindowViewModel"
     xmlns="https://github.com/avaloniaui"
     xmlns:buttons="clr-namespace:PicView.Avalonia.Views.UC.Buttons"
-    xmlns:converters="clr-namespace:PicView.Avalonia.Converters"
     xmlns:customControls="clr-namespace:PicView.Avalonia.CustomControls"
     xmlns:uc="clr-namespace:PicView.Avalonia.Views.UC"
     xmlns:viewModels="clr-namespace:PicView.Core.ViewModels;assembly=PicView.Core"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <UserControl.Resources>
-        <converters:SortFilesByToBoolConverter x:Key="EnumToBoolConverter" />
         <SolidColorBrush Color="{DynamicResource MainTextColor}" x:Key="Brush0" />
 
         <ContextMenu x:Key="MainContextMenu">
@@ -146,9 +144,7 @@
                     GroupName="SortType"
                     Header="{CompiledBinding Translation.FileName.Value,
                                              Mode=OneWay}"
-                    IsChecked="{CompiledBinding WindowTabs.SortOrder.Value,
-                                                Converter={StaticResource EnumToBoolConverter},
-                                                ConverterParameter=Name}"
+                    IsChecked="{Binding WindowTabs.IsSortedByName.Value}"
                     ToggleType="Radio" />
 
                 <!--  Sort files by size  -->
@@ -157,9 +153,7 @@
                     GroupName="SortType"
                     Header="{CompiledBinding Translation.FileSize.Value,
                                              Mode=OneWay}"
-                    IsChecked="{CompiledBinding WindowTabs.SortOrder.Value,
-                                                Converter={StaticResource EnumToBoolConverter},
-                                                ConverterParameter=FileSize}"
+                    IsChecked="{Binding WindowTabs.IsSortedByFileSize.Value}"
                     ToggleType="Radio" />
 
                 <!--  Sort files by extension  -->
@@ -168,9 +162,7 @@
                     GroupName="SortType"
                     Header="{CompiledBinding Translation.FileExtension.Value,
                                              Mode=OneWay}"
-                    IsChecked="{CompiledBinding WindowTabs.SortOrder.Value,
-                                                Converter={StaticResource EnumToBoolConverter},
-                                                ConverterParameter=Extension}"
+                    IsChecked="{Binding WindowTabs.IsSortedByExtension.Value}"
                     ToggleType="Radio" />
 
                 <!--  Sort files by creation time  -->
@@ -179,9 +171,7 @@
                     GroupName="SortType"
                     Header="{CompiledBinding Translation.Created.Value,
                                              Mode=OneWay}"
-                    IsChecked="{CompiledBinding WindowTabs.SortOrder.Value,
-                                                Converter={StaticResource EnumToBoolConverter},
-                                                ConverterParameter=CreationTime}"
+                    IsChecked="{Binding WindowTabs.IsSortedByCreationTime.Value}"
                     ToggleType="Radio" />
 
                 <!--  Sort files by last access time  -->
@@ -190,9 +180,16 @@
                     GroupName="SortType"
                     Header="{CompiledBinding Translation.LastAccessTime.Value,
                                              Mode=OneWay}"
-                    IsChecked="{CompiledBinding WindowTabs.SortOrder.Value,
-                                                Converter={StaticResource EnumToBoolConverter},
-                                                ConverterParameter=LastAccessTime}"
+                    IsChecked="{Binding WindowTabs.IsSortedByLastAccessTime.Value}"
+                    ToggleType="Radio" />
+
+                <!--  Sort files by last write time  -->
+                <MenuItem
+                    Command="{CompiledBinding SortFilesByLastAccessTimeCommand}"
+                    GroupName="SortType"
+                    Header="{CompiledBinding Translation.Modified.Value,
+                                             Mode=OneWay}"
+                    IsChecked="{Binding WindowTabs.IsSortedByLastAccessTime.Value}"
                     ToggleType="Radio" />
 
                 <!--  Sort files randomly  -->
@@ -201,9 +198,7 @@
                     GroupName="SortType"
                     Header="{CompiledBinding Translation.Random.Value,
                                              Mode=OneWay}"
-                    IsChecked="{CompiledBinding WindowTabs.SortOrder.Value,
-                                                Converter={StaticResource EnumToBoolConverter},
-                                                ConverterParameter=Random}"
+                    IsChecked="{Binding WindowTabs.IsSortedByRandomization.Value}"
                     ToggleType="Radio" />
 
                 <Separator />
@@ -624,18 +619,8 @@
                     </MenuItem.Icon>
                 </MenuItem>
 
-                <!--  Single image resize  -->
-                <MenuItem Header="{CompiledBinding Translation.ResizeImage.Value, Mode=OneWay}">
-                    <MenuItem.Icon>
-                        <Image
-                            Height="12"
-                            Source="{StaticResource UpscaleImage}"
-                            Width="12" />
-                    </MenuItem.Icon>
-                </MenuItem>
-
-                <!--  Batch resize  -->
-                <MenuItem Header="{CompiledBinding Translation.BatchResize.Value, Mode=OneWay}">
+                <!--  Resize  Image  -->
+                <MenuItem Command="{Binding BatchResizeWindowCommand}" Header="{CompiledBinding Translation.ResizeImage.Value, Mode=OneWay}">
                     <MenuItem.Icon>
                         <Image
                             Height="12"
@@ -683,6 +668,7 @@
 
                 <!--  Flip  -->
                 <MenuItem
+                    Command="{Binding FlipCommand}"
                     Header="{CompiledBinding Translation.IsFlipped.Value,
                                              Mode=OneWay}"
                     IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.Model.Value.Image,
@@ -691,14 +677,17 @@
                                                 Mode=OneWay}"
                     StaysOpenOnClick="True">
                     <MenuItem.Icon>
-                        <Path Classes="FlipPath">
-                            <Path.RenderTransform />
-                        </Path>
+                        <Image Classes="FlipImage">
+                            <Image.RenderTransform>
+                                <ScaleTransform ScaleX="{Binding WindowTabs.ActiveTab.Value.ScaleX.Value}" />
+                            </Image.RenderTransform>
+                        </Image>
                     </MenuItem.Icon>
                 </MenuItem>
 
                 <!--  Rotate left  -->
                 <MenuItem
+                    Command="{Binding RotateLeftCommand}"
                     Header="{CompiledBinding Translation.RotateLeft.Value,
                                              Mode=OneWay}"
                     IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.Model.Value.Image,
@@ -713,6 +702,7 @@
 
                 <!--  Rotate right  -->
                 <MenuItem
+                    Command="{Binding RotateRightCommand}"
                     Header="{CompiledBinding Translation.RotateRight.Value,
                                              Mode=OneWay}"
                     IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.Model.Value.Image,

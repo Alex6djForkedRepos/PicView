@@ -312,9 +312,7 @@
                                 Command="{CompiledBinding SortFilesByNameCommand}"
                                 Header="{CompiledBinding Translation.FileName.Value,
                                                          Mode=OneWay}"
-                                IsChecked="{CompiledBinding WindowTabs.SortOrder.Value,
-                                                            Converter={StaticResource EnumToBoolConverter},
-                                                            ConverterParameter=Name}"
+                                IsChecked="{Binding WindowTabs.IsSortedByName.Value}"
                                 ToggleType="Radio" />
 
                             <!--  Sort files by size  -->
@@ -322,9 +320,7 @@
                                 Command="{CompiledBinding SortFilesBySizeCommand}"
                                 Header="{CompiledBinding Translation.FileSize.Value,
                                                          Mode=OneWay}"
-                                IsChecked="{CompiledBinding WindowTabs.SortOrder.Value,
-                                                            Converter={StaticResource EnumToBoolConverter},
-                                                            ConverterParameter=FileSize}"
+                                IsChecked="{Binding WindowTabs.IsSortedByFileSize.Value}"
                                 ToggleType="Radio" />
 
                             <!--  Sort files by extension  -->
@@ -332,9 +328,7 @@
                                 Command="{CompiledBinding SortFilesByExtensionCommand}"
                                 Header="{CompiledBinding Translation.FileExtension.Value,
                                                          Mode=OneWay}"
-                                IsChecked="{CompiledBinding WindowTabs.SortOrder.Value,
-                                                            Converter={StaticResource EnumToBoolConverter},
-                                                            ConverterParameter=Extension}"
+                                IsChecked="{Binding WindowTabs.IsSortedByExtension.Value}"
                                 ToggleType="Radio" />
 
                             <!--  Sort files by creation time  -->
@@ -342,9 +336,7 @@
                                 Command="{CompiledBinding SortFilesByCreationTimeCommand}"
                                 Header="{CompiledBinding Translation.Created.Value,
                                                          Mode=OneWay}"
-                                IsChecked="{CompiledBinding WindowTabs.SortOrder.Value,
-                                                            Converter={StaticResource EnumToBoolConverter},
-                                                            ConverterParameter=CreationTime}"
+                                IsChecked="{Binding WindowTabs.IsSortedByCreationTime.Value}"
                                 ToggleType="Radio" />
 
                             <!--  Sort files by last access time  -->
@@ -352,9 +344,15 @@
                                 Command="{CompiledBinding SortFilesByLastAccessTimeCommand}"
                                 Header="{CompiledBinding Translation.LastAccessTime.Value,
                                                          Mode=OneWay}"
-                                IsChecked="{CompiledBinding WindowTabs.SortOrder.Value,
-                                                            Converter={StaticResource EnumToBoolConverter},
-                                                            ConverterParameter=LastAccessTime}"
+                                IsChecked="{Binding WindowTabs.IsSortedByLastAccessTime.Value}"
+                                ToggleType="Radio" />
+
+                            <!--  Sort files by last write time  -->
+                            <NativeMenuItem
+                                Command="{CompiledBinding SortFilesByLastAccessTimeCommand}"
+                                Header="{CompiledBinding Translation.Modified.Value,
+                                                         Mode=OneWay}"
+                                IsChecked="{Binding WindowTabs.IsSortedByLastWriteTime.Value}"
                                 ToggleType="Radio" />
 
                             <!--  Sort files randomly  -->
@@ -362,9 +360,7 @@
                                 Command="{CompiledBinding SortFilesRandomlyCommand}"
                                 Header="{CompiledBinding Translation.Random.Value,
                                                          Mode=OneWay}"
-                                IsChecked="{CompiledBinding WindowTabs.SortOrder.Value,
-                                                            Converter={StaticResource EnumToBoolConverter},
-                                                            ConverterParameter=Random}"
+                                IsChecked="{Binding WindowTabs.IsSortedByRandomization.Value}"
                                 ToggleType="Radio" />
 
                             <NativeMenuItemSeparator />

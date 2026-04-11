@@ -336,7 +336,13 @@ public class TabOverviewViewModel
 
     #region Sort
     
-    public BindableReactiveProperty<SortFilesBy> SortOrder { get; } = new();
+    public BindableReactiveProperty<bool> IsSortedByName { get; } = new();
+    public BindableReactiveProperty<bool> IsSortedByFileSize { get; } = new();
+    public BindableReactiveProperty<bool> IsSortedByCreationTime { get; } = new();
+    public BindableReactiveProperty<bool> IsSortedByExtension { get; } = new();
+    public BindableReactiveProperty<bool> IsSortedByLastAccessTime { get; } = new();
+    public BindableReactiveProperty<bool> IsSortedByLastWriteTime { get; } = new();
+    public BindableReactiveProperty<bool> IsSortedByRandomization{ get; } = new();
     public BindableReactiveProperty<bool> IsAscending { get; } = new(Settings.Sorting.Ascending);
 
     public async ValueTask SortAsync(SortFilesBy sortOrder)
@@ -348,6 +354,78 @@ public class TabOverviewViewModel
         var tab = ActiveTab.Value;
         var ct = tab.GetTabCancellation();
         await SharedNavigation.SortAsync(tab, sortOrder, ct).ConfigureAwait(false);
+        SetSortOrder(sortOrder);
+    }
+    
+    public void SetSortOrder(SortFilesBy sortOrder)
+    {
+        // Using converters fails on macOS NativeMenu, so we have to do it manually
+        switch (sortOrder)
+        {
+            case SortFilesBy.Name:
+                IsSortedByName.Value = true;
+                IsSortedByFileSize.Value = false;
+                IsSortedByCreationTime.Value = false;
+                IsSortedByExtension.Value = false;
+                IsSortedByLastAccessTime.Value = false;
+                IsSortedByLastWriteTime.Value = false;
+                IsSortedByRandomization.Value = false;
+                break;
+            case SortFilesBy.FileSize:
+                IsSortedByName.Value = false;
+                IsSortedByFileSize.Value = true;
+                IsSortedByCreationTime.Value = false;
+                IsSortedByExtension.Value = false;
+                IsSortedByLastAccessTime.Value = false;
+                IsSortedByLastWriteTime.Value = false;
+                IsSortedByRandomization.Value = false;
+                break;
+            case SortFilesBy.CreationTime:
+                IsSortedByName.Value = false;
+                IsSortedByFileSize.Value = false;
+                IsSortedByCreationTime.Value = true;
+                IsSortedByExtension.Value = false;
+                IsSortedByLastAccessTime.Value = false;
+                IsSortedByLastWriteTime.Value = false;
+                IsSortedByRandomization.Value = false;
+                break;
+            case SortFilesBy.Extension:
+                IsSortedByName.Value = false;
+                IsSortedByFileSize.Value = false;
+                IsSortedByCreationTime.Value = false;
+                IsSortedByExtension.Value = true;
+                IsSortedByLastAccessTime.Value = false;
+                IsSortedByLastWriteTime.Value = false;
+                IsSortedByRandomization.Value = false;
+                break;
+            case SortFilesBy.LastAccessTime:
+                IsSortedByName.Value = false;
+                IsSortedByFileSize.Value = false;
+                IsSortedByCreationTime.Value = false;
+                IsSortedByExtension.Value = false;
+                IsSortedByLastAccessTime.Value = true;
+                IsSortedByLastWriteTime.Value = false;
+                IsSortedByRandomization.Value = false;
+                break;
+            case SortFilesBy.LastWriteTime:
+                IsSortedByName.Value = false;
+                IsSortedByFileSize.Value = false;
+                IsSortedByCreationTime.Value = false;
+                IsSortedByExtension.Value = false;
+                IsSortedByLastAccessTime.Value = false;
+                IsSortedByLastWriteTime.Value = true;
+                IsSortedByRandomization.Value = false;
+                break;
+            case SortFilesBy.Random:
+                IsSortedByName.Value = false;
+                IsSortedByFileSize.Value = false;
+                IsSortedByCreationTime.Value = false;
+                IsSortedByExtension.Value = false;
+                IsSortedByLastAccessTime.Value = false;
+                IsSortedByLastWriteTime.Value = false;
+                IsSortedByRandomization.Value = true;
+                break;
+        }
     }
     
     public async ValueTask SortAsync(bool ascending)
@@ -359,6 +437,7 @@ public class TabOverviewViewModel
         var tab = ActiveTab.Value;
         var ct = tab.GetTabCancellation();
         await SharedNavigation.SortAsync(tab, ascending, ct).ConfigureAwait(false);
+        IsAscending.Value = ascending;
     }
     
 
