@@ -57,14 +57,14 @@ public static class MacOSWindow
             {
                 vm.MainWindow.SizeToContent.Value = SizeToContent.WidthAndHeight;
                 vm.MainWindow.CanResize.Value = false;
-                vm.GlobalSettings.IsAutoFit.Value = true;
+                // vm.GlobalSettings.IsAutoFit.Value = true;
                 window.SizeToContent = SizeToContent.WidthAndHeight; // Fixes sizeToContent not being applied
             }
             else
             {
                 vm.MainWindow.SizeToContent.Value = SizeToContent.Manual;
                 vm.MainWindow.CanResize.Value = true;
-                vm.GlobalSettings.IsAutoFit.Value = false;
+                // vm.GlobalSettings.IsAutoFit.Value = false;
             }
         });
 

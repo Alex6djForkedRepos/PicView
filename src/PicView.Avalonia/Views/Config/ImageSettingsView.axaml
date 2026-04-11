@@ -22,42 +22,42 @@
             Text="{CompiledBinding Translation.Image.Value,
                                    Mode=OneWay}" />
 
-        <ToggleButton
-            Background="Transparent"
-            BorderThickness="0"
-            Classes="altHover changeColor"
-            IsChecked="{CompiledBinding GlobalSettings.IsStretched.Value}"
-            Margin="0,0,0,10"
-            ToolTip.Tip="{CompiledBinding Translation.Stretch.Value,
-                                          Mode=OneWay}"
-            Width="300">
-            <TextBlock
-                Classes="txt"
-                Foreground="{StaticResource SecondaryTextColor}"
-                Margin="0"
-                MaxWidth="240"
-                Padding="0,1,5,0"
-                Text="{CompiledBinding Translation.Stretch.Value,
-                                       Mode=OneWay}" />
-        </ToggleButton>
+        <!--  <ToggleButton  -->
+        <!--  Background="Transparent"  -->
+        <!--  BorderThickness="0"  -->
+        <!--  Classes="altHover changeColor"  -->
+        <!--  IsChecked="{CompiledBinding GlobalSettings.IsStretched.Value}"  -->
+        <!--  Margin="0,0,0,10"  -->
+        <!--  ToolTip.Tip="{CompiledBinding Translation.Stretch.Value,  -->
+        <!--  Mode=OneWay}"  -->
+        <!--  Width="300">  -->
+        <!--  <TextBlock  -->
+        <!--  Classes="txt"  -->
+        <!--  Foreground="{StaticResource SecondaryTextColor}"  -->
+        <!--  Margin="0"  -->
+        <!--  MaxWidth="240"  -->
+        <!--  Padding="0,1,5,0"  -->
+        <!--  Text="{CompiledBinding Translation.Stretch.Value,  -->
+        <!--  Mode=OneWay}" />  -->
+        <!-- </ToggleButton> -->
 
-        <ToggleButton
-            Background="Transparent"
-            BorderThickness="0"
-            Classes="altHover changeColor"
-            Command="{CompiledBinding Tools.ToggleScrollCommand}"
-            IsChecked="{CompiledBinding GlobalSettings.IsScrollingEnabled.Value}"
-            Margin="0,0,0,10"
-            Width="300">
-            <TextBlock
-                Classes="txt"
-                Foreground="{StaticResource SecondaryTextColor}"
-                Margin="0"
-                MaxWidth="240"
-                Padding="0,1,5,0"
-                Text="{CompiledBinding Translation.IsScrolling.Value,
-                                       Mode=OneWay}" />
-        </ToggleButton>
+        <!--  <ToggleButton  -->
+        <!--  Background="Transparent"  -->
+        <!--  BorderThickness="0"  -->
+        <!--  Classes="altHover changeColor"  -->
+        <!--  Command="{CompiledBinding Tools.ToggleScrollCommand}"  -->
+        <!--  IsChecked="{CompiledBinding GlobalSettings.IsScrollingEnabled.Value}"  -->
+        <!--  Margin="0,0,0,10"  -->
+        <!--  Width="300">  -->
+        <!--  <TextBlock  -->
+        <!--  Classes="txt"  -->
+        <!--  Foreground="{StaticResource SecondaryTextColor}"  -->
+        <!--  Margin="0"  -->
+        <!--  MaxWidth="240"  -->
+        <!--  Padding="0,1,5,0"  -->
+        <!--  Text="{CompiledBinding Translation.IsScrolling.Value,  -->
+        <!--  Mode=OneWay}" />  -->
+        <!-- </ToggleButton> -->
 
 
         <ToggleButton

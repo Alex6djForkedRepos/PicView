@@ -169,7 +169,12 @@ public static class WindowResizing2
         vm.ScrollViewerWidth.Value = size.ScrollViewerWidth;
         vm.ScrollViewerHeight.Value = size.ScrollViewerHeight;
         var rotationAngle = vm.WindowTabs.ActiveTab.CurrentValue.RotationAngle.CurrentValue;
-        if (Settings.WindowProperties.AutoFit)
+        if (Settings.WindowProperties.Maximized || Settings.WindowProperties.Fullscreen)
+        {
+            vm.WindowMaxWidth.Value = vm.WindowMaxHeight.Value =
+            vm.ImageWidth.Value = vm.ImageHeight.Value = double.NaN;
+        }
+        else if (Settings.WindowProperties.AutoFit)
         {
             if (reason is WindowResizeReason.User)
             {
@@ -180,16 +185,16 @@ public static class WindowResizing2
             {
                 if (rotationAngle is 90 or 270)
                 {
-                    vm.WindowWidth.Value = size.WindowHeight;
-                    vm.WindowHeight.Value = size.WindowWidth;
+                    vm.WindowMaxWidth.Value = size.WindowHeight;
+                    vm.WindowMaxHeight.Value = size.WindowWidth;
 
                     vm.ImageWidth.Value = size.Height;
                     vm.ImageHeight.Value = size.Width;
                 }
                 else
                 {
-                    vm.WindowWidth.Value = size.WindowWidth;
-                    vm.WindowHeight.Value = size.WindowHeight;
+                    vm.WindowMaxWidth.Value = size.WindowWidth;
+                    vm.WindowMaxHeight.Value = size.WindowHeight;
 
                     vm.ImageWidth.Value = size.Width;
                     vm.ImageHeight.Value = size.Height;
@@ -198,8 +203,8 @@ public static class WindowResizing2
         }
         else
         {
-            vm.WindowWidth.Value = Settings.WindowProperties.Width;
-            vm.WindowHeight.Value = Settings.WindowProperties.Height;
+            vm.WindowMaxWidth.Value = Settings.WindowProperties.Width;
+            vm.WindowMaxHeight.Value = Settings.WindowProperties.Height;
             vm.ImageWidth.Value =
                 vm.ImageHeight.Value = double.NaN;
         }

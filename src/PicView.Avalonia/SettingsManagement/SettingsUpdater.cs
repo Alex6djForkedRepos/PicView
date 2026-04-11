@@ -427,7 +427,7 @@ public static class SettingsUpdater
     {
         vm.MainWindow.ToggleScrollBarVisibility.Value = ScrollBarVisibility.Disabled;
         vm.Translation.IsScrolling.Value = TranslationManager.Translation.ScrollingDisabled;
-        vm.GlobalSettings.IsScrollingEnabled.Value = false;
+        // vm.GlobalSettings.IsScrollingEnabled.Value = false;
         Settings.Zoom.ScrollEnabled = false;
         vm.MainWindow.RightControlOffSetMargin.Value = new Thickness(0);
     }
@@ -436,7 +436,7 @@ public static class SettingsUpdater
     {
         vm.MainWindow.ToggleScrollBarVisibility.Value = ScrollBarVisibility.Visible;
         vm.Translation.IsScrolling.Value = TranslationManager.Translation.ScrollingEnabled;
-        vm.GlobalSettings.IsScrollingEnabled.Value = true;
+        // vm.GlobalSettings.IsScrollingEnabled.Value = true;
         Settings.Zoom.ScrollEnabled = true;
         vm.MainWindow.RightControlOffSetMargin.Value = new Thickness(0,0,30,0);
     }

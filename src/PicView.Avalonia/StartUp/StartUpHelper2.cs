@@ -139,7 +139,7 @@ public static class StartUpHelper2
 
         if (Settings.WindowProperties.AutoFit)
         {
-            HandleAutoFit(vm, window);
+            HandleAutoFit(vm.MainWindows.ActiveWindow.CurrentValue, window);
         }
         else 
         {
@@ -249,7 +249,7 @@ public static class StartUpHelper2
         else
         {
       //      vm.MainWindow.ToggleScrollBarVisibility.Value = ScrollBarVisibility.Disabled;
-            vm.GlobalSettings.IsScrollingEnabled.Value = false;
+            vm.MainWindows.ActiveWindow.CurrentValue.IsScrollingEnabled.Value = false;
         }
 
         if (Settings.WindowProperties.TopMost)
@@ -312,10 +312,10 @@ public static class StartUpHelper2
         }
     }
 
-    private static void HandleAutoFit(CoreViewModel vm, Window window)
+    private static void HandleAutoFit(MainWindowViewModel vm, Window window)
     {
-        WindowFunctions2.SetAutoFit(vm.MainWindows.ActiveWindow.CurrentValue, window);
-        vm.GlobalSettings.IsAutoFit.Value = true;
+        WindowFunctions2.SetAutoFit(vm, window);
+        vm.IsAutoFit.Value = true;
         if (Settings.UIProperties.ShowInterface)
         {
   //          vm.MainWindow.IsTopToolbarShown.Value = true;

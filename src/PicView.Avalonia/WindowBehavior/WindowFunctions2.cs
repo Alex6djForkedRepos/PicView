@@ -107,7 +107,7 @@ public static class WindowFunctions2
             return;
         }
 
-        vm.GlobalSettings.IsBottomToolbarShown.Value = true;
+        vm.IsBottomToolbarShown.Value = true;
         vm.BottombarHeight.Value = SizeDefaults.BottombarHeight;
     }
 
@@ -163,11 +163,7 @@ public static class WindowFunctions2
         window.SizeToContent = SizeToContent.WidthAndHeight;
         // vm.MainWindow.CanResize.Value = false;
         Settings.WindowProperties.AutoFit = true;
-        if (Application.Current.DataContext is not CoreViewModel core)
-        {
-            return;
-        }
-        core.GlobalSettings.IsAutoFit.Value = true;
+        vm.IsAutoFit.Value = true;
 
         // Fix unpleasant window placement
         Dispatcher.CurrentDispatcher.Post(() => { CenterWindowOnScreen(); }, DispatcherPriority.Background);
@@ -175,14 +171,10 @@ public static class WindowFunctions2
 
     public static void SetManualWindow(MainWindowViewModel vm, Window window)
     {
-        vm.WindowWidth.Value = vm.WindowHeight.Value = double.NaN;
+        vm.WindowMaxWidth.Value = vm.WindowMaxHeight.Value = double.NaN;
         window.SizeToContent = SizeToContent.Manual;
         Settings.WindowProperties.AutoFit = false;
-        if (Application.Current.DataContext is not CoreViewModel core)
-        {
-            return;
-        }
-        core.GlobalSettings.IsAutoFit.Value = false;
+        vm.IsAutoFit.Value = false;
     }
 
     public static async Task Stretch(MainWindowViewModel vm)

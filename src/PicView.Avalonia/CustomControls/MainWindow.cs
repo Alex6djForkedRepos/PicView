@@ -18,7 +18,8 @@ namespace PicView.Avalonia.CustomControls;
 public class MainWindow : Window, IMainWindow
 {
     public CompositeDisposable Disposables { get; set; } = new();
-    public bool IsChangingWindowState { get; set; } = false;
+    /// Flag to prevent window state changes while resizing
+    public bool IsChangingWindowState { get; set; }
     public BottomBar2? SharedBottomBar { get; set; }
     public UserControl? SharedTitleBar { get; set; }
     public AvaloniaRenderingFrameProvider? FrameProvider { get; set; }
@@ -89,9 +90,9 @@ public class MainWindow : Window, IMainWindow
         
         SharedBottomBar.ResponsiveNavigationBtnSize(e.ClientSize);
 
-        if (e.Reason is WindowResizeReason.User)
+        if (e.Reason is WindowResizeReason.User && !IsChangingWindowState)
         {
-            // Reset to manual window
+            // User manually resized (not maximize or restore), reset to manual window
             Dispatcher.CurrentDispatcher.Post(() => WindowFunctions2.SetManualWindow(vm, this));
             return;
         }

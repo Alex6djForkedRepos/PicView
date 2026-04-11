@@ -12,14 +12,14 @@ public static class ToggleUIVisibility
     {
         if (Settings.UIProperties.ShowBottomNavBar)
         {
-            vm.GlobalSettings.IsBottomToolbarShown.Value = false;
+            vm.IsBottomToolbarShown.Value = false;
             Settings.UIProperties.ShowBottomNavBar = false;
             vm.Translation.IsShowingBottomToolbar.Value = TranslationManager.Translation.ShowBottomToolbar;
             vm.WindowTabs.ActiveTab.CurrentValue.Hoverbar.IsHoverbarVisible.Value = Settings.UIProperties.ShowHoverNavigationBar;
         }
         else
         {
-            vm.GlobalSettings.IsBottomToolbarShown.Value = true;
+            vm.IsBottomToolbarShown.Value = true;
             Settings.UIProperties.ShowBottomNavBar = true;
             vm.BottombarHeight.Value = SizeDefaults.BottombarHeight;
             vm.Translation.IsShowingBottomToolbar.Value = TranslationManager.Translation.HideBottomToolbar;

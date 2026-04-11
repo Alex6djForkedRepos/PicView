@@ -197,13 +197,13 @@ public static class WindowFunctions
 
         if (Settings.WindowProperties.TopMost)
         {
-            vm.GlobalSettings.IsTopMost.Value = false;
+            // vm.GlobalSettings.IsTopMost.Value = false;
             desktop.MainWindow.Topmost = false;
             Settings.WindowProperties.TopMost = false;
         }
         else
         {
-            vm.GlobalSettings.IsTopMost.Value = true;
+            // vm.GlobalSettings.IsTopMost.Value = true;
             desktop.MainWindow.Topmost = true;
             Settings.WindowProperties.TopMost = true;
         }
@@ -218,14 +218,14 @@ public static class WindowFunctions
             vm.MainWindow.SizeToContent.Value = SizeToContent.Manual;
             vm.MainWindow.CanResize.Value = true;
             Settings.WindowProperties.AutoFit = false;
-            vm.GlobalSettings.IsAutoFit.Value = false;
+            // vm.GlobalSettings.IsAutoFit.Value = false;
         }
         else
         {
             vm.MainWindow.SizeToContent.Value = SizeToContent.WidthAndHeight;
             vm.MainWindow.CanResize.Value = false;
             Settings.WindowProperties.AutoFit = true;
-            vm.GlobalSettings.IsAutoFit.Value = true;
+            //vm.GlobalSettings.IsAutoFit.Value = true;
 
             // Fix unpleasant window placement
             Dispatcher.UIThread.Post(() => { CenterWindowOnScreen(); }, DispatcherPriority.Background);
@@ -243,8 +243,8 @@ public static class WindowFunctions
             vm.MainWindow.CanResize.Value = true;
             Settings.WindowProperties.AutoFit = false;
             Settings.ImageScaling.StretchImage = false;
-            vm.GlobalSettings.IsStretched.Value = false;
-            vm.GlobalSettings.IsAutoFit.Value = false;
+            // vm.GlobalSettings.IsStretched.Value = false;
+            // vm.GlobalSettings.IsAutoFit.Value = false;
         }
         else
         {
@@ -252,8 +252,8 @@ public static class WindowFunctions
             vm.MainWindow.CanResize.Value = false;
             Settings.WindowProperties.AutoFit = true;
             Settings.ImageScaling.StretchImage = true;
-            vm.GlobalSettings.IsAutoFit.Value = true;
-            vm.GlobalSettings.IsStretched.Value = true;
+            // vm.GlobalSettings.IsAutoFit.Value = true;
+            // vm.GlobalSettings.IsStretched.Value = true;
         }
 
         await ResizeAndFixRenderingError(vm);
@@ -276,7 +276,7 @@ public static class WindowFunctions
         vm.MainWindow.CanResize.Value = true;
         Settings.WindowProperties.AutoFit = false;
         Settings.ImageScaling.StretchImage = true;
-        vm.GlobalSettings.IsStretched.Value = true;
+        // vm.GlobalSettings.IsStretched.Value = true;
         await WindowResizing.SetSizeAsync(vm);
         vm.ImageViewer.MainImage.InvalidateVisual();
         await SaveSettingsAsync().ConfigureAwait(false);
@@ -287,12 +287,12 @@ public static class WindowFunctions
         if (Settings.ImageScaling.StretchImage)
         {
             Settings.ImageScaling.StretchImage = false;
-            vm.GlobalSettings.IsStretched.Value = false;
+            // vm.GlobalSettings.IsStretched.Value = false;
         }
         else
         {
             Settings.ImageScaling.StretchImage = true;
-            vm.GlobalSettings.IsStretched.Value = true;
+            // vm.GlobalSettings.IsStretched.Value = true;
         }
 
         //vm.ImageViewer.MainImage.InvalidateVisual();

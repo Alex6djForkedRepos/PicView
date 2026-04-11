@@ -1,5 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Media;
 using Avalonia.Threading;
@@ -82,71 +83,71 @@ public static class SettingsUpdater2
         // vm.PicViewer.IsShowingSideBySide.Value = Settings.ImageScaling.ShowImageSideBySide;
         vm.IsUIShown.Value  = Settings.UIProperties.ShowInterface;
         vm.IsTopToolbarShown.Value  = Settings.UIProperties.ShowInterface;
-        vm.GlobalSettings.IsBottomToolbarShown.Value   = Settings.UIProperties.ShowBottomNavBar &&
+        vm.IsBottomToolbarShown.Value   = Settings.UIProperties.ShowBottomNavBar &&
                                     Settings.UIProperties.ShowInterface;
         vm.IsFullscreen.Value  = Settings.WindowProperties.Fullscreen;
-        vm.BackgroundChoice.Value = Settings.UIProperties.BgColorChoice;
+        vm.GlobalSettings.BackgroundChoice.Value = Settings.UIProperties.BgColorChoice;
     }
     
-    public static async Task ResetSettings(MainViewModel vm)
+    public static async Task ResetSettings(MainWindowViewModel vm)
     {
-        vm.MainWindow.IsLoadingIndicatorShown.Value = true;
-
-        try
-        {
-            ResetDefaults();
-
-            ThemeManager.DetermineTheme(Application.Current, false);
-        
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-            {
-                TurnOffUsingTouchpad(vm);
-            }
-            else
-            {
-                TurnOffUsingTouchpad(vm);
-            }
-
-            if (vm.Gallery is not null)
-            {
-                vm.Gallery.GalleryItem.BottomGalleryItemHeight.Value = GalleryDefaults.DefaultBottomGalleryHeight;
-                vm.Gallery.GalleryItem.ExpandedGalleryItemHeight.Value = GalleryDefaults.DefaultFullGalleryHeight;
-            }
-            
-            if (string.IsNullOrWhiteSpace(Settings.Gallery.BottomGalleryStretchMode))
-            {
-                Settings.Gallery.BottomGalleryStretchMode = "UniformToFill";
-            }
-
-            if (string.IsNullOrWhiteSpace(Settings.Gallery.FullGalleryStretchMode))
-            {
-                Settings.Gallery.FullGalleryStretchMode = "UniformToFill";
-            }
-        
-            await TurnOffSubdirectories(vm);
-        
-            TurnOffScroll(vm);
-            TurnOffCtrlZoom(vm);
-            TurnOffLooping(vm);
-        
-            await Dispatcher.UIThread.InvokeAsync(() =>
-            {
-                vm.PlatformService.StopTaskbarProgress();
-                if (NavigationManager.CanNavigate(vm))
-                {
-                    vm.PlatformService.SetTaskbarProgress((ulong)NavigationManager.GetCurrentIndex,
-                        (ulong)NavigationManager.GetCount);
-                }
-                WindowResizing.SetSize(vm);
-            });
-            
-            await SaveSettingsAsync();
-        }
-        finally
-        {
-            TitleManager.SetTitle(vm);
-            vm.MainWindow.IsLoadingIndicatorShown.Value = false;
-        }
+        // vm.IsLoadingIndicatorShown.Value = true;
+        //
+        // try
+        // {
+        //     ResetDefaults();
+        //
+        //     ThemeManager.DetermineTheme(Application.Current, false);
+        //
+        //     if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        //     {
+        //         TurnOffUsingTouchpad(vm);
+        //     }
+        //     else
+        //     {
+        //         TurnOffUsingTouchpad(vm);
+        //     }
+        //
+        //     if (vm.Gallery is not null)
+        //     {
+        //         vm.Gallery.GalleryItem.BottomGalleryItemHeight.Value = GalleryDefaults.DefaultBottomGalleryHeight;
+        //         vm.Gallery.GalleryItem.ExpandedGalleryItemHeight.Value = GalleryDefaults.DefaultFullGalleryHeight;
+        //     }
+        //     
+        //     if (string.IsNullOrWhiteSpace(Settings.Gallery.BottomGalleryStretchMode))
+        //     {
+        //         Settings.Gallery.BottomGalleryStretchMode = "UniformToFill";
+        //     }
+        //
+        //     if (string.IsNullOrWhiteSpace(Settings.Gallery.FullGalleryStretchMode))
+        //     {
+        //         Settings.Gallery.FullGalleryStretchMode = "UniformToFill";
+        //     }
+        //
+        //     await TurnOffSubdirectories(vm);
+        //
+        //     TurnOffScroll(vm);
+        //     TurnOffCtrlZoom(vm);
+        //     TurnOffLooping(vm);
+        //
+        //     await Dispatcher.UIThread.InvokeAsync(() =>
+        //     {
+        //         vm.PlatformService.StopTaskbarProgress();
+        //         if (NavigationManager.CanNavigate(vm))
+        //         {
+        //             vm.PlatformService.SetTaskbarProgress((ulong)NavigationManager.GetCurrentIndex,
+        //                 (ulong)NavigationManager.GetCount);
+        //         }
+        //         WindowResizing.SetSize(vm);
+        //     });
+        //     
+        //     await SaveSettingsAsync();
+        // }
+        // finally
+        // {
+        //     TitleManager.SetTitle(vm);
+        //     vm.MainWindow.IsLoadingIndicatorShown.Value = false;
+        // }
     }
 
     public static async Task ToggleUsingTouchpad(MainViewModel vm)
@@ -336,7 +337,7 @@ public static class SettingsUpdater2
         await SaveSettingsAsync();
     }
     
-    public static async Task ToggleScroll(MainViewModel vm)
+    public static async Task ToggleScroll(MainWindowViewModel vm)
     {
         if (vm is null)
         {
@@ -345,34 +346,33 @@ public static class SettingsUpdater2
         
         if (Settings.Zoom.ScrollEnabled)
         {
-            TurnOffScroll(vm);
+            // TurnOffScroll(vm);
         }
         else
         {
             TurnOnScroll(vm);
         }
         
-        WindowResizing.SetSize(vm);
+        WindowResizing2.SetSize(vm, WindowResizeReason.Application);
         
         await SaveSettingsAsync();
     }
     
-    public static void TurnOffScroll(MainViewModel vm)
+    public static void TurnOffScroll(MainWindowViewModel vm)
     {
-        vm.MainWindow.ToggleScrollBarVisibility.Value = ScrollBarVisibility.Disabled;
+        //vm.ToggleScrollBarVisibility.Value = ScrollBarVisibility.Disabled;
         vm.Translation.IsScrolling.Value = TranslationManager.Translation.ScrollingDisabled;
-        vm.GlobalSettings.IsScrollingEnabled.Value = false;
+        vm.IsScrollingEnabled.Value = false;
         Settings.Zoom.ScrollEnabled = false;
-        vm.MainWindow.RightControlOffSetMargin.Value = new Thickness(0);
     }
     
-    public static void TurnOnScroll(MainViewModel vm)
+    public static void TurnOnScroll(MainWindowViewModel vm)
     {
-        vm.MainWindow.ToggleScrollBarVisibility.Value = ScrollBarVisibility.Visible;
+        // vm.ToggleScrollBarVisibility.Value = ScrollBarVisibility.Visible;
         vm.Translation.IsScrolling.Value = TranslationManager.Translation.ScrollingEnabled;
-        vm.GlobalSettings.IsScrollingEnabled.Value = true;
+        // vm.GlobalSettings.IsScrollingEnabled.Value = true;
         Settings.Zoom.ScrollEnabled = true;
-        vm.MainWindow.RightControlOffSetMargin.Value = new Thickness(0,0,30,0);
+        // vm.MainWindow.RightControlOffSetMargin.Value = new Thickness(0,0,30,0);
     }
     
     public static async Task ToggleCtrlZoom(MainViewModel vm)

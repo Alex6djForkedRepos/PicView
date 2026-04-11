@@ -11,7 +11,7 @@
     <DockPanel LastChildFill="True">
         <gallery:GalleryView2 ZIndex="1" x:Name="GalleryView" />
 
-        <Panel Background="{CompiledBinding $parent[Window].((viewModels1:MainWindowViewModel)DataContext).ImageBackground.Value, Mode=OneWay}" x:Name="MainPanel">
+        <Panel Background="{CompiledBinding $parent[Window].((viewModels1:MainWindowViewModel)DataContext).GlobalSettings.ImageBackground.Value, Mode=OneWay}" x:Name="MainPanel">
             <LayoutTransformControl x:Name="MainTransform">
                 <LayoutTransformControl.LayoutTransform>
                     <RotateTransform Angle="{Binding RotationAngle.Value}" />
@@ -23,7 +23,7 @@
                         VerticalScrollBarVisibility="Disabled"
                         x:Name="ImageScrollViewer">
                         <Border
-                            Background="{CompiledBinding $parent[Window].((viewModels1:MainWindowViewModel)DataContext).ConstrainedImageBackground.Value,
+                            Background="{CompiledBinding $parent[Window].((viewModels1:MainWindowViewModel)DataContext).GlobalSettings.ConstrainedImageBackground.Value,
                                                          Mode=OneWay}"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"

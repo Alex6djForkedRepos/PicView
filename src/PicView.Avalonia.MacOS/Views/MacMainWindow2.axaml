@@ -1,8 +1,8 @@
 <customControls:MainWindow
     ExtendClientAreaTitleBarHeightHint="-1"
     ExtendClientAreaToDecorationsHint="True"
-    MaxHeight="{CompiledBinding WindowHeight.Value}"
-    MaxWidth="{CompiledBinding WindowWidth.Value}"
+    MaxHeight="{CompiledBinding WindowMaxHeight.Value}"
+    MaxWidth="{CompiledBinding WindowMaxWidth.Value}"
     MinHeight="{CompiledBinding WindowMinHeight.Value}"
     MinWidth="{CompiledBinding WindowMinWidth.Value}"
     Title="{CompiledBinding WindowTabs.ActiveTab.Value.WindowTitle.Value,
@@ -10,16 +10,12 @@
     x:Class="PicView.Avalonia.MacOS.Views.MacMainWindow2"
     x:DataType="viewModels:MainWindowViewModel"
     xmlns="https://github.com/avaloniaui"
-    xmlns:converters="clr-namespace:PicView.Avalonia.Converters;assembly=PicView.Avalonia"
     xmlns:customControls="clr-namespace:PicView.Avalonia.CustomControls;assembly=PicView.Avalonia"
     xmlns:main="clr-namespace:PicView.Avalonia.Views.Main;assembly=PicView.Avalonia"
     xmlns:uc="clr-namespace:PicView.Avalonia.Views.UC;assembly=PicView.Avalonia"
     xmlns:viewModels="clr-namespace:PicView.Core.ViewModels;assembly=PicView.Core"
     xmlns:views="clr-namespace:PicView.Avalonia.MacOS.Views"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <Window.Resources>
-        <converters:SortFilesByToBoolConverter x:Key="EnumToBoolConverter" />
-    </Window.Resources>
     <NativeMenu.Menu>
         <NativeMenu>
             <!--  File  -->
@@ -487,30 +483,30 @@
                         ToggleType="CheckBox" />
 
                     <!--  Toggle stretch  -->
-                    <NativeMenuItem
-                        Command="{CompiledBinding StretchCommand}"
-                        Header="{CompiledBinding Translation.Stretch.Value,
-                                                 Mode=OneWay}"
-                        IsChecked="{CompiledBinding GlobalSettings.IsStretched.Value}"
-                        ToggleType="CheckBox" />
+                    <!--  <NativeMenuItem  -->
+                    <!--  Command="{CompiledBinding StretchCommand}"  -->
+                    <!--  Header="{CompiledBinding Translation.Stretch.Value,  -->
+                    <!--  Mode=OneWay}"  -->
+                    <!--  IsChecked="{CompiledBinding GlobalSettings.IsStretched.Value}"  -->
+                    <!--  ToggleType="CheckBox" />  -->
 
                     <!--  Toggle scroll  -->
-                    <NativeMenuItem
-                        Command="{CompiledBinding ToggleScrollCommand}"
-                        Header="{CompiledBinding Translation.ToggleScroll.Value,
-                                                 Mode=OneWay}"
-                        IsChecked="{CompiledBinding GlobalSettings.IsScrollingEnabled.Value}"
-                        ToggleType="CheckBox" />
+                    <!--  <NativeMenuItem  -->
+                    <!--  Command="{CompiledBinding ToggleScrollCommand}"  -->
+                    <!--  Header="{CompiledBinding Translation.ToggleScroll.Value,  -->
+                    <!--  Mode=OneWay}"  -->
+                    <!--  IsChecked="{CompiledBinding GlobalSettings.IsScrollingEnabled.Value}"  -->
+                    <!--  ToggleType="CheckBox" />  -->
 
                     <NativeMenuItemSeparator />
 
                     <!--  Change topmost  -->
-                    <NativeMenuItem
-                        Command="{CompiledBinding SetTopMostCommand}"
-                        Header="{CompiledBinding Translation.StayTopMost.Value,
-                                                 Mode=OneWay}"
-                        IsChecked="{CompiledBinding GlobalSettings.IsTopMost.Value}"
-                        ToggleType="CheckBox" />
+                    <!--  <NativeMenuItem  -->
+                    <!--  Command="{CompiledBinding SetTopMostCommand}"  -->
+                    <!--  Header="{CompiledBinding Translation.StayTopMost.Value,  -->
+                    <!--  Mode=OneWay}"  -->
+                    <!--  IsChecked="{CompiledBinding GlobalSettings.IsTopMost.Value}"  -->
+                    <!--  ToggleType="CheckBox" />  -->
 
                     <NativeMenuItemSeparator />
 

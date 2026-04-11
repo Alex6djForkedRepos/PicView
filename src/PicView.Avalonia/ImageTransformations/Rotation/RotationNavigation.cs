@@ -80,14 +80,14 @@ public static class RotationNavigation
 
         await Dispatcher.UIThread.InvokeAsync(() =>
         {
-            if (vm.GlobalSettings.IsScrollingEnabled.CurrentValue)
-            {
-                vm.ImageViewer.ImageScrollViewer.LineUp();
-            }
-            else
-            {
-                vm.ImageViewer.Rotate(true);
-            }
+            // if (vm.GlobalSettings.IsScrollingEnabled.CurrentValue)
+            // {
+            //     vm.ImageViewer.ImageScrollViewer.LineUp();
+            // }
+            // else
+            // {
+            //     vm.ImageViewer.Rotate(true);
+            // }
         });
     }
 
@@ -109,14 +109,14 @@ public static class RotationNavigation
 
         await Dispatcher.UIThread.InvokeAsync(() =>
         {
-            if (vm.GlobalSettings.IsScrollingEnabled.CurrentValue)
-            {
-                vm.ImageViewer.ImageScrollViewer.LineDown();
-            }
-            else
-            {
-                vm.ImageViewer.Rotate(false);
-            }
+            // if (vm.GlobalSettings.IsScrollingEnabled.CurrentValue)
+            // {
+            //     vm.ImageViewer.ImageScrollViewer.LineDown();
+            // }
+            // else
+            // {
+            //     vm.ImageViewer.Rotate(false);
+            // }
         });
     }
 }

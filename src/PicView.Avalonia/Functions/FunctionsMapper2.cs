@@ -447,19 +447,20 @@ public class FunctionsMapper2(Core.ViewModels.MainWindowViewModel vm, Window win
         }
 
         var brush = BackgroundManager.GetBackgroundBrush((BackgroundType)Settings.UIProperties.BgColorChoice);
+        var globalSettings = core.GlobalSettings;
                  
         if (Settings.UIProperties.IsConstrainBackgroundColorEnabled)
         {
-            activeWindow.ImageBackground.Value = new SolidColorBrush(Colors.Transparent);
-            activeWindow.ConstrainedImageBackground.Value = brush;
+            globalSettings.ImageBackground.Value = new SolidColorBrush(Colors.Transparent);
+            globalSettings.ConstrainedImageBackground.Value = brush;
         }
         else
         {
-            activeWindow.ImageBackground.Value = brush;
-            activeWindow.ConstrainedImageBackground.Value = new SolidColorBrush(Colors.Transparent);
+            globalSettings.ImageBackground.Value = brush;
+            globalSettings.ConstrainedImageBackground.Value = new SolidColorBrush(Colors.Transparent);
         }
                  
-        activeWindow.BackgroundChoice.Value = Settings.UIProperties.BgColorChoice;
+        globalSettings.BackgroundChoice.Value = Settings.UIProperties.BgColorChoice;
         
         return ValueTask.CompletedTask;
     }

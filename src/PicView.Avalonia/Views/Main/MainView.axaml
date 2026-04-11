@@ -350,19 +350,19 @@
                 <Separator />
 
                 <!--  Toggle scrolling  -->
-                <MenuItem
-                    Header="{CompiledBinding Translation.IsScrolling.Value,
-                                             Mode=OneWay}"
-                    IsChecked="{CompiledBinding GlobalSettings.IsScrollingEnabled.Value}"
-                    ToggleType="CheckBox" />
-
-                <!--  Toggle stretching  -->
-                <MenuItem
-                    Command="{CompiledBinding Tools.StretchCommand}"
-                    Header="{CompiledBinding Translation.Stretch.Value,
-                                             Mode=OneWay}"
-                    IsChecked="{CompiledBinding GlobalSettings.IsStretched.Value}"
-                    ToggleType="CheckBox" />
+                <!--  <MenuItem  -->
+                <!--  Header="{CompiledBinding Translation.IsScrolling.Value,  -->
+                <!--  Mode=OneWay}"  -->
+                <!--  IsChecked="{CompiledBinding GlobalSettings.IsScrollingEnabled.Value}"  -->
+                <!--  ToggleType="CheckBox" />  -->
+                <!--    -->
+                <!--  ~1~  Toggle stretching  @1@  -->
+                <!--  <MenuItem  -->
+                <!--  Command="{CompiledBinding Tools.StretchCommand}"  -->
+                <!--  Header="{CompiledBinding Translation.Stretch.Value,  -->
+                <!--  Mode=OneWay}"  -->
+                <!--  IsChecked="{CompiledBinding GlobalSettings.IsStretched.Value}"  -->
+                <!--  ToggleType="CheckBox" />  -->
 
                 <!--  Toggle side-by-side  -->
                 <MenuItem
@@ -375,20 +375,20 @@
                 <Separator />
 
                 <!--  Toggle topmost  -->
-                <MenuItem
-                    Command="{CompiledBinding Tools.ChangeTopMostCommand}"
-                    Header="{CompiledBinding Translation.StayTopMost.Value,
-                                             Mode=OneWay}"
-                    IsChecked="{CompiledBinding GlobalSettings.IsTopMost.Value}"
-                    ToggleType="CheckBox" />
-
-                <!--  Toggle auto fit  -->
-                <MenuItem
-                    Command="{CompiledBinding Tools.ChangeAutoFitCommand}"
-                    Header="{CompiledBinding Translation.AutoFitWindow.Value,
-                                             Mode=OneWay}"
-                    IsChecked="{CompiledBinding GlobalSettings.IsAutoFit.Value}"
-                    ToggleType="CheckBox" />
+                <!--  <MenuItem  -->
+                <!--  Command="{CompiledBinding Tools.ChangeTopMostCommand}"  -->
+                <!--  Header="{CompiledBinding Translation.StayTopMost.Value,  -->
+                <!--  Mode=OneWay}"  -->
+                <!--  IsChecked="{CompiledBinding GlobalSettings.IsTopMost.Value}"  -->
+                <!--  ToggleType="CheckBox" />  -->
+                <!--    -->
+                <!--  ~1~  Toggle auto fit  @1@  -->
+                <!--  <MenuItem  -->
+                <!--  Command="{CompiledBinding Tools.ChangeAutoFitCommand}"  -->
+                <!--  Header="{CompiledBinding Translation.AutoFitWindow.Value,  -->
+                <!--  Mode=OneWay}"  -->
+                <!--  IsChecked="{CompiledBinding GlobalSettings.IsAutoFit.Value}"  -->
+                <!--  ToggleType="CheckBox" />  -->
 
                 <Separator />
 

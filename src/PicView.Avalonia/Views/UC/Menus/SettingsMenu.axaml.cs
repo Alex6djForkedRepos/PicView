@@ -40,12 +40,12 @@ public partial class SettingsMenu : AnimatedMenu
                 }
             }
 
-            UIHelper.SwitchHoverClass(StretchButton);
-            UIHelper.SwitchHoverClass(ScrollButton);
-            UIHelper.SwitchHoverClass(LoopingButton);
-            UIHelper.SwitchHoverClass(AutofitButton);
-            UIHelper.SwitchHoverClass(TopMostButton);
-            UIHelper.SwitchHoverClass(SubDirButton);
+            // UIHelper.SwitchHoverClass(StretchButton);
+            // UIHelper.SwitchHoverClass(ScrollButton);
+            // UIHelper.SwitchHoverClass(LoopingButton);
+            // UIHelper.SwitchHoverClass(AutofitButton);
+            // UIHelper.SwitchHoverClass(TopMostButton);
+            // UIHelper.SwitchHoverClass(SubDirButton);
         };
 
         if (TryGetResource("ScrollingBrush", Application.Current.RequestedThemeVariant,
@@ -53,7 +53,7 @@ public partial class SettingsMenu : AnimatedMenu
         {
             if (scrollingBrush is SolidColorBrush brush)
             {
-                UIHelper.SetButtonHover(ScrollButton, brush);
+                // UIHelper.SetButtonHover(ScrollButton, brush);
             }
         }
 
@@ -62,7 +62,7 @@ public partial class SettingsMenu : AnimatedMenu
         {
             if (stretchBrush is SolidColorBrush brush)
             {
-                UIHelper.SetButtonHover(StretchButton, brush);
+                // UIHelper.SetButtonHover(StretchButton, brush);
             }
         }
 
@@ -80,7 +80,7 @@ public partial class SettingsMenu : AnimatedMenu
         {
             if (autofitBrush is SolidColorBrush brush)
             {
-                UIHelper.SetButtonHover(AutofitButton, brush);
+                // UIHelper.SetButtonHover(AutofitButton, brush);
             }
         }
 
@@ -89,7 +89,7 @@ public partial class SettingsMenu : AnimatedMenu
         {
             if (topMostBrush is SolidColorBrush brush)
             {
-                UIHelper.SetButtonHover(TopMostButton, brush);
+                // UIHelper.SetButtonHover(TopMostButton, brush);
             }
         }
 

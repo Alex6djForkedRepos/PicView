@@ -214,7 +214,7 @@ public static class StartUpHelper
         else
         {
             vm.MainWindow.ToggleScrollBarVisibility.Value = ScrollBarVisibility.Disabled;
-            vm.GlobalSettings.IsScrollingEnabled.Value = false;
+            // vm.GlobalSettings.IsScrollingEnabled.Value = false;
         }
 
         if (Settings.WindowProperties.TopMost)
@@ -294,7 +294,7 @@ public static class StartUpHelper
     private static void HandleNormalWindow(MainViewModel vm, Window window)
     {
         vm.MainWindow.CanResize.Value = true;
-        vm.GlobalSettings.IsAutoFit.Value = false;
+        // vm.GlobalSettings.IsAutoFit.Value = false;
         if (Settings.UIProperties.ShowInterface)
         {
             vm.MainWindow.IsTopToolbarShown.Value = true;
@@ -308,7 +308,7 @@ public static class StartUpHelper
     {
         vm.MainWindow.SizeToContent.Value = SizeToContent.WidthAndHeight;
         vm.MainWindow.CanResize.Value = false;
-        vm.GlobalSettings.IsAutoFit.Value = true;
+        // vm.GlobalSettings.IsAutoFit.Value = true;
         if (Settings.UIProperties.ShowInterface)
         {
             vm.MainWindow.IsTopToolbarShown.Value = true;

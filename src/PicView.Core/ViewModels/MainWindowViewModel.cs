@@ -6,6 +6,7 @@ namespace PicView.Core.ViewModels;
 
 public class MainWindowViewModel : IDisposable
 {
+    #region Properties
     public IFunctionsMapper? Mapper { get; set; }
     public IPlatformWindowService? PlatformWindowService { get; }
     
@@ -18,7 +19,8 @@ public class MainWindowViewModel : IDisposable
     public PrintPreviewViewModel? PrintPreview { get; set; }
     public ImageInfoWindowViewModel? InfoWindow { get; set; } 
     public ExifViewModel? Exif { get; set; }
-    
+
+    #region Window state
     public bool IsNavigationButtonLeftClicked { get; set; }
     public bool IsNavigationButtonRightClicked { get; set; }
     
@@ -27,8 +29,9 @@ public class MainWindowViewModel : IDisposable
 
     public bool IsBottomToolbarRightRotationClicked { get; set; }
     public bool IsBottomToolbarLeftRotationClicked { get; set; }
-
-    public BindableReactiveProperty<int> BackgroundChoice { get; } = new();
+    public BindableReactiveProperty<bool> IsBottomToolbarShown { get; } = new(Settings.UIProperties.ShowBottomNavBar);
+    public BindableReactiveProperty<bool> IsAutoFit { get; } = new(Settings.WindowProperties.AutoFit);
+    public BindableReactiveProperty<bool> IsSideBySide { get; } = new(Settings.ImageScaling.ShowImageSideBySide);
     
     public BindableReactiveProperty<double> ScrollViewerWidth { get; } = new(double.NaN);
     
@@ -37,9 +40,9 @@ public class MainWindowViewModel : IDisposable
     public BindableReactiveProperty<double> WindowMinWidth { get; } = new(SizeDefaults.WindowMinSize);
     public BindableReactiveProperty<double> WindowMinHeight { get; } = new(SizeDefaults.WindowMinSize);
 
-    public BindableReactiveProperty<double> WindowWidth { get; } = new(double.NaN);
+    public BindableReactiveProperty<double> WindowMaxWidth { get; } = new(double.NaN);
 
-    public BindableReactiveProperty<double> WindowHeight { get; } = new(double.NaN);
+    public BindableReactiveProperty<double> WindowMaxHeight { get; } = new(double.NaN);
 
     /// <summary>
     /// The width to scale the image to
@@ -54,11 +57,6 @@ public class MainWindowViewModel : IDisposable
     public BindableReactiveProperty<double> TitlebarHeight { get; } = new();
 
     public BindableReactiveProperty<double> BottombarHeight { get; } = new();
-    
-
-    public BindableReactiveProperty<object?> ImageBackground { get; } = new();
-
-    public BindableReactiveProperty<object?> ConstrainedImageBackground { get; } = new();
 
     public BindableReactiveProperty<bool> IsFullscreen { get; } = new();
 
@@ -74,6 +72,16 @@ public class MainWindowViewModel : IDisposable
     public BindableReactiveProperty<bool> IsTopToolbarShown { get; } = new();
 
     public BindableReactiveProperty<bool> IsEditableTitlebarOpen { get; } = new();
+    
+    public BindableReactiveProperty<bool> IsScrollingEnabled { get; } = new(Settings.Zoom.ScrollEnabled);
+
+    public BindableReactiveProperty<bool> IsStretched { get; } = new(Settings.ImageScaling.StretchImage);
+    
+    public BindableReactiveProperty<bool> IsTopMost { get; } = new(Settings.WindowProperties.TopMost);
+    
+    #endregion
+    
+    #endregion
 
     #region Commands
 
@@ -662,19 +670,16 @@ public class MainWindowViewModel : IDisposable
     public void Dispose()
     {
         Disposable.Dispose(
-            BackgroundChoice,
             ScrollViewerWidth,
             ScrollViewerHeight,
             WindowMinWidth,
             WindowMinHeight,
-            WindowWidth,
-            WindowHeight,
+            WindowMaxWidth,
+            WindowMaxHeight,
             ImageWidth,
             ImageHeight,
             TitlebarHeight,
             BottombarHeight,
-            ImageBackground,
-            ConstrainedImageBackground,
             IsFullscreen,
             IsMaximized,
             ShouldRestore,
@@ -804,7 +809,13 @@ public class MainWindowViewModel : IDisposable
             ShowKeybindingsFileCommand,
             ShowRecentHistoryFileCommand,
             ToggleOpeningInSameWindowCommand,
-            ToggleFileHistoryCommand
+            ToggleFileHistoryCommand,
+            IsBottomToolbarShown,
+            IsAutoFit,
+            IsSideBySide,
+            IsFullscreen,
+            IsScrollingEnabled,
+            IsStretched
         );
         GC.SuppressFinalize(this);
     }

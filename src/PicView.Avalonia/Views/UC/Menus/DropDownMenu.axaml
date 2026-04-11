@@ -531,7 +531,7 @@
                             Classes="altHover"
                             Command="{Binding MainWindows.ActiveWindow.Value.AutoFitWindowCommand}"
                             CornerRadius="8,0,0,0"
-                            IsChecked="{Binding GlobalSettings.IsAutoFit.Value, Mode=TwoWay}"
+                            IsChecked="{Binding MainWindows.ActiveWindow.Value.IsAutoFit.Value, Mode=TwoWay}"
                             Padding="7,4"
                             ToolTip.Tip="{CompiledBinding Translation.AutoFitWindow.Value,
                                                           Mode=OneWay}">
@@ -545,7 +545,7 @@
                             Classes="altHover"
                             Command="{Binding MainWindows.ActiveWindow.Value.SetTopMostCommand}"
                             CornerRadius="8,0,0,0"
-                            IsChecked="{Binding GlobalSettings.IsTopMost.Value, Mode=TwoWay}"
+                            IsChecked="{Binding MainWindows.ActiveWindow.Value.IsTopMost.Value, Mode=TwoWay}"
                             Padding="7,4"
                             ToolTip.Tip="{CompiledBinding Translation.StayTopMost.Value,
                                                           Mode=OneWay}">
@@ -573,7 +573,7 @@
                             Classes="altHover"
                             Command="{Binding MainWindows.ActiveWindow.Value.ToggleScrollCommand}"
                             CornerRadius="8,0,0,0"
-                            IsChecked="{Binding GlobalSettings.IsScrollingEnabled.Value, Mode=TwoWay}"
+                            IsChecked="{Binding MainWindows.ActiveWindow.Value.IsScrollingEnabled.Value, Mode=TwoWay}"
                             Padding="7,4"
                             ToolTip.Tip="{CompiledBinding Translation.ToggleScroll.Value,
                                                           Mode=OneWay}">
@@ -587,7 +587,7 @@
                             Classes="altHover"
                             Command="{Binding MainWindows.ActiveWindow.Value.StretchCommand}"
                             CornerRadius="8,0,0,0"
-                            IsChecked="{Binding GlobalSettings.IsStretched.Value, Mode=TwoWay}"
+                            IsChecked="{Binding MainWindows.ActiveWindow.Value.IsStretched.Value, Mode=TwoWay}"
                             Padding="7,4"
                             ToolTip.Tip="{CompiledBinding Translation.Stretch.Value,
                                                           Mode=OneWay}">
@@ -601,7 +601,7 @@
                             Classes="altHover"
                             Command="{Binding MainWindows.ActiveWindow.Value.SideBySideCommand}"
                             CornerRadius="8,0,0,0"
-                            IsChecked="{Binding GlobalSettings.IsSideBySide.Value, Mode=TwoWay}"
+                            IsChecked="{Binding MainWindows.ActiveWindow.Value.IsSideBySide.Value, Mode=TwoWay}"
                             Padding="7,4"
                             ToolTip.Tip="{CompiledBinding Translation.SideBySideTooltip.Value,
                                                           Mode=OneWay}">

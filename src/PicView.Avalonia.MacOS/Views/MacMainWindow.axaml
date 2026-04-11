@@ -506,30 +506,30 @@
                         ToggleType="CheckBox" />
 
                     <!--  Toggle stretch  -->
-                    <NativeMenuItem
-                        Command="{CompiledBinding Tools.StretchCommand}"
-                        Header="{CompiledBinding Translation.Stretch.Value,
-                                                 Mode=OneWay}"
-                        IsChecked="{CompiledBinding GlobalSettings.IsStretched.Value}"
-                        ToggleType="CheckBox" />
+                    <!--  <NativeMenuItem  -->
+                    <!--  Command="{CompiledBinding Tools.StretchCommand}"  -->
+                    <!--  Header="{CompiledBinding Translation.Stretch.Value,  -->
+                    <!--  Mode=OneWay}"  -->
+                    <!--  IsChecked="{CompiledBinding GlobalSettings.IsStretched.Value}"  -->
+                    <!--  ToggleType="CheckBox" />  -->
 
                     <!--  Toggle scroll  -->
-                    <NativeMenuItem
-                        Command="{CompiledBinding Tools.ToggleScrollCommand}"
-                        Header="{CompiledBinding Translation.ToggleScroll.Value,
-                                                 Mode=OneWay}"
-                        IsChecked="{CompiledBinding GlobalSettings.IsScrollingEnabled.Value}"
-                        ToggleType="CheckBox" />
+                    <!--  <NativeMenuItem  -->
+                    <!--  Command="{CompiledBinding Tools.ToggleScrollCommand}"  -->
+                    <!--  Header="{CompiledBinding Translation.ToggleScroll.Value,  -->
+                    <!--  Mode=OneWay}"  -->
+                    <!--  IsChecked="{CompiledBinding GlobalSettings.IsScrollingEnabled.Value}"  -->
+                    <!--  ToggleType="CheckBox" />  -->
 
                     <NativeMenuItemSeparator />
 
                     <!--  Change topmost  -->
-                    <NativeMenuItem
-                        Command="{CompiledBinding Tools.ChangeTopMostCommand}"
-                        Header="{CompiledBinding Translation.StayTopMost.Value,
-                                                 Mode=OneWay}"
-                        IsChecked="{CompiledBinding GlobalSettings.IsTopMost.Value}"
-                        ToggleType="CheckBox" />
+                    <!--  <NativeMenuItem  -->
+                    <!--  Command="{CompiledBinding Tools.ChangeTopMostCommand}"  -->
+                    <!--  Header="{CompiledBinding Translation.StayTopMost.Value,  -->
+                    <!--  Mode=OneWay}"  -->
+                    <!--  IsChecked="{CompiledBinding GlobalSettings.IsTopMost.Value}"  -->
+                    <!--  ToggleType="CheckBox" />  -->
 
                     <NativeMenuItemSeparator />
 

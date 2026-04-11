@@ -117,46 +117,46 @@
                                                   Mode=OneWay}"
                     Width="45" />
 
-                <ToggleButton
-                    Background="{DynamicResource MenuButtonColor}"
-                    Canvas.Left="7"
-                    Canvas.Top="53"
-                    Classes="ButtonBorder altHover"
-                    Command="{CompiledBinding Tools.ToggleScrollCommand}"
-                    Foreground="{StaticResource ScrollingBrush}"
-                    Height="46"
-                    IsChecked="{CompiledBinding GlobalSettings.IsScrollingEnabled.Value}"
-                    ToolTip.Tip="{CompiledBinding Translation.ToggleScroll.Value,
-                                                  Mode=OneWay}"
-                    Width="169"
-                    x:Name="ScrollButton">
-                    <TextBlock
-                        Classes="txt btnTxt"
-                        Foreground="{StaticResource ScrollingBrush}"
-                        Text="{CompiledBinding Translation.IsScrolling.Value,
-                                               Mode=OneWay}" />
-                </ToggleButton>
+                <!--  <ToggleButton  -->
+                <!--  Background="{DynamicResource MenuButtonColor}"  -->
+                <!--  Canvas.Left="7"  -->
+                <!--  Canvas.Top="53"  -->
+                <!--  Classes="ButtonBorder altHover"  -->
+                <!--  Command="{CompiledBinding Tools.ToggleScrollCommand}"  -->
+                <!--  Foreground="{StaticResource ScrollingBrush}"  -->
+                <!--  Height="46"  -->
+                <!--  IsChecked="{CompiledBinding GlobalSettings.IsScrollingEnabled.Value}"  -->
+                <!--  ToolTip.Tip="{CompiledBinding Translation.ToggleScroll.Value,  -->
+                <!--  Mode=OneWay}"  -->
+                <!--  Width="169"  -->
+                <!--  x:Name="ScrollButton">  -->
+                <!--  <TextBlock  -->
+                <!--  Classes="txt btnTxt"  -->
+                <!--  Foreground="{StaticResource ScrollingBrush}"  -->
+                <!--  Text="{CompiledBinding Translation.IsScrolling.Value,  -->
+                <!--  Mode=OneWay}" />  -->
+                <!-- </ToggleButton> -->
 
-                <ToggleButton
-                    Background="{DynamicResource MenuButtonColor}"
-                    Canvas.Left="182"
-                    Canvas.Top="53"
-                    Classes="ButtonBorder altHover"
-                    Command="{CompiledBinding Tools.StretchedCommand}"
-                    Foreground="{StaticResource StretchBrush}"
-                    Height="46"
-                    IsChecked="{CompiledBinding GlobalSettings.IsStretched.Value,
-                                                Mode=TwoWay}"
-                    ToolTip.Tip="{CompiledBinding Translation.Stretch.Value,
-                                                  Mode=OneWay}"
-                    Width="169"
-                    x:Name="StretchButton">
-                    <TextBlock
-                        Classes="txt btnTxt"
-                        Foreground="{StaticResource StretchBrush}"
-                        Text="{CompiledBinding Translation.Stretch.Value,
-                                               Mode=OneWay}" />
-                </ToggleButton>
+                <!--  <ToggleButton  -->
+                <!--  Background="{DynamicResource MenuButtonColor}"  -->
+                <!--  Canvas.Left="182"  -->
+                <!--  Canvas.Top="53"  -->
+                <!--  Classes="ButtonBorder altHover"  -->
+                <!--  Command="{CompiledBinding Tools.StretchedCommand}"  -->
+                <!--  Foreground="{StaticResource StretchBrush}"  -->
+                <!--  Height="46"  -->
+                <!--  IsChecked="{CompiledBinding GlobalSettings.IsStretched.Value,  -->
+                <!--  Mode=TwoWay}"  -->
+                <!--  ToolTip.Tip="{CompiledBinding Translation.Stretch.Value,  -->
+                <!--  Mode=OneWay}"  -->
+                <!--  Width="169"  -->
+                <!--  x:Name="StretchButton">  -->
+                <!--  <TextBlock  -->
+                <!--  Classes="txt btnTxt"  -->
+                <!--  Foreground="{StaticResource StretchBrush}"  -->
+                <!--  Text="{CompiledBinding Translation.Stretch.Value,  -->
+                <!--  Mode=OneWay}" />  -->
+                <!-- </ToggleButton> -->
 
                 <ToggleButton
                     Background="{DynamicResource MenuButtonColor}"
@@ -178,45 +178,45 @@
                                                Mode=OneWay}" />
                 </ToggleButton>
 
-                <ToggleButton
-                    Background="{DynamicResource MenuButtonColor}"
-                    Canvas.Left="182"
-                    Canvas.Top="104"
-                    Classes="ButtonBorder altHover"
-                    Command="{CompiledBinding Tools.ChangeAutoFitCommand}"
-                    Foreground="{StaticResource AutofitBrush}"
-                    Height="46"
-                    IsChecked="{CompiledBinding GlobalSettings.IsAutoFit.Value}"
-                    ToolTip.Tip="{CompiledBinding Translation.AutoFitWindow.Value,
-                                                  Mode=OneWay}"
-                    Width="169"
-                    x:Name="AutofitButton">
-                    <TextBlock
-                        Classes="txt btnTxt"
-                        Foreground="{StaticResource AutofitBrush}"
-                        Text="{CompiledBinding Translation.AutoFitWindow.Value,
-                                               Mode=OneWay}" />
-                </ToggleButton>
+                <!--  <ToggleButton  -->
+                <!--  Background="{DynamicResource MenuButtonColor}"  -->
+                <!--  Canvas.Left="182"  -->
+                <!--  Canvas.Top="104"  -->
+                <!--  Classes="ButtonBorder altHover"  -->
+                <!--  Command="{CompiledBinding Tools.ChangeAutoFitCommand}"  -->
+                <!--  Foreground="{StaticResource AutofitBrush}"  -->
+                <!--  Height="46"  -->
+                <!--  IsChecked="{CompiledBinding GlobalSettings.IsAutoFit.Value}"  -->
+                <!--  ToolTip.Tip="{CompiledBinding Translation.AutoFitWindow.Value,  -->
+                <!--  Mode=OneWay}"  -->
+                <!--  Width="169"  -->
+                <!--  x:Name="AutofitButton">  -->
+                <!--  <TextBlock  -->
+                <!--  Classes="txt btnTxt"  -->
+                <!--  Foreground="{StaticResource AutofitBrush}"  -->
+                <!--  Text="{CompiledBinding Translation.AutoFitWindow.Value,  -->
+                <!--  Mode=OneWay}" />  -->
+                <!-- </ToggleButton> -->
 
-                <ToggleButton
-                    Background="{DynamicResource MenuButtonColor}"
-                    Canvas.Left="7"
-                    Canvas.Top="155"
-                    Classes="ButtonBorder altHover"
-                    Command="{Binding Tools.ChangeTopMostCommand}"
-                    Foreground="{StaticResource TopMostBrush}"
-                    Height="46"
-                    IsChecked="{CompiledBinding GlobalSettings.IsTopMost.Value}"
-                    ToolTip.Tip="{CompiledBinding Translation.StayTopMost.Value,
-                                                  Mode=OneWay}"
-                    Width="169"
-                    x:Name="TopMostButton">
-                    <TextBlock
-                        Classes="txt btnTxt"
-                        Foreground="{StaticResource TopMostBrush}"
-                        Text="{CompiledBinding Translation.StayTopMost.Value,
-                                               Mode=OneWay}" />
-                </ToggleButton>
+                <!--  <ToggleButton  -->
+                <!--  Background="{DynamicResource MenuButtonColor}"  -->
+                <!--  Canvas.Left="7"  -->
+                <!--  Canvas.Top="155"  -->
+                <!--  Classes="ButtonBorder altHover"  -->
+                <!--  Command="{Binding Tools.ChangeTopMostCommand}"  -->
+                <!--  Foreground="{StaticResource TopMostBrush}"  -->
+                <!--  Height="46"  -->
+                <!--  IsChecked="{CompiledBinding GlobalSettings.IsTopMost.Value}"  -->
+                <!--  ToolTip.Tip="{CompiledBinding Translation.StayTopMost.Value,  -->
+                <!--  Mode=OneWay}"  -->
+                <!--  Width="169"  -->
+                <!--  x:Name="TopMostButton">  -->
+                <!--  <TextBlock  -->
+                <!--  Classes="txt btnTxt"  -->
+                <!--  Foreground="{StaticResource TopMostBrush}"  -->
+                <!--  Text="{CompiledBinding Translation.StayTopMost.Value,  -->
+                <!--  Mode=OneWay}" />  -->
+                <!-- </ToggleButton> -->
 
                 <ToggleButton
                     Background="{DynamicResource MenuButtonColor}"

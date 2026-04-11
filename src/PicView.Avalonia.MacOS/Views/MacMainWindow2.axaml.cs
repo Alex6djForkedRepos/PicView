@@ -40,6 +40,8 @@ public partial class MacMainWindow2 : MainWindow, IPlatformWindowService
             {
                 return;
             }
+            
+            // Subscribe to window state changes to handle when user changes state outside the UI
             Observable.EveryValueChanged(this, x => x.WindowState, FrameProvider)
                 .Skip(1)
                 .SubscribeAwait(async (state, _) =>
@@ -49,25 +51,34 @@ public partial class MacMainWindow2 : MainWindow, IPlatformWindowService
                     case WindowState.FullScreen:
                         if (!Settings.WindowProperties.Fullscreen)
                         {
-                            //await MacOSWindow2.Fullscreen(this, vm);
+                            await MacOSWindow2.Fullscreen(this, vm);
                         }
 
                         break;
                     case WindowState.Maximized:
                         if (!Settings.WindowProperties.Maximized && !Settings.WindowProperties.Fullscreen)
                         {
-                            //await MacOSWindow2.Maximize(this, vm);
+                            await MacOSWindow2.Maximize(this, vm);
                         }
 
                         break;
                     case WindowState.Normal:
                         if (Settings.WindowProperties.Maximized || Settings.WindowProperties.Fullscreen)
                         {
-                            //await MacOSWindow2.Restore(this, vm);
+                            await MacOSWindow2.Restore(this, vm);
                         }
                         break;
                 }
-            }).AddTo(Disposables);
+            }, static result =>
+                {
+#if DEBUG
+                    if (result is { IsFailure: true, Exception: not null })
+                    {
+                        DebugHelper.LogDebug(nameof(MacMainWindow2), nameof(vm.IsTopToolbarShown), result.Exception);
+                    }
+#endif
+                })
+                .AddTo(Disposables);
             
             // Hide macOS traffic lights buttons when interface is hidden
             Observable.EveryValueChanged(vm, x => x.IsTopToolbarShown.CurrentValue, FrameProvider).Subscribe(shown =>
@@ -254,23 +265,23 @@ public partial class MacMainWindow2 : MainWindow, IPlatformWindowService
 
     /// <inheritdoc />
     public async Task Maximize(bool saveSetting = true) =>
-        await MacOSWindow2.Maximize(this, null, saveSetting);
+        await MacOSWindow2.Maximize(this, DataContext as MainWindowViewModel, saveSetting);
     
     /// <inheritdoc />
     public async Task MaximizeRestore(bool saveSetting = true) =>
-        await MacOSWindow2.ToggleMaximize(this, null, saveSetting);
+        await MacOSWindow2.ToggleMaximize(this, DataContext as MainWindowViewModel, saveSetting);
 
     /// <inheritdoc />
     public async Task Fullscreen(bool saveSetting = true) =>
-        await MacOSWindow2.Fullscreen(this, null, saveSetting);
+        await MacOSWindow2.Fullscreen(this, DataContext as MainWindowViewModel, saveSetting);
     
     /// <inheritdoc />
     public async Task ToggleFullscreen(bool saveSetting = true) =>
-        await MacOSWindow2.ToggleFullscreen(this, null, saveSetting);
+        await MacOSWindow2.ToggleFullscreen(this, DataContext as MainWindowViewModel, saveSetting);
     
     /// <inheritdoc />
     public async Task Restore() =>
-        await MacOSWindow2.Restore(this, null);
+        await MacOSWindow2.Restore(this, DataContext as MainWindowViewModel);
     
     public void Minimize() =>
         MacOSWindow2.Minimize(this);

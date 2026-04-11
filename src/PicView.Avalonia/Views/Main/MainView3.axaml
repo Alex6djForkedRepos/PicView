@@ -259,7 +259,7 @@
                     Command="{CompiledBinding ToggleScrollCommand}"
                     Header="{CompiledBinding Translation.IsScrolling.Value,
                                              Mode=OneWay}"
-                    IsChecked="{Binding GlobalSettings.IsScrollingEnabled.Value, Mode=TwoWay}"
+                    IsChecked="{Binding IsScrollingEnabled.Value, Mode=TwoWay}"
                     ToggleType="CheckBox" />
 
                 <!--  Toggle stretching  -->
@@ -267,7 +267,7 @@
                     Command="{CompiledBinding StretchCommand}"
                     Header="{CompiledBinding Translation.Stretch.Value,
                                              Mode=OneWay}"
-                    IsChecked="{Binding GlobalSettings.IsStretched.Value, Mode=TwoWay}"
+                    IsChecked="{Binding IsStretched.Value, Mode=TwoWay}"
                     ToggleType="CheckBox" />
 
                 <!--  Toggle side-by-side  -->
@@ -275,7 +275,7 @@
                     Command="{CompiledBinding SideBySideCommand}"
                     Header="{CompiledBinding Translation.SideBySide.Value,
                                              Mode=OneWay}"
-                    IsChecked="{Binding GlobalSettings.IsSideBySide.Value, Mode=TwoWay}"
+                    IsChecked="{Binding IsSideBySide.Value, Mode=TwoWay}"
                     ToggleType="CheckBox" />
 
                 <Separator />
@@ -285,7 +285,7 @@
                     Command="{CompiledBinding SetTopMostCommand}"
                     Header="{CompiledBinding Translation.StayTopMost.Value,
                                              Mode=OneWay}"
-                    IsChecked="{Binding GlobalSettings.IsTopMost.Value, Mode=TwoWay}"
+                    IsChecked="{Binding IsTopMost.Value, Mode=TwoWay}"
                     ToggleType="CheckBox" />
 
                 <!--  Toggle auto fit  -->
@@ -293,7 +293,7 @@
                     Command="{CompiledBinding AutoFitWindowCommand}"
                     Header="{CompiledBinding Translation.AutoFitWindow.Value,
                                              Mode=OneWay}"
-                    IsChecked="{Binding GlobalSettings.IsAutoFit.Value, Mode=TwoWay}"
+                    IsChecked="{Binding IsAutoFit.Value, Mode=TwoWay}"
                     ToggleType="CheckBox" />
 
                 <Separator />
@@ -356,8 +356,8 @@
                     Command="{Binding ToggleBottomToolbarCommand}"
                     Header="{CompiledBinding Translation.ShowBottomToolbar.Value,
                                              Mode=OneWay}"
-                    IsChecked="{CompiledBinding GlobalSettings.IsBottomToolbarShown.Value}"
-                    IsVisible="{CompiledBinding !GlobalSettings.IsBottomToolbarShown.Value}"
+                    IsChecked="{CompiledBinding IsBottomToolbarShown.Value}"
+                    IsVisible="{CompiledBinding !IsBottomToolbarShown.Value}"
                     ToggleType="CheckBox">
                     <MenuItem.Icon>
                         <Image

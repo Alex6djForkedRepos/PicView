@@ -78,11 +78,12 @@ public static class ThemeManager
 
     public static void SetBackground(int backgroundIndex)
     {
-        var coreVm = Application.Current?.DataContext as CoreViewModel;
-        if (coreVm?.MainWindows.ActiveWindow.Value is not { } activeWindow)
+        if (Application.Current.DataContext is not CoreViewModel core)
         {
             return;
         }
+        
+        var globalSettings = core.GlobalSettings;
 
         Settings.UIProperties.BgColorChoice = backgroundIndex;
                  
@@ -90,15 +91,15 @@ public static class ThemeManager
                  
         if (Settings.UIProperties.IsConstrainBackgroundColorEnabled)
         {
-            activeWindow.ImageBackground.Value = new SolidColorBrush(Colors.Transparent);
-            activeWindow.ConstrainedImageBackground.Value = brush;
+            globalSettings.ImageBackground.Value = new SolidColorBrush(Colors.Transparent);
+            globalSettings.ConstrainedImageBackground.Value = brush;
         }
         else
         {
-            activeWindow.ImageBackground.Value = brush;
-            activeWindow.ConstrainedImageBackground.Value = new SolidColorBrush(Colors.Transparent);
+            globalSettings.ImageBackground.Value = brush;
+            globalSettings.ConstrainedImageBackground.Value = new SolidColorBrush(Colors.Transparent);
         }
                  
-        activeWindow.BackgroundChoice.Value = backgroundIndex;
+        globalSettings.BackgroundChoice.Value = backgroundIndex;
     }
 }
