@@ -34,6 +34,7 @@ public interface IFunctionsMapper
     ValueTask ZoomIn();
     ValueTask ZoomOut();
     ValueTask ResetZoom();
+    ValueTask ResetZoomAndRotations();
     ValueTask ToggleScroll();
     ValueTask ChangeCtrlZoom();
     

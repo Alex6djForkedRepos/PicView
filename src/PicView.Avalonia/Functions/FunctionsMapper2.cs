@@ -8,6 +8,7 @@ using PicView.Avalonia.Crop;
 using PicView.Avalonia.FileSystem;
 using PicView.Avalonia.Gallery;
 using PicView.Avalonia.ImageHandling;
+using PicView.Avalonia.ImageTransformations;
 using PicView.Avalonia.ImageTransformations.Rotation;
 using PicView.Avalonia.Navigation;
 using PicView.Avalonia.SettingsManagement;
@@ -73,6 +74,7 @@ public class FunctionsMapper2(Core.ViewModels.MainWindowViewModel vm, Window win
             "ZoomIn" => ZoomIn,
             "ZoomOut" => ZoomOut,
             "ResetZoom" => ResetZoom,
+            "ResetZoomAndRotations" => ResetZoomAndRotations,
             "ChangeCtrlZoom" => ChangeCtrlZoom,
 
             // Toggles
@@ -371,6 +373,12 @@ public class FunctionsMapper2(Core.ViewModels.MainWindowViewModel vm, Window win
         {
             imageViewer.ZoomOut();
         }
+        return ValueTask.CompletedTask;
+    }
+    
+    public ValueTask ResetZoomAndRotations()
+    {
+        RotationManager.ResetZoomAndRotations(vm);
         return ValueTask.CompletedTask;
     }
 

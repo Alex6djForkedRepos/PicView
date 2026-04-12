@@ -280,7 +280,7 @@
                 BorderBrush="{DynamicResource MainBorderColor}"
                 BorderThickness="0,0,1,0"
                 Classes="noBorderHover"
-                Command="{CompiledBinding ResetZoomCommand}"
+                Command="{CompiledBinding ResetZoomAndRotationsCommand}"
                 Height="25"
                 Icon="{StaticResource RefreshCcwOff}"
                 IconHeight="17"

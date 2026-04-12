@@ -162,6 +162,8 @@ public class MainWindowViewModel : IDisposable
 
     public ReactiveCommand ResetZoomCommand { get; }
     private async ValueTask ResetZoom(Unit unit, CancellationToken cancellationToken) { if (Mapper is null) return; await Mapper.ResetZoom(); }
+    public ReactiveCommand ResetZoomAndRotationsCommand { get; }
+    private async ValueTask ResetZoomAndRotations(Unit unit, CancellationToken cancellationToken) { if (Mapper is null) return; await Mapper.ResetZoomAndRotations(); }
 
     public ReactiveCommand ToggleScrollCommand { get; }
     private async ValueTask ToggleScroll(Unit unit, CancellationToken cancellationToken) { if (Mapper is null) return; await Mapper.ToggleScroll(); }
@@ -543,6 +545,7 @@ public class MainWindowViewModel : IDisposable
         ZoomInCommand = new ReactiveCommand(ZoomIn);
         ZoomOutCommand = new ReactiveCommand(ZoomOut);
         ResetZoomCommand = new ReactiveCommand(ResetZoom);
+        ResetZoomAndRotationsCommand = new ReactiveCommand(ResetZoomAndRotations);
         ToggleScrollCommand = new ReactiveCommand(ToggleScroll);
         ChangeCtrlZoomCommand = new ReactiveCommand(ChangeCtrlZoom);
 
@@ -712,6 +715,7 @@ public class MainWindowViewModel : IDisposable
             ZoomInCommand,
             ZoomOutCommand,
             ResetZoomCommand,
+            ResetZoomAndRotationsCommand,
             ToggleScrollCommand,
             ChangeCtrlZoomCommand,
             ToggleLoopingCommand,

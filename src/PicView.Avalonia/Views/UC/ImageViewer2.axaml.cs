@@ -9,6 +9,7 @@ using PicView.Avalonia.ImageTransformations;
 using PicView.Avalonia.ImageTransformations.Rotation;
 using PicView.Avalonia.Input;
 using PicView.Avalonia.UI;
+using PicView.Avalonia.WindowBehavior;
 using PicView.Core.Config;
 using PicView.Core.Localization;
 using PicView.Core.ViewModels;
@@ -21,7 +22,7 @@ public partial class ImageViewer2 : UserControl
 {
     private RotationTransformer2? _imageTransformer;
     private DisposableBag _disposables;
-    private MainWindowViewModel? _mainWindowViewModel;
+    private readonly MainWindowViewModel? _mainWindowViewModel;
     
     public ImageViewer2()
     {
@@ -181,17 +182,15 @@ public partial class ImageViewer2 : UserControl
     /// <inheritdoc cref="Zoom.ResetZoom(bool, ViewModels.MainViewModel)"/>
     public void ResetZoom(bool enableAnimations = true) =>
         ZoomPanControl.ResetZoom(enableAnimations);
-
-    public void Reset()
-    {
+    
+    public void ResetZoomSlim() =>
         ZoomPanControl.ResetZoomSlim();
-        _imageTransformer.Rotate(0);
-    } 
     
     #endregion
 
     #region Image Transformation
     public void Rotate(bool clockWise) => _imageTransformer?.Rotate(clockWise);
+    public void Rotate(int angle) => _imageTransformer?.Rotate(angle);
     public void Flip(bool animate) => _imageTransformer?.Flip(animate);
         
     #endregion

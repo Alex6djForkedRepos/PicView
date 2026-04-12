@@ -37,7 +37,8 @@ public static class UpdateImage2
         {
             if (vm.WindowTabs.ActiveTab.CurrentValue.CurrentView.CurrentValue is ImageViewer2 imageViewer)
             {
-                imageViewer.Reset();
+                imageViewer.ResetZoomSlim();
+                imageViewer.Rotate(0);
             }
         }
         

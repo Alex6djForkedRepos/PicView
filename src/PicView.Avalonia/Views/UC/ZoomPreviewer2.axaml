@@ -51,8 +51,11 @@
 
             <LayoutTransformControl>
                 <LayoutTransformControl.LayoutTransform>
-                    <RotateTransform Angle="{CompiledBinding Model.Value.Rotation}" />
+                    <RotateTransform Angle="{CompiledBinding RotationAngle.Value}" />
                 </LayoutTransformControl.LayoutTransform>
+                <LayoutTransformControl.RenderTransform>
+                    <ScaleTransform ScaleX="{Binding ScaleX.Value}" />
+                </LayoutTransformControl.RenderTransform>
                 <Panel>
                     <customControls:PicBox
                         ImageType="{CompiledBinding Model.Value.ImageType,
