@@ -116,12 +116,13 @@ public static class MacOSWindow2
     public static async Task Maximize(MacMainWindow2? window, MainWindowViewModel vm, bool saveSettings = true)
     {
         window.IsChangingWindowState = true;
-        
+        Settings.WindowProperties.Maximized = true;
+                    
         await Dispatcher.UIThread.InvokeAsync(() =>
         {
             // Save window size, so that restoring it will return to the same size and position
             WindowResizing2.SaveSize(window);
-            Settings.WindowProperties.Maximized = true;
+
             
             // Use WindowResizing to reset the max size of the window
             WindowResizing2.SetSize(vm, WindowResizeReason.Application);

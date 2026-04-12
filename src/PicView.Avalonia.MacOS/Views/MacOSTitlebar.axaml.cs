@@ -1,4 +1,6 @@
 using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Media;
 using PicView.Avalonia.CustomControls;
 using PicView.Avalonia.UI;
@@ -26,14 +28,14 @@ public partial class MacOSTitlebar : MainTitleBar
             CreateTabButton.Background = Brushes.Transparent;
             CreateTabButton.BorderThickness = new Thickness(0);;
                 
-            MenuButton.Background = Brushes.Transparent;
-            MenuButton.BorderThickness = new Thickness(0);;
+            DropMenuButton.Background = Brushes.Transparent;
+            DropMenuButton.BorderThickness = new Thickness(0);;
                 
             var brush = UIHelper.GetBrush("SecondaryTextColor");
             EditableTitlebar.Foreground = brush;
             SearchButton.Foreground = brush;
             CreateTabButton.Foreground = brush;
-            MenuButton.Foreground = brush;
+            DropMenuButton.Foreground = brush;
         };
     }
 }

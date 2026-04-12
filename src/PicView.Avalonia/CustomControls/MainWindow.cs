@@ -1,8 +1,8 @@
+using System.Runtime.InteropServices;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Interactivity;
-using Avalonia.LogicalTree;
 using Avalonia.Threading;
 using PicView.Avalonia.Interfaces;
 using PicView.Avalonia.UI;
@@ -92,6 +92,17 @@ public class MainWindow : Window, IMainWindow
 
         if (e.Reason is WindowResizeReason.User && !IsChangingWindowState)
         {
+            if (SharedTitleBar.IsPointerOver && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                // Traffic light button clicked, don't change window state
+                return;
+            }
+
+            if (sender is MainWindow { WindowState: WindowState.FullScreen })
+            {
+                // Don't reset when leaving fullscreen
+                return;
+            }
             // User manually resized (not maximize or restore), reset to manual window
             Dispatcher.CurrentDispatcher.Post(() => WindowFunctions2.SetManualWindow(vm, this));
             return;

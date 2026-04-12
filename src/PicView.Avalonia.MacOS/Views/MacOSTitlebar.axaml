@@ -1,14 +1,11 @@
 <customControls:MainTitleBar
     IsVisible="{CompiledBinding IsTopToolbarShown.Value,
                                 Mode=OneWay}"
-    mc:Ignorable="d"
     x:Class="PicView.Avalonia.MacOS.Views.MacOSTitlebar"
     x:DataType="viewModels:MainWindowViewModel"
     x:Name="Titlebar"
     xmlns="https://github.com/avaloniaui"
     xmlns:customControls="clr-namespace:PicView.Avalonia.CustomControls;assembly=PicView.Avalonia"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:uc="clr-namespace:PicView.Avalonia.Views.UC;assembly=PicView.Avalonia"
     xmlns:viewModels="clr-namespace:PicView.Core.ViewModels;assembly=PicView.Core"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
@@ -17,6 +14,8 @@
         Background="{DynamicResource MainBackgroundColor}"
         LastChildFill="True"
         x:Name="TopWindowBorder">
+
+        <!--  Traffic lights reserved  -->
         <Rectangle DockPanel.Dock="Left" Width="70" />
 
         <customControls:IconButton
@@ -33,7 +32,7 @@
             IsRepeatEnabled="False"
             IsTabStop="False"
             Width="30"
-            x:Name="MenuButton" />
+            x:Name="DropMenuButton" />
 
         <customControls:IconButton
             Background="Transparent"
