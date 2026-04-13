@@ -212,24 +212,29 @@ public partial class BottomBar2 : UserControl
         _rotationContextMenu.Open();
     }
 
-    public void ResponsiveNavigationBtnSize(Size size)
+    public void ResponsiveNavigationBtnSize()
     {
-        if (size.Width < 380)
+        var width = MainBottomBorder.Bounds.Width;
+        switch (width)
+        {
+            case > 520:
+                ResetZoomButton.IsVisible = RotateLeftButton.IsVisible = true;
+                PreviousButton.Width = NextButton.Width = 80;
+                return;
+            case < 520 and > 430:
+                PreviousButton.Width = NextButton.Width = 65;
+                break;
+            case < 380 and > 360:
+                PreviousButton.Width = NextButton.Width = 50;
+                break;
+            default:
+                PreviousButton.Width = NextButton.Width = 42;
+                break;
+        }
+
+        if (width < 430)
         {
             ResetZoomButton.IsVisible = RotateLeftButton.IsVisible = false;
-        }
-        else
-        {
-            ResetZoomButton.IsVisible = RotateLeftButton.IsVisible = true;
-        }
-        
-        if (size.Width < 450)
-        {
-            PreviousButton.Width = NextButton.Width = 65;
-        }
-        else
-        {
-            PreviousButton.Width = NextButton.Width = 80;
         }
     }   
 }

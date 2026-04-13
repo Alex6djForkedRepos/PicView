@@ -87,8 +87,6 @@ public class MainWindow : Window, IMainWindow
         {
             return;
         }
-        
-        SharedBottomBar.ResponsiveNavigationBtnSize(e.ClientSize);
 
         if (e.Reason is WindowResizeReason.User && !IsChangingWindowState)
         {
@@ -114,12 +112,18 @@ public class MainWindow : Window, IMainWindow
         }
 
         WindowResizing2.SetSize(vm, e.Reason);
+        SharedBottomBar.ResponsiveNavigationBtnSize();
     }
     
     // Window is being resized
     private void HandleWindowResize(AvaloniaPropertyChangedEventArgs<Size> size)
     {
         if (IsChangingWindowState || WindowState != WindowState.Normal)
+        {
+            return;
+        }
+
+        if (size.NewValue.Value.Width == Bounds.Width && size.NewValue.Value.Height == Bounds.Height)
         {
             return;
         }

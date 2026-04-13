@@ -37,8 +37,8 @@ public class MainWindowViewModel : IDisposable
     
     public BindableReactiveProperty<double> ScrollViewerHeight { get; } = new(double.NaN);
 
-    public BindableReactiveProperty<double> WindowMinWidth { get; } = new(SizeDefaults.WindowMinSize);
-    public BindableReactiveProperty<double> WindowMinHeight { get; } = new(SizeDefaults.WindowMinSize);
+    public static int WindowMinWidth => SizeDefaults.WindowMinSize;
+    public static int WindowMinHeight => SizeDefaults.WindowMinSize;
 
     public BindableReactiveProperty<double> WindowMaxWidth { get; } = new(double.NaN);
 
@@ -675,8 +675,6 @@ public class MainWindowViewModel : IDisposable
         Disposable.Dispose(
             ScrollViewerWidth,
             ScrollViewerHeight,
-            WindowMinWidth,
-            WindowMinHeight,
             WindowMaxWidth,
             WindowMaxHeight,
             ImageWidth,
