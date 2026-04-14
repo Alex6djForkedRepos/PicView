@@ -236,6 +236,8 @@ public class ImageIterator(IImageCache cache, IThumbnailCache thumbCache, IThumb
             }
         }
 
+        // We need to update the secondary model first, because updating the first model will trigger reactive subscription,
+        // where the secondary model need to be valid beforehand.
         _tab.SecondaryModel.Value = secondModel;
         _tab.Model.Value = firstModel;
         UpdateNavigationProperties();

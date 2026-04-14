@@ -6,6 +6,7 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Threading;
 using PicView.Core.DebugTools;
+using PicView.Core.Gallery;
 
 namespace PicView.Avalonia.CustomControls;
 
@@ -213,6 +214,24 @@ public class NavigateAbleItemsViewer : ItemsControl
     }
 
     private void OnPointerWheelChanged(object? sender, PointerWheelEventArgs e)
+    {
+        switch (Settings.Gallery.GalleryMouseWheelBehavior)
+        {
+            case GalleryMouseWheel.Navigate:
+                NavigateTheControl(e);
+                break;
+            case GalleryMouseWheel.Scroll:
+                ScrollTheControl(e);
+                break;
+        }
+    }
+
+    private void NavigateTheControl(PointerWheelEventArgs e)
+    {
+        // TODO
+    }
+
+    private void ScrollTheControl(PointerWheelEventArgs e)
     {
         if (Settings.Zoom.HorizontalReverseScroll)
         {

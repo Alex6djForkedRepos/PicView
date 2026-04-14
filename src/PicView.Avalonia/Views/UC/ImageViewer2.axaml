@@ -11,7 +11,11 @@
     <DockPanel LastChildFill="True">
         <gallery:GalleryView2 ZIndex="1" x:Name="GalleryView" />
 
-        <Panel Background="{CompiledBinding $parent[Window].((vm:MainWindowViewModel)DataContext).GlobalSettings.ImageBackground.Value, Mode=OneWay}" x:Name="MainPanel">
+        <Panel
+            Background="{CompiledBinding $parent[Window].((vm:MainWindowViewModel)DataContext).GlobalSettings.ImageBackground.Value,
+                                         Mode=OneWay}"
+            DockPanel.Dock="Left"
+            x:Name="MainPanel">
             <LayoutTransformControl x:Name="MainTransform">
                 <LayoutTransformControl.LayoutTransform>
                     <RotateTransform Angle="{Binding RotationAngle.Value}" />
@@ -28,13 +32,17 @@
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
                             x:Name="MainBorder">
-                            <StackPanel Orientation="Horizontal">
-                                <customControls:PicBox2 Source="{CompiledBinding Model.Value.Image}" x:Name="MainImage" />
+                            <DockPanel LastChildFill="False">
                                 <customControls:PicBox2
+                                    DockPanel.Dock="Left"
+                                    Source="{CompiledBinding Model.Value.Image}"
+                                    x:Name="MainImage" />
+                                <customControls:PicBox2
+                                    DockPanel.Dock="Right"
                                     IsVisible="{CompiledBinding $parent[Window].((vm:MainWindowViewModel)DataContext).IsSideBySide.Value}"
                                     Source="{CompiledBinding SecondaryModel.Value.Image}"
                                     x:Name="SecondaryImage" />
-                            </StackPanel>
+                            </DockPanel>
                         </Border>
                     </customControls:AutoScrollViewer>
                 </customControls:ZoomPanControl2>

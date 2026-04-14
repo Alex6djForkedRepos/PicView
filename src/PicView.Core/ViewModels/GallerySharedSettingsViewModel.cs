@@ -300,6 +300,7 @@ public class GallerySharedSettingsViewModel
 
         CloseGalleryCommand.SubscribeAwait(async (_, ct) =>
         {
+            IsGalleryDocked.Value = false;
             await GalleryManager.CloseDockedGalleryAsync(ct);
         }, result =>
         {
@@ -315,6 +316,7 @@ public class GallerySharedSettingsViewModel
         {
             Settings.Gallery.IsGalleryDocked = true;
             Settings.Gallery.DockPosition = pos;
+            IsGalleryDocked.Value = true;
         }, result =>
         {
 #if DEBUG

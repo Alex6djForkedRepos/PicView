@@ -1,6 +1,4 @@
-﻿using PicView.Core.Config;
-
-namespace PicView.Core.Gallery;
+﻿namespace PicView.Core.Gallery;
 
 public static class GalleryManager
 {

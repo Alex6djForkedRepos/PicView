@@ -2,7 +2,6 @@
     x:Class="PicView.Avalonia.Views.Config.GallerySettingsView2"
     x:DataType="viewModels:CoreViewModel"
     xmlns="https://github.com/avaloniaui"
-    xmlns:config="clr-namespace:PicView.Core.Config;assembly=PicView.Core"
     xmlns:customControls="clr-namespace:PicView.Avalonia.CustomControls"
     xmlns:gallery="clr-namespace:PicView.Core.Gallery;assembly=PicView.Core"
     xmlns:ui="clr-namespace:PicView.Avalonia.UI"
