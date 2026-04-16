@@ -1,7 +1,7 @@
 <Styles
     xmlns="https://github.com/avaloniaui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:customControls="clr-namespace:PicView.Avalonia.CustomControls">
+    xmlns:customControls="clr-namespace:PicView.Avalonia.CustomControls"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <Style Selector="Border.borderStyle">
         <Setter Property="BorderBrush" Value="{DynamicResource MainBorderColor}" />
@@ -21,6 +21,10 @@
         </Style>
     </Style>
 
+    <Style Selector="TextBlock.txtHover:pointerover">
+        <Setter Property="Foreground" Value="{StaticResource SecondaryTextColor}" />
+    </Style>
+
     <Style Selector="TextBlock.bold">
         <Setter Property="FontFamily" Value="/Assets/Fonts/Roboto-Bold.ttf#Roboto" />
         <Setter Property="FontSize" Value="14" />
@@ -32,18 +36,6 @@
 
     <Style Selector="TextBlock.txtShadow">
         <Setter Property="Effect" Value="{StaticResource TextShadow}" />
-    </Style>
-
-    <Style Selector="TextBlock.hover">
-        <Style Selector="^:pointerover">
-            <Setter Property="Foreground" Value="{DynamicResource AccentColor}" />
-        </Style>
-    </Style>
-
-    <Style Selector="TextBlock.lightHover">
-        <Style Selector="^:pointerover">
-            <Setter Property="Foreground" Value="{StaticResource SecondaryTextColor}" />
-        </Style>
     </Style>
 
     <Style Selector="Button.hover, customControls|CopyButton:hover">
@@ -109,6 +101,25 @@
         <Setter Property="VerticalContentAlignment" Value="Center" />
     </Style>
 
+    <Style Selector="customControls|TextToggleButton.settingsToggleButton">
+        <Setter Property="Width" Value="300" />
+        <Setter Property="TextMaxWidth" Value="240" />
+        <Setter Property="TextMargin" Value="6" />
+        <Setter Property="Margin" Value="6" />
+        <Setter Property="CornerRadius" Value="6" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{DynamicResource MainTextColor}" />
+    </Style>
+
+    <Style Selector="Button.settingsTextIconButton">
+        <Setter Property="Width" Value="300" />
+        <Setter Property="Padding" Value="0,10,0,10" />
+        <Setter Property="Margin" Value="0,0,0,10" />
+        <Setter Property="CornerRadius" Value="6" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{DynamicResource MainTextColor}" />
+    </Style>
+
     <Style Selector="Button.GlassBorder, ToggleButton.GlassBorder, RepeatButton.GlassBorder">
         <Setter Property="BorderBrush" Value="#48000000" />
     </Style>
@@ -128,7 +139,7 @@
         <Setter Property="Margin" Value="0" />
         <Setter Property="Transitions">
             <Transitions>
-                <BrushTransition Property="BorderBrush" Duration="0:0:0.4" />
+                <BrushTransition Duration="0:0:0.4" Property="BorderBrush" />
             </Transitions>
         </Setter>
     </Style>

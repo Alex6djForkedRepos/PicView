@@ -1,4 +1,5 @@
 <customControls:GalleryAnimationControl
+    Background="{DynamicResource MainBackgroundColor}"
     BorderBrush="{DynamicResource MainBorderColor}"
     GalleryMode="{CompiledBinding Gallery.GalleryMode.Value}"
     Padding="1"

@@ -28,23 +28,13 @@
                     Margin="0,20,0,20"
                     Text="{CompiledBinding Translation.WindowScaling.Value,
                                            Mode=OneWay}" />
-
-                <ToggleButton
-                    Background="Transparent"
-                    BorderThickness="0"
-                    Classes="altHover changeColor"
+                <customControls:TextToggleButton
+                    Classes="altHover settingsToggleButton"
                     Command="{CompiledBinding MainWindows.ActiveWindow.Value.AutoFitWindowCommand}"
                     IsChecked="{CompiledBinding MainWindows.ActiveWindow.Value.IsAutoFit.Value}"
-                    Margin="0,0,0,10"
-                    Width="300">
-                    <TextBlock
-                        Classes="txt"
-                        Margin="0"
-                        MaxWidth="240"
-                        Padding="0,1,5,0"
-                        Text="{CompiledBinding Translation.AutoFitWindow.Value,
-                                               Mode=OneWay}" />
-                </ToggleButton>
+                    Text="{CompiledBinding Translation.AutoFitWindow.Value,
+                                           Mode=OneWay}"
+                    x:Name="AutoFitToggleButton" />
 
                 <TextBlock
                     Classes="txt bold"
@@ -83,81 +73,42 @@
                                    Mode=OneWay}" />
 
         <Border Classes="searchBorder" ui:SearchProperties.Keywords="{CompiledBinding SettingsViewModel.SearchData.WindowTopMostSearchTags.Value}">
-            <ToggleButton
-                Background="Transparent"
-                BorderThickness="0"
-                Classes="altHover alt changeColor"
+            <customControls:TextToggleButton
+                Classes="altHover settingsToggleButton"
                 Command="{CompiledBinding MainWindows.ActiveWindow.Value.SetTopMostCommand}"
                 IsChecked="{CompiledBinding MainWindows.ActiveWindow.Value.IsTopMost.Value}"
-                Margin="0,0,0,10"
-                Width="300">
-                <TextBlock
-                    Classes="txt"
-                    Margin="0"
-                    MaxWidth="240"
-                    Padding="0,1,5,0"
-                    Text="{CompiledBinding Translation.StayTopMost.Value,
-                                           Mode=OneWay}" />
-            </ToggleButton>
+                Text="{CompiledBinding Translation.StayTopMost.Value,
+                                       Mode=OneWay}"
+                x:Name="TopMostToggleButton" />
         </Border>
 
         <Border Classes="searchBorder" ui:SearchProperties.Keywords="{CompiledBinding SettingsViewModel.SearchData.WindowCenteredSearchTags.Value}">
-            <ToggleButton
-                Background="Transparent"
-                BorderThickness="0"
-                Classes="altHover changeColor"
+            <customControls:TextToggleButton
+                Classes="altHover settingsToggleButton"
                 IsChecked="{CompiledBinding SettingsViewModel.IsStayingCentered.Value}"
                 IsEnabled="{CompiledBinding MainWindows.ActiveWindow.Value.IsAutoFit.Value}"
-                Margin="0,0,0,10"
-                Width="300">
-                <TextBlock
-                    Classes="txt"
-                    Foreground="{StaticResource SecondaryTextColor}"
-                    IsEnabled="{CompiledBinding MainWindows.ActiveWindow.Value.IsAutoFit.Value}"
-                    Margin="0"
-                    MaxWidth="240"
-                    Padding="0,1,5,0"
-                    Text="{CompiledBinding Translation.StayCentered.Value,
-                                           Mode=OneWay}" />
-            </ToggleButton>
+                Text="{CompiledBinding Translation.StayCentered.Value,
+                                       Mode=OneWay}"
+                x:Name="StayCenteredToggleButton" />
         </Border>
 
         <Border Classes="searchBorder" ui:SearchProperties.Keywords="{CompiledBinding SettingsViewModel.SearchData.WindowSameWindowSearchTags.Value}">
-            <ToggleButton
-                Background="Transparent"
-                BorderThickness="0"
-                Classes="altHover changeColor"
+            <customControls:TextToggleButton
+                Classes="altHover settingsToggleButton"
                 Command="{CompiledBinding MainWindows.ActiveWindow.Value.ToggleOpeningInSameWindowCommand}"
                 IsChecked="{CompiledBinding SettingsViewModel.IsOpeningInSameWindow.Value}"
-                Margin="0,0,0,10"
-                Width="300">
-                <TextBlock
-                    Classes="txt"
-                    Foreground="{StaticResource SecondaryTextColor}"
-                    Margin="0"
-                    MaxWidth="240"
-                    Padding="0,1,5,0"
-                    Text="{CompiledBinding Translation.OpenInSameWindow.Value,
-                                           Mode=OneWay}" />
-            </ToggleButton>
+                Text="{CompiledBinding Translation.OpenInSameWindow.Value,
+                                       Mode=OneWay}"
+                x:Name="OpenInSameWindowToggleButton" />
         </Border>
 
         <Border Classes="searchBorder" ui:SearchProperties.Keywords="{CompiledBinding SettingsViewModel.SearchData.WindowEscSearchTags.Value}">
-            <ToggleButton
-                Background="Transparent"
-                BorderThickness="0"
-                Classes="altHover changeColor"
+            <customControls:TextToggleButton
+                Classes="altHover settingsToggleButton"
                 IsChecked="{CompiledBinding SettingsViewModel.IsShowingConfirmationOnEsc.Value}"
-                Margin="0,0,0,10"
-                Width="300">
-                <TextBlock
-                    Classes="txt"
-                    Margin="0"
-                    MaxWidth="240"
-                    Padding="0,1,5,0"
-                    Text="{CompiledBinding Translation.ShowConfirmationOnEsc.Value,
-                                           Mode=OneWay}" />
-            </ToggleButton>
+                Text="{CompiledBinding Translation.ShowConfirmationOnEsc.Value,
+                                       Mode=OneWay}"
+                x:Name="ShowConfirmationEscToggleButton" />
         </Border>
 
     </StackPanel>

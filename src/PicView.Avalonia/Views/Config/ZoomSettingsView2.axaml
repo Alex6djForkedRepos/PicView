@@ -12,7 +12,7 @@
         <StackPanel Classes="searchHeader">
             <Image
                 Height="18"
-                Source="{StaticResource ZoomAltImage}"
+                Source="{StaticResource ZoomImage}"
                 Width="18" />
             <TextBlock
                 Classes="txt bold"
@@ -22,76 +22,39 @@
         </StackPanel>
 
         <Border Classes="searchBorder" ui:SearchProperties.Keywords="{CompiledBinding SettingsViewModel.SearchData.ZoomResetSearchTags.Value}">
-            <ToggleButton
-                Background="Transparent"
-                BorderThickness="0"
-                Classes="altHover changeColor"
+            <customControls:TextToggleButton
+                Classes="altHover settingsToggleButton"
                 IsChecked="{CompiledBinding SettingsViewModel.IsResettingZoomOnImageChange.Value}"
-                Margin="0,0,0,10"
-                Width="300">
-                <TextBlock
-                    Classes="txt"
-                    Margin="0"
-                    MaxWidth="240"
-                    Padding="0,1,5,0"
-                    Text="{CompiledBinding Translation.ResetZoomOnChange.Value,
-                                           Mode=OneWay}" />
-            </ToggleButton>
+                Text="{CompiledBinding Translation.ResetZoomOnChange.Value,
+                                       Mode=OneWay}"
+                x:Name="ResetZoomToggleButton" />
         </Border>
 
         <Border Classes="searchBorder" ui:SearchProperties.Keywords="{CompiledBinding SettingsViewModel.SearchData.ZoomOutSearchTags.Value}">
-            <ToggleButton
-                Background="Transparent"
-                BorderThickness="0"
-                Classes="altHover changeColor"
+            <customControls:TextToggleButton
+                Classes="altHover settingsToggleButton"
                 IsChecked="{CompiledBinding SettingsViewModel.IsAvoidingZoomingOut.Value}"
-                Margin="0,0,0,10"
-                Width="300">
-                <TextBlock
-                    Classes="txt"
-                    Margin="0"
-                    MaxWidth="240"
-                    Padding="0,1,5,0"
-                    Text="{CompiledBinding Translation.AllowZoomOut.Value,
-                                           Mode=OneWay}" />
-            </ToggleButton>
+                Text="{CompiledBinding Translation.AllowZoomOut.Value,
+                                       Mode=OneWay}"
+                x:Name="AllowZoomOutToggleButton" />
         </Border>
 
         <Border Classes="searchBorder" ui:SearchProperties.Keywords="{CompiledBinding SettingsViewModel.SearchData.ZoomAnimationSearchTags.Value}">
-            <ToggleButton
-                Background="Transparent"
-                BorderThickness="0"
-                Classes="altHover changeColor"
+            <customControls:TextToggleButton
+                Classes="altHover settingsToggleButton"
                 IsChecked="{CompiledBinding SettingsViewModel.IsZoomAnimated.Value}"
-                Margin="0,0,0,10"
-                Width="300">
-                <TextBlock
-                    Classes="txt"
-                    Foreground="{StaticResource SecondaryTextColor}"
-                    Margin="0"
-                    MaxWidth="240"
-                    Padding="0,1,5,0"
-                    Text="{CompiledBinding Translation.UseAnimatedZoom.Value,
-                                           Mode=OneWay}" />
-            </ToggleButton>
+                Text="{CompiledBinding Translation.UseAnimatedZoom.Value,
+                                       Mode=OneWay}"
+                x:Name="UseAnimatedZoomToggleButton" />
         </Border>
 
         <Border Classes="searchBorder" ui:SearchProperties.Keywords="{CompiledBinding SettingsViewModel.SearchData.ZoomPopupSearchTags.Value}">
-            <ToggleButton
-                Background="Transparent"
-                BorderThickness="0"
-                Classes="altHover changeColor"
+            <customControls:TextToggleButton
+                Classes="altHover settingsToggleButton"
                 IsChecked="{CompiledBinding SettingsViewModel.IsShowingZoomPercentagePopup.Value}"
-                Margin="0,0,0,10"
-                Width="300">
-                <TextBlock
-                    Classes="txt"
-                    Margin="0"
-                    MaxWidth="240"
-                    Padding="0,1,5,0"
-                    Text="{CompiledBinding Translation.ShowZoomPercentagePopup.Value,
-                                           Mode=OneWay}" />
-            </ToggleButton>
+                Text="{CompiledBinding Translation.ShowZoomPercentagePopup.Value,
+                                       Mode=OneWay}"
+                x:Name="ShowZoomPercentageToggleButton" />
         </Border>
 
         <Border Classes="searchBorder" ui:SearchProperties.Keywords="{CompiledBinding SettingsViewModel.SearchData.ZoomSpeedSearchTags.Value}">

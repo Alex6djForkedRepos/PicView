@@ -9,11 +9,17 @@
         <Style Selector="Button#MainButton.isCurrent">
             <Setter Property="Background" Value="{DynamicResource SecondaryAccentColor}" />
         </Style>
+        <Style Selector="Button#MainButton.isCurrent TextBlock">
+            <Setter Property="Foreground" Value="{StaticResource SecondaryTextColor}" />
+        </Style>
         <Style Selector="Button#MainButton:not(.isCurrent)">
             <Setter Property="Background" Value="Transparent" />
             <Style Selector="^:pointerover">
                 <Setter Property="Background" Value="{DynamicResource AccentColor}" />
             </Style>
+        </Style>
+        <Style Selector="Button:pointerover TextBlock">
+            <Setter Property="Foreground" Value="{StaticResource SecondaryTextColor}" />
         </Style>
     </UserControl.Styles>
     <Border BorderThickness="0,1,1,1" x:Name="AppBorder">
@@ -23,17 +29,27 @@
                 BorderThickness="1"
                 Classes.isCurrent="{Binding IsCurrentItem.Value}"
                 Command="{Binding OpenCommand}"
+                Foreground="{DynamicResource MainTextColor}"
                 Padding="5,6"
-                ToolTip.Tip="{Binding FilePath.Value}"
                 x:Name="MainButton">
+                <ToolTip.Tip>
+                    <StackPanel MaxHeight="700" MaxWidth="500">
+                        <!--  TODO: Show thumbnail here  -->
+                        <Image />
+                        <TextBlock
+                            Classes="txt"
+                            Foreground="{DynamicResource ContextMenuTextColor}"
+                            Text="{Binding FilePath.Value}" />
+                    </StackPanel>
+                </ToolTip.Tip>
                 <StackPanel Orientation="Horizontal">
                     <TextBlock
-                        Classes="txt"
+                        Classes="txt txtHover"
                         IsVisible="{Binding !IsPinned.Value}"
                         Padding="5,0,2,0"
                         Text="{Binding Index.Value}" />
                     <TextBlock
-                        Classes="txt"
+                        Classes="txt txtHover"
                         Padding="5,0,0,0"
                         Text="{Binding FileName.Value}" />
                 </StackPanel>

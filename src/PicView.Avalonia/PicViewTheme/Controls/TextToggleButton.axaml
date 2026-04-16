@@ -1,12 +1,13 @@
 <ResourceDictionary
     x:ClassModifier="internal"
     xmlns="https://github.com/avaloniaui"
+    xmlns:customControls="clr-namespace:PicView.Avalonia.CustomControls"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <ControlTheme TargetType="ToggleButton" x:Key="{x:Type ToggleButton}">
+    <ControlTheme TargetType="ToggleButton" x:Key="{x:Type customControls:TextToggleButton}">
         <Setter Property="HorizontalContentAlignment" Value="Center" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
         <Setter Property="Template">
-            <ControlTemplate TargetType="{x:Type ToggleButton}">
+            <ControlTemplate TargetType="{x:Type customControls:TextToggleButton}">
                 <Border
                     Background="{TemplateBinding Background}"
                     BorderBrush="{TemplateBinding BorderBrush}"
@@ -39,15 +40,18 @@
                                     x:Name="CrossMark" />
                             </Canvas>
                         </Decorator>
-                        <ContentPresenter
-                            Content="{TemplateBinding Content}"
-                            ContentTemplate="{TemplateBinding ContentTemplate}"
-                            HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
-                            Margin="7,0,5,0"
-                            Name="PART_ContentPresenter"
-                            RecognizesAccessKey="True"
-                            TextElement.Foreground="{TemplateBinding Foreground}"
-                            VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+                        <TextBlock
+                            FontFamily="/Assets/Fonts/Roboto-Medium.ttf#Roboto"
+                            FontSize="12"
+                            Foreground="{TemplateBinding Foreground}"
+                            LineHeight="18"
+                            Margin="{TemplateBinding TextMargin}"
+                            MaxWidth="{TemplateBinding TextMaxWidth}"
+                            Name="text"
+                            Text="{TemplateBinding Text}"
+                            TextTrimming="CharacterEllipsis"
+                            TextWrapping="Wrap"
+                            VerticalAlignment="Center" />
                     </StackPanel>
                 </Border>
             </ControlTemplate>
@@ -88,8 +92,28 @@
             </Style.Animations>
             <Setter Property="Background" Value="{DynamicResource AccentColor}" />
         </Style>
+        <Style Selector="^.hover:pointerover /template/ TextBlock#text">
+            <Style.Animations>
+                <Animation Duration="{StaticResource ButtonHoverAnimationDuration}" IterationCount="1">
+                    <KeyFrame>
+                        <Setter Property="Foreground">
+                            <SolidColorBrush Color="{DynamicResource MainTextColor}" />
+                        </Setter>
+                    </KeyFrame>
+                    <KeyFrame Cue="1">
+                        <Setter Property="Foreground">
+                            <SolidColorBrush Color="#fff" />
+                        </Setter>
+                    </KeyFrame>
+                </Animation>
+            </Style.Animations>
+            <Setter Property="Foreground" Value="#fff" />
+        </Style>
         <Style Selector="^.hover:pointerover /template/ Image#TickMark">
             <Setter Property="Source" Value="{DynamicResource SquareCheckAltImage}" />
+        </Style>
+        <Style Selector="^.hover:pointerover /template/ Path#CrossMark">
+            <Setter Property="Fill" Value="{StaticResource SecondaryTextColor}" />
         </Style>
 
         <Style Selector="^.altHover:pointerover /template/ Border#border">
@@ -117,24 +141,6 @@
             <Setter Property="BorderBrush" Value="{DynamicResource SecondaryBorderColor}" />
         </Style>
 
-        <Style Selector="^.foregroundHover:pointerover /template/ ContentPresenter#PART_ContentPresenter">
-            <Style.Animations>
-                <Animation Duration="{StaticResource ButtonHoverAnimationDuration}" IterationCount="1">
-                    <KeyFrame>
-                        <Setter Property="Foreground">
-                            <SolidColorBrush Color="{DynamicResource MainTextColor}" />
-                        </Setter>
-                    </KeyFrame>
-                    <KeyFrame Cue="1">
-                        <Setter Property="Foreground">
-                            <SolidColorBrush Color="{DynamicResource AccentColor}" />
-                        </Setter>
-                    </KeyFrame>
-                </Animation>
-            </Style.Animations>
-            <Setter Property="Foreground" Value="{DynamicResource AccentColor}" />
-        </Style>
-
         <Style Selector="^.noBorderHover:pointerover /template/ Border#border">
             <Style.Animations>
                 <Animation Duration="{StaticResource ButtonHoverAnimationDuration}" IterationCount="1">
@@ -152,21 +158,13 @@
             </Style.Animations>
             <Setter Property="Background" Value="{DynamicResource AltBackgroundHoverColor}" />
         </Style>
-        <Style Selector="^.hover:pressed  /template/ ContentPresenter#PART_ContentPresenter">
-            <Setter Property="Background" Value="{DynamicResource SecondaryAccentColor}" />
-        </Style>
-        <Style Selector="^.noBorderHover:pressed  /template/ ContentPresenter#PART_ContentPresenter">
-            <Setter Property="Background" Value="{DynamicResource SecondaryAccentColor}" />
-        </Style>
+
         <Style Selector="^:disabled">
             <Setter Property="Opacity" Value="{DynamicResource ThemeDisabledOpacity}" />
         </Style>
 
         <Style Selector="^.changeColor  /template/ Image#TickMark">
             <Setter Property="Source" Value="{StaticResource SquareCheckAltImage}" />
-        </Style>
-        <Style Selector="^.changeColor  /template/ Image#CrossMark">
-            <Setter Property="Source" Value="{StaticResource SquareXAltImage}" />
         </Style>
     </ControlTheme>
 </ResourceDictionary>

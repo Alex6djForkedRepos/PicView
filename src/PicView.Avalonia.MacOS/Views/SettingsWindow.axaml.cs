@@ -1,17 +1,13 @@
-using System;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
-using Avalonia.Threading;
 using PicView.Avalonia.Input;
 using PicView.Avalonia.UI;
-using PicView.Avalonia.WindowBehavior;
 using PicView.Core.Config;
 using PicView.Core.FileAssociations;
 using PicView.Core.Localization;
 using PicView.Core.MacOS.FileAssociation;
-using PicView.Core.Sizing;
 using PicView.Core.ViewModels;
 using R3;
 
@@ -53,6 +49,18 @@ public partial class SettingsWindow : Window
             TitleText.Background = Brushes.Transparent;
             SettingsView.Background = Brushes.Transparent;
             SettingsButton.Background = Brushes.Transparent;
+            
+            HomeButton.Classes.Remove("noBorderHover");
+            HomeButton.Classes.Add("hover");
+            GoBackButton.Classes.Remove("noBorderHover");
+            GoBackButton.Classes.Add("hover");
+            GoForwardButton.Classes.Remove("noBorderHover");
+            GoForwardButton.Classes.Add("hover");
+        }
+
+        if (!Settings.Theme.Dark)
+        {
+            MainBorder.Background = UIHelper.GetMenuBackgroundColor();
         }
         Loaded += delegate
         {

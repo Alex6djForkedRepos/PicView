@@ -22,64 +22,35 @@
         </StackPanel>
 
         <Border Classes="searchBorder" ui:SearchProperties.Keywords="{CompiledBinding SettingsViewModel.SearchData.NavigationSubdirectorySearchTags.Value}">
-            <ToggleButton
-                Background="Transparent"
-                BorderThickness="0"
-                Classes="altHover changeColor"
+            <customControls:TextToggleButton
+                Classes="altHover settingsToggleButton"
                 IsChecked="{CompiledBinding SettingsViewModel.IsIncludingSubdirectories.Value,
                                             Mode=TwoWay}"
-                Margin="0,0,0,10"
-                Width="300">
-                <TextBlock
-                    Classes="txt"
-                    Margin="0"
-                    MaxWidth="240"
-                    Padding="0,1,5,0"
-                    Text="{CompiledBinding Translation.SearchSubdirectory.Value,
-                                           Mode=OneWay}" />
-            </ToggleButton>
+                Text="{CompiledBinding Translation.SearchSubdirectory.Value,
+                                       Mode=OneWay}"
+                x:Name="IncludeSubdirToggleButton" />
         </Border>
 
         <Border Classes="searchBorder" ui:SearchProperties.Keywords="{CompiledBinding SettingsViewModel.SearchData.NavigationLoopSearchTags.Value}">
-            <ToggleButton
-                Background="Transparent"
-                BorderThickness="0"
-                Classes="altHover changeColor"
+            <customControls:TextToggleButton
+                Classes="altHover settingsToggleButton"
                 IsChecked="{CompiledBinding SettingsViewModel.IsLooping.Value,
                                             Mode=TwoWay}"
-                Margin="0,0,0,10"
+                Text="{CompiledBinding Translation.IsLooping.Value,
+                                       Mode=OneWay}"
                 ToolTip.Tip="{CompiledBinding Translation.ToggleLooping.Value,
                                               Mode=OneWay}"
-                Width="300">
-                <TextBlock
-                    Classes="txt"
-                    Margin="0"
-                    MaxWidth="240"
-                    Padding="0,1,5,0"
-                    Text="{CompiledBinding Translation.IsLooping.Value,
-                                           Mode=OneWay}" />
-            </ToggleButton>
+                x:Name="LoopingToggleButton" />
         </Border>
 
         <Border Classes="searchBorder" ui:SearchProperties.Keywords="{CompiledBinding SettingsViewModel.SearchData.NavigationTaskbarSearchTags.Value}">
-            <ToggleButton
-                Background="Transparent"
-                BorderThickness="0"
-                Classes="altHover changeColor"
+            <customControls:TextToggleButton
+                Classes="altHover settingsToggleButton"
                 IsChecked="{CompiledBinding SettingsViewModel.IsShowingTaskbarProgress.Value,
                                             Mode=TwoWay}"
-                Margin="0,0,0,10"
-                Width="300"
-                x:Name="TaskBarToggleButton">
-                <TextBlock
-                    Classes="txt"
-                    Foreground="{StaticResource SecondaryTextColor}"
-                    Margin="0"
-                    MaxWidth="240"
-                    Padding="0,1,5,0"
-                    Text="{CompiledBinding Translation.ToggleTaskbarProgress.Value,
-                                           Mode=OneWay}" />
-            </ToggleButton>
+                Text="{CompiledBinding Translation.ToggleTaskbarProgress.Value,
+                                       Mode=OneWay}"
+                x:Name="TaskBarToggleButton" />
         </Border>
 
         <Border Classes="searchBorder" ui:SearchProperties.Keywords="{CompiledBinding SettingsViewModel.SearchData.NavigationSpeedSearchTags.Value}">
@@ -106,8 +77,9 @@
                 <TextBlock
                     Classes="txt"
                     FontFamily="/Assets/Fonts/Roboto-Bold.ttf#Roboto"
-                    Foreground="{DynamicResource MainTextColorFaded}"
-                    Margin="0,0,0,15">
+                    Foreground="{DynamicResource MainTextColor}"
+                    Margin="0,0,0,15"
+                    Opacity=".9">
                     <Run Text="{CompiledBinding SettingsViewModel.GetNavSpeed.Value, Mode=OneWay}" />
                     <Run Text="{CompiledBinding Translation.SecAbbreviation.Value, Mode=OneWay}" />
                 </TextBlock>

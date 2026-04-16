@@ -7,6 +7,7 @@
     xmlns="https://github.com/avaloniaui"
     xmlns:color="clr-namespace:PicView.Core.ColorHandling;assembly=PicView.Core"
     xmlns:converters="clr-namespace:PicView.Avalonia.Converters"
+    xmlns:customControls="clr-namespace:PicView.Avalonia.CustomControls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="clr-namespace:PicView.Avalonia.UI"
@@ -406,23 +407,13 @@
         </Border>
 
         <Border Classes="searchBorder" ui:SearchProperties.Keywords="{CompiledBinding SettingsViewModel.SearchData.BackgroundConstrainSearchTags.Value}">
-            <ToggleButton
-                Background="Transparent"
-                BorderThickness="0"
-                Classes="altHover"
+            <customControls:TextToggleButton
+                Classes="altHover settingsToggleButton"
                 Command="{CompiledBinding MainWindows.ActiveWindow.Value.ToggleConstrainBackgroundColorCommand}"
                 IsChecked="{CompiledBinding SettingsViewModel.IsConstrainingBackgroundColor.Value}"
-                Margin="0,0,0,10"
-                Width="300">
-                <TextBlock
-                    Classes="txt"
-                    Foreground="{StaticResource SecondaryTextColor}"
-                    Margin="0"
-                    MaxWidth="240"
-                    Padding="0,1,5,0"
-                    Text="{CompiledBinding Translation.ConstrainBackgroundToImage.Value,
-                                           Mode=OneWay}" />
-            </ToggleButton>
+                Text="{CompiledBinding Translation.ConstrainBackgroundToImage.Value,
+                                       Mode=OneWay}"
+                x:Name="ConstrainingBackgroundColorToggleButton" />
         </Border>
 
     </StackPanel>

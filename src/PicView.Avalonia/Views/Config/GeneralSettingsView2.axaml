@@ -5,6 +5,7 @@
     x:Class="PicView.Avalonia.Views.Config.GeneralSettingsView2"
     x:DataType="viewModels:CoreViewModel"
     xmlns="https://github.com/avaloniaui"
+    xmlns:customControls="clr-namespace:PicView.Avalonia.CustomControls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="clr-namespace:PicView.Avalonia.UI"
@@ -16,7 +17,7 @@
         <StackPanel Classes="searchHeader">
             <Image
                 Height="18"
-                Source="{StaticResource GeneralSettingsAltImage}"
+                Source="{StaticResource GeneralSettingsImage}"
                 Width="18" />
             <TextBlock
                 Classes="txt bold"
@@ -62,79 +63,42 @@
 
         <Border Classes="searchBorder" ui:SearchProperties.Keywords="{CompiledBinding SettingsViewModel.SearchData.DeleteFileDialogSearchTags.Value}">
             <StackPanel>
-                <ToggleButton
-                    Background="Transparent"
-                    BorderThickness="0"
-                    Classes="altHover changeColor"
+                <customControls:TextToggleButton
+                    Classes="altHover settingsToggleButton"
                     IsChecked="{CompiledBinding SettingsViewModel.IsShowingPermanentDeletionDialog.Value,
                                                 Mode=TwoWay}"
-                    Margin="0,0,0,10"
-                    Width="300">
-                    <TextBlock
-                        Classes="txt"
-                        Margin="0"
-                        MaxWidth="240"
-                        Padding="0,1,5,0"
-                        Text="{CompiledBinding Translation.ShowConfirmationDialogWhenPermanentlyDeletingFile.Value,
-                                               Mode=OneWay}" />
-                </ToggleButton>
+                    Text="{CompiledBinding Translation.ShowConfirmationDialogWhenPermanentlyDeletingFile.Value,
+                                           Mode=OneWay}"
+                    x:Name="DeletingToggleButton" />
 
-
-                <ToggleButton
-                    Background="Transparent"
-                    BorderThickness="0"
-                    Classes="altHover changeColor"
+                <customControls:TextToggleButton
+                    Classes="altHover settingsToggleButton"
                     IsChecked="{CompiledBinding SettingsViewModel.IsShowingRecycleDialog.Value,
                                                 Mode=TwoWay}"
-                    Margin="0,0,0,10"
-                    Width="300">
-                    <TextBlock
-                        Classes="txt"
-                        Margin="0"
-                        MaxWidth="240"
-                        Padding="0,1,5,0"
-                        Text="{CompiledBinding Translation.ShowConfirmationDialogWhenMovingFileToRecycleBin.Value,
-                                               Mode=OneWay}" />
-                </ToggleButton>
+                    Text="{CompiledBinding Translation.ShowConfirmationDialogWhenMovingFileToRecycleBin.Value,
+                                           Mode=OneWay}"
+                    x:Name="RecyclingToggleButton" />
             </StackPanel>
         </Border>
 
         <Border Classes="searchBorder" ui:SearchProperties.Keywords="{CompiledBinding SettingsViewModel.SearchData.SubDirectorySearchTags.Value}">
-            <ToggleButton
-                Background="Transparent"
-                BorderThickness="0"
-                Classes="altHover changeColor"
+            <customControls:TextToggleButton
+                Classes="altHover settingsToggleButton"
                 IsChecked="{CompiledBinding SettingsViewModel.IsIncludingSubdirectories.Value,
                                             Mode=TwoWay}"
-                Margin="0,0,0,10"
-                Width="300">
-                <TextBlock
-                    Classes="txt"
-                    Margin="0"
-                    MaxWidth="240"
-                    Padding="0,1,5,0"
-                    Text="{CompiledBinding Translation.SearchSubdirectory.Value,
-                                           Mode=OneWay}" />
-            </ToggleButton>
+                Text="{CompiledBinding Translation.SearchSubdirectory.Value,
+                                       Mode=OneWay}"
+                x:Name="SubdirectoriesToggleButton" />
         </Border>
 
         <Border Classes="searchBorder" ui:SearchProperties.Keywords="{CompiledBinding SettingsViewModel.SearchData.FileHistorySearchTags.Value}">
-            <ToggleButton
-                Background="Transparent"
-                BorderThickness="0"
-                Classes="altHover changeColor"
+            <customControls:TextToggleButton
+                Classes="altHover settingsToggleButton"
                 IsChecked="{CompiledBinding SettingsViewModel.IsFileHistoryEnabled.Value,
                                             Mode=TwoWay}"
-                Margin="0,0,0,10"
-                Width="300">
-                <TextBlock
-                    Classes="txt"
-                    Margin="0"
-                    MaxWidth="240"
-                    Padding="0,1,5,0"
-                    Text="{CompiledBinding Translation.ToggleFileHistory.Value,
-                                           Mode=OneWay}" />
-            </ToggleButton>
+                Text="{CompiledBinding Translation.ToggleFileHistory.Value,
+                                       Mode=OneWay}"
+                x:Name="FileHistoryToggleButton" />
         </Border>
 
         <Border Classes="searchBorder" ui:SearchProperties.Keywords="{CompiledBinding SettingsViewModel.SearchData.WhenDeletingFileSearchTags.Value}">

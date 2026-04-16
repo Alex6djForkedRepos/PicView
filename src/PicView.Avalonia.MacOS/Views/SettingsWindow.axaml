@@ -17,7 +17,8 @@
         BorderBrush="{DynamicResource MainBorderColor}"
         BorderThickness="1"
         CornerRadius="8"
-        PointerPressed="MoveWindow">
+        PointerPressed="MoveWindow"
+        x:Name="MainBorder">
         <DockPanel>
             <Panel DockPanel.Dock="Top">
                 <customControls:IconButton
@@ -25,7 +26,7 @@
                     Classes="noBorderHover"
                     Command="{CompiledBinding SettingsViewModel.GoBackCommand}"
                     Data="{StaticResource ArrowLeftGeometry}"
-                    Foreground="{StaticResource SecondaryTextColor}"
+                    Foreground="{DynamicResource MainTextColor}"
                     Height="28"
                     HorizontalAlignment="Left"
                     IconHeight="12"
@@ -40,7 +41,7 @@
                     Classes="noBorderHover"
                     Command="{CompiledBinding SettingsViewModel.GoForwardCommand}"
                     Data="{StaticResource ArrowRightGeometry}"
-                    Foreground="{StaticResource SecondaryTextColor}"
+                    Foreground="{DynamicResource MainTextColor}"
                     HorizontalAlignment="Left"
                     IconHeight="12"
                     IconWidth="12"
@@ -53,6 +54,7 @@
                     Background="Transparent"
                     Classes="noBorderHover"
                     Command="{CompiledBinding SettingsViewModel.GoHomeCommand}"
+                    CornerRadius="4"
                     Foreground="{StaticResource SecondaryTextColor}"
                     HorizontalAlignment="Left"
                     Icon="{StaticResource HomeImage}"
@@ -66,7 +68,7 @@
                 <TextBlock
                     Background="{DynamicResource WindowBackgroundColor}"
                     Classes="txt"
-                    Foreground="{StaticResource SecondaryTextColor}"
+                    Foreground="{DynamicResource MainTextColor}"
                     Height="28"
                     LineHeight="28"
                     Text="{CompiledBinding Translation.Settings.Value,

@@ -178,7 +178,7 @@
                             <StackPanel Spacing="5" VerticalAlignment="Center">
                                 <Image
                                     Height="25"
-                                    Source="{StaticResource GeneralSettingsAltImage}"
+                                    Source="{StaticResource GeneralSettingsImage}"
                                     Width="25" />
                                 <TextBlock
                                     Classes="txt"
@@ -220,7 +220,7 @@
                             <StackPanel Spacing="5" VerticalAlignment="Center">
                                 <Image
                                     Height="25"
-                                    Source="{StaticResource ColumnsSettingsAltImage}"
+                                    Source="{StaticResource ColumnsSettingsImage}"
                                     Width="25" />
                                 <TextBlock
                                     Classes="txt"
@@ -241,7 +241,7 @@
                             <StackPanel Spacing="5" VerticalAlignment="Center">
                                 <Image
                                     Height="25"
-                                    Source="{StaticResource ImageSettingAltImage}"
+                                    Source="{StaticResource ImageSettingImage}"
                                     Width="25" />
                                 <TextBlock
                                     Classes="txt"
@@ -283,7 +283,7 @@
                             <StackPanel Spacing="5" VerticalAlignment="Center">
                                 <Image
                                     Height="25"
-                                    Source="{StaticResource GalleryAltImage}"
+                                    Source="{StaticResource GalleryImage}"
                                     Width="25" />
                                 <TextBlock
                                     Classes="txt"
@@ -346,7 +346,7 @@
                             <StackPanel Spacing="5" VerticalAlignment="Center">
                                 <Image
                                     Height="25"
-                                    Source="{StaticResource ZoomAltImage}"
+                                    Source="{StaticResource ZoomImage}"
                                     Width="25" />
                                 <TextBlock
                                     Classes="txt"
@@ -388,7 +388,7 @@
                             <StackPanel Spacing="5" VerticalAlignment="Center">
                                 <Image
                                     Height="25"
-                                    Source="{StaticResource LanguageSettingsAltImage}"
+                                    Source="{StaticResource LanguageSettingsImage}"
                                     Width="25" />
                                 <TextBlock
                                     Classes="txt"
@@ -409,7 +409,7 @@
                             <StackPanel Spacing="5" VerticalAlignment="Center">
                                 <Image
                                     Height="25"
-                                    Source="{StaticResource FileAssociationAltImage}"
+                                    Source="{StaticResource FileAssociationImage}"
                                     Width="25" />
                                 <TextBlock
                                     Classes="txt"
@@ -456,7 +456,7 @@
                             <StackPanel Orientation="Horizontal" Spacing="8">
                                 <Image
                                     Height="18"
-                                    Source="{StaticResource GeneralSettingsAltImage}"
+                                    Source="{StaticResource GeneralSettingsImage}"
                                     Width="18" />
                                 <TextBlock Classes="txt" Text="{CompiledBinding Translation.GeneralSettings.Value, Mode=OneWay}" />
                             </StackPanel>
@@ -480,7 +480,7 @@
                             <StackPanel Orientation="Horizontal" Spacing="8">
                                 <Image
                                     Height="18"
-                                    Source="{StaticResource ColumnsSettingsAltImage}"
+                                    Source="{StaticResource ColumnsSettingsImage}"
                                     Width="18" />
                                 <TextBlock Classes="txt" Text="{CompiledBinding Translation.InterfaceConfiguration.Value, Mode=OneWay}" />
                             </StackPanel>
@@ -492,7 +492,7 @@
                             <StackPanel Orientation="Horizontal" Spacing="8">
                                 <Image
                                     Height="18"
-                                    Source="{StaticResource ImageSettingAltImage}"
+                                    Source="{StaticResource ImageSettingImage}"
                                     Width="18" />
                                 <TextBlock Classes="txt" Text="{CompiledBinding Translation.Image.Value, Mode=OneWay}" />
                             </StackPanel>
@@ -576,7 +576,7 @@
                             <StackPanel Orientation="Horizontal" Spacing="8">
                                 <Image
                                     Height="18"
-                                    Source="{StaticResource LanguageSettingsAltImage}"
+                                    Source="{StaticResource LanguageSettingsImage}"
                                     Width="18" />
                                 <TextBlock Classes="txt" Text="{CompiledBinding Translation.Language.Value, Mode=OneWay}" />
                             </StackPanel>

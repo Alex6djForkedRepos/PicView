@@ -59,7 +59,7 @@
                 Command="{CompiledBinding $parent[Window].((vm:MainWindowViewModel)DataContext).ZoomInCommand}"
                 Foreground="{DynamicResource MainTextColor}"
                 Height="35"
-                Icon="{StaticResource ZoomAltImage}"
+                Icon="{StaticResource ZoomImage}"
                 IconHeight="18"
                 IconWidth="21"
                 IsTabStop="False"

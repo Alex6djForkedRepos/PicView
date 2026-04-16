@@ -251,7 +251,7 @@
             <TabItem Classes="headerStyle">
                 <TabItem.Header>
                     <StackPanel Orientation="Horizontal">
-                        <Image Classes="imageStyle" Source="{StaticResource ZoomAltImage}" />
+                        <Image Classes="imageStyle" Source="{StaticResource ZoomImage}" />
                         <TextBlock
                             Classes="txt txtShadow"
                             Foreground="{StaticResource SecondaryTextColor}"
@@ -357,7 +357,7 @@
                         <Image
                             Classes="imageStyle"
                             Height="17"
-                            Source="{StaticResource FileAssociationAltImage}"
+                            Source="{StaticResource FileAssociationImage}"
                             Width="17" />
                         <TextBlock
                             Classes="txt"

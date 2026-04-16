@@ -260,7 +260,7 @@
                 Classes="noBorderHover"
                 Command="{CompiledBinding ZoomInCommand}"
                 Height="{CompiledBinding BottombarHeight.Value}"
-                Icon="{StaticResource ZoomAltImage}"
+                Icon="{StaticResource ZoomImage}"
                 IconHeight="16"
                 IconWidth="18"
                 IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.Model.Value.Image,

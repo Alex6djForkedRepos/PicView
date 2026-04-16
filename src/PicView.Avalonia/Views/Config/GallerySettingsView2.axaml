@@ -13,7 +13,7 @@
         <StackPanel Classes="searchHeader">
             <Image
                 Height="18"
-                Source="{StaticResource GalleryAltImage}"
+                Source="{StaticResource GalleryImage}"
                 Width="18" />
             <TextBlock
                 Classes="txt bold"
@@ -25,128 +25,86 @@
         <Border Classes="searchBorder" ui:SearchProperties.Keywords="{CompiledBinding SettingsViewModel.SearchData.GalleryDockSearchTags.Value}">
             <StackPanel>
                 <customControls:TextIconButton
-                    Background="Transparent"
-                    BorderThickness="0"
-                    Classes="altHover"
+                    Classes="altHover settingsTextIconButton"
                     Command="{CompiledBinding GallerySettings.SetDockPositionCommand}"
                     CommandParameter="{x:Static gallery:GalleryDockPosition.Bottom}"
-                    Foreground="{DynamicResource MainTextColor}"
                     Icon="{StaticResource GalleryImage}"
                     IconHeight="16"
                     IconMargin="0,0,7,0"
                     IconWidth="16"
                     IsEnabled="{CompiledBinding !GallerySettings.IsBottomDocked.Value}"
-                    Margin="0,0,0,10"
                     Padding="9,8,8,8"
                     Text="{CompiledBinding Translation.ShowDockedGalleryAtBottom.Value,
                                            Mode=OneWay}"
                     TextMargin="5,0,5,0"
                     TextMaxWidth="240"
-                    Width="300"
                     x:Name="ShowBottomDockedGalleryButton" />
 
                 <customControls:TextIconButton
-                    Background="Transparent"
-                    BorderThickness="0"
-                    Classes="altHover"
+                    Classes="altHover settingsTextIconButton"
                     Command="{CompiledBinding GallerySettings.SetDockPositionCommand}"
                     CommandParameter="{x:Static gallery:GalleryDockPosition.Top}"
-                    Foreground="{DynamicResource MainTextColor}"
                     Icon="{StaticResource GalleryImage}"
                     IconHeight="16"
                     IconMargin="0,0,7,0"
                     IconWidth="16"
                     IsEnabled="{CompiledBinding !GallerySettings.IsTopDocked.Value}"
-                    Margin="0,0,0,10"
                     Padding="9,8,8,8"
                     Text="{CompiledBinding Translation.ShowDockedGalleryAtTop.Value,
                                            Mode=OneWay}"
                     TextMargin="5,0,5,0"
                     TextMaxWidth="240"
-                    Width="300"
                     x:Name="ShowTopDockedGalleryButton" />
 
                 <customControls:TextIconButton
-                    Background="Transparent"
-                    BorderThickness="0"
-                    Classes="altHover"
+                    Classes="altHover settingsTextIconButton"
                     Command="{CompiledBinding GallerySettings.SetDockPositionCommand}"
                     CommandParameter="{x:Static gallery:GalleryDockPosition.Right}"
-                    Foreground="{DynamicResource MainTextColor}"
                     Icon="{StaticResource GalleryImage}"
                     IconHeight="16"
                     IconMargin="0,0,7,0"
                     IconWidth="16"
                     IsEnabled="{CompiledBinding !GallerySettings.IsRightDocked.Value}"
-                    Margin="0,0,0,10"
                     Padding="9,8,8,8"
                     Text="{CompiledBinding Translation.ShowDockedGalleryToTheRight.Value,
                                            Mode=OneWay}"
                     TextMargin="5,0,5,0"
                     TextMaxWidth="240"
-                    Width="300"
                     x:Name="ShowRightDockedGalleryButton" />
 
                 <customControls:TextIconButton
-                    Background="Transparent"
-                    BorderThickness="0"
-                    Classes="altHover"
+                    Classes="altHover settingsTextIconButton"
                     Command="{CompiledBinding GallerySettings.SetDockPositionCommand}"
                     CommandParameter="{x:Static gallery:GalleryDockPosition.Left}"
-                    Foreground="{DynamicResource MainTextColor}"
                     Icon="{StaticResource GalleryImage}"
                     IconHeight="16"
                     IconMargin="0,0,7,0"
                     IconWidth="16"
                     IsEnabled="{CompiledBinding !GallerySettings.IsLeftDocked.Value}"
-                    Margin="0,0,0,10"
                     Padding="9,8,8,8"
                     Text="{CompiledBinding Translation.ShowDockedGalleryToTheLeft.Value,
                                            Mode=OneWay}"
                     TextMargin="5,0,5,0"
                     TextMaxWidth="240"
-                    Width="300"
                     x:Name="ShowLeftDockedGalleryButton" />
             </StackPanel>
         </Border>
 
         <Border Classes="searchBorder" ui:SearchProperties.Keywords="{CompiledBinding SettingsViewModel.SearchData.GalleryVisibilitySearchTags.Value}">
             <StackPanel>
-                <customControls:TextIconButton
-                    Background="Transparent"
-                    BorderThickness="0"
-                    Classes="altHover"
+                <customControls:TextToggleButton
+                    Classes="altHover settingsToggleButton"
                     Command="{CompiledBinding GallerySettings.CloseGalleryCommand}"
-                    Data="{StaticResource CloseGeometry}"
-                    Foreground="{DynamicResource MainTextColor}"
-                    IconHeight="12"
-                    IconMargin="0,0,7,0"
-                    IconWidth="12"
-                    IsEnabled="{CompiledBinding GallerySettings.IsGalleryDocked.Value}"
-                    Margin="0,0,0,10"
-                    Padding="9,8,8,8"
                     Text="{CompiledBinding Translation.HideDockedGallery.Value,
                                            Mode=OneWay}"
-                    TextMargin="5,0,5,0"
-                    TextMaxWidth="240"
-                    Width="300"
                     x:Name="CloseDockedGalleryButton" />
 
-                <ToggleButton
-                    Background="Transparent"
-                    BorderThickness="0"
-                    Classes="altHover changeColor"
+                <customControls:TextToggleButton
+                    Classes="altHover settingsToggleButton"
                     IsChecked="{CompiledBinding GallerySettings.IsDockedGalleryShownInHiddenUI.Value}"
-                    Margin="0,0,0,10"
-                    Width="300">
-                    <TextBlock
-                        Classes="txt"
-                        Margin="0"
-                        MaxWidth="240"
-                        Padding="0,0,5,2"
-                        Text="{CompiledBinding Translation.ShowDockedGalleryWhenUiIsHidden.Value,
-                                               Mode=OneWay}" />
-                </ToggleButton>
+                    Text="{CompiledBinding Translation.ShowDockedGalleryWhenUiIsHidden.Value,
+                                           Mode=OneWay}"
+                    x:Name="UIHiddenDockedGalleryToggleButton" />
             </StackPanel>
         </Border>
 

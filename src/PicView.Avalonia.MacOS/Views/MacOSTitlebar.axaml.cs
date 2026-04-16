@@ -15,27 +15,47 @@ public partial class MacOSTitlebar : MainTitleBar
         
         Loaded += (_, _) =>
         {
-            if (!Settings.Theme.GlassTheme)
+            if (Settings.Theme.GlassTheme)
             {
-                return;
+                SetGlassTheme();
+            }
+            else if (!Settings.Theme.Dark)
+            {
+                SetLightTheme();
             }
 
-            TopWindowBorder.Background = Brushes.Transparent;
-
-            EditableTitlebar.Background = Brushes.Transparent;
-            EditableTitlebar.BorderThickness = new Thickness(0);
-
-            CreateTabButton.Background = Brushes.Transparent;
-            CreateTabButton.BorderThickness = new Thickness(0);;
-                
-            DropMenuButton.Background = Brushes.Transparent;
-            DropMenuButton.BorderThickness = new Thickness(0);;
-                
-            var brush = UIHelper.GetBrush("SecondaryTextColor");
-            EditableTitlebar.Foreground = brush;
-            SearchButton.Foreground = brush;
-            CreateTabButton.Foreground = brush;
-            DropMenuButton.Foreground = brush;
         };
+    }
+
+    private void SetGlassTheme()
+    {
+        TopWindowBorder.Background = Brushes.Transparent;
+
+        EditableTitlebar.Background = Brushes.Transparent;
+        EditableTitlebar.BorderThickness = new Thickness(0);
+
+        CreateTabButton.Background = Brushes.Transparent;
+        CreateTabButton.BorderThickness = new Thickness(0);;
+                
+        DropMenuButton.Background = Brushes.Transparent;
+        DropMenuButton.BorderThickness = new Thickness(0);;
+                
+        var brush = UIHelper.GetBrush("SecondaryTextColor");
+        EditableTitlebar.Foreground = brush;
+        SearchButton.Foreground = brush;
+        CreateTabButton.Foreground = brush;
+        DropMenuButton.Foreground = brush;
+    }
+    
+    private void SetLightTheme()
+    {
+        DropMenuButton.Classes.Remove("altHover");
+        DropMenuButton.Classes.Add("hover");
+        
+        CreateTabButton.Classes.Remove("altHover");
+        CreateTabButton.Classes.Add("hover");
+        
+        SearchButton.Classes.Remove("altHover");
+        SearchButton.Classes.Add("hover");
     }
 }

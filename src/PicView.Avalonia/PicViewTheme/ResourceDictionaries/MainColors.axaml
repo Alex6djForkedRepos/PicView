@@ -83,9 +83,10 @@
 
         <ResourceDictionary x:Key="Light">
             <Color x:Key="MainTextColor">#424242</Color>
+            <Color x:Key="MainTextColorFaded">#DD9A98B7</Color>
 
             <Color x:Key="MainBackgroundColor">White</Color>
-            <Color x:Key="SecondaryBackgroundColor">#E4FFFFFF</Color>
+            <Color x:Key="SecondaryBackgroundColor">#F3FFFFFF</Color>
             <Color x:Key="TertiaryBackgroundColor">#E29E9E9E</Color>
 
             <Color x:Key="DisabledBackgroundColor">#B8CFCFCF</Color>

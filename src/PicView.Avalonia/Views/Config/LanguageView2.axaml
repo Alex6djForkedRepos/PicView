@@ -13,7 +13,7 @@
                 <StackPanel Orientation="Horizontal" Spacing="12">
                     <Image
                         Height="18"
-                        Source="{StaticResource LanguageSettingsAltImage}"
+                        Source="{StaticResource LanguageSettingsImage}"
                         Width="18" />
                     <TextBlock
                         Classes="txt bold searchHeader"
