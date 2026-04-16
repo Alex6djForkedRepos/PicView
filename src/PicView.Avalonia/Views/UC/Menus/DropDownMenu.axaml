@@ -527,7 +527,7 @@
                             Command="{Binding MainWindows.ActiveWindow.Value.AutoFitWindowCommand}"
                             Foreground="{DynamicResource MainTextColor}"
                             IsChecked="{Binding MainWindows.ActiveWindow.Value.IsAutoFit.Value, Mode=TwoWay}"
-                            Padding="7,4"
+                            Padding="7,0"
                             Text="{Binding Translation.AutoFitWindow.Value}"
                             TextMargin="0,0,7,0"
                             ToolTip.Tip="{CompiledBinding Translation.AutoFitWindow.Value,
@@ -539,7 +539,7 @@
                             Command="{Binding MainWindows.ActiveWindow.Value.SetTopMostCommand}"
                             Foreground="{DynamicResource MainTextColor}"
                             IsChecked="{Binding MainWindows.ActiveWindow.Value.IsTopMost.Value, Mode=TwoWay}"
-                            Padding="7,4"
+                            Padding="7,0"
                             Text="{Binding Translation.StayTopMost.Value}"
                             TextMargin="0,0,7,0"
                             ToolTip.Tip="{CompiledBinding Translation.StayTopMost.Value,
@@ -551,7 +551,7 @@
                             Command="{Binding MainWindows.ActiveWindow.Value.ToggleLoopingCommand}"
                             Foreground="{DynamicResource MainTextColor}"
                             IsChecked="{Binding GlobalSettings.IsLooping.Value, Mode=TwoWay}"
-                            Padding="7,4"
+                            Padding="7,0"
                             Text="{Binding Translation.ToggleLooping.Value}"
                             TextMargin="0,0,7,0"
                             ToolTip.Tip="{CompiledBinding Translation.ToggleLooping.Value,
@@ -563,7 +563,7 @@
                             Command="{Binding MainWindows.ActiveWindow.Value.ToggleScrollCommand}"
                             Foreground="{DynamicResource MainTextColor}"
                             IsChecked="{Binding MainWindows.ActiveWindow.Value.IsScrollingEnabled.Value, Mode=TwoWay}"
-                            Padding="7,4"
+                            Padding="7,0"
                             Text="{Binding Translation.IsScrolling.Value}"
                             TextMargin="0,0,7,0"
                             ToolTip.Tip="{CompiledBinding Translation.ToggleScroll.Value,
@@ -575,7 +575,7 @@
                             Command="{Binding MainWindows.ActiveWindow.Value.StretchCommand}"
                             Foreground="{DynamicResource MainTextColor}"
                             IsChecked="{Binding MainWindows.ActiveWindow.Value.IsStretched.Value, Mode=TwoWay}"
-                            Padding="7,4"
+                            Padding="7,0"
                             Text="{Binding Translation.Stretch.Value}"
                             TextMargin="0,0,7,0"
                             ToolTip.Tip="{CompiledBinding Translation.Stretch.Value,
@@ -587,7 +587,7 @@
                             Command="{Binding MainWindows.ActiveWindow.Value.SideBySideCommand}"
                             Foreground="{DynamicResource MainTextColor}"
                             IsChecked="{Binding MainWindows.ActiveWindow.Value.IsSideBySide.Value, Mode=TwoWay}"
-                            Padding="7,4"
+                            Padding="7,0"
                             Text="{Binding Translation.SideBySide.Value}"
                             TextMargin="0,0,7,0"
                             ToolTip.Tip="{CompiledBinding Translation.SideBySideTooltip.Value,
@@ -602,7 +602,7 @@
                             IconHeight="14"
                             IconMargin="0,0,7,0"
                             IconWidth="14"
-                            Padding="15,7,15,7"
+                            Padding="15,9"
                             Text="{Binding Translation.About.Value}"
                             ToolTip.Tip="{Binding Translation.AboutWindow.Value}"
                             x:Name="AboutButton" />
@@ -615,7 +615,7 @@
                             IconHeight="14"
                             IconMargin="0,0,7,0"
                             IconWidth="14"
-                            Padding="15,7,15,7"
+                            Padding="15,9"
                             Text="{Binding Translation.ApplicationShortcuts.Value}"
                             ToolTip.Tip="{Binding Translation.ApplicationShortcuts.Value}"
                             x:Name="KeybindingsButton" />
@@ -629,7 +629,7 @@
                             IconHeight="14"
                             IconMargin="0,0,7,0"
                             IconWidth="14"
-                            Padding="15,7,15,7"
+                            Padding="15,9"
                             Text="{Binding Translation.ShowAllSettingsWindow.Value}"
                             ToolTip.Tip="{Binding Translation.ShowAllSettingsWindow.Value}"
                             x:Name="AllSettingsButton" />

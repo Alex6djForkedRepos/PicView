@@ -241,11 +241,22 @@ public class Gallery
     /// </summary>
     public bool IsGalleryDocked { get; set; } = false;
 
+    /// <summary>
+    /// Determines how images will be stretched or scaled, in docked mode.
+    /// </summary>
     public GalleryDockPosition DockPosition { get; set; } = GalleryDockPosition.Closed;
-
+    /// <summary>
+    /// Determines how images will be stretched or scaled, when the gallery is in full/expanded mode.
+    /// </summary>
+    public GalleryStretchMode ExpandedGalleryStretchMode { get; set; } = GalleryStretchMode.UniformToFill;
+    public GalleryStretchMode DockedGalleryStretchMode { get; set; } = GalleryStretchMode.UniformToFill;
+    
     /// <summary>
     /// Determines whether the docked gallery is shown when the user interface is hidden.
     /// </summary>
+    public bool ShowDockedGalleryInHiddenUI { get; set; } = false;
+
+    // TODO: Deprecated, delete when cleaning up the fork 
     public bool ShowBottomGalleryInHiddenUI { get; set; } = false;
 
     /// <summary>
@@ -258,14 +269,10 @@ public class Gallery
     /// </summary>
     public double ExpandedGalleryItemSize { get; set; } = 23;
 
-    /// <summary>
-    /// Determines how images will be stretched or scaled, when the gallery is in full/expanded mode.
-    /// </summary>
+    // TODO: Deprecated, delete when cleaning up the fork 
     public string FullGalleryStretchMode { get; set; } = "Uniform";
-
-    /// <summary>
-    /// Determines how images will be stretched or scaled.
-    /// </summary>
+    
+    // TODO: Deprecated, delete when cleaning up the fork 
     public string BottomGalleryStretchMode { get; set; } = "Uniform";
 
     public double ItemSpacing { get; set; } = 25;

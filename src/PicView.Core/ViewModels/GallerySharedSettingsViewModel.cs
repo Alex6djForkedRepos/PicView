@@ -17,7 +17,7 @@ public class GallerySharedSettingsViewModel
     public BindableReactiveProperty<double> ItemWidth { get; } = new(0);
 
     public BindableReactiveProperty<object> GalleryStretch { get; } = new();
-    public ReactiveCommand<string> SetStretchModeCommand { get; } = new();
+    public ReactiveCommand<object> SetStretchModeCommand { get; } = new();
 
     public BindableReactiveProperty<bool> IsTopDocked { get; } = new();
     public BindableReactiveProperty<bool> IsBottomDocked { get; } = new();
@@ -50,11 +50,11 @@ public class GallerySharedSettingsViewModel
     public BindableReactiveProperty<double> GalleryItemSpacing { get; } = new(Settings.Gallery.ItemSpacing);
     public BindableReactiveProperty<double> GalleryLineSpacing { get; } = new(Settings.Gallery.LineSpacing);
 
-    public BindableReactiveProperty<int> DockedGalleryStretchIndex { get; } =
-        new(GetStretchIndex(Settings.Gallery.BottomGalleryStretchMode));
+    public BindableReactiveProperty<int> DockedGalleryStretchMode { get; } =
+        new((int)Settings.Gallery.DockedGalleryStretchMode);
 
-    public BindableReactiveProperty<int> FullGalleryStretchIndex { get; } =
-        new(GetStretchIndex(Settings.Gallery.FullGalleryStretchMode));
+    public BindableReactiveProperty<int> ExpandedGalleryStretchMode { get; } =
+        new((int)Settings.Gallery.ExpandedGalleryStretchMode);
 
     public void Initialize()
     {
@@ -77,12 +77,12 @@ public class GallerySharedSettingsViewModel
 #endif
         });
 
-        UpdateDockPositionProperties();
+        GallerySettingsConverter.UpdateDockPositionProperties(this);
         ToggleGalleryVisibilitySubscription();
 
         Observable.EveryValueChanged(Settings.Gallery, x => x.DockPosition)
             .Skip(1)
-            .Subscribe(_ => { UpdateDockPositionProperties(); }, result =>
+            .Subscribe(_ => { GallerySettingsConverter.UpdateDockPositionProperties(this); }, result =>
             {
 #if DEBUG
                 if (result is { IsFailure: true, Exception: not null })
@@ -144,8 +144,8 @@ public class GallerySharedSettingsViewModel
 #endif
             });
 
-        Observable.EveryValueChanged(Settings.Gallery, x => x.BottomGalleryStretchMode)
-            .Subscribe(x => { DockedGalleryStretchIndex.Value = GetStretchIndex(x); }, result =>
+        Observable.EveryValueChanged(Settings.Gallery, x => x.DockedGalleryStretchMode)
+            .Subscribe(x => { DockedGalleryStretchMode.Value = (int)x; }, result =>
             {
 #if DEBUG
                 if (result is { IsFailure: true, Exception: not null })
@@ -156,8 +156,8 @@ public class GallerySharedSettingsViewModel
 #endif
             });
 
-        Observable.EveryValueChanged(Settings.Gallery, x => x.FullGalleryStretchMode)
-            .Subscribe(x => { FullGalleryStretchIndex.Value = GetStretchIndex(x); }, result =>
+        Observable.EveryValueChanged(Settings.Gallery, x => x.ExpandedGalleryStretchMode)
+            .Subscribe(x => { ExpandedGalleryStretchMode.Value = (int)x; }, result =>
             {
 #if DEBUG
                 if (result is { IsFailure: true, Exception: not null })
@@ -249,14 +249,13 @@ public class GallerySharedSettingsViewModel
 #endif
             });
 
-        DockedGalleryStretchIndex
+        DockedGalleryStretchMode
             .Skip(1)
             .SubscribeAwait(async (x, _) =>
             {
-                var mode = GetStretchString(x);
-                if (Settings.Gallery.BottomGalleryStretchMode != mode)
+                if (Settings.Gallery.DockedGalleryStretchMode != (GalleryStretchMode)x)
                 {
-                    Settings.Gallery.BottomGalleryStretchMode = mode;
+                    Settings.Gallery.DockedGalleryStretchMode = (GalleryStretchMode)x;
                     await SaveSettingsAsync();
                 }
             }, result =>
@@ -270,14 +269,13 @@ public class GallerySharedSettingsViewModel
 #endif
             });
 
-        FullGalleryStretchIndex
+        ExpandedGalleryStretchMode
             .Skip(1)
             .SubscribeAwait(async (x, _) =>
             {
-                var mode = GetStretchString(x);
-                if (Settings.Gallery.FullGalleryStretchMode != mode)
+                if (Settings.Gallery.ExpandedGalleryStretchMode != (GalleryStretchMode)x)
                 {
-                    Settings.Gallery.FullGalleryStretchMode = mode;
+                    Settings.Gallery.ExpandedGalleryStretchMode = (GalleryStretchMode)x;
                     await SaveSettingsAsync();
                 }
             }, result =>
@@ -393,42 +391,5 @@ public class GallerySharedSettingsViewModel
                 }
 #endif
             });
-    }
-
-    private void UpdateDockPositionProperties()
-    {
-        var pos = Settings.Gallery.DockPosition;
-        IsTopDocked.Value = pos == GalleryDockPosition.Top;
-        IsBottomDocked.Value = pos == GalleryDockPosition.Bottom;
-        IsLeftDocked.Value = pos == GalleryDockPosition.Left;
-        IsRightDocked.Value = pos == GalleryDockPosition.Right;
-    }
-
-    private static int GetStretchIndex(string mode)
-    {
-        return mode switch
-        {
-            "Uniform" => 0,
-            "UniformToFill" => 1,
-            "Fill" => 2,
-            "None" => 3,
-            "Square" => 4,
-            "FillSquare" => 5,
-            _ => 0
-        };
-    }
-
-    private static string GetStretchString(int index)
-    {
-        return index switch
-        {
-            0 => "Uniform",
-            1 => "UniformToFill",
-            2 => "Fill",
-            3 => "None",
-            4 => "Square",
-            5 => "FillSquare",
-            _ => "Uniform"
-        };
     }
 }

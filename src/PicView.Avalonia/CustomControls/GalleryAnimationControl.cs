@@ -3,6 +3,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
+using Avalonia.Media;
 using Avalonia.Threading;
 using PicView.Avalonia.Animations;
 using PicView.Avalonia.UI;
@@ -25,7 +26,7 @@ public class GalleryAnimationControl : UserControl
     private static CoreViewModel? CoreViewModel => Application.Current?.DataContext as CoreViewModel;
     private Control? ParentControl => Parent as Control;
 
-    private CompositeDisposable? _disposables;
+    private DisposableBag _disposables;
     private NavigateAbleItemsViewer? _viewer;
     private WrapPanel? _itemsPanel;
 
@@ -89,28 +90,41 @@ public class GalleryAnimationControl : UserControl
 
     private void SetupSubscriptions()
     {
-        _disposables = new CompositeDisposable();
         Debug.Assert(Settings.Gallery is not null);
 
         // Change layout corresponding to DockPositions
         Observable.EveryValueChanged(Settings.Gallery, gallery => gallery.DockPosition, UIHelper2.GetFrameProvider)
             .Skip(1)
             .Subscribe(SetDockedLayout, LogError(nameof(SetDockedLayout)))
-            .AddTo(_disposables);
-
-        if (CoreViewModel == null) return;
-
+            .AddTo(ref _disposables);
+        
         // Update expanded item sizes
         Observable.EveryValueChanged(CoreViewModel.GallerySettings, gallery => gallery.ExpandedGalleryItemSize.CurrentValue, UIHelper2.GetFrameProvider)
             .Skip(1)
             .Subscribe(UpdateExpandedItemHeight, LogError(nameof(UpdateExpandedItemHeight)))
-            .AddTo(_disposables);
+            .AddTo(ref _disposables);
 
         // Update docked item sizes
         Observable.EveryValueChanged(CoreViewModel.GallerySettings, gallery => gallery.DockedGalleryItemSize.CurrentValue, UIHelper2.GetFrameProvider)
             .Skip(1)
             .Subscribe(UpdateDockedItemHeight, LogError(nameof(UpdateDockedItemHeight)))
-            .AddTo(_disposables);
+            .AddTo(ref _disposables);
+        
+        CoreViewModel.GallerySettings.ExpandedGalleryStretchMode.Skip(1).Subscribe(x =>
+        {
+            SetExpandedThumbs();
+        }, LogError(nameof(UpdateExpandedItemHeight)))
+        .AddTo(ref _disposables);
+        
+        CoreViewModel.GallerySettings.DockedGalleryStretchMode.Skip(1).Subscribe(x =>
+        {
+            ApplyThumbSettings(
+                Settings.Gallery.BottomGalleryItemSize,
+                (GalleryStretchMode)x,
+                GetDockedMargin,
+                spacing: 2);
+        }, LogError(nameof(UpdateDockedItemHeight)))
+        .AddTo(ref _disposables);
     }
 
     // Properly handles R3's Action<Result> overload while preserving exact method context
@@ -221,8 +235,16 @@ public class GalleryAnimationControl : UserControl
     {
         ApplyThumbSettings(
             Settings.Gallery.ExpandedGalleryItemSize,
-            Settings.Gallery.FullGalleryStretchMode,
+            Settings.Gallery.ExpandedGalleryStretchMode,
             GetExpandedMargin);
+    }
+    
+    private void SetDockedThumbs()
+    {
+        ApplyThumbSettings(
+            Settings.Gallery.BottomGalleryItemSize,
+            Settings.Gallery.DockedGalleryStretchMode,
+            GetDockedMargin);
     }
 
     private void UpdateExpandedItemHeight(double itemHeight)
@@ -238,7 +260,7 @@ public class GalleryAnimationControl : UserControl
     private void SetDockedLayout(GalleryDockPosition dock)
     {
         SetDockLayoutCore(dock);
-        SetDockedThumbs(dock);
+        SetDockedThumbPosition(dock);
     }
 
     private void SetDockLayoutCore(GalleryDockPosition dock)
@@ -267,7 +289,7 @@ public class GalleryAnimationControl : UserControl
         }
     }
 
-    private void SetDockedThumbs(GalleryDockPosition dock)
+    private void SetDockedThumbPosition(GalleryDockPosition dock)
     {
         if (CoreViewModel == null) return;
         var gallerySettings = CoreViewModel.GallerySettings;
@@ -302,11 +324,7 @@ public class GalleryAnimationControl : UserControl
         }
 
         IsVisible = true;
-        ApplyThumbSettings(
-            Settings.Gallery.BottomGalleryItemSize,
-            Settings.Gallery.BottomGalleryStretchMode,
-            GetDockedMargin,
-            spacing: 2);
+        SetDockedThumbs();
     }
 
     private void UpdateDockedItemHeight(double itemHeight)
@@ -334,29 +352,44 @@ public class GalleryAnimationControl : UserControl
 
     private bool IsHorizontalDock(GalleryDockPosition dock) => dock is GalleryDockPosition.Top or GalleryDockPosition.Bottom;
 
-    private void ApplyThumbSettings(double size, string modeStr, Thickness margin, double spacing = 0)
+    private void ApplyThumbSettings(double size, GalleryStretchMode mode, Thickness margin, double spacing = 0)
     {
-        if (CoreViewModel == null) return;
-
         var settings = CoreViewModel.GallerySettings;
         settings.ItemHeight.Value = size;
-
-        var (stretch, isSquare) = ParseStretchMode(modeStr);
-        settings.GalleryStretch.Value = stretch;
-        settings.ItemWidth.Value = isSquare ? size : double.NaN;
+        switch (mode)
+        {
+            case GalleryStretchMode.Uniform:
+                settings.GalleryStretch.Value = Stretch.Uniform;
+                settings.ItemWidth.Value = double.NaN;
+                break;
+            case GalleryStretchMode.UniformToFill:
+                settings.GalleryStretch.Value = Stretch.UniformToFill;
+                settings.ItemWidth.Value = double.NaN;
+                break;
+            case GalleryStretchMode.Fill:
+                settings.GalleryStretch.Value = Stretch.Fill;
+                settings.ItemWidth.Value = double.NaN;
+                break;
+            case GalleryStretchMode.None:
+                settings.GalleryStretch.Value = Stretch.None;
+                settings.ItemWidth.Value = double.NaN;
+                break;
+            case GalleryStretchMode.Square:
+                settings.GalleryStretch.Value = Stretch.Uniform;
+                settings.ItemWidth.Value = size;
+                break;
+            case GalleryStretchMode.FillSquare:
+                settings.GalleryStretch.Value = Stretch.Fill;
+                settings.ItemWidth.Value = size;
+                break;
+        }
 
         if (spacing > 0)
+        {
             TabViewModel?.Gallery.ItemSpacing.Value = spacing;
-
-        if (_itemsPanel != null)
-            _itemsPanel.Margin = margin;
-    }
-
-    private (string Stretch, bool IsSquare) ParseStretchMode(string mode)
-    {
-        if (string.Equals(mode, "Square", StringComparison.OrdinalIgnoreCase)) return ("Uniform", true);
-        if (string.Equals(mode, "FillSquare", StringComparison.OrdinalIgnoreCase)) return ("Fill", true);
-        return (mode, false);
+        }
+        
+        _itemsPanel?.Margin = margin;
     }
 
     #endregion
@@ -388,7 +421,7 @@ public class GalleryAnimationControl : UserControl
             Width = targetSize;
         }
 
-        SetDockedThumbs(dock);
+        SetDockedThumbPosition(dock);
         _viewer?.ScrollToCenterOfCurrentItem();
     }
 
@@ -519,7 +552,6 @@ public class GalleryAnimationControl : UserControl
         }
 
         Loaded -= OnControlLoaded;
-        _disposables?.Dispose();
     }
 
     #endregion

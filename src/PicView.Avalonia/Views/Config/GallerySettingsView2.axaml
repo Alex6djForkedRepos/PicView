@@ -254,7 +254,7 @@
                     Foreground="{DynamicResource MainTextColor}"
                     Margin="0,5,0,15"
                     Padding="5,7,0,7"
-                    SelectedIndex="{CompiledBinding GallerySettings.FullGalleryStretchIndex.Value}"
+                    SelectedIndex="{CompiledBinding GallerySettings.ExpandedGalleryStretchMode.Value}"
                     Width="300"
                     x:Name="FullGalleryComboBox">
                     <ComboBoxItem
@@ -304,7 +304,7 @@
                     Foreground="{DynamicResource MainTextColor}"
                     Margin="0,5,0,15"
                     Padding="5,7,0,7"
-                    SelectedIndex="{CompiledBinding GallerySettings.DockedGalleryStretchIndex.Value}"
+                    SelectedIndex="{CompiledBinding GallerySettings.DockedGalleryStretchMode.Value}"
                     Width="300"
                     x:Name="DockedGalleryComboBox">
                     <ComboBoxItem
