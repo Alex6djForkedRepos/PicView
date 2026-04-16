@@ -237,53 +237,31 @@ public class NavigateAbleItemsViewer : ItemsControl
             return;
         }
 
-        if (Settings.Zoom.HorizontalReverseScroll)
+        if (tab.Gallery.IsGalleryExpanded.CurrentValue)
         {
-            if (e.Delta.Y < 0 || e.Delta.X < 0)
-            {
-                _ = tab.Next();
-            }
-            else
-            {
-                _ = tab.Prev();
-            }
+            ScrollTheControl(e);
+            return;
+        }
+
+        if (e.Delta.Y < 0 || e.Delta.X < 0)
+        {
+            _ = tab.Next();
         }
         else
         {
-            if (e.Delta.Y > 0 || e.Delta.X > 0)
-            {
-                _ = tab.Prev();
-            }
-            else
-            {
-                _ = tab.Next();
-            }
+            _ = tab.Prev();
         }
     }
 
     private void ScrollTheControl(PointerWheelEventArgs e)
     {
-        if (Settings.Zoom.HorizontalReverseScroll)
+        if (e.Delta.Y < 0 || e.Delta.X < 0)
         {
-            if (e.Delta.Y < 0 || e.Delta.X < 0)
-            {
-                _scrollViewer.LineRight();
-            }
-            else
-            {
-                _scrollViewer.LineLeft();
-            }
+            _scrollViewer.LineRight();
         }
         else
         {
-            if (e.Delta.Y > 0 || e.Delta.X > 0)
-            {
-                _scrollViewer.LineRight();
-            }
-            else
-            {
-                _scrollViewer.LineLeft();
-            }
+            _scrollViewer.LineLeft();
         }
     }
 
