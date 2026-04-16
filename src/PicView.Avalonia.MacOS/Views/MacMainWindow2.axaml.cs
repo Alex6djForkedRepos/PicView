@@ -53,7 +53,6 @@ public partial class MacMainWindow2 : MainWindow, IPlatformWindowService
                         {
                             await MacOSWindow2.Fullscreen(this, vm);
                         }
-
                         break;
                     case WindowState.Maximized:
                         if (!Settings.WindowProperties.Maximized && !Settings.WindowProperties.Fullscreen)

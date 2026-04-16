@@ -365,8 +365,8 @@ public static class WindowResizing2
             var left = window.Position.X;
             Settings.WindowProperties.Top = top;
             Settings.WindowProperties.Left = left;
-            Settings.WindowProperties.Width = window.Width;
-            Settings.WindowProperties.Height = window.Height;
+            Settings.WindowProperties.Width = window.Bounds.Width;
+            Settings.WindowProperties.Height = window.Bounds.Height;
         }
     }
 

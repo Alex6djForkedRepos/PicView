@@ -198,6 +198,7 @@ public static class MouseShortcuts2
             return;
         }
 
+        // Handle mouse side buttons
         if (prop.IsXButton1Pressed)
         {
             if (Settings.Navigation.IsNavigatingFileHistory)
@@ -218,6 +219,19 @@ public static class MouseShortcuts2
             else if (Settings.Navigation.IsNavigatingBetweenDirectories)
             {
                 await windowViewModel.Mapper.NextFolder().ConfigureAwait(false);
+            }
+        }
+        // Handle double click
+        else if (e.ClickCount is 2)
+        {
+            switch (Settings.UIProperties.DoubleClickBehavior)
+            {
+                case 1:
+                    await windowViewModel.Mapper.ResetZoom();
+                    break;
+                case 2:
+                    await windowViewModel.Mapper.ToggleFullscreen();
+                    break;
             }
         }
     }
