@@ -112,23 +112,11 @@ public class GalleryAnimationControl : UserControl
             .Subscribe(UpdateDockedItemHeight, DebugHelper.LogError(nameof(GalleryAnimationControl), nameof(UpdateDockedItemHeight)))
             .AddTo(ref _disposables);
         
-        core.GallerySettings.ExpandedGalleryStretchMode.Skip(1).Subscribe(_ =>
-        {
-            SetExpandedThumbs();
-        }, DebugHelper.LogError(nameof(GalleryAnimationControl), nameof(UpdateExpandedItemHeight)))
+        core.GallerySettings.ExpandedGalleryStretchMode.Skip(1).Subscribe(SetExpandedThumbs, DebugHelper.LogError(nameof(GalleryAnimationControl), nameof(UpdateExpandedItemHeight)))
         .AddTo(ref _disposables);
         
         core.GallerySettings.DockedGalleryStretchMode.Skip(1).Subscribe(SetDockedStretch, DebugHelper.LogError(nameof(GalleryAnimationControl), nameof(UpdateDockedItemHeight)))
         .AddTo(ref _disposables);
-    }
-
-    private void SetDockedStretch(int x)
-    {
-        ApplyThumbSettings(
-            Settings.Gallery.BottomGalleryItemSize,
-            (GalleryStretchMode)x,
-            GetDockedMargin,
-            spacing: 2);
     }
 
     #endregion
@@ -230,12 +218,30 @@ public class GalleryAnimationControl : UserControl
             GetExpandedMargin);
     }
     
+    private void SetExpandedThumbs(int x)
+    {
+        SetExpandedThumbs();
+        if (_viewer.CenterCurrentItem)
+        {
+            _viewer.ScrollToCenterOfCurrentItem();
+        }
+    }
+    
     private void SetDockedThumbs()
     {
         ApplyThumbSettings(
             Settings.Gallery.BottomGalleryItemSize,
             Settings.Gallery.DockedGalleryStretchMode,
             GetDockedMargin);
+    }
+    
+    private void SetDockedStretch(int x)
+    {
+        SetDockedThumbs();
+        if (_viewer.CenterCurrentItem)
+        {
+            _viewer.ScrollToCenterOfCurrentItem();
+        }
     }
 
     private void UpdateExpandedItemHeight(double itemHeight)

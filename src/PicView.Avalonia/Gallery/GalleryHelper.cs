@@ -1,9 +1,11 @@
-﻿using Avalonia.Media;
+﻿using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Media;
 using PicView.Avalonia.Navigation;
 using PicView.Avalonia.UI;
 using PicView.Avalonia.ViewModels;
+using PicView.Avalonia.Views.UC;
 using PicView.Core.Sizing;
-using PicView.Core.ViewModels;
 using MainWindowViewModel = PicView.Core.ViewModels.MainWindowViewModel;
 
 namespace PicView.Avalonia.Gallery;
@@ -54,19 +56,30 @@ public static class GalleryHelper
         }
     }
     
-    public static double GetGalleryHeight(GallerySharedSettingsViewModel gallery, MainWindowViewModel main)
+    public static (double width, double height) GetGallerySize(MainWindowViewModel main)
     {
-        if (!Settings.Gallery.IsGalleryDocked || Slideshow.IsRunning)
+        if (!Settings.Gallery.IsGalleryDocked || Slideshow.IsRunning || 
+            !Settings.Gallery.ShowBottomGalleryInHiddenUI && !main.IsUIShown.CurrentValue)
         {
-            return 0;
-        }
-        if (!Settings.Gallery.ShowBottomGalleryInHiddenUI && !main.IsUIShown.CurrentValue)
-        {
-            return 0;
+            return (0, 0);
         }
 
-        return Settings.Gallery.IsGalleryDocked
-            ? gallery.DockedGalleryItemSize.CurrentValue + (SizeDefaults.ScrollbarSize - 1)
-            : 0;
+        Rect galleryBounds;
+        if (main.WindowTabs.ActiveTab.CurrentValue.CurrentView.CurrentValue is ImageViewer2 imageViewer)
+        {
+            galleryBounds = imageViewer.GalleryView.Bounds;
+        }
+        else
+        {
+            return (0, 0);
+        }
+
+        if (main.WindowTabs.ActiveTab.CurrentValue.Gallery.IsLeftDocked.CurrentValue || 
+            main.WindowTabs.ActiveTab.CurrentValue.Gallery.IsRightDocked.CurrentValue)
+        {
+            return (galleryBounds.Width, 0);
+        }
+
+        return (0, galleryBounds.Height);
     }
 }

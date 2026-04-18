@@ -25,7 +25,6 @@ public static class UIHelper2
     public static DraggableTabControl? GetMainTabControl { get; private set; }
     public static Control? GetTitlebar { get; private set; }
     public static EditableTitlebar? GetEditableTitlebar { get; private set; }
-    public static GalleryAnimationControlView? GetGalleryView { get; private set; }
     public static BottomBar2? GetBottomBar { get; private set; }
     public static DropDownMenu? GetDropDownMenu { get; private set; }
     public static ToolTipMessage2? GetToolTipMessage { get; private set; }
@@ -45,7 +44,6 @@ public static class UIHelper2
         GetMainView = mainWindow?.FindControl<MainView3>("MainView");
         GetTitlebar = mainWindow?.FindControl<Control>("Titlebar");
         GetEditableTitlebar = GetTitlebar?.FindControl<EditableTitlebar>("EditableTitlebar");
-        //GetGalleryView = GetMainView?.MainPanel.GetControl<GalleryAnimationControlView>("GalleryView");
         GetBottomBar = mainWindow?.FindControl<BottomBar2>("BottomBar");
         GetToolTipMessage = GetMainView?.MainPanel.FindControl<ToolTipMessage2>("ToolTipMessage");
         GetMainTabControl = GetMainView.MainTabControl;
@@ -147,28 +145,6 @@ public static class UIHelper2
         }
 
         await Dispatcher.UIThread.InvokeAsync(() => { Center(vm); });
-    }
-
-    /// <summary>
-    ///     Scrolls to the end of the gallery if the <paramref name="last" /> parameter is true.
-    /// </summary>
-    /// <param name="last">True to scroll to the end of the gallery.</param>
-    /// <returns>A task representing the asynchronous operation.</returns>
-    public static async Task ScrollToEndIfNecessary(bool last)
-    {
-        if (!Settings.Gallery.IsGalleryDocked)
-        {
-            return;
-        }
-
-        if (last)
-        {
-            await Dispatcher.UIThread.InvokeAsync(() => { GetGalleryView.GalleryListBox.ScrollToEnd(); });
-        }
-        else
-        {
-            await Dispatcher.UIThread.InvokeAsync(() => { GetGalleryView.GalleryListBox.ScrollToHome(); });
-        }
     }
 
     public static void SetButtonInterval(RepeatButton? button)

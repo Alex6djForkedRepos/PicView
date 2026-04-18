@@ -29,10 +29,15 @@
                         <Border
                             Background="{CompiledBinding $parent[Window].((vm:MainWindowViewModel)DataContext).GlobalSettings.ConstrainedImageBackground.Value,
                                                          Mode=OneWay}"
+                            Height="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).ImageHeight.Value}"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
+                            Width="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).ImageWidth.Value}"
                             x:Name="MainBorder">
-                            <DockPanel LastChildFill="False">
+                            <DockPanel
+                                HorizontalAlignment="Center"
+                                LastChildFill="False"
+                                VerticalAlignment="Center">
                                 <customControls:PicBox2
                                     DockPanel.Dock="Left"
                                     Source="{CompiledBinding Model.Value.Image}"

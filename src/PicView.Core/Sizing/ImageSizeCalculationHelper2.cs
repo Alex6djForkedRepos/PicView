@@ -7,131 +7,51 @@ public static class ImageSizeCalculationHelper2
         double imageHeight,
         ScreenSize screenSize,
         double rotationAngle,
-        double dpiScaling,
         double uiTopSize,
         double uiBottomSize,
-        double galleryHeight,
-        double containerWidth,
-        double containerHeight)
+        double galleryWidth,
+        double galleryHeight)
     {
         if (imageWidth <= 0 || imageHeight <= 0)
         {
-            return new ImageSize2(0, 0, 0, 0, 0,  0, 0, 0);
+            return new ImageSize2(0, 0, 0, 0, 0,  0, 0);
         }
-
-        // When in fullscreen, we need to capture the entire screen estate
-        var isFullscreen = Settings.WindowProperties.Fullscreen;
-        // When in maximized mode, working area and interface size needs to be taken into consideration
-        var isMaximized = Settings.WindowProperties.Maximized;
-
-        var scrollEnabled = Settings.Zoom.ScrollEnabled;
-        var stretchImage = Settings.ImageScaling.StretchImage;
-        var autoFit = Settings.WindowProperties.AutoFit;
-        var showBottomGallery = Settings.Gallery.IsGalleryDocked;
-        var showInterface = Settings.UIProperties.ShowInterface;
-        var showGalleryInHiddenUI = Settings.Gallery.ShowBottomGalleryInHiddenUI;
-
-        // Calculate the possible surrounding area and borders between the picture and window
-        var borderSpaceHeight = CalculateBorderSpaceHeight(isFullscreen, uiTopSize, uiBottomSize, galleryHeight);
-        var borderSpaceWidth = isFullscreen  ? 0 : screenSize.Margin;
-
-        var workArea = CalculateWorkArea(screenSize, isFullscreen, borderSpaceWidth, borderSpaceHeight);
-        var screenMargin = isFullscreen || isMaximized ? 0 : screenSize.Margin;
-
-        var (maxAvailableWidth, maxAvailableHeight, adjustedContainerWidth, adjustedContainerHeight) =
-            CalculateMaxImageSize(scrollEnabled, stretchImage, autoFit,
-                rotationAngle,
-                workArea.width, workArea.height, screenMargin, imageWidth, imageHeight, dpiScaling, galleryHeight,
-                containerWidth, containerHeight);
-
-        var margin = CalculateGalleryMargin(showBottomGallery,
-            showInterface, showGalleryInHiddenUI, galleryHeight);
+        
+        var (maxAvailableWidth, maxAvailableHeight) = GetMaxAvailableScreenSize(screenSize, uiTopSize, uiBottomSize, galleryWidth, galleryHeight);
 
         var aspectRatio =
             CalculateAspectRatio(rotationAngle, maxAvailableWidth, maxAvailableHeight, imageWidth, imageHeight);
 
-        double displayedWidth, displayedHeight, scrollWidth, scrollHeight;
-        if (scrollEnabled)
-        {
-            (displayedWidth, displayedHeight, scrollWidth, scrollHeight) = CalculateScrolledImageSize(
-                isFullscreen, autoFit, screenSize, imageWidth, imageHeight, aspectRatio,
-                adjustedContainerWidth, containerHeight, margin
-            );
+        double calculatedImageWidth, calculatedImageHeight, scrollWidth, scrollHeight;
+        calculatedImageWidth = imageWidth * aspectRatio;
+        calculatedImageHeight = imageHeight * aspectRatio;
+        if (Settings.Zoom.ScrollEnabled)
+        {            
+            // TODO
+            scrollWidth = double.NaN;
+            scrollHeight = double.NaN;
         }
         else
         {
-            displayedWidth = imageWidth * aspectRatio;
-            displayedHeight = imageHeight * aspectRatio;
             scrollWidth = double.NaN;
             scrollHeight = double.NaN;
         }
 
+
         double windowWidth, windowHeight;
-        if (Settings.WindowProperties.AutoFit)
+        if (Settings.Zoom.ScrollEnabled)
         {
-            windowWidth = displayedWidth + 2;
-            windowHeight = displayedHeight + borderSpaceHeight;
+            // TODO
+            windowWidth = windowHeight = double.NaN;
         }
         else
         {
-            windowWidth = windowHeight = double.NaN;
-        }
-
-        return new ImageSize2(windowWidth, windowHeight, displayedWidth, displayedHeight, scrollWidth, scrollHeight, margin,
-            aspectRatio);
-    }
-
-    private static (double width, double height) CalculateWorkArea(ScreenSize screenSize, bool fullscreen,
-        double borderSpaceWidth, double borderSpaceHeight)
-    {
-        if (fullscreen)
-        {
-            return (screenSize.Width, screenSize.Height);
-        }
-
-        return (screenSize.WorkingAreaWidth - borderSpaceWidth,
-            screenSize.WorkingAreaHeight - borderSpaceHeight);
-    }
-
-
-    private static double CalculateBorderSpaceHeight(bool fullscreen, double uiTop, double uiBottom, double gallery)
-        => fullscreen ? 0 : uiTop + uiBottom + gallery;
-
-    private static (double maxWidth, double maxHeight, double containerWidth, double containerHeight)
-        CalculateMaxImageSize(
-            bool scrollEnabled, bool stretchImage, bool autoFit, double rotationAngle,
-            double workAreaWidth, double workAreaHeight, double margin,
-            double width, double height, double dpiScaling, double galleryHeight, double containerWidth,
-            double containerHeight)
-    {
-        // Swap width and height for 90/270 degree rotations to correctly cap the size
-        // against the image's effective native resolution after rotation.
-        if (rotationAngle is 90 or 270)
-        {
-            (width, height) = (height, width);
+            windowWidth = calculatedImageWidth + galleryWidth;
+            windowHeight = calculatedImageHeight + uiBottomSize + uiTopSize + galleryHeight;
         }
         
-        if (scrollEnabled)
-        {
-            workAreaWidth -= SizeDefaults.ScrollbarSize * dpiScaling;
-            containerWidth -= SizeDefaults.ScrollbarSize * dpiScaling;
-            return (stretchImage ? workAreaWidth : Math.Min(workAreaWidth - margin, width), workAreaHeight,
-                containerWidth, containerHeight);
-        }
-
-        // ReSharper disable once InvertIf
-        if (autoFit)
-        {
-            var mw = stretchImage ? workAreaWidth - margin : Math.Min(workAreaWidth - margin, width);
-            var mh = stretchImage ? workAreaHeight - margin : Math.Min(workAreaHeight - margin, height);
-            return (mw, mh, containerWidth, containerHeight);
-        }
-
-        return (
-            stretchImage ? containerWidth : Math.Min(containerWidth, width),
-            stretchImage ? containerHeight - galleryHeight : Math.Min(containerHeight - galleryHeight, height),
-            containerWidth, containerHeight
-        );
+        return new ImageSize2(windowWidth, windowHeight, calculatedImageWidth, calculatedImageHeight, scrollWidth, scrollHeight,
+            aspectRatio);
     }
 
     private static double CalculateAspectRatio(double rotationAngle, double maxWidth, double maxHeight, double width,
@@ -153,46 +73,20 @@ public static class ImageSizeCalculationHelper2
         }
     }
 
-    private static double CalculateGalleryMargin(bool isBottomGalleryShown, bool showInterface,
-        bool showGalleryInHidden, double galleryHeight)
+    private static (double maxWidth, double maxHeight) GetMaxAvailableScreenSize(ScreenSize screenSize, double uiTopSize, double uiBottomSize, double galleryWidth, double galleryHeight)
     {
-        if (!isBottomGalleryShown)
+        double maxAvailableWidth, maxAvailableHeight;
+        if (Settings.WindowProperties.Fullscreen)
         {
-            return 0;
+            maxAvailableWidth = screenSize.Width - galleryWidth;
+            maxAvailableHeight = screenSize.Height - galleryHeight;
         }
-
-        if (!showInterface)
+        else
         {
-            return showGalleryInHidden && galleryHeight > 0 ? galleryHeight : 0;
+            maxAvailableWidth = screenSize.WorkingAreaWidth - galleryWidth;
+            maxAvailableHeight = screenSize.WorkingAreaHeight - (galleryHeight + Settings.WindowProperties.Margin + uiBottomSize + uiTopSize);
         }
-
-        return galleryHeight > 0 ? galleryHeight : 0;
-    }
-
-    private static (double width, double height, double scrollWidth, double scrollHeight) CalculateScrolledImageSize(
-        bool fullscreen, bool autoFit, ScreenSize screenSize, double width, double height, double aspectRatio,
-        double containerWidth, double origContainerHeight, double margin)
-    {
-        if (fullscreen)
-        {
-            return (width * aspectRatio, height * aspectRatio, screenSize.Width, screenSize.Height);
-        }
-
-        if (autoFit)
-        {
-            var imgWidth = width * aspectRatio;
-            var imgHeight = height * aspectRatio;
-            var sw = Math.Max(imgWidth + SizeDefaults.ScrollbarSize,
-                SizeDefaults.WindowMinSize + SizeDefaults.ScrollbarSize + screenSize.Margin + 16);
-            var sh = origContainerHeight - margin;
-            return (imgWidth, imgHeight, sw, sh);
-        }
-
-        var cWidth = containerWidth - SizeDefaults.ScrollbarSize + 10;
-        var cHeight = height / width * cWidth;
-        var sWidth = containerWidth + SizeDefaults.ScrollbarSize;
-        var sHeight = origContainerHeight - margin;
-        return (cWidth, cHeight, sWidth, sHeight);
+        return (maxAvailableWidth, maxAvailableHeight);
     }
 
     public static ImageSize2 GetSideBySideImageSize(
@@ -202,124 +96,52 @@ public static class ImageSizeCalculationHelper2
         double secondaryHeight,
         ScreenSize screenSize,
         double rotationAngle,
-        double dpiScaling,
         double uiTopSize,
         double uiBottomSize,
-        double galleryHeight,
-        double containerWidth,
-        double containerHeight)
+        double galleryWidth,
+        double galleryHeight)
     {
+        // 1. Guard clause for invalid dimensions
         if (width <= 0 || height <= 0 || secondaryWidth <= 0 || secondaryHeight <= 0)
         {
-            return new ImageSize2(0, 0, 0, 0, 0,  0, 0, 0);
+            return new ImageSize2(0, 0, 0, 0, 0, 0, 0);
         }
 
-        // Get sizes for both images
-        var firstSize = GetImageSize(width, height, screenSize, rotationAngle, dpiScaling, uiTopSize, uiBottomSize, galleryHeight,
-            containerWidth,
-            containerHeight);
-        var secondSize = GetImageSize(secondaryWidth, secondaryHeight, screenSize, rotationAngle, dpiScaling, uiTopSize, uiBottomSize,
-            galleryHeight,
-            containerWidth, containerHeight);
+        // 2. Treat the two side-by-side images as one large "virtual" image bounds
+        var combinedWidth = width + secondaryWidth;
+        var largestHeight = Math.Max(height, secondaryHeight);
 
-        // Determine maximum height for both images
-        var xHeight = Math.Max(firstSize.Height, secondSize.Height);
+        // 3. Get the maximum available screen space (same as GetImageSize)
+        var (maxAvailableWidth, maxAvailableHeight) = GetMaxAvailableScreenSize(screenSize, uiTopSize, uiBottomSize, galleryWidth, galleryHeight);
+        
+        // 4. Calculate a single aspect ratio that fits the entire combined bounding box into the screen
+        var aspectRatio = CalculateAspectRatio(rotationAngle, maxAvailableWidth, maxAvailableHeight, combinedWidth, largestHeight);
 
-        // Recalculate the widths to maintain the aspect ratio with the new maximum height
-        var xWidth1 = firstSize.Width / firstSize.Height * xHeight;
-        var xWidth2 = secondSize.Width / secondSize.Height * xHeight;
+        // 5. Apply the scaling factor to our virtual image
+        var calculatedCombinedWidth = combinedWidth * aspectRatio;
+        var calculatedLargestHeight = largestHeight * aspectRatio;
 
-        // Combined width of both images
-        var combinedWidth = xWidth1 + xWidth2;
-
-        if (Settings.WindowProperties.AutoFit)
-        {
-            var widthPadding = Settings.ImageScaling.StretchImage ? 4 : screenSize.Margin;
-            var availableWidth = screenSize.WorkingAreaWidth - widthPadding;
-            var availableHeight = screenSize.WorkingAreaHeight - (widthPadding + uiBottomSize + uiTopSize);
-            if (rotationAngle is 0 or 180)
-            {
-                // If combined width exceeds available width, scale both images down proportionally
-                if (combinedWidth > availableWidth)
-                {
-                    var scaleFactor = availableWidth / combinedWidth;
-                    xWidth1 *= scaleFactor;
-                    xWidth2 *= scaleFactor;
-                    xHeight *= scaleFactor;
-
-                    combinedWidth = xWidth1 + xWidth2;
-                }
-            }
-            else
-            {
-                if (combinedWidth > availableHeight)
-                {
-                    var scaleFactor = availableHeight / combinedWidth;
-                    xWidth1 *= scaleFactor;
-                    xWidth2 *= scaleFactor;
-                    xHeight *= scaleFactor;
-
-                    combinedWidth = xWidth1 + xWidth2;
-                }
-            }
-        }
-        else
-        {
-            if (rotationAngle is 0 or 180)
-            {
-                if (combinedWidth > containerWidth)
-                {
-                    var scaleFactor = containerWidth / combinedWidth;
-                    xWidth1 *= scaleFactor;
-                    xWidth2 *= scaleFactor;
-                    xHeight *= scaleFactor;
-
-                    combinedWidth = xWidth1 + xWidth2;
-                }
-            }
-            else
-            {
-                if (combinedWidth > containerHeight)
-                {
-                    var scaleFactor = containerHeight / combinedWidth;
-                    xWidth1 *= scaleFactor;
-                    xWidth2 *= scaleFactor;
-                    xHeight *= scaleFactor;
-
-                    combinedWidth = xWidth1 + xWidth2;
-                }
-            }
-        }
-
-        double scrollWidth, scrollHeight;
+        // 6. Calculate the final Window Width and Height (ignoring scrolling for now)
+        double windowWidth, windowHeight;
         if (Settings.Zoom.ScrollEnabled)
         {
-            if (Settings.WindowProperties.AutoFit)
-            {
-                combinedWidth -= SizeDefaults.ScrollbarSize;
-                scrollWidth = combinedWidth + SizeDefaults.ScrollbarSize + 8;
-
-                var fullscreen = Settings.WindowProperties.Fullscreen ||
-                                 Settings.WindowProperties.Maximized;
-                var borderSpaceHeight = fullscreen ? 0 : uiTopSize + uiBottomSize + galleryHeight;
-                var workAreaHeight = screenSize.WorkingAreaHeight * dpiScaling - borderSpaceHeight;
-                scrollHeight = Math.Min(xHeight,
-                    Settings.ImageScaling.StretchImage ? workAreaHeight : workAreaHeight - screenSize.Margin);
-            }
-            else
-            {
-                combinedWidth -= SizeDefaults.ScrollbarSize + 8;
-                scrollWidth = double.NaN;
-                scrollHeight = double.NaN;
-            }
+            // TODO: Add scrolling logic in the future
+            windowWidth = windowHeight = double.NaN;
         }
         else
         {
-            scrollWidth = double.NaN;
-            scrollHeight = double.NaN;
+            windowWidth = calculatedCombinedWidth + galleryWidth;
+            windowHeight = calculatedLargestHeight + uiBottomSize + uiTopSize + galleryHeight;
         }
-
-        return new ImageSize2(combinedWidth, xHeight, combinedWidth, xHeight, xWidth2, scrollWidth, scrollHeight,
-            firstSize.AspectRatio);
+        
+        // 7. Return the struct
+        return new ImageSize2(
+            windowWidth, 
+            windowHeight, 
+            calculatedCombinedWidth, 
+            calculatedLargestHeight, 
+            double.NaN, // scrollWidth
+            double.NaN, // scrollHeight
+            aspectRatio);
     }
 }

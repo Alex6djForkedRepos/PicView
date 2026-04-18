@@ -3,7 +3,6 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
-using PicView.Avalonia.CustomControls;
 using PicView.Avalonia.Gallery;
 using PicView.Avalonia.UI;
 using PicView.Core.Sizing;
@@ -268,14 +267,13 @@ public static class WindowResizing2
         MainWindowViewModel vm)
     {
         var screenSize = ScreenHelper.ScreenSize;
-        var (containerWidth, containerHeight) = GetContainerSize();
+        var (containerWidth, containerHeight, galleryWidth, galleryHeight) = GetContainerSize();
 
         if (double.IsNaN(width) || double.IsNaN(height))
         {
             return null;
         }
-        var core = Dispatcher.UIThread.Invoke(() => Application.Current.DataContext as CoreViewModel, DispatcherPriority.Send);
-        var galleryHeight = GalleryHelper.GetGalleryHeight(core.GallerySettings, vm);
+        
         ImageSize2 size;
         if (Settings.ImageScaling.ShowImageSideBySide && secondWidth > 0 && secondHeight > 0)
         {
@@ -286,12 +284,10 @@ public static class WindowResizing2
                 secondHeight,
                 screenSize,
                 rotation,
-                screenSize.Scaling,
                 vm.TitlebarHeight.CurrentValue,
                 vm.BottombarHeight.CurrentValue,
-                galleryHeight,
-                containerWidth,
-                containerHeight);
+                galleryWidth,
+                galleryHeight);
         }
         else
         {
@@ -300,23 +296,23 @@ public static class WindowResizing2
                 height,
                 screenSize,
                 rotation,
-                screenSize.Scaling,
                 vm.TitlebarHeight.CurrentValue,
                 vm.BottombarHeight.CurrentValue,
-                galleryHeight,
-                containerWidth,
-                containerHeight);
+                galleryWidth,
+                galleryHeight);
         }
 
         return size;
 
-        (double containerWidth, double containerHeight) GetContainerSize()
+        (double containerWidth, double containerHeight, double galleryWidth, double galleryHeight) GetContainerSize()
         {
             return Dispatcher.CurrentDispatcher.CheckAccess() ? Get() : Dispatcher.CurrentDispatcher.Invoke(Get, DispatcherPriority.Send);
 
-            (double containerWidth, double containerHeight) Get()
+            (double containerWidth, double containerHeight, double galleryWidth, double galleryHeight) Get()
             {
-                var mainView = UIHelper.GetMainView;
+                var core = Application.Current.DataContext as CoreViewModel;
+                var (galleryWidth, galleryHeight) = GalleryHelper.GetGallerySize(vm);
+                var mainView = UIHelper2.GetMainView;
 
                 if (mainView is null)
                 {
@@ -336,7 +332,7 @@ public static class WindowResizing2
                     containerHeight = mainView.Bounds.Height;
                 }
 
-                return (containerWidth, containerHeight);
+                return (containerWidth, containerHeight, galleryWidth, galleryHeight);
             }
         }
     }
