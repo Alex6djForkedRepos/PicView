@@ -22,21 +22,31 @@ public interface IFunctionsMapper
     ValueTask Search();
     ValueTask ToggleLooping();
     
-    // Viewport / Zoom
+    // Viewport
     ValueTask Up();
+    ValueTask Down();
+    
+    // Rotation
     ValueTask RotateRight();
     ValueTask RotateLeft();
-    ValueTask Down();
-    ValueTask ScrollDown();
-    ValueTask ScrollUp();
-    ValueTask ScrollToTop();
-    ValueTask ScrollToBottom();
+    ValueTask Rotate0();
+    ValueTask Rotate90();
+    ValueTask Rotate180();
+    ValueTask Rotate270();
+    
+    // Zoom
     ValueTask ZoomIn();
     ValueTask ZoomOut();
     ValueTask ResetZoom();
     ValueTask ResetZoomAndRotations();
-    ValueTask ToggleScroll();
     ValueTask ChangeCtrlZoom();
+    
+    // Scroll
+    ValueTask ScrollDown();
+    ValueTask ScrollUp();
+    ValueTask ScrollToTop();
+    ValueTask ScrollToBottom();
+    ValueTask ToggleScroll();
     
     // Interface Toggles
     ValueTask ToggleInterface();

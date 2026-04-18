@@ -63,6 +63,10 @@ public class FunctionsMapper2(Core.ViewModels.MainWindowViewModel vm, Window win
             // Rotate
             "RotateLeft" => RotateLeft,
             "RotateRight" => RotateRight,
+            "Rotate0" => Rotate0,
+            "Rotate90" => Rotate90,
+            "Rotate180" => Rotate180,
+            "Rotate270" => Rotate270,
 
             // Scroll
             "ScrollUp" => ScrollUp,
@@ -292,6 +296,30 @@ public class FunctionsMapper2(Core.ViewModels.MainWindowViewModel vm, Window win
     public ValueTask RotateLeft()
     {
         RotationManager.RotateLeft(vm);
+        return ValueTask.CompletedTask;
+    }
+
+    public ValueTask Rotate0()
+    {
+        RotationManager.Rotate(vm, 0);
+        return ValueTask.CompletedTask;
+    }
+
+    public ValueTask Rotate90()
+    {
+        RotationManager.Rotate(vm, 90);
+        return ValueTask.CompletedTask;
+    }
+
+    public ValueTask Rotate180()
+    {
+        RotationManager.Rotate(vm, 180);
+        return ValueTask.CompletedTask;
+    }
+    
+    public ValueTask Rotate270()
+    {
+        RotationManager.Rotate(vm, 270);
         return ValueTask.CompletedTask;
     }
     

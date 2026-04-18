@@ -138,7 +138,19 @@ public class MainWindowViewModel : IDisposable
 
     public ReactiveCommand RotateLeftCommand { get; }
     private async ValueTask RotateLeft(Unit unit, CancellationToken cancellationToken) { if (Mapper is null) return; await Mapper.RotateLeft(); }
-
+    
+    public ReactiveCommand Rotate0Command { get; }
+    private async ValueTask Rotate0(Unit unit, CancellationToken cancellationToken) { if (Mapper is null) return; await Mapper.Rotate0(); }
+    
+    public ReactiveCommand Rotate90Command { get; }
+    private async ValueTask Rotate90(Unit unit, CancellationToken cancellationToken) { if (Mapper is null) return; await Mapper.Rotate90(); }
+    
+    public ReactiveCommand Rotate180Command { get; }
+    private async ValueTask Rotate180(Unit unit, CancellationToken cancellationToken) { if (Mapper is null) return; await Mapper.Rotate180(); }
+    
+    public ReactiveCommand Rotate270Command { get; }
+    private async ValueTask Rotate270(Unit unit, CancellationToken cancellationToken) { if (Mapper is null) return; await Mapper.Rotate270(); }
+    
     public ReactiveCommand DownCommand { get; }
     private async ValueTask Down(Unit unit, CancellationToken cancellationToken) { if (Mapper is null) return; await Mapper.Down(); }
 
@@ -537,6 +549,10 @@ public class MainWindowViewModel : IDisposable
         UpCommand = new ReactiveCommand(Up);
         RotateRightCommand = new ReactiveCommand(RotateRight);
         RotateLeftCommand = new ReactiveCommand(RotateLeft);
+        Rotate0Command = new ReactiveCommand(Rotate0);
+        Rotate90Command = new ReactiveCommand(Rotate90);
+        Rotate180Command = new ReactiveCommand(Rotate180);
+        Rotate270Command = new ReactiveCommand(Rotate270);
         DownCommand = new ReactiveCommand(Down);
         ScrollDownCommand = new ReactiveCommand(ScrollDown);
         ScrollUpCommand = new ReactiveCommand(ScrollUp);
@@ -705,6 +721,10 @@ public class MainWindowViewModel : IDisposable
             UpCommand,
             RotateRightCommand,
             RotateLeftCommand,
+            Rotate0Command,
+            Rotate90Command,
+            Rotate180Command,
+            Rotate270Command,
             DownCommand,
             ScrollDownCommand,
             ScrollUpCommand,

@@ -1,6 +1,4 @@
 ﻿using Avalonia.Controls;
-using Avalonia.Interactivity;
-using PicView.Avalonia.ImageTransformations;
 using PicView.Avalonia.UI;
 using PicView.Core.DebugTools;
 using PicView.Core.ViewModels;
@@ -23,47 +21,6 @@ public partial class RotationContextMenu : ContextMenu, IDisposable
         _disposable = Observable.EveryValueChanged(this, x => IsOpen, UIHelper2.GetFrameProvider)
             .Subscribe(_ => { UpdateRotation(); },
                 DebugHelper.LogError(nameof(RotationContextMenu), nameof(UpdateSubscription)));
-
-        Rotation0Item.Click += Rotation0ItemOnClick;
-        Rotation90Item.Click += Rotation90ItemOnClick;
-        Rotation180Item.Click += Rotation180ItemOnClick;
-        Rotation270Item.Click += Rotation270ItemOnClick;
-    }
-
-    private void Rotation270ItemOnClick(object? sender, RoutedEventArgs e)
-    {
-        if (DataContext is not MainWindowViewModel vm)
-        {
-            return;
-        }
-        RotationManager.Rotate(vm, 270);
-    }
-
-    private void Rotation180ItemOnClick(object? sender, RoutedEventArgs e)
-    {
-        if (DataContext is not MainWindowViewModel vm)
-        {
-            return;
-        }
-        RotationManager.Rotate(vm, 180);
-    }
-
-    private void Rotation90ItemOnClick(object? sender, RoutedEventArgs e)
-    {
-        if (DataContext is not MainWindowViewModel vm)
-        {
-            return;
-        }
-        RotationManager.Rotate(vm, 90);
-    }
-
-    private void Rotation0ItemOnClick(object? sender, RoutedEventArgs e)
-    {
-        if (DataContext is not MainWindowViewModel vm)
-        {
-            return;
-        }
-        RotationManager.Rotate(vm, 0);
     }
 
     private void UpdateRotation()
@@ -98,9 +55,7 @@ public partial class RotationContextMenu : ContextMenu, IDisposable
     {
         _disposable?.Dispose();
         _disposable = null;
-        Rotation0Item.Click -= Rotation0ItemOnClick;
-        Rotation90Item.Click -= Rotation90ItemOnClick;
-        Rotation180Item.Click -= Rotation180ItemOnClick;
-        Rotation270Item.Click -= Rotation270ItemOnClick;
+        
+        GC.SuppressFinalize(this);
     }
 }
