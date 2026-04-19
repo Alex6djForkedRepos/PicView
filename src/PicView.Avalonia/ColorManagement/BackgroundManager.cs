@@ -82,19 +82,19 @@ public static class BackgroundManager
     /// <param name="choice">The background choice to set.</param>
     public static void SetBackground(MainViewModel vm, int choice)
     {
-        Settings.UIProperties.BgColorChoice = choice;
-        if (Settings.UIProperties.IsConstrainBackgroundColorEnabled)
-        {
-            vm.MainWindow.ImageBackground.Value = new SolidColorBrush(Colors.Transparent);
-            vm.MainWindow.ConstrainedImageBackground.Value = GetBackgroundBrush((BackgroundType)choice);
-        }
-        else
-        {
-            vm.MainWindow.ImageBackground.Value = GetBackgroundBrush((BackgroundType)choice);
-            vm.MainWindow.ConstrainedImageBackground.Value = new SolidColorBrush(Colors.Transparent);
-        }
-        
-        vm.MainWindow.BackgroundChoice.Value = choice;
+        // Settings.UIProperties.BgColorChoice = choice;
+        // if (Settings.UIProperties.IsConstrainBackgroundColorEnabled)
+        // {
+        //     vm.MainWindow.ImageBackground.Value = new SolidColorBrush(Colors.Transparent);
+        //     vm.MainWindow.ConstrainedImageBackground.Value = GetBackgroundBrush((BackgroundType)choice);
+        // }
+        // else
+        // {
+        //     vm.MainWindow.ImageBackground.Value = GetBackgroundBrush((BackgroundType)choice);
+        //     vm.MainWindow.ConstrainedImageBackground.Value = new SolidColorBrush(Colors.Transparent);
+        // }
+        //
+        // vm.MainWindow.BackgroundChoice.Value = choice;
     }
 
     /// <summary>

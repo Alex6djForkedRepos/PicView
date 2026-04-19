@@ -3,7 +3,6 @@ using PicView.Avalonia.Gallery;
 using PicView.Avalonia.Navigation;
 using PicView.Avalonia.ViewModels;
 using PicView.Avalonia.WindowBehavior;
-using PicView.Core.Gallery;
 using PicView.Core.Localization;
 using PicView.Core.Sizing;
 
@@ -20,64 +19,29 @@ public static class HideInterfaceLogic
     {
         if (Settings.UIProperties.ShowInterface)
         {
-            vm.MainWindow.IsUIShown.Value = false;
-            Settings.UIProperties.ShowInterface = false;
-            vm.MainWindow.IsTopToolbarShown.Value = false;
-            vm.MainWindow.IsBottomToolbarShown.Value = false;
-            vm.Translation.IsShowingUI.Value = TranslationManager.Translation.ShowUI;
-            vm.HoverbarViewModel.IsHoverbarVisible.Value = Settings.UIProperties.ShowHoverNavigationBar;
-            if (!GalleryFunctions.IsFullGalleryOpen)
-            {
-                if (!Settings.Gallery.ShowBottomGalleryInHiddenUI)
-                {
-                    vm.Gallery.GalleryMode.Value = GalleryMode.Closed;
-                    await Dispatcher.UIThread.InvokeAsync(() =>
-                    {
-                    });
-                    vm.Gallery.IsBottomGalleryShown.Value = false;
-                }
-                else
-                {
-                    vm.Gallery.IsBottomGalleryShown.Value = Settings.Gallery.ShowBottomGalleryInHiddenUI;
-                }
-            }
+            // vm.MainWindow.IsUIShown.Value = false;
+            // Settings.UIProperties.ShowInterface = false;
+            // vm.MainWindow.IsTopToolbarShown.Value = false;
+            // vm.MainWindow.IsBottomToolbarShown.Value = false;
+            // vm.Translation.IsShowingUI.Value = TranslationManager.Translation.ShowUI;
         }
         else
         {
-            vm.MainWindow.IsUIShown.Value = true;
-            vm.MainWindow.IsTopToolbarShown.Value = true;
-            vm.Translation.IsShowingUI.Value = TranslationManager.Translation.HideUI;
-            if (Settings.UIProperties.ShowBottomNavBar)
-            {
-                vm.MainWindow.IsBottomToolbarShown.Value = true;
-                vm.MainWindow.BottombarHeight.Value = SizeDefaults.BottombarHeight;
-                vm.HoverbarViewModel.IsHoverbarVisible.Value = false;
-            }
-            else
-            {
-                vm.HoverbarViewModel.IsHoverbarVisible.Value = Settings.UIProperties.ShowHoverNavigationBar;
-            }
-            Settings.UIProperties.ShowInterface = true;
-            vm.MainWindow.TitlebarHeight.Value = SizeDefaults.MainTitlebarHeight;
-            if (!GalleryFunctions.IsFullGalleryOpen)
-            {
-                if (Settings.Gallery.IsGalleryDocked)
-                {
-                    if (NavigationManager.CanNavigate(vm))
-                    {
-                        await Dispatcher.UIThread.InvokeAsync(() =>
-                        {
-                        });
-                        _ = GalleryLoad.LoadGallery(vm, vm.PicViewer.FileInfo.CurrentValue.DirectoryName);
-                    }
-
-                    vm.Gallery.IsBottomGalleryShown.Value = true;
-                }
-                else
-                {
-                    vm.Gallery.IsBottomGalleryShown.Value = false;
-                }
-            }
+            // vm.MainWindow.IsUIShown.Value = true;
+            // vm.MainWindow.IsTopToolbarShown.Value = true;
+            // vm.Translation.IsShowingUI.Value = TranslationManager.Translation.HideUI;
+            // if (Settings.UIProperties.ShowBottomNavBar)
+            // {
+            //     vm.MainWindow.IsBottomToolbarShown.Value = true;
+            //     vm.MainWindow.BottombarHeight.Value = SizeDefaults.BottombarHeight;
+            //     vm.HoverbarViewModel.IsHoverbarVisible.Value = false;
+            // }
+            // else
+            // {
+            //     vm.HoverbarViewModel.IsHoverbarVisible.Value = Settings.UIProperties.ShowHoverNavigationBar;
+            // }
+            // Settings.UIProperties.ShowInterface = true;
+            // vm.MainWindow.TitlebarHeight.Value = SizeDefaults.MainTitlebarHeight;
         }
         
         await WindowResizing.SetSizeAsync(vm);
@@ -93,18 +57,18 @@ public static class HideInterfaceLogic
     {
         if (Settings.UIProperties.ShowBottomNavBar)
         {
-            vm.MainWindow.IsBottomToolbarShown.Value = false;
-            Settings.UIProperties.ShowBottomNavBar = false;
-            vm.Translation.IsShowingBottomToolbar.Value = TranslationManager.Translation.ShowBottomToolbar;
-            vm.HoverbarViewModel.IsHoverbarVisible.Value = Settings.UIProperties.ShowHoverNavigationBar;
+            // vm.MainWindow.IsBottomToolbarShown.Value = false;
+            // Settings.UIProperties.ShowBottomNavBar = false;
+            // vm.Translation.IsShowingBottomToolbar.Value = TranslationManager.Translation.ShowBottomToolbar;
+            // vm.HoverbarViewModel.IsHoverbarVisible.Value = Settings.UIProperties.ShowHoverNavigationBar;
         }
         else
         {
-            vm.MainWindow.IsBottomToolbarShown.Value = true;
-            Settings.UIProperties.ShowBottomNavBar = true;
-            vm.MainWindow.BottombarHeight.Value = SizeDefaults.BottombarHeight;
-            vm.Translation.IsShowingBottomToolbar.Value = TranslationManager.Translation.HideBottomToolbar;
-            vm.HoverbarViewModel.IsHoverbarVisible.Value = false;
+            // vm.MainWindow.IsBottomToolbarShown.Value = true;
+            // Settings.UIProperties.ShowBottomNavBar = true;
+            // vm.MainWindow.BottombarHeight.Value = SizeDefaults.BottombarHeight;
+            // vm.Translation.IsShowingBottomToolbar.Value = TranslationManager.Translation.HideBottomToolbar;
+            // vm.HoverbarViewModel.IsHoverbarVisible.Value = false;
         }
         await Dispatcher.UIThread.InvokeAsync(() =>
         {
@@ -115,33 +79,4 @@ public static class HideInterfaceLogic
     }
     
     #endregion
-
-    public static async Task ToggleBottomGalleryShownInHiddenUI(MainViewModel vm)
-    {
-        Settings.Gallery.ShowBottomGalleryInHiddenUI = !Settings.Gallery
-            .ShowBottomGalleryInHiddenUI;
-        if (vm.Gallery is not { } gallery)
-        {
-            return;
-        }
-        gallery.IsBottomGalleryShownInHiddenUI.Value = Settings.Gallery.ShowBottomGalleryInHiddenUI;
-
-        if (!Settings.UIProperties.ShowInterface && !Settings.Gallery
-                .ShowBottomGalleryInHiddenUI)
-        {
-            gallery.IsBottomGalleryShown.Value = false;
-        }
-        else
-        {
-            gallery.IsBottomGalleryShown.Value = Settings.Gallery.IsGalleryDocked;
-        }
-        
-        await WindowResizing.SetSizeAsync(vm);
-        if (gallery.IsBottomGalleryShown.Value)
-        {
-            gallery.GalleryMode.Value = GalleryMode.ClosedToBottom;
-        }
-        
-        await SaveSettingsAsync();
-    }
 }

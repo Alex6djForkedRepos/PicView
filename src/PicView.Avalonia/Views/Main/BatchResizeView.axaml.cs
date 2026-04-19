@@ -258,14 +258,6 @@ public partial class BatchResizeView : UserControl
 
     private void IsQualityEnabledBox_OnIsCheckedChanged(object? sender, RoutedEventArgs e)
     {
-        if (DataContext is not MainViewModel vm || !IsQualityEnabledBox.IsChecked.HasValue)
-        {
-            return;
-        }
-
-        var isEnabled = IsQualityEnabledBox.IsChecked.Value;
-        vm.Window.BatchResizeWindowConfig.WindowProperties.IsQualityEnabled = isEnabled;
-        vm.BatchResizeViewModel.IsQualityEnabled.Value = isEnabled;
     }
 
     private void ResizeComboBox_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)

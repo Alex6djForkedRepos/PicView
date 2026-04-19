@@ -76,7 +76,7 @@ public class ZoomPanControl : Decorator
             return;
         }
 
-        _zoomPreviewer.SetVisible();
+        // _zoomPreviewer.SetVisible();
         UpdatePreviewWindow();
     }
 
@@ -163,7 +163,7 @@ public class ZoomPanControl : Decorator
 
         SetZoomValue(100);
 
-        _zoomPreviewer?.SetInvisible();
+        // _zoomPreviewer?.SetInvisible();
     }
 
     /// <summary>
@@ -559,11 +559,11 @@ public class ZoomPanControl : Decorator
             return;
         }
 
-        // Update visibility based on zoom state
-        _zoomPreviewer.UpdateVisibility();
-
-        // Update viewport rectangle
-        _zoomPreviewer.UpdateViewportRect();
+        // // Update visibility based on zoom state
+        // _zoomPreviewer.UpdateVisibility();
+        //
+        // // Update viewport rectangle
+        // _zoomPreviewer.UpdateViewportRect();
     }
 
     private Point CenterPoint() => new(Bounds.Width / 2.0, Bounds.Height / 2.0);

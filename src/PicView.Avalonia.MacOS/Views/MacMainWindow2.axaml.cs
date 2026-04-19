@@ -51,20 +51,20 @@ public partial class MacMainWindow2 : MainWindow, IPlatformWindowService
                     case WindowState.FullScreen:
                         if (!Settings.WindowProperties.Fullscreen)
                         {
-                            await MacOSWindow2.Fullscreen(this, vm);
+                            await MacOSWindow.Fullscreen(this, vm);
                         }
                         break;
                     case WindowState.Maximized:
                         if (!Settings.WindowProperties.Maximized && !Settings.WindowProperties.Fullscreen)
                         {
-                            await MacOSWindow2.Maximize(this, vm);
+                            await MacOSWindow.Maximize(this, vm);
                         }
 
                         break;
                     case WindowState.Normal:
                         if (Settings.WindowProperties.Maximized || Settings.WindowProperties.Fullscreen)
                         {
-                            await MacOSWindow2.Restore(this, vm);
+                            await MacOSWindow.Restore(this, vm);
                         }
                         break;
                 }
@@ -264,26 +264,26 @@ public partial class MacMainWindow2 : MainWindow, IPlatformWindowService
 
     /// <inheritdoc />
     public async Task Maximize(bool saveSetting = true) =>
-        await MacOSWindow2.Maximize(this, DataContext as MainWindowViewModel, saveSetting);
+        await MacOSWindow.Maximize(this, DataContext as MainWindowViewModel, saveSetting);
     
     /// <inheritdoc />
     public async Task MaximizeRestore(bool saveSetting = true) =>
-        await MacOSWindow2.ToggleMaximize(this, DataContext as MainWindowViewModel, saveSetting);
+        await MacOSWindow.ToggleMaximize(this, DataContext as MainWindowViewModel, saveSetting);
 
     /// <inheritdoc />
     public async Task Fullscreen(bool saveSetting = true) =>
-        await MacOSWindow2.Fullscreen(this, DataContext as MainWindowViewModel, saveSetting);
+        await MacOSWindow.Fullscreen(this, DataContext as MainWindowViewModel, saveSetting);
     
     /// <inheritdoc />
     public async Task ToggleFullscreen(bool saveSetting = true) =>
-        await MacOSWindow2.ToggleFullscreen(this, DataContext as MainWindowViewModel, saveSetting);
+        await MacOSWindow.ToggleFullscreen(this, DataContext as MainWindowViewModel, saveSetting);
     
     /// <inheritdoc />
     public async Task Restore() =>
-        await MacOSWindow2.Restore(this, DataContext as MainWindowViewModel);
+        await MacOSWindow.Restore(this, DataContext as MainWindowViewModel);
     
     public void Minimize() =>
-        MacOSWindow2.Minimize(this);
+        MacOSWindow.Minimize(this);
     
     #endregion
 }

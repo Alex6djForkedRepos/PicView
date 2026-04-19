@@ -281,7 +281,7 @@ public static class FunctionsMapper
         // TODO: ImageViewer Needs refactor
         await Dispatcher.UIThread.InvokeAsync(() =>
         {
-            Vm.ImageViewer.ImageScrollViewer.LineDown();
+            // Vm.ImageViewer.ImageScrollViewer.LineDown();
         });
     }
     
@@ -290,7 +290,7 @@ public static class FunctionsMapper
         // TODO: ImageViewer Needs refactor
         await Dispatcher.UIThread.InvokeAsync(() =>
         {
-            Vm.ImageViewer.ImageScrollViewer.LineUp();
+            // Vm.ImageViewer.ImageScrollViewer.LineUp();
         });
     }
 
@@ -299,7 +299,7 @@ public static class FunctionsMapper
         // TODO: ImageViewer Needs refactor
         await Dispatcher.UIThread.InvokeAsync(() =>
         {
-            Vm.ImageViewer.ImageScrollViewer.ScrollToHome();
+            // Vm.ImageViewer.ImageScrollViewer.ScrollToHome();
         });
     }
 
@@ -308,7 +308,7 @@ public static class FunctionsMapper
         // TODO: ImageViewer Needs refactor
         await Dispatcher.UIThread.InvokeAsync(() =>
         {
-            Vm.ImageViewer.ImageScrollViewer.ScrollToEnd();
+            // Vm.ImageViewer.ImageScrollViewer.ScrollToEnd();
         });
     }
 
@@ -319,7 +319,7 @@ public static class FunctionsMapper
         {
             return;
         }
-        await Dispatcher.UIThread.InvokeAsync(Vm.ImageViewer.ZoomIn);
+        // await Dispatcher.UIThread.InvokeAsync(Vm.ImageViewer.ZoomIn);
     }
 
     public static async ValueTask ZoomOut()
@@ -329,7 +329,7 @@ public static class FunctionsMapper
         {
             return;
         }
-        await Dispatcher.UIThread.InvokeAsync(Vm.ImageViewer.ZoomOut);
+        // await Dispatcher.UIThread.InvokeAsync(Vm.ImageViewer.ZoomOut);
     }
 
     public static async ValueTask ResetZoom()
@@ -340,7 +340,7 @@ public static class FunctionsMapper
             return;
         }
 
-        await Dispatcher.UIThread.InvokeAsync(() => Vm.ImageViewer.ResetZoom(Settings.Zoom.IsZoomAnimated));
+        // await Dispatcher.UIThread.InvokeAsync(() => Vm.ImageViewer.ResetZoom(Settings.Zoom.IsZoomAnimated));
     }
     
     #endregion
@@ -825,10 +825,10 @@ public static class FunctionsMapper
 #if DEBUG
     public static void Invalidate()
     {
-        Vm?.ImageViewer?.MainImage?.InvalidateVisual();
-        Vm?.ImageViewer?.InvalidateVisual();
-        Vm?.ImageViewer?.MainImage?.InvalidateMeasure();
-        Vm?.ImageViewer?.InvalidateMeasure();
+        // Vm?.ImageViewer?.MainImage?.InvalidateVisual();
+        // Vm?.ImageViewer?.InvalidateVisual();
+        // Vm?.ImageViewer?.MainImage?.InvalidateMeasure();
+        // Vm?.ImageViewer?.InvalidateMeasure();
     }
 #endif
 }

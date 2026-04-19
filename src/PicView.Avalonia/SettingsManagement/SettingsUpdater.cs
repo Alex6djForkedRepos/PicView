@@ -18,138 +18,92 @@ public static class SettingsUpdater
 {
     public static void ValidateGallerySettings(MainViewModel vm, bool settingsExists)
     {
-        if (vm.Gallery is not {} gallery)
-        {
-            return;
-        }
-
-        if (!settingsExists)
-        {
-            gallery.GalleryItem.BottomGalleryItemHeight.Value = GalleryDefaults.DefaultBottomGalleryHeight;
-            gallery.GalleryItem.ExpandedGalleryItemHeight.Value = GalleryDefaults.DefaultFullGalleryHeight;
-        }
-        else
-        {
-            gallery.GalleryItem.ExpandedGalleryItemHeight.Value  = Settings.Gallery.ExpandedGalleryItemSize;
-            gallery.GalleryItem.BottomGalleryItemHeight.Value = Settings.Gallery.BottomGalleryItemSize;
-        }
-
-        // Set default gallery sizes if they are out of range or upgrading from an old version
-        if (gallery.GalleryItem.BottomGalleryItemHeight.CurrentValue is < GalleryDefaults.MinBottomGalleryItemHeight or > GalleryDefaults.MaxBottomGalleryItemHeight)
-        {
-            gallery.GalleryItem.BottomGalleryItemHeight.Value = GalleryDefaults.DefaultBottomGalleryHeight;
-        }
-
-        if (gallery.GalleryItem.ExpandedGalleryItemHeight.CurrentValue is < GalleryDefaults.MinFullGalleryItemHeight or > GalleryDefaults.MaxFullGalleryItemHeight)
-        {
-            gallery.GalleryItem.ExpandedGalleryItemHeight.Value = GalleryDefaults.DefaultFullGalleryHeight;
-        }
-
-        if (settingsExists)
-        {
-            return;
-        }
-
-        if (string.IsNullOrWhiteSpace(Settings.Gallery.BottomGalleryStretchMode))
-        {
-            Settings.Gallery.BottomGalleryStretchMode = "UniformToFill";
-        }
-
-        if (string.IsNullOrWhiteSpace(Settings.Gallery.FullGalleryStretchMode))
-        {
-            Settings.Gallery.FullGalleryStretchMode = "UniformToFill";
-        }
+       
     }
 
 
 
     public static void InitializeSettings(MainViewModel vm)
     {
-        MainWindowViewModel.GetAndSetWindowMinSize(vm);
-        
-        // Set corner radius on macOS
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-        {
-            vm.MainWindow.BottomCornerRadius.Value = new CornerRadius(0, 0, 8, 8);
-        }
-        
-        vm.MainWindow.TitlebarHeight.Value = Settings.WindowProperties.Fullscreen
-                                       || !Settings.UIProperties.ShowInterface
-            ? 0
-            : SizeDefaults.MainTitlebarHeight;
-        vm.MainWindow.BottombarHeight.Value = Settings.WindowProperties.Fullscreen
-                                              || !Settings.UIProperties.ShowInterface
-            ? 0
-            : SizeDefaults.BottombarHeight;
-        vm.PicViewer.IsShowingSideBySide.Value = Settings.ImageScaling.ShowImageSideBySide;
-        vm.MainWindow.IsUIShown.Value  = Settings.UIProperties.ShowInterface;
-        vm.MainWindow.IsTopToolbarShown.Value  = Settings.UIProperties.ShowInterface;
-        vm.MainWindow.IsBottomToolbarShown.Value   = Settings.UIProperties.ShowBottomNavBar &&
-                                    Settings.UIProperties.ShowInterface;
-        vm.MainWindow.IsFullscreen.Value  = Settings.WindowProperties.Fullscreen;
-        vm.MainWindow.BackgroundChoice.Value = Settings.UIProperties.BgColorChoice;
+        // MainWindowViewModel.GetAndSetWindowMinSize(vm);
+        //
+        // // Set corner radius on macOS
+        // if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        // {
+        //     vm.MainWindow.BottomCornerRadius.Value = new CornerRadius(0, 0, 8, 8);
+        // }
+        //
+        // vm.MainWindow.TitlebarHeight.Value = Settings.WindowProperties.Fullscreen
+        //                                || !Settings.UIProperties.ShowInterface
+        //     ? 0
+        //     : SizeDefaults.MainTitlebarHeight;
+        // vm.MainWindow.BottombarHeight.Value = Settings.WindowProperties.Fullscreen
+        //                                       || !Settings.UIProperties.ShowInterface
+        //     ? 0
+        //     : SizeDefaults.BottombarHeight;
+        // vm.PicViewer.IsShowingSideBySide.Value = Settings.ImageScaling.ShowImageSideBySide;
+        // vm.MainWindow.IsUIShown.Value  = Settings.UIProperties.ShowInterface;
+        // vm.MainWindow.IsTopToolbarShown.Value  = Settings.UIProperties.ShowInterface;
+        // vm.MainWindow.IsBottomToolbarShown.Value   = Settings.UIProperties.ShowBottomNavBar &&
+        //                             Settings.UIProperties.ShowInterface;
+        // vm.MainWindow.IsFullscreen.Value  = Settings.WindowProperties.Fullscreen;
+        // vm.MainWindow.BackgroundChoice.Value = Settings.UIProperties.BgColorChoice;
     }
     
     public static async Task ResetSettings(MainViewModel vm)
     {
-        vm.MainWindow.IsLoadingIndicatorShown.Value = true;
-
-        try
-        {
-            ResetDefaults();
-
-            ThemeManager.DetermineTheme(Application.Current, false);
-        
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-            {
-                TurnOffUsingTouchpad(vm);
-            }
-            else
-            {
-                TurnOffUsingTouchpad(vm);
-            }
-
-            if (vm.Gallery is not null)
-            {
-                vm.Gallery.GalleryItem.BottomGalleryItemHeight.Value = GalleryDefaults.DefaultBottomGalleryHeight;
-                vm.Gallery.GalleryItem.ExpandedGalleryItemHeight.Value = GalleryDefaults.DefaultFullGalleryHeight;
-            }
-            
-            if (string.IsNullOrWhiteSpace(Settings.Gallery.BottomGalleryStretchMode))
-            {
-                Settings.Gallery.BottomGalleryStretchMode = "UniformToFill";
-            }
-
-            if (string.IsNullOrWhiteSpace(Settings.Gallery.FullGalleryStretchMode))
-            {
-                Settings.Gallery.FullGalleryStretchMode = "UniformToFill";
-            }
-        
-            await TurnOffSubdirectories(vm);
-        
-            TurnOffSideBySide(vm);
-            TurnOffScroll(vm);
-            TurnOffCtrlZoom(vm);
-            TurnOffLooping(vm);
-        
-            await Dispatcher.UIThread.InvokeAsync(() =>
-            {
-                vm.PlatformService.StopTaskbarProgress();
-                if (NavigationManager.CanNavigate(vm))
-                {
-                    vm.PlatformService.SetTaskbarProgress((ulong)NavigationManager.GetCurrentIndex,
-                        (ulong)NavigationManager.GetCount);
-                }
-                WindowResizing.SetSize(vm);
-            });
-            
-            await SaveSettingsAsync();
-        }
-        finally
-        {
-            TitleManager.SetTitle(vm);
-            vm.MainWindow.IsLoadingIndicatorShown.Value = false;
-        }
+        // vm.MainWindow.IsLoadingIndicatorShown.Value = true;
+        //
+        // try
+        // {
+        //     ResetDefaults();
+        //
+        //     ThemeManager.DetermineTheme(Application.Current, false);
+        //
+        //     if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        //     {
+        //         TurnOffUsingTouchpad(vm);
+        //     }
+        //     else
+        //     {
+        //         TurnOffUsingTouchpad(vm);
+        //     }
+        //     
+        //     if (string.IsNullOrWhiteSpace(Settings.Gallery.BottomGalleryStretchMode))
+        //     {
+        //         Settings.Gallery.BottomGalleryStretchMode = "UniformToFill";
+        //     }
+        //
+        //     if (string.IsNullOrWhiteSpace(Settings.Gallery.FullGalleryStretchMode))
+        //     {
+        //         Settings.Gallery.FullGalleryStretchMode = "UniformToFill";
+        //     }
+        //
+        //     await TurnOffSubdirectories(vm);
+        //
+        //     TurnOffSideBySide(vm);
+        //     TurnOffScroll(vm);
+        //     TurnOffCtrlZoom(vm);
+        //     TurnOffLooping(vm);
+        //
+        //     await Dispatcher.UIThread.InvokeAsync(() =>
+        //     {
+        //         vm.PlatformService.StopTaskbarProgress();
+        //         if (NavigationManager.CanNavigate(vm))
+        //         {
+        //             vm.PlatformService.SetTaskbarProgress((ulong)NavigationManager.GetCurrentIndex,
+        //                 (ulong)NavigationManager.GetCount);
+        //         }
+        //         WindowResizing.SetSize(vm);
+        //     });
+        //     
+        //     await SaveSettingsAsync();
+        // }
+        // finally
+        // {
+        //     TitleManager.SetTitle(vm);
+        //     vm.MainWindow.IsLoadingIndicatorShown.Value = false;
+        // }
     }
 
     public static async Task ToggleUsingTouchpad(MainViewModel vm)
@@ -425,57 +379,57 @@ public static class SettingsUpdater
     
     public static void TurnOffScroll(MainViewModel vm)
     {
-        vm.MainWindow.ToggleScrollBarVisibility.Value = ScrollBarVisibility.Disabled;
-        vm.Translation.IsScrolling.Value = TranslationManager.Translation.ScrollingDisabled;
-        // vm.GlobalSettings.IsScrollingEnabled.Value = false;
-        Settings.Zoom.ScrollEnabled = false;
-        vm.MainWindow.RightControlOffSetMargin.Value = new Thickness(0);
+        // vm.MainWindow.ToggleScrollBarVisibility.Value = ScrollBarVisibility.Disabled;
+        // vm.Translation.IsScrolling.Value = TranslationManager.Translation.ScrollingDisabled;
+        // // vm.GlobalSettings.IsScrollingEnabled.Value = false;
+        // Settings.Zoom.ScrollEnabled = false;
+        // vm.MainWindow.RightControlOffSetMargin.Value = new Thickness(0);
     }
     
     public static void TurnOnScroll(MainViewModel vm)
     {
-        vm.MainWindow.ToggleScrollBarVisibility.Value = ScrollBarVisibility.Visible;
-        vm.Translation.IsScrolling.Value = TranslationManager.Translation.ScrollingEnabled;
-        // vm.GlobalSettings.IsScrollingEnabled.Value = true;
-        Settings.Zoom.ScrollEnabled = true;
-        vm.MainWindow.RightControlOffSetMargin.Value = new Thickness(0,0,30,0);
+        // vm.MainWindow.ToggleScrollBarVisibility.Value = ScrollBarVisibility.Visible;
+        // vm.Translation.IsScrolling.Value = TranslationManager.Translation.ScrollingEnabled;
+        // // vm.GlobalSettings.IsScrollingEnabled.Value = true;
+        // Settings.Zoom.ScrollEnabled = true;
+        // vm.MainWindow.RightControlOffSetMargin.Value = new Thickness(0,0,30,0);
     }
     
     public static async Task ToggleCtrlZoom(MainViewModel vm)
     {
-        if (vm is null)
-        {
-            return;
-        }
-        
-        Settings.Zoom.CtrlZoom = !Settings.Zoom.CtrlZoom;
-        vm.Translation.IsCtrlToZoom.Value = Settings.Zoom.CtrlZoom
-            ? TranslationManager.Translation.CtrlToZoom
-            : TranslationManager.Translation.ScrollToZoom;
-        
-        // Set source for ChangeCtrlZoomImage
-        if (!Application.Current.TryGetResource("ScanEyeImage", Application.Current.RequestedThemeVariant, out var scanEyeImage ))
-        {
-            return;
-        }
-        if (!Application.Current.TryGetResource("LeftRightArrowsImage", Application.Current.RequestedThemeVariant, out var leftRightArrowsImage ))
-        {
-            return;
-        }
-        var isNavigatingWithCtrl = Settings.Zoom.CtrlZoom;
-        vm.MainWindow.ChangeCtrlZoomImage.Value = isNavigatingWithCtrl ? leftRightArrowsImage as DrawingImage : scanEyeImage as DrawingImage;
-        await SaveSettingsAsync().ConfigureAwait(false);
+        // if (vm is null)
+        // {
+        //     return;
+        // }
+        //
+        // Settings.Zoom.CtrlZoom = !Settings.Zoom.CtrlZoom;
+        // vm.Translation.IsCtrlToZoom.Value = Settings.Zoom.CtrlZoom
+        //     ? TranslationManager.Translation.CtrlToZoom
+        //     : TranslationManager.Translation.ScrollToZoom;
+        //
+        // // Set source for ChangeCtrlZoomImage
+        // if (!Application.Current.TryGetResource("ScanEyeImage", Application.Current.RequestedThemeVariant, out var scanEyeImage ))
+        // {
+        //     return;
+        // }
+        // if (!Application.Current.TryGetResource("LeftRightArrowsImage", Application.Current.RequestedThemeVariant, out var leftRightArrowsImage ))
+        // {
+        //     return;
+        // }
+        // var isNavigatingWithCtrl = Settings.Zoom.CtrlZoom;
+        // vm.MainWindow.ChangeCtrlZoomImage.Value = isNavigatingWithCtrl ? leftRightArrowsImage as DrawingImage : scanEyeImage as DrawingImage;
+        // await SaveSettingsAsync().ConfigureAwait(false);
     }
     
     public static void TurnOffCtrlZoom(MainViewModel vm)
     {
-        Settings.Zoom.CtrlZoom = false;
-        vm.Translation.IsCtrlToZoom.Value = TranslationManager.Translation.ScrollToZoom;
-        if (!Application.Current.TryGetResource("ScanEyeImage", Application.Current.RequestedThemeVariant, out var scanEyeImage ))
-        {
-            return;
-        }
-        vm.MainWindow.ChangeCtrlZoomImage.Value = scanEyeImage as DrawingImage;
+        // Settings.Zoom.CtrlZoom = false;
+        // vm.Translation.IsCtrlToZoom.Value = TranslationManager.Translation.ScrollToZoom;
+        // if (!Application.Current.TryGetResource("ScanEyeImage", Application.Current.RequestedThemeVariant, out var scanEyeImage ))
+        // {
+        //     return;
+        // }
+        // vm.MainWindow.ChangeCtrlZoomImage.Value = scanEyeImage as DrawingImage;
     }
     
     public static async Task ToggleLooping(MainViewModel vm)

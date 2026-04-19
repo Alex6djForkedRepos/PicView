@@ -33,63 +33,63 @@ public static class QuickLoad
     /// <param name="continueFromLeftOff">A boolean indicating whether to continue loading from the last session folder structure.</param>
     public static async ValueTask QuickLoadAsync(MainViewModel vm, string file, Window window, bool continueFromLeftOff)
     {
-        var fileInfo = new FileInfo(file);
-        if (!fileInfo.Exists) // If not file, try to load if URL, base64 or directory
-        {
-            vm.MainWindow.IsLoadingIndicatorShown.Value = true;
-            Dispatcher.UIThread.Invoke(window.Show, DispatcherPriority.Send);
-            await NavigationManager.LoadPicFromStringAsync(file, vm).ConfigureAwait(false);
-            if (Settings.WindowProperties.AutoFit)
-            {
-                await Dispatcher.UIThread.InvokeAsync(() => { WindowFunctions.CenterWindowOnScreen(); },
-                    DispatcherPriority.Send);
-            }
-            return;
-        }
-
-        if (file.IsArchive()) // Handle if file exist and is an archive
-        {
-            vm.MainWindow.IsLoadingIndicatorShown.Value = true;
-            Dispatcher.UIThread.Invoke(window.Show, DispatcherPriority.Send);
-            await NavigationManager.LoadPicFromArchiveAsync(file, vm).ConfigureAwait(false);
-            if (Settings.WindowProperties.AutoFit)
-            {
-                await Dispatcher.UIThread.InvokeAsync(() => { WindowFunctions.CenterWindowOnScreen(); },
-                    DispatcherPriority.Send);
-            }
-            return;
-        }
-
-        var magickImage = new MagickImage();
-        try
-        {
-            magickImage.Ping(fileInfo);
-        }
-        catch (Exception e)
-        {
-            // Pinging can lead to crashes when the file cannot be read. 
-            // Just catching the exception here means it will still load correctly regardless
-            DebugHelper.LogDebug(nameof(QuickLoad), nameof(QuickLoadAsync), e);
-        }
-        vm.PicViewer.FileInfo.Value = fileInfo;
-        var isLargeImage = magickImage.Width * magickImage.Height > 5000000; // ~5 megapixels threshold
-        if (isLargeImage || Settings.ImageScaling.ShowImageSideBySide)
-        {
-            // Don't show loading indicator if image is too small
-            vm.MainWindow.IsLoadingIndicatorShown.Value = true;
-        }
-
-        if (Settings.ImageScaling.ShowImageSideBySide)
-        {
-            await SideBySideLoadingAsync(vm, fileInfo, magickImage, window, continueFromLeftOff).ConfigureAwait(false);
-        }
-        else
-        {
-            await SingeImageLoadingAsync(vm, fileInfo, magickImage, window, continueFromLeftOff).ConfigureAwait(false);
-        }
-
-        vm.PicViewer.GetIndex.Value = NavigationManager.GetNonZeroIndex;
-        vm.PicViewer.Index.Value = NavigationManager.GetCurrentIndex;
+        // var fileInfo = new FileInfo(file);
+        // if (!fileInfo.Exists) // If not file, try to load if URL, base64 or directory
+        // {
+        //     vm.MainWindow.IsLoadingIndicatorShown.Value = true;
+        //     Dispatcher.UIThread.Invoke(window.Show, DispatcherPriority.Send);
+        //     await NavigationManager.LoadPicFromStringAsync(file, vm).ConfigureAwait(false);
+        //     if (Settings.WindowProperties.AutoFit)
+        //     {
+        //         await Dispatcher.UIThread.InvokeAsync(() => { WindowFunctions.CenterWindowOnScreen(); },
+        //             DispatcherPriority.Send);
+        //     }
+        //     return;
+        // }
+        //
+        // if (file.IsArchive()) // Handle if file exist and is an archive
+        // {
+        //     vm.MainWindow.IsLoadingIndicatorShown.Value = true;
+        //     Dispatcher.UIThread.Invoke(window.Show, DispatcherPriority.Send);
+        //     await NavigationManager.LoadPicFromArchiveAsync(file, vm).ConfigureAwait(false);
+        //     if (Settings.WindowProperties.AutoFit)
+        //     {
+        //         await Dispatcher.UIThread.InvokeAsync(() => { WindowFunctions.CenterWindowOnScreen(); },
+        //             DispatcherPriority.Send);
+        //     }
+        //     return;
+        // }
+        //
+        // var magickImage = new MagickImage();
+        // try
+        // {
+        //     magickImage.Ping(fileInfo);
+        // }
+        // catch (Exception e)
+        // {
+        //     // Pinging can lead to crashes when the file cannot be read. 
+        //     // Just catching the exception here means it will still load correctly regardless
+        //     DebugHelper.LogDebug(nameof(QuickLoad), nameof(QuickLoadAsync), e);
+        // }
+        // vm.PicViewer.FileInfo.Value = fileInfo;
+        // var isLargeImage = magickImage.Width * magickImage.Height > 5000000; // ~5 megapixels threshold
+        // if (isLargeImage || Settings.ImageScaling.ShowImageSideBySide)
+        // {
+        //     // Don't show loading indicator if image is too small
+        //     vm.MainWindow.IsLoadingIndicatorShown.Value = true;
+        // }
+        //
+        // if (Settings.ImageScaling.ShowImageSideBySide)
+        // {
+        //     await SideBySideLoadingAsync(vm, fileInfo, magickImage, window, continueFromLeftOff).ConfigureAwait(false);
+        // }
+        // else
+        // {
+        //     await SingeImageLoadingAsync(vm, fileInfo, magickImage, window, continueFromLeftOff).ConfigureAwait(false);
+        // }
+        //
+        // vm.PicViewer.GetIndex.Value = NavigationManager.GetNonZeroIndex;
+        // vm.PicViewer.Index.Value = NavigationManager.GetCurrentIndex;
     }
 
     /// <summary>
@@ -181,7 +181,7 @@ public static class QuickLoad
         var imageModel = await GetImageModel.GetImageModelAsync(fileInfo, magickImage).ConfigureAwait(false);
         SetPicViewerValues(vm, imageModel, fileInfo);
 
-        vm.MainWindow.IsLoadingIndicatorShown.Value = false;
+        // vm.MainWindow.IsLoadingIndicatorShown.Value = false;
         if (!Settings.WindowProperties.AutoFit)
         {
             await Dispatcher.UIThread.InvokeAsync(
@@ -236,7 +236,7 @@ public static class QuickLoad
     {
         if (imageModel.ImageType is ImageType.AnimatedGif or ImageType.AnimatedWebp)
         {
-            vm.ImageViewer.MainImage.InitialAnimatedSource = fileInfo.FullName;
+            // vm.ImageViewer.MainImage.InitialAnimatedSource = fileInfo.FullName;
         }
 
         vm.PicViewer.ImageSource.Value = imageModel.Image;
@@ -257,7 +257,7 @@ public static class QuickLoad
     private static async Task StartPreloaderAndGalleryAsync(MainViewModel vm, ImageModel imageModel,
         FileInfo fileInfo)
     {
-        vm.MainWindow.IsLoadingIndicatorShown.Value = false;
+        // vm.MainWindow.IsLoadingIndicatorShown.Value = false;
 
         // Add recent files, except when browsing archive
         if (string.IsNullOrWhiteSpace(TempFileHelper.TempFilePath))
@@ -284,21 +284,21 @@ public static class QuickLoad
         if (Settings.Gallery.IsGalleryDocked)
         {
             bool loadGallery;
-            if (!vm.MainWindow.IsUIShown.CurrentValue)
-            {
-                loadGallery = Settings.Gallery.ShowBottomGalleryInHiddenUI;
-            }
-            else
-            {
-                loadGallery = true;
-            }
-
-            if (loadGallery)
-            {
-                vm.Gallery.GalleryMode.Value = GalleryMode.BottomNoAnimation;
-
-                await GalleryLoad.LoadGallery(vm, fileInfo.DirectoryName);
-            }
+            // if (!vm.MainWindow.IsUIShown.CurrentValue)
+            // {
+            //     loadGallery = Settings.Gallery.ShowBottomGalleryInHiddenUI;
+            // }
+            // else
+            // {
+            //     loadGallery = true;
+            // }
+            //
+            // if (loadGallery)
+            // {
+            //     // vm.Gallery.GalleryMode.Value = GalleryMode.BottomNoAnimation;
+            //     //
+            //     // await GalleryLoad.LoadGallery(vm, fileInfo.DirectoryName);
+            // }
         }
     }
 }

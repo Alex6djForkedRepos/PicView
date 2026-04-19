@@ -23,7 +23,7 @@ public static class ImageOptimizer
 
         try
         {
-            vm.MainWindow.IsLoadingIndicatorShown.Value = true;
+            // vm.MainWindow.IsLoadingIndicatorShown.Value = true;
             await Task.Run(() =>
             {
                 try
@@ -44,7 +44,7 @@ public static class ImageOptimizer
         finally
         {
             TitleManager.SetTitle(vm);
-            vm.MainWindow.IsLoadingIndicatorShown.Value = false;
+            // vm.MainWindow.IsLoadingIndicatorShown.Value = false;
         }
     }
 }

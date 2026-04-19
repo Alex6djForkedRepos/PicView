@@ -108,22 +108,22 @@
             <!-- </ToggleButton> -->
 
             <!--  Toggle looping  -->
-            <ToggleButton
-                Background="{DynamicResource MenuButtonColor}"
-                Classes="ButtonBorder altHover"
-                Command="{CompiledBinding Tools.ToggleLoopingCommand}"
-                Height="42"
-                IsChecked="{CompiledBinding GlobalSettings.IsLooping.Value}"
-                Margin="6,0,4,8"
-                ToolTip.Tip="{CompiledBinding Translation.ToggleScroll.Value,
-                                              Mode=OneWay}"
-                Width="175">
-                <TextBlock
-                    Classes="txt"
-                    MaxWidth="155"
-                    Text="{CompiledBinding Translation.IsLooping.Value,
-                                           Mode=OneWay}" />
-            </ToggleButton>
+            <!--  <ToggleButton  -->
+            <!--  Background="{DynamicResource MenuButtonColor}"  -->
+            <!--  Classes="ButtonBorder altHover"  -->
+            <!--  Command="{CompiledBinding Tools.ToggleLoopingCommand}"  -->
+            <!--  Height="42"  -->
+            <!--  IsChecked="{CompiledBinding GlobalSettings.IsLooping.Value}"  -->
+            <!--  Margin="6,0,4,8"  -->
+            <!--  ToolTip.Tip="{CompiledBinding Translation.ToggleScroll.Value,  -->
+            <!--  Mode=OneWay}"  -->
+            <!--  Width="175">  -->
+            <!--  <TextBlock  -->
+            <!--  Classes="txt"  -->
+            <!--  MaxWidth="155"  -->
+            <!--  Text="{CompiledBinding Translation.IsLooping.Value,  -->
+            <!--  Mode=OneWay}" />  -->
+            <!-- </ToggleButton> -->
 
             <!--  Toggle auto fit  -->
             <!--  <ToggleButton  -->
@@ -163,23 +163,23 @@
             <!-- </ToggleButton> -->
 
             <!--  Toggle subdirectories  -->
-            <ToggleButton
-                Background="{DynamicResource MenuButtonColor}"
-                Classes="ButtonBorder altHover"
-                Command="{CompiledBinding Tools.ToggleSubdirectoriesCommand}"
-                Height="42"
-                IsChecked="{CompiledBinding GlobalSettings.IsIncludingSubdirectories.Value,
-                                            Mode=TwoWay}"
-                Margin="6,0,4,8"
-                ToolTip.Tip="{CompiledBinding Translation.SearchSubdirectory.Value,
-                                              Mode=OneWay}"
-                Width="175">
-                <TextBlock
-                    Classes="txt"
-                    MaxWidth="145"
-                    Text="{CompiledBinding Translation.SearchSubdirectory.Value,
-                                           Mode=OneWay}" />
-            </ToggleButton>
+            <!--  <ToggleButton  -->
+            <!--  Background="{DynamicResource MenuButtonColor}"  -->
+            <!--  Classes="ButtonBorder altHover"  -->
+            <!--  Command="{CompiledBinding Tools.ToggleSubdirectoriesCommand}"  -->
+            <!--  Height="42"  -->
+            <!--  IsChecked="{CompiledBinding GlobalSettings.IsIncludingSubdirectories.Value,  -->
+            <!--  Mode=TwoWay}"  -->
+            <!--  Margin="6,0,4,8"  -->
+            <!--  ToolTip.Tip="{CompiledBinding Translation.SearchSubdirectory.Value,  -->
+            <!--  Mode=OneWay}"  -->
+            <!--  Width="175">  -->
+            <!--  <TextBlock  -->
+            <!--  Classes="txt"  -->
+            <!--  MaxWidth="145"  -->
+            <!--  Text="{CompiledBinding Translation.SearchSubdirectory.Value,  -->
+            <!--  Mode=OneWay}" />  -->
+            <!-- </ToggleButton> -->
         </WrapPanel>
     </StackPanel>
 </customControls:AnimatedPopUp>

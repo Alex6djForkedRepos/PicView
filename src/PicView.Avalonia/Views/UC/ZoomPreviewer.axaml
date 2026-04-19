@@ -1,79 +1,8 @@
 ﻿<UserControl
     Focusable="False"
-    IsVisible="{CompiledBinding MainWindow.IsZoomPreviewerVisible.Value}"
     x:Class="PicView.Avalonia.Views.UC.ZoomPreviewer"
     x:DataType="vm:MainViewModel"
     xmlns="https://github.com/avaloniaui"
     xmlns:customControls="clr-namespace:PicView.Avalonia.CustomControls"
     xmlns:vm="clr-namespace:PicView.Avalonia.ViewModels"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <Border
-        Background="{DynamicResource MainBackgroundColor}"
-        BorderBrush="{DynamicResource MainBorderColor}"
-        BorderThickness="1"
-        CornerRadius="6,6,1,1"
-        x:Name="MainBorder">
-        <StackPanel>
-            <Border
-                Background="{DynamicResource MainBackgroundColor}"
-                BorderBrush="{DynamicResource MainBorderColor}"
-                BorderThickness="0,0,1,1"
-                CornerRadius="6,6,1,1">
-                <Grid ColumnDefinitions="*,*">
-                    <customControls:IconButton
-                        Classes="altHover mainBtn"
-                        Command="{CompiledBinding Tools.ResetZoomCommand}"
-                        CornerRadius="6,0,0,0"
-                        Data="{StaticResource ReloadGeometry}"
-                        Foreground="{DynamicResource MainTextColor}"
-                        Grid.Column="0"
-                        Height="22"
-                        IconHeight="11"
-                        IconWidth="11"
-                        Padding="1"
-                        ToolTip.Tip="{CompiledBinding Translation.ResetZoom.Value}"
-                        x:Name="ResetZoomButton" />
-
-                    <customControls:IconButton
-                        Classes="altHover mainBtn"
-                        CornerRadius="0,6,0,0"
-                        Data="{StaticResource CloseGeometry}"
-                        Foreground="{DynamicResource MainTextColor}"
-                        Grid.Column="1"
-                        Height="22"
-                        IconHeight="10"
-                        IconWidth="10"
-                        Padding="1"
-                        ToolTip.Tip="{CompiledBinding Translation.Close.Value}"
-                        x:Name="CloseButton" />
-                </Grid>
-            </Border>
-            <LayoutTransformControl>
-                <LayoutTransformControl.LayoutTransform>
-                    <RotateTransform Angle="{CompiledBinding PicViewer.RotationAngle.Value}" />
-                </LayoutTransformControl.LayoutTransform>
-                <Panel>
-                    <customControls:PicBox
-                        ImageType="{CompiledBinding PicViewer.ImageType.Value,
-                                                    Mode=OneWay}"
-                        Source="{CompiledBinding PicViewer.ImageSource.Value}"
-                        x:Name="OverlayImage">
-                        <customControls:PicBox.RenderTransform>
-                            <ScaleTransform ScaleX="{CompiledBinding PicViewer.ScaleX.Value}" />
-                        </customControls:PicBox.RenderTransform>
-                    </customControls:PicBox>
-                    <Canvas x:Name="OverlayCanvas">
-                        <Rectangle
-                            Fill="Transparent"
-                            Stroke="{DynamicResource AccentColor}"
-                            StrokeThickness="2"
-                            x:Name="ViewportBorder" />
-                        <Canvas.RenderTransform>
-                            <ScaleTransform ScaleX="{CompiledBinding PicViewer.ScaleX.Value}" />
-                        </Canvas.RenderTransform>
-                    </Canvas>
-                </Panel>
-            </LayoutTransformControl>
-        </StackPanel>
-    </Border>
-</UserControl>
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" />

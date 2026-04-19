@@ -212,7 +212,7 @@ public partial class EffectsView : UserControl
                 if (state.Config is null)
                     return (Magick: (MagickImage?)null, state.Vm);
 
-                state.Vm.MainWindow.IsLoadingIndicatorShown.Value = true;
+                // state.Vm.MainWindow.IsLoadingIndicatorShown.Value = true;
 
                 var magick = await ImageEffectsHelper.ApplyEffects(
                     state.Vm.PicViewer.FileInfo.CurrentValue,
@@ -228,7 +228,7 @@ public partial class EffectsView : UserControl
                 if (magick is not null)
                     viewModel.PicViewer.ImageSource.Value = magick.ToWriteableBitmap();
 
-                viewModel.MainWindow.IsLoadingIndicatorShown.Value = false;
+                // viewModel.MainWindow.IsLoadingIndicatorShown.Value = false;
             })
             .AddTo(_disposables);
     }
@@ -547,8 +547,8 @@ public partial class EffectsView : UserControl
     {
         _disposables.Dispose();
 
-        if (DataContext is MainViewModel vm)
-            vm.MainWindow.IsLoadingIndicatorShown.Value = false;
+        // if (DataContext is MainViewModel vm)
+        //     vm.MainWindow.IsLoadingIndicatorShown.Value = false;
     }
 
     private static string BuildEffectDescription(ImageEffectConfig c)

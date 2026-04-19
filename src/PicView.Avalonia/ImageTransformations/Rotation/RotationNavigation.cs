@@ -6,6 +6,7 @@ using PicView.Core.Gallery;
 
 namespace PicView.Avalonia.ImageTransformations.Rotation;
 
+// TODO deprecated, delete
 public static class RotationNavigation
 {
     public static async Task RotateRight(MainViewModel? vm)
@@ -20,14 +21,14 @@ public static class RotationNavigation
             return;
         }
 
-        await Dispatcher.UIThread.InvokeAsync(() => { vm.ImageViewer.Rotate(false); });
+        // await Dispatcher.UIThread.InvokeAsync(() => { vm.ImageViewer.Rotate(false); });
     }
 
     public static async Task RotateTo(MainViewModel? vm, int angle)
     {
-        await Dispatcher.UIThread.InvokeAsync(() => { vm.ImageViewer.Rotate(angle); });
-        vm.PicViewer.RotationAngle.Value = angle;
-        await WindowResizing.SetSizeAsync(vm);
+        // await Dispatcher.UIThread.InvokeAsync(() => { vm.ImageViewer.Rotate(angle); });
+        // vm.PicViewer.RotationAngle.Value = angle;
+        // await WindowResizing.SetSizeAsync(vm);
     }
 
 
@@ -43,12 +44,12 @@ public static class RotationNavigation
             return;
         }
 
-        await Dispatcher.UIThread.InvokeAsync(() => { vm.ImageViewer.Rotate(true); });
+        // await Dispatcher.UIThread.InvokeAsync(() => { vm.ImageViewer.Rotate(true); });
     }
 
     public static void Flip(MainViewModel vm)
     {
-        Dispatcher.UIThread.Invoke(() => { vm.ImageViewer.Flip(true); });
+        // Dispatcher.UIThread.Invoke(() => { vm.ImageViewer.Flip(true); });
 
         if (vm.PicViewer.ScaleX.CurrentValue == 1)
         {

@@ -141,12 +141,12 @@ public static class StartUpHelper
         UIHelper.SetControls(window);
         Task.Run(() =>
         {
-            FileHistoryManager.Initialize();
-            HandleWindowControlSettings(vm, desktop);
-            SettingsUpdater.ValidateGallerySettings(vm, settingsExists);
-
-            vm.MainWindow.LayoutButtonSubscription(vm);
-            vm.Gallery.GalleryItemSizeUpdateSubscription(vm);
+            // FileHistoryManager.Initialize();
+            // HandleWindowControlSettings(vm, desktop);
+            // SettingsUpdater.ValidateGallerySettings(vm, settingsExists);
+            //
+            // vm.MainWindow.LayoutButtonSubscription(vm);
+            // vm.Gallery.GalleryItemSizeUpdateSubscription(vm);
         });
 
         if (!Settings.WindowProperties.AutoFit)
@@ -212,7 +212,7 @@ public static class StartUpHelper
         }
         else
         {
-            vm.MainWindow.ToggleScrollBarVisibility.Value = ScrollBarVisibility.Disabled;
+            // vm.MainWindow.ToggleScrollBarVisibility.Value = ScrollBarVisibility.Disabled;
             // vm.GlobalSettings.IsScrollingEnabled.Value = false;
         }
 
@@ -228,7 +228,7 @@ public static class StartUpHelper
 
         if (args.Length > 1)
         {
-            vm.MainWindow.CurrentView.Value = vm.ImageViewer;
+            // vm.MainWindow.CurrentView.Value = vm.ImageViewer;
             Task.Run(() => QuickLoad.QuickLoadAsync(vm, args[1], window, false));
         }
         else
@@ -243,7 +243,7 @@ public static class StartUpHelper
 
         if (arg is not null)
         {
-            vm.MainWindow.CurrentView.Value = vm.ImageViewer;
+            // vm.MainWindow.CurrentView.Value = vm.ImageViewer;
             Task.Run(() => QuickLoad.QuickLoadAsync(vm, arg,  window,false));
         }
         else
@@ -262,7 +262,7 @@ public static class StartUpHelper
             }
             else
             {
-                vm.MainWindow.CurrentView.Value = vm.ImageViewer;
+                // vm.MainWindow.CurrentView.Value = vm.ImageViewer;
                 Task.Run(() => QuickLoad.QuickLoadAsync(vm, Settings.StartUp.LastFile, window, true));
             }
         }
@@ -292,37 +292,37 @@ public static class StartUpHelper
 
     private static void HandleNormalWindow(MainViewModel vm, Window window)
     {
-        vm.MainWindow.CanResize.Value = true;
-        // vm.GlobalSettings.IsAutoFit.Value = false;
-        if (Settings.UIProperties.ShowInterface)
-        {
-            vm.MainWindow.IsTopToolbarShown.Value = true;
-            vm.MainWindow.IsBottomToolbarShown.Value = Settings.UIProperties.ShowBottomNavBar;
-        }
-
-        WindowFunctions.InitializeWindowSizeAndPosition(window);
+        // vm.MainWindow.CanResize.Value = true;
+        // // vm.GlobalSettings.IsAutoFit.Value = false;
+        // if (Settings.UIProperties.ShowInterface)
+        // {
+        //     vm.MainWindow.IsTopToolbarShown.Value = true;
+        //     vm.MainWindow.IsBottomToolbarShown.Value = Settings.UIProperties.ShowBottomNavBar;
+        // }
+        //
+        // WindowFunctions.InitializeWindowSizeAndPosition(window);
     }
 
     private static void HandleAutoFit(MainViewModel vm, Window window)
     {
-        vm.MainWindow.SizeToContent.Value = SizeToContent.WidthAndHeight;
-        vm.MainWindow.CanResize.Value = false;
-        // vm.GlobalSettings.IsAutoFit.Value = true;
-        if (Settings.UIProperties.ShowInterface)
-        {
-            vm.MainWindow.IsTopToolbarShown.Value = true;
-            vm.MainWindow.IsBottomToolbarShown.Value = Settings.UIProperties.ShowBottomNavBar;
-        }
-
-        if (Settings.WindowProperties.Fullscreen || Settings.WindowProperties.Maximized)
-        {
-            window.WindowStartupLocation = WindowStartupLocation.Manual;
-        }
-        else
-        {
-            window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-        }
-        
+        // vm.MainWindow.SizeToContent.Value = SizeToContent.WidthAndHeight;
+        // vm.MainWindow.CanResize.Value = false;
+        // // vm.GlobalSettings.IsAutoFit.Value = true;
+        // if (Settings.UIProperties.ShowInterface)
+        // {
+        //     vm.MainWindow.IsTopToolbarShown.Value = true;
+        //     vm.MainWindow.IsBottomToolbarShown.Value = Settings.UIProperties.ShowBottomNavBar;
+        // }
+        //
+        // if (Settings.WindowProperties.Fullscreen || Settings.WindowProperties.Maximized)
+        // {
+        //     window.WindowStartupLocation = WindowStartupLocation.Manual;
+        // }
+        // else
+        // {
+        //     window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+        // }
+        //
     }
 
     private static void SetWindowEventHandlers(Window w)

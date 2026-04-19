@@ -34,7 +34,7 @@ public static class ClipboardFileOperations
         
         try
         {
-            vm.MainWindow.IsLoadingIndicatorShown.Value = true;
+            // vm.MainWindow.IsLoadingIndicatorShown.Value = true;
             
             if (path == vm.PicViewer.FileInfo?.CurrentValue.FullName)
             {
@@ -52,7 +52,7 @@ public static class ClipboardFileOperations
         }
         finally
         {
-            vm.MainWindow.IsLoadingIndicatorShown.Value = false;
+            // vm.MainWindow.IsLoadingIndicatorShown.Value = false;
         }
     }
 

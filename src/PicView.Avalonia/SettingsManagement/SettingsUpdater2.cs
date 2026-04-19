@@ -387,39 +387,39 @@ public static class SettingsUpdater2
     
     public static async Task ToggleCtrlZoom(MainViewModel vm)
     {
-        if (vm is null)
-        {
-            return;
-        }
-        
-        Settings.Zoom.CtrlZoom = !Settings.Zoom.CtrlZoom;
-        vm.Translation.IsCtrlToZoom.Value = Settings.Zoom.CtrlZoom
-            ? TranslationManager.Translation.CtrlToZoom
-            : TranslationManager.Translation.ScrollToZoom;
-        
-        // Set source for ChangeCtrlZoomImage
-        if (!Application.Current.TryGetResource("ScanEyeImage", Application.Current.RequestedThemeVariant, out var scanEyeImage ))
-        {
-            return;
-        }
-        if (!Application.Current.TryGetResource("LeftRightArrowsImage", Application.Current.RequestedThemeVariant, out var leftRightArrowsImage ))
-        {
-            return;
-        }
-        var isNavigatingWithCtrl = Settings.Zoom.CtrlZoom;
-        vm.MainWindow.ChangeCtrlZoomImage.Value = isNavigatingWithCtrl ? leftRightArrowsImage as DrawingImage : scanEyeImage as DrawingImage;
-        await SaveSettingsAsync().ConfigureAwait(false);
+        // if (vm is null)
+        // {
+        //     return;
+        // }
+        //
+        // Settings.Zoom.CtrlZoom = !Settings.Zoom.CtrlZoom;
+        // vm.Translation.IsCtrlToZoom.Value = Settings.Zoom.CtrlZoom
+        //     ? TranslationManager.Translation.CtrlToZoom
+        //     : TranslationManager.Translation.ScrollToZoom;
+        //
+        // // Set source for ChangeCtrlZoomImage
+        // if (!Application.Current.TryGetResource("ScanEyeImage", Application.Current.RequestedThemeVariant, out var scanEyeImage ))
+        // {
+        //     return;
+        // }
+        // if (!Application.Current.TryGetResource("LeftRightArrowsImage", Application.Current.RequestedThemeVariant, out var leftRightArrowsImage ))
+        // {
+        //     return;
+        // }
+        // var isNavigatingWithCtrl = Settings.Zoom.CtrlZoom;
+        // vm.MainWindow.ChangeCtrlZoomImage.Value = isNavigatingWithCtrl ? leftRightArrowsImage as DrawingImage : scanEyeImage as DrawingImage;
+        // await SaveSettingsAsync().ConfigureAwait(false);
     }
     
     public static void TurnOffCtrlZoom(MainViewModel vm)
     {
-        Settings.Zoom.CtrlZoom = false;
-        vm.Translation.IsCtrlToZoom.Value = TranslationManager.Translation.ScrollToZoom;
-        if (!Application.Current.TryGetResource("ScanEyeImage", Application.Current.RequestedThemeVariant, out var scanEyeImage ))
-        {
-            return;
-        }
-        vm.MainWindow.ChangeCtrlZoomImage.Value = scanEyeImage as DrawingImage;
+        // Settings.Zoom.CtrlZoom = false;
+        // vm.Translation.IsCtrlToZoom.Value = TranslationManager.Translation.ScrollToZoom;
+        // if (!Application.Current.TryGetResource("ScanEyeImage", Application.Current.RequestedThemeVariant, out var scanEyeImage ))
+        // {
+        //     return;
+        // }
+        // vm.MainWindow.ChangeCtrlZoomImage.Value = scanEyeImage as DrawingImage;
     }
     
     public static async Task ToggleLooping(MainViewModel vm)

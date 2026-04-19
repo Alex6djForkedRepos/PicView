@@ -20,9 +20,9 @@ public class CropResizeHandler(CropControl control)
             return;
         }
 
-        _resizeStart = e.GetPosition(control.RootCanvas);
-        _originalRect = new Rect(Canvas.GetLeft(control.MainRectangle), Canvas.GetTop(control.MainRectangle), vm.Crop.SelectionWidth.CurrentValue,
-            vm.Crop.SelectionHeight.CurrentValue);
+        // _resizeStart = e.GetPosition(control.RootCanvas);
+        // _originalRect = new Rect(Canvas.GetLeft(control.MainRectangle), Canvas.GetTop(control.MainRectangle), vm.Crop.SelectionWidth.CurrentValue,
+        //     vm.Crop.SelectionHeight.CurrentValue);
         _isResizing = true;
     }
 
@@ -33,7 +33,7 @@ public class CropResizeHandler(CropControl control)
             return;
         }
 
-        CropResizer.Resize(control, e, _resizeStart, _originalRect, vm.Crop, mode);
+        // CropResizer.Resize(control, e, _resizeStart, _originalRect, vm.Crop, mode);
     }
 
     public void OnResizeEnd(object? sender, PointerReleasedEventArgs e)

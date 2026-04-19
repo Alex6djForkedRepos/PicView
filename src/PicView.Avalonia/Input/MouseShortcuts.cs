@@ -36,10 +36,10 @@ public static class MouseShortcuts
 
         // Don't handle mouse wheel if the view is not the image viewer
         // or a dialog is opened
-        if (vm.MainWindow.CurrentView.Value != vm.ImageViewer || DialogManager.IsDialogOpen)
-        {
-            return;
-        }
+        // if (vm.MainWindow.CurrentView.Value != vm.ImageViewer || DialogManager.IsDialogOpen)
+        // {
+        //     return;
+        // }
         
         e.Handled = true;
 

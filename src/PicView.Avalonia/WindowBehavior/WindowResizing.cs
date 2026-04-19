@@ -139,41 +139,40 @@ public static class WindowResizing
 
     public static void SetSize(ImageSize size, MainViewModel vm)
     {
-        vm.MainWindow.TitleMaxWidth.Value = size.TitleMaxWidth;
-        vm.PicViewer.ImageWidth.Value = size.Width;
-        vm.PicViewer.SecondaryImageWidth.Value = size.SecondaryWidth;
-        vm.PicViewer.ImageHeight.Value = size.Height;
-
-        vm.PicViewer.ScrollViewerWidth.Value = size.ScrollViewerWidth;
-        vm.PicViewer.ScrollViewerHeight.Value = size.ScrollViewerHeight;
-
-        vm.PicViewer.AspectRatio.Value = size.AspectRatio;
-
-        if (vm.Gallery is not { } gallery)
-        {
-            return;
-        }
-
-        gallery.GalleryMargin.Value = new Thickness(0, 0, 0, size.Margin);
-        if (Settings.WindowProperties.AutoFit)
-        {
-            if (Settings.WindowProperties.Fullscreen ||
-                Settings.WindowProperties.Maximized)
-            {
-                vm.PicViewer.GalleryWidth.Value = double.NaN;
-            }
-            else
-            {
-                var scrollbarSize = Settings.Zoom.ScrollEnabled ? SizeDefaults.ScrollbarSize : 0;
-                vm.PicViewer.GalleryWidth.Value = vm.PicViewer.RotationAngle.CurrentValue is 90 or 270
-                    ? Math.Max(size.Height + scrollbarSize, SizeDefaults.WindowMinSize + scrollbarSize)
-                    : Math.Max(size.Width + scrollbarSize, SizeDefaults.WindowMinSize + scrollbarSize);
-            }
-        }
-        else
-        {
-            vm.PicViewer.GalleryWidth.Value = double.NaN;
-        }
+        // vm.MainWindow.TitleMaxWidth.Value = size.TitleMaxWidth;
+        // vm.PicViewer.ImageWidth.Value = size.Width;
+        // vm.PicViewer.SecondaryImageWidth.Value = size.SecondaryWidth;
+        // vm.PicViewer.ImageHeight.Value = size.Height;
+        //
+        // vm.PicViewer.ScrollViewerWidth.Value = size.ScrollViewerWidth;
+        // vm.PicViewer.ScrollViewerHeight.Value = size.ScrollViewerHeight;
+        //
+        // vm.PicViewer.AspectRatio.Value = size.AspectRatio;
+        //
+        // if (vm.Gallery is not { } gallery)
+        // {
+        //     return;
+        // }
+        //
+        // if (Settings.WindowProperties.AutoFit)
+        // {
+        //     if (Settings.WindowProperties.Fullscreen ||
+        //         Settings.WindowProperties.Maximized)
+        //     {
+        //         vm.PicViewer.GalleryWidth.Value = double.NaN;
+        //     }
+        //     else
+        //     {
+        //         var scrollbarSize = Settings.Zoom.ScrollEnabled ? SizeDefaults.ScrollbarSize : 0;
+        //         vm.PicViewer.GalleryWidth.Value = vm.PicViewer.RotationAngle.CurrentValue is 90 or 270
+        //             ? Math.Max(size.Height + scrollbarSize, SizeDefaults.WindowMinSize + scrollbarSize)
+        //             : Math.Max(size.Width + scrollbarSize, SizeDefaults.WindowMinSize + scrollbarSize);
+        //     }
+        // }
+        // else
+        // {
+        //     vm.PicViewer.GalleryWidth.Value = double.NaN;
+        // }
     }
 
     public static ImageSize? GetSize(MainViewModel vm)
@@ -265,7 +264,7 @@ public static class WindowResizing
             return null;
         }
 
-        var (minWidth, minHeight) = MainWindowViewModel.GetAndSetWindowMinSize(vm);
+        // var (minWidth, minHeight) = MainWindowViewModel.GetAndSetWindowMinSize(vm);
         
         ImageSize size;
         if (Settings.ImageScaling.ShowImageSideBySide && secondWidth > 0 && secondHeight > 0)
@@ -276,13 +275,13 @@ public static class WindowResizing
                 secondWidth,
                 secondHeight,
                 screenSize,
-                minWidth,
-                minHeight,
+                0,
+                0,
                 vm.PlatformWindowService.CombinedTitleButtonsWidth,
                 rotation,
                 screenSize.Scaling,
-                vm.MainWindow.TitlebarHeight.CurrentValue,
-                vm.MainWindow.BottombarHeight.CurrentValue,
+                0,
+                0,
                 GalleryFunctions.GetGalleryHeight(vm),
                 containerWidth,
                 containerHeight);
@@ -293,13 +292,13 @@ public static class WindowResizing
                 width,
                 height,
                 screenSize,
-                minWidth,
-                minHeight,
+                0,
+                0,
                 vm.PlatformWindowService.CombinedTitleButtonsWidth,
                 rotation,
                 screenSize.Scaling,
-                vm.MainWindow.TitlebarHeight.CurrentValue,
-                vm.MainWindow.BottombarHeight.CurrentValue,
+                0,
+                0,
                 GalleryFunctions.GetGalleryHeight(vm),
                 containerWidth,
                 containerHeight);

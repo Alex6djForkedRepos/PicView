@@ -55,11 +55,6 @@ public static class Slideshow
                 WindowFunctions.CenterWindowOnScreen();
             }
         }
-
-        if (Settings.Gallery.IsGalleryDocked)
-        {
-            vm.Gallery.GalleryMode.Value = GalleryMode.ClosedToBottom;
-        }
         
         _timer.Stop();
         _timer = null;
@@ -112,11 +107,6 @@ public static class Slideshow
         {
             await vm.PlatformWindowService.ToggleFullscreen();
             Settings.WindowProperties.Fullscreen = false;
-        }
-
-        if (GalleryFunctions.IsFullGalleryOpen || Settings.Gallery.IsGalleryDocked)
-        {
-            vm.Gallery.GalleryMode.Value = GalleryMode.BottomToClosed;
         }
     }
 }

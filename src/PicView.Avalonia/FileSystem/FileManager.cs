@@ -83,36 +83,36 @@ public static class FileManager
     /// </summary>
     public static async Task Print(string? path, MainViewModel vm)
     {
-        try
-        {
-            vm.MainWindow.IsLoadingIndicatorShown.Value = true;
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-            {
-                await Task.Run(() => vm.PlatformService.Print(path));
-            }
-            else
-            {
-                // TODO: Refactor this for Windows
-                var file = await ImageFormatConverter.ConvertToCommonSupportedFormatAsync(path, vm)
-                    .ConfigureAwait(false);
-
-                if (string.IsNullOrWhiteSpace(file))
-                {
-                    TooltipHelper.ShowTooltipMessage(TranslationManager.Translation.UnexpectedError);
-                    return;
-                }
-
-                await Task.Run(() => vm.PlatformService.Print(file));
-            }
-        }
-        catch (Exception ex)
-        {
-            LogAndShowError(ex, nameof(Print));
-        }
-        finally
-        {
-            vm.MainWindow.IsLoadingIndicatorShown.Value = false;
-        }
+        // try
+        // {
+        //     vm.MainWindow.IsLoadingIndicatorShown.Value = true;
+        //     if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        //     {
+        //         await Task.Run(() => vm.PlatformService.Print(path));
+        //     }
+        //     else
+        //     {
+        //         // TODO: Refactor this for Windows
+        //         var file = await ImageFormatConverter.ConvertToCommonSupportedFormatAsync(path, vm)
+        //             .ConfigureAwait(false);
+        //
+        //         if (string.IsNullOrWhiteSpace(file))
+        //         {
+        //             TooltipHelper.ShowTooltipMessage(TranslationManager.Translation.UnexpectedError);
+        //             return;
+        //         }
+        //
+        //         await Task.Run(() => vm.PlatformService.Print(file));
+        //     }
+        // }
+        // catch (Exception ex)
+        // {
+        //     LogAndShowError(ex, nameof(Print));
+        // }
+        // finally
+        // {
+        //     vm.MainWindow.IsLoadingIndicatorShown.Value = false;
+        // }
     }
 
     /// <summary>

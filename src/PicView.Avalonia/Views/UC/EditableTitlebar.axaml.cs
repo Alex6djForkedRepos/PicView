@@ -156,13 +156,6 @@ public partial class EditableTitlebar : UserControl
         // UIHelper.GetMainView.Focus();
         // MainKeyboardShortcuts.IsKeysEnabled = true;
     }
-    
-    private void ShowFileExistsError(MainViewModel vm)
-    {
-        CloseTitlebar();
-        vm.MainWindow.IsLoadingIndicatorShown.Value = false;
-        TooltipHelper.ShowTooltipMessage(TranslationManager.GetTranslation("FileAlreadyExistsError"), true);
-    }
 
     public void SelectFileName()
     {

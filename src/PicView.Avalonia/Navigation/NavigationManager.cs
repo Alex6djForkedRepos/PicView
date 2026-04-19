@@ -45,100 +45,7 @@ public static class NavigationManager
     public static async ValueTask LoadWithoutImageIterator(FileInfo fileInfo, MainViewModel vm, List<FileInfo>? files = null,
         int index = 0)
     {
-        _ = Task.Run(GalleryLoad.CancelGalleryLoadAsync);
-        
-        var imageModel = await GetImageModel.GetImageModelAsync(fileInfo).ConfigureAwait(false);
-        ImageModel? nextImageModel = null;
-        vm.PicViewer.ImageSource.Value = imageModel.Image;
-        vm.PicViewer.ImageType.Value = imageModel.ImageType;
-
-        if (!Settings.ImageScaling.ShowImageSideBySide)
-        {
-            var size = WindowResizing.GetSize(imageModel.PixelWidth, imageModel.PixelHeight, 0, 0, imageModel.Rotation, vm );
-            await Dispatcher.UIThread.InvokeAsync(() =>
-            {
-                if (size.HasValue)
-                {
-                    WindowResizing.SetSize(size.Value,
-                        vm);
-                }
-                else
-                {
-                    WindowResizing.GetSize(vm);
-                }
-            });
-        }
-
-        await DisposeImageIteratorAsync();
-
-        if (files is null)
-        {
-            ImageIterator = new ImageIterator(fileInfo, vm);
-            index = ImageIterator.CurrentIndex;
-            if (index == -1)
-            {
-                await UpdateImage.SetSingleImageAsync(imageModel.Image, imageModel.ImageType,
-                    TranslationManager.Translation.ClipboardImage, vm);
-                return;
-            }
-        }
-        else
-        {
-            ImageIterator = new ImageIterator(fileInfo, files, index, vm);
-        }
-
-        if (Settings.ImageScaling.ShowImageSideBySide)
-        {
-            nextImageModel = (await ImageIterator.GetNextPreLoadValueAsync()).ImageModel;
-            vm.PicViewer.SecondaryImageSource.Value = nextImageModel.Image;
-            await Dispatcher.UIThread.InvokeAsync(() =>
-            {
-                WindowResizing.SetSize(imageModel.PixelWidth, imageModel.PixelHeight, nextImageModel.PixelWidth,
-                    nextImageModel.PixelHeight, imageModel.Rotation, vm);
-            });
-
-            TitleManager.SetSideBySideTitle(vm, imageModel, nextImageModel);
-            UpdateImage.SetStats(vm, imageModel);
-
-            // Fixes incorrect rendering in the side by side view
-            // TODO: Improve and fix side by side and remove this hack 
-            Dispatcher.UIThread.Post(() => { vm.ImageViewer?.MainImage?.InvalidateVisual(); });
-        }
-        else
-        {
-            var isTiffUpdated = await CheckIfTiffAndUpdate(vm, fileInfo, index);
-            if (!isTiffUpdated)
-            {
-                if (Settings.ImageScaling.ShowImageSideBySide)
-                {
-                    TitleManager.SetSideBySideTitle(vm, imageModel, nextImageModel);
-                }
-                else
-                {
-                    TitleManager.SetTitle(vm, imageModel);
-                }
-
-                UpdateImage.SetStats(vm, imageModel);
-            }
-        }
-
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-        {
-            await WindowFunctions.ResizeAndFixRenderingError(vm);
-        }
-
-        vm.MainWindow.IsLoadingIndicatorShown.Value = false;
-        if (ImageIterator.ImagePaths.Count > 0 && index > ImageIterator.ImagePaths.Count)
-        {
-            FileHistoryManager.Add(ImageIterator.ImagePaths[index].FullName);
-            if (Settings.ImageScaling.ShowImageSideBySide)
-            {
-                FileHistoryManager.Add(
-                    ImageIterator.ImagePaths[ImageIterator.GetIteration(index, NavigateTo.Next)].FullName);
-            }
-        }
-
-        await GalleryLoad.CheckAndReloadGallery(fileInfo, vm);
+       
     }
 
 
@@ -147,10 +54,7 @@ public static class NavigationManager
     /// </summary>
     /// <param name="vm">The main view model instance.</param>
     /// <returns>True if navigation is possible, otherwise false.</returns>
-    public static bool CanNavigate(MainViewModel vm) =>
-        ImageIterator?.ImagePaths is not null &&
-        ImageIterator.ImagePaths.Count > 0 && !CropFunctions.IsCropping &&
-        !DialogManager.IsDialogOpen && vm is { MainWindow.IsEditableTitlebarOpen.CurrentValue: false, PicViewer.FileInfo.CurrentValue: not null };
+    public static bool CanNavigate(MainViewModel vm) => false;
 
     /// <summary>
     /// Navigates to the next or previous image based on the specified direction, ensuring all conditions for navigation are met.
@@ -358,65 +262,7 @@ public static class NavigationManager
 
     public static async ValueTask LoadLastFileAsync(MainViewModel vm)
     {
-        var lastFile = Settings.StartUp.LastFile;
-        var isFromStartUpMenu = false;
-        await Dispatcher.UIThread.InvokeAsync(() =>
-        {
-            if (vm.MainWindow.CurrentView.CurrentValue is StartUpMenu)
-            {
-                // Change view beforehand to avoid weird rendering error
-                vm.MainWindow.CurrentView.Value = vm.ImageViewer;
-            }
-
-            isFromStartUpMenu = true;
-        });
-        if (!string.IsNullOrEmpty(lastFile))
-        {
-            await ChooseLoading(lastFile).ConfigureAwait(false);
-
-        }
-        else
-        {
-            var lastEntry = FileHistoryManager.GetLastEntry();
-            if (lastEntry != null)
-            {
-                await ChooseLoading(lastEntry).ConfigureAwait(false);
-            }
-            else if (isFromStartUpMenu)
-            {
-                await Dispatcher.UIThread.InvokeAsync(() => { vm.MainWindow.CurrentView.Value = new StartUpMenu(); });
-            }
-        }
-
-        return;
-
-        async Task ChooseLoading(string chosenFile)
-        {
-            if (isFromStartUpMenu)
-            {
-                // Using QuickLoadAsync fixes rendering error, if the startup menu was used
-                Window? window = null;
-                await Dispatcher.UIThread.InvokeAsync(() =>
-                {
-                    if (Application.Current.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop)
-                    {
-                        return;
-                    }
-
-                    window = desktop.MainWindow;
-                });
-                await QuickLoad.QuickLoadAsync(vm, chosenFile, window, false);
-            }
-            else
-            {
-                await LoadPicFromStringAsync(chosenFile, vm).ConfigureAwait(false);
-            }
-
-            if (Settings.WindowProperties.AutoFit)
-            {
-                WindowFunctions.CenterWindowOnScreen();
-            }
-        }
+        
     }
 
     public static ValueTask Next10(MainViewModel vm) => NavigateIncrements(vm, true, true, false);

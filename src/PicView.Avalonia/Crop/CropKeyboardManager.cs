@@ -20,7 +20,7 @@ public class CropKeyboardManager(CropControl control)
         switch (e.Key)
         {
             case Key.Enter:
-                await vm.Crop.SaveCroppedImageAsync();
+                // await vm.Crop.SaveCroppedImageAsync();
                 return;
             case Key.Escape:
                 CropFunctions.CloseCropControl(UIHelper.GetMainView.DataContext as MainViewModel);
@@ -85,11 +85,11 @@ public class CropKeyboardManager(CropControl control)
                 case "Save":
                 case "SaveAs":
                 case "GalleryClick":
-                    await vm.Crop.SaveCroppedImageAsync();
+                    // await vm.Crop.SaveCroppedImageAsync();
                     return;
                 case "CopyImage":
                 case "CopyFile":
-                    await vm.Crop.CopyCroppedImageAsync();
+                    // await vm.Crop.CopyCroppedImageAsync();
                     return;
             }
         }

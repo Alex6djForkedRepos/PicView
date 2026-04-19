@@ -19,29 +19,7 @@ public static class GalleryFunctions
 {
     public static double GetGalleryHeight(MainViewModel vm)
     {
-        if (vm?.Gallery is not { } gallery)
-        {
-            return 0;
-        }
-
-        if (!Settings.Gallery.IsGalleryDocked || vm.PicViewer.IsSingleImage.CurrentValue || Slideshow.IsRunning)
-        {
-            return 0;
-        }
-
-        if (Settings.WindowProperties.Fullscreen)
-        {
-            return Settings.Gallery.IsGalleryDocked
-                ? gallery.GalleryItem.BottomGalleryItemHeight.CurrentValue + (SizeDefaults.ScrollbarSize - 1)
-                : 0;
-        }
-
-        if (!Settings.Gallery.ShowBottomGalleryInHiddenUI && !vm.MainWindow.IsUIShown.CurrentValue)
-        {
-            return 0;
-        }
-
-        return gallery.GalleryItem.BottomGalleryItemHeight.CurrentValue + (SizeDefaults.ScrollbarSize - 1);
+        return 0;
     }
 
     public static bool RenameGalleryItem(int oldIndex, int newIndex, string newFileLocation, string newName)

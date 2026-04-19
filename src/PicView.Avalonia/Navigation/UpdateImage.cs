@@ -82,7 +82,7 @@ public static class UpdateImage
 
             if (Settings.Zoom.ResetZoomOnChange)
             {
-                vm.ImageViewer.ZoomPanControl.ResetZoomSlim();
+                // vm.ImageViewer.ZoomPanControl.ResetZoomSlim();
             }
 
             if (Settings.ImageScaling.ShowImageSideBySide && nextPreloadValue is { ImageModel: not null })
@@ -99,7 +99,7 @@ public static class UpdateImage
             {
                 if (preLoadValue.ImageModel.ImageType is ImageType.AnimatedGif or ImageType.AnimatedWebp)
                 {
-                    vm.ImageViewer.MainImage.InitialAnimatedSource = preLoadValue.ImageModel.FileInfo.FullName;
+                    // vm.ImageViewer.MainImage.InitialAnimatedSource = preLoadValue.ImageModel.FileInfo.FullName;
                 }
                 
                 vm.PicViewer.ImageSource.Value = preLoadValue.ImageModel.Image;
@@ -120,7 +120,7 @@ public static class UpdateImage
             UIHelper.GetToolTipMessage?.IsVisible = false;
         }, DispatcherPriority.Send);
 
-        vm.MainWindow.IsLoadingIndicatorShown.Value = false;
+        // vm.MainWindow.IsLoadingIndicatorShown.Value = false;
 
         if (Settings.ImageScaling.ShowImageSideBySide)
         {
@@ -215,40 +215,40 @@ public static class UpdateImage
     public static async Task SetTiffImageAsync(TiffManager.TiffNavigationInfo tiffNavigationInfo, int index, FileInfo fileInfo,
         MainViewModel vm)
     {
-        var source = await Task.Run( () => tiffNavigationInfo.Pages[tiffNavigationInfo.CurrentPage].ToWriteableBitmap()).ConfigureAwait(false);
-        vm.PicViewer.ImageSource.Value = source;
-        vm.PicViewer.SecondaryImageSource.Value = null;
-        vm.PicViewer.ImageType.Value = ImageType.Bitmap;
-        var width = source?.PixelSize.Width ?? 0;
-        var height = source?.PixelSize.Height ?? 0;
-        
-        await Dispatcher.UIThread.InvokeAsync(() =>
-        {
-            if (vm.MainWindow.CurrentView.CurrentValue != vm.ImageViewer)
-            {
-                vm.MainWindow.CurrentView.Value = vm.ImageViewer;
-            }
-            
-            WindowResizing.SetSize(width, height, 0, 0, 0, vm);
-
-            if (vm.PicViewer.RotationAngle.CurrentValue != 0)
-            {
-                vm.ImageViewer.Rotate(vm.PicViewer.RotationAngle.CurrentValue);
-            }
-        }, DispatcherPriority.Render);
-        
-        TitleManager.SetTiffTitle(tiffNavigationInfo, width, height, index, fileInfo, vm);
-
-        var imageModel = new ImageModel
-        {
-            Orientation = ExifOrientationHelper.GetImageOrientation(fileInfo),
-            ImageType = ImageType.Bitmap,
-            FileInfo = fileInfo,
-            Image = source,
-            PixelWidth = width,
-            PixelHeight = height
-        };
-        SetStats(vm, imageModel);
+        // var source = await Task.Run( () => tiffNavigationInfo.Pages[tiffNavigationInfo.CurrentPage].ToWriteableBitmap()).ConfigureAwait(false);
+        // vm.PicViewer.ImageSource.Value = source;
+        // vm.PicViewer.SecondaryImageSource.Value = null;
+        // vm.PicViewer.ImageType.Value = ImageType.Bitmap;
+        // var width = source?.PixelSize.Width ?? 0;
+        // var height = source?.PixelSize.Height ?? 0;
+        //
+        // await Dispatcher.UIThread.InvokeAsync(() =>
+        // {
+        //     if (vm.MainWindow.CurrentView.CurrentValue != vm.ImageViewer)
+        //     {
+        //         vm.MainWindow.CurrentView.Value = vm.ImageViewer;
+        //     }
+        //     
+        //     WindowResizing.SetSize(width, height, 0, 0, 0, vm);
+        //
+        //     if (vm.PicViewer.RotationAngle.CurrentValue != 0)
+        //     {
+        //         vm.ImageViewer.Rotate(vm.PicViewer.RotationAngle.CurrentValue);
+        //     }
+        // }, DispatcherPriority.Render);
+        //
+        // TitleManager.SetTiffTitle(tiffNavigationInfo, width, height, index, fileInfo, vm);
+        //
+        // var imageModel = new ImageModel
+        // {
+        //     Orientation = ExifOrientationHelper.GetImageOrientation(fileInfo),
+        //     ImageType = ImageType.Bitmap,
+        //     FileInfo = fileInfo,
+        //     Image = source,
+        //     PixelWidth = width,
+        //     PixelHeight = height
+        // };
+        // SetStats(vm, imageModel);
     }
 
     #endregion
@@ -278,23 +278,23 @@ public static class UpdateImage
 
     public static void SetStats(MainViewModel vm, ImageModel imageModel)
     {
-        vm.PicViewer.IsSingleImage.Value = false;
-        vm.PicViewer.PixelWidth.Value = imageModel.PixelWidth;
-        vm.PicViewer.PixelHeight.Value = imageModel.PixelHeight;
-        vm.PicViewer.GetIndex.Value = NavigationManager.GetNonZeroIndex;
-        vm.PicViewer.ExifOrientation.Value = imageModel.Orientation;
-        vm.PicViewer.FileInfo.Value = imageModel.FileInfo;
-        vm.PicViewer.ZoomValue.Value = 100;
-
-        if (Settings.ImageScaling.ShowImageSideBySide)
-        {
-            // Fixes incorrect rendering in the side by side view
-            // TODO: Improve and fix side by side and remove this hack 
-            Dispatcher.UIThread.Post(() => { vm.ImageViewer?.MainImage?.InvalidateVisual(); });
-        }
-
-        // Reset effects
-        vm.PicViewer.EffectConfig.Value = null;
+        // vm.PicViewer.IsSingleImage.Value = false;
+        // vm.PicViewer.PixelWidth.Value = imageModel.PixelWidth;
+        // vm.PicViewer.PixelHeight.Value = imageModel.PixelHeight;
+        // vm.PicViewer.GetIndex.Value = NavigationManager.GetNonZeroIndex;
+        // vm.PicViewer.ExifOrientation.Value = imageModel.Orientation;
+        // vm.PicViewer.FileInfo.Value = imageModel.FileInfo;
+        // vm.PicViewer.ZoomValue.Value = 100;
+        //
+        // if (Settings.ImageScaling.ShowImageSideBySide)
+        // {
+        //     // Fixes incorrect rendering in the side by side view
+        //     // TODO: Improve and fix side by side and remove this hack 
+        //     Dispatcher.UIThread.Post(() => { vm.ImageViewer?.MainImage?.InvalidateVisual(); });
+        // }
+        //
+        // // Reset effects
+        // vm.PicViewer.EffectConfig.Value = null;
     }
 
     #endregion

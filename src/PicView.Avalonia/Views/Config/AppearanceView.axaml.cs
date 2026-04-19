@@ -22,7 +22,7 @@ public partial class AppearanceView : UserControl
         InitializeComponent();
         if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
         {
-            RestartButton.IsEnabled = false;
+            // RestartButton.IsEnabled = false;
         }
         Loaded += AppearanceView_Loaded;
     }

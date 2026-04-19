@@ -28,118 +28,113 @@ public static class CropFunctions
     /// </remarks>
     public static async Task StartCropControlAsync(MainViewModel vm)
     {
-        if (!DetermineIfShouldBeEnabled(vm))
-        {
-            return;
-        }
-
-        if (vm?.PicViewer.ImageSource.CurrentValue is not Bitmap bitmap)
-        {
-            return;
-        }
-
-        var isBottomGalleryShown = Settings.Gallery.IsGalleryDocked;
-        // Hide bottom gallery when entering crop mode
-        if (isBottomGalleryShown)
-        {
-            vm.Gallery.GalleryMode.Value = GalleryMode.Closed;
-            // Reset setting before resizing
-            Settings.Gallery.IsGalleryDocked = false;
-            await WindowResizing.SetSizeAsync(vm);
-        }
-
-        var size = new Size(vm.PicViewer.ImageWidth.CurrentValue, vm.PicViewer.ImageHeight.CurrentValue);
-        await Dispatcher.UIThread.InvokeAsync(() =>
-        {
-            vm.Crop = new ImageCropperViewModel(bitmap);
-            vm.Crop.ImageWidth.Value = size.Width;
-            vm.Crop.ImageHeight.Value = size.Height;
-            vm.Crop.AspectRatio.Value = vm.PicViewer.AspectRatio.CurrentValue;
-            
-            var cropControl = new CropControl
-            {
-                DataContext = vm,
-                Width = size.Width,
-                Height = size.Height,
-                Margin = new Thickness(0)
-            };
-            vm.MainWindow.CurrentView.Value = cropControl;
-        });
-
-        IsCropping = true;
-        vm.PicViewer.Title.Value = TranslationManager.Translation.CropMessage!;
-        vm.PicViewer.TitleTooltip.Value = TranslationManager.Translation.CropMessage!;
-
-        await FunctionsMapper.CloseMenus();
-
-        if (isBottomGalleryShown)
-        {
-            Settings.Gallery.IsGalleryDocked = true;
-        }
+        // if (!DetermineIfShouldBeEnabled(vm))
+        // {
+        //     return;
+        // }
+        //
+        // if (vm?.PicViewer.ImageSource.CurrentValue is not Bitmap bitmap)
+        // {
+        //     return;
+        // }
+        //
+        // var isBottomGalleryShown = Settings.Gallery.IsGalleryDocked;
+        // // Hide bottom gallery when entering crop mode
+        // if (isBottomGalleryShown)
+        // {
+        //     // Reset setting before resizing
+        //     Settings.Gallery.IsGalleryDocked = false;
+        //     await WindowResizing.SetSizeAsync(vm);
+        // }
+        //
+        // var size = new Size(vm.PicViewer.ImageWidth.CurrentValue, vm.PicViewer.ImageHeight.CurrentValue);
+        // await Dispatcher.UIThread.InvokeAsync(() =>
+        // {
+        //     vm.Crop = new ImageCropperViewModel(bitmap);
+        //     vm.Crop.ImageWidth.Value = size.Width;
+        //     vm.Crop.ImageHeight.Value = size.Height;
+        //     vm.Crop.AspectRatio.Value = vm.PicViewer.AspectRatio.CurrentValue;
+        //     
+        //     var cropControl = new CropControl
+        //     {
+        //         DataContext = vm,
+        //         Width = size.Width,
+        //         Height = size.Height,
+        //         Margin = new Thickness(0)
+        //     };
+        //     vm.MainWindow.CurrentView.Value = cropControl;
+        // });
+        //
+        // IsCropping = true;
+        // vm.PicViewer.Title.Value = TranslationManager.Translation.CropMessage!;
+        // vm.PicViewer.TitleTooltip.Value = TranslationManager.Translation.CropMessage!;
+        //
+        // await FunctionsMapper.CloseMenus();
+        //
+        // if (isBottomGalleryShown)
+        // {
+        //     Settings.Gallery.IsGalleryDocked = true;
+        // }
     }
 
     public static void CloseCropControl(MainViewModel vm)
     {
-        if (Settings.Gallery.IsGalleryDocked)
-        {
-            if (vm.Gallery is {} gallery)
-            {
-                gallery.GalleryMode.Value = GalleryMode.ClosedToBottom;
-            }
-            
-            WindowResizing.SetSize(vm);
-        }
-
-        vm.MainWindow.CurrentView.Value = vm.ImageViewer;
-        IsCropping = false;
-        TitleManager.SetTitle(vm);
-
-        // Reset image type to fix issue with animated images
-        switch (vm.PicViewer.ImageType.CurrentValue)
-        {
-            case ImageType.AnimatedWebp:
-                vm.PicViewer.ImageType.Value = ImageType.Bitmap;
-                vm.PicViewer.ImageType.Value = ImageType.AnimatedWebp;
-                break;
-            case ImageType.AnimatedGif:
-                vm.PicViewer.ImageType.Value = ImageType.Bitmap;
-                vm.PicViewer.ImageType.Value = ImageType.AnimatedGif;
-                break;
-        }
-
-        vm.Crop = null;
+        // if (Settings.Gallery.IsGalleryDocked)
+        // {
+        //     
+        //     WindowResizing.SetSize(vm);
+        // }
+        //
+        // vm.MainWindow.CurrentView.Value = vm.ImageViewer;
+        // IsCropping = false;
+        // TitleManager.SetTitle(vm);
+        //
+        // // Reset image type to fix issue with animated images
+        // switch (vm.PicViewer.ImageType.CurrentValue)
+        // {
+        //     case ImageType.AnimatedWebp:
+        //         vm.PicViewer.ImageType.Value = ImageType.Bitmap;
+        //         vm.PicViewer.ImageType.Value = ImageType.AnimatedWebp;
+        //         break;
+        //     case ImageType.AnimatedGif:
+        //         vm.PicViewer.ImageType.Value = ImageType.Bitmap;
+        //         vm.PicViewer.ImageType.Value = ImageType.AnimatedGif;
+        //         break;
+        // }
+        //
+        // vm.Crop = null;
     }
 
     public static bool DetermineIfShouldBeEnabled(MainViewModel vm)
     {
-        if (IsCropping)
-        {
-            return false;
-        }
-
-        if (vm?.PicViewer.ImageSource.CurrentValue is not Bitmap || Settings.ImageScaling.ShowImageSideBySide)
-        {
-            vm.PicViewer.ShouldCropBeEnabled.Value = false;
-            return false;
-        }
-
-        if (DialogManager.IsDialogOpen)
-        {
-            return false;
-        }
-
-        if (vm.MainWindow.IsEditableTitlebarOpen.CurrentValue)
-        {
-            return false;
-        }
-
-        if (vm.PicViewer.RotationAngle.CurrentValue is 0 && vm.PicViewer.ScaleX.CurrentValue is 1)
-        {
-            vm.PicViewer.ShouldCropBeEnabled.Value = true;
-            return true;
-        }
-
-        vm.PicViewer.ShouldCropBeEnabled.Value = false;
+        // if (IsCropping)
+        // {
+        //     return false;
+        // }
+        //
+        // if (vm?.PicViewer.ImageSource.CurrentValue is not Bitmap || Settings.ImageScaling.ShowImageSideBySide)
+        // {
+        //     vm.PicViewer.ShouldCropBeEnabled.Value = false;
+        //     return false;
+        // }
+        //
+        // if (DialogManager.IsDialogOpen)
+        // {
+        //     return false;
+        // }
+        //
+        // if (vm.MainWindow.IsEditableTitlebarOpen.CurrentValue)
+        // {
+        //     return false;
+        // }
+        //
+        // if (vm.PicViewer.RotationAngle.CurrentValue is 0 && vm.PicViewer.ScaleX.CurrentValue is 1)
+        // {
+        //     vm.PicViewer.ShouldCropBeEnabled.Value = true;
+        //     return true;
+        // }
+        //
+        // vm.PicViewer.ShouldCropBeEnabled.Value = false;
         return false;
     }
 }

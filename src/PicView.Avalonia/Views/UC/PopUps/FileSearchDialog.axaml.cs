@@ -34,7 +34,7 @@ public partial class FileSearchDialog : AnimatedPopUp
         _disposables.Clear();
         SetupSearchSubscription();
 
-        SearchBox.Focus();
+        // SearchBox.Focus();
 
         AddHandler(KeyDownEvent, KeysDownAsync, RoutingStrategies.Tunnel);
     }
@@ -52,19 +52,19 @@ public partial class FileSearchDialog : AnimatedPopUp
                 e.Handled = true;
                 break;
             case Key.Enter:
-                if (string.IsNullOrWhiteSpace(SearchBox.Text))
-                {
-                    return;
-                }
-
-                if (uint.TryParse(SearchBox.Text, out var result))
-                {
-                    e.Handled = true;
-                    var desiredIndex = result <= 0 ? 0 : Math.Min(NavigationManager.GetCount - 1, result - 1);
-                    await ImageLoader.CheckCancellationAndStartIterateToIndex((int)desiredIndex,
-                            NavigationManager.ImageIterator, CancellationToken.None)
-                        .ConfigureAwait(false);
-                }
+                // if (string.IsNullOrWhiteSpace(SearchBox.Text))
+                // {
+                //     return;
+                // }
+                //
+                // if (uint.TryParse(SearchBox.Text, out var result))
+                // {
+                //     e.Handled = true;
+                //     var desiredIndex = result <= 0 ? 0 : Math.Min(NavigationManager.GetCount - 1, result - 1);
+                //     await ImageLoader.CheckCancellationAndStartIterateToIndex((int)desiredIndex,
+                //             NavigationManager.ImageIterator, CancellationToken.None)
+                //         .ConfigureAwait(false);
+                // }
 
                 break;
         }
@@ -96,64 +96,7 @@ public partial class FileSearchDialog : AnimatedPopUp
 
     private void SetupSearchSubscription()
     {
-        if (DataContext is not MainViewModel vm)
-        {
-            return;
-        }
-
-        // Create an observable that emits a value whenever SearchQuery changes.
-        Observable.EveryValueChanged(SearchBox, x => x.Text)
-            .Skip(1)
-            // Wait for X ms of inactivity before processing to avoid searching on every keystroke.
-            .Debounce(TimeSpan.FromMilliseconds(50))
-            // Subscribe to the results and update the UI collection.
-            .SubscribeAwait(async (text, ct) =>
-            {
-                if (string.IsNullOrWhiteSpace(text))
-                {
-                    vm.PicViewer.FilteredFileInfos.Value?.Clear();
-                    return;
-                }
-
-                const int batchSize = 25;
-
-                IEnumerable<FileSearchResult>? results = null;
-                await Task.Run(
-                    () => { results = FileSearcher.GetFileSearchResults(NavigationManager.GetCollection, text); }, ct);
-
-                var fileSearchResults = results as FileSearchResult[] ?? results.ToArray();
-                vm.PicViewer.FilteredFileInfos.Value =
-                    new ObservableCollection<FileSearchResult>(fileSearchResults.Take(batchSize));
-                if (fileSearchResults.Length < batchSize)
-                {
-                    return;
-                }
-
-                // Need to delay to make it feel smooth
-                await Task.Delay(10, ct);
-
-                for (var i = batchSize; i < fileSearchResults.Length; i += batchSize)
-                {
-                    var batch = fileSearchResults.Skip(i).Take(batchSize);
-                    foreach (var item in batch)
-                    {
-                        await Task.Delay(10, ct);
-                        ct.ThrowIfCancellationRequested();
-                        if (!ct.IsCancellationRequested)
-                        {
-                            vm.PicViewer.FilteredFileInfos.Value.Add(item);
-                        }
-                    }
-                }
-            }, AwaitOperation.Switch, false)
-            // Add the subscription to our disposable manager for cleanup.
-            .AddTo(_disposables);
-
-        // Close when changing picture
-        Observable.EveryValueChanged(vm.PicViewer, x => x.FileInfo.CurrentValue)
-            .Skip(1)
-            .SubscribeAwait(async (_, _) => { await AnimatedClosing(); })
-            .AddTo(_disposables);
+       
     }
 
     public void Dispose()

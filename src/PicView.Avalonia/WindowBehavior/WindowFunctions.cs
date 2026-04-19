@@ -70,21 +70,6 @@ public static class WindowFunctions
         TempFileHelper.DeleteTempFiles();
         await FileHistoryManager.SaveToFileAsync();
         ArchiveExtraction.Cleanup();
-
-        if (vm?.Window?.SettingsWindowConfig is not null)
-        {
-            await vm.Window.SettingsWindowConfig.SaveAsync();
-        }
-
-        if (vm?.Window?.ImageInfoWindowConfig is not null)
-        {
-            await vm.Window.ImageInfoWindowConfig.SaveAsync();
-        }
-
-        if (vm?.Window?.BatchResizeWindowConfig is not null)
-        {
-            await vm.Window.BatchResizeWindowConfig.SaveAsync();
-        }
     }
 
     #region Window State
@@ -94,90 +79,90 @@ public static class WindowFunctions
     /// </summary>
     public static void RestoreInterface(MainViewModel vm)
     {
-        vm.MainWindow.IsUIShown.Value = Settings.UIProperties.ShowInterface;
-
-        if (!Settings.UIProperties.ShowInterface)
-        {
-            return;
-        }
-
-        vm.MainWindow.IsTopToolbarShown.Value = true;
-        vm.MainWindow.TitlebarHeight.Value = SizeDefaults.MainTitlebarHeight;
-
-        if (!Settings.UIProperties.ShowBottomNavBar)
-        {
-            return;
-        }
-
-        vm.MainWindow.IsBottomToolbarShown.Value = true;
-        vm.MainWindow.BottombarHeight.Value = SizeDefaults.BottombarHeight;
+        // vm.MainWindow.IsUIShown.Value = Settings.UIProperties.ShowInterface;
+        //
+        // if (!Settings.UIProperties.ShowInterface)
+        // {
+        //     return;
+        // }
+        //
+        // vm.MainWindow.IsTopToolbarShown.Value = true;
+        // vm.MainWindow.TitlebarHeight.Value = SizeDefaults.MainTitlebarHeight;
+        //
+        // if (!Settings.UIProperties.ShowBottomNavBar)
+        // {
+        //     return;
+        // }
+        //
+        // vm.MainWindow.IsBottomToolbarShown.Value = true;
+        // vm.MainWindow.BottombarHeight.Value = SizeDefaults.BottombarHeight;
     }
 
     public static async Task ResizeAndFixRenderingError(MainViewModel vm)
     {
-        await Dispatcher.UIThread.InvokeAsync(() =>
-        {
-            if (Settings.WindowProperties.AutoFit)
-            {
-                if (vm.PicViewer.PixelWidth.Value > UIHelper.GetMainView.Bounds.Width ||
-                    vm.PicViewer.PixelHeight.Value > UIHelper.GetMainView.Bounds.Height)
-                {
-                    vm.ImageViewer.MainBorder.Height = double.NaN;
-                    vm.ImageViewer.MainBorder.Width = double.NaN;
-
-                    WindowResizing.SetSize(1, 1, 0, 0, 0, vm);
-                }
-                else
-                {
-                    WindowResizing.SetSize(vm);
-                }
-
-                CenterWindowOnScreen(false);
-            }
-            else
-            {
-                WindowResizing.SetSize(vm);
-            }
-
-            if (Settings.WindowProperties.AutoFit)
-            {
-                if (Settings.ImageScaling.StretchImage)
-                {
-                    // Setting horizontal and vertical alignment fixes the rendering error
-                    if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop)
-                    {
-                        return;
-                    }
-
-                    Dispatcher.UIThread.Post(() => WindowResizing.SetSize(vm), DispatcherPriority.Render);
-                    desktop.MainWindow.HorizontalAlignment = HorizontalAlignment.Center;
-                    desktop.MainWindow.VerticalAlignment = VerticalAlignment.Center;
-                }
-                else
-                {
-                    if (vm.PicViewer.PixelWidth.CurrentValue > UIHelper.GetMainView.Bounds.Width ||
-                        vm.PicViewer.PixelHeight.CurrentValue > UIHelper.GetMainView.Bounds.Height)
-                    {
-                        Dispatcher.UIThread.Post(() => WindowResizing.SetSize(vm), DispatcherPriority.Render);
-                    }
-                }
-            }
-        }, DispatcherPriority.Send);
-        if (Settings.ImageScaling.StretchImage)
-        {
-            if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop)
-            {
-                return;
-            }
-
-            Dispatcher.UIThread.Post(() =>
-            {
-                WindowResizing.SetSize(vm);
-                // Reset the horizontal and vertical alignment after fixing the rendering error
-                desktop.MainWindow.HorizontalAlignment = HorizontalAlignment.Stretch;
-                desktop.MainWindow.VerticalAlignment = VerticalAlignment.Stretch;
-            }, DispatcherPriority.Render);
-        }
+        // await Dispatcher.UIThread.InvokeAsync(() =>
+        // {
+        //     if (Settings.WindowProperties.AutoFit)
+        //     {
+        //         if (vm.PicViewer.PixelWidth.Value > UIHelper.GetMainView.Bounds.Width ||
+        //             vm.PicViewer.PixelHeight.Value > UIHelper.GetMainView.Bounds.Height)
+        //         {
+        //             vm.ImageViewer.MainBorder.Height = double.NaN;
+        //             vm.ImageViewer.MainBorder.Width = double.NaN;
+        //
+        //             WindowResizing.SetSize(1, 1, 0, 0, 0, vm);
+        //         }
+        //         else
+        //         {
+        //             WindowResizing.SetSize(vm);
+        //         }
+        //
+        //         CenterWindowOnScreen(false);
+        //     }
+        //     else
+        //     {
+        //         WindowResizing.SetSize(vm);
+        //     }
+        //
+        //     if (Settings.WindowProperties.AutoFit)
+        //     {
+        //         if (Settings.ImageScaling.StretchImage)
+        //         {
+        //             // Setting horizontal and vertical alignment fixes the rendering error
+        //             if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop)
+        //             {
+        //                 return;
+        //             }
+        //
+        //             Dispatcher.UIThread.Post(() => WindowResizing.SetSize(vm), DispatcherPriority.Render);
+        //             desktop.MainWindow.HorizontalAlignment = HorizontalAlignment.Center;
+        //             desktop.MainWindow.VerticalAlignment = VerticalAlignment.Center;
+        //         }
+        //         else
+        //         {
+        //             if (vm.PicViewer.PixelWidth.CurrentValue > UIHelper.GetMainView.Bounds.Width ||
+        //                 vm.PicViewer.PixelHeight.CurrentValue > UIHelper.GetMainView.Bounds.Height)
+        //             {
+        //                 Dispatcher.UIThread.Post(() => WindowResizing.SetSize(vm), DispatcherPriority.Render);
+        //             }
+        //         }
+        //     }
+        // }, DispatcherPriority.Send);
+        // if (Settings.ImageScaling.StretchImage)
+        // {
+        //     if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop)
+        //     {
+        //         return;
+        //     }
+        //
+        //     Dispatcher.UIThread.Post(() =>
+        //     {
+        //         WindowResizing.SetSize(vm);
+        //         // Reset the horizontal and vertical alignment after fixing the rendering error
+        //         desktop.MainWindow.HorizontalAlignment = HorizontalAlignment.Stretch;
+        //         desktop.MainWindow.VerticalAlignment = VerticalAlignment.Stretch;
+        //     }, DispatcherPriority.Render);
+        // }
     }
 
     public static void ShowMinimizedWindow(Window window)
@@ -213,73 +198,73 @@ public static class WindowFunctions
 
     public static async Task ToggleAutoFit(MainViewModel vm)
     {
-        if (Settings.WindowProperties.AutoFit)
-        {
-            vm.MainWindow.SizeToContent.Value = SizeToContent.Manual;
-            vm.MainWindow.CanResize.Value = true;
-            Settings.WindowProperties.AutoFit = false;
-            // vm.GlobalSettings.IsAutoFit.Value = false;
-        }
-        else
-        {
-            vm.MainWindow.SizeToContent.Value = SizeToContent.WidthAndHeight;
-            vm.MainWindow.CanResize.Value = false;
-            Settings.WindowProperties.AutoFit = true;
-            //vm.GlobalSettings.IsAutoFit.Value = true;
-
-            // Fix unpleasant window placement
-            Dispatcher.UIThread.Post(() => { CenterWindowOnScreen(); }, DispatcherPriority.Background);
-        }
-
-        await ResizeAndFixRenderingError(vm);
-        await SaveSettingsAsync().ConfigureAwait(false);
+        // if (Settings.WindowProperties.AutoFit)
+        // {
+        //     vm.MainWindow.SizeToContent.Value = SizeToContent.Manual;
+        //     vm.MainWindow.CanResize.Value = true;
+        //     Settings.WindowProperties.AutoFit = false;
+        //     // vm.GlobalSettings.IsAutoFit.Value = false;
+        // }
+        // else
+        // {
+        //     vm.MainWindow.SizeToContent.Value = SizeToContent.WidthAndHeight;
+        //     vm.MainWindow.CanResize.Value = false;
+        //     Settings.WindowProperties.AutoFit = true;
+        //     //vm.GlobalSettings.IsAutoFit.Value = true;
+        //
+        //     // Fix unpleasant window placement
+        //     Dispatcher.UIThread.Post(() => { CenterWindowOnScreen(); }, DispatcherPriority.Background);
+        // }
+        //
+        // await ResizeAndFixRenderingError(vm);
+        // await SaveSettingsAsync().ConfigureAwait(false);
     }
 
     public static async Task AutoFitAndStretch(MainViewModel vm)
     {
-        if (Settings.WindowProperties.AutoFit)
-        {
-            vm.MainWindow.SizeToContent.Value = SizeToContent.Manual;
-            vm.MainWindow.CanResize.Value = true;
-            Settings.WindowProperties.AutoFit = false;
-            Settings.ImageScaling.StretchImage = false;
-            // vm.GlobalSettings.IsStretched.Value = false;
-            // vm.GlobalSettings.IsAutoFit.Value = false;
-        }
-        else
-        {
-            vm.MainWindow.SizeToContent.Value = SizeToContent.WidthAndHeight;
-            vm.MainWindow.CanResize.Value = false;
-            Settings.WindowProperties.AutoFit = true;
-            Settings.ImageScaling.StretchImage = true;
-            // vm.GlobalSettings.IsAutoFit.Value = true;
-            // vm.GlobalSettings.IsStretched.Value = true;
-        }
-
-        await ResizeAndFixRenderingError(vm);
-        await SaveSettingsAsync().ConfigureAwait(false);
+        // if (Settings.WindowProperties.AutoFit)
+        // {
+        //     vm.MainWindow.SizeToContent.Value = SizeToContent.Manual;
+        //     vm.MainWindow.CanResize.Value = true;
+        //     Settings.WindowProperties.AutoFit = false;
+        //     Settings.ImageScaling.StretchImage = false;
+        //     // vm.GlobalSettings.IsStretched.Value = false;
+        //     // vm.GlobalSettings.IsAutoFit.Value = false;
+        // }
+        // else
+        // {
+        //     vm.MainWindow.SizeToContent.Value = SizeToContent.WidthAndHeight;
+        //     vm.MainWindow.CanResize.Value = false;
+        //     Settings.WindowProperties.AutoFit = true;
+        //     Settings.ImageScaling.StretchImage = true;
+        //     // vm.GlobalSettings.IsAutoFit.Value = true;
+        //     // vm.GlobalSettings.IsStretched.Value = true;
+        // }
+        //
+        // await ResizeAndFixRenderingError(vm);
+        // await SaveSettingsAsync().ConfigureAwait(false);
     }
 
     public static async Task NormalWindow(MainViewModel vm)
     {
-        vm.MainWindow.SizeToContent.Value = SizeToContent.Manual;
-        vm.MainWindow.CanResize.Value = true;
-        Settings.WindowProperties.AutoFit = false;
-        await WindowResizing.SetSizeAsync(vm);
-        vm.ImageViewer.MainImage.InvalidateVisual();
-        await SaveSettingsAsync().ConfigureAwait(false);
+        // vm.MainWindow.SizeToContent.Value = SizeToContent.Manual;
+        // vm.MainWindow.CanResize.Value = true;
+        // Settings.WindowProperties.AutoFit = false;
+        // await WindowResizing.SetSizeAsync(vm);
+        // vm.ImageViewer.MainImage.InvalidateVisual();
+        // await SaveSettingsAsync().ConfigureAwait(false);
     }
 
     public static async Task NormalWindowStretch(MainViewModel vm)
     {
-        vm.MainWindow.SizeToContent.Value = SizeToContent.Manual;
-        vm.MainWindow.CanResize.Value = true;
-        Settings.WindowProperties.AutoFit = false;
-        Settings.ImageScaling.StretchImage = true;
-        // vm.GlobalSettings.IsStretched.Value = true;
-        await WindowResizing.SetSizeAsync(vm);
-        vm.ImageViewer.MainImage.InvalidateVisual();
-        await SaveSettingsAsync().ConfigureAwait(false);
+        // vm.MainWindow.SizeToContent.Value = SizeToContent.Manual;
+        // vm.MainWindow.CanResize.Value = true;
+        // Settings.WindowProperties.AutoFit = false;
+        // Settings.ImageScaling.StretchImage = true;
+        // // vm.GlobalSettings.IsStretched.Value = true;
+        // await WindowResizing.SetSizeAsync(vm);
+        // vm.ImageViewer.MainImage.InvalidateVisual();
+        // await SaveSettingsAsync().ConfigureAwait(false);
     }
 
     public static async Task Stretch(MainViewModel vm)

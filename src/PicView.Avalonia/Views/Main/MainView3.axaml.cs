@@ -49,7 +49,7 @@ public partial class MainView3 : UserControl
             {
                 if (value is ContextMenu mainContextMenu)
                 {
-                    mainContextMenu.Opened += async (sender, args) =>  await OnMainContextMenuOpened(sender, args);
+                    //mainContextMenu.Opened += async (sender, args) =>  await OnMainContextMenuOpened(sender, args);
                     mainContextMenu.Opening += async (sender, args) => OnMainContextMenuOpening(sender, args);
                 }
             }
@@ -135,17 +135,17 @@ public partial class MainView3 : UserControl
     
     private void CloseTitlebarIfOpen(object? sender, EventArgs e)
     {
-        if (DataContext is not MainViewModel vm)
-        {
-            return;
-        }
-
-        if (!vm.MainWindow.IsEditableTitlebarOpen.Value)
-        {
-            return;
-        }
-
-        vm.MainWindow.IsEditableTitlebarOpen.Value = false;
+        // if (DataContext is not MainViewModel vm)
+        // {
+        //     return;
+        // }
+        //
+        // if (!vm.MainWindow.IsEditableTitlebarOpen.Value)
+        // {
+        //     return;
+        // }
+        //
+        // vm.MainWindow.IsEditableTitlebarOpen.Value = false;
         MainKeyboardShortcuts.IsKeysEnabled = true;
         Focus();
     }
@@ -153,32 +153,6 @@ public partial class MainView3 : UserControl
     private static void HandleLostFocus(object? sender, EventArgs e)
     {
         DragAndDropManager.RemoveDragDropView();
-    }
-
-    private async Task OnMainContextMenuOpened(object? sender, EventArgs e)
-    {
-        if (DataContext is not MainViewModel vm)
-        {
-            return;
-        }
-        
-        await Dispatcher.UIThread.InvokeAsync(() =>
-        {
-            vm.PicViewer.ShouldOptimizeImageBeEnabled.Value = ConversionHelper.DetermineIfOptimizeImageShouldBeEnabled(vm.PicViewer.FileInfo?.CurrentValue);
-
-            // Set source for ChangeCtrlZoomImage
-            if (!Application.Current.TryGetResource("ScanEyeImage", Application.Current.RequestedThemeVariant, out var scanEyeImage))
-            {
-                return;
-            }
-            if (!Application.Current.TryGetResource("LeftRightArrowsImage", Application.Current.RequestedThemeVariant, out var leftRightArrowsImage))
-            {
-                return;
-            }
-            var isNavigatingWithCtrl = Settings.Zoom.CtrlZoom;
-            vm.MainWindow.ChangeCtrlZoomImage.Value = isNavigatingWithCtrl ? leftRightArrowsImage as DrawingImage : scanEyeImage as DrawingImage;
-        });
-        
     }
 
     private async ValueTask Drop(object? sender, DragEventArgs e)

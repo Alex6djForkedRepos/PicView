@@ -21,16 +21,16 @@ public static class TooltipHelper
 
     public static void StartTooltipSubscription(MainViewModel vm)
     {
-        vm.ToolTip ??= new ToolTipViewModel();
-        vm.ToolTip.ToolTipMessageSource
-            .Where(msg => !string.IsNullOrWhiteSpace(msg)) // Ignore empty messages
-            .Select(message => Observable.FromAsync(token => ShowToolTipAsync(
-                message,
-                vm.ToolTip.ToolTipMessageCentered.CurrentValue,
-                vm.ToolTip.ToolTipMessageInterval.CurrentValue,
-                token)))
-            .Switch() // Switch to the latest message, cancelling the previous animation
-            .Subscribe();
+        // vm.ToolTip ??= new ToolTipViewModel();
+        // vm.ToolTip.ToolTipMessageSource
+        //     .Where(msg => !string.IsNullOrWhiteSpace(msg)) // Ignore empty messages
+        //     .Select(message => Observable.FromAsync(token => ShowToolTipAsync(
+        //         message,
+        //         vm.ToolTip.ToolTipMessageCentered.CurrentValue,
+        //         vm.ToolTip.ToolTipMessageInterval.CurrentValue,
+        //         token)))
+        //     .Switch() // Switch to the latest message, cancelling the previous animation
+        //     .Subscribe();
     }
     private static async ValueTask ShowToolTipAsync(string message, bool center, TimeSpan interval, CancellationToken cancellationToken)
     {
