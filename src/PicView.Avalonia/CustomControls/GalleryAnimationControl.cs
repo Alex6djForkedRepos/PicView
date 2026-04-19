@@ -208,6 +208,7 @@ public class GalleryAnimationControl : UserControl
         _itemsPanel?.Orientation = Orientation.Vertical;
         TabViewModel?.Gallery.ItemSpacing.Value = Settings.Gallery.ItemSpacing;
         _viewer?.SetHorizontalScrolling();
+        TabViewModel.Hoverbar.IsHoverbarVisible.Value = false;
     }
 
     private void SetExpandedThumbs()
@@ -287,6 +288,7 @@ public class GalleryAnimationControl : UserControl
 
             _viewer?.SetVerticalScrolling();
         }
+        TabViewModel.Hoverbar.IsHoverbarVisible.Value = !Settings.UIProperties.ShowBottomNavBar && Settings.UIProperties.ShowHoverNavigationBar;
     }
 
     private void SetDockedThumbPosition(GalleryDockPosition dock)

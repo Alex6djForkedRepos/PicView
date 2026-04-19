@@ -92,7 +92,19 @@ public class HoverFadeButtonHandler2 : IDisposable
 
     private bool ShouldShowButton()
     {
+        if (!Settings.UIProperties.ShowAltInterfaceButtons)
+        {
+            return false;
+        }
 
+        if (_mainButton is HoverBar2 hoverBar)
+        {
+            if (Settings.UIProperties.ShowBottomNavBar || !Settings.UIProperties.ShowHoverNavigationBar)
+            {
+                hoverBar.IsVisible = false;
+                return false;
+            }
+        }
         return _childButton == null || _vm.WindowTabs.CanActiveTabNavigate.Value;
     }
 
