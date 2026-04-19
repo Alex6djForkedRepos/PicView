@@ -116,20 +116,6 @@ public static class GalleryNavigation
 
     public static async Task GalleryClick(MainViewModel? vm)
     {
-        if (vm is null)
-        {
-            return;
-        }
-
-        if (!GalleryFunctions.IsFullGalleryOpen)
-        {
-            return;
-        }
-        GalleryFunctions.ToggleGallery(vm);
-        if (vm.PicViewer.Index.CurrentValue != NavigationManager.GetCurrentIndex) 
-        {
-            await NavigationManager.Navigate(vm.PicViewer.Index.CurrentValue, vm).ConfigureAwait(false);
-        }
     }
     
     /// <summary>

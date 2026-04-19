@@ -78,12 +78,6 @@ public static class NavigationManager
             }
         }
 
-        if (GalleryFunctions.IsFullGalleryOpen)
-        {
-            await GalleryNavigation.ScrollGallery(next);
-            return;
-        }
-
         var navigateTo = next ? NavigateTo.Next : NavigateTo.Previous;
         int nextIteration;
 
@@ -295,14 +289,6 @@ public static class NavigationManager
     /// <returns>A task that represents the asynchronous operation.</returns>
     public static async ValueTask Iterate(bool next, MainViewModel vm, CancellationToken? cancellationToken)
     {
-        if (GalleryFunctions.IsFullGalleryOpen)
-        {
-            GalleryNavigation.NavigateGallery(next ? Direction.Right : Direction.Left, vm);
-        }
-        else
-        {
-            await Navigate(next, vm, cancellationToken);
-        }
     }
 
     public static async ValueTask Iterate(bool next, CancellationToken cancellationToken) =>

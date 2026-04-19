@@ -282,7 +282,7 @@ public static class WindowResizing
                 screenSize.Scaling,
                 0,
                 0,
-                GalleryFunctions.GetGalleryHeight(vm),
+                0,
                 containerWidth,
                 containerHeight);
         }
@@ -299,7 +299,7 @@ public static class WindowResizing
                 screenSize.Scaling,
                 0,
                 0,
-                GalleryFunctions.GetGalleryHeight(vm),
+                0,
                 containerWidth,
                 containerHeight);
         }

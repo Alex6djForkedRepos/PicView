@@ -23,6 +23,7 @@ namespace PicView.Avalonia.Functions;
 /// <summary>
 /// Used to map functions to their names, used for keyboard shortcuts
 /// </summary>
+/// // TODO deprecated, delete
 public static class FunctionsMapper
 {
     public static MainViewModel? Vm;
@@ -258,23 +259,19 @@ public static class FunctionsMapper
 
     public static async ValueTask Search() =>
         await Dispatcher.UIThread.InvokeAsync(DialogManager.AddFileSearchDialog);
-    
+
 
     /// <inheritdoc cref="RotationNaRotationNavigationp(MainViewModel)" />
-    public static async ValueTask Up() =>
-        await RotationNavigation.NavigateUp(Vm).ConfigureAwait(false);
+    public static ValueTask Up() => ValueTask.CompletedTask;
 
     /// <inheritdoc cref="RotationNavigation.RotateRight(MainViewModel)" />
-    public static async ValueTask RotateRight() =>
-        await RotationNavigation.RotateRight(Vm).ConfigureAwait(false);
+    public static ValueTask RotateRight() =>ValueTask.CompletedTask;
 
     /// <inheritdoc cref="RotationNavigation.RotateLeft(MainViewModel)" />
-    public static async ValueTask RotateLeft() =>
-        await RotationNavigation.RotateLeft(Vm).ConfigureAwait(false);
+    public static ValueTask RotateLeft() => ValueTask.CompletedTask;
 
     /// <inheritdoc cref="RotationNavigation.NavigateDown(MainViewModel)" />
-    public static async ValueTask Down() =>
-        await RotationNavigation.NavigateDown(Vm).ConfigureAwait(false);
+    public static  ValueTask Down() =>ValueTask.CompletedTask;
     
     public static async ValueTask ScrollDown()
     {
@@ -384,17 +381,24 @@ public static class FunctionsMapper
     #region Gallery functions
 
     /// <inheritdoc cref="GalleryFunctions.ToggleGallery(MainViewModel)" />
-    public static async ValueTask ToggleGallery() =>
-        await Task.Run(() => GalleryFunctions.ToggleGallery(Vm));
+    public static  ValueTask ToggleGallery() =>ValueTask.CompletedTask;
 
     /// <inheritdoc cref="GalleryFunctions.OpenCloseBottomGallery(MainViewModel)" />
-    public static async ValueTask OpenCloseBottomGallery() =>
-        await Task.Run(() => GalleryFunctions.OpenCloseBottomGallery(Vm));
-    
+    public static ValueTask OpenCloseBottomGallery()
+    {
+        try
+        {
+            return ValueTask.CompletedTask;
+        }
+        catch (Exception exception)
+        {
+            return ValueTask.FromException(exception);
+        }
+    }
+
     /// <inheritdoc cref="GalleryFunctions.CloseGallery(MainViewModel)" />
     public static ValueTask CloseGallery()
     {
-        GalleryFunctions.CloseGallery(Vm);
         return ValueTask.CompletedTask;
     }
 
@@ -614,8 +618,7 @@ public static class FunctionsMapper
     public static async ValueTask Crop() =>
         await CropFunctions.StartCropControlAsync(Vm).ConfigureAwait(false);
 
-    public static async ValueTask Flip() =>
-        await Dispatcher.UIThread.InvokeAsync(() => RotationNavigation.Flip(Vm));
+    public static ValueTask Flip() => ValueTask.CompletedTask;
 
     /// <inheritdoc cref="ImageOptimizer.OptimizeImageAsync(MainViewModel)" />
     public static async ValueTask OptimizeImage() =>

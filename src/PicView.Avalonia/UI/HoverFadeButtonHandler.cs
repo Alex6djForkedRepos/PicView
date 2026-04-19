@@ -83,11 +83,6 @@ public class HoverFadeButtonHandler
 
     private bool ShouldShowButton()
     {
-        // You may want to extend this with more checks
-        if (!Settings.UIProperties.ShowAltInterfaceButtons || GalleryFunctions.IsFullGalleryOpen)
-        {
-            return false;
-        }
 
         if (_childButton != null && !NavigationManager.CanNavigate(_vm))
         {
