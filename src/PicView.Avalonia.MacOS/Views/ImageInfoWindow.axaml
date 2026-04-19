@@ -184,7 +184,7 @@
                 TextAlignment="Center" />
 
         </DockPanel>
-        <main:ImageInfoView2
+        <main:ImageInfoView
             Background="{DynamicResource WindowBackgroundColor}"
             DockPanel.Dock="Bottom"
             PointerPressed="MoveWindow"

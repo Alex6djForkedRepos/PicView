@@ -41,22 +41,6 @@ public partial class ImageInfoWindow : Window, IDisposable
                 .AddTo(_disposables);
             PositionChanged += (_, __) => UpdateWindowPosition();
         };
-        
-        Closing += async delegate
-        {
-            Hide();
-            if (VisualRoot is null)
-            {
-                return;
-            }
-            var topLevel = GetTopLevel(VisualRoot);
-
-            if (topLevel is Window hostWindow)
-            {
-                hostWindow.Focus();
-            }
-            await _config.SaveAsync();
-        };
     }
 
     private void MoveWindow(object? sender, PointerPressedEventArgs e)
