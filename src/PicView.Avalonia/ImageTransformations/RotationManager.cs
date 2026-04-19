@@ -23,33 +23,60 @@ public static class RotationManager
     
     public static void ResetZoom(MainWindowViewModel vm)
     {
-        if (vm.WindowTabs.ActiveTab.CurrentValue.CurrentView.CurrentValue is ImageViewer2 imageViewer)
+        if (vm.WindowTabs.ActiveTab.CurrentValue.CurrentView.CurrentValue is not ImageViewer2 imageViewer)
         {
-            imageViewer.ResetZoom(Settings.Zoom.IsZoomAnimated);
+            return;
+        }
+        
+        imageViewer.ResetZoom(Settings.Zoom.IsZoomAnimated);
+        if (Settings.WindowProperties.AutoFit)
+        {
+            WindowResizing2.SetSize(vm, WindowResizeReason.Layout);
         }
     }
     
     public static void Rotate(MainWindowViewModel vm, int angle)
     {
-        if (vm.WindowTabs.ActiveTab.CurrentValue.CurrentView.CurrentValue is ImageViewer2 imageViewer)
+        if (vm.WindowTabs.ActiveTab.CurrentValue.CurrentView.CurrentValue is not ImageViewer2 imageViewer)
         {
-            imageViewer.Rotate(angle);
+            return;
+        }
+        
+        imageViewer.Rotate(angle);
+        
+        if (Settings.WindowProperties.AutoFit)
+        {
+            WindowResizing2.SetSize(vm, WindowResizeReason.Layout);
         }
     }
     
     public static void RotateRight(MainWindowViewModel vm)
     {
-        if (vm.WindowTabs.ActiveTab.CurrentValue.CurrentView.CurrentValue is ImageViewer2 imageViewer)
+        if (vm.WindowTabs.ActiveTab.CurrentValue.CurrentView.CurrentValue is not ImageViewer2 imageViewer)
         {
-            imageViewer.Rotate(true);
+            return;
+        }
+        
+        imageViewer.Rotate(true);
+        
+        if (Settings.WindowProperties.AutoFit)
+        {
+            WindowResizing2.SetSize(vm, WindowResizeReason.Layout);
         }
     }
 
     public static void RotateLeft(MainWindowViewModel vm)
     {
-        if (vm.WindowTabs.ActiveTab.CurrentValue.CurrentView.CurrentValue is ImageViewer2 imageViewer)
+        if (vm.WindowTabs.ActiveTab.CurrentValue.CurrentView.CurrentValue is not ImageViewer2 imageViewer)
         {
-            imageViewer.Rotate(false);
+            return;
+        }
+        
+        imageViewer.Rotate(false);
+        
+        if (Settings.WindowProperties.AutoFit)
+        {
+            WindowResizing2.SetSize(vm, WindowResizeReason.Layout);
         }
     }
     
