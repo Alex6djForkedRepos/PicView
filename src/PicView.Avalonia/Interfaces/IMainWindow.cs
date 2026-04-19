@@ -11,7 +11,7 @@ public interface IMainWindow
     
     bool IsChangingWindowState { get; set; }
     
-    BottomBar2? SharedBottomBar { get; set; }
+    BottomBar? SharedBottomBar { get; set; }
     
     UserControl? SharedTitleBar { get; set; }
     

@@ -20,7 +20,7 @@ public class MainWindow : Window, IMainWindow
     public CompositeDisposable Disposables { get; set; } = new();
     /// Flag to prevent window state changes while resizing
     public bool IsChangingWindowState { get; set; }
-    public BottomBar2? SharedBottomBar { get; set; }
+    public BottomBar? SharedBottomBar { get; set; }
     public UserControl? SharedTitleBar { get; set; }
     public AvaloniaRenderingFrameProvider? FrameProvider { get; set; }
 

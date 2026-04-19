@@ -23,7 +23,7 @@ public static class UIHelper
     public static DraggableTabControl? GetMainTabControl { get; private set; }
     public static Control? GetTitlebar { get; private set; }
     public static EditableTitlebar? GetEditableTitlebar { get; private set; }
-    public static BottomBar2? GetBottomBar { get; private set; }
+    public static BottomBar? GetBottomBar { get; private set; }
     public static DropDownMenu? GetDropDownMenu { get; private set; }
     public static ToolTipMessage2? GetToolTipMessage { get; private set; }
     
@@ -42,7 +42,7 @@ public static class UIHelper
         GetMainView = mainWindow?.FindControl<MainView3>("MainView");
         GetTitlebar = mainWindow?.FindControl<Control>("Titlebar");
         GetEditableTitlebar = GetTitlebar?.FindControl<EditableTitlebar>("EditableTitlebar");
-        GetBottomBar = mainWindow?.FindControl<BottomBar2>("BottomBar");
+        GetBottomBar = mainWindow?.FindControl<BottomBar>("BottomBar");
         GetToolTipMessage = GetMainView?.MainPanel.FindControl<ToolTipMessage2>("ToolTipMessage");
         GetMainTabControl = GetMainView.MainTabControl;
     }

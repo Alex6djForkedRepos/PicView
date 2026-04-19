@@ -546,7 +546,7 @@
     </NativeMenu.Menu>
     <DockPanel LastChildFill="True">
         <views:MacOSTitlebar DockPanel.Dock="Top" x:Name="Titlebar" />
-        <uc:BottomBar2 DockPanel.Dock="Bottom" x:Name="BottomBar" />
+        <uc:BottomBar DockPanel.Dock="Bottom" x:Name="BottomBar" />
         <main:MainView3 x:Name="MainView" />
     </DockPanel>
 </customControls:MainWindow>
