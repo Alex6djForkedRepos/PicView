@@ -210,24 +210,28 @@
                 Command="{Binding Rotate0Command}"
                 GroupName="RotationGroup"
                 Header="0°"
+                IsChecked="{Binding WindowTabs.ActiveTab.Value.IsRotated0.Value}"
                 ToggleType="Radio"
                 x:Name="Rotation0Item" />
             <MenuItem
                 Command="{Binding Rotate90Command}"
                 GroupName="RotationGroup"
                 Header="90°"
+                IsChecked="{Binding WindowTabs.ActiveTab.Value.IsRotated90.Value}"
                 ToggleType="Radio"
                 x:Name="Rotation90Item" />
             <MenuItem
                 Command="{Binding Rotate180Command}"
                 GroupName="RotationGroup"
                 Header="180°"
+                IsChecked="{Binding WindowTabs.ActiveTab.Value.IsRotated180.Value}"
                 ToggleType="Radio"
                 x:Name="Rotation180Item" />
             <MenuItem
                 Command="{Binding Rotate270Command}"
                 GroupName="RotationGroup"
                 Header="270°"
+                IsChecked="{Binding WindowTabs.ActiveTab.Value.IsRotated270.Value}"
                 ToggleType="Radio"
                 x:Name="Rotation270Item" />
             <Separator />

@@ -22,6 +22,9 @@ namespace PicView.Core.ViewModels;
 /// </summary>
 public class TabViewModel(Action<uint> closeTab, IFileWatcherService? fileWatcherService = null) : IDisposable
 {
+    #region Properties
+    
+    #region Tab logic
     /// The CoreViewModel that currently "owns" this tab
     public object? ParentWindowContext { get; set; }
     
@@ -32,18 +35,35 @@ public class TabViewModel(Action<uint> closeTab, IFileWatcherService? fileWatche
     
     public CompositeDisposable Disposables { get; } = new();
     public bool IsInitialized { get; set; }
+    
+    public bool IsClosing { get; private set; }
+    public bool IsSelected { get; set; }
+    #endregion
+
+    #region UI view models
+    public BindableReactiveProperty<object?> CurrentView { get; } = new(null);
     public HoverbarViewModel Hoverbar { get; } = new();
     public GalleryViewModel Gallery { get; } = new();
 
-    public bool IsClosing { get; private set; }
-    public bool IsSelected { get; set; }
+    #endregion
+    
+    #region Image properties
     public ImageModel Model { get; set; } = new();
     public BindableReactiveProperty<object?> Image { get; } = new(null);
     public BindableReactiveProperty<FileInfo?> FileInfo { get; } = new(null);
     public ImageModel? SecondaryModel { get; set; } = new();
     public BindableReactiveProperty<object?> SecondaryImage { get; } = new(null);
     public BindableReactiveProperty<FileInfo?> SecondaryFileInfo { get; } = new(null);
-    public BindableReactiveProperty<object?> CurrentView { get; } = new(null);
+    public BindableReactiveProperty<int> RotationAngle { get; } = new(0);
+    public BindableReactiveProperty<bool> IsRotated0 { get; } = new(true);
+    public BindableReactiveProperty<bool> IsRotated90 { get; } = new(false);
+    public BindableReactiveProperty<bool> IsRotated180 { get; } = new(false);
+    public BindableReactiveProperty<bool> IsRotated270 { get; } = new(false);
+    public BindableReactiveProperty<double> ScaleX { get; } = new(1);
+    #endregion
+
+    #region Navigation properties
+    
     /// <inheritdoc cref="Core.Navigation.Interfaces.IImageIterator"/>>
     public IImageIterator? ImageIterator { get; private set; }
     public IThumbnailCache? ThumbnailCache { get; private set; }
@@ -60,6 +80,10 @@ public class TabViewModel(Action<uint> closeTab, IFileWatcherService? fileWatche
     /// </summary>
     private CancellationTokenSource NavigationCts { get; set; } = new();
     
+    #endregion
+
+    #region Titles
+
     /// <summary>
     /// The main title displayed in the window title bar.
     /// </summary>
@@ -80,9 +104,9 @@ public class TabViewModel(Action<uint> closeTab, IFileWatcherService? fileWatche
     /// The tooltip displayed when hovering over the tab.
     /// </summary>
     public BindableReactiveProperty<string> TabTooltip { get; } = new(string.Empty);
-
-    public BindableReactiveProperty<double> RotationAngle { get; } = new(0);
-    public BindableReactiveProperty<double> ScaleX { get; } = new(1);
+    
+    #endregion
+    #endregion
 
     /// <summary>
     /// Updates the window title and tab title based on the current image model.

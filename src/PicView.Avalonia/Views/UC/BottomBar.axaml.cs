@@ -15,9 +15,6 @@ namespace PicView.Avalonia.Views.UC;
 
 public partial class BottomBar : UserControl, IDisposable
 {
-    private ContextMenu? _rotationContextMenu;
-    private IDisposable? _rotationSubscription;
-    
     public BottomBar()
     {
         InitializeComponent();
@@ -29,20 +26,6 @@ public partial class BottomBar : UserControl, IDisposable
     {
         PointerPressed += OnPointerPressed;
         PointerExited += OnPointerExited;
-
-        if (TryGetResource("RotationContextMenu", ActualThemeVariant, out var rotationContextMenu))
-        {
-            _rotationContextMenu = rotationContextMenu as ContextMenu;
-            UpdateRotationSubscription();
-        }
-        else
-        {
-            DebugHelper.LogDebug(nameof(BottomBar), nameof(OnLoaded), "Failed to load rotation context menu resource");
-        }
-        
-        FlipButton.ContextMenu = _rotationContextMenu;
-        RotateRightButton.ContextMenu = _rotationContextMenu;
-        RotateLeftButton.ContextMenu = _rotationContextMenu;
 
         PreviousButton.Click += OnPreviousButtonClick;
         NextButton.Click += OnNextButtonClick;
@@ -275,41 +258,6 @@ public partial class BottomBar : UserControl, IDisposable
             WindowFunctions.WindowDragBehavior(window, e);
         }
     }
-    
-    public void UpdateRotationSubscription()
-    {
-        _rotationSubscription = Observable.EveryValueChanged(this, x => x._rotationContextMenu.IsOpen, UIHelper.GetFrameProvider)
-            .Subscribe(_ => { UpdateRotation(); },
-                DebugHelper.LogError(nameof(BottomBar), nameof(UpdateRotationSubscription)));
-    }
-    
-    private void UpdateRotation()
-    {
-        if (DataContext is not MainWindowViewModel vm)
-        {
-            return;
-        }
-
-        Rotation0Item.IsChecked = false;
-        Rotation90Item.IsChecked = false;
-        Rotation180Item.IsChecked = false;
-        Rotation270Item.IsChecked = false;
-        switch (vm.WindowTabs.ActiveTab.CurrentValue.RotationAngle.CurrentValue)
-        {
-            case 0:
-                Rotation0Item.IsChecked = true;
-                break;
-            case 90:
-                Rotation90Item.IsChecked = true;
-                break;
-            case 180:
-                Rotation180Item.IsChecked = true;
-                break;
-            case 270:
-                Rotation270Item.IsChecked = true;
-                break;
-        }
-    }
 
     public void ResponsiveNavigationBtnSize()
     {
@@ -353,8 +301,6 @@ public partial class BottomBar : UserControl, IDisposable
         ResetZoomButton.Click -= OnResetZoomButtonClick;
         FlipButton.Click -= OnFlipButtonClick;
         SettingsMenuButton.Click -= OnSettingsMenuButtonClick;
-        
-        _rotationSubscription?.Dispose();
 
         GC.SuppressFinalize(this);
     }

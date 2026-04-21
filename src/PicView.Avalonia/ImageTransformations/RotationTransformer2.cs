@@ -19,23 +19,29 @@ public class RotationTransformer2(LayoutTransformControl imageLayoutTransformCon
             return;
         }
 
-        var angle = vm.WindowTabs.ActiveTab.CurrentValue.RotationAngle.CurrentValue;
-        if (RotationHelper.IsValidRotation(angle))
+        var currentAngle = vm.WindowTabs.ActiveTab.CurrentValue.RotationAngle.CurrentValue;
+        if (RotationHelper.IsValidRotation(currentAngle))
         {
-            var nextAngle = RotationHelper.Rotate(angle, clockWise);
-            vm.WindowTabs.ActiveTab.CurrentValue.RotationAngle.Value = nextAngle switch
+            var nextAngle = RotationHelper.Rotate(currentAngle, clockWise);
+            var validAngle = nextAngle switch
             {
                 360 => 0,
                 -90 => 270,
                 _ => nextAngle
             };
+            Rotate(validAngle);
         }
         else
         {
-            vm.WindowTabs.ActiveTab.CurrentValue.RotationAngle.Value =
-                RotationHelper.NextRotationAngle(angle, true);
+            Rotate(RotationHelper.NextRotationAngle(currentAngle, true));
         }
+    }
 
+    public void Rotate(int angle)
+    {
+        var tab = vm.WindowTabs.ActiveTab.Value;
+        tab.RotationAngle.Value = angle;
+        
         WindowResizing2.SetSize(vm, WindowResizeReason.Layout);
 
         if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX) && Settings.WindowProperties.Fullscreen)
@@ -43,11 +49,34 @@ public class RotationTransformer2(LayoutTransformControl imageLayoutTransformCon
             // Sometimes the window is off-center after rotating on macOS fullscreen view
             WindowFunctions2.CenterWindowOnScreen();
         }
-    }
 
-    public void Rotate(int angle)
-    {
-        vm.WindowTabs.ActiveTab.CurrentValue.RotationAngle.Value = angle;
+        switch (angle)
+        {
+            case 0:
+                tab.IsRotated0.Value = true;
+                tab.IsRotated90.Value = false;
+                tab.IsRotated180.Value = false;
+                tab.IsRotated270.Value = false;
+                break;
+            case 90:
+                tab.IsRotated0.Value = false;
+                tab.IsRotated90.Value = true;
+                tab.IsRotated180.Value = false;
+                tab.IsRotated270.Value = false;
+                break;
+            case 180:
+                tab.IsRotated0.Value = false;
+                tab.IsRotated90.Value = false;
+                tab.IsRotated180.Value = true;
+                tab.IsRotated270.Value = false;
+                break;
+            case 270:
+                tab.IsRotated0.Value = false;
+                tab.IsRotated90.Value = false;
+                tab.IsRotated180.Value = false;
+                tab.IsRotated270.Value = true;
+                break;
+        }
     }
 
     private ScaleTransform? _scaleTransform;

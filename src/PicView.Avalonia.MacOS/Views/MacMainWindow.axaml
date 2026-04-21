@@ -220,25 +220,33 @@
                     <NativeMenuItem
                         Command="{Binding RotateRightCommand}"
                         CommandParameter="0"
-                        Header="0°" />
+                        Header="0°"
+                        IsChecked="{Binding WindowTabs.ActiveTab.Value.IsRotated0.Value}"
+                        ToggleType="Radio" />
 
                     <!--  Rotate 90  -->
                     <NativeMenuItem
                         Command="{Binding RotateRightCommand}"
                         CommandParameter="90"
-                        Header="90°" />
+                        Header="90°"
+                        IsChecked="{Binding WindowTabs.ActiveTab.Value.IsRotated90.Value}"
+                        ToggleType="Radio" />
 
                     <!--  Rotate 180  -->
                     <NativeMenuItem
                         Command="{Binding RotateRightCommand}"
                         CommandParameter="180"
-                        Header="180°" />
+                        Header="180°"
+                        IsChecked="{Binding WindowTabs.ActiveTab.Value.IsRotated180.Value}"
+                        ToggleType="Radio" />
 
                     <!--  Rotate 270  -->
                     <NativeMenuItem
                         Command="{Binding RotateRightCommand}"
                         CommandParameter="270"
-                        Header="270°" />
+                        Header="270°"
+                        IsChecked="{Binding WindowTabs.ActiveTab.Value.IsRotated270.Value}"
+                        ToggleType="Radio" />
 
                     <NativeMenuItemSeparator />
 
