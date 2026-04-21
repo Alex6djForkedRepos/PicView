@@ -105,15 +105,7 @@ public partial class ImageViewer2 : UserControl
                 }
 
                 ZoomPreview.Margin = HoverBar.Opacity > 0 ? new Thickness(0,0,25,HoverBar.Bounds.Height / 2 + 25) : new Thickness(0, 0, 25, 25);
-            }, static result =>
-            {
-#if DEBUG
-                if (result is { IsFailure: true, Exception: not null })
-                {
-                    DebugHelper.LogDebug(nameof(ImageViewer2), nameof(InitializeImageTransformer), result.Exception);
-                }
-#endif
-            }).AddTo(ref _disposables);
+            }, DebugHelper.LogError(nameof(ImageViewer2), nameof(InitializeImageTransformer))).AddTo(ref _disposables);
         
         // Correspond to change when index clicked on track
         Observable.FromEvent<EventHandler<int>, int>(
@@ -123,15 +115,7 @@ public partial class ImageViewer2 : UserControl
             .SubscribeAwait(async (x, _) =>
             {
                 await tab.ImageIterator.SkipToIndexAsync(x, tab.GetTabCancellation()).ConfigureAwait(false);
-            }, static result =>
-            {
-#if DEBUG
-                if (result is { IsFailure: true, Exception: not null })
-                {
-                    DebugHelper.LogDebug(nameof(ImageViewer2), nameof(InitializeImageTransformer), result.Exception);
-                }
-#endif
-            }, AwaitOperation.Drop)
+            }, DebugHelper.LogError(nameof(ImageViewer2), nameof(InitializeImageTransformer)), AwaitOperation.Drop)
             .AddTo(ref _disposables);
         // Correspond to change when index dragged on track
         // wait for a 25ms pause in changes (debounce), and then emit the last value.
@@ -143,15 +127,7 @@ public partial class ImageViewer2 : UserControl
             .SubscribeAwait(async (x, _) =>
             {
                 await tab.ImageIterator.SkipToIndexAsync(x, tab.GetTabCancellation()).ConfigureAwait(false);
-            }, static result =>
-            {
-#if DEBUG
-                if (result is { IsFailure: true, Exception: not null })
-                {
-                    DebugHelper.LogDebug(nameof(ImageViewer2), nameof(InitializeImageTransformer), result.Exception);
-                }
-#endif
-            }, AwaitOperation.Drop)
+            }, DebugHelper.LogError(nameof(ImageViewer2), nameof(InitializeImageTransformer)), AwaitOperation.Drop)
             .AddTo(ref _disposables);
     }
 
