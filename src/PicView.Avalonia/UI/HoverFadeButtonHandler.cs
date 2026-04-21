@@ -84,12 +84,13 @@ public class HoverFadeButtonHandler
     private bool ShouldShowButton()
     {
 
-        if (_childButton != null && !NavigationManager.CanNavigate(_vm))
-        {
-            return false;
-        }
-
-        return _childButton == null || NavigationManager.GetCount > 1;
+        // if (_childButton != null && !NavigationManager.CanNavigate(_vm))
+        // {
+        //     return false;
+        // }
+        //
+        // return _childButton == null || NavigationManager.GetCount > 1;
+        return true;
     }
 
     /// <summary>

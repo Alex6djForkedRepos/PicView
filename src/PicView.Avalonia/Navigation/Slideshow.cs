@@ -63,10 +63,10 @@ public static class Slideshow
 
     private static bool InitiateAndStart(MainViewModel vm)
     {
-        if (!NavigationManager.CanNavigate(vm))
-        {
-            return false;
-        }
+        // if (!NavigationManager.CanNavigate(vm))
+        // {
+        //     return false;
+        // }
         
         if (_timer is null)
         {
@@ -81,7 +81,7 @@ public static class Slideshow
                 // https://docs.avaloniaui.net/docs/guides/graphics-and-animation/page-transitions/how-to-create-a-custom-page-transition
                 // https://docs.avaloniaui.net/docs/guides/graphics-and-animation/page-transitions/page-slide-transition
                 // https://docs.avaloniaui.net/docs/reference/controls/transitioningcontentcontrol
-                await NavigationManager.Navigate(true, vm, CancellationToken.None).ConfigureAwait(false);
+                // await NavigationManager.Navigate(true, vm, CancellationToken.None).ConfigureAwait(false);
             };
         }
         else if (_timer.Enabled)

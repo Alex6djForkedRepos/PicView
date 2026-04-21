@@ -173,12 +173,12 @@ public static class SettingsUpdater
         vm.GlobalSettings.IsIncludingSubdirectories.Value = false;
         Settings.Sorting.IncludeSubDirectories = false;
 
-        if (!NavigationManager.CanNavigate(vm))
-        {
-            return;
-        }
-        
-        await NavigationManager.ReloadFileListAsync().ConfigureAwait(false);
+        // if (!NavigationManager.CanNavigate(vm))
+        // {
+        //     return;
+        // }
+        //
+        // await NavigationManager.ReloadFileListAsync().ConfigureAwait(false);
         TitleManager.SetTitle(vm);
     }
     
@@ -187,12 +187,12 @@ public static class SettingsUpdater
         vm.GlobalSettings.IsIncludingSubdirectories.Value = true;
         Settings.Sorting.IncludeSubDirectories = true;
         
-        if (!NavigationManager.CanNavigate(vm))
-        {
-            return;
-        }
-        
-        await NavigationManager.ReloadFileListAsync().ConfigureAwait(false);
+        // if (!NavigationManager.CanNavigate(vm))
+        // {
+        //     return;
+        // }
+        //
+        // await NavigationManager.ReloadFileListAsync().ConfigureAwait(false);
         TitleManager.SetTitle(vm);
     }
     
@@ -209,14 +209,14 @@ public static class SettingsUpdater
         else
         {
             Settings.UIProperties.IsTaskbarProgressEnabled = true;
-            if (NavigationManager.CanNavigate(vm))
-            {
-                await Dispatcher.UIThread.InvokeAsync(() =>
-                {
-                    vm.PlatformService.SetTaskbarProgress((ulong)NavigationManager.GetCurrentIndex,
-                        (ulong)NavigationManager.GetCount);
-                });
-            }
+            // if (NavigationManager.CanNavigate(vm))
+            // {
+            //     await Dispatcher.UIThread.InvokeAsync(() =>
+            //     {
+            //         vm.PlatformService.SetTaskbarProgress((ulong)NavigationManager.GetCurrentIndex,
+            //             (ulong)NavigationManager.GetCount);
+            //     });
+            // }
         }
 
         await SaveSettingsAsync();
@@ -316,44 +316,44 @@ public static class SettingsUpdater
     
     public static async Task TurnOnSideBySide(MainViewModel vm)
     {
-        Settings.ImageScaling.ShowImageSideBySide = true;
-        vm.PicViewer.IsShowingSideBySide.Value = true;
-        if (NavigationManager.CanNavigate(vm))
-        {
-            var preloadValue = await NavigationManager.GetNextPreLoadValueAsync();
-            if (preloadValue is null)
-            {
-#if DEBUG
-                Console.WriteLine($"{nameof(TurnOnSideBySide)} {nameof(preloadValue)} is null");       
-#endif
-                return;
-            }
-            vm.PicViewer.SecondaryImageSource.Value = preloadValue.ImageModel.Image;
-            var imageModel1 = new ImageModel
-            {
-                FileInfo = vm.PicViewer.FileInfo.CurrentValue,
-                PixelWidth = (int)vm.PicViewer.ImageWidth.CurrentValue,
-                PixelHeight = (int)vm.PicViewer.ImageHeight.CurrentValue,
-                ImageType = vm.PicViewer.ImageType.CurrentValue,
-                Image = vm.PicViewer.ImageSource,
-                Orientation = vm.PicViewer.ExifOrientation.CurrentValue
-            };
-            var imageModel2 = new ImageModel
-            {
-                FileInfo = preloadValue.ImageModel.FileInfo,
-                PixelWidth = preloadValue.ImageModel.PixelWidth,
-                PixelHeight = preloadValue.ImageModel.PixelHeight,
-                ImageType = preloadValue.ImageModel.ImageType,
-                Image = preloadValue.ImageModel.Image,
-                Orientation = preloadValue.ImageModel.Orientation
-            };
-            await Dispatcher.UIThread.InvokeAsync(() =>
-            {
-                WindowResizing.SetSize(vm.PicViewer.ImageWidth.CurrentValue, vm.PicViewer.ImageHeight.CurrentValue, preloadValue.ImageModel.PixelWidth,
-                    preloadValue.ImageModel.PixelHeight, vm.PicViewer.RotationAngle.CurrentValue, vm);
-                TitleManager.SetSideBySideTitle(vm, imageModel1, imageModel2);
-            });
-        }
+//         Settings.ImageScaling.ShowImageSideBySide = true;
+//         vm.PicViewer.IsShowingSideBySide.Value = true;
+//         if (NavigationManager.CanNavigate(vm))
+//         {
+//             var preloadValue = await NavigationManager.GetNextPreLoadValueAsync();
+//             if (preloadValue is null)
+//             {
+// #if DEBUG
+//                 Console.WriteLine($"{nameof(TurnOnSideBySide)} {nameof(preloadValue)} is null");       
+// #endif
+//                 return;
+//             }
+//             vm.PicViewer.SecondaryImageSource.Value = preloadValue.ImageModel.Image;
+//             var imageModel1 = new ImageModel
+//             {
+//                 FileInfo = vm.PicViewer.FileInfo.CurrentValue,
+//                 PixelWidth = (int)vm.PicViewer.ImageWidth.CurrentValue,
+//                 PixelHeight = (int)vm.PicViewer.ImageHeight.CurrentValue,
+//                 ImageType = vm.PicViewer.ImageType.CurrentValue,
+//                 Image = vm.PicViewer.ImageSource,
+//                 Orientation = vm.PicViewer.ExifOrientation.CurrentValue
+//             };
+//             var imageModel2 = new ImageModel
+//             {
+//                 FileInfo = preloadValue.ImageModel.FileInfo,
+//                 PixelWidth = preloadValue.ImageModel.PixelWidth,
+//                 PixelHeight = preloadValue.ImageModel.PixelHeight,
+//                 ImageType = preloadValue.ImageModel.ImageType,
+//                 Image = preloadValue.ImageModel.Image,
+//                 Orientation = preloadValue.ImageModel.Orientation
+//             };
+//             await Dispatcher.UIThread.InvokeAsync(() =>
+//             {
+//                 WindowResizing.SetSize(vm.PicViewer.ImageWidth.CurrentValue, vm.PicViewer.ImageHeight.CurrentValue, preloadValue.ImageModel.PixelWidth,
+//                     preloadValue.ImageModel.PixelHeight, vm.PicViewer.RotationAngle.CurrentValue, vm);
+//                 TitleManager.SetSideBySideTitle(vm, imageModel1, imageModel2);
+//             });
+//         }
     }
     
     public static async Task ToggleScroll(MainViewModel vm)
@@ -365,7 +365,7 @@ public static class SettingsUpdater
         
         if (Settings.Zoom.ScrollEnabled)
         {
-            TurnOffScroll(vm);
+            // TurnOffScroll(vm);
         }
         else
         {
@@ -375,15 +375,6 @@ public static class SettingsUpdater
         WindowResizing.SetSize(vm);
         
         await SaveSettingsAsync();
-    }
-    
-    public static void TurnOffScroll(MainViewModel vm)
-    {
-        // vm.MainWindow.ToggleScrollBarVisibility.Value = ScrollBarVisibility.Disabled;
-        // vm.Translation.IsScrolling.Value = TranslationManager.Translation.ScrollingDisabled;
-        // // vm.GlobalSettings.IsScrollingEnabled.Value = false;
-        // Settings.Zoom.ScrollEnabled = false;
-        // vm.MainWindow.RightControlOffSetMargin.Value = new Thickness(0);
     }
     
     public static void TurnOnScroll(MainViewModel vm)

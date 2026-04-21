@@ -1,6 +1,5 @@
 ﻿using Avalonia.Input.Platform;
 using Avalonia.Threading;
-using PicView.Avalonia.Navigation;
 using PicView.Avalonia.ViewModels;
 using PicView.Core.DebugTools;
 
@@ -26,7 +25,7 @@ public static class ClipboardPasteOperations
             var files = await Dispatcher.UIThread.InvokeAsync(async () => await clipboard.TryGetFilesAsync());
             if (files != null)
             {
-                await ClipboardFileOperations.PasteFiles(files, vm);
+                await ClipboardFileOperations.PasteFiles(files);
                 return;
             }
 
@@ -34,7 +33,8 @@ public static class ClipboardPasteOperations
             var text = await clipboard.TryGetTextAsync();
             if (!string.IsNullOrWhiteSpace(text))
             {
-                await NavigationManager.LoadPicFromStringAsync(text, vm).ConfigureAwait(false);
+                // TODO load file in active tab
+                //await NavigationManager.LoadPicFromStringAsync(text, vm).ConfigureAwait(false);
                 return;
             }
 

@@ -218,12 +218,12 @@ public static class SettingsUpdater2
         vm.GlobalSettings.IsIncludingSubdirectories.Value = false;
         Settings.Sorting.IncludeSubDirectories = false;
 
-        if (!NavigationManager.CanNavigate(vm))
-        {
-            return;
-        }
-        
-        await NavigationManager.ReloadFileListAsync().ConfigureAwait(false);
+        // if (!NavigationManager.CanNavigate(vm))
+        // {
+        //     return;
+        // }
+        //
+        // await NavigationManager.ReloadFileListAsync().ConfigureAwait(false);
         TitleManager.SetTitle(vm);
     }
     
@@ -232,12 +232,12 @@ public static class SettingsUpdater2
         vm.GlobalSettings.IsIncludingSubdirectories.Value = true;
         Settings.Sorting.IncludeSubDirectories = true;
         
-        if (!NavigationManager.CanNavigate(vm))
-        {
-            return;
-        }
-        
-        await NavigationManager.ReloadFileListAsync().ConfigureAwait(false);
+        // if (!NavigationManager.CanNavigate(vm))
+        // {
+        //     return;
+        // }
+        //
+        // await NavigationManager.ReloadFileListAsync().ConfigureAwait(false);
         TitleManager.SetTitle(vm);
     }
     
@@ -254,14 +254,14 @@ public static class SettingsUpdater2
         else
         {
             Settings.UIProperties.IsTaskbarProgressEnabled = true;
-            if (NavigationManager.CanNavigate(vm))
-            {
-                await Dispatcher.UIThread.InvokeAsync(() =>
-                {
-                    vm.PlatformService.SetTaskbarProgress((ulong)NavigationManager.GetCurrentIndex,
-                        (ulong)NavigationManager.GetCount);
-                });
-            }
+            // if (NavigationManager.CanNavigate(vm))
+            // {
+            //     await Dispatcher.UIThread.InvokeAsync(() =>
+            //     {
+            //         vm.PlatformService.SetTaskbarProgress((ulong)NavigationManager.GetCurrentIndex,
+            //             (ulong)NavigationManager.GetCount);
+            //     });
+            // }
         }
 
         await SaveSettingsAsync();

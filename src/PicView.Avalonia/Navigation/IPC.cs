@@ -157,7 +157,7 @@ public static class IPC
                         // Activating the window works fine in debug mode, but not in AOT release mode 
                         desktop.MainWindow.Activate();
                     });
-                    await NavigationManager.LoadPicFromStringAsync(line, vm).ConfigureAwait(false);
+                    // await NavigationManager.LoadPicFromStringAsync(line, vm).ConfigureAwait(false);
 
                 }
             }

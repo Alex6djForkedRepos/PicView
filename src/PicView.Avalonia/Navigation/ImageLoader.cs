@@ -61,7 +61,7 @@ public static class ImageLoader
                 {
                     _cancellationTokenSource ??= new CancellationTokenSource();
                     await imageIterator.IterateToIndex(index, _cancellationTokenSource).ConfigureAwait(false);
-                    await NavigationManager.CheckIfTiffAndUpdate(vm, fileInfo, index);
+                    // await NavigationManager.CheckIfTiffAndUpdate(vm, fileInfo, index);
                 }
                 else
                 {
@@ -87,7 +87,7 @@ public static class ImageLoader
                 vm.PlatformService.StopTaskbarProgress();
             }
 
-            await NavigationManager.LoadWithoutImageIterator(fileInfo, vm).ConfigureAwait(false);
+            // await NavigationManager.LoadWithoutImageIterator(fileInfo, vm).ConfigureAwait(false);
         }
     }
 

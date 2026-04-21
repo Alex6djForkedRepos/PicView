@@ -34,42 +34,7 @@ public static class WindowFunctions
 
     public static async Task WindowClosingBehavior(Window window)
     {
-        WindowResizing.SaveSize(window);
-
-        if (Dispatcher.UIThread.CheckAccess())
-        {
-            window.Hide();
-        }
-        else
-        {
-            await Dispatcher.UIThread.InvokeAsync(window.Hide);
-        }
-
-        var vm = window.DataContext as MainViewModel;
-        string? lastFile;
-        if (NavigationManager.CanNavigate(vm))
-        {
-            if (!string.IsNullOrEmpty(ArchiveExtraction.LastOpenedArchive))
-            {
-                lastFile = ArchiveExtraction.LastOpenedArchive;
-            }
-            else
-            {
-                lastFile = vm?.PicViewer.FileInfo?.CurrentValue.FullName ?? FileHistoryManager.GetLastEntry();
-            }
-        }
-        else
-        {
-            var url = vm?.PicViewer.Title?.CurrentValue?.GetURL();
-            lastFile = !string.IsNullOrWhiteSpace(url) ? url : FileHistoryManager.GetLastEntry();
-        }
-
-        Settings.StartUp.LastFile = lastFile ?? "";
-        await SaveSettingsAsync();
-        await KeybindingManager.UpdateKeyBindingsFile(); // Save keybindings
-        TempFileHelper.DeleteTempFiles();
-        await FileHistoryManager.SaveToFileAsync();
-        ArchiveExtraction.Cleanup();
+        
     }
 
     #region Window State

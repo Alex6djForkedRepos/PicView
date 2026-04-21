@@ -76,8 +76,8 @@ public static class PrintCore
         {
             DebugHelper.LogDebug(nameof(PrintCore), nameof(ToGrayScale), e);
             var mainVm = Dispatcher.UIThread.Invoke(() => UIHelper.GetMainView.DataContext as MainViewModel);
-            var cached = NavigationManager.GetPreLoadValueAsync(mainVm.PicViewer.FileInfo.Value).Result;
-            src = cached.ImageModel.Image as Bitmap ?? throw new NullReferenceException();
+            // var cached = NavigationManager.GetPreLoadValueAsync(mainVm.PicViewer.FileInfo.Value).Result;
+            // src = cached.ImageModel.Image as Bitmap ?? throw new NullReferenceException();
             width = src.PixelSize.Width;
             height = src.PixelSize.Height;
         }

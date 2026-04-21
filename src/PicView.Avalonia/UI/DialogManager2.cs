@@ -58,10 +58,10 @@ public static class DialogManager
 
     public static void AddFileSearchDialog()
     {
-        if (!NavigationManager.CanNavigate(UIHelper.GetMainView.DataContext as MainViewModel))
-        {
-            return;
-        }
+        // if (!NavigationManager.CanNavigate(UIHelper.GetMainView.DataContext as MainViewModel))
+        // {
+        //     return;
+        // }
         // if (UIHelper.GetMainView.MainGrid.Children.OfType<FileSearchDialog>().Any())
         // {
         //     return;

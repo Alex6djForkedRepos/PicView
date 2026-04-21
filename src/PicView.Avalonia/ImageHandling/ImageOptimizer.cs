@@ -16,10 +16,10 @@ public static class ImageOptimizer
     /// <param name="vm">The main view model</param>
     public static async Task OptimizeImageAsync(MainViewModel vm)
     {
-        if (!NavigationManager.CanNavigate(vm) || vm.PicViewer.FileInfo == null)
-        {
-            return;
-        }
+        // if (!NavigationManager.CanNavigate(vm) || vm.PicViewer.FileInfo == null)
+        // {
+        //     return;
+        // }
 
         try
         {
@@ -39,7 +39,7 @@ public static class ImageOptimizer
                     DebugHelper.LogDebug(nameof(ImageOptimizer), nameof(OptimizeImageAsync), ex);
                 }
             });
-            await NavigationManager.QuickReload();
+            // await NavigationManager.QuickReload();
         }
         finally
         {

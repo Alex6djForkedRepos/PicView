@@ -4,13 +4,13 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Input.Platform;
 using Avalonia.Platform.Storage;
 using PicView.Avalonia.Animations;
-using PicView.Avalonia.Navigation;
 using PicView.Avalonia.UI;
 using PicView.Avalonia.ViewModels;
 using PicView.Core.DebugTools;
 using PicView.Core.FileHandling;
 using PicView.Core.Localization;
 using PicView.Core.ProcessHandling;
+using PicView.Core.ViewModels;
 
 namespace PicView.Avalonia.Clipboard;
 
@@ -24,8 +24,7 @@ public static class ClipboardFileOperations
     /// If the current file is being duplicated, the view model will navigate to the duplicated file.
     /// </summary>
     /// <param name="path">Path to the file to duplicate, or null to duplicate the current file.</param>
-    /// <param name="vm">The main view model</param>
-    public static async Task Duplicate(string path, MainViewModel vm)
+    public static async Task Duplicate(string path)
     {
         if (string.IsNullOrWhiteSpace(path))
         {
@@ -34,16 +33,12 @@ public static class ClipboardFileOperations
         
         try
         {
-            // vm.MainWindow.IsLoadingIndicatorShown.Value = true;
+            if (Application.Current.DataContext is CoreViewModel core)
+            {
+                core.MainWindows.ActiveWindow.Value.IsLoadingIndicatorShown.Value = true;
+            }
             
-            if (path == vm.PicViewer.FileInfo?.CurrentValue.FullName)
-            {
-                await DuplicateCurrentFile(vm);
-            }
-            else
-            {
-                await DuplicateFile(path);
-            }
+            await DuplicateFile(path);
         }
         catch (Exception ex)
         {
@@ -52,55 +47,13 @@ public static class ClipboardFileOperations
         }
         finally
         {
-            // vm.MainWindow.IsLoadingIndicatorShown.Value = false;
-        }
-    }
-
-    /// <summary>
-    /// Duplicates the current file and navigates to it
-    /// </summary>
-    /// <param name="vm">The main view model</param>
-    private static async Task DuplicateCurrentFile(MainViewModel vm)
-    {
-        if (!NavigationManager.CanNavigate(vm))
-        {
-            return;
-        }
-
-        if (Settings.Navigation.IsFileWatcherEnabled)
-        {
-            NavigationManager.ImageIterator.IsWatcherEnabled = false;
-        }
-
-        try
-        {
-            var duplicatedPath =
-                await FileHelper.DuplicateAndReturnFileNameAsync(vm.PicViewer.FileInfo.CurrentValue.FullName);
-
-            if (string.IsNullOrWhiteSpace(duplicatedPath) || !File.Exists(duplicatedPath))
+            if (Application.Current.DataContext is CoreViewModel core)
             {
-                return;
-            }
-
-            await NavigationManager.AddFile(duplicatedPath);
-            await Task.WhenAll(
-                AnimationsHelper.CopyAnimation(), 
-                NavigationManager.LoadPicFromFile(duplicatedPath, vm)
-            );
-        }
-        finally
-        {
-            if (Settings.Navigation.IsFileWatcherEnabled)
-            {
-                NavigationManager.EnableWatcher();
-            }
-            else
-            {
-                NavigationManager.DisableWatcher();
+                core.MainWindows.ActiveWindow.Value.IsLoadingIndicatorShown.Value = false;
             }
         }
     }
-    
+
     /// <summary>
     /// Duplicates the specified file and plays a copy animation when done. The original file is not navigated away from.
     /// </summary>
@@ -157,18 +110,19 @@ public static class ClipboardFileOperations
     /// <summary>
     /// Handles pasting files from the clipboard
     /// </summary>
-    public static async Task PasteFiles(object files, MainViewModel vm)
+    public static async Task PasteFiles(object files)
     {
         try
         {
             switch (files)
             {
                 case IEnumerable<IStorageItem> items:
-                    await ProcessStorageItems(items.ToArray(), vm);
+                    await ProcessStorageItems(items.ToArray());
                     break;
                 case IStorageItem singleFile:
                 {
-                    await NavigationManager.LoadPicFromStringAsync(singleFile.Path.AbsolutePath, vm);
+                    // TODO send to active tab
+                    //await NavigationManager.LoadPicFromStringAsync(singleFile.Path.AbsolutePath, vm);
                     break;
                 }
             }
@@ -179,15 +133,16 @@ public static class ClipboardFileOperations
         }
     }
     
-    private static async Task ProcessStorageItems(IStorageItem[] storageItems, MainViewModel vm)
+    private static async Task ProcessStorageItems(IStorageItem[] storageItems)
     {
         if (storageItems.Length == 0)
         {
             return;
         }
 
+        // TODO load file in active tab
         // Load the first file
-        await NavigationManager.LoadPicFromStringAsync(storageItems[0].Path.AbsolutePath, vm);
+        //await NavigationManager.LoadPicFromStringAsync(storageItems[0].Path.AbsolutePath, vm);
 
         // Open consecutive files in a new process
         foreach (var file in storageItems.Skip(1))

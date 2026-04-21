@@ -235,25 +235,6 @@ public partial class BatchResizeView : UserControl
 
     private static void InitializeNavigationData(MainViewModel vm)
     {
-        if (!NavigationManager.CanNavigate(vm))
-        {
-            return;
-        }
-
-        vm.BatchResizeViewModel.SelectedFiles.Value =
-            new ObservableCollection<FileInfo>(NavigationManager.GetCollection);
-
-        if (!string.IsNullOrWhiteSpace(vm.PicViewer.FileInfo?.CurrentValue.DirectoryName))
-        {
-            vm.BatchResizeViewModel.OutputFolder.Value = Path.Combine(
-                vm.PicViewer.FileInfo?.CurrentValue.DirectoryName,
-                TranslationManager.Translation.BatchResize);
-        }
-
-        vm.BatchResizeViewModel.SingleWidthValue.Value =
-            vm.BatchResizeViewModel.WidthValue.Value = (uint)vm.PicViewer.PixelWidth.CurrentValue;
-        vm.BatchResizeViewModel.SingleHeightValue.Value =
-            vm.BatchResizeViewModel.HeightValue.Value = (uint)vm.PicViewer.PixelHeight.CurrentValue;
     }
 
     private void IsQualityEnabledBox_OnIsCheckedChanged(object? sender, RoutedEventArgs e)

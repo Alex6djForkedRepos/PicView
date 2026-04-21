@@ -23,10 +23,10 @@ public static class FileListManager
     public static async Task UpdateFileList(IPlatformSpecificService? platformSpecificService, MainViewModel vm, SortFilesBy sortFilesBy)
     {
         Settings.Sorting.SortPreference = (int)sortFilesBy;
-        if (!NavigationManager.CanNavigate(vm))
-        {
-            return;
-        }
+        // if (!NavigationManager.CanNavigate(vm))
+        // {
+        //     return;
+        // }
 
         await UpdateFileList(platformSpecificService, vm);
     }
@@ -40,10 +40,10 @@ public static class FileListManager
     public static async Task UpdateFileList(IPlatformSpecificService? platformSpecificService, MainViewModel vm, bool ascending)
     {
         Settings.Sorting.Ascending = ascending;
-        if (!NavigationManager.CanNavigate(vm))
-        {
-            return;
-        }
+        // if (!NavigationManager.CanNavigate(vm))
+        // {
+        //     return;
+        // }
         await UpdateFileList(platformSpecificService, vm);
     }
 
@@ -71,7 +71,7 @@ public static class FileListManager
                 }
 
                 var index = files.FindIndex(info => info.FullName.Equals(vm.PicViewer.FileInfo.CurrentValue.FullName));
-                NavigationManager.UpdateFileListAndIndex(files, index);
+                // NavigationManager.UpdateFileListAndIndex(files, index);
                 TitleManager.SetTitle(vm);
                 return true;
             }

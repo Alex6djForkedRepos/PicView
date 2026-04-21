@@ -36,12 +36,12 @@ public static class SaveImageHandler
         }
 
         // Clear possible cache to show updated values correctly
-        NavigationManager.RemoveFromPreloader(path);
-        NavigationManager.RemoveFromPreloader(destination);
+        // NavigationManager.RemoveFromPreloader(path);
+        // NavigationManager.RemoveFromPreloader(destination);
 
         if (sameFile)
         {
-            await NavigationManager.LoadPicFromFile(destination, vm).ConfigureAwait(false);
+            //await NavigationManager.LoadPicFromFile(destination, vm).ConfigureAwait(false);
         }
     }
 }

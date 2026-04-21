@@ -305,32 +305,32 @@ public class PicBox : Control, IDisposable
 
     private Size GetSizeFromAlternativeSources()
     {
-        if (DataContext is not MainViewModel vm)
-        {
-            return new Size();
-        }
-
-        var preloadValue = NavigationManager.GetCurrentPreLoadValue();
-        if (preloadValue?.ImageModel != null)
-        {
-            return new Size(preloadValue.ImageModel.PixelWidth, preloadValue.ImageModel.PixelHeight);
-        }
-
-        if (vm.PicViewer.FileInfo?.CurrentValue?.Exists != true)
-        {
-            return new Size();
-        }
-
-        try
-        {
-            using var magickImage = new MagickImage();
-            magickImage.Ping(vm.PicViewer.FileInfo.CurrentValue);
-            return new Size(magickImage.Width, magickImage.Height);
-        }
-        catch (Exception exception)
-        {
-            DebugHelper.LogDebug(nameof(PicBox), nameof(GetSizeFromAlternativeSources), exception);
-        }
+        // if (DataContext is not MainViewModel vm)
+        // {
+        //     return new Size();
+        // }
+        //
+        // var preloadValue = NavigationManager.GetCurrentPreLoadValue();
+        // if (preloadValue?.ImageModel != null)
+        // {
+        //     return new Size(preloadValue.ImageModel.PixelWidth, preloadValue.ImageModel.PixelHeight);
+        // }
+        //
+        // if (vm.PicViewer.FileInfo?.CurrentValue?.Exists != true)
+        // {
+        //     return new Size();
+        // }
+        //
+        // try
+        // {
+        //     using var magickImage = new MagickImage();
+        //     magickImage.Ping(vm.PicViewer.FileInfo.CurrentValue);
+        //     return new Size(magickImage.Width, magickImage.Height);
+        // }
+        // catch (Exception exception)
+        // {
+        //     DebugHelper.LogDebug(nameof(PicBox), nameof(GetSizeFromAlternativeSources), exception);
+        // }
 
         return new Size();
     }
@@ -342,37 +342,37 @@ public class PicBox : Control, IDisposable
             return new Size();
         }
 
-        try
-        {
-            return secondarySource.Size;
-        }
-        catch (Exception)
-        {
-            if (DataContext is not MainViewModel vm)
-            {
-                return new Size();
-            }
-
-            var nextPreloadValue = NavigationManager.GetNextPreLoadValue();
-            if (nextPreloadValue?.ImageModel != null)
-            {
-                return new Size(nextPreloadValue.ImageModel.PixelWidth, nextPreloadValue.ImageModel.PixelHeight);
-            }
-
-            if (NavigationManager.CanNavigate(vm))
-            {
-                try
-                {
-                    using var magickImage = new MagickImage();
-                    magickImage.Ping(NavigationManager.GetNextFileName);
-                    return new Size(magickImage.Width, magickImage.Height);
-                }
-                catch
-                {
-                    return new Size();
-                }
-            }
-        }
+        // try
+        // {
+        //     return secondarySource.Size;
+        // }
+        // catch (Exception)
+        // {
+        //     if (DataContext is not MainViewModel vm)
+        //     {
+        //         return new Size();
+        //     }
+        //
+        //     var nextPreloadValue = NavigationManager.GetNextPreLoadValue();
+        //     if (nextPreloadValue?.ImageModel != null)
+        //     {
+        //         return new Size(nextPreloadValue.ImageModel.PixelWidth, nextPreloadValue.ImageModel.PixelHeight);
+        //     }
+        //
+        //     if (NavigationManager.CanNavigate(vm))
+        //     {
+        //         try
+        //         {
+        //             using var magickImage = new MagickImage();
+        //             magickImage.Ping(NavigationManager.GetNextFileName);
+        //             return new Size(magickImage.Width, magickImage.Height);
+        //         }
+        //         catch
+        //         {
+        //             return new Size();
+        //         }
+        //     }
+        // }
 
         return new Size();
     }
@@ -397,27 +397,27 @@ public class PicBox : Control, IDisposable
         {
             DebugHelper.LogDebug(nameof(PicBox), nameof(RenderImage), e);
             
-            var preloadValue = NavigationManager.GetCurrentPreLoadValue();
-            if (preloadValue?.ImageModel?.Image != null)
-            {
-                try
-                {
-                    context.DrawImage(preloadValue?.ImageModel?.Image as IImage, sourceRect, destRect);
-                }
-                catch (Exception exception)
-                {
-                    DebugHelper.LogDebug(nameof(PicBox), nameof(RenderImage), exception);
-                }
-            }
-            else
-            {
-                // Last resort bug fix
-                var asyncPreloadValue = NavigationManager.GetCurrentPreLoadValueAsync().GetAwaiter().GetResult();
-                if (asyncPreloadValue?.ImageModel?.Image is IImage image)
-                {
-                    context.DrawImage(image, sourceRect, destRect);
-                }
-            }
+            //var preloadValue = NavigationManager.GetCurrentPreLoadValue();
+            // if (preloadValue?.ImageModel?.Image != null)
+            // {
+            //     try
+            //     {
+            //         context.DrawImage(preloadValue?.ImageModel?.Image as IImage, sourceRect, destRect);
+            //     }
+            //     catch (Exception exception)
+            //     {
+            //         DebugHelper.LogDebug(nameof(PicBox), nameof(RenderImage), exception);
+            //     }
+            // }
+            // else
+            // {
+            //     // Last resort bug fix
+            //     var asyncPreloadValue = NavigationManager.GetCurrentPreLoadValueAsync().GetAwaiter().GetResult();
+            //     if (asyncPreloadValue?.ImageModel?.Image is IImage image)
+            //     {
+            //         context.DrawImage(image, sourceRect, destRect);
+            //     }
+            // }
         }
         catch (Exception e)
         {

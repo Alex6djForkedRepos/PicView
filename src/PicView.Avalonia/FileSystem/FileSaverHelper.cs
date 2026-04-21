@@ -30,8 +30,8 @@ public static class FileSaverHelper
         if (isSaved)
         {
             // Remove cached value so that rotation or likewise will be updated when navigating back
-            NavigationManager.RemoveFromPreloader(vm.PicViewer.FileInfo.CurrentValue.FullName);
-            await NavigationManager.QuickReload();
+            // NavigationManager.RemoveFromPreloader(vm.PicViewer.FileInfo.CurrentValue.FullName);
+            // await NavigationManager.QuickReload();
         }
 
         // TODO: Add visual design to tell whether file was saved
@@ -54,7 +54,7 @@ public static class FileSaverHelper
         var isSaved = await FilePicker.PickAndSaveFileAsAsync(fileName, vm);
         if (isSaved)
         {
-            NavigationManager.RemoveFromPreloader(fileName);
+            //NavigationManager.RemoveFromPreloader(fileName);
         }
 
         // TODO: Add visual design to tell whether file was saved

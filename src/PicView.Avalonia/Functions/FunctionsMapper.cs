@@ -212,49 +212,49 @@ public static class FunctionsMapper
 
     /// <inheritdoc cref="NavigationManager.Iterate(bool, MainViewModel)" />
     public static async ValueTask Next() =>
-        await NavigationManager.Iterate(true, Vm, CancellationToken.None).ConfigureAwait(false);
+        await ValueTask.CompletedTask;
     
     /// <inheritdoc cref="NavigationManager.NavigateBetweenDirectories(bool, MainViewModel)" />
     public static async ValueTask NextFolder() =>
-        await NavigationManager.NavigateBetweenDirectories(true, Vm).ConfigureAwait(false);
+        await ValueTask.CompletedTask;
 
     public static async ValueTask NextArchive() =>
-        await NavigationManager.NavigateBetweenArchives(true, Vm).ConfigureAwait(false);
-    
+        await ValueTask.CompletedTask;
+
     /// <inheritdoc cref="NavigationManager.NavigateFirstOrLast(bool, MainViewModel)" />
     public static async ValueTask Last() =>
-        await NavigationManager.NavigateFirstOrLast(last: true, Vm).ConfigureAwait(false);
+        await ValueTask.CompletedTask;
 
     /// <inheritdoc cref="NavigationManager.Iterate(bool, MainViewModel)" />
     public static async ValueTask Prev() =>
-        await NavigationManager.Iterate(false, Vm, CancellationToken.None).ConfigureAwait(false);
+        await ValueTask.CompletedTask;
     
     /// <inheritdoc cref="NavigationManager.NavigateBetweenDirectories(bool, MainViewModel)" />
     public static async ValueTask PrevFolder() =>
-        await NavigationManager.NavigateBetweenDirectories(false, Vm).ConfigureAwait(false);
+        await ValueTask.CompletedTask;
 
     public static async ValueTask PrevArchive() =>
-        await NavigationManager.NavigateBetweenArchives(false, Vm).ConfigureAwait(false);
+        await ValueTask.CompletedTask;
 
     /// <inheritdoc cref="NavigationManager.NavigateFirstOrLast(bool, MainViewModel)" />
     public static async ValueTask First() =>
-        await NavigationManager.NavigateFirstOrLast(last: false, Vm).ConfigureAwait(false);
-    
+        await ValueTask.CompletedTask;
+
     /// <inheritdoc cref="NavigationManager.Next10(MainViewModel)" />
     public static async ValueTask Next10() =>
-        await NavigationManager.Next10(Vm).ConfigureAwait(false);
+        await ValueTask.CompletedTask;
 
     /// <inheritdoc cref="NavigationManager.Next100(MainViewModel)" />
     public static async ValueTask Next100() =>
-        await NavigationManager.Next100(Vm).ConfigureAwait(false);
-    
+        await ValueTask.CompletedTask;
+
     /// <inheritdoc cref="NavigationManager.Prev10(MainViewModel)" />
     public static async ValueTask Prev10() =>
-        await NavigationManager.Prev10(Vm).ConfigureAwait(false);
-    
+        await ValueTask.CompletedTask;
+
     /// <inheritdoc cref="NavigationManager.Prev100(MainViewModel)" />
     public static async ValueTask Prev100() =>
-        await NavigationManager.Prev100(Vm).ConfigureAwait(false);
+        await ValueTask.CompletedTask;
 
     public static async ValueTask Search() =>
         await Dispatcher.UIThread.InvokeAsync(DialogManager.AddFileSearchDialog);
@@ -495,16 +495,12 @@ public static class FunctionsMapper
     #region File funnctions
 
     /// <inheritdoc cref="NavigationManager.LoadPicFromStringAsync(string, MainViewModel)" />
-    public static async Task OpenLastFile() =>
-        await NavigationManager.LoadLastFileAsync(Vm).ConfigureAwait(false);
+    public static async Task OpenPreviousFileHistoryEntry() =>
+        await ValueTask.CompletedTask;
 
     /// <inheritdoc cref="NavigationManager.LoadPicFromStringAsync(string, MainViewModel)" />
-    public static async Task OpenPreviousFileHistoryEntry() =>
-        await NavigationManager.LoadPicFromStringAsync(FileHistoryManager.GetPreviousEntry(), Vm).ConfigureAwait(false);
-   
-    /// <inheritdoc cref="NavigationManager.LoadPicFromStringAsync(string, MainViewModel)" />
     public static async Task OpenNextFileHistoryEntry() =>
-        await NavigationManager.LoadPicFromStringAsync(FileHistoryManager.GetNextEntry(), Vm).ConfigureAwait(false);
+        await ValueTask.CompletedTask;
     
     /// <inheritdoc cref="FileManager.Print(string, MainViewModel)" />
     public static async ValueTask Print() =>
@@ -579,7 +575,7 @@ public static class FunctionsMapper
 
     /// <inheritdoc cref="ClipboardFileOperations.Duplicate(string, MainViewModel)" />
     public static async ValueTask DuplicateFile() => 
-        await ClipboardFileOperations.Duplicate(Vm.PicViewer.FileInfo?.CurrentValue.FullName, Vm).ConfigureAwait(false);
+        await ClipboardFileOperations.Duplicate(Vm.PicViewer.FileInfo?.CurrentValue.FullName).ConfigureAwait(false);
 
     /// <inheritdoc cref="ClipboardFileOperations.CutFile(string, MainViewModel)" />
     public static async ValueTask CutFile() =>

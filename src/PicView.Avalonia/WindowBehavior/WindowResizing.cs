@@ -177,75 +177,9 @@ public static class WindowResizing
 
     public static ImageSize? GetSize(MainViewModel vm)
     {
-        double firstWidth, firstHeight;
-        var preloadValue = NavigationManager.GetCurrentPreLoadValue();
-        if (preloadValue == null)
-        {
-            if (vm.PicViewer.FileInfo is null)
-            {
-                if (vm.PicViewer.ImageSource.CurrentValue is Bitmap bitmap)
-                {
-                    firstWidth = bitmap.PixelSize.Width;
-                    firstHeight = bitmap.PixelSize.Height;
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            else if (vm.PicViewer.FileInfo?.CurrentValue?.Exists != null)
-            {
-                try
-                {
-                    var magickImage = new MagickImage();
-                    magickImage.Ping(vm.PicViewer.FileInfo.CurrentValue);
-                    firstWidth = magickImage.Width;
-                    firstHeight = magickImage.Height;
-                }
-                catch (Exception e)
-                {
-                    DebugHelper.LogDebug(nameof(WindowBehavior), nameof(GetSize), e);
-                    return null;
-                }
-            }
-            else
-            {
-                return null;
-            }
-        }
-        else
-        {
-            firstWidth = preloadValue.ImageModel?.PixelWidth ?? vm.PicViewer.ImageWidth.CurrentValue;
-            firstHeight = preloadValue.ImageModel?.PixelHeight ?? vm.PicViewer.ImageHeight.CurrentValue;
-        }
+       
 
-        if (!Settings.ImageScaling.ShowImageSideBySide)
-        {
-            return GetSize(firstWidth, firstHeight, 0, 0, vm.PicViewer.RotationAngle.CurrentValue, vm);
-        }
-
-        var secondaryPreloadValue = NavigationManager.GetNextPreLoadValue();
-        double secondWidth, secondHeight;
-        if (secondaryPreloadValue is not null)
-        {
-            secondWidth = secondaryPreloadValue.ImageModel.PixelWidth;
-            secondHeight = secondaryPreloadValue.ImageModel.PixelHeight;
-        }
-        else if (NavigationManager.CanNavigate(vm))
-        {
-            var nextFileName = NavigationManager.GetNextFileName;
-            var magickImage = new MagickImage();
-            magickImage.Ping(nextFileName);
-            secondWidth = magickImage.Width;
-            secondHeight = magickImage.Height;
-        }
-        else
-        {
-            secondWidth = 0;
-            secondHeight = 0;
-        }
-
-        return GetSize(firstWidth, firstHeight, secondWidth, secondHeight, vm.PicViewer.RotationAngle.CurrentValue,
+        return GetSize(0, 0, 0, 0, vm.PicViewer.RotationAngle.CurrentValue,
             vm);
     }
 
