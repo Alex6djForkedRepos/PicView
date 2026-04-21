@@ -48,7 +48,7 @@ public class GalleryAnimationControl : UserControl
 
     #endregion
 
-    #region Constructors & Setup
+    #region Constructors, Subscriptions & Setup
 
     protected GalleryAnimationControl()
     {

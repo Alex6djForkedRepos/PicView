@@ -40,12 +40,12 @@
                                 VerticalAlignment="Center">
                                 <customControls:PicBox2
                                     DockPanel.Dock="Left"
-                                    Source="{CompiledBinding Model.Value.Image}"
+                                    Source="{CompiledBinding Image.Value}"
                                     x:Name="MainImage" />
                                 <customControls:PicBox2
                                     DockPanel.Dock="Right"
                                     IsVisible="{CompiledBinding $parent[Window].((vm:MainWindowViewModel)DataContext).IsSideBySide.Value}"
-                                    Source="{CompiledBinding SecondaryModel.Value.Image}"
+                                    Source="{CompiledBinding SecondaryImage.Value}"
                                     x:Name="SecondaryImage" />
                             </DockPanel>
                         </Border>

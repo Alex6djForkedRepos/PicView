@@ -73,7 +73,7 @@ public partial class GalleryView2 : GalleryAnimationControl
                         {
                             GalleryItemsControl.Items.Add(item);
                         },DispatcherPriority.Background);
-                        if (tab.Model.CurrentValue.FileInfo.FullName != item.FileInfo.FullName)
+                        if (tab.Model.FileInfo.FullName != item.FileInfo.FullName)
                         {
                             continue;
                         }

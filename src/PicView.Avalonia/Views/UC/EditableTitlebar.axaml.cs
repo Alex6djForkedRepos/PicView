@@ -165,7 +165,7 @@ public partial class EditableTitlebar : UserControl
         }
 
         var file = core.MainWindows.ActiveWindow.CurrentValue.WindowTabs.ActiveTab.CurrentValue.Model
-            .CurrentValue.FileInfo;
+            .FileInfo;
         if (file is null)
         {
             return;

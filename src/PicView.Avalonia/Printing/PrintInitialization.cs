@@ -9,7 +9,7 @@ public static class PrintInitialization
     public static void Initialize(MainWindowViewModel vm, string path, IPrintWindow printWindow,
         List<string> installedPrinters, List<string> paperSizes, bool supportsColor, string printerName, PrinterPageSettings pageSettings)
     {
-        if (vm.WindowTabs.ActiveTab.CurrentValue.Model.CurrentValue.Image != null && File.Exists(path))
+        if (vm.WindowTabs.ActiveTab.CurrentValue.Model.Image != null && File.Exists(path))
         {
             using var fs = File.OpenRead(path);
             vm.PrintPreview.PreviewImage.Value = new Bitmap(fs);
@@ -25,7 +25,7 @@ public static class PrintInitialization
         var currentPrintSettings =
             new PrintSettings // TODO: Add print settings to its own config class to remember user preference
             {
-                ImagePath = { Value = vm.WindowTabs.ActiveTab.CurrentValue.Model.CurrentValue.FileInfo?.FullName },
+                ImagePath = { Value = vm.WindowTabs.ActiveTab.CurrentValue.FileInfo?.CurrentValue.FullName },
                 PrinterName = { Value = printerName },
                 PaperSize = { Value = pageSettings.PaperSize.PaperName },
                 ColorMode =

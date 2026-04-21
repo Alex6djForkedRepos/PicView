@@ -30,8 +30,6 @@
                 Classes="errorHover"
                 ClickMode="Release"
                 Command="{CompiledBinding DeleteFileCommand}"
-                CommandParameter="{CompiledBinding WindowTabs.ActiveTab.Value.Model.Value.FileInfo.FullName,
-                                                   FallbackValue=''}"
                 Data="{StaticResource RecycleGeometry}"
                 DockPanel.Dock="Right"
                 Foreground="{DynamicResource MainTextColor}"
@@ -69,8 +67,6 @@
                 BorderThickness="0,0,1,0"
                 Classes="noBorderHover"
                 Command="{Binding OptimizeImageCommand}"
-                CommandParameter="{CompiledBinding WindowTabs.ActiveTab.Value.Model.Value.FileInfo.FullName,
-                                                   FallbackValue=''}"
                 DockPanel.Dock="Right"
                 Foreground="{DynamicResource MainTextColor}"
                 Height="28"
@@ -78,8 +74,6 @@
                 IconHeight="17"
                 IconMargin="10,0,5,0"
                 IconWidth="17"
-                IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.Model.Value.Image,
-                                            Mode=OneWay}"
                 IsVisible="{CompiledBinding InfoWindow.IsExtraButtonsEnabled.Value}"
                 Text="{CompiledBinding Translation.OptimizeImage.Value,
                                        Mode=OneWay}"
@@ -94,8 +88,6 @@
                 BorderThickness="0,0,1,0"
                 Classes="noBorderHover"
                 Command="{CompiledBinding OpenWithCommand}"
-                CommandParameter="{CompiledBinding WindowTabs.ActiveTab.Value.Model.Value.FileInfo.FullName,
-                                                   FallbackValue=''}"
                 DockPanel.Dock="Right"
                 Foreground="{DynamicResource MainTextColor}"
                 Height="28"
@@ -118,8 +110,6 @@
                 BorderThickness="0,0,1,0"
                 Classes="noBorderHover"
                 Command="{CompiledBinding DuplicateFileCommand}"
-                CommandParameter="{CompiledBinding WindowTabs.ActiveTab.Value.Model.Value.FileInfo.FullName,
-                                                   FallbackValue=''}"
                 Data="{StaticResource DuplicateGeometry}"
                 DockPanel.Dock="Right"
                 Foreground="{DynamicResource MainTextColor}"
@@ -137,8 +127,6 @@
                 BorderThickness="1,0,1,0"
                 Classes="noBorderHover"
                 Command="{CompiledBinding OpenInExplorerCommand}"
-                CommandParameter="{CompiledBinding WindowTabs.ActiveTab.Value.Model.Value.FileInfo.FullName,
-                                                   FallbackValue=''}"
                 Data="{StaticResource ShowInFolderGeometry}"
                 DockPanel.Dock="Right"
                 Foreground="{DynamicResource MainTextColor}"
@@ -162,8 +150,6 @@
                 BorderThickness="0,0,1,0"
                 Classes="noBorderHover"
                 Command="{CompiledBinding Exif.SetExifRating0Command}"
-                CommandParameter="{CompiledBinding WindowTabs.ActiveTab.Value.Model.Value.FileInfo.FullName,
-                                                   FallbackValue=''}"
                 DockPanel.Dock="Right"
                 Foreground="{DynamicResource MainTextColor}"
                 Icon="{StaticResource StarOffImage}"

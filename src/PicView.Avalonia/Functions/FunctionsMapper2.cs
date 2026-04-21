@@ -690,7 +690,7 @@ public class FunctionsMapper2(Core.ViewModels.MainWindowViewModel vm, Window win
     /// <inheritdoc cref="FileManager.Print(string, MainViewModel)" />
     public async ValueTask Print()
     {
-        await FileManager2.Print(vm.WindowTabs.ActiveTab.CurrentValue.Model.CurrentValue.FileInfo?.FullName, vm).ConfigureAwait(false);
+        await FileManager2.Print(vm.WindowTabs.ActiveTab.CurrentValue.Model.FileInfo?.FullName, vm).ConfigureAwait(false);
     }
 
     /// <inheritdoc cref="FilePicker.SelectAndLoadFile(MainViewModel)" />
@@ -707,7 +707,7 @@ public class FunctionsMapper2(Core.ViewModels.MainWindowViewModel vm, Window win
             return ValueTask.CompletedTask;
         }
 
-        core.PlatformService.OpenWith(vm.WindowTabs.ActiveTab.CurrentValue.Model.CurrentValue.FileInfo?.FullName);
+        core.PlatformService.OpenWith(vm.WindowTabs.ActiveTab.CurrentValue.Model.FileInfo?.FullName);
         return ValueTask.CompletedTask;
     }
 
@@ -719,7 +719,7 @@ public class FunctionsMapper2(Core.ViewModels.MainWindowViewModel vm, Window win
             return ValueTask.CompletedTask;
         }
 
-        core.PlatformService.LocateOnDisk(vm.WindowTabs.ActiveTab.CurrentValue.Model.CurrentValue.FileInfo?.FullName);
+        core.PlatformService.LocateOnDisk(vm.WindowTabs.ActiveTab.CurrentValue.Model.FileInfo?.FullName);
         return ValueTask.CompletedTask;
     }
 
@@ -748,7 +748,7 @@ public class FunctionsMapper2(Core.ViewModels.MainWindowViewModel vm, Window win
         const bool recycle = true;
         await FileManager2
             .DeleteFileWithOptionalDialog(recycle, vm.WindowTabs.ActiveTab.CurrentValue.Model
-                .CurrentValue.FileInfo?.FullName, core.PlatformService)
+                .FileInfo?.FullName, core.PlatformService)
             .ConfigureAwait(false);
     }
     
@@ -762,7 +762,7 @@ public class FunctionsMapper2(Core.ViewModels.MainWindowViewModel vm, Window win
         const bool recycle = false;
         await FileManager2
             .DeleteFileWithOptionalDialog(recycle, vm.WindowTabs.ActiveTab.CurrentValue.Model
-                .CurrentValue.FileInfo?.FullName, core.PlatformService)
+                .FileInfo?.FullName, core.PlatformService)
             .ConfigureAwait(false);
     }
 
@@ -784,7 +784,7 @@ public class FunctionsMapper2(Core.ViewModels.MainWindowViewModel vm, Window win
         }
         await Task.Run(() =>
             FileManager2.ShowFileProperties(vm.WindowTabs.ActiveTab.CurrentValue.Model
-                .CurrentValue.FileInfo?.FullName)).ConfigureAwait(false);
+                .FileInfo?.FullName)).ConfigureAwait(false);
     }
 
     #endregion
@@ -795,14 +795,14 @@ public class FunctionsMapper2(Core.ViewModels.MainWindowViewModel vm, Window win
     public async ValueTask CopyFile()
     {
         await ClipboardFileOperations2.CopyFileToClipboard(vm.WindowTabs.ActiveTab.CurrentValue.Model
-            .CurrentValue.FileInfo?.FullName).ConfigureAwait(false);
+            .FileInfo?.FullName).ConfigureAwait(false);
     }
     
     /// <inheritdoc cref="ClipboardTextOperations.CopyTextToClipboard(string)" />
     public async ValueTask CopyFilePath()
     {
         await ClipboardTextOperations2.CopyTextToClipboard(vm.WindowTabs.ActiveTab.CurrentValue.Model
-            .CurrentValue.FileInfo?.FullName).ConfigureAwait(false);
+            .FileInfo?.FullName).ConfigureAwait(false);
     }
 
     /// <inheritdoc cref="ClipboardImageOperations.CopyImageToClipboard(MainViewModel)" />
@@ -823,7 +823,7 @@ public class FunctionsMapper2(Core.ViewModels.MainWindowViewModel vm, Window win
     public async ValueTask DuplicateFile()
     {
         await ClipboardFileOperations2.Duplicate(vm.WindowTabs.ActiveTab.CurrentValue.Model
-            .CurrentValue.FileInfo?.FullName, vm).ConfigureAwait(false);
+            .FileInfo?.FullName, vm).ConfigureAwait(false);
     }
 
     /// <inheritdoc cref="ClipboardFileOperations.CutFile(string, MainViewModel)" />
@@ -834,7 +834,7 @@ public class FunctionsMapper2(Core.ViewModels.MainWindowViewModel vm, Window win
             return;
         }
         await ClipboardFileOperations2.CutFile(vm.WindowTabs.ActiveTab.CurrentValue.Model
-            .CurrentValue.FileInfo?.FullName, core.PlatformService).ConfigureAwait(false);
+            .FileInfo?.FullName, core.PlatformService).ConfigureAwait(false);
     }
 
     /// <inheritdoc cref="ClipboardPasteOperations.Paste(MainViewModel)" />
@@ -1024,7 +1024,7 @@ public class FunctionsMapper2(Core.ViewModels.MainWindowViewModel vm, Window win
         {
             return;
         }
-        await Task.Run(() => core.PlatformService.SetAsWallpaper(vm.WindowTabs.ActiveTab.CurrentValue.Model.CurrentValue.FileInfo.FullName, 0)).ConfigureAwait(false);
+        await Task.Run(() => core.PlatformService.SetAsWallpaper(vm.WindowTabs.ActiveTab.CurrentValue.Model.FileInfo.FullName, 0)).ConfigureAwait(false);
     }
     
     public async ValueTask SetAsWallpaperCentered()     
@@ -1033,7 +1033,7 @@ public class FunctionsMapper2(Core.ViewModels.MainWindowViewModel vm, Window win
         {
             return;
         }
-        await Task.Run(() => core.PlatformService.SetAsWallpaper(vm.WindowTabs.ActiveTab.CurrentValue.Model.CurrentValue.FileInfo.FullName, 1)).ConfigureAwait(false);
+        await Task.Run(() => core.PlatformService.SetAsWallpaper(vm.WindowTabs.ActiveTab.CurrentValue.Model.FileInfo.FullName, 1)).ConfigureAwait(false);
     }
     
     public async ValueTask SetAsWallpaperStretched()
@@ -1042,7 +1042,7 @@ public class FunctionsMapper2(Core.ViewModels.MainWindowViewModel vm, Window win
         {
             return;
         }
-        await Task.Run(() => core.PlatformService.SetAsWallpaper(vm.WindowTabs.ActiveTab.CurrentValue.Model.CurrentValue.FileInfo.FullName, 2)).ConfigureAwait(false);
+        await Task.Run(() => core.PlatformService.SetAsWallpaper(vm.WindowTabs.ActiveTab.CurrentValue.Model.FileInfo.FullName, 2)).ConfigureAwait(false);
     }
     
     public async ValueTask SetAsWallpaperFitted()     
@@ -1051,7 +1051,7 @@ public class FunctionsMapper2(Core.ViewModels.MainWindowViewModel vm, Window win
         {
             return;
         }
-        await Task.Run(() => core.PlatformService.SetAsWallpaper(vm.WindowTabs.ActiveTab.CurrentValue.Model.CurrentValue.FileInfo.FullName, 3)).ConfigureAwait(false);
+        await Task.Run(() => core.PlatformService.SetAsWallpaper(vm.WindowTabs.ActiveTab.CurrentValue.Model.FileInfo.FullName, 3)).ConfigureAwait(false);
     }
     
     public async ValueTask SetAsWallpaperFilled()
@@ -1060,7 +1060,7 @@ public class FunctionsMapper2(Core.ViewModels.MainWindowViewModel vm, Window win
         {
             return;
         }
-        await Task.Run(() => core.PlatformService.SetAsWallpaper(vm.WindowTabs.ActiveTab.CurrentValue.Model.CurrentValue.FileInfo.FullName, 4)).ConfigureAwait(false);
+        await Task.Run(() => core.PlatformService.SetAsWallpaper(vm.WindowTabs.ActiveTab.CurrentValue.Model.FileInfo.FullName, 4)).ConfigureAwait(false);
     }
     
     public async ValueTask SetAsLockscreenCentered()
@@ -1069,7 +1069,7 @@ public class FunctionsMapper2(Core.ViewModels.MainWindowViewModel vm, Window win
         {
             return;
         }
-        await Task.Run(() => core.PlatformService.SetAsLockScreen(vm.WindowTabs.ActiveTab.CurrentValue.Model.CurrentValue.FileInfo.FullName)).ConfigureAwait(false);
+        await Task.Run(() => core.PlatformService.SetAsLockScreen(vm.WindowTabs.ActiveTab.CurrentValue.Model.FileInfo.FullName)).ConfigureAwait(false);
     }
 
     public async ValueTask SetAsLockScreen()
@@ -1080,7 +1080,7 @@ public class FunctionsMapper2(Core.ViewModels.MainWindowViewModel vm, Window win
         }
 
         await Task.Run(() =>
-            core.PlatformService.SetAsLockScreen(vm.WindowTabs.ActiveTab.CurrentValue.Model.CurrentValue.FileInfo
+            core.PlatformService.SetAsLockScreen(vm.WindowTabs.ActiveTab.CurrentValue.Model.FileInfo
                 .FullName)).ConfigureAwait(false);
     }
 

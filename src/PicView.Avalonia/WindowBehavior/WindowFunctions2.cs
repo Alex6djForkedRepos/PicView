@@ -57,7 +57,7 @@ public static class WindowFunctions2
         }
         else
         {
-            lastFile = viewModel.WindowTabs.ActiveTab.CurrentValue?.Model.CurrentValue?.FileInfo?.FullName ?? FileHistoryManager.GetLastEntry() ?? null;
+            lastFile = viewModel.WindowTabs.ActiveTab.CurrentValue?.Model?.FileInfo?.FullName ?? FileHistoryManager.GetLastEntry() ?? null;
         }
 
 

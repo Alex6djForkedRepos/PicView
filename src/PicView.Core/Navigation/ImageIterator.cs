@@ -91,7 +91,7 @@ public class ImageIterator(IImageCache cache, IThumbnailCache thumbCache, IThumb
         }
 
         // Handle internal TIFF navigation
-        if (_tab.Model?.CurrentValue.TiffNavigation is not null && ShouldNavigateTiffEntry(_tab.Model.CurrentValue, IsReversed))
+        if (_tab.Model?.TiffNavigation is not null && ShouldNavigateTiffEntry(_tab.Model, IsReversed))
         {
             return;
         }
@@ -109,7 +109,7 @@ public class ImageIterator(IImageCache cache, IThumbnailCache thumbCache, IThumb
             {
                 // Is loading in cache, show thumbnail while loading
                 var thumb = _thumbnailLoader.GetExifThumbnail(targetFile);
-                _tab.Model.Value = new ImageModel
+                _tab.Model = new ImageModel
                 {
                     Image = thumb,
                     FileInfo = targetFile,
@@ -152,7 +152,7 @@ public class ImageIterator(IImageCache cache, IThumbnailCache thumbCache, IThumb
 
         // Handle internal TIFF navigation
         // TODO: Figure out how to handle multi-page TIFF files when side-by-side is enabled
-        if (_tab.Model?.CurrentValue.TiffNavigation is not null && ShouldNavigateTiffEntry(_tab.Model.CurrentValue, IsReversed))
+        if (_tab.Model?.TiffNavigation is not null && ShouldNavigateTiffEntry(_tab.Model, IsReversed))
         {
             return;
         }
@@ -238,8 +238,8 @@ public class ImageIterator(IImageCache cache, IThumbnailCache thumbCache, IThumb
 
         // We need to update the secondary model first, because updating the first model will trigger reactive subscription,
         // where the secondary model need to be valid beforehand.
-        _tab.SecondaryModel.Value = secondModel;
-        _tab.Model.Value = firstModel;
+        _tab.SecondaryModel = secondModel;
+        _tab.Model = firstModel;
         UpdateNavigationProperties();
         TriggerPreload();
         
@@ -322,7 +322,7 @@ public class ImageIterator(IImageCache cache, IThumbnailCache thumbCache, IThumb
 
     private void UpdateModel(ImageModel newModel)
     {
-        _tab.Model.Value = newModel;
+        _tab.Model = newModel;
         UpdateNavigationProperties();
         TriggerPreload();
         

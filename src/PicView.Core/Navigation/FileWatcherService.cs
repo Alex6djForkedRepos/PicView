@@ -35,14 +35,14 @@ public class FileWatcherService : IFileWatcherService, IDisposable
             return;
         }
 
-        if (tab.Model.CurrentValue is null)
+        if (tab.Model is null)
         {
             return;
         }
         
         if (string.IsNullOrEmpty(directory))
         {
-            var fileInfo = tab.Model?.CurrentValue.FileInfo;
+            var fileInfo = tab.Model?.FileInfo;
             if (fileInfo is null || string.IsNullOrEmpty(fileInfo.DirectoryName))
             {
                 return;
@@ -158,7 +158,7 @@ public class FileWatcherService : IFileWatcherService, IDisposable
         {
             tab.ImageIterator.Files = files;
 
-            var currentFile = tab.Model?.CurrentValue.FileInfo;
+            var currentFile = tab.Model?.FileInfo;
             if (currentFile != null)
             {
                 var newIndex = files.FindIndex(x =>
@@ -188,7 +188,7 @@ public class FileWatcherService : IFileWatcherService, IDisposable
         await HandleUpdateAsync(directory, async (tab, files) =>
         {
             var oldIndex = tab.ImageIterator.CurrentIndex;
-            var currentFile = tab.Model?.CurrentValue.FileInfo;
+            var currentFile = tab.Model?.FileInfo;
             var wasCurrentFileDeleted =
                 currentFile?.FullName.AsSpan().Equals(e.FullPath.AsSpan(), StringComparison.OrdinalIgnoreCase) ?? false;
 
@@ -235,7 +235,7 @@ public class FileWatcherService : IFileWatcherService, IDisposable
 
         await HandleUpdateAsync(directory, (tab, files) =>
         {
-            var currentFile = tab.Model?.CurrentValue.FileInfo;
+            var currentFile = tab.Model?.FileInfo;
             var wasCurrentFileRenamed = currentFile?.FullName.AsSpan()
                 .Equals(e.OldFullPath.AsSpan(), StringComparison.OrdinalIgnoreCase) ?? false;
 
@@ -250,11 +250,11 @@ public class FileWatcherService : IFileWatcherService, IDisposable
                     var newModel = new ImageModel
                     {
                         FileInfo = newFileInfo,
-                        Image = currentModel.CurrentValue.Image,
-                        Orientation = currentModel.CurrentValue.Orientation,
-                        ImageType = currentModel.CurrentValue.ImageType
+                        Image = currentModel.Image,
+                        Orientation = currentModel.Orientation,
+                        ImageType = currentModel.ImageType
                     };
-                    tab.Model.Value = newModel;
+                    tab.Model = newModel;
                 }
             }
 

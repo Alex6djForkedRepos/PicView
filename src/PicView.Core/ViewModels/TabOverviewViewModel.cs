@@ -88,7 +88,7 @@ public class TabOverviewViewModel
         tab.ParentWindowContext = _parentVm;
         if (file is not null)
         {
-            tab.Model.CurrentValue.FileInfo = file;
+            tab.Model.FileInfo = file;
         }
         Tabs.Value.Add(tab);
         return tab;
@@ -332,6 +332,13 @@ public class TabOverviewViewModel
         CanActiveTabNavigate.Value = false;
         return false;
     }
+
+    public async ValueTask ReloadAsync(TabViewModel? senderTab = null)
+    {
+        var tab = senderTab ?? ActiveTab.Value;
+        var ct = tab.GetTabCancellation();
+        await tab.ImageIterator.ReloadAsync(ct).ConfigureAwait(false);
+    }
     #endregion
 
     #region Sort
@@ -445,7 +452,7 @@ public class TabOverviewViewModel
 
     #region Retrieval
 
-    public object? GetCurrentSource() => GetSourceFromFile(ActiveTab.CurrentValue.Model.CurrentValue?.FileInfo);
+    public object? GetCurrentSource() => GetSourceFromFile(ActiveTab.CurrentValue.Model?.FileInfo);
 
     public object? GetSourceFromFile(FileInfo fileInfo)
     {

@@ -57,7 +57,7 @@ public class FileHistoryViewModel
         
         HasPinnedEntries.Value = pinnedEntries.Any();
         
-        var currentFilePath = _core.MainWindows.ActiveWindow.CurrentValue.WindowTabs.ActiveTab.Value?.Model?.CurrentValue?.FileInfo?.FullName;
+        var currentFilePath = _core.MainWindows.ActiveWindow.CurrentValue.WindowTabs.ActiveTab.Value?.Model?.FileInfo?.FullName;
         
         foreach (var entry in pinnedEntries)
         {

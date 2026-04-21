@@ -77,7 +77,7 @@
                 Height="35"
                 IconHeight="16"
                 IconWidth="16"
-                IsEnabled="{CompiledBinding Model.Value.Image,
+                IsEnabled="{CompiledBinding Image.Value,
                                             Converter={x:Static ObjectConverters.IsNotNull}}"
                 IsRepeatEnabled="False"
                 Margin="0"
@@ -96,8 +96,6 @@
                 Height="35"
                 IconHeight="16"
                 IconWidth="16"
-                IsEnabled="{CompiledBinding Model.Value.Image,
-                                            Converter={x:Static ObjectConverters.IsNotNull}}"
                 IsRepeatEnabled="False"
                 Margin="0"
                 ToolTip.Tip="{CompiledBinding $parent[Window].((vm:MainWindowViewModel)DataContext).Translation.RotateRight.Value,
@@ -117,8 +115,6 @@
                 Height="35"
                 IconHeight="17"
                 IconWidth="17"
-                IsEnabled="{CompiledBinding Model.Value.Image,
-                                            Converter={x:Static ObjectConverters.IsNotNull}}"
                 IsRepeatEnabled="False"
                 Margin="0"
                 ToolTip.Tip="{CompiledBinding $parent[Window].((vm:MainWindowViewModel)DataContext).Translation.IsFlipped.Value,
@@ -196,7 +192,7 @@
                 CornerRadius="0,6,6,0"
                 CurrentIndex="{CompiledBinding NavigationIndex.Value}"
                 DragSensitivity="1"
-                IsEnabled="{CompiledBinding Model.Value.FileInfo,
+                IsEnabled="{CompiledBinding FileInfo.Value,
                                             Converter={x:Static ObjectConverters.IsNotNull}}"
                 Maximum="{CompiledBinding MaxIndex.Value}"
                 ThumbFill="{DynamicResource SecondaryBorderColor}"

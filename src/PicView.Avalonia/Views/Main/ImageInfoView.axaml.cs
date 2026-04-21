@@ -75,20 +75,21 @@ public partial class ImageInfoView : UserControl
             PixelWidthTextBox.KeyUp += delegate { AdjustAspectRatio(PixelWidthTextBox); };
             PixelHeightTextBox.KeyUp += delegate { AdjustAspectRatio(PixelHeightTextBox); };
 
-            vm.WindowTabs.ActiveTab.CurrentValue.Model.SubscribeAwait(UpdateValuesAsync).AddTo(ref _disposables);
+            Observable.EveryValueChanged(vm.WindowTabs.ActiveTab.CurrentValue.Model, x => x)
+                .SubscribeAwait(UpdateValuesAsync).AddTo(ref _disposables);
 
             SizeChanged += (_, _) => ResponsiveResizeUpdate(vm);
             
             FileNameTextBox.KeyDown += async (_, e) =>
                 await HandleRenameOnEnterAsync(e, () =>
-                    Path.Combine(vm.WindowTabs.ActiveTab.Value.Model.CurrentValue.FileInfo.DirectoryName!, FileNameTextBox.Text));
+                    Path.Combine(vm.WindowTabs.ActiveTab.Value.Model.FileInfo.DirectoryName!, FileNameTextBox.Text));
 
             FullPathTextBox.KeyDown += async (_, e) =>
                 await HandleRenameOnEnterAsync(e, () => FullPathTextBox.Text ?? string.Empty);
 
             DirectoryNameTextBox.KeyDown += async (_, e) =>
                 await HandleRenameOnEnterAsync(e, () =>
-                    Path.Combine(DirectoryNameTextBox.Text, vm.WindowTabs.ActiveTab.Value.Model.CurrentValue.FileInfo.Name));
+                    Path.Combine(DirectoryNameTextBox.Text, vm.WindowTabs.ActiveTab.Value.Model.FileInfo.Name));
 
             // Orientation is for display only atm
             OrientationBox.DropDownClosed += (_, _) =>
@@ -211,13 +212,13 @@ public partial class ImageInfoView : UserControl
             DirectoryNameTextBox.Text = imageModel.FileInfo.DirectoryName;
         }
 
-        FileSizeBox.Text = vm.WindowTabs.ActiveTab.Value.Model.CurrentValue.FileInfo?.Length.GetReadableFileSize();
+        FileSizeBox.Text = vm.WindowTabs.ActiveTab.Value.Model.FileInfo?.Length.GetReadableFileSize();
         // vm.WindowTabs.ActiveTab.Value.Model.ShouldOptimizeImageBeEnabled.Value =
         //     ConversionHelper.DetermineIfOptimizeImageShouldBeEnabled(vm.WindowTabs.ActiveTab.Value.Model.FileInfo?.CurrentValue);
         GoogleLinkButton.IsEnabled = !string.IsNullOrWhiteSpace(vm.Exif.GoogleLink.CurrentValue);
         BingLinkButton.IsEnabled = !string.IsNullOrWhiteSpace(vm.Exif.BingLink.CurrentValue);
 
-        vm.Exif.IsExifAvailable.Value = vm.WindowTabs.ActiveTab.Value.Model.CurrentValue.Format.IsExifImage();
+        vm.Exif.IsExifAvailable.Value = vm.WindowTabs.ActiveTab.Value.Model.Format.IsExifImage();
     }
     
     private void SetLoadingState(bool isLoading)
@@ -234,7 +235,7 @@ public partial class ImageInfoView : UserControl
             return;
         }
 
-        var aspectRatio = (double)vm.WindowTabs.ActiveTab.Value.Model.CurrentValue.PixelWidth / vm.WindowTabs.ActiveTab.Value.Model.CurrentValue.PixelHeight;
+        var aspectRatio = (double)vm.WindowTabs.ActiveTab.Value.Model.PixelWidth / vm.WindowTabs.ActiveTab.Value.Model.PixelHeight;
         // AspectRatioHelper.SetAspectRatioForTextBox(PixelWidthTextBox, PixelHeightTextBox, sender == PixelWidthTextBox,
         //     aspectRatio, DataContext as MainWindowViewModel);
 
@@ -257,8 +258,8 @@ public partial class ImageInfoView : UserControl
 
         var gcd = AspectRatioFormatter.GCD(width, height);
         AspectRatioTextBox.Text =
-            AspectRatioFormatter.GetFormattedAspectRatio(gcd, vm.WindowTabs.ActiveTab.Value.Model.CurrentValue.PixelWidth,
-                vm.WindowTabs.ActiveTab.Value.Model.CurrentValue.PixelHeight);
+            AspectRatioFormatter.GetFormattedAspectRatio(gcd, vm.WindowTabs.ActiveTab.Value.Model.PixelWidth,
+                vm.WindowTabs.ActiveTab.Value.Model.PixelHeight);
     }
 
     private static async Task DoResize(MainWindowViewModel vm, bool isWidth, object width, object height)
@@ -272,7 +273,7 @@ public partial class ImageInfoView : UserControl
 
             if (widthValue > 0)
             {
-                var success = await ConversionHelper.ResizeByWidth(vm.WindowTabs.ActiveTab.Value.Model.CurrentValue.FileInfo, widthValue)
+                var success = await ConversionHelper.ResizeByWidth(vm.WindowTabs.ActiveTab.Value.Model.FileInfo, widthValue)
                     .ConfigureAwait(false);
                 if (success)
                 {
@@ -289,7 +290,7 @@ public partial class ImageInfoView : UserControl
 
             if (heightValue > 0)
             {
-                var success = await ConversionHelper.ResizeByHeight(vm.WindowTabs.ActiveTab.Value.Model.CurrentValue.FileInfo, heightValue)
+                var success = await ConversionHelper.ResizeByHeight(vm.WindowTabs.ActiveTab.Value.Model.FileInfo, heightValue)
                     .ConfigureAwait(false);
                 if (success)
                 {
@@ -331,7 +332,7 @@ public partial class ImageInfoView : UserControl
     {
         if (DataContext is MainWindowViewModel vm)
         {
-            await addAction(vm.WindowTabs.ActiveTab.Value.Model.CurrentValue.FileInfo, value);
+            await addAction(vm.WindowTabs.ActiveTab.Value.Model.FileInfo, value);
         }
     }
 }

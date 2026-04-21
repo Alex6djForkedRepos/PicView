@@ -58,10 +58,10 @@
                 </LayoutTransformControl.RenderTransform>
                 <Panel>
                     <customControls:PicBox
-                        ImageType="{CompiledBinding Model.Value.ImageType,
+                        ImageType="{CompiledBinding Model.ImageType,
                                                     Mode=OneWay,
                                                     FallbackValue=0}"
-                        Source="{CompiledBinding Model.Value.Image}"
+                        Source="{CompiledBinding Image.Value}"
                         x:Name="OverlayImage" />
                     <Canvas x:Name="OverlayCanvas">
                         <Rectangle

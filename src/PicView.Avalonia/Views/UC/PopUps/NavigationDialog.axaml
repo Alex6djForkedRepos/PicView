@@ -134,7 +134,7 @@
             IconHeight="14"
             IconMargin="5,0,10,0"
             IconWidth="14"
-            IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.Model.Value.FileInfo,
+            IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.FileInfo.Value,
                                         Converter={x:Static ObjectConverters.IsNotNull}}"
             Padding="6"
             Text="{CompiledBinding Translation.NextFolder.Value,
@@ -148,7 +148,7 @@
             IconHeight="14"
             IconMargin="5,0,10,0"
             IconWidth="14"
-            IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.Model.Value.FileInfo,
+            IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.FileInfo.Value,
                                         Converter={x:Static ObjectConverters.IsNotNull}}"
             Padding="6"
             Text="{CompiledBinding Translation.PrevFolder.Value,
@@ -164,7 +164,7 @@
             IconHeight="14"
             IconMargin="5,0,10,0"
             IconWidth="14"
-            IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.Model.Value.FileInfo,
+            IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.FileInfo.Value,
                                         Converter={x:Static ObjectConverters.IsNotNull}}"
             Padding="6"
             Text="{CompiledBinding Translation.NextArchive.Value,
@@ -178,7 +178,7 @@
             IconHeight="14"
             IconMargin="5,0,10,0"
             IconWidth="14"
-            IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.Model.Value.FileInfo,
+            IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.FileInfo.Value,
                                         Converter={x:Static ObjectConverters.IsNotNull}}"
             Padding="6"
             Text="{CompiledBinding Translation.PrevArchive.Value,

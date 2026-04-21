@@ -27,7 +27,7 @@
                 Command="{CompiledBinding SaveCommand}"
                 Header="{CompiledBinding Translation.Save.Value,
                                          Mode=OneWay}"
-                IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.Model.Value.Image,
+                IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.Image.Value,
                                             Converter={x:Static ObjectConverters.IsNotNull},
                                             FallbackValue=False}">
                 <MenuItem.Icon>
@@ -40,7 +40,7 @@
                 Command="{CompiledBinding SaveAsCommand}"
                 Header="{CompiledBinding Translation.SaveAs.Value,
                                          Mode=OneWay}"
-                IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.Model.Value.Image,
+                IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.Image.Value,
                                             Converter={x:Static ObjectConverters.IsNotNull},
                                             FallbackValue=False}">
                 <MenuItem.Icon>
@@ -54,7 +54,7 @@
                 Command="{CompiledBinding PrintCommand}"
                 Header="{CompiledBinding Translation.Print.Value,
                                          Mode=OneWay}"
-                IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.Model.Value.Image,
+                IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.Image.Value,
                                             Converter={x:Static ObjectConverters.IsNotNull},
                                             FallbackValue=False}">
                 x:Name="PrintMenuItem">
@@ -68,7 +68,7 @@
                 Command="{CompiledBinding OpenWithCommand}"
                 Header="{CompiledBinding Translation.OpenWith.Value,
                                          Mode=OneWay}"
-                IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.Model.Value.FileInfo,
+                IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.FileInfo.Value,
                                             Converter={x:Static ObjectConverters.IsNotNull},
                                             FallbackValue=False}"
                 x:Name="OpenWithMenuItem">
@@ -82,7 +82,7 @@
                 Command="{CompiledBinding OpenInExplorerCommand}"
                 Header="{CompiledBinding Translation.ShowInFolder.Value,
                                          Mode=OneWay}"
-                IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.Model.Value.FileInfo,
+                IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.FileInfo.Value,
                                             Converter={x:Static ObjectConverters.IsNotNull},
                                             FallbackValue=False}">
                 <MenuItem.Icon>
@@ -94,7 +94,7 @@
             <MenuItem
                 Header="{CompiledBinding Translation.RemoveImageData.Value,
                                          Mode=OneWay}"
-                IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.Model.Value.FileInfo,
+                IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.FileInfo.Value,
                                             Converter={x:Static ObjectConverters.IsNotNull},
                                             FallbackValue=False}"
                 x:Name="RemoveImageDataMenuItem">
@@ -110,7 +110,7 @@
             <MenuItem
                 Header="{CompiledBinding Translation.SetAsWallpaper.Value,
                                          Mode=OneWay}"
-                IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.Model.Value.Image,
+                IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.Image.Value,
                                             Converter={x:Static ObjectConverters.IsNotNull},
                                             FallbackValue=False}"
                 IsVisible="{CompiledBinding GlobalSettings.ShowSetAsWallpaper.Value}"
@@ -129,7 +129,7 @@
                     Command="{CompiledBinding SetAsWallpaperFilledCommand}"
                     Header="{CompiledBinding Translation.Fill.Value,
                                              Mode=OneWay}"
-                    IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.Model.Value.Image,
+                    IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.Image.Value,
                                                 Converter={x:Static ObjectConverters.IsNotNull},
                                                 FallbackValue=False}"
                     IsVisible="{CompiledBinding GlobalSettings.ShowSetAsWallpaper.Value}">
@@ -148,7 +148,7 @@
                     Command="{CompiledBinding SetAsWallpaperFittedCommand}"
                     Header="{CompiledBinding Translation.Fit.Value,
                                              Mode=OneWay}"
-                    IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.Model.Value.Image,
+                    IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.Image.Value,
                                                 Converter={x:Static ObjectConverters.IsNotNull},
                                                 FallbackValue=False}"
                     IsVisible="{CompiledBinding GlobalSettings.ShowSetAsWallpaper.Value}">
@@ -167,7 +167,7 @@
                     Command="{CompiledBinding SetAsWallpaperStretchedCommand}"
                     Header="{CompiledBinding Translation.Stretch.Value,
                                              Mode=OneWay}"
-                    IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.Model.Value.Image,
+                    IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.Image.Value,
                                                 Converter={x:Static ObjectConverters.IsNotNull},
                                                 FallbackValue=False}"
                     IsVisible="{CompiledBinding GlobalSettings.ShowSetAsWallpaper.Value}">
@@ -187,7 +187,7 @@
                     Command="{CompiledBinding SetAsWallpaperCenteredCommand}"
                     Header="{CompiledBinding Translation.Center.Value,
                                              Mode=OneWay}"
-                    IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.Model.Value.Image,
+                    IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.Image.Value,
                                                 Converter={x:Static ObjectConverters.IsNotNull},
                                                 FallbackValue=False}"
                     IsVisible="{CompiledBinding GlobalSettings.ShowSetAsWallpaper.Value}">
@@ -206,7 +206,7 @@
                     Command="{CompiledBinding SetAsWallpaperTiledCommand}"
                     Header="{CompiledBinding Translation.Tile.Value,
                                              Mode=OneWay}"
-                    IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.Model.Value.Image,
+                    IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.Image.Value,
                                                 Converter={x:Static ObjectConverters.IsNotNull},
                                                 FallbackValue=False}"
                     IsVisible="{CompiledBinding GlobalSettings.ShowSetAsWallpaper.Value}">
@@ -226,7 +226,7 @@
                 Command="{CompiledBinding ShowFilePropertiesCommand}"
                 Header="{CompiledBinding Translation.FileProperties.Value,
                                          Mode=OneWay}"
-                IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.Model.Value.FileInfo,
+                IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.FileInfo.Value,
                                             Converter={x:Static ObjectConverters.IsNotNull},
                                             FallbackValue=False}">
                 <MenuItem.Icon>
@@ -257,7 +257,7 @@
                 Command="{CompiledBinding ConvertWindowCommand}"
                 Header="{CompiledBinding Translation.ConvertTo.Value,
                                          Mode=OneWay}"
-                IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.Model.Value.FileInfo,
+                IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.FileInfo.Value,
                                             Converter={x:Static ObjectConverters.IsNotNull},
                                             FallbackValue=False}">
                 <MenuItem.Icon>
@@ -276,7 +276,7 @@
                 Command="{CompiledBinding DeleteFileCommand}"
                 Header="{CompiledBinding Translation.DeleteFile.Value,
                                          Mode=OneWay}"
-                IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.Model.Value.FileInfo,
+                IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.FileInfo.Value,
                                             Converter={x:Static ObjectConverters.IsNotNull},
                                             FallbackValue=False}">
                 <MenuItem.Icon>
@@ -297,7 +297,7 @@
                     Command="{CompiledBinding CopyFileCommand}"
                     Header="{CompiledBinding Translation.CopyFile.Value,
                                              Mode=OneWay}"
-                    IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.Model.Value.FileInfo,
+                    IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.FileInfo.Value,
                                                 Converter={x:Static ObjectConverters.IsNotNull},
                                                 FallbackValue=False}">
                     <MenuItem.Icon>
@@ -310,7 +310,7 @@
                     Command="{CompiledBinding CopyImageCommand}"
                     Header="{CompiledBinding Translation.CopyImage.Value,
                                              Mode=OneWay}"
-                    IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.Model.Value.FileInfo,
+                    IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.Image.Value,
                                                 Converter={x:Static ObjectConverters.IsNotNull},
                                                 FallbackValue=False}">
                     <MenuItem.Icon>
@@ -322,7 +322,7 @@
                 <MenuItem
                     Command="{CompiledBinding CopyFilePathCommand}"
                     Header="{Binding Translation.FileCopyPath, Mode=OneWay}"
-                    IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.Model.Value.FileInfo,
+                    IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.FileInfo.Value,
                                                 Converter={x:Static ObjectConverters.IsNotNull},
                                                 FallbackValue=False}">
                     <MenuItem.Icon>
@@ -331,7 +331,7 @@
                 </MenuItem>
 
                 <!--  Copy base64  -->
-                <MenuItem Command="{CompiledBinding CopyBase64Command}" IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.Model.Value.FileInfo, Converter={x:Static ObjectConverters.IsNotNull}, FallbackValue=False}">
+                <MenuItem Command="{CompiledBinding CopyBase64Command}" IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.Image.Value, Converter={x:Static ObjectConverters.IsNotNull}, FallbackValue=False}">
                     <MenuItem.Header>
                         <TextBlock>
                             <Run Text="{CompiledBinding Translation.Copy, Mode=OneWay}" />
@@ -350,7 +350,7 @@
                     Command="{CompiledBinding DuplicateFileCommand}"
                     Header="{CompiledBinding Translation.DuplicateFile,
                                              Mode=OneWay}"
-                    IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.Model.Value.FileInfo,
+                    IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.FileInfo.Value,
                                                 Converter={x:Static ObjectConverters.IsNotNull},
                                                 FallbackValue=False}">
                     <MenuItem.Icon>
@@ -401,13 +401,13 @@
                                                         FallbackValue=0}" />
                             <customControls:FuncTextBox
                                 Classes="hover TStyle x"
-                                Text="{CompiledBinding WindowTabs.ActiveTab.Value.Model.Value.FileInfo.Name}"
+                                Text="{CompiledBinding WindowTabs.ActiveTab.Value.FileInfo.Value.Name}"
                                 Width="{CompiledBinding InfoWindow.TextBoxXlWidth.Value,
                                                         FallbackValue=0}"
                                 x:Name="FileNameTextBox" />
                             <customControls:CopyButton
                                 Classes="altHover BorderStyle"
-                                CopyText="{CompiledBinding WindowTabs.ActiveTab.Value.Model.Value.FileInfo}"
+                                CopyText="{CompiledBinding WindowTabs.ActiveTab.Value.FileInfo.Value}"
                                 IsVisible="{CompiledBinding InfoWindow.IsCopyButtonEnabled.Value,
                                                             FallbackValue=True}"
                                 ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
@@ -427,14 +427,14 @@
                                                         FallbackValue=0}" />
                             <customControls:FuncTextBox
                                 Classes="hover TStyle x"
-                                Text="{CompiledBinding WindowTabs.ActiveTab.Value.Model.Value.FileInfo.DirectoryName,
+                                Text="{CompiledBinding WindowTabs.ActiveTab.Value.FileInfo.Value.DirectoryName,
                                                        FallbackValue=''}"
                                 Width="{CompiledBinding InfoWindow.TextBoxXlWidth.Value,
                                                         FallbackValue=0}"
                                 x:Name="DirectoryNameTextBox" />
                             <customControls:CopyButton
                                 Classes="altHover BorderStyle"
-                                CopyText="{CompiledBinding WindowTabs.ActiveTab.Value.Model.Value.FileInfo.DirectoryName,
+                                CopyText="{CompiledBinding WindowTabs.ActiveTab.Value.FileInfo.Value.DirectoryName,
                                                            FallbackValue=''}"
                                 IsVisible="{CompiledBinding InfoWindow.IsCopyButtonEnabled.Value,
                                                             FallbackValue=False}"
@@ -455,13 +455,13 @@
                                                         FallbackValue='0'}" />
                             <customControls:FuncTextBox
                                 Classes="hover TStyle x"
-                                Text="{CompiledBinding WindowTabs.ActiveTab.Value.Model.Value.FileInfo.FullName,
+                                Text="{CompiledBinding WindowTabs.ActiveTab.Value.Model.FileInfo.FullName,
                                                        FallbackValue=''}"
                                 Width="{CompiledBinding InfoWindow.TextBoxXlWidth.Value}"
                                 x:Name="FullPathTextBox" />
                             <customControls:CopyButton
                                 Classes="altHover BorderStyle"
-                                CopyText="{CompiledBinding WindowTabs.ActiveTab.Value.Model.Value.FileInfo.FullName,
+                                CopyText="{CompiledBinding WindowTabs.ActiveTab.Value.Model.FileInfo.FullName,
                                                            FallbackValue=''}"
                                 IsVisible="{CompiledBinding InfoWindow.IsCopyButtonEnabled.Value}"
                                 ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
@@ -480,7 +480,7 @@
                                 Width="{CompiledBinding InfoWindow.TextWidth}" />
                             <customControls:NumTextBox
                                 Classes="hover TStyle x"
-                                Text="{CompiledBinding WindowTabs.ActiveTab.Value.Model.Value.PixelWidth,
+                                Text="{CompiledBinding WindowTabs.ActiveTab.Value.Model.PixelWidth,
                                                        Mode=OneWay}"
                                 ToolTip.Tip="{CompiledBinding Translation.SizeTooltip.Value,
                                                               Mode=OneWay}"
@@ -488,7 +488,7 @@
                                 x:Name="PixelWidthTextBox" />
                             <customControls:CopyButton
                                 Classes="altHover BorderStyle"
-                                CopyText="{CompiledBinding WindowTabs.ActiveTab.Value.Model.Value.PixelWidth,
+                                CopyText="{CompiledBinding WindowTabs.ActiveTab.Value.Model.PixelWidth,
                                                            Mode=OneWay}"
                                 IsVisible="{CompiledBinding InfoWindow.IsCopyButtonEnabled.Value}"
                                 ToolTip.Tip="{CompiledBinding Translation.Copy,
@@ -507,7 +507,7 @@
                                 Width="{CompiledBinding InfoWindow.TextWidth}" />
                             <customControls:NumTextBox
                                 Classes="hover TStyle x"
-                                Text="{CompiledBinding WindowTabs.ActiveTab.Value.Model.Value.PixelHeight,
+                                Text="{CompiledBinding WindowTabs.ActiveTab.Value.Model.PixelHeight,
                                                        Mode=OneWay}"
                                 ToolTip.Tip="{CompiledBinding Translation.SizeTooltip.Value,
                                                               Mode=OneWay}"
@@ -515,7 +515,7 @@
                                 x:Name="PixelHeightTextBox" />
                             <customControls:CopyButton
                                 Classes="altHover BorderStyle"
-                                CopyText="{CompiledBinding WindowTabs.ActiveTab.Value.Model.Value.PixelHeight,
+                                CopyText="{CompiledBinding WindowTabs.ActiveTab.Value.Model.PixelHeight,
                                                            Mode=OneWay}"
                                 IsVisible="{CompiledBinding InfoWindow.IsCopyButtonEnabled.Value}"
                                 ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
@@ -620,14 +620,18 @@
                                 Classes=" TStyle x"
                                 IsReadOnly="True"
                                 Text="{CompiledBinding Exif.PrintSizeInch.Value,
-                                                       Mode=OneWay}"
-                                Width="{CompiledBinding InfoWindow.TextBoxWidth.Value}"
+                                                       Mode=OneWay,
+                                                       FallbackValue=''}"
+                                Width="{CompiledBinding InfoWindow.TextBoxWidth.Value,
+                                                        FallbackValue=0}"
                                 x:Name="PrintSizeInchTextBox" />
                             <customControls:CopyButton
                                 Classes="altHover BorderStyle"
                                 CopyText="{CompiledBinding Exif.PrintSizeInch.Value,
-                                                           Mode=OneWay}"
-                                IsVisible="{CompiledBinding InfoWindow.IsCopyButtonEnabled.Value}"
+                                                           Mode=OneWay,
+                                                           FallbackValue=''}"
+                                IsVisible="{CompiledBinding InfoWindow.IsCopyButtonEnabled.Value,
+                                                            FallbackValue=False}"
                                 ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                               Mode=OneWay}">
                                 <Path Classes="CopyPath Xl" />
@@ -641,20 +645,25 @@
                                 Margin="0,8,0,0"
                                 Text="{CompiledBinding Translation.ReadAbleAspectRatio.Value,
                                                        Mode=OneWay}"
-                                Width="{CompiledBinding InfoWindow.TextWidth}" />
+                                Width="{CompiledBinding InfoWindow.TextWidth,
+                                                        FallbackValue=0}" />
                             <customControls:FuncTextBox
                                 Background="{DynamicResource DisabledBackgroundColor}"
                                 Classes=" TStyle x"
                                 IsReadOnly="True"
                                 Text="{CompiledBinding Exif.AspectRatio.Value,
-                                                       Mode=OneWay}"
-                                Width="{CompiledBinding InfoWindow.TextBoxWidth.Value}"
+                                                       Mode=OneWay,
+                                                       FallbackValue=''}"
+                                Width="{CompiledBinding InfoWindow.TextBoxWidth.Value,
+                                                        FallbackValue=0}"
                                 x:Name="AspectRatioTextBox" />
                             <customControls:CopyButton
                                 Classes="altHover BorderStyle"
                                 CopyText="{CompiledBinding Exif.AspectRatio.Value,
-                                                           Mode=OneWay}"
-                                IsVisible="{CompiledBinding InfoWindow.IsCopyButtonEnabled.Value}"
+                                                           Mode=OneWay,
+                                                           FallbackValue=''}"
+                                IsVisible="{CompiledBinding InfoWindow.IsCopyButtonEnabled.Value,
+                                                            FallbackValue=False}"
                                 ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                               Mode=OneWay}">
                                 <Path Classes="CopyPath Xl" />
@@ -668,19 +677,24 @@
                                 Margin="0,8,0,0"
                                 Text="{CompiledBinding Translation.BitDepth.Value,
                                                        Mode=OneWay}"
-                                Width="{CompiledBinding InfoWindow.TextWidth}" />
+                                Width="{CompiledBinding InfoWindow.TextWidth,
+                                                        FallbackValue=0}" />
                             <customControls:FuncTextBox
                                 Background="{DynamicResource DisabledBackgroundColor}"
                                 Classes="TStyle x"
                                 IsReadOnly="True"
                                 Text="{CompiledBinding Exif.BitDepth.Value,
-                                                       Mode=OneWay}"
-                                Width="{CompiledBinding InfoWindow.TextBoxWidth.Value}" />
+                                                       Mode=OneWay,
+                                                       FallbackValue=''}"
+                                Width="{CompiledBinding InfoWindow.TextBoxWidth.Value,
+                                                        FallbackValue=0}" />
                             <customControls:CopyButton
                                 Classes="altHover BorderStyle"
                                 CopyText="{CompiledBinding Exif.BitDepth.Value,
-                                                           Mode=OneWay}"
-                                IsVisible="{CompiledBinding InfoWindow.IsCopyButtonEnabled.Value}"
+                                                           Mode=OneWay,
+                                                           FallbackValue=''}"
+                                IsVisible="{CompiledBinding InfoWindow.IsCopyButtonEnabled.Value,
+                                                            FallbackValue=False}"
                                 ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                               Mode=OneWay}">
                                 <Path Classes="CopyPath Xl" />
@@ -694,23 +708,29 @@
                                 Margin="0,8,0,0"
                                 Text="{CompiledBinding Translation.Orientation.Value,
                                                        Mode=OneWay}"
-                                Width="{CompiledBinding InfoWindow.TextWidth}" />
+                                Width="{CompiledBinding InfoWindow.TextWidth,
+                                                        FallbackValue=0}" />
                             <ComboBox
                                 Background="{DynamicResource DisabledBackgroundColor}"
                                 Classes="CStyle x"
                                 ItemsSource="{CompiledBinding Exif.Orientations.Value,
-                                                              Mode=OneWay}"
+                                                              Mode=OneWay,
+                                                              FallbackValue=''}"
                                 Margin="5,0,0,0"
                                 MinWidth="180"
                                 SelectedIndex="{CompiledBinding Exif.Orientation.Value,
-                                                                Mode=OneWay}"
-                                Width="{CompiledBinding InfoWindow.TextBoxWidth.Value}"
+                                                                Mode=OneWay,
+                                                                FallbackValue=0}"
+                                Width="{CompiledBinding InfoWindow.TextBoxWidth.Value,
+                                                        FallbackValue=0}"
                                 x:Name="OrientationBox" />
                             <customControls:CopyButton
                                 Classes="altHover BorderStyle"
                                 CopyText="{CompiledBinding Exif.Orientation.Value,
-                                                           Mode=OneWay}"
-                                IsVisible="{CompiledBinding InfoWindow.IsCopyButtonEnabled.Value}"
+                                                           Mode=OneWay,
+                                                           FallbackValue=''}"
+                                IsVisible="{CompiledBinding InfoWindow.IsCopyButtonEnabled.Value,
+                                                            FallbackValue=False}"
                                 ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                               Mode=OneWay}">
                                 <Path Classes="CopyPath Xl" />
@@ -723,19 +743,22 @@
                                 Classes="txt"
                                 Margin="0,8,0,0"
                                 Text="{CompiledBinding Translation.ImageFormat.Value}"
-                                Width="{CompiledBinding InfoWindow.TextWidth}" />
+                                Width="{CompiledBinding InfoWindow.TextWidth,
+                                                        FallbackValue=''}" />
                             <customControls:FuncTextBox
                                 Background="{DynamicResource DisabledBackgroundColor}"
                                 Classes="TStyle x"
                                 IsReadOnly="True"
-                                Text="{CompiledBinding WindowTabs.ActiveTab.Value.Model.Value.Format,
+                                Text="{CompiledBinding WindowTabs.ActiveTab.Value.Model.Format,
                                                        Mode=OneWay}"
-                                Width="{CompiledBinding InfoWindow.TextBoxWidth.Value}" />
+                                Width="{CompiledBinding InfoWindow.TextBoxWidth.Value,
+                                                        FallbackValue=''}" />
                             <customControls:CopyButton
                                 Classes="altHover BorderStyle"
-                                CopyText="{CompiledBinding WindowTabs.ActiveTab.Value.Model.Value.Format,
+                                CopyText="{CompiledBinding WindowTabs.ActiveTab.Value.Model.Format,
                                                            Mode=OneWay}"
-                                IsVisible="{CompiledBinding InfoWindow.IsCopyButtonEnabled.Value}"
+                                IsVisible="{CompiledBinding InfoWindow.IsCopyButtonEnabled.Value,
+                                                            FallbackValue=''}"
                                 ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                               Mode=OneWay}">
                                 <Path Classes="CopyPath Xl" />
@@ -759,7 +782,7 @@
                             <customControls:CopyButton
                                 Classes="altHover BorderStyle"
                                 CopyText="{Binding Path=Text, ElementName=FileSizeBox}"
-                                IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.Model.Value.FileInfo,
+                                IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.FileInfo.Value,
                                                             Converter={x:Static ObjectConverters.IsNotNull}}"
                                 IsVisible="{CompiledBinding InfoWindow.IsCopyButtonEnabled.Value}"
                                 ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
@@ -775,18 +798,20 @@
                                 Margin="0,8,0,0"
                                 Text="{CompiledBinding Translation.Created.Value,
                                                        Mode=OneWay}"
-                                Width="{CompiledBinding InfoWindow.TextWidth}" />
+                                Width="{CompiledBinding InfoWindow.TextWidth,
+                                                        FallbackValue=0}" />
                             <customControls:DateTimePickerButtons
-                                IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.Model.Value.FileInfo,
+                                IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.FileInfo.Value,
                                                             Converter={x:Static ObjectConverters.IsNotNull}}"
                                 Margin="5,0,0,0"
-                                SelectedDateTime="{CompiledBinding WindowTabs.ActiveTab.Value.Model.Value.FileInfo.CreationTime,
-                                                                   Mode=TwoWay}"
+                                SelectedDateTime="{CompiledBinding WindowTabs.ActiveTab.Value.Model.FileInfo.CreationTime,
+                                                                   Mode=TwoWay,
+                                                                   FallbackValue=''}"
                                 Width="{CompiledBinding InfoWindow.TextBoxWidth.Value}" />
 
                             <customControls:CopyButton
                                 Classes="altHover BorderStyle"
-                                CopyText="{CompiledBinding WindowTabs.ActiveTab.Value.Model.Value.FileInfo.CreationTime,
+                                CopyText="{CompiledBinding WindowTabs.ActiveTab.Value.Model.FileInfo.CreationTime,
                                                            FallbackValue=''}"
                                 IsVisible="{CompiledBinding InfoWindow.IsCopyButtonEnabled.Value}"
                                 ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
@@ -804,15 +829,16 @@
                                                        Mode=OneWay}"
                                 Width="{CompiledBinding InfoWindow.TextWidth}" />
                             <customControls:DateTimePickerButtons
-                                IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.Model.Value.FileInfo,
+                                IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.FileInfo.Value,
                                                             Converter={x:Static ObjectConverters.IsNotNull}}"
                                 Margin="5,0,0,0"
-                                SelectedDateTime="{CompiledBinding WindowTabs.ActiveTab.Value.Model.Value.FileInfo.LastWriteTime,
-                                                                   Mode=TwoWay}"
+                                SelectedDateTime="{CompiledBinding WindowTabs.ActiveTab.Value.Model.FileInfo.LastWriteTime,
+                                                                   Mode=TwoWay,
+                                                                   FallbackValue=''}"
                                 Width="{CompiledBinding InfoWindow.TextBoxWidth.Value}" />
                             <customControls:CopyButton
                                 Classes="altHover BorderStyle"
-                                CopyText="{CompiledBinding WindowTabs.ActiveTab.Value.Model.Value.FileInfo.LastWriteTime,
+                                CopyText="{CompiledBinding WindowTabs.ActiveTab.Value.Model.FileInfo.LastWriteTime,
                                                            FallbackValue=''}"
                                 IsVisible="{CompiledBinding InfoWindow.IsCopyButtonEnabled.Value}"
                                 ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
@@ -830,16 +856,17 @@
                                                        Mode=OneWay}"
                                 Width="{CompiledBinding InfoWindow.TextWidth}" />
                             <customControls:DateTimePickerButtons
-                                IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.Model.Value.FileInfo,
+                                IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.FileInfo.Value,
                                                             Converter={x:Static ObjectConverters.IsNotNull}}"
                                 Margin="5,0,0,0"
-                                SelectedDateTime="{CompiledBinding WindowTabs.ActiveTab.Value.Model.Value.FileInfo.LastAccessTime,
-                                                                   Mode=TwoWay}"
+                                SelectedDateTime="{CompiledBinding WindowTabs.ActiveTab.Value.Model.FileInfo.LastAccessTime,
+                                                                   Mode=TwoWay,
+                                                                   FallbackValue=''}"
                                 Width="{CompiledBinding InfoWindow.TextBoxWidth.Value}" />
 
                             <customControls:CopyButton
                                 Classes="altHover BorderStyle"
-                                CopyText="{CompiledBinding WindowTabs.ActiveTab.Value.Model.Value.FileInfo.LastAccessTime,
+                                CopyText="{CompiledBinding WindowTabs.ActiveTab.Value.Model.FileInfo.LastAccessTime,
                                                            FallbackValue=''}"
                                 IsVisible="{CompiledBinding InfoWindow.IsCopyButtonEnabled.Value}"
                                 ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
@@ -849,8 +876,6 @@
                         </StackPanel>
 
                     </WrapPanel>
-
-
 
                     <!--  Copyright, comment, etc.  -->
                     <StackPanel IsEnabled="{CompiledBinding Exif.IsExifAvailable.Value}">
@@ -864,7 +889,8 @@
                                 Fill="{DynamicResource MainBorderColor}"
                                 Height="1"
                                 Margin="0,0,7,0"
-                                Width="{CompiledBinding InfoWindow.HalfLineWidth.Value}" />
+                                Width="{CompiledBinding InfoWindow.HalfLineWidth.Value,
+                                                        FallbackValue=0}" />
                             <Path
                                 Data="{StaticResource AtGeometry}"
                                 Fill="{DynamicResource MainTextColor}"
@@ -873,7 +899,8 @@
                                 Fill="{DynamicResource MainBorderColor}"
                                 Height="1"
                                 Margin="7,0,0,0"
-                                Width="{CompiledBinding InfoWindow.HalfLineWidth.Value}" />
+                                Width="{CompiledBinding InfoWindow.HalfLineWidth.Value,
+                                                        FallbackValue=0}" />
                         </StackPanel>
 
                         <WrapPanel HorizontalAlignment="Center" Margin="5,10,0,0">
@@ -885,18 +912,23 @@
                                     Margin="0,8,2,0"
                                     Text="{CompiledBinding Translation.DateTaken.Value,
                                                            Mode=OneWay}"
-                                    Width="{CompiledBinding InfoWindow.TextWidth}" />
+                                    Width="{CompiledBinding InfoWindow.TextWidth,
+                                                            FallbackValue=0}" />
                                 <customControls:DateTimePickerButtons
                                     Command="{CompiledBinding Exif.SetDateTakenCommand}"
                                     Margin="5,0,0,0"
                                     SelectedDateTime="{CompiledBinding Exif.DateTaken.Value,
-                                                                       Mode=TwoWay}"
-                                    Width="{CompiledBinding InfoWindow.TextBoxWidth.Value}" />
+                                                                       Mode=TwoWay,
+                                                                       FallbackValue=''}"
+                                    Width="{CompiledBinding InfoWindow.TextBoxWidth.Value,
+                                                            FallbackValue=0}" />
                                 <customControls:CopyButton
                                     Classes="altHover BorderStyle"
                                     CopyText="{CompiledBinding Exif.DateTaken.Value,
-                                                               Mode=OneWay}"
-                                    IsVisible="{CompiledBinding InfoWindow.IsCopyButtonEnabled.Value}"
+                                                               Mode=OneWay,
+                                                               FallbackValue=''}"
+                                    IsVisible="{CompiledBinding InfoWindow.IsCopyButtonEnabled.Value,
+                                                                FallbackValue=False}"
                                     ToolTip.Tip="{CompiledBinding Translation.Copy.Value,
                                                                   Mode=OneWay}">
                                     <Path Classes="CopyPath Xl" />

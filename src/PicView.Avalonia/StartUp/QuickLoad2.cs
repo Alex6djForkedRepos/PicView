@@ -61,7 +61,8 @@ public static class QuickLoad2
 
         var imageModel = await GetImageModel.GetImageModelAsync(fileInfo, magickImage).ConfigureAwait(false);
         var tab = core.MainWindows.ActiveWindow.CurrentValue.WindowTabs.ActiveTab.CurrentValue;
-        tab.Model.Value = imageModel;
+        tab.Image.Value = imageModel.Image;
+        tab.Model = imageModel;
         if (Settings.ImageScaling.ShowImageSideBySide)
         {
             var files = core.PlatformService.GetFiles(fileInfo);
@@ -70,7 +71,7 @@ public static class QuickLoad2
             var (nextIndex, _) = IterationHelper.GetIteration(index, files.Count, NavigateTo.Next, SkipAmount.One);
             var nextFileInfo = files[nextIndex];
             var secondImageModel = await GetImageModel.GetImageModelAsync(nextFileInfo, magickImage).ConfigureAwait(false);
-            tab.SecondaryModel.Value = secondImageModel;
+            tab.SecondaryModel = secondImageModel;
             UpdateImage2.ChangeImage(tab, core.MainWindows.ActiveWindow.CurrentValue);
             UpdateImage2.UpdateTabSideBySideTitles(core.MainWindows.ActiveWindow.CurrentValue.WindowTabs.ActiveTab.CurrentValue, index, nextIndex, fileInfo, nextFileInfo, files);
             TabNavigationInitializer.Initialize(core, files);

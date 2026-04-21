@@ -133,7 +133,7 @@ public partial class PrintPreviewWindow : Window, IPrintWindow
 
         var mainVm= Dispatcher.UIThread.Invoke(() => DataContext as MainWindowViewModel);
         
-        if (mainVm?.WindowTabs.ActiveTab.CurrentValue.Model.CurrentValue.Image is not Bitmap avaloniaBmp)
+        if (mainVm?.WindowTabs.ActiveTab.CurrentValue.Model.Image is not Bitmap avaloniaBmp)
         {
             return;
         }
@@ -221,7 +221,7 @@ public partial class PrintPreviewWindow : Window, IPrintWindow
             return;
         }
 
-        if (mainVm.WindowTabs.ActiveTab.CurrentValue.Model.CurrentValue.Image is not Bitmap avaloniaBmp)
+        if (mainVm.WindowTabs.ActiveTab.CurrentValue.Model.Image is not Bitmap avaloniaBmp)
         {
             return;
         }

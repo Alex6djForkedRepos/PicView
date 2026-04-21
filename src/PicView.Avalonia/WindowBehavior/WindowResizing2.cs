@@ -215,14 +215,14 @@ public static class WindowResizing2
     public static ImageSize2? GetSize(MainWindowViewModel vm)
     {
         double width, height, secondaryWidth, secondaryHeight;
-        if (vm.WindowTabs.SharedCache?.TryGet(vm.WindowTabs.ActiveTab.CurrentValue.Model.CurrentValue.FileInfo, out var preloadValue) ?? false)
+        if (vm.WindowTabs.SharedCache?.TryGet(vm.WindowTabs.ActiveTab.CurrentValue.Model.FileInfo, out var preloadValue) ?? false)
         {
             width = preloadValue.ImageModel.PixelWidth;
             height = preloadValue.ImageModel.PixelHeight;
         }
         else
         {
-            if (vm.WindowTabs.ActiveTab.CurrentValue.Model.CurrentValue.Image is Bitmap bitmap)
+            if (vm.WindowTabs.ActiveTab.CurrentValue.Model.Image is Bitmap bitmap)
             {
                 width = bitmap.PixelSize.Width;
                 height = bitmap.PixelSize.Height;
@@ -235,14 +235,14 @@ public static class WindowResizing2
 
         if (Settings.ImageScaling.ShowImageSideBySide)
         {
-            if (vm.WindowTabs.SharedCache?.TryGet(vm.WindowTabs.ActiveTab.CurrentValue.SecondaryModel.CurrentValue.FileInfo, out var secondaryPreloadValue) ?? false)
+            if (vm.WindowTabs.SharedCache?.TryGet(vm.WindowTabs.ActiveTab.CurrentValue.SecondaryModel.FileInfo, out var secondaryPreloadValue) ?? false)
             {
                 secondaryWidth = secondaryPreloadValue.ImageModel.PixelWidth;
                 secondaryHeight = secondaryPreloadValue.ImageModel.PixelHeight;
             }
             else
             {
-                if (vm.WindowTabs.ActiveTab.CurrentValue.Model.CurrentValue.Image is Bitmap bitmap)
+                if (vm.WindowTabs.ActiveTab.CurrentValue.Model.Image is Bitmap bitmap)
                 {
                     secondaryWidth = bitmap.PixelSize.Width;
                     secondaryHeight = bitmap.PixelSize.Height;

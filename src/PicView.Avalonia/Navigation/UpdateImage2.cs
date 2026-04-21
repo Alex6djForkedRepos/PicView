@@ -1,4 +1,6 @@
+using Avalonia;
 using Avalonia.Controls;
+using ImageMagick;
 using PicView.Avalonia.Views.UC;
 using PicView.Avalonia.WindowBehavior;
 using PicView.Core.DebugTools;
@@ -12,7 +14,8 @@ public static class UpdateImage2
 {
     public static void UpdateFileInfo(TabViewModel tabViewModel, FileInfo? file)
     {
-        if (tabViewModel.Model.CurrentValue.Image is null || tabViewModel.Model.CurrentValue.PixelHeight is 0 || tabViewModel.Model.CurrentValue.PixelWidth is 0)
+        if (tabViewModel.Model?.Image is null || tabViewModel.Model.PixelHeight is 0 ||
+            tabViewModel.Model.PixelWidth is 0)
         {
             return;
         }
@@ -31,13 +34,37 @@ public static class UpdateImage2
         }
                         
         tabViewModel.UpdateTabTitle();
+
+        if (Application.Current.DataContext is not CoreViewModel core)
+        {
+            return;
+        }
+
+        core.Effects?.ProcessedImage = new MagickImage(file);
     }
     
-    public static void UpdateTabSideBySideTitles(TabViewModel tabViewModel, int index, int secondaryIndex, FileInfo firstFile, FileInfo secondFile, List<FileInfo> files)
+    public static void UpdateTabSideBySideTitles(TabViewModel tabViewModel,
+        int index,
+        int secondaryIndex,
+        FileInfo firstFile,
+        FileInfo secondFile,
+        List<FileInfo> files)
     {
-        var firstInfo = new ImageTitleInfo(tabViewModel.Model.CurrentValue.PixelWidth, tabViewModel.Model.CurrentValue.PixelHeight, index, firstFile, 100);
-        var secondInfo = new ImageTitleInfo(tabViewModel.SecondaryModel.CurrentValue.PixelWidth, tabViewModel.SecondaryModel.CurrentValue.PixelHeight, secondaryIndex, secondFile, 100);
-        var titles = ImageTitleFormatter.GenerateTitleForSideBySide(firstInfo, secondInfo, index, secondaryIndex, files);
+        var firstInfo = new ImageTitleInfo(tabViewModel.Model.PixelWidth,
+            tabViewModel.Model.PixelHeight,
+            index,
+            firstFile,
+            100);
+        var secondInfo = new ImageTitleInfo(tabViewModel.SecondaryModel.PixelWidth,
+            tabViewModel.SecondaryModel.PixelHeight,
+            secondaryIndex,
+            secondFile,
+            100);
+        var titles = ImageTitleFormatter.GenerateTitleForSideBySide(firstInfo,
+            secondInfo,
+            index,
+            secondaryIndex,
+            files);
         tabViewModel.WindowTitle.Value = titles.TitleWithAppName;
         tabViewModel.Title.Value = titles.BaseTitle;
         tabViewModel.TitleTooltip.Value = titles.FilePathTitle;
@@ -45,6 +72,7 @@ public static class UpdateImage2
 
     public static void ChangeImage(TabViewModel tabViewModel, MainWindowViewModel vm)
     {
+        tabViewModel.Image.Value = tabViewModel.Model.Image;
         if (Settings.Zoom.ResetZoomOnChange)
         {
             if (vm.WindowTabs.ActiveTab.CurrentValue.CurrentView.CurrentValue is ImageViewer2 imageViewer)
@@ -57,18 +85,22 @@ public static class UpdateImage2
         double secondaryWidth, secondaryHeight;
         if (Settings.ImageScaling.ShowImageSideBySide)
         {
-            if (tabViewModel.SecondaryModel.CurrentValue is null)
+            if (tabViewModel.SecondaryModel is null)
             {
 #if DEBUG
-                DebugHelper.LogDebug(nameof(UpdateImage2), nameof(ChangeImage), "SecondaryModel.CurrentValue is null");
+                DebugHelper.LogDebug(nameof(UpdateImage2),
+                    nameof(ChangeImage),
+                    "SecondaryModel.CurrentValue is null");
 #endif
                 secondaryWidth = 0;
                 secondaryHeight = 0;
+                tabViewModel.SecondaryImage.Value = null;
             }
             else
             {
-                secondaryWidth = tabViewModel.SecondaryModel.CurrentValue.PixelWidth;
-                secondaryHeight = tabViewModel.SecondaryModel.CurrentValue.PixelHeight;
+                secondaryWidth = tabViewModel.SecondaryModel.PixelWidth;
+                secondaryHeight = tabViewModel.SecondaryModel.PixelHeight;
+                tabViewModel.SecondaryImage.Value = tabViewModel.SecondaryModel.Image;
             }
         }
         else
@@ -78,15 +110,15 @@ public static class UpdateImage2
         
         if (Settings.WindowProperties.AutoFit)
         {
-            WindowResizing2.SetSize(tabViewModel.Model.CurrentValue.PixelWidth,
-                tabViewModel.Model.CurrentValue.PixelHeight, 
+            WindowResizing2.SetSize(tabViewModel.Model.PixelWidth,
+                tabViewModel.Model.PixelHeight, 
                 secondaryWidth, secondaryHeight,
                 WindowResizeReason.Application,
                 vm);
         }
 
         // Update tiff title if appropriate (there are no file changes in this instance
-        if (tabViewModel.Model.CurrentValue.TiffNavigation is null)
+        if (tabViewModel.Model?.TiffNavigation is null)
         {
             return;
         }

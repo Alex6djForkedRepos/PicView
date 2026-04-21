@@ -37,8 +37,12 @@ public class TabViewModel(Action<uint> closeTab, IFileWatcherService? fileWatche
 
     public bool IsClosing { get; private set; }
     public bool IsSelected { get; set; }
-    public BindableReactiveProperty<ImageModel> Model { get; set; } = new();
-    public BindableReactiveProperty<ImageModel?> SecondaryModel { get; set; } = new();
+    public ImageModel Model { get; set; } = new();
+    public BindableReactiveProperty<object?> Image { get; } = new(null);
+    public BindableReactiveProperty<FileInfo?> FileInfo { get; } = new(null);
+    public ImageModel? SecondaryModel { get; set; } = new();
+    public BindableReactiveProperty<object?> SecondaryImage { get; } = new(null);
+    public BindableReactiveProperty<FileInfo?> SecondaryFileInfo { get; } = new(null);
     public BindableReactiveProperty<object?> CurrentView { get; } = new(null);
     /// <inheritdoc cref="Core.Navigation.Interfaces.IImageIterator"/>>
     public IImageIterator? ImageIterator { get; private set; }
@@ -96,42 +100,42 @@ public class TabViewModel(Action<uint> closeTab, IFileWatcherService? fileWatche
             return;
         }
             
-        var width = Model.CurrentValue.PixelWidth;
-        var height = Model.CurrentValue.PixelHeight;
+        var width = Model.PixelWidth;
+        var height = Model.PixelHeight;
         var index = ImageIterator.CurrentIndex;
         var windowTitles = GetTitles();
         WindowTitle.Value = windowTitles.TitleWithAppName;
         Title.Value = windowTitles.BaseTitle;
         TitleTooltip.Value = windowTitles.FilePathTitle;
-        if (Settings.ImageScaling.ShowImageSideBySide && SecondaryModel.CurrentValue is not null)
+        if (Settings.ImageScaling.ShowImageSideBySide && SecondaryModel is not null)
         {
-            TabTitle.Value = StringExtensions.Combine(Model.CurrentValue.FileInfo.Name, SecondaryModel.CurrentValue.FileInfo.Name);
-            TabTooltip.Value = StringExtensions.Combine(Model.CurrentValue.FileInfo.FullName, SecondaryModel.CurrentValue.FileInfo.FullName);
+            TabTitle.Value = StringExtensions.Combine(Model.FileInfo.Name, SecondaryModel.FileInfo.Name);
+            TabTooltip.Value = StringExtensions.Combine(Model.FileInfo.FullName, SecondaryModel.FileInfo.FullName);
         }
         else
         {
-            TabTitle.Value = Model.CurrentValue.FileInfo.Name;
-            TabTooltip.Value = Model.CurrentValue.FileInfo.FullName;
+            TabTitle.Value = Model.FileInfo.Name;
+            TabTooltip.Value = Model.FileInfo.FullName;
         }
         
         return;
         
         WindowTitles GetTitles()
         {
-            if (Model.CurrentValue.TiffNavigation is { } tiff)
+            if (Model.TiffNavigation is { } tiff)
             {
                 return ImageTitleFormatter.GenerateTiffTitleStrings(width, height,
-                    index, Model.CurrentValue.FileInfo, 100, ImageIterator.Files, tiff.CurrentPage, tiff.PageCount);
+                    index, Model.FileInfo, 100, ImageIterator.Files, tiff.CurrentPage, tiff.PageCount);
             }
 
-            if (!Settings.ImageScaling.ShowImageSideBySide || SecondaryModel.CurrentValue is null)
+            if (!Settings.ImageScaling.ShowImageSideBySide || SecondaryModel is null)
             {
                 return ImageTitleFormatter.GenerateTitleStrings(width, height,
-                    index, Model.CurrentValue.FileInfo, 100, ImageIterator.Files);
+                    index, Model.FileInfo, 100, ImageIterator.Files);
             }
 
-            var firstInfo = new ImageTitleInfo(width, height, index, Model.CurrentValue.FileInfo, 100);
-            var secondInfo = new ImageTitleInfo(SecondaryModel.CurrentValue.PixelWidth, SecondaryModel.CurrentValue.PixelHeight, index + 1, SecondaryModel.CurrentValue.FileInfo, 100);
+            var firstInfo = new ImageTitleInfo(width, height, index, Model.FileInfo, 100);
+            var secondInfo = new ImageTitleInfo(SecondaryModel.PixelWidth, SecondaryModel.PixelHeight, index + 1, SecondaryModel.FileInfo, 100);
             return ImageTitleFormatter.GenerateTitleForSideBySide(firstInfo, secondInfo, ImageIterator.CurrentIndex, ImageIterator.SecondaryCurrentIndex, ImageIterator.Files);
         }
     }
@@ -174,19 +178,19 @@ public class TabViewModel(Action<uint> closeTab, IFileWatcherService? fileWatche
             ThumbnailCache.RemoveOwner(Id);
         }
         ImageIterator ??= new ImageIterator(cache, thumbCache, thumbnailLoader, this);
-        if (Model?.CurrentValue?.FileInfo is null)
+        if (Model?.FileInfo is null)
         {
 #if DEBUG
             DebugHelper.LogDebug(nameof(TabViewModel), nameof(InitializeImageIterator), $"Model.FileInfo is null for tab {Id}");
 #endif
             return;
         }
-        var index = files.FindIndex(x => x.FullName.Equals(Model.CurrentValue.FileInfo.FullName));
+        var index = files.FindIndex(x => x.FullName.Equals(Model.FileInfo.FullName));
         ImageIterator.Initialize(files, index);
 
         if (index > -1 && index < files.Count)
         {
-            cache.TryAdd(Id, index, new PreLoadValue(Model.CurrentValue), files.Count, false, out _);
+            cache.TryAdd(Id, index, new PreLoadValue(Model), files.Count, false, out _);
         }
         
         var directory = files.Count > 0 ? files[0].DirectoryName : null;
