@@ -85,7 +85,7 @@ public class App : Application, IPlatformSpecificService
         TranslationManager.Init();
         SettingsUpdater2.InitializeSettings(_mainWindowViewModel, settingsExists);
 
-        StartUpHelper2.HandleWindowScalingMode(_coreViewModel, _mainWindow);
+        StartUpHelper.HandleWindowScalingMode(_coreViewModel, _mainWindow);
         
         var arg = Environment.GetCommandLineArgs();
         if (arg.Length > 1)
@@ -98,7 +98,7 @@ public class App : Application, IPlatformSpecificService
         }
         else
         {
-            StartUpHelper2.StartUpMenuOrLastFile(_coreViewModel);
+            StartUpHelper.StartUpMenuOrLastFile(_coreViewModel);
         }
         
         if (ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop)
@@ -106,7 +106,7 @@ public class App : Application, IPlatformSpecificService
             return;
         }
         
-        StartUpHelper2.HandlePostWindowUpdates(_coreViewModel, settingsExists, desktop, _mainWindow);
+        StartUpHelper.HandlePostWindowUpdates(_coreViewModel, settingsExists, desktop, _mainWindow);
         
         return;
 
