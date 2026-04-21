@@ -55,25 +55,22 @@ public partial class DropDownMenu : AnimatedMenu
         }
 
         core.FileHistory.PinnedEntries.CollectionChanged += PinnedEntriesOnCollectionChanged;
-        core.FileHistory.Entries.CollectionChanged += EntriesOnCollectionChanged;   
-            
-        _menuVisibilitySubscription = core.MainWindows.ActiveWindow.Value.TopTitlebarViewModel.DropDownMenu.IsDropDownMenuVisible
-            .Subscribe(isVisible =>
+        core.FileHistory.Entries.CollectionChanged += EntriesOnCollectionChanged;
+
+        _menuVisibilitySubscription = Observable.EveryValueChanged(this, x => x.IsVisible)
+            .SubscribeOn(UIHelper.GetFrameProvider).Subscribe(isVisible =>
             {
                 if (isVisible)
                 {
                     MaxHeight = UIHelper.GetMainView.Bounds.Height - 1;
                     core.FileHistory.UpdateHistory();
                 }
-            }, static result =>
-            {
-#if DEBUG
-                if (result is { IsFailure: true, Exception: not null })
+                else
                 {
-                    DebugHelper.LogDebug(nameof(DropDownMenu), nameof(_menuVisibilitySubscription), result.Exception);
+                    // Reset it, so that it opens in default state the next time it opens
+                    core.MainWindows.ActiveWindow.Value.TopTitlebarViewModel.DropDownMenu.CloseToDefault();
                 }
-#endif
-            });
+            }, DebugHelper.LogError(nameof(DropDownMenu), nameof(_menuVisibilitySubscription)));
     }
 
     private void ApplyLightTheme()

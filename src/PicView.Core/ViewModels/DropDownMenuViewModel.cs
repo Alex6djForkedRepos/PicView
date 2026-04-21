@@ -74,6 +74,20 @@ public class DropDownMenuViewModel
         IsSettingsCarouselVisible.Value = true;
         IsFileHistoryVisible.Value = Settings.Navigation.IsFileHistoryEnabled;
     }
+
+    public void CloseToDefault()
+    {
+        SlideshowCarouselIndex.Value = 0;
+        GalleryCarouselIndex.Value = 0;
+        ToolWindowsCarouselIndex.Value = 0;
+        SettingsCarouselIndex.Value = 0;
+        IsExpandedOptionsOpened.Value = false;
+        IsGalleryCarouselVisible.Value = true;
+        IsSlideshowCarouselVisible.Value = true;
+        IsToolWindowsCarouselVisible.Value = true;
+        IsSettingsCarouselVisible.Value = true;
+        IsFileHistoryVisible.Value = Settings.Navigation.IsFileHistoryEnabled;
+    }
     
     public void OpenToolWindowsOptions()
     {

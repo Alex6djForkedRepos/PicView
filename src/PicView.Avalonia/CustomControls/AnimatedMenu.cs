@@ -39,15 +39,8 @@ public class AnimatedMenu : UserControl, IDisposable
                 {
                     IsVisible = false;
                 }
-            }, static result =>
-            {
-#if DEBUG
-                if (result is { IsFailure: true, Exception: not null })
-                {
-                    DebugHelper.LogDebug(nameof(AnimatedMenu), nameof(IsOpen), result.Exception);
-                }
-#endif
-            })
+                
+            }, DebugHelper.LogError(nameof(AnimatedMenu), nameof(IsOpenProperty)))
             .AddTo(ref _disposable);
     }
     
