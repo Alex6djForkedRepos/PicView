@@ -94,7 +94,7 @@ public class App : Application, IPlatformSpecificService
         }
         if (startUpFilePath is not null)
         {
-            Task.Run(() => QuickLoad2.QuickLoadAsync(_coreViewModel, startUpFilePath, false));
+            Task.Run(() => QuickLoad.QuickLoadAsync(_coreViewModel, startUpFilePath, false));
         }
         else
         {
