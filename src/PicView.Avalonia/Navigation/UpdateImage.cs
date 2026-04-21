@@ -38,7 +38,7 @@ public static class UpdateImage
         preLoadValue ??= await NavigationManager.GetPreLoadValueAsync(index).ConfigureAwait(false);
         if (preLoadValue is null)
         {
-            await ErrorHandling.ReloadAsync(vm).ConfigureAwait(false);
+            // await ErrorHandling.ReloadAsync(vm).ConfigureAwait(false);
             return;
         }
         if (preLoadValue.ImageModel?.Image is null && index == NavigationManager.GetCurrentIndex)

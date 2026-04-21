@@ -89,7 +89,7 @@ public static class NavigationManager
                     ImageIterator.ImagePaths.FindIndex(x => x.FullName.Equals(vm.PicViewer.FileInfo.CurrentValue.FullName));
                 if (newIndex == -1)
                 {
-                    ErrorHandling.ShowStartUpMenu(vm);
+                    // ErrorHandling.ShowStartUpMenu(vm);
                     return;
                 }
 
@@ -97,7 +97,7 @@ public static class NavigationManager
             }
             else
             {
-                ErrorHandling.ShowStartUpMenu(vm);
+                // ErrorHandling.ShowStartUpMenu(vm);
                 return;
             }
         }

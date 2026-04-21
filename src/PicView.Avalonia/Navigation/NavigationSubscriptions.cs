@@ -1,10 +1,8 @@
 ﻿using Avalonia.Threading;
-using PicView.Avalonia.StartUp;
 using PicView.Core.DebugTools;
 using PicView.Core.ViewModels;
 using PicView.Avalonia.Gallery;
 using PicView.Avalonia.UI;
-using PicView.Core.Navigation.Interfaces;
 using R3;
 
 namespace PicView.Avalonia.Navigation;

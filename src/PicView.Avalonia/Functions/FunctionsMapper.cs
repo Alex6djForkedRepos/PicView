@@ -411,11 +411,6 @@ public static class FunctionsMapper
 
     public static async Task ShowStartUpMenu()
     {
-        //TODO: Needs refactor, add async overload for ShowStartUpMenu
-        await Dispatcher.UIThread.InvokeAsync(() =>
-        {
-            ErrorHandling.ShowStartUpMenu(Vm);
-        });
     }
     
     /// <inheritdoc cref="DialogManager.HandleShouldClosing" />
@@ -605,10 +600,10 @@ public static class FunctionsMapper
     /// <inheritdoc cref="SettingsUpdater.ToggleSideBySide(MainViewModel)" />
     public static async ValueTask SideBySide() =>
         await SettingsUpdater.ToggleSideBySide(Vm).ConfigureAwait(false);
-    
+
     /// <inheritdoc cref="ErrorHandling.ReloadAsync(MainViewModel)" />
     public static async ValueTask Reload() =>
-        await ErrorHandling.ReloadAsync(Vm).ConfigureAwait(false);
+        await ValueTask.CompletedTask;
 
     public static async ValueTask ResizeImage() =>
         await ResizeWindow();

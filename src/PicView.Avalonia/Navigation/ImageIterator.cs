@@ -159,7 +159,6 @@ public class ImageIterator : IAsyncDisposable
             ImagePaths.RemoveAt(index);
             if (ImagePaths.Count <= 0)
             {
-                ErrorHandling.ShowStartUpMenu(_vm);
                 return;
             }
 
