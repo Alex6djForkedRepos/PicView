@@ -1,11 +1,10 @@
 using Avalonia.Controls;
-using PicView.Avalonia.WindowBehavior;
 
 namespace PicView.Avalonia.Views.Config;
 
-public partial class GalleryView : UserControl
+public partial class GallerySettingsView : UserControl
 {
-    public GalleryView()
+    public GallerySettingsView()
     {
         InitializeComponent();
     }

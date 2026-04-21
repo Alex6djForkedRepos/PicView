@@ -12,7 +12,7 @@ using R3;
 
 namespace PicView.Avalonia.Controllers;
 
-public class SettingsSearchController(SettingsView2 view) : IDisposable
+public class SettingsSearchController(SettingsView view) : IDisposable
 {
     private const string ClassSearchDim = "searchDim";
     private const string ClassSearchMatch = "searchMatch";
