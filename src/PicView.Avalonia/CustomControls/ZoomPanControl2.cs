@@ -54,13 +54,13 @@ public class ZoomPanControl2 : Decorator
     private Point _panStartTranslate;
 
     // UI Components
-    public ZoomPreviewer2? ZoomPreviewer;
+    public ZoomPreviewer? ZoomPreviewer;
 
     #endregion
 
     #region Initialization and Lifecycle
 
-    public void Initialize(ZoomPreviewer2 zoomPreviewer)
+    public void Initialize(ZoomPreviewer zoomPreviewer)
     {
         // Pointer handling for panning
         AddHandler(PointerPressedEvent, HandleResetZoomOrStartPanning, RoutingStrategies.Tunnel);

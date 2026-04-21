@@ -52,7 +52,7 @@
                     </customControls:AutoScrollViewer>
                 </customControls:ZoomPanControl2>
             </LayoutTransformControl>
-            <uc:ZoomPreviewer2
+            <uc:ZoomPreviewer
                 HorizontalAlignment="Right"
                 IsVisible="False"
                 Margin="0,0,25,25"
