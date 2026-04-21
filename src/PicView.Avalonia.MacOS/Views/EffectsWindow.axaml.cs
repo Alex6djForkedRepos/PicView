@@ -42,10 +42,10 @@ public partial class EffectsWindow : Window, IDisposable
 
     private void MoveWindow(object? sender, PointerPressedEventArgs e)
     {
-        if (VisualRoot is null) { return; }
-
-        var hostWindow = (Window)VisualRoot;
-        hostWindow?.BeginMoveDrag(e);
+        if (GetTopLevel(this) is Window hostWindow)
+        {
+            hostWindow.BeginMoveDrag(e);
+        }
     }
     
     public void Dispose()

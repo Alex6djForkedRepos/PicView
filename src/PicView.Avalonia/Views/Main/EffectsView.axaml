@@ -67,7 +67,7 @@
     </UserControl.Styles>
     <UserControl.ContextMenu>
         <ContextMenu x:Name="EffectsContextMenu">
-            <MenuItem Header="{CompiledBinding Translation.Save.Value, Mode=OneWay}">
+            <MenuItem Command="{Binding MainWindows.ActiveWindow.Value.SaveCommand}" Header="{CompiledBinding Translation.Save.Value, Mode=OneWay}">
                 <MenuItem.Icon>
                     <Path
                         Data="{StaticResource SaveGeometry}"
@@ -77,7 +77,7 @@
                         Width="12" />
                 </MenuItem.Icon>
             </MenuItem>
-            <MenuItem Header="{CompiledBinding Translation.SaveAs.Value}">
+            <MenuItem Command="{Binding MainWindows.ActiveWindow.Value.SaveAsCommand}" Header="{CompiledBinding Translation.SaveAs.Value}">
                 <MenuItem.Icon>
                     <Path
                         Data="{StaticResource SaveGeometry}"
@@ -87,7 +87,7 @@
                         Width="12" />
                 </MenuItem.Icon>
             </MenuItem>
-            <MenuItem Header="{CompiledBinding Translation.CopyImage.Value, Mode=OneWay}">
+            <MenuItem Command="{Binding MainWindows.ActiveWindow.Value.CopyImageCommand}" Header="{CompiledBinding Translation.CopyImage.Value, Mode=OneWay}">
                 <MenuItem.Icon>
                     <Path
                         Data="{StaticResource CopyGeometry}"
@@ -99,8 +99,7 @@
             </MenuItem>
             <Separator />
             <MenuItem
-                CommandParameter="{CompiledBinding MainWindows.ActiveWindow.Value.WindowTabs.ActiveTab.Value.Model.Value.FileInfo.FullName,
-                                                   FallbackValue=''}"
+                Command="{Binding MainWindows.ActiveWindow.Value.SetAsWallpaperCommand}"
                 Header="{CompiledBinding Translation.SetAsWallpaper.Value,
                                          Mode=OneWay}"
                 IsVisible="{CompiledBinding GlobalSettings.ShowSetAsWallpaper.Value}">
@@ -162,6 +161,8 @@
     <Panel>
         <uc:SpinWaiter
             HorizontalAlignment="Center"
+            IsVisible="{CompiledBinding MainWindows.ActiveWindow.Value.IsLoadingIndicatorShown.Value,
+                                        Mode=OneWay}"
             VerticalAlignment="Center"
             x:Name="SpinWaiter" />
 
@@ -212,6 +213,7 @@
                     <SplitButton
                         Background="{DynamicResource AccentColor}"
                         Classes="BorderStyle accentHover mainBtn"
+                        Command="{Binding MainWindows.ActiveWindow.Value.SaveCommand}"
                         CornerRadius="4"
                         Width="195"
                         x:Name="SaveButton">
@@ -224,6 +226,7 @@
                         <SplitButton.Flyout>
                             <MenuFlyout FlyoutPresenterClasses="noCornerRadius" Placement="Bottom">
                                 <MenuItem
+                                    Command="{Binding MainWindows.ActiveWindow.Value.SaveAsCommand}"
                                     Header="{CompiledBinding Translation.SaveAs.Value,
                                                              Mode=OneWay}"
                                     HorizontalAlignment="Center"
