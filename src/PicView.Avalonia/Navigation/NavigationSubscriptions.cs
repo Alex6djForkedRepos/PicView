@@ -1,8 +1,10 @@
-﻿using Avalonia.Threading;
+﻿using Avalonia;
+using Avalonia.Threading;
 using PicView.Core.DebugTools;
 using PicView.Core.ViewModels;
-using PicView.Avalonia.Gallery;
+using PicView.Avalonia.Navigation.Services;
 using PicView.Avalonia.UI;
+using PicView.Core.Gallery;
 using R3;
 
 namespace PicView.Avalonia.Navigation;
@@ -31,14 +33,18 @@ public static class NavigationSubscriptions
                 .Skip(1)
                 .SubscribeAwait(async (mode, _) =>
                 {
-                    await UpdateGallery.LoadGalleryIfDockedOrExpanded(tabViewModel, mode);
-                }, DebugHelper.LogError(nameof(NavigationSubscriptions), nameof(UpdateGallery)))
+                    if (Application.Current.DataContext is not CoreViewModel core)
+                    {
+                        return;
+                    }
+                    await GalleryLoader.LoadGalleryIfDockedOrExpanded(tabViewModel, mode, core.SharedThumbnailCache, new AvaloniaThumbnailLoader());
+                }, DebugHelper.LogError(nameof(NavigationSubscriptions), nameof(GalleryLoader.LoadGalleryIfDockedOrExpanded)))
                 .AddTo(tabViewModel.Disposables);
             tabViewModel.Gallery.OpenSelectedItemCommand
                 .SubscribeAwait(async (index, _) =>
                 {
-                    await UpdateGallery.ToggleGalleryAndLoadItem(tabViewModel, index);
-                }, DebugHelper.LogError(nameof(NavigationSubscriptions), nameof(UpdateGallery)))
+                    await GalleryLoader.ToggleGalleryAndLoadItem(tabViewModel, index);
+                }, DebugHelper.LogError(nameof(NavigationSubscriptions), nameof(GalleryLoader.ToggleGalleryAndLoadItem)))
                 .AddTo(tabViewModel.Disposables);
         });
     }

@@ -22,7 +22,7 @@ namespace PicView.Avalonia.Functions;
 /// <summary>
 /// Used to map functions to their names, used for keyboard shortcuts
 /// </summary>
-/// // TODO deprecated, delete
+/// // TODO replace with FunctionsMapper2
 public static class FunctionsMapper
 {
     public static MainViewModel? Vm;

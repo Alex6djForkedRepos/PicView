@@ -1,6 +1,7 @@
 using PicView.Core.DebugTools;
 using PicView.Core.Navigation.Interfaces;
 using PicView.Core.ViewModels;
+using R3;
 
 namespace PicView.Core.Gallery;
 
@@ -135,5 +136,35 @@ public static class GalleryLoader
             }
             item.Image.Value = thumb;
         }
+    }
+    
+    public static async ValueTask LoadGalleryIfDockedOrExpanded(TabViewModel tabViewModel, GalleryMode2 mode, IThumbnailCache thumbnailCache, IThumbnailLoader thumbnailLoader)
+    {
+        if (mode is GalleryMode2.Docked or GalleryMode2.Expanded)
+        {
+            if (tabViewModel.Gallery.LoadingState is GalleryLoadingState.NotLoaded)
+            {
+                await LoadGalleryAsync(tabViewModel,
+                        tabViewModel.ImageIterator.Files,
+                        thumbnailLoader,
+                        thumbnailCache,
+                        tabViewModel.GetTabCancellation().Token)
+                    .ConfigureAwait(false);
+            }
+        }
+    }
+    
+    public static async ValueTask ToggleGalleryAndLoadItem(TabViewModel tabViewModel, int index)
+    {
+        if (tabViewModel.ImageIterator is null)
+        {
+            return;
+        }
+        if (tabViewModel.Gallery.IsGalleryExpanded.Value)
+        {
+            tabViewModel.Gallery.ToggleGalleryCommand.Execute(Unit.Default);
+        }
+
+        await tabViewModel.ImageIterator.SkipToIndexAsync(index, tabViewModel.GetTabCancellation()).ConfigureAwait(false);
     }
 }
