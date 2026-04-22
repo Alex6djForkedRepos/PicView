@@ -586,7 +586,7 @@
                         Spacing="80"
                         x:Name="ContentPanel">
 
-                        <config:GeneralSettingsView2
+                        <config:GeneralSettingsView
                             Background="Transparent"
                             Focusable="True"
                             x:Name="GeneralSection" />
@@ -596,7 +596,7 @@
                             Focusable="True"
                             x:Name="AppearanceSection" />
 
-                        <config:InterfaceConfigurationView2
+                        <config:InterfaceConfigurationView
                             Background="Transparent"
                             Focusable="True"
                             x:Name="InterfaceSection" />
@@ -606,7 +606,7 @@
                             Focusable="True"
                             x:Name="ImageSection" />
 
-                        <config:WindowSettingsView2
+                        <config:WindowSettingsView
                             Background="Transparent"
                             Focusable="True"
                             x:Name="WindowSection" />
@@ -616,27 +616,27 @@
                             Focusable="True"
                             x:Name="GallerySection" />
 
-                        <config:SlideshowSettingsView2
+                        <config:SlideshowSettingsView
                             Background="Transparent"
                             Focusable="True"
                             x:Name="SlideshowSection" />
 
-                        <config:NavigationView2
+                        <config:NavigationView
                             Background="Transparent"
                             Focusable="True"
                             x:Name="NavigationSection" />
 
-                        <config:ZoomSettingsView2
+                        <config:ZoomSettingsView
                             Background="Transparent"
                             Focusable="True"
                             x:Name="ZoomSection" />
 
-                        <config:MouseView2
+                        <config:MouseView
                             Background="Transparent"
                             Focusable="True"
                             x:Name="MouseSection" />
 
-                        <config:LanguageView2
+                        <config:LanguageView
                             Background="Transparent"
                             Focusable="True"
                             x:Name="LanguageSection" />
