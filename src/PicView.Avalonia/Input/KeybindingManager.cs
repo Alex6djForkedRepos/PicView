@@ -2,9 +2,10 @@
 using System.Text.Json.Serialization;
 using Avalonia.Input;
 using PicView.Avalonia.Functions;
-using PicView.Avalonia.Interfaces;
 using PicView.Core.DebugTools;
+using PicView.Core.IPlatform;
 using PicView.Core.Keybindings;
+using ZLinq;
 
 namespace PicView.Avalonia.Input;
 
@@ -100,6 +101,11 @@ public static class KeybindingManager
         PopulateCustomShortcuts(keyValues);
     }
     
-    private static string GetFunctionNameByFunction(Func<ValueTask> function) =>
-        function == null ? "" : CustomShortcuts.FirstOrDefault(x => x.Value == function).Value.Method.Name;
+    public static string GetFunctionNameByFunction(Func<ValueTask> function) =>
+        function == null ? "" : CustomShortcuts.AsValueEnumerable()
+            .FirstOrDefault(x => x.Value == function).Value.Method.Name;
+    
+    public static Func<ValueTask>? GetFunction(KeyGesture keyGesture) =>
+        keyGesture == null ? null : CustomShortcuts.AsValueEnumerable()
+            .FirstOrDefault(x => x.Key == keyGesture).Value;
 }

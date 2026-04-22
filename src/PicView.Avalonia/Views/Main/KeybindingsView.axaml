@@ -1,18 +1,10 @@
 <UserControl
-    d:DesignHeight="450"
-    d:DesignWidth="800"
-    mc:Ignorable="d"
     x:Class="PicView.Avalonia.Views.Main.KeybindingsView"
-    x:DataType="viewModels:MainViewModel"
+    x:DataType="viewModels:CoreViewModel"
     xmlns="https://github.com/avaloniaui"
     xmlns:customControls="clr-namespace:PicView.Avalonia.CustomControls"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:viewModels="clr-namespace:PicView.Avalonia.ViewModels"
+    xmlns:viewModels="clr-namespace:PicView.Core.ViewModels;assembly=PicView.Core"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <Design.DataContext>
-        <viewModels:MainViewModel />
-    </Design.DataContext>
 
     <!--  Filter  -->
     <DockPanel>
@@ -78,7 +70,7 @@
                                     MethodName="{CompiledBinding MethodName}"
                                     Text="{CompiledBinding Key,
                                                            Mode=OneTime}"
-                                    ToolTip.Tip="{CompiledBinding #MainPanel.((viewModels:MainViewModel)DataContext).Translation.ChangeKeybindingTooltip.Value,
+                                    ToolTip.Tip="{CompiledBinding #MainPanel.((viewModels:CoreViewModel)DataContext).Translation.ChangeKeybindingTooltip.Value,
                                                                   Mode=OneWay}"
                                     Width="140" />
                                 <customControls:KeybindTextBox
@@ -89,7 +81,7 @@
                                     MethodName="{CompiledBinding MethodName}"
                                     Text="{CompiledBinding AltKey,
                                                            Mode=OneTime}"
-                                    ToolTip.Tip="{CompiledBinding #MainPanel.((viewModels:MainViewModel)DataContext).Translation.ChangeKeybindingTooltip.Value,
+                                    ToolTip.Tip="{CompiledBinding #MainPanel.((viewModels:CoreViewModel)DataContext).Translation.ChangeKeybindingTooltip.Value,
                                                                   Mode=OneWay}"
                                     Width="140" />
                             </StackPanel>
@@ -153,7 +145,7 @@
                                         MethodName="{CompiledBinding MethodName}"
                                         Text="{CompiledBinding Key,
                                                                Mode=OneTime}"
-                                        ToolTip.Tip="{CompiledBinding #MainPanel.((viewModels:MainViewModel)DataContext).Translation.ChangeKeybindingTooltip.Value,
+                                        ToolTip.Tip="{CompiledBinding #MainPanel.((viewModels:CoreViewModel)DataContext).Translation.ChangeKeybindingTooltip.Value,
                                                                       Mode=OneWay}"
                                         Width="140" />
                                     <customControls:KeybindTextBox
@@ -164,7 +156,7 @@
                                         MethodName="{CompiledBinding MethodName}"
                                         Text="{CompiledBinding AltKey,
                                                                Mode=OneTime}"
-                                        ToolTip.Tip="{CompiledBinding #MainPanel.((viewModels:MainViewModel)DataContext).Translation.ChangeKeybindingTooltip.Value,
+                                        ToolTip.Tip="{CompiledBinding #MainPanel.((viewModels:CoreViewModel)DataContext).Translation.ChangeKeybindingTooltip.Value,
                                                                       Mode=OneWay}"
                                         Width="140" />
                                 </StackPanel>
@@ -198,7 +190,7 @@
                                         MethodName="{CompiledBinding MethodName}"
                                         Text="{CompiledBinding Key,
                                                                Mode=OneTime}"
-                                        ToolTip.Tip="{CompiledBinding #MainPanel.((viewModels:MainViewModel)DataContext).Translation.ChangeKeybindingTooltip.Value,
+                                        ToolTip.Tip="{CompiledBinding #MainPanel.((viewModels:CoreViewModel)DataContext).Translation.ChangeKeybindingTooltip.Value,
                                                                       Mode=OneWay}"
                                         Width="140" />
                                     <customControls:KeybindTextBox
@@ -209,7 +201,7 @@
                                         MethodName="{CompiledBinding MethodName}"
                                         Text="{CompiledBinding AltKey,
                                                                Mode=OneTime}"
-                                        ToolTip.Tip="{CompiledBinding #MainPanel.((viewModels:MainViewModel)DataContext).Translation.ChangeKeybindingTooltip.Value,
+                                        ToolTip.Tip="{CompiledBinding #MainPanel.((viewModels:CoreViewModel)DataContext).Translation.ChangeKeybindingTooltip.Value,
                                                                       Mode=OneWay}"
                                         Width="140" />
                                 </StackPanel>
@@ -243,7 +235,7 @@
                                         MethodName="{CompiledBinding MethodName}"
                                         Text="{CompiledBinding Key,
                                                                Mode=OneTime}"
-                                        ToolTip.Tip="{CompiledBinding #MainPanel.((viewModels:MainViewModel)DataContext).Translation.ChangeKeybindingTooltip.Value,
+                                        ToolTip.Tip="{CompiledBinding #MainPanel.((viewModels:CoreViewModel)DataContext).Translation.ChangeKeybindingTooltip.Value,
                                                                       Mode=OneWay}"
                                         Width="140" />
                                     <customControls:KeybindTextBox
@@ -254,7 +246,7 @@
                                         MethodName="{CompiledBinding MethodName}"
                                         Text="{CompiledBinding AltKey,
                                                                Mode=OneTime}"
-                                        ToolTip.Tip="{CompiledBinding #MainPanel.((viewModels:MainViewModel)DataContext).Translation.ChangeKeybindingTooltip.Value,
+                                        ToolTip.Tip="{CompiledBinding #MainPanel.((viewModels:CoreViewModel)DataContext).Translation.ChangeKeybindingTooltip.Value,
                                                                       Mode=OneWay}"
                                         Width="140" />
                                 </StackPanel>
@@ -288,7 +280,7 @@
                                         MethodName="{CompiledBinding MethodName}"
                                         Text="{CompiledBinding Key,
                                                                Mode=OneTime}"
-                                        ToolTip.Tip="{CompiledBinding #MainPanel.((viewModels:MainViewModel)DataContext).Translation.ChangeKeybindingTooltip.Value,
+                                        ToolTip.Tip="{CompiledBinding #MainPanel.((viewModels:CoreViewModel)DataContext).Translation.ChangeKeybindingTooltip.Value,
                                                                       Mode=OneWay}"
                                         Width="140" />
                                     <customControls:KeybindTextBox
@@ -299,7 +291,7 @@
                                         MethodName="{CompiledBinding MethodName}"
                                         Text="{CompiledBinding AltKey,
                                                                Mode=OneTime}"
-                                        ToolTip.Tip="{CompiledBinding #MainPanel.((viewModels:MainViewModel)DataContext).Translation.ChangeKeybindingTooltip.Value,
+                                        ToolTip.Tip="{CompiledBinding #MainPanel.((viewModels:CoreViewModel)DataContext).Translation.ChangeKeybindingTooltip.Value,
                                                                       Mode=OneWay}"
                                         Width="140" />
                                 </StackPanel>
@@ -333,7 +325,7 @@
                                         MethodName="{CompiledBinding MethodName}"
                                         Text="{CompiledBinding Key,
                                                                Mode=OneTime}"
-                                        ToolTip.Tip="{CompiledBinding #MainPanel.((viewModels:MainViewModel)DataContext).Translation.ChangeKeybindingTooltip.Value,
+                                        ToolTip.Tip="{CompiledBinding #MainPanel.((viewModels:CoreViewModel)DataContext).Translation.ChangeKeybindingTooltip.Value,
                                                                       Mode=OneWay}"
                                         Width="140" />
                                     <customControls:KeybindTextBox
@@ -344,7 +336,7 @@
                                         MethodName="{CompiledBinding MethodName}"
                                         Text="{CompiledBinding AltKey,
                                                                Mode=OneTime}"
-                                        ToolTip.Tip="{CompiledBinding #MainPanel.((viewModels:MainViewModel)DataContext).Translation.ChangeKeybindingTooltip.Value,
+                                        ToolTip.Tip="{CompiledBinding #MainPanel.((viewModels:CoreViewModel)DataContext).Translation.ChangeKeybindingTooltip.Value,
                                                                       Mode=OneWay}"
                                         Width="140" />
                                 </StackPanel>
@@ -378,7 +370,7 @@
                                         MethodName="{CompiledBinding MethodName}"
                                         Text="{CompiledBinding Key,
                                                                Mode=OneTime}"
-                                        ToolTip.Tip="{CompiledBinding #MainPanel.((viewModels:MainViewModel)DataContext).Translation.ChangeKeybindingTooltip.Value,
+                                        ToolTip.Tip="{CompiledBinding #MainPanel.((viewModels:CoreViewModel)DataContext).Translation.ChangeKeybindingTooltip.Value,
                                                                       Mode=OneWay}"
                                         Width="140" />
                                     <customControls:KeybindTextBox
@@ -389,7 +381,7 @@
                                         MethodName="{CompiledBinding MethodName}"
                                         Text="{CompiledBinding AltKey,
                                                                Mode=OneTime}"
-                                        ToolTip.Tip="{CompiledBinding #MainPanel.((viewModels:MainViewModel)DataContext).Translation.ChangeKeybindingTooltip.Value,
+                                        ToolTip.Tip="{CompiledBinding #MainPanel.((viewModels:CoreViewModel)DataContext).Translation.ChangeKeybindingTooltip.Value,
                                                                       Mode=OneWay}"
                                         Width="140" />
                                 </StackPanel>
@@ -423,7 +415,7 @@
                                         MethodName="{CompiledBinding MethodName}"
                                         Text="{CompiledBinding Key,
                                                                Mode=OneTime}"
-                                        ToolTip.Tip="{CompiledBinding #MainPanel.((viewModels:MainViewModel)DataContext).Translation.ChangeKeybindingTooltip.Value,
+                                        ToolTip.Tip="{CompiledBinding #MainPanel.((viewModels:CoreViewModel)DataContext).Translation.ChangeKeybindingTooltip.Value,
                                                                       Mode=OneWay}"
                                         Width="140" />
                                     <customControls:KeybindTextBox
@@ -434,7 +426,7 @@
                                         MethodName="{CompiledBinding MethodName}"
                                         Text="{CompiledBinding AltKey,
                                                                Mode=OneTime}"
-                                        ToolTip.Tip="{CompiledBinding #MainPanel.((viewModels:MainViewModel)DataContext).Translation.ChangeKeybindingTooltip.Value,
+                                        ToolTip.Tip="{CompiledBinding #MainPanel.((viewModels:CoreViewModel)DataContext).Translation.ChangeKeybindingTooltip.Value,
                                                                       Mode=OneWay}"
                                         Width="140" />
                                 </StackPanel>
@@ -469,7 +461,7 @@
                                         MethodName="{CompiledBinding MethodName}"
                                         Text="{CompiledBinding Key,
                                                                Mode=OneTime}"
-                                        ToolTip.Tip="{CompiledBinding #MainPanel.((viewModels:MainViewModel)DataContext).Translation.ChangeKeybindingTooltip.Value,
+                                        ToolTip.Tip="{CompiledBinding #MainPanel.((viewModels:CoreViewModel)DataContext).Translation.ChangeKeybindingTooltip.Value,
                                                                       Mode=OneWay}"
                                         Width="140" />
                                     <customControls:KeybindTextBox
@@ -480,7 +472,7 @@
                                         MethodName="{CompiledBinding MethodName}"
                                         Text="{CompiledBinding AltKey,
                                                                Mode=OneTime}"
-                                        ToolTip.Tip="{CompiledBinding #MainPanel.((viewModels:MainViewModel)DataContext).Translation.ChangeKeybindingTooltip.Value,
+                                        ToolTip.Tip="{CompiledBinding #MainPanel.((viewModels:CoreViewModel)DataContext).Translation.ChangeKeybindingTooltip.Value,
                                                                       Mode=OneWay}"
                                         Width="140" />
                                 </StackPanel>
@@ -514,7 +506,7 @@
                                         MethodName="{CompiledBinding MethodName}"
                                         Text="{CompiledBinding Key,
                                                                Mode=OneTime}"
-                                        ToolTip.Tip="{CompiledBinding #MainPanel.((viewModels:MainViewModel)DataContext).Translation.ChangeKeybindingTooltip.Value,
+                                        ToolTip.Tip="{CompiledBinding #MainPanel.((viewModels:CoreViewModel)DataContext).Translation.ChangeKeybindingTooltip.Value,
                                                                       Mode=OneWay}"
                                         Width="140" />
                                     <customControls:KeybindTextBox
@@ -525,7 +517,7 @@
                                         MethodName="{CompiledBinding MethodName}"
                                         Text="{CompiledBinding AltKey,
                                                                Mode=OneTime}"
-                                        ToolTip.Tip="{CompiledBinding #MainPanel.((viewModels:MainViewModel)DataContext).Translation.ChangeKeybindingTooltip.Value,
+                                        ToolTip.Tip="{CompiledBinding #MainPanel.((viewModels:CoreViewModel)DataContext).Translation.ChangeKeybindingTooltip.Value,
                                                                       Mode=OneWay}"
                                         Width="140" />
                                 </StackPanel>
@@ -559,7 +551,7 @@
                                         MethodName="{CompiledBinding MethodName}"
                                         Text="{CompiledBinding Key,
                                                                Mode=OneTime}"
-                                        ToolTip.Tip="{CompiledBinding #MainPanel.((viewModels:MainViewModel)DataContext).Translation.ChangeKeybindingTooltip.Value,
+                                        ToolTip.Tip="{CompiledBinding #MainPanel.((viewModels:CoreViewModel)DataContext).Translation.ChangeKeybindingTooltip.Value,
                                                                       Mode=OneWay}"
                                         Width="140" />
                                     <customControls:KeybindTextBox
@@ -570,7 +562,7 @@
                                         MethodName="{CompiledBinding MethodName}"
                                         Text="{CompiledBinding AltKey,
                                                                Mode=OneTime}"
-                                        ToolTip.Tip="{CompiledBinding #MainPanel.((viewModels:MainViewModel)DataContext).Translation.ChangeKeybindingTooltip.Value,
+                                        ToolTip.Tip="{CompiledBinding #MainPanel.((viewModels:CoreViewModel)DataContext).Translation.ChangeKeybindingTooltip.Value,
                                                                       Mode=OneWay}"
                                         Width="140" />
                                 </StackPanel>
@@ -604,7 +596,7 @@
                                         MethodName="{CompiledBinding MethodName}"
                                         Text="{CompiledBinding Key,
                                                                Mode=OneTime}"
-                                        ToolTip.Tip="{CompiledBinding #MainPanel.((viewModels:MainViewModel)DataContext).Translation.ChangeKeybindingTooltip.Value,
+                                        ToolTip.Tip="{CompiledBinding #MainPanel.((viewModels:CoreViewModel)DataContext).Translation.ChangeKeybindingTooltip.Value,
                                                                       Mode=OneWay}"
                                         Width="140" />
                                     <customControls:KeybindTextBox
@@ -615,7 +607,7 @@
                                         MethodName="{CompiledBinding MethodName}"
                                         Text="{CompiledBinding AltKey,
                                                                Mode=OneTime}"
-                                        ToolTip.Tip="{CompiledBinding #MainPanel.((viewModels:MainViewModel)DataContext).Translation.ChangeKeybindingTooltip.Value,
+                                        ToolTip.Tip="{CompiledBinding #MainPanel.((viewModels:CoreViewModel)DataContext).Translation.ChangeKeybindingTooltip.Value,
                                                                       Mode=OneWay}"
                                         Width="140" />
                                 </StackPanel>
@@ -649,7 +641,7 @@
                                         MethodName="{CompiledBinding MethodName}"
                                         Text="{CompiledBinding Key,
                                                                Mode=OneTime}"
-                                        ToolTip.Tip="{CompiledBinding #MainPanel.((viewModels:MainViewModel)DataContext).Translation.ChangeKeybindingTooltip.Value,
+                                        ToolTip.Tip="{CompiledBinding #MainPanel.((viewModels:CoreViewModel)DataContext).Translation.ChangeKeybindingTooltip.Value,
                                                                       Mode=OneWay}"
                                         Width="140" />
                                     <customControls:KeybindTextBox
@@ -660,7 +652,7 @@
                                         MethodName="{CompiledBinding MethodName}"
                                         Text="{CompiledBinding AltKey,
                                                                Mode=OneTime}"
-                                        ToolTip.Tip="{CompiledBinding #MainPanel.((viewModels:MainViewModel)DataContext).Translation.ChangeKeybindingTooltip.Value,
+                                        ToolTip.Tip="{CompiledBinding #MainPanel.((viewModels:CoreViewModel)DataContext).Translation.ChangeKeybindingTooltip.Value,
                                                                       Mode=OneWay}"
                                         Width="140" />
                                 </StackPanel>

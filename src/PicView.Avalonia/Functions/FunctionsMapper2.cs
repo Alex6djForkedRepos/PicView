@@ -28,7 +28,7 @@ using R3;
 
 namespace PicView.Avalonia.Functions;
 
-public class FunctionsMapper2(Core.ViewModels.MainWindowViewModel vm, Window window) : IFunctionsMapper
+public class FunctionsMapper2(MainWindowViewModel vm, Window window) : IFunctionsMapper
 {
     public Func<ValueTask>? GetFunctionByName(string functionName)
     {

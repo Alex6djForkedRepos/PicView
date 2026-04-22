@@ -213,11 +213,11 @@ public static class StartUpHelper
             {
                 if (defaultKeybindings)
                 {
-                    KeybindingManager2.SetDefaultKeybindings(vm.PlatformService);
+                    KeybindingManager.SetDefaultKeybindings(vm.PlatformService);
                 }
                 else
                 {
-                    await KeybindingManager2.LoadKeybindings(vm.PlatformService);
+                    await KeybindingManager.LoadKeybindings(vm.PlatformService);
                 }
                 vm.MainWindows.ActiveWindow.Value.Mapper =
                     new FunctionsMapper2(vm.MainWindows.ActiveWindow.CurrentValue, window);

@@ -24,13 +24,13 @@ public static class FunctionsKeyHelper
             switch (methodName)
             {
                 case "ScrollUpInternal":
-                    var rotateRightKey = KeybindingManager.CustomShortcuts.Where(x => x.Value?.Method?.Name == "Up")
+                    var rotateRightKey = KeybindingManager.CustomShortcuts.Where(x => x.Value?.Method.Name == "Up")
                         ?.Select(x => x.Key).ToList() ?? null;
                     return rotateRightKey is not { Count: > 0 } ? string.Empty :
                         alt ? rotateRightKey.LastOrDefault().ToString() : rotateRightKey.FirstOrDefault().ToString();
 
                 case "ScrollDownInternal":
-                    var rotateLeftKey = KeybindingManager.CustomShortcuts.Where(x => x.Value?.Method?.Name == "Down")
+                    var rotateLeftKey = KeybindingManager.CustomShortcuts.Where(x => x.Value?.Method.Name == "Down")
                         ?.Select(x => x.Key).ToList() ?? null;
                     return rotateLeftKey is not { Count: > 0 } ? string.Empty :
                         alt ? rotateLeftKey.LastOrDefault().ToString() : rotateLeftKey.FirstOrDefault().ToString();
@@ -54,7 +54,7 @@ public static class FunctionsKeyHelper
 
     public static KeyGesture[] GetKeysFromFunction(string methodName)
     {
-        var keys = KeybindingManager.CustomShortcuts.Where(x => x.Value?.Method?.Name == methodName)?
+        var keys = KeybindingManager.CustomShortcuts.Where(x => x.Value?.Method.Name == methodName)?
             .Select(x => x.Key) ?? null;
 
         return keys as KeyGesture[] ?? keys.ToArray();
@@ -113,7 +113,7 @@ public static class FunctionsKeyHelper
 
         // Special case: ScrollUpInternal is read-only and derived from 'Up' keys
         AddBinding(scrollKeys, "Up", TranslationManager.Translation.RotateRight);
-        var upInternalCheck = KeybindingManager.CustomShortcuts.Where(x => x.Value?.Method?.Name == "Up")
+        var upInternalCheck = KeybindingManager.CustomShortcuts.Where(x => x.Value?.Method.Name == "Up")
             ?.Select(x => x.Key).ToList() ?? null;
         var scrollUpInternal = new KeyBindingsModel
         {
@@ -128,7 +128,7 @@ public static class FunctionsKeyHelper
         
         // Special case: ScrollDownInternal is read-only and derived from 'Down' keys
         AddBinding(scrollKeys, "Down", TranslationManager.Translation.RotateLeft);
-        var downInternalCheck = KeybindingManager.CustomShortcuts.Where(x => x.Value?.Method?.Name == "Down")
+        var downInternalCheck = KeybindingManager.CustomShortcuts.Where(x => x.Value?.Method.Name == "Down")
             ?.Select(x => x.Key).ToList() ?? null;
         var scrollDownInternal = new KeyBindingsModel
         {

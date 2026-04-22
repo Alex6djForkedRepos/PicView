@@ -2,14 +2,8 @@
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Input;
-using PicView.Avalonia.Crop;
-using PicView.Avalonia.CustomControls;
-using PicView.Avalonia.Functions;
 using PicView.Avalonia.Navigation;
 using PicView.Avalonia.UI;
-using PicView.Avalonia.ViewModels;
-using PicView.Avalonia.Views.UC;
-using PicView.Core.DebugTools;
 using PicView.Core.ViewModels;
 
 namespace PicView.Avalonia.Input;
@@ -55,9 +49,9 @@ public static class MainKeyboardShortcuts2
     /// </summary>
     /// <param name="e">The key event arguments.</param>
     /// <param name="mainWindowViewModel">The ViewModel of the active MainWindow.</param>
-    public static async ValueTask MainWindow_KeysDownAsync(KeyEventArgs e, Core.ViewModels.MainWindowViewModel? mainWindowViewModel)
+    public static async ValueTask MainWindow_KeysDownAsync(KeyEventArgs e, MainWindowViewModel? mainWindowViewModel)
     {
-        if (KeybindingManager2.CustomShortcuts is null || !IsKeysEnabled)
+        if (KeybindingManager.CustomShortcuts is null || !IsKeysEnabled)
         {
             return;
         }
@@ -90,11 +84,6 @@ public static class MainKeyboardShortcuts2
         {
             return;
         }
-        
-        if (mainWindowViewModel is null)
-        {
-            return;
-        }
 
         // Handle registered shortcuts
         await ExecuteShortcutIfRegistered(mainWindowViewModel);
@@ -104,7 +93,7 @@ public static class MainKeyboardShortcuts2
     /// Processes the KeyUp event for the main window.
     /// </summary>
     /// <param name="e">The key event arguments.</param>
-    public static void MainWindow_KeysUp(KeyEventArgs e, Core.ViewModels.MainWindowViewModel? mainWindowViewModel)
+    public static void MainWindow_KeysUp(KeyEventArgs e, MainWindowViewModel? mainWindowViewModel)
     {
         mainWindowViewModel?.Mapper?.StopRepeatedNavigation();
         UpdateModifierState(e.Key, false);
@@ -176,7 +165,7 @@ public static class MainKeyboardShortcuts2
     /// Handles special cases like cropping, dialog handling, and escape key.
     /// </summary>
     /// <returns>True if the key event was handled by a special case handler.</returns>
-    private static async ValueTask<bool> HandleSpecialCases(KeyEventArgs e, Core.ViewModels.MainWindowViewModel? vm)
+    private static async ValueTask<bool> HandleSpecialCases(KeyEventArgs e, MainWindowViewModel? vm)
     {
         if (vm is null) return false;
 
@@ -246,20 +235,16 @@ public static class MainKeyboardShortcuts2
     /// <summary>
     /// Executes the registered shortcut action for the current key combination.
     /// </summary>
-    private static async ValueTask ExecuteShortcutIfRegistered(Core.ViewModels.MainWindowViewModel vm)
+    private static async ValueTask ExecuteShortcutIfRegistered(MainWindowViewModel vm)
     {
-        if (CurrentKeys is not null)
+        var function = KeybindingManager.GetFunction(CurrentKeys);
+        if (function is null)
         {
-            var functionName = KeybindingManager2.GetFunctionName(CurrentKeys);
-            if (!string.IsNullOrEmpty(functionName))
-            {
-                var action = vm.Mapper?.GetFunctionByName(functionName);
-                if (action is not null)
-                {
-                    await action.Invoke().ConfigureAwait(false);
-                }
-            }
+            // Pressed key(s) have no associated function
+            return;
         }
+
+        await vm.Mapper.GetFunctionByName(function.Method.Name).Invoke().ConfigureAwait(false);
     }
 
     /// <summary>

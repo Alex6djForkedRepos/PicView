@@ -176,7 +176,7 @@ public static class MainKeyboardShortcuts
                 return;
             }
             
-            await action.Invoke().ConfigureAwait(false);
+            //await action.Invoke().ConfigureAwait(false);
         }
     }
 

@@ -59,40 +59,40 @@ public class CropKeyboardManager(CropControl control)
         {
             currentKeys = new KeyGesture(e.Key);
         }
-
-        if (KeybindingManager.CustomShortcuts.TryGetValue(currentKeys, out var func))
-        {
-            var function = FunctionsMapper.GetFunctionByName(func.Method.Name);
-            switch (function.Method.Name)
-            {
-                case "Up":
-                case "RotateLeft":
-                    Rotate(false);
-                    return;
-                case "Down":
-                case "RotateRight":
-                    Rotate(true);
-                    return;
-                case "ZoomIn":
-                    ZoomIn();
-                    return;
-                case "ZoomOut":
-                    ZoomOut();
-                    return;
-                case "ResetZoom":
-                    ResetZoom();
-                    return;
-                case "Save":
-                case "SaveAs":
-                case "GalleryClick":
-                    // await vm.Crop.SaveCroppedImageAsync();
-                    return;
-                case "CopyImage":
-                case "CopyFile":
-                    // await vm.Crop.CopyCroppedImageAsync();
-                    return;
-            }
-        }
+        //
+        // if (KeybindingManager.CustomShortcuts.TryGetValue(currentKeys, out var func))
+        // {
+        //     var function = FunctionsMapper.GetFunctionByName(func);
+        //     switch (function.Method.Name)
+        //     {
+        //         case "Up":
+        //         case "RotateLeft":
+        //             Rotate(false);
+        //             return;
+        //         case "Down":
+        //         case "RotateRight":
+        //             Rotate(true);
+        //             return;
+        //         case "ZoomIn":
+        //             ZoomIn();
+        //             return;
+        //         case "ZoomOut":
+        //             ZoomOut();
+        //             return;
+        //         case "ResetZoom":
+        //             ResetZoom();
+        //             return;
+        //         case "Save":
+        //         case "SaveAs":
+        //         case "GalleryClick":
+        //             // await vm.Crop.SaveCroppedImageAsync();
+        //             return;
+        //         case "CopyImage":
+        //         case "CopyFile":
+        //             // await vm.Crop.CopyCroppedImageAsync();
+        //             return;
+        //     }
+        // }
     }
 
 

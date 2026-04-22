@@ -1,5 +1,6 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Input;
 using Avalonia.Media;
 using PicView.Avalonia.UI;
@@ -11,7 +12,7 @@ namespace PicView.Avalonia.MacOS.Views;
 
 public partial class KeybindingsWindow : Window, IDisposable
 {
-    private readonly CompositeDisposable _disposables = new();
+    private readonly IDisposable _disposable;
     private readonly KeybindingWindowConfig _config;
 
     public KeybindingsWindow(KeybindingWindowConfig config)
@@ -29,22 +30,19 @@ public partial class KeybindingsWindow : Window, IDisposable
         }
         GenericWindowHelper.KeybindingsWindowInitialize(this);
 
-        ClientSizeProperty.Changed.ToObservable()
+        _disposable = ClientSizeProperty.Changed.ToObservable()
             .ObserveOn(UIHelper.GetFrameProvider)
-            .Subscribe(UpdateWindowSize)
-            .AddTo(_disposables);
+            .Subscribe(UpdateWindowSize);
         PositionChanged += (_, _) => UpdateWindowPosition();
         
         Closing += async delegate
         {
             Hide();
-            if (VisualRoot is null)
+            if (Application.Current.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
-                return;
+                var hostWindow = desktop.MainWindow;
+                hostWindow?.Focus();
             }
-
-            var hostWindow = (Window)VisualRoot;
-            hostWindow?.Focus();
             await _config.SaveAsync();
         };
     }
@@ -60,14 +58,11 @@ public partial class KeybindingsWindow : Window, IDisposable
 
     private void MoveWindow(object? sender, PointerPressedEventArgs e)
     {
-        if (VisualRoot is null) { return; }
-
-        var hostWindow = (Window)VisualRoot;
-        hostWindow?.BeginMoveDrag(e);
+        BeginMoveDrag(e);
     }
 
     public void Dispose()
     {
-        _disposables.Dispose();
+        _disposable?.Dispose();
     }
 }

@@ -11,6 +11,7 @@ using PicView.Avalonia.Functions;
 using PicView.Avalonia.Input;
 using PicView.Avalonia.UI;
 using PicView.Core.Localization;
+using PicView.Core.ViewModels;
 using R3;
 
 namespace PicView.Avalonia.CustomControls;
@@ -206,7 +207,11 @@ public class KeybindTextBox : TextBox
 
         KeybindingManager.CustomShortcuts.Remove(new KeyGesture(e.Key, e.KeyModifiers));
 
-        var function = FunctionsMapper.GetFunctionByName(MethodName);
+        if (DataContext is not CoreViewModel core)
+        {
+            return;
+        }
+        var function = core.MainWindows.ActiveWindow.CurrentValue.Mapper.GetFunctionByName(MethodName);
 
         if (function == null)
         {
@@ -270,7 +275,7 @@ public class KeybindTextBox : TextBox
 
         void Remove()
         {
-            var keys = KeybindingManager.CustomShortcuts.Where(x => x.Value?.Method?.Name == MethodName)
+            var keys = KeybindingManager.CustomShortcuts.Where(x => x.Value?.Method.Name == MethodName)
                 ?.Select(x => x.Key).ToList() ?? null;
             if (keys is not null)
             {
