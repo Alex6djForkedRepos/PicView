@@ -35,12 +35,6 @@ public static class MainKeyboardShortcuts2
     
     public static bool IsEscKeyEnabled { get; set; } = true;
 
-    public static bool CtrlDown => (CurrentModifiers & KeyModifiers.Control) == KeyModifiers.Control;
-    public static bool AltOrOptionDown => (CurrentModifiers & KeyModifiers.Alt) == KeyModifiers.Alt;
-    public static bool ShiftDown => (CurrentModifiers & KeyModifiers.Shift) == KeyModifiers.Shift;
-    public static bool CommandDown => RuntimeInformation.IsOSPlatform(OSPlatform.OSX) && 
-                                     (CurrentModifiers & KeyModifiers.Meta) == KeyModifiers.Meta;
-
     private static int _keyRepeatCount;
     private const int KeyRepeatThreshold = 1;
 
@@ -66,12 +60,6 @@ public static class MainKeyboardShortcuts2
         }
 #endif
 
-        // If it's a modifier key only, nothing more to do
-        if (IsModifierKey(e.Key))
-        {
-            return;
-        }
-
         // Create key gesture from current state
         CurrentKeys = new KeyGesture(e.Key, CurrentModifiers);
 
@@ -84,6 +72,19 @@ public static class MainKeyboardShortcuts2
         {
             return;
         }
+        
+        // If it's a modifier key only, nothing more to do
+        if (IsModifierKey(e.Key))
+        {
+            if (!RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                if (CurrentModifiers is KeyModifiers.Alt && !mainWindowViewModel.TopTitlebarViewModel.IsMainMenuVisible.CurrentValue)
+                {
+                    mainWindowViewModel.TopTitlebarViewModel.OpenMenu();
+                }
+            }
+            return;
+        }
 
         // Handle registered shortcuts
         await ExecuteShortcutIfRegistered(mainWindowViewModel);
@@ -93,18 +94,11 @@ public static class MainKeyboardShortcuts2
     /// Processes the KeyUp event for the main window.
     /// </summary>
     /// <param name="e">The key event arguments.</param>
-    public static void MainWindow_KeysUp(KeyEventArgs e, MainWindowViewModel? mainWindowViewModel)
+    public static async ValueTask MainWindow_KeysUpAsync(KeyEventArgs e, MainWindowViewModel? mainWindowViewModel)
     {
-        mainWindowViewModel?.Mapper?.StopRepeatedNavigation();
+        await mainWindowViewModel.Mapper.StopRepeatedNavigation();
         UpdateModifierState(e.Key, false);
         Reset();
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-        {
-            if (e.Key is Key.LeftAlt or Key.RightAlt)
-            {
-                mainWindowViewModel.TopTitlebarViewModel.ToggleMenu();
-            }
-        }
     }
 
     /// <summary>
@@ -183,12 +177,6 @@ public static class MainKeyboardShortcuts2
         }
         */
 
-        // Don't interrupt navigating main menu with keyboard
-        if (vm.TopTitlebarViewModel.IsMainMenuVisible.CurrentValue)
-        {
-            return true;
-        }
-
         // Handle open dialog
         if (DialogManager.IsDialogOpen)
         {
@@ -201,6 +189,12 @@ public static class MainKeyboardShortcuts2
         {
             if (vm.IsEditableTitlebarOpen.CurrentValue)
             {
+                return true;
+            }
+            
+            if (vm.TopTitlebarViewModel.IsMainMenuVisible.CurrentValue)
+            {
+                vm.TopTitlebarViewModel.CloseMenu();
                 return true;
             }
             
@@ -227,6 +221,11 @@ public static class MainKeyboardShortcuts2
                     await vm.Mapper.Close();
                 }
             }
+        }
+        // Don't interrupt navigating main menu with keyboard
+        else if (vm.TopTitlebarViewModel.IsMainMenuVisible.CurrentValue)
+        {
+            return true;
         }
 
         return false;
@@ -256,6 +255,7 @@ public static class MainKeyboardShortcuts2
         IsEscKeyEnabled = true;
         CurrentKeys = null;
         _keyRepeatCount = 0;
+        ClearKeyDownModifiers();
     }
 
     /// <summary>
