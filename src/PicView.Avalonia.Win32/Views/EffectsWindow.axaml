@@ -5,12 +5,11 @@
     SizeToContent="WidthAndHeight"
     Title="Loading..."
     x:Class="PicView.Avalonia.Win32.Views.EffectsWindow"
-    x:DataType="viewModels:MainViewModel"
+    x:DataType="viewModels:CoreViewModel"
     xmlns="https://github.com/avaloniaui"
     xmlns:customControls="clr-namespace:PicView.Avalonia.CustomControls;assembly=PicView.Avalonia"
     xmlns:main="clr-namespace:PicView.Avalonia.Views.Main;assembly=PicView.Avalonia"
-    xmlns:viewModels="clr-namespace:PicView.Avalonia.ViewModels;assembly=PicView.Avalonia"
-    xmlns:views="clr-namespace:PicView.Avalonia.Views;assembly=PicView.Avalonia"
+    xmlns:viewModels="clr-namespace:PicView.Core.ViewModels;assembly=PicView.Core"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <Border
@@ -82,7 +81,7 @@
                     Width="30">
                     <customControls:IconButton.Flyout>
                         <MenuFlyout FlyoutPresenterClasses="noCornerRadius" Placement="Bottom">
-                            <MenuItem Command="{CompiledBinding Tools.SaveFileCommand}" Header="{CompiledBinding Translation.Save.Value, Mode=OneWay}">
+                            <MenuItem Command="{Binding MainWindows.ActiveWindow.Value.SaveCommand}" Header="{Binding Translation.Save.Value, Mode=OneWay}">
                                 <MenuItem.Icon>
                                     <Path
                                         Data="{StaticResource SaveGeometry}"
@@ -92,7 +91,7 @@
                                         Width="12" />
                                 </MenuItem.Icon>
                             </MenuItem>
-                            <MenuItem Command="{CompiledBinding Tools.SaveFileAsCommand}" Header="{CompiledBinding Translation.SaveAs.Value, Mode=OneWay}">
+                            <MenuItem Command="{Binding MainWindows.ActiveWindow.Value.SaveAsCommand}" Header="{Binding Translation.SaveAs.Value, Mode=OneWay}">
                                 <MenuItem.Icon>
                                     <Path
                                         Data="{StaticResource SaveGeometry}"
@@ -102,7 +101,7 @@
                                         Width="12" />
                                 </MenuItem.Icon>
                             </MenuItem>
-                            <MenuItem Command="{CompiledBinding Tools.CopyImageCommand}" Header="{CompiledBinding Translation.CopyImage.Value, Mode=OneWay}">
+                            <MenuItem Command="{Binding MainWindows.ActiveWindow.Value.CopyImageCommand}" Header="{Binding Translation.CopyImage.Value, Mode=OneWay}">
                                 <MenuItem.Icon>
                                     <Path
                                         Data="{StaticResource CopyGeometry}"
@@ -114,12 +113,9 @@
                             </MenuItem>
                             <Separator />
                             <MenuItem
-                                Command="{CompiledBinding Tools.SetAsWallpaperFilledCommand}"
-                                CommandParameter="{CompiledBinding PicViewer.FileInfo.Value.FullName,
-                                                                   FallbackValue=''}"
-                                Header="{CompiledBinding Translation.SetAsWallpaper.Value,
-                                                         Mode=OneWay}"
-                                IsVisible="{CompiledBinding GlobalSettings.ShowSetAsWallpaper.Value}">
+                                Command="{Binding MainWindows.ActiveWindow.Value.SetAsWallpaperFilledCommand}"
+                                Header="{Binding Translation.SetAsWallpaper.Value, Mode=OneWay}"
+                                IsVisible="{Binding GlobalSettings.ShowSetAsWallpaper.Value}">
                                 <MenuItem.Icon>
                                     <Path
                                         Data="{StaticResource PanoramaGeometry}"

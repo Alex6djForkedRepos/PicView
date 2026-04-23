@@ -13,7 +13,7 @@ using R3;
 
 namespace PicView.Avalonia.Win32.Views;
 
-public partial class ImageInfoWindow : Window, IDisposable
+public partial class ImageInfoWindow: Window, IDisposable
 {
     private readonly CompositeDisposable _disposables = new();
     private readonly ImageInfoWindowConfig _config;
@@ -103,10 +103,6 @@ public partial class ImageInfoWindow : Window, IDisposable
                 .Subscribe(UpdateWindowSize)
                 .AddTo(_disposables);
             PositionChanged += (_, _) => UpdateWindowPosition();
-            RemoveImageDataButton.Click += async (_, _) =>
-            {
-                await ExifView.RemoveImageDataAsync();
-            };
         };
         
         Closing += async delegate

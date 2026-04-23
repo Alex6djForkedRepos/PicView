@@ -1,16 +1,17 @@
 using Avalonia.Controls;
 using Avalonia.Input;
 using PicView.Avalonia.ColorManagement;
+using PicView.Avalonia.CustomControls;
 using PicView.Avalonia.DragAndDrop;
 using PicView.Avalonia.UI;
-using PicView.Avalonia.ViewModels;
 using PicView.Avalonia.WindowBehavior;
 using PicView.Core.Sizing;
+using PicView.Core.ViewModels;
 using R3;
 
 namespace PicView.Avalonia.Win32.Views;
 
-public partial class WinTitleBar : UserControl
+public partial class WinTitleBar : MainTitleBar
 {
     public WinTitleBar()
     {
@@ -37,7 +38,7 @@ public partial class WinTitleBar : UserControl
         GlassThemeHelper.ApplyTransparentStyle(MinimizeButton);
         GlassThemeHelper.ApplyTransparentStyle(RestoreButton);
         GlassThemeHelper.ApplyTransparentStyle(FullscreenButton);
-        GlassThemeHelper.ApplyTransparentStyle(GalleryButton);
+        GlassThemeHelper.ApplyTransparentStyle(DropDownMenuButton);
         GlassThemeHelper.ApplyTransparentStyle(MenuButton);
         GlassThemeHelper.ApplyTransparentStyle(MainMenu);
 
@@ -46,35 +47,34 @@ public partial class WinTitleBar : UserControl
         CloseButton.Foreground = glassForeground;
         MinimizeButton.Foreground = glassForeground;
         RestoreButton.Foreground = glassForeground;
-        GalleryButton.Foreground = glassForeground;
+        DropDownMenuButton.Foreground = glassForeground;
         MenuButton.Foreground = glassForeground;
     }
     
     private void InitializeEventHandlers()
     {
-        if (DataContext is not MainViewModel vm)
+        if (DataContext is not MainWindowViewModel vm)
         {
             return;
         }
         
-        PointerPressed += (_, e) => TryDragWindow(e);
-        PointerExited += (_, _) => { DragAndDropHelper.RemoveDragDropView(); };
+        //PointerExited += (_, _) => { DragAndDropHelper.RemoveDragDropView(); };
         MainMenu.Closed += (_, _) => { CloseMenu(); };
-
-        Observable.EveryValueChanged(vm.MainWindow.TopTitlebarViewModel.IsMainMenuVisible, x => x.Value,
+        
+        Observable.EveryValueChanged(vm.TopTitlebarViewModel.IsMainMenuVisible, x => x.Value,
                 UIHelper.GetFrameProvider)
             .Subscribe(isVisible =>
             {
                 if (isVisible)
                 {
                     // Overflow buttons if the window is too small
-                    if (vm.MainWindow.TitleMaxWidth.CurrentValue < SizeDefaults.WindowMinSize)
+                    if (Bounds.Width - SearchButton.Bounds.Width - DropDownMenuButton.Bounds.Width - CreateTabButton.Bounds.Width < SizeDefaults.WindowMinSize)
                     {
-                        vm.MainWindow.TopTitlebarViewModel.IsBtnPanelVisible.Value = false;
+                        HideButtons(vm);
                     }
                     else
                     {
-                        vm.MainWindow.TopTitlebarViewModel.IsBtnPanelVisible.Value = true;
+                        ShowButtons(vm);
                     }
                     
                     MainMenu.Open();
@@ -83,35 +83,36 @@ public partial class WinTitleBar : UserControl
                 else
                 {
                     MainMenu.Close();
-                    vm.MainWindow.TopTitlebarViewModel.IsBtnPanelVisible.Value = true;
+                    ShowButtons(vm);
                 }
             });
+    }
+
+    private void HideButtons(MainWindowViewModel vm)
+    {
+        vm.TopTitlebarViewModel.IsBtnPanelVisible.Value = false;
+        SearchButton.IsVisible = false;
+        DropDownMenuButton.IsVisible = false;
+        CreateTabButton.IsVisible = false;
+    }
+    
+    private void ShowButtons(MainWindowViewModel vm)
+    {
+        vm.TopTitlebarViewModel.IsBtnPanelVisible.Value = true;
+        SearchButton.IsVisible = true;
+        DropDownMenuButton.IsVisible = true;
+        CreateTabButton.IsVisible = true;
     }
 
     private void CloseMenu()
     {
         MainMenu.Close();
 
-        if (DataContext is not MainViewModel vm)
+        if (DataContext is not MainWindowViewModel vm)
         {
             return;
         }
 
-        vm.MainWindow.TopTitlebarViewModel.CloseMenu();
-    }
-
-    private void TryDragWindow(PointerPressedEventArgs e)
-    {
-        if (VisualRoot is null || DataContext is not MainViewModel vm)
-        {
-            return;
-        }
-
-        if (vm.MainWindow.IsEditableTitlebarOpen.Value || MainMenu.IsOpen)
-        {
-            return;
-        }
-
-        WindowFunctions.WindowDragAndDoubleClickBehavior((Window)VisualRoot, e, vm.PlatformWindowService);
+        vm.TopTitlebarViewModel.CloseMenu();
     }
 }

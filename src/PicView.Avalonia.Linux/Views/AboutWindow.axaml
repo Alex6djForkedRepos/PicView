@@ -1,6 +1,5 @@
 <Window
     CanResize="False"
-    ExtendClientAreaChromeHints="SystemChrome"
     ExtendClientAreaTitleBarHeightHint="-1"
     SizeToContent="WidthAndHeight"
     Title="Loading..."

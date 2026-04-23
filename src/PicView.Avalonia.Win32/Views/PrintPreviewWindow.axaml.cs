@@ -80,10 +80,10 @@ public partial class PrintPreviewWindow : Window, IPrintWindow
         vm.PrintPreview ??= new PrintPreviewViewModel();
 
         ClientSizeProperty.Changed.ToObservable()
-            .ObserveOn(UIHelper2.GetFrameProvider)
+            .ObserveOn(UIHelper.GetFrameProvider)
             .Subscribe(_ =>
             {
-                WindowFunctions2.CenterWindowOnOwnerWindow(this, Owner as Window);
+                WindowFunctions.CenterWindowOnOwnerWindow(this, Owner as Window);
             })
             .AddTo(vm.PrintPreview.Disposables);
 

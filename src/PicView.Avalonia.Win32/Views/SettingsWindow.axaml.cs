@@ -148,7 +148,7 @@ public partial class SettingsWindow : Window
         };
 
         _disposable = ClientSizeProperty.Changed.ToObservable()
-            .ObserveOn(UIHelper2.GetFrameProvider)
+            .ObserveOn(UIHelper.GetFrameProvider)
             .Subscribe(UpdateWindowSize);
 
         InitializeFileAssociationManager();

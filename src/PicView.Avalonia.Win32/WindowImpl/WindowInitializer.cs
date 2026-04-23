@@ -18,7 +18,7 @@ namespace PicView.Avalonia.Win32.WindowImpl;
 
 public class WindowInitializer : IPlatformSpecificUpdate, PicView.Core.IPlatform.IPlatformSpecificUpdate
 {
-    private AboutWindow2? _aboutWindow;
+    private AboutWindow? _aboutWindow;
     private BatchResizeWindow? _batchResizeWindow;
     private ConvertWindow? _convertWindow;
     private EffectsWindow? _effectsWindow;
@@ -26,7 +26,7 @@ public class WindowInitializer : IPlatformSpecificUpdate, PicView.Core.IPlatform
     private KeybindingsWindow? _keybindingsWindow;
     private SettingsWindow? _settingsWindow;
     private SingleImageResizeWindow? _singleImageResizeWindow;
-    private PrintPreviewWindow2? _printPreviewWindow;
+    private PrintPreviewWindow? _printPreviewWindow;
 
     public async Task HandlePlatofrmUpdate(UpdateInfo updateInfo, string tempPath)
     {
@@ -62,7 +62,7 @@ public class WindowInitializer : IPlatformSpecificUpdate, PicView.Core.IPlatform
             if (_aboutWindow is null)
             {
                 core.AboutView ??= new AboutViewModel(this);
-                _aboutWindow = new AboutWindow2
+                _aboutWindow = new AboutWindow
                 {
                     DataContext = core,
                     WindowStartupLocation = WindowStartupLocation.CenterOwner
@@ -481,58 +481,44 @@ public class WindowInitializer : IPlatformSpecificUpdate, PicView.Core.IPlatform
         }
     }
 
-    public void ShowPrintPreviewWindow(string path, MainWindowViewModel vm)
+    public async Task ShowPrintPreviewWindow(string path, MainWindowViewModel vm)
     {
-        if (Dispatcher.UIThread.CheckAccess())
+        if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop)
         {
-            Set();
-        }
-        else
-        {
-            Dispatcher.UIThread.InvokeAsync(Set);
+            return;
         }
 
-        return;
-
-        void Set()
+        if (_printPreviewWindow is null)
         {
-            if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop)
+            vm.PrintPreview = new PrintPreviewViewModel();
+
+            await Dispatcher.UIThread.InvokeAsync(() =>
             {
-                return;
-            }
-
-            if (_printPreviewWindow is null)
-            {
-                vm.PrintPreview = new PrintPreviewViewModel();
-
-                // TODO: Move this initialization to its own dedicated class
-
-                _printPreviewWindow = new PrintPreviewWindow2
+                _printPreviewWindow = new PrintPreviewWindow
                 {
                     DataContext = vm,
                     WindowStartupLocation = WindowStartupLocation.CenterOwner
                 };
-
-                vm.PrintPreview.PrintCommand.SubscribeAwait(async (_, _) =>
-                {
-                    await _printPreviewWindow?.RunPrintAsync(vm);
-                })
-                .AddTo(vm.PrintPreview.Disposables);
-
-                vm.PrintPreview.CancelCommand.SubscribeAwait(async (_, _) =>
-                {
-                    await Dispatcher.UIThread.InvokeAsync(() => _printPreviewWindow?.Close());
-                }).AddTo(vm.PrintPreview.Disposables);
-
+                
                 _printPreviewWindow.Show(desktop.MainWindow);
                 _printPreviewWindow.Closing += (_, _) => _printPreviewWindow = null;
+            });
+            
+            vm.PrintPreview.PrintCommand.SubscribeAwait(async (_, _) =>
+            {
+                await _printPreviewWindow.RunPrintAsync(vm);
+            }).AddTo(vm.PrintPreview.Disposables);
 
-                Task.Run(async () =>
-                {
-                    await PrintInitialization2.InitializeAsync(vm, path, _printPreviewWindow);
-                });
-            }
-            else
+            vm.PrintPreview.CancelCommand.SubscribeAwait(async (_, _) =>
+            {
+                await Dispatcher.UIThread.InvokeAsync(() => _printPreviewWindow?.Close());
+            }).AddTo(vm.PrintPreview.Disposables);
+
+            await PrintInitialization.InitializeAsync(vm, path, _printPreviewWindow);
+        }
+        else
+        {
+            await Dispatcher.UIThread.InvokeAsync(() =>
             {
                 if (_printPreviewWindow.WindowState == WindowState.Minimized)
                 {
@@ -540,11 +526,12 @@ public class WindowInitializer : IPlatformSpecificUpdate, PicView.Core.IPlatform
                 }
                 else
                 {
-                    _printPreviewWindow.Show();
+                    _printPreviewWindow.Activate();
                 }
-            }
-
-            _ = FunctionsMapper.CloseMenus();
+            });
         }
+
+        _ = FunctionsMapper.CloseMenus();
+        
     }
 }

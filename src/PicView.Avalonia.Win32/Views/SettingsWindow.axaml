@@ -130,7 +130,7 @@
                 </DockPanel>
             </Border>
 
-            <main:SettingsView2 Background="{DynamicResource WindowBackgroundColor}" x:Name="SettingsView" />
+            <main:SettingsView Background="{DynamicResource WindowBackgroundColor}" x:Name="SettingsView" />
 
         </DockPanel>
     </Border>
