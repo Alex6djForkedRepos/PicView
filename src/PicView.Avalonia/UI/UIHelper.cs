@@ -4,9 +4,11 @@ using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Threading;
 using PicView.Avalonia.CustomControls;
+using PicView.Avalonia.Gallery;
 using PicView.Avalonia.Views.Main;
 using PicView.Avalonia.Views.UC;
 using PicView.Avalonia.Views.UC.Buttons;
+using PicView.Avalonia.WindowBehavior;
 using PicView.Core.ViewModels;
 using R3.Avalonia;
 
@@ -117,21 +119,16 @@ public static class UIHelper
     /// <summary>
     /// Centers the window or gallery based on current state
     /// </summary>
-    public static void Center(MainWindowViewModel? vm)
+    public static void Center(MainWindowViewModel vm)
     {
-        if (vm is null)
+        if (vm.WindowTabs.ActiveTab.CurrentValue.Gallery.IsGalleryExpanded.CurrentValue)
         {
-            return;
+            GalleryHelper.CenterGallery(vm);
         }
-
-        // if (GalleryFunctions.IsFullGalleryOpen)
-        // {
-        //     GalleryFunctions.CenterGallery(vm);
-        // }
-        // else
-        // {
-        //     WindowFunctions.CenterWindowOnScreen();
-        // }
+        else
+        {
+            WindowFunctions.CenterWindowOnScreen();
+        }
     }
 
     /// <inheritdoc cref="Center"/>

@@ -4,6 +4,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
+using PicView.Avalonia.DragAndDrop;
 using PicView.Avalonia.Interfaces;
 using PicView.Avalonia.UI;
 using PicView.Avalonia.Views.UC;
@@ -37,21 +38,28 @@ public class MainWindow : Window, IMainWindow
         
         // Keep window position when resizing
         ClientSizeProperty.Changed.ToObservable()
-            .Subscribe(HandleWindowResize, static result =>
-            {
-#if DEBUG
-                if (result is { IsFailure: true, Exception: not null })
-                {
-                    DebugHelper.LogDebug(nameof(MainWindow), nameof(HandleWindowResize), result.Exception);
-                }
-#endif
-            })
+            .SubscribeOn(FrameProvider)
+            .Subscribe(HandleWindowResize, DebugHelper.LogError(nameof(MainWindow), nameof(HandleWindowResize)))
             .AddTo(Disposables);
             
         UIHelper.AddDropDownMenu();
         Activated += OnActivated;
+        
+        ScalingChanged += OnScalingChanged;
+        
+        PointerExited += (_, _) => { DragAndDropManager.RemoveDragDropView(); };
     }
-    
+
+    private void OnScalingChanged(object? sender, EventArgs e)
+    {
+        if (DataContext is not MainWindowViewModel windowViewModel)
+        {
+            return;
+        }
+        ScreenHelper.UpdateScreenSize(this);
+        WindowResizing.SetSize(windowViewModel, WindowResizeReason.DpiChange);
+    }
+
     private void OnActivated(object? sender, EventArgs e)
     {
         if (Application.Current.DataContext is not CoreViewModel core || Application.Current.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop)

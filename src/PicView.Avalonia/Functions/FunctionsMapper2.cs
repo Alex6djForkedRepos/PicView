@@ -550,10 +550,11 @@ public class FunctionsMapper2(MainWindowViewModel vm, Window window) : IFunction
         return ValueTask.CompletedTask;
     }
 
-    public async ValueTask Center()
+    public ValueTask Center()
     {
         // await UIHelper.CenterAsync(vm).ConfigureAwait(false);
-        return;
+        UIHelper.Center(vm);
+        return ValueTask.CompletedTask;
     }
 
     /// <inheritdoc cref="Interfaces.IPlatformWindowService.MaximizeRestore" />

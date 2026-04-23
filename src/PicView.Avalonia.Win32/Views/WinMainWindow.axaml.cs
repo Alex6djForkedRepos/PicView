@@ -3,17 +3,13 @@ using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Threading;
 using PicView.Avalonia.CustomControls;
-using PicView.Avalonia.DragAndDrop;
 using PicView.Avalonia.StartUp;
 using PicView.Avalonia.UI;
-using PicView.Avalonia.Views.UC;
 using PicView.Avalonia.Win32.WindowImpl;
-using PicView.Avalonia.WindowBehavior;
 using PicView.Core.DebugTools;
 using PicView.Core.IPlatform;
 using PicView.Core.ViewModels;
 using R3;
-using R3.Avalonia;
 
 namespace PicView.Avalonia.Win32.Views;
 
@@ -43,38 +39,10 @@ public partial class WinMainWindow : MainWindow, IPlatformWindowService
         Loaded += delegate
         {
             _windowInitializer = new WindowInitializer();
-            if (Application.Current.DataContext is not CoreViewModel || DataContext is not MainWindowViewModel windowViewModel)
+            if (DataContext is not MainWindowViewModel windowViewModel)
             {
                 return;
             }
-
-            // Keep window position when resizing
-            ClientSizeProperty.Changed.ToObservable()
-                .ObserveOn(FrameProvider)
-                .Subscribe(size =>
-                {
-                    if (Win32Window.IsChangingWindowState || WindowState != WindowState.Normal)
-                    {
-                        return;
-                    }
-
-                    WindowResizing.HandleWindowResize(this, size);
-                }, result =>
-                {
-#if DEBUG
-                    if (result is { IsFailure: true, Exception: not null })
-                    {
-                        DebugHelper.LogDebug(nameof(WinMainWindow), nameof(ClientSizeProperty),
-                            result.Exception);
-                    }
-#endif
-                });
-            ScalingChanged += (_, _) =>
-            {
-                ScreenHelper.UpdateScreenSize(this);
-                WindowResizing.SetSize(windowViewModel, WindowResizeReason.DpiChange);
-            };
-            PointerExited += (_, _) => { DragAndDropManager.RemoveDragDropView(); };
 
             Observable.EveryValueChanged(this, x => x.WindowState, FrameProvider)
                 .SubscribeAwait(async (state, _) =>
@@ -103,16 +71,7 @@ public partial class WinMainWindow : MainWindow, IPlatformWindowService
 
                         break;
                 }
-            }, result =>
-            {
-#if DEBUG
-                if (result is { IsFailure: true, Exception: not null })
-                {
-                    DebugHelper.LogDebug(nameof(WinMainWindow), nameof(WindowState),
-                        result.Exception);
-                }
-#endif
-            });
+            }, DebugHelper.LogError(nameof(WinMainWindow), nameof(WindowState)));
 
             // Close tabMenu when clicking outside of it
             PointerPressed += (_, _) =>
