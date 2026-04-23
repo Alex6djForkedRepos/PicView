@@ -81,7 +81,7 @@ public static class UIHelper
 
     #region Helper functions`
     
-    public static ClickArrowRight2? GetClickArrowRight(MainWindowViewModel vm)
+    public static ClickArrowRight? GetClickArrowRight(MainWindowViewModel vm)
     {
         if (vm.WindowTabs.ActiveTab.CurrentValue.CurrentView.CurrentValue is ImageViewer imageViewer)
         {
@@ -90,7 +90,7 @@ public static class UIHelper
         return null;
     }
     
-    public static ClickArrowLeft2? GetClickArrowLeft(MainWindowViewModel vm)
+    public static ClickArrowLeft? GetClickArrowLeft(MainWindowViewModel vm)
     {
         if (vm.WindowTabs.ActiveTab.CurrentValue.CurrentView.CurrentValue is ImageViewer imageViewer)
         {

@@ -9,7 +9,7 @@
     xmlns:vm="clr-namespace:PicView.Core.ViewModels;assembly=PicView.Core"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <DockPanel LastChildFill="True">
-        <gallery:GalleryView2 ZIndex="1" x:Name="GalleryView" />
+        <gallery:GalleryView ZIndex="1" x:Name="GalleryView" />
 
         <Panel
             Background="{CompiledBinding $parent[Window].((vm:MainWindowViewModel)DataContext).GlobalSettings.ImageBackground.Value,
@@ -60,19 +60,19 @@
                 ZIndex="90"
                 x:Name="ZoomPreview" />
             <uc:HoverBar VerticalAlignment="Bottom" x:Name="HoverBar" />
-            <buttons:ClickArrowRight2
+            <buttons:ClickArrowRight
                 HorizontalAlignment="Right"
                 Opacity="0"
                 VerticalAlignment="Center"
                 ZIndex="2"
                 x:Name="ClickArrowRight" />
-            <buttons:ClickArrowLeft2
+            <buttons:ClickArrowLeft
                 HorizontalAlignment="Left"
                 Opacity="0"
                 VerticalAlignment="Center"
                 ZIndex="2"
                 x:Name="ClickArrowLeft" />
-            <buttons:GalleryShortcut2
+            <buttons:GalleryShortcut
                 HorizontalAlignment="Right"
                 IsVisible="{CompiledBinding !$parent[Window].((vm:MainWindowViewModel)DataContext).IsUIShown.Value}"
                 Opacity="0"
