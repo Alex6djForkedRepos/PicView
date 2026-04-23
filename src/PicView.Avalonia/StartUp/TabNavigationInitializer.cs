@@ -110,7 +110,7 @@ public static class TabNavigationInitializer
         if (newTab.IsInitialized)
         {
 #if DEBUG
-            DebugHelper.LogDebug(nameof(TabNavigationInitializer), nameof(InitializeNewTab), $"TabNavigationInitializer.InitializeNewTab: Tab {newTab.Model.FileInfo.Name} is already initialized");
+            DebugHelper.LogDebug(nameof(TabNavigationInitializer), nameof(InitializeNewTab), $"TTab {newTab.Id} {newTab.Model.FileInfo.Name} is already initialized");
 #endif
             return;
         }

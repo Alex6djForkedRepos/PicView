@@ -24,16 +24,20 @@ public static class FilePicker2
         {
             return;
         }
+        
+        Dispatcher.UIThread.Invoke(() =>
+        {
+            if (vm.WindowTabs.ActiveTab.CurrentValue.CurrentView.CurrentValue is not StartUpMenu)
+            {
+                return;
+            }
+
+            vm.WindowTabs.ActiveTab.Value.CurrentView.Value = new ImageViewer();
+            TabNavigationInitializer.InitializeNewTab(vm.WindowTabs.ActiveTab.Value, vm);
+        });
+
 
         await vm.WindowTabs.LoadFromFileAsync(file).ConfigureAwait(false);
-        await Dispatcher.UIThread.InvokeAsync(() =>
-        {
-            if (vm.WindowTabs.ActiveTab.CurrentValue.CurrentView.CurrentValue is StartUpMenu)
-            {
-                vm.WindowTabs.ActiveTab.Value.CurrentView.Value = new ImageViewer();
-            }
-        });
-        TabNavigationInitializer.InitializeNewTab(vm.WindowTabs.ActiveTab.Value, vm);
     }
 
     public static async Task<string?> SelectFile()
