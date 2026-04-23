@@ -268,6 +268,8 @@ public class GalleryAnimationControl : UserControl
     {
         var size = GetDockedSize;
 
+        TabViewModel.Gallery.ItemSpacing.Value = 0;
+        
         if (IsHorizontalDock(dock))
         {
             Width = double.NaN;
