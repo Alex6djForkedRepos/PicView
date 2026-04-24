@@ -1,60 +1,37 @@
-﻿using Avalonia;
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Threading;
-using PicView.Avalonia.UI;
-using PicView.Avalonia.ViewModels;
+using PicView.Avalonia.CustomControls;
 using PicView.Avalonia.Win32.Views;
 using PicView.Avalonia.WindowBehavior;
 using PicView.Core.Sizing;
+using PicView.Core.ViewModels;
 
 namespace PicView.Avalonia.Win32.WindowImpl;
 
 public static class Win32Window
 {
-    public static bool IsChangingWindowState { get; private set; }
-
-    public static async Task Fullscreen(Window window, MainViewModel vm, bool saveSettings = true)
+    public static async Task Fullscreen(MainWindow window, MainWindowViewModel vm, bool saveSettings = true)
     {
-        // Need to set changing state to true, to prevent image resize subscription from firing
-        IsChangingWindowState = true;
-
-        // Save window size, so that restoring it will return to the same size and position
-        WindowResizing.SaveSize(window);
+        window.IsChangingWindowState = true;
         
-        // Update settings
         Settings.WindowProperties.Fullscreen = true;
-
-        // Update view model properties
-        // vm.MainWindow.SizeToContent.Value = SizeToContent.Manual;
-        // vm.MainWindow.IsFullscreen.Value = true;
-        // vm.MainWindow.IsMaximized.Value = false;
-        // vm.MainWindow.CanResize.Value = false;
+        Settings.WindowProperties.Maximized = false;
+        vm.IsMaximized.Value = false;
+        vm.IsFullscreen.Value = true;
         
-        // Hide interface in fullscreen
+        vm.ShouldMaximizeBeShown.Value = true;
+        vm.ShouldRestoreBeShown.Value = true;
+        
+        if (window.WindowState != WindowState.FullScreen)
+        {
+            window.WindowState = WindowState.FullScreen;
+        }
+        
         HideInterface(vm);
         
-        // Gallery needs to take up all space 
-        vm.PicViewer.GalleryWidth.Value = double.NaN;
-
-        // Apply fullscreen state
-        await Dispatcher.UIThread.InvokeAsync(() => window.WindowState = WindowState.FullScreen, DispatcherPriority.Send);
+        WindowResizing.SetSize(vm, WindowResizeReason.Application);
+        Dispatcher.UIThread.Post(() => window.IsChangingWindowState = false, DispatcherPriority.SystemIdle);
         
-        // Needs to reset decorations from potentially being changed from maximized state
-        Dispatcher.UIThread.Post(() =>
-        {
-            window.WindowDecorations = WindowDecorations.Full;
-            window.ExtendClientAreaToDecorationsHint = true;
-        }, DispatcherPriority.ApplicationIdle);
-
-        // var size = WindowResizing.GetSize(vm);
-        // if (size.HasValue)
-        // {
-        //     Dispatcher.UIThread.Post(() => WindowResizing.SetSize(size.Value, vm),  DispatcherPriority.Send);
-        // }
-
-        // Reset changing state flag so subscription can fire again. Need to be delayed by dispatcher to not be misfired. 
-        Dispatcher.UIThread.Post(() => IsChangingWindowState = false, DispatcherPriority.SystemIdle);
-
         if (saveSettings)
         {
             await SaveSettingsAsync().ConfigureAwait(false);
@@ -64,86 +41,66 @@ public static class Win32Window
     /// <summary>
     /// Maximizes the window
     /// </summary>
-    public static async Task Maximize(Window window, MainViewModel vm, bool saveSettings = true)
+    public static async Task Maximize(MainWindow window, MainWindowViewModel vm, bool saveSettings = true)
     {
-        // IsChangingWindowState = true;
-        //
-        // await Dispatcher.UIThread.InvokeAsync(() =>
-        // {
-        //     if (Settings.WindowProperties.AutoFit)
-        //     {
-        //         vm.MainWindow.SizeToContent.Value = SizeToContent.Manual;
-        //     }
-        //
-        //     // Save window size, so that restoring it will return to the same size and position
-        //     WindowResizing.SaveSize(window);
-        //
-        //     window.WindowState = WindowState.Maximized;
-        //     Settings.WindowProperties.Maximized = true;
-        //     WindowResizing.SetSize(vm);
-        // });
-        //
-        // vm.MainWindow.IsMaximized.Value = true;
-        // vm.MainWindow.IsFullscreen.Value = false;
-        // vm.MainWindow.CanResize.Value = false;
-        //
-        // Dispatcher.UIThread.Post(() => IsChangingWindowState = false, DispatcherPriority.SystemIdle);
-        //
-        // if (saveSettings)
-        // {
-        //     await SaveSettingsAsync().ConfigureAwait(false);
-        // }
+        window.IsChangingWindowState = true;
+        
+        Settings.WindowProperties.Maximized = true;
+        vm.IsMaximized.Value = true;
+        vm.IsFullscreen.Value = false;
+        
+        vm.ShouldMaximizeBeShown.Value = false;
+        vm.ShouldRestoreBeShown.Value = true;
+        
+        if (window.WindowState != WindowState.Maximized)
+        {
+            window.WindowState = WindowState.Maximized;
+        }
+        
+        WindowResizing.SetSize(vm, WindowResizeReason.Application);
+        Dispatcher.UIThread.Post(() => window.IsChangingWindowState = false, DispatcherPriority.SystemIdle);
+        
+        if (saveSettings)
+        {
+            await SaveSettingsAsync().ConfigureAwait(false);
+        }
     }
 
-    public static async Task Restore(Window window, MainViewModel vm, bool saveSettings = true)
+    public static async Task Restore(MainWindow window, MainWindowViewModel vm, bool saveSettings = true)
     {
-        // IsChangingWindowState = true;
-        //
-        // // Update settings
-        // Settings.WindowProperties.Maximized = false;
-        // Settings.WindowProperties.Fullscreen = false;
-        //
-        // // Update UI state
-        // vm.MainWindow.IsMaximized.Value = false;
-        // vm.MainWindow.IsFullscreen.Value = false;
-        //
-        // RestoreInterface(vm);
-        //
-        // // Update window state
-        // await Dispatcher.UIThread.InvokeAsync(() => window.WindowState = WindowState.Normal, DispatcherPriority.Send);
-        //
-        // if (Settings.WindowProperties.AutoFit)
-        // {
-        //     vm.MainWindow.SizeToContent.Value = SizeToContent.WidthAndHeight;
-        //     vm.MainWindow.CanResize.Value = false;
-        //     vm.GlobalSettings.IsAutoFit.Value = true;
-        //     if (Settings.WindowProperties.KeepCentered)
-        //     {
-        //         WindowFunctions.CenterWindowOnScreen();
-        //     }
-        //     else
-        //     {
-        //         WindowFunctions.InitializeWindowSizeAndPosition(window);
-        //     }
-        // }
-        // else
-        // {
-        //     vm.MainWindow.SizeToContent.Value = SizeToContent.Manual;
-        //     vm.MainWindow.CanResize.Value = true;
-        //     WindowFunctions.InitializeWindowSizeAndPosition(window);
-        // }
-        //
-        // //await WindowResizing.SetSizeAsync(vm);
-        //
-        // Dispatcher.UIThread.Post(() => IsChangingWindowState = false, DispatcherPriority.SystemIdle);
-        //
-        // if (saveSettings)
-        // {
-        //     await SaveSettingsAsync().ConfigureAwait(false);
-        // }
+        window.IsChangingWindowState = true;
+        
+        var wasFullscreen = window.WindowState == WindowState.FullScreen || Settings.WindowProperties.Fullscreen;
+        
+        // Update settings
+        Settings.WindowProperties.Maximized = false;
+        Settings.WindowProperties.Fullscreen = false;
+        
+        // Update UI state
+        vm.IsMaximized.Value = false;
+        vm.IsFullscreen.Value = false;
+        
+        vm.ShouldMaximizeBeShown.Value = true;
+        vm.ShouldRestoreBeShown.Value = false;
+
+        if (wasFullscreen)
+        {
+            RestoreInterface(vm);
+        }
+        
+        window.WindowState = WindowState.Normal;
+        
+        WindowResizing.SetSize(vm, WindowResizeReason.Application);
+        
+        Dispatcher.UIThread.Post(() => window.IsChangingWindowState = false, DispatcherPriority.SystemIdle);
+        
+        if (saveSettings)
+        {
+            await SaveSettingsAsync().ConfigureAwait(false);
+        }
     }
 
-    public static async Task ToggleFullscreen(Window window, MainViewModel vm, bool saveSettings = true)
+    public static async Task ToggleFullscreen(MainWindow window, MainWindowViewModel vm, bool saveSettings = true)
     {
         if (Settings.WindowProperties.Fullscreen)
         {
@@ -160,7 +117,7 @@ public static class Win32Window
         }
     }
 
-    public static async Task ToggleMaximize(Window window, MainViewModel vm, bool saveSettings = true)
+    public static async Task ToggleMaximize(MainWindow window, MainWindowViewModel vm, bool saveSettings = true)
     {
         if (Settings.WindowProperties.Maximized)
         {
@@ -188,35 +145,35 @@ public static class Win32Window
     /// <summary>
     /// Restores the interface based on settings
     /// </summary>
-    private static void RestoreInterface(MainViewModel vm)
+    private static void RestoreInterface(MainWindowViewModel vm)
     {
-        // vm.MainWindow.IsUIShown.Value = Settings.UIProperties.ShowInterface;
-        //
-        // if (!Settings.UIProperties.ShowInterface)
-        // {
-        //     return;
-        // }
-        //
-        // vm.MainWindow.IsTopToolbarShown.Value = true;
-        // vm.MainWindow.TitlebarHeight.Value = SizeDefaults.MainTitlebarHeight;
-        //
-        // if (!Settings.UIProperties.ShowBottomNavBar)
-        // {
-        //     return;
-        // }
-        //
-        // vm.MainWindow.IsBottomToolbarShown.Value = true;
-        // vm.MainWindow.BottombarHeight.Value = SizeDefaults.BottombarHeight;
+        vm.IsUIShown.Value = Settings.UIProperties.ShowInterface;
+        
+        if (!Settings.UIProperties.ShowInterface)
+        {
+            return;
+        }
+        
+        vm.IsTopToolbarShown.Value = true;
+        vm.TitlebarHeight.Value = SizeDefaults.MainTitlebarHeight;
+        
+        if (!Settings.UIProperties.ShowBottomNavBar)
+        {
+            return;
+        }
+        
+        vm.IsBottomToolbarShown.Value = true;
+        vm.BottombarHeight.Value = SizeDefaults.BottombarHeight;
     }
 
     /// <summary>
     /// Hides interface elements for fullscreen mode
     /// </summary>
-    private static void HideInterface(MainViewModel vm)
+    private static void HideInterface(MainWindowViewModel vm)
     {
-        // vm.MainWindow.IsTopToolbarShown.Value = false;
-        // vm.MainWindow.IsBottomToolbarShown.Value = false;
-        // vm.MainWindow.IsUIShown.Value = false;
+        vm.IsBottomToolbarShown.Value = false;
+        vm.IsTopToolbarShown.Value = false;
+        vm.IsUIShown.Value = false;
     }
 
     #endregion Helpers

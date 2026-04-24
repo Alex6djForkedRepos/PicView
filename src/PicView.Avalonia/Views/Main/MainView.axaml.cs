@@ -9,6 +9,7 @@ using PicView.Avalonia.Crop;
 using PicView.Avalonia.CustomControls;
 using PicView.Avalonia.DragAndDrop;
 using PicView.Avalonia.Input;
+using PicView.Avalonia.UI;
 using PicView.Avalonia.Views.UC;
 using PicView.Avalonia.WindowBehavior;
 using PicView.Core.ViewModels;
@@ -54,6 +55,12 @@ public partial class MainView : UserControl
             //MainTabControl.TabDetached += MainTabControlOnTabDetached;
             MainTabControl.TabCreated += MainTabControlOnTabCreated;
             MainTabControl.SelectionChanged += MainTabControlOnSelectionChanged;
+
+            if (TopLevel.GetTopLevel(this) is not MainWindow mainWindow)
+            {
+                return;
+            }
+            mainWindow.Disposables.Add(new HoverFadeButtonHandler(AltButtonsPanel, DataContext as MainWindowViewModel));
         };
     }
 

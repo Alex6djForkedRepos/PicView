@@ -872,12 +872,6 @@
     </UserControl.Resources>
 
     <Panel ContextMenu="{StaticResource MainContextMenu}" x:Name="MainPanel">
-        <uc:SpinWaiter
-            HorizontalAlignment="Center"
-            IsVisible="{CompiledBinding IsLoadingIndicatorShown.Value,
-                                        Mode=OneWay}"
-            VerticalAlignment="Center"
-            ZIndex="3" />
         <customControls:DraggableTabControl
             Background="{DynamicResource SecondaryBackgroundColor}"
             BorderBrush="{DynamicResource TertiaryBorderColor}"
@@ -921,8 +915,7 @@
                                     FontSize="12"
                                     HorizontalAlignment="Center"
                                     MaxWidth="135"
-                                    Text="{CompiledBinding TabTitle.Value,
-                                                           Mode=OneWay}" />
+                                    Text="{Binding TabTitle.Value, Mode=OneWay}" />
                                 <customControls:ThumbImage
                                     DockPanel.Dock="Bottom"
                                     HorizontalAlignment="Center"
@@ -936,29 +929,38 @@
 
             <customControls:DraggableTabControl.ContentTemplate>
                 <DataTemplate DataType="viewModels:TabViewModel">
-                    <ContentControl ClipToBounds="True" Content="{CompiledBinding CurrentView.Value, Mode=OneWay}" />
+                    <ContentControl ClipToBounds="True" Content="{Binding CurrentView.Value, Mode=OneWay}" />
                 </DataTemplate>
             </customControls:DraggableTabControl.ContentTemplate>
 
         </customControls:DraggableTabControl>
 
+        <uc:SpinWaiter
+            HorizontalAlignment="Center"
+            IsVisible="{Binding IsLoadingIndicatorShown.Value, Mode=OneWay}"
+            VerticalAlignment="Center"
+            ZIndex="9" />
+
         <StackPanel
             Background="Transparent"
             Height="150"
             HorizontalAlignment="Right"
-            IsVisible="{CompiledBinding !IsUIShown.Value}"
+            IsVisible="{Binding !IsUIShown.Value}"
             Opacity="0"
             Orientation="Horizontal"
             VerticalAlignment="Top"
+            ZIndex="9"
             x:Name="AltButtonsPanel">
             <buttons:AltMinimize x:Name="AltMinimize" />
             <buttons:AltRestore x:Name="AltRestore" />
             <buttons:AltClose x:Name="AltClose" />
         </StackPanel>
+
         <uc:ToolTipMessage
             HorizontalAlignment="Center"
             Opacity="0"
             VerticalAlignment="Center"
+            ZIndex="9"
             x:Name="ToolTipMessage" />
     </Panel>
 </UserControl>

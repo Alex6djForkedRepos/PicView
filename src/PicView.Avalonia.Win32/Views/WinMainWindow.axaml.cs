@@ -29,9 +29,6 @@ public partial class WinMainWindow : MainWindow, IPlatformWindowService
 
         InitializeComponent();
         
-        // Fix annoying empty blank spaces when snapping window to edges
-        Win32Properties.AddWndProcHookCallback(this, WindowHook.WndProc);
-        
         SharedBottomBar = BottomBar;
         SharedTitleBar = Titlebar;
 
@@ -238,23 +235,23 @@ public partial class WinMainWindow : MainWindow, IPlatformWindowService
 
     /// <inheritdoc />
     public async Task Maximize(bool saveSetting = true) =>
-        await Win32Window.Maximize(this, null, saveSetting);
+        await Win32Window.Maximize(this, DataContext as MainWindowViewModel, saveSetting);
     
     /// <inheritdoc />
     public async Task MaximizeRestore(bool saveSetting = true) =>
-        await Win32Window.ToggleMaximize(this, null, saveSetting);
+        await Win32Window.ToggleMaximize(this, DataContext as MainWindowViewModel, saveSetting);
 
     /// <inheritdoc />
     public async Task Fullscreen(bool saveSetting = true) =>
-        await Win32Window.Fullscreen(this, null, saveSetting);
+        await Win32Window.Fullscreen(this, DataContext as MainWindowViewModel, saveSetting);
     
     /// <inheritdoc />
     public async Task ToggleFullscreen(bool saveSetting = true) =>
-        await Win32Window.ToggleFullscreen(this, null, saveSetting);
+        await Win32Window.ToggleFullscreen(this, DataContext as MainWindowViewModel, saveSetting);
     
     /// <inheritdoc />
     public async Task Restore() =>
-        await Win32Window.Restore(this, null);
+        await Win32Window.Restore(this, DataContext as MainWindowViewModel);
     
     public void Minimize() =>
         Win32Window.Minimize(this);
