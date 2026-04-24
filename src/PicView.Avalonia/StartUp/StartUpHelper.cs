@@ -145,10 +145,12 @@ public static class StartUpHelper
         }
         else if (Settings.WindowProperties.AutoFit)
         {
+            window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
             WindowFunctions.SetAutoFit(vm.MainWindows.ActiveWindow.CurrentValue, window, false);
         }
         else 
         {
+            window.WindowStartupLocation = WindowStartupLocation.Manual;
             WindowFunctions.SetManualWindow(vm.MainWindows.ActiveWindow.CurrentValue, window);
             WindowFunctions.InitializeWindowSizeAndPosition(window);
         }

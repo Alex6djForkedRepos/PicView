@@ -175,7 +175,7 @@
             x:Name="GalleryItemsControl">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <gallery:GalleryItem2 />
+                    <gallery:GalleryItem />
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
             <ItemsControl.ItemsPanel>

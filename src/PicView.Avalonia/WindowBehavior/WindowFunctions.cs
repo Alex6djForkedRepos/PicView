@@ -167,7 +167,7 @@ public static class WindowFunctions
         if (center)
         {
             // Fix unpleasant window placement
-            Dispatcher.CurrentDispatcher.Post(() => { CenterWindowOnScreen(); }, DispatcherPriority.Background);
+            CenterWindowOnScreen();
         }
     }
 
