@@ -1,10 +1,13 @@
-﻿using Avalonia.Controls;
+﻿using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Controls.Presenters;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.LogicalTree;
+using PicView.Avalonia.Clipboard;
 using PicView.Avalonia.CustomControls;
+using PicView.Avalonia.FileSystem;
 using PicView.Core.ViewModels;
 
 namespace PicView.Avalonia.Views.Gallery;
@@ -79,5 +82,136 @@ public partial class GalleryItem : NavigateAbleItem
         base.OnDetachedFromLogicalTree(e);
         GalleryContextMenu.Opened -= GalleryContextMenuOnOpened;
         GalleryContextMenu.Closed -= GalleryContextMenuOnClosed;
+    }
+
+    private void PrintItem_OnClick(object? sender, RoutedEventArgs e)
+    {
+        if (Application.Current.DataContext is not CoreViewModel core || DataContext is not GalleryItemViewModel item)
+        {
+            return;
+        }
+        var mainViewModel = core.MainWindows.ActiveWindow.CurrentValue;
+        var fileName = item.FileLocation.CurrentValue;
+        _ = FileManager2.Print(fileName, mainViewModel).ConfigureAwait(false);
+    }
+
+    private void OpenWith_OnClick(object? sender, RoutedEventArgs e)
+    {
+        if (DataContext is not GalleryItemViewModel item)
+        {
+            return;
+        }
+        var fileName = item.FileLocation.CurrentValue;
+        _ = FileManager2.OpenWith(fileName).ConfigureAwait(false);
+    }
+
+    private void LocateOnDisk_OnClick(object? sender, RoutedEventArgs e)
+    {
+        if (DataContext is not GalleryItemViewModel item)
+        {
+            return;
+        }
+        var fileName = item.FileLocation.CurrentValue;
+        _ = FileManager2.LocateOnDisk(fileName).ConfigureAwait(false);
+    }
+
+    private void WallpaperFilled_OnClick(object? sender, RoutedEventArgs e)
+    {
+        if (Application.Current.DataContext is not CoreViewModel core || DataContext is not GalleryItemViewModel item)
+        {
+            return;
+        }
+        var fileName = item.FileLocation.CurrentValue;
+        _ = core.PlatformService.SetAsWallpaper(fileName, 4);
+    }
+
+    private void WallpaperFitted_OnClick(object? sender, RoutedEventArgs e)
+    {
+        if (Application.Current.DataContext is not CoreViewModel core || DataContext is not GalleryItemViewModel item)
+        {
+            return;
+        }
+        var fileName = item.FileLocation.CurrentValue;
+        _ = core.PlatformService.SetAsWallpaper(fileName, 3);
+    }
+
+    private void WallpaperStretched_OnClick(object? sender, RoutedEventArgs e)
+    {
+        if (Application.Current.DataContext is not CoreViewModel core || DataContext is not GalleryItemViewModel item)
+        {
+            return;
+        }
+        var fileName = item.FileLocation.CurrentValue;
+        _ = core.PlatformService.SetAsWallpaper(fileName, 2);
+    }
+
+    private void WallpaperCentered_OnClick(object? sender, RoutedEventArgs e)
+    {
+        if (Application.Current.DataContext is not CoreViewModel core || DataContext is not GalleryItemViewModel item)
+        {
+            return;
+        }
+        var fileName = item.FileLocation.CurrentValue;
+        _ = core.PlatformService.SetAsWallpaper(fileName, 1);
+    }
+
+    private void WallpaperTiled_OnClick(object? sender, RoutedEventArgs e)
+    {
+        if (Application.Current.DataContext is not CoreViewModel core || DataContext is not GalleryItemViewModel item)
+        {
+            return;
+        }
+        var fileName = item.FileLocation.CurrentValue;
+        _ = core.PlatformService.SetAsWallpaper(fileName, 0);
+    }
+
+    private void CopyFile_OnClick(object? sender, RoutedEventArgs e)
+    {
+        if (Application.Current.DataContext is not CoreViewModel core || DataContext is not GalleryItemViewModel item)
+        {
+            return;
+        }
+        var fileName = item.FileLocation.CurrentValue;
+        _ = core.PlatformService.CopyFile(fileName);
+    }
+
+    private void CopyImage_OnClick(object? sender, RoutedEventArgs e)
+    {
+        if (Application.Current.DataContext is not CoreViewModel core || DataContext is not GalleryItemViewModel item)
+        {
+            return;
+        }
+        var fileName = item.FileLocation.CurrentValue;
+        // TODO
+    }
+
+    private void CopyBase64_OnClick(object? sender, RoutedEventArgs e)
+    {
+        if (Application.Current.DataContext is not CoreViewModel core || DataContext is not GalleryItemViewModel item)
+        {
+            return;
+        }
+        var fileName = item.FileLocation.CurrentValue;
+        // TODO
+    }
+
+    private void DuplicateFile_OnClick(object? sender, RoutedEventArgs e)
+    {
+        if (Application.Current.DataContext is not CoreViewModel core || DataContext is not GalleryItemViewModel item)
+        {
+            return;
+        }
+        var fileName = item.FileLocation.CurrentValue;
+        ClipboardFileOperations2.Duplicate(fileName, core.MainWindows.ActiveWindow.CurrentValue).ConfigureAwait(false);
+    }
+
+    private void DeleteFile_OnClick(object? sender, RoutedEventArgs e)
+    {
+        if (Application.Current.DataContext is not CoreViewModel core || DataContext is not GalleryItemViewModel item)
+        {
+            return;
+        }
+        var fileName = item.FileLocation.CurrentValue;
+        _ = core.PlatformService.DeleteFile(fileName, recycle: true);
     }
 }
