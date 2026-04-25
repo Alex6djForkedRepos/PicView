@@ -44,7 +44,7 @@
                                                  Mode=OneWay}"
                         Theme="{StaticResource MainBg}">
                         <MenuItem.Icon>
-                            <Path Classes="OpenPath" />
+                            <Image Classes="OpenImage" />
                         </MenuItem.Icon>
                     </MenuItem>
 
@@ -529,7 +529,7 @@
                         Theme="{StaticResource MainBg}"
                         x:Name="CropMenuItem">
                         <MenuItem.Icon>
-                            <Path Classes="CropPath" />
+                            <Image Classes="CropImage" />
                         </MenuItem.Icon>
                     </MenuItem>
 

@@ -42,7 +42,7 @@
                                                  Mode=OneWay}"
                         Theme="{StaticResource MainBg}">
                         <MenuItem.Icon>
-                            <Path Classes="OpenPath" />
+                            <Image Classes="OpenImage" />
                         </MenuItem.Icon>
                     </MenuItem>
 
@@ -378,9 +378,8 @@
 
                     <!--  Toggle bottom bar  -->
                     <MenuItem
-                        Command="{CompiledBinding ToggleBottomToolbarCommand}"
-                        Header="{CompiledBinding Translation.ShowBottomToolbar.Value,
-                                                 Mode=OneWay}"
+                        Command="{Binding ToggleBottomToolbarCommand}"
+                        Header="{Binding Translation.ShowBottomToolbar.Value, Mode=OneWay}"
                         IsVisible="{CompiledBinding !IsBottomToolbarShown.Value}"
                         Theme="{StaticResource MainBg}">
                         <MenuItem.Icon>
@@ -391,10 +390,9 @@
                         </MenuItem.Icon>
                     </MenuItem>
                     <MenuItem
-                        Command="{CompiledBinding ToggleBottomToolbarCommand}"
-                        Header="{CompiledBinding Translation.HideBottomToolbar.Value,
-                                                 Mode=OneWay}"
-                        IsVisible="{CompiledBinding IsBottomToolbarShown.Value}"
+                        Command="{Binding ToggleBottomToolbarCommand}"
+                        Header="{Binding Translation.HideBottomToolbar.Value, Mode=OneWay}"
+                        IsVisible="{Binding IsBottomToolbarShown.Value}"
                         Theme="{StaticResource MainBg}">
                         <MenuItem.Icon>
                             <Image
@@ -516,7 +514,7 @@
                         Theme="{StaticResource MainBg}"
                         x:Name="CropMenuItem">
                         <MenuItem.Icon>
-                            <Path Classes="CropPath" />
+                            <Image Classes="CropImage" />
                         </MenuItem.Icon>
                     </MenuItem>
 

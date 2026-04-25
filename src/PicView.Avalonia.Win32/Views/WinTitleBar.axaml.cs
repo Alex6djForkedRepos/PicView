@@ -5,6 +5,7 @@ using PicView.Avalonia.CustomControls;
 using PicView.Avalonia.DragAndDrop;
 using PicView.Avalonia.UI;
 using PicView.Avalonia.WindowBehavior;
+using PicView.Core.DebugTools;
 using PicView.Core.Sizing;
 using PicView.Core.ViewModels;
 using R3;
@@ -53,7 +54,7 @@ public partial class WinTitleBar : MainTitleBar
     
     private void InitializeEventHandlers()
     {
-        if (DataContext is not MainWindowViewModel vm)
+        if (DataContext is not MainWindowViewModel vm || TopLevel.GetTopLevel(this) is not MainWindow mainWindow)
         {
             return;
         }
@@ -85,7 +86,8 @@ public partial class WinTitleBar : MainTitleBar
                     MainMenu.Close();
                     ShowButtons(vm);
                 }
-            });
+            }, DebugHelper.LogError(nameof(WinTitleBar), nameof(InitializeEventHandlers)))
+            .AddTo(mainWindow.Disposables);
     }
 
     private void HideButtons(MainWindowViewModel vm)

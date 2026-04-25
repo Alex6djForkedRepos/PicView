@@ -8,15 +8,14 @@
     xmlns:uc="clr-namespace:PicView.Avalonia.Views.UC"
     xmlns:viewModels="clr-namespace:PicView.Core.ViewModels;assembly=PicView.Core"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
     <Border
         Background="{DynamicResource MenuBackgroundColor}"
         BorderBrush="{DynamicResource OuterBorderColor}"
         BorderThickness="1"
         CornerRadius="8"
-        Effect="{DynamicResource MenuShadowButtonBorder}"
         Width="380"
         x:Name="MainBorder">
-
         <DockPanel>
 
             <!--  Gallery Carousel  -->
@@ -364,8 +363,8 @@
                             Classes="altHover"
                             ClickMode="Release"
                             Command="{CompiledBinding MainWindows.ActiveWindow.Value.TopTitlebarViewModel.DropDownMenu.OpenToolWindowsOptions}"
-                            Data="{StaticResource HammerGeometry}"
                             Foreground="{DynamicResource MainTextColor}"
+                            Icon="{StaticResource BrushImage}"
                             IconHeight="14"
                             IconMargin="0,0,7,0"
                             IconWidth="14"
@@ -442,8 +441,8 @@
                             Classes="altHover"
                             Command="{Binding MainWindows.ActiveWindow.Value.CropCommand}"
                             CornerRadius="0,0,8,8"
-                            Data="{StaticResource CropGeometry}"
                             Foreground="{DynamicResource MainTextColor}"
+                            Icon="{StaticResource CropImage}"
                             IconHeight="14"
                             IconMargin="0,0,7,0"
                             IconWidth="14"
@@ -486,8 +485,8 @@
                             Classes="altHover"
                             ClickMode="Release"
                             Command="{CompiledBinding MainWindows.ActiveWindow.Value.SettingsWindowCommand}"
-                            Data="{StaticResource CogGeometry}"
                             Foreground="{DynamicResource MainTextColor}"
+                            Icon="{StaticResource CogImage}"
                             IconHeight="14"
                             IconMargin="0,0,7,0"
                             IconWidth="14"
@@ -624,8 +623,8 @@
                             Classes="altHover"
                             Command="{Binding MainWindows.ActiveWindow.Value.SettingsWindowCommand}"
                             CornerRadius="0,0,8,8"
-                            Data="{StaticResource CogGeometry}"
                             Foreground="{DynamicResource MainTextColor}"
+                            Icon="{StaticResource CogImage}"
                             IconHeight="14"
                             IconMargin="0,0,7,0"
                             IconWidth="14"

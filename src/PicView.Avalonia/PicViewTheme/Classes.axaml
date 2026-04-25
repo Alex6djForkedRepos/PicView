@@ -166,12 +166,10 @@
         <Setter Property="BorderBrush" Value="Transparent" />
     </Style>
 
-    <Style Selector="Path.OpenPath">
-        <Setter Property="Data" Value="{StaticResource AltFolderGeometry}" />
-        <Setter Property="Fill" Value="{DynamicResource MainTextColor}" />
-        <Setter Property="Height" Value="12.14" />
-        <Setter Property="Width" Value="15" />
-        <Setter Property="Stretch" Value="Fill" />
+    <Style Selector="Image.OpenImage">
+        <Setter Property="Source" Value="{StaticResource OpenFolderImage}" />
+        <Setter Property="Height" Value="12" />
+        <Setter Property="Width" Value="12" />
     </Style>
 
     <Style Selector="Path.CopyPath">
@@ -260,12 +258,10 @@
         <Setter Property="Stretch" Value="Fill" />
     </Style>
 
-    <Style Selector="Path.SettingsPath">
-        <Setter Property="Data" Value="{StaticResource CogGeometry}" />
-        <Setter Property="Fill" Value="{DynamicResource MainTextColor}" />
+    <Style Selector="Image.CogImage">
+        <Setter Property="Source" Value="{StaticResource CogImage}" />
         <Setter Property="Height" Value="12" />
         <Setter Property="Width" Value="12" />
-        <Setter Property="Stretch" Value="Fill" />
     </Style>
 
     <Style Selector="Image.FlipImage">
@@ -275,12 +271,10 @@
         <Setter Property="Stretch" Value="Fill" />
     </Style>
 
-    <Style Selector="Path.CropPath">
-        <Setter Property="Data" Value="{StaticResource CropGeometry}" />
-        <Setter Property="Fill" Value="{DynamicResource MainTextColor}" />
+    <Style Selector="Image.CropImage">
+        <Setter Property="Source" Value="{StaticResource CropImage}" />
         <Setter Property="Height" Value="12" />
         <Setter Property="Width" Value="12" />
-        <Setter Property="Stretch" Value="Fill" />
     </Style>
 
     <Style Selector="Path.ImageInfoPath">

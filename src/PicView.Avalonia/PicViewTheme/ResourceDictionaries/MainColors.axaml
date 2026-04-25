@@ -65,7 +65,7 @@
 
             <DropShadowEffect
                 BlurRadius="5"
-                Color="#112e2e2e"
+                Color="DeepPink"
                 OffsetX="2"
                 OffsetY="2"
                 x:Key="MenuShadowButtonBorder" />

@@ -56,7 +56,7 @@
             </Button>
 
             <StackPanel
-                Background="{DynamicResource MenuBackgroundColor}"
+                Background="Transparent"
                 HorizontalAlignment="Right"
                 IsVisible="False"
                 Orientation="Horizontal"

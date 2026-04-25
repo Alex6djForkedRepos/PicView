@@ -73,9 +73,9 @@
                     BorderThickness="1,0,0,0"
                     Classes="noBorderHover"
                     ClickMode="Press"
-                    Data="{StaticResource CogGeometry}"
                     DockPanel.Dock="Right"
                     Foreground="{DynamicResource MainTextColor}"
+                    Icon="{StaticResource SettingsImage}"
                     IconHeight="12"
                     IconWidth="12"
                     Width="30">
