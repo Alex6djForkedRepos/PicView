@@ -38,6 +38,13 @@ public class MainTitleBar : UserControl, ITitleBar
             return;
         }
 
+        if (vm.TopTitlebarViewModel.IsMainMenuVisible.CurrentValue)
+        {
+            // Clicked in main menu, handle accordingly
+            e.Handled = false;
+            return;
+        }
+
         if (TopLevel.GetTopLevel(this) is Window window)
         {
             WindowFunctions.WindowDragAndDoubleClickBehavior(window, e, vm.PlatformWindowService);

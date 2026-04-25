@@ -1,10 +1,7 @@
 using Avalonia.Controls;
-using Avalonia.Input;
 using PicView.Avalonia.ColorManagement;
 using PicView.Avalonia.CustomControls;
-using PicView.Avalonia.DragAndDrop;
 using PicView.Avalonia.UI;
-using PicView.Avalonia.WindowBehavior;
 using PicView.Core.DebugTools;
 using PicView.Core.Sizing;
 using PicView.Core.ViewModels;
@@ -59,12 +56,11 @@ public partial class WinTitleBar : MainTitleBar
             return;
         }
         
-        //PointerExited += (_, _) => { DragAndDropHelper.RemoveDragDropView(); };
         MainMenu.Closed += (_, _) => { CloseMenu(); };
         
         Observable.EveryValueChanged(vm.TopTitlebarViewModel.IsMainMenuVisible, x => x.Value,
                 UIHelper.GetFrameProvider)
-            .Subscribe(isVisible =>
+            .Subscribe( isVisible =>
             {
                 if (isVisible)
                 {
@@ -77,7 +73,6 @@ public partial class WinTitleBar : MainTitleBar
                     {
                         ShowButtons(vm);
                     }
-                    
                     MainMenu.Open();
                     FileMenuItem.Open();
                 }
@@ -90,20 +85,14 @@ public partial class WinTitleBar : MainTitleBar
             .AddTo(mainWindow.Disposables);
     }
 
-    private void HideButtons(MainWindowViewModel vm)
+    private static void HideButtons(MainWindowViewModel vm)
     {
         vm.TopTitlebarViewModel.IsBtnPanelVisible.Value = false;
-        SearchButton.IsVisible = false;
-        DropDownMenuButton.IsVisible = false;
-        CreateTabButton.IsVisible = false;
     }
     
-    private void ShowButtons(MainWindowViewModel vm)
+    private static void ShowButtons(MainWindowViewModel vm)
     {
         vm.TopTitlebarViewModel.IsBtnPanelVisible.Value = true;
-        SearchButton.IsVisible = true;
-        DropDownMenuButton.IsVisible = true;
-        CreateTabButton.IsVisible = true;
     }
 
     private void CloseMenu()
