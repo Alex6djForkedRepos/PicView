@@ -21,7 +21,7 @@
                                        Mode=OneWay}" />
         </StackPanel>
 
-        <Border Classes="searchBorder" ui:SearchProperties.Keywords="{CompiledBinding SettingsViewModel.SearchData.NavigationSubdirectorySearchTags.Value}">
+        <Border Classes="searchBorder" ui:SearchProperties.Keywords="{CompiledBinding SettingsViewModel.SearchData.NavigationSubdirectorySearchTags}">
             <customControls:TextToggleButton
                 Classes="altHover settingsToggleButton"
                 IsChecked="{CompiledBinding SettingsViewModel.IsIncludingSubdirectories.Value,
@@ -31,7 +31,7 @@
                 x:Name="IncludeSubdirToggleButton" />
         </Border>
 
-        <Border Classes="searchBorder" ui:SearchProperties.Keywords="{CompiledBinding SettingsViewModel.SearchData.NavigationLoopSearchTags.Value}">
+        <Border Classes="searchBorder" ui:SearchProperties.Keywords="{CompiledBinding SettingsViewModel.SearchData.NavigationLoopSearchTags}">
             <customControls:TextToggleButton
                 Classes="altHover settingsToggleButton"
                 IsChecked="{CompiledBinding SettingsViewModel.IsLooping.Value,
@@ -43,7 +43,7 @@
                 x:Name="LoopingToggleButton" />
         </Border>
 
-        <Border Classes="searchBorder" ui:SearchProperties.Keywords="{CompiledBinding SettingsViewModel.SearchData.NavigationTaskbarSearchTags.Value}">
+        <Border Classes="searchBorder" ui:SearchProperties.Keywords="{CompiledBinding SettingsViewModel.SearchData.NavigationTaskbarSearchTags}">
             <customControls:TextToggleButton
                 Classes="altHover settingsToggleButton"
                 IsChecked="{CompiledBinding SettingsViewModel.IsShowingTaskbarProgress.Value,
@@ -53,7 +53,7 @@
                 x:Name="TaskBarToggleButton" />
         </Border>
 
-        <Border Classes="searchBorder" ui:SearchProperties.Keywords="{CompiledBinding SettingsViewModel.SearchData.NavigationSpeedSearchTags.Value}">
+        <Border Classes="searchBorder" ui:SearchProperties.Keywords="{CompiledBinding SettingsViewModel.SearchData.NavigationSpeedSearchTags}">
             <StackPanel>
                 <TextBlock
                     Classes="txt bold"

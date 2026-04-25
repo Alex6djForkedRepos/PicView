@@ -8,7 +8,7 @@
 
     <StackPanel HorizontalAlignment="Center">
 
-        <Border Classes="searchBorder" ui:SearchProperties.Keywords="{CompiledBinding SettingsViewModel.SearchData.LanguageSearchTags.Value}">
+        <Border Classes="searchBorder" ui:SearchProperties.Keywords="{CompiledBinding SettingsViewModel.SearchData.LanguageSearchTags}">
             <StackPanel>
                 <StackPanel Orientation="Horizontal" Spacing="12">
                     <Image

@@ -24,7 +24,7 @@
         <Border
             Classes="searchBorder"
             Margin="0,10,0,0"
-            ui:SearchProperties.Keywords="{CompiledBinding SettingsViewModel.SearchData.StartUpSearchTags.Value}">
+            ui:SearchProperties.Keywords="{CompiledBinding SettingsViewModel.SearchData.StartUpSearchTags}">
             <StackPanel>
                 <TextBlock
                     Classes="txt bold"
@@ -56,7 +56,7 @@
             Text="{CompiledBinding Translation.FileManagement.Value,
                                    Mode=OneWay}" />
 
-        <Border Classes="searchBorder" ui:SearchProperties.Keywords="{CompiledBinding SettingsViewModel.SearchData.DeleteFileDialogSearchTags.Value}">
+        <Border Classes="searchBorder" ui:SearchProperties.Keywords="{CompiledBinding SettingsViewModel.SearchData.DeleteFileDialogSearchTags}">
             <StackPanel>
                 <customControls:TextToggleButton
                     Classes="altHover settingsToggleButton"
@@ -76,7 +76,7 @@
             </StackPanel>
         </Border>
 
-        <Border Classes="searchBorder" ui:SearchProperties.Keywords="{CompiledBinding SettingsViewModel.SearchData.SubDirectorySearchTags.Value}">
+        <Border Classes="searchBorder" ui:SearchProperties.Keywords="{CompiledBinding SettingsViewModel.SearchData.SubDirectorySearchTags}">
             <customControls:TextToggleButton
                 Classes="altHover settingsToggleButton"
                 IsChecked="{CompiledBinding SettingsViewModel.IsIncludingSubdirectories.Value,
@@ -86,7 +86,7 @@
                 x:Name="SubdirectoriesToggleButton" />
         </Border>
 
-        <Border Classes="searchBorder" ui:SearchProperties.Keywords="{CompiledBinding SettingsViewModel.SearchData.FileHistorySearchTags.Value}">
+        <Border Classes="searchBorder" ui:SearchProperties.Keywords="{CompiledBinding SettingsViewModel.SearchData.FileHistorySearchTags}">
             <customControls:TextToggleButton
                 Classes="altHover settingsToggleButton"
                 IsChecked="{CompiledBinding SettingsViewModel.IsFileHistoryEnabled.Value,
@@ -96,7 +96,7 @@
                 x:Name="FileHistoryToggleButton" />
         </Border>
 
-        <Border Classes="searchBorder" ui:SearchProperties.Keywords="{CompiledBinding SettingsViewModel.SearchData.WhenDeletingFileSearchTags.Value}">
+        <Border Classes="searchBorder" ui:SearchProperties.Keywords="{CompiledBinding SettingsViewModel.SearchData.WhenDeletingFileSearchTags}">
             <StackPanel>
                 <TextBlock
                     Classes="txt bold"

@@ -21,7 +21,7 @@
                                        Mode=OneWay}" />
         </StackPanel>
 
-        <Border Classes="searchBorder" ui:SearchProperties.Keywords="{CompiledBinding SettingsViewModel.SearchData.ShowBottomToolbarSearchTags.Value}">
+        <Border Classes="searchBorder" ui:SearchProperties.Keywords="{CompiledBinding SettingsViewModel.SearchData.ShowBottomToolbarSearchTags}">
             <customControls:TextIconButton
                 Classes="altHover settingsTextIconButton"
                 Command="{Binding MainWindows.ActiveWindow.Value.ToggleBottomToolbarCommand}"
@@ -35,7 +35,7 @@
         </Border>
 
 
-        <Border Classes="searchBorder" ui:SearchProperties.Keywords="{CompiledBinding SettingsViewModel.SearchData.ShowUISearchTags.Value}">
+        <Border Classes="searchBorder" ui:SearchProperties.Keywords="{CompiledBinding SettingsViewModel.SearchData.ShowUISearchTags}">
             <StackPanel>
                 <customControls:TextIconButton
                     Classes="altHover settingsTextIconButton"
@@ -62,7 +62,7 @@
             </StackPanel>
         </Border>
 
-        <Border Classes="searchBorder" ui:SearchProperties.Keywords="{CompiledBinding SettingsViewModel.SearchData.ShowFadeInButtonsSearchTags.Value}">
+        <Border Classes="searchBorder" ui:SearchProperties.Keywords="{CompiledBinding SettingsViewModel.SearchData.ShowFadeInButtonsSearchTags}">
             <customControls:TextIconButton
                 Classes="altHover settingsTextIconButton"
                 Icon="{StaticResource CursorImage}"
@@ -74,7 +74,7 @@
                 x:Name="ToggleFadeUIButton" />
         </Border>
 
-        <Border Classes="searchBorder" ui:SearchProperties.Keywords="{CompiledBinding SettingsViewModel.SearchData.ShowHoverNavigationBarSearchTags.Value}">
+        <Border Classes="searchBorder" ui:SearchProperties.Keywords="{CompiledBinding SettingsViewModel.SearchData.ShowHoverNavigationBarSearchTags}">
             <customControls:TextIconButton
                 Classes="altHover settingsTextIconButton"
                 Icon="{StaticResource CursorImage}"

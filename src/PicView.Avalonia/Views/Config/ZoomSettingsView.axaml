@@ -21,7 +21,7 @@
                                        Mode=OneWay}" />
         </StackPanel>
 
-        <Border Classes="searchBorder" ui:SearchProperties.Keywords="{CompiledBinding SettingsViewModel.SearchData.ZoomResetSearchTags.Value}">
+        <Border Classes="searchBorder" ui:SearchProperties.Keywords="{CompiledBinding SettingsViewModel.SearchData.ZoomResetSearchTags}">
             <customControls:TextToggleButton
                 Classes="altHover settingsToggleButton"
                 IsChecked="{CompiledBinding SettingsViewModel.IsResettingZoomOnImageChange.Value}"
@@ -30,7 +30,7 @@
                 x:Name="ResetZoomToggleButton" />
         </Border>
 
-        <Border Classes="searchBorder" ui:SearchProperties.Keywords="{CompiledBinding SettingsViewModel.SearchData.ZoomOutSearchTags.Value}">
+        <Border Classes="searchBorder" ui:SearchProperties.Keywords="{CompiledBinding SettingsViewModel.SearchData.ZoomOutSearchTags}">
             <customControls:TextToggleButton
                 Classes="altHover settingsToggleButton"
                 IsChecked="{CompiledBinding SettingsViewModel.IsAvoidingZoomingOut.Value}"
@@ -39,7 +39,7 @@
                 x:Name="AllowZoomOutToggleButton" />
         </Border>
 
-        <Border Classes="searchBorder" ui:SearchProperties.Keywords="{CompiledBinding SettingsViewModel.SearchData.ZoomAnimationSearchTags.Value}">
+        <Border Classes="searchBorder" ui:SearchProperties.Keywords="{CompiledBinding SettingsViewModel.SearchData.ZoomAnimationSearchTags}">
             <customControls:TextToggleButton
                 Classes="altHover settingsToggleButton"
                 IsChecked="{CompiledBinding SettingsViewModel.IsZoomAnimated.Value}"
@@ -48,7 +48,7 @@
                 x:Name="UseAnimatedZoomToggleButton" />
         </Border>
 
-        <Border Classes="searchBorder" ui:SearchProperties.Keywords="{CompiledBinding SettingsViewModel.SearchData.ZoomPopupSearchTags.Value}">
+        <Border Classes="searchBorder" ui:SearchProperties.Keywords="{CompiledBinding SettingsViewModel.SearchData.ZoomPopupSearchTags}">
             <customControls:TextToggleButton
                 Classes="altHover settingsToggleButton"
                 IsChecked="{CompiledBinding SettingsViewModel.IsShowingZoomPercentagePopup.Value}"
@@ -57,7 +57,7 @@
                 x:Name="ShowZoomPercentageToggleButton" />
         </Border>
 
-        <Border Classes="searchBorder" ui:SearchProperties.Keywords="{CompiledBinding SettingsViewModel.SearchData.ZoomSpeedSearchTags.Value}">
+        <Border Classes="searchBorder" ui:SearchProperties.Keywords="{CompiledBinding SettingsViewModel.SearchData.ZoomSpeedSearchTags}">
             <StackPanel>
                 <TextBlock
                     Classes="txt"

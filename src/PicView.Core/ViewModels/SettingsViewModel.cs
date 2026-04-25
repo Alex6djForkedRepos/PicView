@@ -215,7 +215,6 @@ public class SettingsViewModel : IDisposable
 
     public void Dispose()
     {
-        SearchData.Dispose();
         Disposable.Dispose(_disposables,
             GetNavSpeed,
             GetSlideshowSpeed,
