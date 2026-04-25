@@ -54,7 +54,10 @@ public class SettingsSearchData : IDisposable
     public BindableReactiveProperty<string> MouseWheelBehaviorSearchTags { get; }
     public BindableReactiveProperty<string> MouseScrollDirectionSearchTags { get; }
     public BindableReactiveProperty<string> MouseTouchpadSearchTags { get; }
+    
     public BindableReactiveProperty<string> LanguageSearchTags { get; }
+    
+    public BindableReactiveProperty<string> KeybindingsSearchTags { get; }
 
     public SettingsSearchData()
     {
@@ -457,6 +460,13 @@ public class SettingsSearchData : IDisposable
         sb.Append(space);
         sb.Append("Background Constrain");
         BackgroundConstrainSearchTags = new BindableReactiveProperty<string>(sb.ToString());
+        
+        sb.Clear();
+        
+        sb.Append(TranslationManager.Translation.ApplicationShortcuts);
+        sb.Append(space);
+        sb.Append("Key keybindings");
+        KeybindingsSearchTags = new BindableReactiveProperty<string>(sb.ToString());
     }
 
     public void Dispose()
@@ -503,7 +513,9 @@ public class SettingsSearchData : IDisposable
             MouseWheelBehaviorSearchTags,
             MouseScrollDirectionSearchTags,
             MouseTouchpadSearchTags,
-            LanguageSearchTags
+            LanguageSearchTags,
+            BackgroundSearchTags,
+            KeybindingsSearchTags
         );
     }
 }

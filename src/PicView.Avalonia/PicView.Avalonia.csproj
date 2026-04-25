@@ -223,6 +223,10 @@
           <DependentUpon>DragDropView.axaml</DependentUpon>
           <SubType>Code</SubType>
         </Compile>
+        <Compile Update="Views\Config\KeybindingsView.axaml.cs">
+          <DependentUpon>KeybindingsView.axaml</DependentUpon>
+          <SubType>Code</SubType>
+        </Compile>
     </ItemGroup>
 
 

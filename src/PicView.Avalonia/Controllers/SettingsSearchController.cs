@@ -79,6 +79,8 @@ public class SettingsSearchController(SettingsView view) : IDisposable
         _subscription?.Dispose();
         _allSearchableControls = null;
         _searchMatches.Clear();
+        
+        GC.SuppressFinalize(this);
     }
     
     public void ResetFilters()

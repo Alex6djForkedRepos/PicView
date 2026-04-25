@@ -164,6 +164,10 @@ public static class SettingsSearchIndex
         // Language
         if (t.Language != null)
             list.Add(new SettingsSearchItem(t.Language, data.LanguageSearchTags.Value));
+        
+        // Keybindings
+        if (t.ApplicationShortcuts != null)
+            list.Add(new SettingsSearchItem(t.ApplicationShortcuts, data.KeybindingsSearchTags.Value));
 
         return list;
     }

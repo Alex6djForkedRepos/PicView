@@ -614,6 +614,7 @@ public enum SettingsCategory
     Zoom,
     Mouse,
     Language,
+    Keybindings,
     FileAssociations
 }
 
