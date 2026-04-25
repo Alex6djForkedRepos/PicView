@@ -61,7 +61,7 @@ public static class UpdateManager
         }
 
         // Handle update based on platform and installation type
-        await platformUpdate?.HandlePlatofrmUpdate(updateInfo, tempPath);
+        await platformUpdate?.HandlePlatformUpdate(updateInfo, tempPath);
         return true;
     }
 

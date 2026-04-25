@@ -4,5 +4,5 @@ namespace PicView.Core.IPlatform;
 
 public interface IPlatformSpecificUpdate
 {
-    public Task HandlePlatofrmUpdate(UpdateInfo updateInfo, string tempPath);
+    public Task HandlePlatformUpdate(UpdateInfo updateInfo, string tempPath);
 }

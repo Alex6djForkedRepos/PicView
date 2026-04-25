@@ -13,7 +13,7 @@ public class UpdateManagerTests
     {
         public bool HandlePlatformUpdateCalled { get; private set; }
 
-        public Task HandlePlatofrmUpdate(UpdateInfo updateInfo, string tempPath)
+        public Task HandlePlatformUpdate(UpdateInfo updateInfo, string tempPath)
         {
             HandlePlatformUpdateCalled = true;
             return Task.CompletedTask;

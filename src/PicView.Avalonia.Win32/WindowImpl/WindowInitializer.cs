@@ -3,7 +3,6 @@ using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Threading;
 using PicView.Avalonia.Functions;
-using PicView.Avalonia.Interfaces;
 using PicView.Avalonia.Win32.PlatformUpdate;
 using PicView.Avalonia.Win32.Views;
 using PicView.Avalonia.WindowBehavior;
@@ -16,7 +15,7 @@ using R3;
 
 namespace PicView.Avalonia.Win32.WindowImpl;
 
-public class WindowInitializer : IPlatformSpecificUpdate, PicView.Core.IPlatform.IPlatformSpecificUpdate
+public class WindowInitializer : Core.IPlatform.IPlatformSpecificUpdate
 {
     private AboutWindow? _aboutWindow;
     private BatchResizeWindow? _batchResizeWindow;
@@ -28,14 +27,9 @@ public class WindowInitializer : IPlatformSpecificUpdate, PicView.Core.IPlatform
     private SingleImageResizeWindow? _singleImageResizeWindow;
     private PrintPreviewWindow? _printPreviewWindow;
 
-    public async Task HandlePlatofrmUpdate(UpdateInfo updateInfo, string tempPath)
+    public async Task HandlePlatformUpdate(UpdateInfo updateInfo, string tempPath)
     {
         await WinUpdateHelper.HandleWindowsUpdate(updateInfo, tempPath);
-    }
-
-    Task PicView.Core.IPlatform.IPlatformSpecificUpdate.HandlePlatofrmUpdate(UpdateInfo updateInfo, string tempPath)
-    {
-        return HandlePlatofrmUpdate(updateInfo, tempPath);
     }
 
     public void ShowAboutWindow()

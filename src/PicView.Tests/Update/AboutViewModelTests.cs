@@ -111,7 +111,7 @@ public class AboutViewModelTests
 
     private class MockPlatformSpecificUpdate : IPlatformSpecificUpdate
     {
-        public Task HandlePlatofrmUpdate(UpdateInfo updateInfo, string tempPath)
+        public Task HandlePlatformUpdate(UpdateInfo updateInfo, string tempPath)
         {
             return Task.CompletedTask;
         }

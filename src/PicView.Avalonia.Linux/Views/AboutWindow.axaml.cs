@@ -20,7 +20,7 @@ public partial class AboutWindow : Window, IPlatformSpecificUpdate
         GenericWindowHelper.AboutWindowInitialize(this);
     }
     
-    public async Task HandlePlatofrmUpdate(UpdateInfo updateInfo, string tempPath)
+    public async Task HandlePlatformUpdate(UpdateInfo updateInfo, string tempPath)
     {
         await LinuxUpdateHelper.HandleLinuxUpdate(updateInfo, tempPath);
     }
