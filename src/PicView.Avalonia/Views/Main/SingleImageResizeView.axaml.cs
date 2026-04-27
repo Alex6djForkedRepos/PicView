@@ -4,13 +4,13 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Input;
 using Avalonia.Media;
 using Avalonia.Threading;
+using ImageMagick;
 using PicView.Avalonia.FileSystem;
-using PicView.Avalonia.ImageHandling;
 using PicView.Avalonia.Resizing;
 using PicView.Avalonia.UI;
-using PicView.Avalonia.ViewModels;
 using PicView.Core.DebugTools;
 using PicView.Core.ImageDecoding;
+using PicView.Core.ViewModels;
 using R3;
 
 namespace PicView.Avalonia.Views.Main;
@@ -30,7 +30,7 @@ public partial class SingleImageResizeView : UserControl
 
     private void OnLoaded(object? sender, EventArgs e)
     {
-        if (DataContext is not MainViewModel vm)
+        if (DataContext is not MainWindowViewModel vm)
         {
             return;
         }
@@ -61,16 +61,27 @@ public partial class SingleImageResizeView : UserControl
             UIHelper.SwitchAccentHoverClass(CancelButton);
         }
 
-        _aspectRatio = (double)vm.PicViewer.PixelWidth.CurrentValue / vm.PicViewer.PixelHeight.CurrentValue;
+        var tab = vm.WindowTabs.ActiveTab.CurrentValue;
+        var pixelWidth = tab.Model.PixelWidth;
+        var pixelHeight = tab.Model.PixelHeight;
+
+        _aspectRatio = (double)pixelWidth / pixelHeight;
 
         RegisterEventHandlers(vm);
 
-        Observable.EveryValueChanged(vm.PicViewer, x => x.FileInfo.Value, UIHelper.GetFrameProvider)
-            .Subscribe(_ =>
-            {
-                UpdateQualitySliderState();
-                ShowCancelButton();
-            }).AddTo(_imageUpdateSubscription);
+        Observable.EveryValueChanged(tab.FileInfo, x => x.CurrentValue, UIHelper.GetFrameProvider)
+            .Subscribe(UpdateState, DebugHelper.LogError(nameof(SingleImageResizeView), nameof(UpdateState)))
+            .AddTo(_imageUpdateSubscription);
+    }
+
+    private void UpdateState(FileInfo? fileInfo)
+    {
+        if (fileInfo is null)
+        {
+            return;
+        }
+        UpdateQualitySliderState(fileInfo);
+        ShowCancelButton();
     }
 
     private void OnUnloaded(object? sender, EventArgs e)
@@ -78,28 +89,29 @@ public partial class SingleImageResizeView : UserControl
         _imageUpdateSubscription?.Dispose();
     }
 
-    private void RegisterEventHandlers(MainViewModel vm)
+    private void RegisterEventHandlers(MainWindowViewModel vm)
     {
-        UpdateQualitySliderState();
+        var fileInfo = vm.WindowTabs.ActiveTab.CurrentValue.FileInfo.CurrentValue;
+        UpdateQualitySliderState(fileInfo);
         QualitySlider.ValueChanged += (_, _) => ShowResetButton();
 
         SaveButton.Click += async (_, _) => await SaveImage(vm).ConfigureAwait(false);
-        SaveAsButton.Click += async (_, _) => await SaveImageAs(vm).ConfigureAwait(false);
+        SaveAsButton.Click += async (_, _) => await SaveImageAs(fileInfo).ConfigureAwait(false);
 
-        PixelWidthTextBox.KeyDown += async (_, e) => await SaveImageOnEnter(e, vm);
-        PixelHeightTextBox.KeyDown += async (_, e) => await SaveImageOnEnter(e, vm);
+        PixelWidthTextBox.KeyDown += async (_, e) => await SaveImageOnEnter(e);
+        PixelHeightTextBox.KeyDown += async (_, e) => await SaveImageOnEnter(e);
 
         PixelWidthTextBox.KeyUp += (_, _) => AdjustAspectRatio(PixelWidthTextBox);
         PixelHeightTextBox.KeyUp += (_, _) => AdjustAspectRatio(PixelHeightTextBox);
 
         ConversionComboBox.SelectionChanged += (_, _) =>
         {
-            UpdateQualitySliderState();
+            UpdateQualitySliderState(fileInfo);
             ShowResetButton();
         };
 
-        ResetButton.Click += (_, _) => ResetSettings(vm);
-        CancelButton.Click += (_, _) => (VisualRoot as Window)?.Close();
+        ResetButton.Click += (_, _) => ResetSettings();
+        CancelButton.Click += (_, _) => (TopLevel.GetTopLevel(this) as Window)?.Close();
 
         LinkChainButton.Click += (_, _) => ToggleAspectRatio();
     }
@@ -118,36 +130,34 @@ public partial class SingleImageResizeView : UserControl
 
     private void AdjustAspectRatio(TextBox sender)
     {
-        if (!_isKeepingAspectRatio)
+        if (!_isKeepingAspectRatio || DataContext is not MainWindowViewModel vm)
         {
             return;
         }
+        
+        var tab = vm.WindowTabs.ActiveTab.CurrentValue;
+        var pixelWidth = tab.Model.PixelWidth;
+        var pixelHeight = tab.Model.PixelHeight;
 
         AspectRatioHelper.SetAspectRatioForTextBox(
             PixelWidthTextBox, PixelHeightTextBox, sender == PixelWidthTextBox,
-            _aspectRatio, DataContext as MainViewModel);
+            _aspectRatio, pixelWidth, pixelHeight);
 
         ShowResetButton();
     }
 
-    private void UpdateQualitySliderState()
-    {
-        if (DataContext is not MainViewModel vm)
-        {
-            return;
-        }
-
-        try
+    private void UpdateQualitySliderState(FileInfo fileInfo)
+    { try
         {
             if (IsConversionToQualityFormat())
             {
                 QualitySlider.IsEnabled = true;
                 QualitySlider.Value = 75;
             }
-            else if (IsOriginalFileQualityFormat(vm.PicViewer.FileInfo.CurrentValue.Extension))
+            else if (IsOriginalFileQualityFormat(fileInfo.Extension))
             {
                 QualitySlider.IsEnabled = true;
-                QualitySlider.Value = ImageAnalyzer.GetCompressionQuality(vm.PicViewer.FileInfo.CurrentValue.FullName);
+                QualitySlider.Value = ImageAnalyzer.GetCompressionQuality(fileInfo.FullName);
             }
             else
             {
@@ -168,40 +178,54 @@ public partial class SingleImageResizeView : UserControl
            || ext.Equals(".jpeg", StringComparison.OrdinalIgnoreCase)
            || ext.Equals(".png", StringComparison.OrdinalIgnoreCase);
 
-    private async Task SaveImageOnEnter(KeyEventArgs e, MainViewModel vm)
+    private async Task SaveImageOnEnter(KeyEventArgs e)
     {
-        if (e.Key == Key.Enter)
+        if (e.Key != Key.Enter || DataContext is not MainWindowViewModel vm)
         {
-            await SaveImage(vm).ConfigureAwait(false);
+            return;
         }
+
+        var tab = vm.WindowTabs.ActiveTab.CurrentValue;
+        var file = tab.FileInfo.CurrentValue;
+        var destination = file.FullName;
+        var isFlipped = tab.ScaleX.CurrentValue < 0;
+        var rotationAngle = tab.RotationAngle.CurrentValue;
+        await SaveImage(file, destination, isFlipped, rotationAngle).ConfigureAwait(false);
     }
 
-    private async Task SaveImageAs(MainViewModel vm)
+    private async ValueTask SaveImageAs(FileInfo fileInfo)
     {
         if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop
-            || desktop.MainWindow?.StorageProvider is null)
+            || desktop.MainWindow?.StorageProvider is null || DataContext  is not MainWindowViewModel vm)
         {
             return;
         }
 
-        var fileInfoFullName = vm.PicViewer.FileInfo.CurrentValue.FullName;
-        var ext = GetSelectedFileExtension(vm, ref fileInfoFullName);
+        var fileInfoFullName = fileInfo.FullName;
+        var ext = GetSelectedFileExtension(fileInfo, ref fileInfoFullName);
 
-        var file = await FilePicker.PickFileForSavingAsync(vm.PicViewer.FileInfo?.CurrentValue.FullName, ext);
-        if (file is null)
+        var destination = await FilePicker.PickFileForSavingAsync(fileInfo.FullName, ext);
+        if (destination is null)
         {
             return;
         }
-
-        await DoSaveImage(vm, file).ConfigureAwait(false);
+        var tab = vm.WindowTabs.ActiveTab.CurrentValue;
+        var isFlipped = tab.ScaleX.CurrentValue < 0;
+        var rotationAngle = tab.RotationAngle.CurrentValue;
+        await SaveImage(fileInfo, destination, isFlipped, rotationAngle).ConfigureAwait(false);
     }
 
-    private async Task SaveImage(MainViewModel vm)
+    private async ValueTask SaveImage(MainWindowViewModel vm)
     {
-        await DoSaveImage(vm, vm.PicViewer.FileInfo.CurrentValue.FullName).ConfigureAwait(false);
+        var tab = vm.WindowTabs.ActiveTab.CurrentValue;
+        var fileInfo = tab.FileInfo.CurrentValue;
+        var destination = fileInfo.FullName;
+        var isFlipped = tab.ScaleX.CurrentValue < 0;
+        var rotationAngle = tab.RotationAngle.CurrentValue;
+        await SaveImage(fileInfo, destination, isFlipped, rotationAngle).ConfigureAwait(false);
     }
 
-    private async Task DoSaveImage(MainViewModel vm, string destination)
+    private async ValueTask SaveImage(FileInfo fileInfo, string destination, bool isFLipped, int rotationAngle)
     {
         if (!uint.TryParse(PixelWidthTextBox.Text, out var width) ||
             !uint.TryParse(PixelHeightTextBox.Text, out var height))
@@ -211,21 +235,30 @@ public partial class SingleImageResizeView : UserControl
 
         await Dispatcher.UIThread.InvokeAsync(() => SetLoadingState(true));
         
-        var ext = GetSelectedFileExtension(vm, ref destination);
+        var ext = GetSelectedFileExtension(fileInfo, ref destination);
         destination = Path.ChangeExtension(destination, ext);
-        var sameFile = destination.Equals(vm.PicViewer.FileInfo.CurrentValue.FullName,
+        var sameFile = destination.Equals(fileInfo.FullName,
             StringComparison.OrdinalIgnoreCase);
         var quality = GetQualityValue(ext, destination);
 
-        await SaveImageHandler.SaveImageWithPossibleNavigation(vm,
-            vm.PicViewer.FileInfo.CurrentValue.FullName,
-            destination,
-            sameFile,
-            width: width,
-            height: height,
-            quality: quality,
-            ext: ext,
-            isKeepingAspectRatio: _isKeepingAspectRatio);
+        using var magickImage = new MagickImage(fileInfo);
+        if (quality is not null)
+        {
+            magickImage.Quality = quality.Value;
+        }
+        
+        if (isFLipped)
+        {
+            magickImage.Flop();
+        }
+        
+        if (rotationAngle != 0)
+        {
+            magickImage.Rotate(rotationAngle);
+        }
+        
+        magickImage.Resize(width, height);
+        await magickImage.WriteAsync(destination).ConfigureAwait(false);
 
         await Dispatcher.UIThread.InvokeAsync(() => SetLoadingState(false));
         
@@ -238,9 +271,9 @@ public partial class SingleImageResizeView : UserControl
         SpinWaiter.IsVisible = isLoading;
     }
 
-    private string GetSelectedFileExtension(MainViewModel vm, ref string destination)
+    private string GetSelectedFileExtension(FileInfo fileInfo, ref string destination)
     {
-        var ext = vm.PicViewer.FileInfo.CurrentValue.Extension;
+        var ext = fileInfo.Extension;
         if (NoConversion.IsSelected)
         {
             return ext;
@@ -299,15 +332,24 @@ public partial class SingleImageResizeView : UserControl
         return null;
     }
 
-    private void ResetSettings(MainViewModel vm)
+    private void ResetSettings()
     {
-        PixelWidthTextBox.Text = vm.PicViewer.PixelWidth.ToString();
-        PixelHeightTextBox.Text = vm.PicViewer.PixelHeight.ToString();
+        if (DataContext is not MainWindowViewModel vm)
+        {
+            return;
+        }   
+        var tab = vm.WindowTabs.ActiveTab.CurrentValue;
+        var fileInfo = tab.FileInfo.CurrentValue;
+        var pixelWidth = tab.Model.PixelWidth;
+        var pixelHeight = tab.Model.PixelHeight;
+        
+        PixelWidthTextBox.Text = pixelWidth.ToString();
+        PixelHeightTextBox.Text = pixelHeight.ToString();
 
-        if (IsOriginalFileQualityFormat(vm.PicViewer.FileInfo.CurrentValue.Extension))
+        if (IsOriginalFileQualityFormat(fileInfo.Extension))
         {
             QualitySlider.IsEnabled = true;
-            QualitySlider.Value = ImageAnalyzer.GetCompressionQuality(vm.PicViewer.FileInfo.CurrentValue.FullName);
+            QualitySlider.Value = ImageAnalyzer.GetCompressionQuality(fileInfo.FullName);
         }
         else
         {
