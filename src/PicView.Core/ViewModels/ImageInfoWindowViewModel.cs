@@ -25,17 +25,6 @@ public class ImageInfoWindowViewModel : IDisposable
     
     public BindableReactiveProperty<bool> IsLoading { get; } = new(true);
 
-    public void Dispose()
-    {
-        Disposable.Dispose(
-            TextBoxWidth,
-            TextBoxXlWidth,
-            TextBoxXxlWidth,
-            IsCopyButtonEnabled,
-            IsExtraButtonsEnabled,
-            IsLoading);
-    }
-
     public void ResponsiveResizeUpdate(double width, double scrollBarThickness)
     {
         const int firstBreakPoint = 600;
@@ -78,7 +67,7 @@ public class ImageInfoWindowViewModel : IDisposable
                 TextBoxWidth.Value = aboveThirdWidth;
                 var aboveThirdWidthL = aboveThirdWidth * 2 + textWidth * 2 - padding * 2;
                 TextBoxXlWidth.Value = aboveThirdWidthL;
-                TextBoxXxlWidth.Value = aboveThirdWidthL - 10;
+                TextBoxXxlWidth.Value = aboveThirdWidthL - padding;
                 break;
         }
 
@@ -90,7 +79,21 @@ public class ImageInfoWindowViewModel : IDisposable
         {
             HalfLineWidth.Value = width / 2 - (scrollBarThickness + padding);
         }
+    }
+    
+    public void Dispose()
+    {
+        Disposable.Dispose(
+            TextBoxMaxWidth,
+            TextBoxMaxWidth,
+            TextBoxWidth,
+            TextBoxXlWidth,
+            TextBoxXxlWidth,
+            HalfLineWidth,
+            IsCopyButtonEnabled,
+            IsExtraButtonsEnabled,
+            IsLoading);
         
-        
+        GC.SuppressFinalize(this);
     }
 }
