@@ -47,7 +47,7 @@ public partial class EffectsWindow : Window, IDisposable
             CloseButton.Foreground = new SolidColorBrush(color);
         }
         
-        GenericWindowHelper.GenericWindowInitialize(this, StringExtensions.CombineWithPlusAppName(TranslationManager.Translation.Effects));
+        GenericWindowHelper.GenericWindowInitialize(this, StringExtensions.CombineWithAppName(TranslationManager.Translation.Effects));
         Loaded += delegate
         {
             ClientSizeProperty.Changed.ToObservable()

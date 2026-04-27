@@ -48,13 +48,13 @@ public static partial class StringExtensions
     }
 
     /// <summary>
-    /// Combines the specified string with the application name ("PicView") using a " + " separator.
+    /// Combines the specified string with the application name ("PicView") using a " - " separator.
     /// </summary>
     /// <param name="value">The string to combine with the application name.</param>
-    /// <returns>A new string containing the original string followed by " + PicView".</returns>
-    public static string CombineWithPlusAppName(string value)
+    /// <returns>A new string containing the original string followed by " - PicView".</returns>
+    public static string CombineWithAppName(string value)
     {
-        const string separator = " + ";
+        const string separator = " - ";
         var requiredLength = value.Length + separator.Length + AppName.Length;
 
         return string.Create(requiredLength, (value, AppName), (destination, state) =>

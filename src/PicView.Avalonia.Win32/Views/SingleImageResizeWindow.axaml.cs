@@ -16,6 +16,7 @@ public partial class SingleImageResizeWindow : Window
     {
         DataContext = viewModel;
         InitializeComponent();
+        GenericWindowHelper.GenericWindowInitialize(this, StringExtensions.CombineWithAppName(TranslationManager.Translation.Resize));
         Loaded += OnLoaded;
     }
 
@@ -53,7 +54,7 @@ public partial class SingleImageResizeWindow : Window
             CloseButton.Foreground = new SolidColorBrush(color);
         }
 
-        GenericWindowHelper.GenericWindowInitialize(this, StringExtensions.CombineWithPlusAppName(TranslationManager.Translation.Resize));
+        GenericWindowHelper.GenericWindowInitialize(this, StringExtensions.CombineWithAppName(TranslationManager.Translation.Resize));
     }
 
     private void MoveWindow(object? sender, PointerPressedEventArgs e)

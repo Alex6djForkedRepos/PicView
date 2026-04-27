@@ -104,7 +104,7 @@ public static class FilePicker2
 
             var options = new FilePickerSaveOptions
             {
-                Title = StringExtensions.CombineWithPlusAppName(TranslationManager.Translation.SaveAs),
+                Title = StringExtensions.CombineWithAppName(TranslationManager.Translation.SaveAs),
                 FileTypeChoices = [
                     FilePickerFileTypes.ImageAll,
                     GetFilePickerFileTypes.JpegFileType,

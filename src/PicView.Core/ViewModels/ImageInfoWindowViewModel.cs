@@ -28,9 +28,9 @@ public class ImageInfoWindowViewModel : IDisposable
     public void ResponsiveResizeUpdate(double width, double scrollBarThickness)
     {
         const int firstBreakPoint = 600;
-        const int secondBreakPoint = 900;
-        const int thirdBreakPoint = 1100;
-        const int fourthBreakPoint = 1400;
+        const int secondBreakPoint = 915;
+        const int thirdBreakPoint = 1150;
+        const int fourthBreakPoint = 1450;
 
         var textWidth = TextWidth;
         var copyBtnWidth = CopyButtonWidth;

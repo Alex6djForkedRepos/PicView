@@ -171,7 +171,7 @@ public class TabViewModel(Action<uint> closeTab, IFileWatcherService? fileWatche
         {
             return;
         }
-        WindowTitle.Value = StringExtensions.CombineWithPlusAppName(title);
+        WindowTitle.Value = StringExtensions.CombineWithAppName(title);
         Title.Value = title;
         TitleTooltip.Value = title;
         TabTitle.Value = title;
@@ -179,7 +179,7 @@ public class TabViewModel(Action<uint> closeTab, IFileWatcherService? fileWatche
     
     public void SetLoading()
     {
-        WindowTitle.Value = StringExtensions.CombineWithPlusAppName(TranslationManager.Translation.Loading);
+        WindowTitle.Value = StringExtensions.CombineWithAppName(TranslationManager.Translation.Loading);
         Title.Value = TranslationManager.Translation.Loading;
         TitleTooltip.Value = TranslationManager.Translation.Loading;
         TabTitle.Value = TranslationManager.Translation.Loading;

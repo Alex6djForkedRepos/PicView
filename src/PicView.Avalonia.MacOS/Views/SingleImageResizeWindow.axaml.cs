@@ -14,7 +14,7 @@ public partial class SingleImageResizeWindow : Window
     {
         DataContext = vm;
         InitializeComponent();
-        GenericWindowHelper.GenericWindowInitialize(this, StringExtensions.CombineWithPlusAppName(TranslationManager.Translation.ResizeImage));
+        GenericWindowHelper.GenericWindowInitialize(this, StringExtensions.CombineWithAppName(TranslationManager.Translation.ResizeImage));
         if (!Settings.Theme.Dark || Settings.Theme.GlassTheme)
         {
             XAboutView.Background = Brushes.Transparent;
