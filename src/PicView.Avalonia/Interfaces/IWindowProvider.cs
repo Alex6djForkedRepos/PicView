@@ -14,7 +14,7 @@ public interface IWindowProvider
     Window CreateImageInfoWindow(MainWindowViewModel vm);
     Window CreateKeybindingsWindow(KeybindingWindowConfig config);
     Window CreateSettingsWindow(SettingsWindowConfig config);
-    Window CreateSingleImageResizeWindow();
+    Window CreateSingleImageResizeWindow(MainWindowViewModel vm);
     Window CreatePrintPreviewWindow(MainWindowViewModel vm);
 
     Task InitializePrintAsync(MainWindowViewModel vm, string path, Window printPreviewWindow);

@@ -166,8 +166,8 @@ public static class GetImageModel
             imageModel.DpiY = 0;
             return;
         }
-        imageModel.PixelWidth = bitmap.PixelSize.Width;
-        imageModel.PixelHeight = bitmap.PixelSize.Height;
+        imageModel.PixelWidth = (uint)bitmap.PixelSize.Width;
+        imageModel.PixelHeight = (uint)bitmap.PixelSize.Height;
         imageModel.ImageType = imageType;
         imageModel.DpiX = (ushort)bitmap.Dpi.X;
         imageModel.DpiY = (ushort)bitmap.Dpi.Y;
@@ -200,8 +200,8 @@ public static class GetImageModel
     private static async Task ProcessSvg(FileInfo fileInfo, ImageModel imageModel, MagickImage magickImage)
     {
         var svgData = await SvgLoader.GetContentFromSvgFileAsync(fileInfo.FullName);
-        imageModel.PixelWidth = (int)magickImage.Width;
-        imageModel.PixelHeight = (int)magickImage.Height;
+        imageModel.PixelWidth = magickImage.Width;
+        imageModel.PixelHeight = magickImage.Height;
         imageModel.ImageType = ImageType.Svg;
         imageModel.Image = svgData;
         imageModel.DpiX = (ushort)magickImage.Density.X;

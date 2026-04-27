@@ -31,7 +31,7 @@
                                 Foreground="{DynamicResource MainTextColor}"
                                 Height="35"
                                 Margin="0"
-                                Text="{Binding WindowTabs.ActiveTab.Value.Model.PixelWidth, Mode=OneWay}"
+                                Text="{Binding ResizeImageViewModel.DesiredPixelWidth.Value, Mode=TwoWay}"
                                 ToolTip.Tip="{CompiledBinding Translation.SizeTooltip.Value,
                                                               Mode=OneWay}"
                                 Width="195"
@@ -65,7 +65,7 @@
                                 Foreground="{DynamicResource MainTextColor}"
                                 Height="35"
                                 Margin="0"
-                                Text="{Binding WindowTabs.ActiveTab.Value.Model.PixelHeight, Mode=OneWay}"
+                                Text="{Binding ResizeImageViewModel.DesiredPixelHeight.Value, Mode=TwoWay}"
                                 ToolTip.Tip="{CompiledBinding Translation.SizeTooltip,
                                                               Mode=OneWay}"
                                 Width="195"
@@ -81,12 +81,13 @@
                                 Margin="5,0,0,2"
                                 Text="{Binding Translation.Quality.Value, Mode=OneWay}" />
                             <customControls:CustomSlider
+                                IsEnabled="{Binding ResizeImageViewModel.IsQualityEnabled.Value}"
                                 IsSnapToTickEnabled="True"
                                 Margin="5,0,0,2"
                                 Maximum="100"
                                 Minimum="1"
                                 TickFrequency="1"
-                                Value="90"
+                                Value="{Binding ResizeImageViewModel.Quality.Value, Mode=TwoWay}"
                                 Width="190"
                                 x:Name="QualitySlider" />
                             <TextBlock
@@ -114,7 +115,7 @@
                                 HorizontalAlignment="Right"
                                 Margin="0"
                                 Padding="5,7,0,7"
-                                SelectedIndex="0"
+                                SelectedIndex="{Binding ResizeImageViewModel.SelectedConversionIndex.Value, Mode=TwoWay}"
                                 Width="195"
                                 x:Name="ConversionComboBox">
                                 <ComboBoxItem Content="{CompiledBinding Translation.NoConversion.Value, Mode=OneWay}" x:Name="NoConversion" />
@@ -138,7 +139,7 @@
                 <Button
                     Classes="BorderStyle altHover mainBtn"
                     CornerRadius="4"
-                    IsVisible="False"
+                    IsVisible="{Binding ResizeImageViewModel.ShowReset.Value}"
                     Margin="30,0,60,0"
                     Width="195"
                     x:Name="ResetButton">
@@ -151,6 +152,7 @@
                 <Button
                     Classes="BorderStyle altHover mainBtn"
                     CornerRadius="4"
+                    IsVisible="{Binding !ResizeImageViewModel.ShowReset.Value}"
                     Margin="30,0,60,0"
                     Width="195"
                     x:Name="CancelButton">

@@ -14,7 +14,7 @@ public static class ImageTitleFormatter
     private const double NormalZoomLevel = 100;
     private const double NoZoomLevel = 0.0;
 
-    public static WindowTitles GenerateTitleStrings(int width, int height, int index, FileInfo? fileInfo,
+    public static WindowTitles GenerateTitleStrings(uint width, uint height, int index, FileInfo? fileInfo,
         double zoomValue, IReadOnlyList<FileInfo> filesList)
         => GenerateTitleStrings(width, height, index, fileInfo.Name, fileInfo, zoomValue, filesList);
 
@@ -34,7 +34,7 @@ public static class ImageTitleFormatter
     /// A <see cref="WindowTitles"/> struct containing the base title, title with the application name appended,
     /// and a title using the full file path.
     /// </returns>
-    public static WindowTitles GenerateTitleStrings(int width, int height, int index, string namePart,
+    public static WindowTitles GenerateTitleStrings(uint width, uint height, int index, string namePart,
         FileInfo? fileInfo, double zoomValue, IReadOnlyList<FileInfo> filesList)
     {
         using var sb = ZString.CreateStringBuilder(true);
@@ -199,7 +199,7 @@ public static class ImageTitleFormatter
         };
     }
 
-    public static WindowTitles GenerateTiffTitleStrings(int width, int height, int index, FileInfo? fileInfo, double zoomValue, IReadOnlyList<FileInfo> filesList, int? currentPage, int? pageCount)
+    public static WindowTitles GenerateTiffTitleStrings(uint width, uint height, int index, FileInfo? fileInfo, double zoomValue, IReadOnlyList<FileInfo> filesList, int? currentPage, int? pageCount)
     {
         var namePart = $"{fileInfo.Name} [{currentPage + 1}/{pageCount}]";
         return GenerateTitleStrings(width, height,  index, namePart, fileInfo, zoomValue, filesList);
@@ -222,7 +222,7 @@ public static class ImageTitleFormatter
     /// <param name="name">Display name of the image.</param>
     /// <param name="zoomValue">The current zoom level of the image.</param>
     /// <returns>A <see cref="WindowTitles"/> struct containing the generated titles for the single image.</returns>
-    public static WindowTitles GenerateTitleForSingleImage(int width, int height, string name, double zoomValue)
+    public static WindowTitles GenerateTitleForSingleImage(uint width, uint height, string name, double zoomValue)
     {
         using var sb = ZString.CreateStringBuilder(true);
 

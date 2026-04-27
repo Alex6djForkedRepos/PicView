@@ -25,7 +25,7 @@ public class LinuxWindowProvider : IWindowProvider
 
     public Window CreateSettingsWindow(SettingsWindowConfig config) => new SettingsWindow(config);
 
-    public Window CreateSingleImageResizeWindow() => new SingleImageResizeWindow();
+    public Window CreateSingleImageResizeWindow(MainWindowViewModel vm) => new SingleImageResizeWindow(vm);
 
     public Window CreatePrintPreviewWindow(MainWindowViewModel vm) => new PrintPreviewWindow();
 

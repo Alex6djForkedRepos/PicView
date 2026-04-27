@@ -19,6 +19,7 @@ public class MainWindowViewModel : IDisposable
     public PrintPreviewViewModel? PrintPreview { get; set; }
     public ImageInfoWindowViewModel? InfoWindow { get; set; } 
     public ExifViewModel? Exif { get; set; }
+    public ResizeImageViewModel? ResizeImageViewModel { get; set; }
 
     #region Window state
     public bool IsNavigationButtonLeftClicked { get; set; }
@@ -689,6 +690,7 @@ public class MainWindowViewModel : IDisposable
     public void Dispose()
     {
         Disposable.Dispose(
+            ResizeImageViewModel,
             ScrollViewerWidth,
             ScrollViewerHeight,
             WindowMaxWidth,

@@ -9,8 +9,8 @@ public record ImageModel
 {
     public object? Image { get; set; }
     public FileInfo? FileInfo { get; set; }
-    public int PixelWidth { get; set; }
-    public int PixelHeight { get; set; }
+    public uint PixelWidth { get; set; }
+    public uint PixelHeight { get; set; }
     public ExifOrientation? Orientation { get; set; }
     public ImageType ImageType { get; set; }
     public MagickFormat? Format { get; set; }

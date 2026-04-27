@@ -336,14 +336,17 @@ public class WindowInitializer(IWindowProvider provider) : IWindowInitializer, I
 
         void Set()
         {
-            if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop)
+            if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop ||
+                Application.Current.DataContext is not CoreViewModel core)
             {
                 return;
             }
 
             if (_singleImageResizeWindow is null)
             {
-                _singleImageResizeWindow = provider.CreateSingleImageResizeWindow();
+                var activeWindow = core.MainWindows.ActiveWindow.CurrentValue;
+                activeWindow.ResizeImageViewModel ??= new ResizeImageViewModel();
+                _singleImageResizeWindow = provider.CreateSingleImageResizeWindow(activeWindow);
                 _singleImageResizeWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
 
                 _singleImageResizeWindow.Show(desktop.MainWindow);

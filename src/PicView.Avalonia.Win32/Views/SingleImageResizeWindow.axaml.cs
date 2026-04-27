@@ -6,14 +6,21 @@ using Avalonia.Media;
 using PicView.Avalonia.UI;
 using PicView.Core.Extensions;
 using PicView.Core.Localization;
+using PicView.Core.ViewModels;
 
 namespace PicView.Avalonia.Win32.Views;
 
 public partial class SingleImageResizeWindow : Window
 {
-    public SingleImageResizeWindow()
+    public SingleImageResizeWindow(MainWindowViewModel viewModel)
     {
+        DataContext = viewModel;
         InitializeComponent();
+        Loaded += OnLoaded;
+    }
+
+    private void OnLoaded(object? sender, RoutedEventArgs e)
+    {
         StartUp();
     }
 
@@ -54,7 +61,11 @@ public partial class SingleImageResizeWindow : Window
         BeginMoveDrag(e);
     }
 
-    private void Close(object? sender, RoutedEventArgs e) => Close();
+    private void Close(object? sender, RoutedEventArgs e)
+    {
+        Loaded -= OnLoaded;
+        Close();
+    }
 
     private void Minimize(object? sender, RoutedEventArgs e) => WindowState = WindowState.Minimized;
 }

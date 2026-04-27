@@ -5,6 +5,7 @@ using Avalonia.Threading;
 using PicView.Avalonia.StartUp;
 using PicView.Avalonia.Views.UC;
 using PicView.Core.DebugTools;
+using PicView.Core.Extensions;
 using PicView.Core.Localization;
 using PicView.Core.ViewModels;
 
@@ -103,7 +104,7 @@ public static class FilePicker2
 
             var options = new FilePickerSaveOptions
             {
-                Title = $"{TranslationManager.Translation.SaveAs} - PicView",
+                Title = StringExtensions.CombineWithPlusAppName(TranslationManager.Translation.SaveAs),
                 FileTypeChoices = [
                     FilePickerFileTypes.ImageAll,
                     GetFilePickerFileTypes.JpegFileType,
