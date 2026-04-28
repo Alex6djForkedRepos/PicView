@@ -244,7 +244,11 @@ public class WindowInitializer(IWindowProvider provider) : IWindowInitializer, I
                 _settingsWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
 
                 Show();
-                _settingsWindow.Closing += (_, _) => _settingsWindow = null;
+                _settingsWindow.Closing += (_, _) =>
+                {
+                    desktop.MainWindow?.Focus();
+                    _settingsWindow = null;
+                };
             });
         }
         else
@@ -303,7 +307,11 @@ public class WindowInitializer(IWindowProvider provider) : IWindowInitializer, I
                 _effectsWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
 
                 _effectsWindow.Show(desktop.MainWindow);
-                _effectsWindow.Closing += (_, _) => _effectsWindow = null;
+                _effectsWindow.Closing += (_, _) =>
+                {
+                    desktop.MainWindow?.Focus();
+                    _effectsWindow = null;
+                };
             }
             else
             {
@@ -350,7 +358,11 @@ public class WindowInitializer(IWindowProvider provider) : IWindowInitializer, I
                 _singleImageResizeWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
 
                 _singleImageResizeWindow.Show(desktop.MainWindow);
-                _singleImageResizeWindow.Closing += (_, _) => _singleImageResizeWindow = null;
+                _singleImageResizeWindow.Closing += (_, _) =>
+                {
+                    desktop.MainWindow?.Focus();
+                    _singleImageResizeWindow = null;
+                };
             }
             else
             {
@@ -486,7 +498,11 @@ public class WindowInitializer(IWindowProvider provider) : IWindowInitializer, I
                 _printPreviewWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
 
                 _printPreviewWindow.Show(desktop.MainWindow);
-                _printPreviewWindow.Closing += (_, _) => _printPreviewWindow = null;
+                _printPreviewWindow.Closing += (_, _) =>
+                {
+                    desktop.MainWindow?.Focus();
+                    _printPreviewWindow = null;
+                };
             });
 
             vm.PrintPreview.PrintCommand.SubscribeAwait(async (_, _) =>
