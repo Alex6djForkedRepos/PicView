@@ -63,10 +63,13 @@ public partial class DropDownMenu : AnimatedMenu
                 if (isVisible)
                 {
                     MaxHeight = UIHelper.GetMainView.Bounds.Height - 1;
+                    DialogManager.IsDialogOpen  = true;
                     core.FileHistory.UpdateHistory();
                 }
                 else
                 {
+                    DialogManager.IsDialogOpen  = false;
+                    
                     // Reset it, so that it opens in default state the next time it opens
                     core.MainWindows.ActiveWindow.Value.TopTitlebarViewModel.DropDownMenu.CloseToDefault();
                 }
