@@ -2,6 +2,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
+using PicView.Avalonia.CustomControls;
 using PicView.Avalonia.Input;
 using PicView.Avalonia.UI;
 using PicView.Core.Config;
@@ -13,7 +14,7 @@ using R3;
 
 namespace PicView.Avalonia.MacOS.Views;
 
-public partial class SettingsWindow : Window
+public partial class SettingsWindow : GenericWindow
 {
     private readonly SettingsWindowConfig _config;
     private readonly IDisposable? _disposable;
@@ -108,11 +109,6 @@ public partial class SettingsWindow : Window
             .Subscribe(UpdateWindowSizeAndPosition);
 
         InitializeFileAssociationManager();
-    }
-
-    private void MoveWindow(object? sender, PointerPressedEventArgs e)
-    {
-        BeginMoveDrag(e);
     }
     
     private void UpdateWindowSizeAndPosition(AvaloniaPropertyChangedEventArgs<Size> size)

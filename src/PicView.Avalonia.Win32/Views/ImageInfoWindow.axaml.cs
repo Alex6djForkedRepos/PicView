@@ -1,8 +1,5 @@
 using System.Diagnostics;
 using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Input;
-using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.VisualTree;
 using PicView.Avalonia.CustomControls;
@@ -15,7 +12,7 @@ using R3;
 
 namespace PicView.Avalonia.Win32.Views;
 
-public partial class ImageInfoWindow: Window, IDisposable
+public partial class ImageInfoWindow: GenericWindow, IDisposable
 {
     private readonly CompositeDisposable _disposables = new();
     private readonly ImageInfoWindowConfig _config;
@@ -110,11 +107,6 @@ public partial class ImageInfoWindow: Window, IDisposable
         };
     }
 
-    private void MoveWindow(object? sender, PointerPressedEventArgs e)
-    {
-        BeginMoveDrag(e);
-    }
-    
     private void UpdateWindowPosition()
     {
         _config.WindowProperties.Left = Position.X;
@@ -123,10 +115,6 @@ public partial class ImageInfoWindow: Window, IDisposable
 
     private void UpdateWindowSize(AvaloniaPropertyChangedEventArgs<Size> size)
         => WindowFunctions.SetWindowSize(this, size, _config.WindowProperties);
-
-    private void Close(object? sender, RoutedEventArgs e) => Close();
-
-    private void Minimize(object? sender, RoutedEventArgs e) => WindowState = WindowState.Minimized;
     
     public void Dispose()
     {

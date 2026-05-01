@@ -1,17 +1,11 @@
 ﻿using Avalonia.Controls;
-using Avalonia.Input;
 using PicView.Core.ViewModels;
 
 namespace PicView.Avalonia.CustomControls;
 
-public class PrintWindow: Window
+public class PrintWindow: GenericWindow
 {
     protected const float PreviewDpi = 96f;
-    
-    public void MoveWindow(object? sender, PointerPressedEventArgs e)
-    {
-        BeginMoveDrag(e);
-    }
     
     protected override void OnClosing(WindowClosingEventArgs e)
     {

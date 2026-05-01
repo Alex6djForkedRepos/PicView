@@ -1,6 +1,4 @@
 ﻿using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
@@ -52,10 +50,6 @@ public partial class PrintPreviewWindow : PrintWindow, IPrintWindow
         MinimizeButton.Foreground = brush;
         CloseButton.Foreground = brush;
     }
-
-    private void Close(object? sender, RoutedEventArgs e) => Close();
-    private void Minimize(object? sender, RoutedEventArgs e) => WindowState = WindowState.Minimized;
-
 
     // -----------------------------------------------------------
     //   Preview rendering (uses same layout as print)

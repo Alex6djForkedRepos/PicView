@@ -1,6 +1,5 @@
-using Avalonia.Controls;
-using Avalonia.Input;
 using Avalonia.Media;
+using PicView.Avalonia.CustomControls;
 using PicView.Avalonia.MacOS.PlatformUpdate;
 using PicView.Avalonia.UI;
 using PicView.Core.IPlatform;
@@ -8,7 +7,7 @@ using PicView.Core.Update;
 
 namespace PicView.Avalonia.MacOS.Views;
 
-public partial class AboutWindow : Window, IPlatformSpecificUpdate
+public partial class AboutWindow : GenericWindow, IPlatformSpecificUpdate
 {
     public AboutWindow()
     {
@@ -23,13 +22,5 @@ public partial class AboutWindow : Window, IPlatformSpecificUpdate
     public async Task HandlePlatformUpdate(UpdateInfo updateInfo, string tempPath)
     {
         await MacUpdateHelper.HandleMacOSUpdate(updateInfo, tempPath);
-    }
-
-    private void MoveWindow(object? sender, PointerPressedEventArgs e)
-    {
-        if (VisualRoot is null) { return; }
-
-        var hostWindow = (Window)VisualRoot;
-        hostWindow?.BeginMoveDrag(e);
     }
 }

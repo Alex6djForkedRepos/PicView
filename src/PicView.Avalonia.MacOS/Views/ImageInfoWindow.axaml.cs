@@ -1,8 +1,7 @@
 using System.Diagnostics;
 using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Input;
 using Avalonia.Media;
+using PicView.Avalonia.CustomControls;
 using PicView.Avalonia.UI;
 using PicView.Avalonia.WindowBehavior;
 using PicView.Core.Config;
@@ -12,7 +11,7 @@ using R3;
 
 namespace PicView.Avalonia.MacOS.Views;
 
-public partial class ImageInfoWindow : Window, IDisposable
+public partial class ImageInfoWindow : GenericWindow, IDisposable
 {
     private readonly CompositeDisposable _disposables = new();
     private readonly ImageInfoWindowConfig _config;
@@ -41,16 +40,6 @@ public partial class ImageInfoWindow : Window, IDisposable
                 .AddTo(_disposables);
             PositionChanged += (_, __) => UpdateWindowPosition();
         };
-    }
-
-    private void MoveWindow(object? sender, PointerPressedEventArgs e)
-    {
-        var topLevel = GetTopLevel(this);
-        
-        if (topLevel is Window hostWindow)
-        {
-            hostWindow.BeginMoveDrag(e);
-        }
     }
     
     private void UpdateWindowPosition()

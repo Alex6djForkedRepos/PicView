@@ -3,8 +3,10 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
+using PicView.Avalonia.CustomControls;
 using PicView.Avalonia.Input;
 using PicView.Avalonia.UI;
+using PicView.Avalonia.Views.Main;
 using PicView.Avalonia.WindowBehavior;
 using PicView.Core.Config;
 using PicView.Core.ViewModels;
@@ -15,7 +17,7 @@ using R3;
 
 namespace PicView.Avalonia.Win32.Views;
 
-public partial class SettingsWindow : Window
+public partial class SettingsWindow : GenericWindow
 {
     private readonly SettingsWindowConfig _config;
     private readonly IDisposable? _disposable;
@@ -163,14 +165,6 @@ public partial class SettingsWindow : Window
             filterBox?.Focus();
         }
     }
-
-    private void MoveWindow(object? sender, PointerPressedEventArgs e)
-    {
-        if (GetTopLevel(this) is Window hostWindow)
-        {
-            hostWindow.BeginMoveDrag(e);
-        }
-    }
     
     private void UpdateWindowSizeAndPosition(object? sender, PointerReleasedEventArgs e)
     {
@@ -183,13 +177,6 @@ public partial class SettingsWindow : Window
     
     private void UpdateWindowSize(AvaloniaPropertyChangedEventArgs<Size> size)
         => WindowFunctions.SetWindowSize(this, size, _config.WindowProperties);
-
-    private void Close(object? sender, RoutedEventArgs e) => Close();
-
-    private void Minimize(object? sender, RoutedEventArgs e)
-    {
-        WindowState = WindowState.Minimized;
-    }
 
     private static void InitializeFileAssociationManager()
     {

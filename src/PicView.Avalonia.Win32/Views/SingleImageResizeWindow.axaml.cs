@@ -1,8 +1,7 @@
 ﻿using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
+using PicView.Avalonia.CustomControls;
 using PicView.Avalonia.UI;
 using PicView.Core.Extensions;
 using PicView.Core.Localization;
@@ -10,7 +9,7 @@ using PicView.Core.ViewModels;
 
 namespace PicView.Avalonia.Win32.Views;
 
-public partial class SingleImageResizeWindow : Window
+public partial class SingleImageResizeWindow : GenericWindow
 {
     public SingleImageResizeWindow(MainWindowViewModel viewModel)
     {
@@ -56,17 +55,4 @@ public partial class SingleImageResizeWindow : Window
 
         GenericWindowHelper.GenericWindowInitialize(this, StringExtensions.CombineWithAppName(TranslationManager.Translation.Resize));
     }
-
-    private void MoveWindow(object? sender, PointerPressedEventArgs e)
-    {
-        BeginMoveDrag(e);
-    }
-
-    private void Close(object? sender, RoutedEventArgs e)
-    {
-        Loaded -= OnLoaded;
-        Close();
-    }
-
-    private void Minimize(object? sender, RoutedEventArgs e) => WindowState = WindowState.Minimized;
 }
