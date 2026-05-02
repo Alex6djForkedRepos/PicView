@@ -5,21 +5,21 @@
     xmlns:customControls="clr-namespace:PicView.Avalonia.CustomControls;assembly=PicView.Avalonia"
     xmlns:main="clr-namespace:PicView.Avalonia.Views.Main;assembly=PicView.Avalonia"
     xmlns:viewModels="clr-namespace:PicView.Core.ViewModels;assembly=PicView.Core"
-    Title="Loading..."
-    x:DataType="viewModels:MainWindowViewModel"
-    BorderThickness="1"
-    CanResize="False"
-    CornerRadius="8"
-    SizeToContent="WidthAndHeight">
+    Width="975"
+    Height="835"
+    MinWidth="660"
+    MinHeight="805"
+    x:DataType="viewModels:MainWindowViewModel">
 
     <Border
         x:Name="ParentBorder"
         BorderBrush="{DynamicResource WindowBorderColor}"
         BorderThickness="1">
-        <StackPanel>
+        <DockPanel>
 
             <DockPanel
                 Height="28"
+                DockPanel.Dock="Top"
                 LastChildFill="True"
                 PointerPressed="MoveWindow">
 
@@ -82,13 +82,14 @@
             <Rectangle
                 x:Name="BorderRectangle"
                 Height="1"
+                DockPanel.Dock="Top"
                 Fill="{DynamicResource MainBorderColor}" />
 
             <main:PrintPreviewView
                 x:Name="PrintPreviewView"
-                Background="{DynamicResource NoisyTexture}"
-                Focusable="True"
-                PointerPressed="MoveWindow" />
-        </StackPanel>
+                Background="{DynamicResource WindowBackgroundColor}"
+                DockPanel.Dock="Bottom"
+                Focusable="True" />
+        </DockPanel>
     </Border>
 </Window>

@@ -6,21 +6,28 @@ using PicView.Avalonia.CustomControls;
 using PicView.Avalonia.Printing;
 using PicView.Avalonia.UI;
 using PicView.Avalonia.Win32.Printing;
+using PicView.Core.Config;
 using PicView.Core.DebugTools;
+using PicView.Core.Extensions;
 using PicView.Core.Localization;
 using PicView.Core.Printing;
 using PicView.Core.ViewModels;
+using R3;
 
 namespace PicView.Avalonia.Win32.Views;
 
 public partial class PrintPreviewWindow : PrintWindow, IPrintWindow
 {
-    public PrintPreviewWindow()
+    DisposableBag  _disposable;
+    public PrintPreviewWindow(PrintWindowConfig config)
     {
+        Config = config;
         InitializeComponent();
 
-        GenericWindowHelper.GenericWindowInitialize(this, TranslationManager.Translation.Print + " - PicView");
+        GenericWindowHelper.GenericWindowInitialize(this, StringExtensions.CombineWithAppName(TranslationManager.Translation.Print));
         ThemeUpdates();
+
+        SetWindowSize();
     }
 
     private void ThemeUpdates()
@@ -121,11 +128,6 @@ public partial class PrintPreviewWindow : PrintWindow, IPrintWindow
                     new Rect(0, 0, avaloniaBmp.PixelSize.Width, avaloniaBmp.PixelSize.Height),
                     destRect);
             });
-
-            if (vm.PreviewImage.Value is Bitmap old)
-            {
-                old.Dispose();
-            }
 
             vm.PreviewImage.Value = rtb;
             vm.PageWidth.Value = layout.PageWidthPx;

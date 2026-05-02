@@ -45,8 +45,6 @@ public partial class PrintPreviewWindow : PrintWindow, IPrintWindow
         {
             return;
         }
-        
-        WindowFunctions.CenterWindowOnScreen(this);
 
         var ps = vm.PrintPreview.PrintSettings.Value;
 
@@ -152,11 +150,6 @@ public partial class PrintPreviewWindow : PrintWindow, IPrintWindow
                 new Rect(0, 0, avaloniaBmp.PixelSize.Width, avaloniaBmp.PixelSize.Height),
                 destRect);
         });
-        
-        if (vm.PreviewImage.Value is Bitmap old)
-        {
-            old.Dispose();
-        }
 
         vm.PreviewImage.Value = rtb;
         vm.PageWidth.Value = layout.PageWidthPx;

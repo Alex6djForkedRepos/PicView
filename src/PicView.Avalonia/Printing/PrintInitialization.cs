@@ -22,7 +22,7 @@ public static class PrintInitialization
             await vm.PrintPreview.PrintWindowConfig.LoadAsync();
         }
 
-        var configProps = vm.PrintPreview.PrintWindowConfig.PrintProperties;
+        var configProps = vm.PrintPreview.PrintWindowConfig.WindowProperties;
 
         vm.PrintPreview.Printers.Value = printers;
         vm.PrintPreview.PaperSizes.Value = paperSizes;

@@ -490,14 +490,19 @@ public class WindowInitializer(IWindowProvider provider) : IWindowInitializer, I
         if (_printPreviewWindow is null)
         {
             vm.PrintPreview = new PrintPreviewViewModel();
+            
+            if (vm.PrintPreview.PrintWindowConfig is null)
+            {
+                vm.PrintPreview.PrintWindowConfig = new PrintWindowConfig();
+                await vm.PrintPreview.PrintWindowConfig.LoadAsync();
+            }
 
             await Dispatcher.UIThread.InvokeAsync(() =>
             {
-                _printPreviewWindow = provider.CreatePrintPreviewWindow(vm);
+                _printPreviewWindow = provider.CreatePrintPreviewWindow(vm.PrintPreview.PrintWindowConfig);
                 _printPreviewWindow.DataContext = vm;
-                _printPreviewWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-
                 _printPreviewWindow.Show(desktop.MainWindow);
+                
                 _printPreviewWindow.Closing += (_, _) =>
                 {
                     desktop.MainWindow?.Focus();
