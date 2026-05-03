@@ -114,11 +114,6 @@ public class MainWindow : Window, IMainWindow
             Dispatcher.CurrentDispatcher.Post(() => WindowFunctions.SetManualWindow(vm, this));
         }
 
-        if (Settings.WindowProperties.AutoFit)
-        {
-            return;
-        }
-
         WindowResizing.SetSize(vm, e.Reason);
         SharedBottomBar.ResponsiveNavigationBtnSize();
     }

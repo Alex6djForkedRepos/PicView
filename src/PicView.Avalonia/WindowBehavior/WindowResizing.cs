@@ -1,5 +1,4 @@
-﻿using System.Runtime.InteropServices;
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
@@ -195,10 +194,18 @@ public static class WindowResizing
         }
         else
         {
+            if (Settings.ImageScaling.ShowImageSideBySide)
+            {
+                vm.ImageWidth.Value = imageWidth;
+                vm.ImageHeight.Value = imageHeight;
+            }
+            else
+            {
+                vm.ImageWidth.Value =
+                    vm.ImageHeight.Value = double.NaN;
+            }
             vm.WindowMaxWidth.Value =
-            vm.WindowMaxHeight.Value =
-            vm.ImageWidth.Value =
-                vm.ImageHeight.Value = double.NaN;
+                vm.WindowMaxHeight.Value  = double.NaN;
         }
 
     }
@@ -267,12 +274,15 @@ public static class WindowResizing
         
         if (Settings.ImageScaling.ShowImageSideBySide && secondWidth > 0 && secondHeight > 0)
         {
+            var (containerWidth, containerHeight) = GetWindowSize();
             return ImageSizeCalculationHelper.GetSideBySideImageSize(
                 width,
                 height,
                 secondWidth,
                 secondHeight,
                 screenSize,
+                containerWidth,
+                containerHeight,
                 rotation,
                 uiTopSize,
                 uiBottomSize,
@@ -306,6 +316,16 @@ public static class WindowResizing
                 }
 
                 return (UIHelper.GetBottomBar.Bounds.Height, uiTopSize, gW, gH);
+            }
+        }
+
+        (double, double) GetWindowSize()
+        {
+            return Dispatcher.CurrentDispatcher.CheckAccess() ? Get() : Dispatcher.CurrentDispatcher.Invoke(Get, DispatcherPriority.Send);
+
+            (double, double) Get()
+            {
+                return (UIHelper.GetMainView.Bounds.Width, UIHelper.GetMainView.Bounds.Height);
             }
         }
     }

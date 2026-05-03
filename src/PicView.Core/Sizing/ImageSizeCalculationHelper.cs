@@ -22,9 +22,9 @@ public static class ImageSizeCalculationHelper
         var aspectRatio =
             CalculateAspectRatio(rotationAngle, maxAvailableWidth, maxAvailableHeight, imageWidth, imageHeight);
 
-        double calculatedImageWidth, calculatedImageHeight, scrollWidth, scrollHeight;
-        calculatedImageWidth = imageWidth * aspectRatio;
-        calculatedImageHeight = imageHeight * aspectRatio;
+        double scrollWidth, scrollHeight;
+        var calculatedImageWidth = imageWidth * aspectRatio;
+        var calculatedImageHeight = imageHeight * aspectRatio;
         if (Settings.Zoom.ScrollEnabled)
         {            
             // TODO
@@ -95,33 +95,48 @@ public static class ImageSizeCalculationHelper
         double secondaryWidth,
         double secondaryHeight,
         ScreenSize screenSize,
+        double containerWidth,
+        double containerHeight,
         double rotationAngle,
         double uiTopSize,
         double uiBottomSize,
         double galleryWidth,
         double galleryHeight)
     {
-        // 1. Guard clause for invalid dimensions
         if (width <= 0 || height <= 0 || secondaryWidth <= 0 || secondaryHeight <= 0)
         {
             return new ImageSize(0, 0, 0, 0, 0, 0, 0);
         }
 
-        // 2. Treat the two side-by-side images as one large "virtual" image bounds
-        var combinedWidth = width + secondaryWidth;
+        // 1. Normalize the widths so both images mathematically share the largest height.
+        // This guarantees they will scale evenly and utilize the maximum available container space.
         var largestHeight = Math.Max(height, secondaryHeight);
-
-        // 3. Get the maximum available screen space (same as GetImageSize)
-        var (maxAvailableWidth, maxAvailableHeight) = GetMaxAvailableScreenSize(screenSize, uiTopSize, uiBottomSize, galleryWidth, galleryHeight);
+        var normalizedWidth = width * (largestHeight / height);
+        var normalizedSecondaryWidth = secondaryWidth * (largestHeight / secondaryHeight);
         
-        // 4. Calculate a single aspect ratio that fits the entire combined bounding box into the screen
+        // 2. Combine the normalized widths to create our perfectly balanced virtual bounding box.
+        var combinedWidth = normalizedWidth + normalizedSecondaryWidth;
+
+        double maxAvailableWidth, maxAvailableHeight;
+        if (Settings.WindowProperties.AutoFit)
+        {
+            var (w, h) = GetMaxAvailableScreenSize(screenSize, uiTopSize, uiBottomSize, galleryWidth, galleryHeight);
+            maxAvailableWidth = w;
+            maxAvailableHeight = h;
+        }
+        else
+        {
+            maxAvailableWidth = containerWidth;
+            maxAvailableHeight = containerHeight;
+        }
+        
+        // 3. Calculate the aspect ratio to fit this evenly balanced bounding box into the screen/container.
         var aspectRatio = CalculateAspectRatio(rotationAngle, maxAvailableWidth, maxAvailableHeight, combinedWidth, largestHeight);
 
-        // 5. Apply the scaling factor to our virtual image
+        // 4. Apply the scaling factor to our virtual image.
         var calculatedCombinedWidth = combinedWidth * aspectRatio;
         var calculatedLargestHeight = largestHeight * aspectRatio;
 
-        // 6. Calculate the final Window Width and Height (ignoring scrolling for now)
         double windowWidth, windowHeight;
         if (Settings.Zoom.ScrollEnabled)
         {
@@ -134,7 +149,6 @@ public static class ImageSizeCalculationHelper
             windowHeight = calculatedLargestHeight + uiBottomSize + uiTopSize + galleryHeight;
         }
         
-        // 7. Return the struct
         return new ImageSize(
             windowWidth, 
             windowHeight, 

@@ -13,7 +13,6 @@ using PicView.Avalonia.AnimatedImage;
 using PicView.Core.DebugTools;
 using PicView.Core.ImageDecoding;
 using PicView.Core.ViewModels;
-using R3;
 
 namespace PicView.Avalonia.CustomControls;
 
@@ -61,7 +60,6 @@ public class PicBox2 : Control
     private CompositionCustomVisual? _customVisual;
     private FileStream? _stream;
     private IGifInstance? _animInstance;
-    private readonly DisposableBag _imageTypeSubscription;
 
     /// <summary>
     ///     Gets or sets the image type.
