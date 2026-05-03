@@ -3,7 +3,7 @@ using MainWindowViewModel = PicView.Core.ViewModels.MainWindowViewModel;
 
 namespace PicView.Avalonia.Win32.Printing;
 
-public static class PrintInitialization
+public static class Win32PrintInitialization
 {
     public static async ValueTask InitializeAsync(MainWindowViewModel vm, string path)
     {
@@ -15,7 +15,7 @@ public static class PrintInitialization
             : [];
 
         await PicView.Avalonia.Printing.PrintInitialization.InitializeAsync(
-            vm, path, new PrintEngine(), printers, paperSizes, defaultPrinter);
+            vm, path, new Win32PrintEngine(), printers, paperSizes, defaultPrinter);
 
     }
 }

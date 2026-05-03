@@ -13,7 +13,7 @@ using Bitmap = Avalonia.Media.Imaging.Bitmap;
 
 namespace PicView.Avalonia.Win32.Printing;
 
-public class PrintEngine : AbstractPrintEngine
+public class Win32PrintEngine : AbstractPrintEngine
 {
     public override PaperInfo ResolvePaper(PrintSettings settings)
     {

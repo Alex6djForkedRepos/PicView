@@ -30,7 +30,7 @@ public class Win32WindowProvider : IWindowProvider
     public Window CreatePrintPreviewWindow(PrintWindowConfig config) => new PrintPreviewWindow(config);
 
     public async ValueTask InitializePrintAsync(MainWindowViewModel vm, string path, Window printPreviewWindow) =>
-        await PrintInitialization.InitializeAsync(vm, path);
+        await Win32PrintInitialization.InitializeAsync(vm, path);
 
     public async Task HandlePlatformUpdate(UpdateInfo updateInfo, string tempPath)
     {
