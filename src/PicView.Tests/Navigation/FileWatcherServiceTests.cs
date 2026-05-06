@@ -28,7 +28,7 @@ public class FileWatcherServiceTests : IDisposable
         _mockCache = new MockImageCache();
         _mockThumbnailCache = new MockThumbnailCache();
         // Use default ordinal comparison for tests
-        _service = new FileWatcherService((s1, s2) => string.CompareOrdinal(s1, s2), _mockCache, _mockThumbnailCache);
+        _service = new FileWatcherService((s1, s2) => string.CompareOrdinal(s1, s2), _mockCache, _mockThumbnailCache, new MockThumbnailLoader());
     }
 
     [Fact]
@@ -119,7 +119,7 @@ public class FileWatcherServiceTests : IDisposable
 
     private TabViewModel CreateTab(string directory)
     {
-        var tab = new TabViewModel("test", null);
+        var tab = new TabViewModel(_ => { }, _service);
         // We need to set a model so Watcher can find directory
         // But usually Watch() is called after InitializeImageIterator which likely has files.
         // If Model is null, Watch does nothing.
@@ -127,7 +127,7 @@ public class FileWatcherServiceTests : IDisposable
         var dummyFile = new FileInfo(Path.Combine(directory, "placeholder.txt"));
         tab.Model = new ImageModel { FileInfo = dummyFile };
         
-        tab.Initialize(_mockCache, _mockThumbnailCache, new MockThumbnailLoader(), null, _mockThumbnailCache);
+        tab.Initialize(_mockCache, _mockThumbnailCache, new MockThumbnailLoader(), _service, _mockThumbnailCache);
         return tab;
     }
 
@@ -148,25 +148,24 @@ public class FileWatcherServiceTests : IDisposable
     private class MockImageCache : IImageCache
     {
         public bool Resynchronized { get; private set; }
-        public void Resynchronize(string ownerId, IReadOnlyList<FileInfo> files) => Resynchronized = true;
+        public void Resynchronize(uint ownerId, IReadOnlyList<FileInfo> files) => Resynchronized = true;
 
         // Stub other methods
-        public Task<ImageModel?> LoadAsync(string ownerId, int index, IReadOnlyList<FileInfo> list, CancellationToken ct = default) => Task.FromResult<ImageModel?>(null);
-        public void RegisterOwner(string ownerId) { }
-        public void RemoveOwner(string ownerId) { }
+        public Task<ImageModel?> LoadAsync(uint ownerId, int index, IReadOnlyList<FileInfo> list, CancellationToken ct = default) => Task.FromResult<ImageModel?>(null);
+        public void RegisterOwner(uint ownerId) { }
+        public void RemoveOwner(uint ownerId) { }
         public bool TryGet(FileInfo f, out PreLoadValue? value) { value = null; return false; }
-        public bool TryGet(string ownerId, int index, out PreLoadValue? value) { value = null; return false; }
+        public bool TryGet(uint ownerId, int index, out PreLoadValue? value) { value = null; return false; }
         public bool TryGet(ReadOnlySpan<char> f, out PreLoadValue? value) { value = null; return false; }
         public void Clear() { }
-        public void Clear(string ownerId) { }
-        public bool Contains(ReadOnlySpan<char> span, out PreLoadValue? value) { value = null; return false; }
+        public void Clear(uint ownerId) { }
         public bool Contains(PreLoadValue value) => false;
-        public bool Add(string ownerId, int index, PreLoadValue preLoadValue, int listCount, bool isReverse) => false;
-        public bool TryAdd(string ownerId, int index, PreLoadValue preLoadValue, int listCount, bool isReverse, out PreLoadValue? value) { value = null; return false; }
-        public void Preload(string ownerId, int currentIndex, bool reversed, IReadOnlyList<FileInfo> files, CancellationToken token) { }
+        public bool Add(uint ownerId, int index, PreLoadValue preLoadValue, int listCount, bool isReverse) => false;
+        public bool TryAdd(uint ownerId, int index, PreLoadValue preLoadValue, int listCount, bool isReverse, out PreLoadValue? value) { value = null; return false; }
+        public void Preload(uint ownerId, int currentIndex, bool reversed, IReadOnlyList<FileInfo> files, CancellationToken token) { }
         public void Clear(TabViewModel tab, int currentIndex, string directory, IReadOnlyList<FileInfo> files) { }
-        public void TryRemove(string ownerId, int index) { }
-        public ValueTask<bool> WaitForLoadingCompleteAsync(string ownerId, int index) => ValueTask.FromResult(false);
+        public void TryRemove(uint ownerId, int index) { }
+        public ValueTask<bool> WaitForLoadingCompleteAsync(uint ownerId, int index) => ValueTask.FromResult(false);
     }
 
     private class MockThumbnailLoader : IThumbnailLoader
