@@ -17,6 +17,9 @@ public class ZoomPanControl : Decorator
     public static readonly StyledProperty<double> DeadzoneToleranceProperty =
         AvaloniaProperty.Register<ZoomPanControl, double>(nameof(DeadzoneTolerance), 0.05);
 
+    public static readonly StyledProperty<double> FittingScaleProperty =
+        AvaloniaProperty.Register<ZoomPanControl, double>(nameof(FittingScale), 1.0);
+
     /// <summary>
     /// The tolerance range around 1.0 where zoom will snap to reset (1.0).
     /// For example, 0.05 means zoom values between 0.95 and 1.05 will snap to 1.0.
@@ -25,6 +28,16 @@ public class ZoomPanControl : Decorator
     {
         get => GetValue(DeadzoneToleranceProperty);
         set => SetValue(DeadzoneToleranceProperty, Math.Max(0, value));
+    }
+
+    /// <summary>
+    /// The initial scaling factor used to fit the image.
+    /// Used to calculate ZoomLevel relative to pixel dimensions.
+    /// </summary>
+    public double FittingScale
+    {
+        get => GetValue(FittingScaleProperty);
+        set => SetValue(FittingScaleProperty, value);
     }
 
     // Transform Properties
@@ -69,6 +82,16 @@ public class ZoomPanControl : Decorator
 
         zoomPreviewer.SetZoomPanControl(this);
         ZoomPreviewer = zoomPreviewer;
+    }
+
+    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
+    {
+        base.OnPropertyChanged(change);
+
+        if (change.Property == FittingScaleProperty)
+        {
+            UpdateZoomLevel();
+        }
     }
 
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
@@ -162,7 +185,7 @@ public class ZoomPanControl : Decorator
         ZoomPreviewer?.IsVisible = false;
 
         SetTransitionsAndScale(1.0, CenterPoint(), animated);
-        SetZoomValue(100);
+        UpdateZoomLevel();
     }
 
     /// <summary>
@@ -170,7 +193,7 @@ public class ZoomPanControl : Decorator
     /// </summary>
     public void ResetZoomSlim()
     {
-        if (ZoomLevel is 100)
+        if (Scale is 1.0)
         {
             return;
         }
@@ -180,7 +203,7 @@ public class ZoomPanControl : Decorator
         TranslateY = 0;
         SetScaleImmediate(1.0, CenterPoint());
 
-        SetZoomValue(100);
+        UpdateZoomLevel();
     }
 
     /// <summary>
@@ -201,7 +224,7 @@ public class ZoomPanControl : Decorator
         ConstrainTranslationToBounds();
         UpdateChildTransform();
 
-        SetZoomValue(newScale * 100);
+        UpdateZoomLevel();
     }
 
     /// <summary>
@@ -344,12 +367,12 @@ public class ZoomPanControl : Decorator
         SetScaleImmediate(targetScale, center);
     }
 
-    private void SetZoomValue(double zoomValue)
+    private void UpdateZoomLevel()
     {
-        ZoomLevel = zoomValue;
+        ZoomLevel = Scale * FittingScale * 100;
         if (DataContext is MainViewModel vm)
         {
-            vm.PicViewer.ZoomValue.Value = zoomValue;
+            vm.PicViewer.ZoomValue.Value = ZoomLevel;
         }
     }
 

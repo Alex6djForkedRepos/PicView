@@ -17,10 +17,22 @@ public static class ImageSizeCalculationHelper
             return new ImageSize(0, 0, 0, 0, 0,  0, 0);
         }
         
-        var (maxAvailableWidth, maxAvailableHeight) = GetMaxAvailableScreenSize(screenSize, uiTopSize, uiBottomSize, galleryWidth, galleryHeight);
+        double maxAvailableWidth, maxAvailableHeight;
+        if (Settings.ImageScaling.StretchImage)
+        {
+            var (w, h) = GetMaxAvailableScreenSize(screenSize, uiTopSize, uiBottomSize, galleryWidth, galleryHeight);
+            maxAvailableWidth = w;
+            maxAvailableHeight = h;
+        }
+        else
+        {
+            var (w, h) = GetMaxAvailableImageSize(screenSize, imageWidth, imageHeight, uiTopSize, uiBottomSize, galleryWidth, galleryHeight);
+            maxAvailableWidth = w;
+            maxAvailableHeight = h;
+        }
 
-        var aspectRatio =
-            CalculateAspectRatio(rotationAngle, maxAvailableWidth, maxAvailableHeight, imageWidth, imageHeight);
+        var aspectRatio = CalculateAspectRatio(rotationAngle, maxAvailableWidth, maxAvailableHeight, imageWidth, imageHeight);
+
 
         double scrollWidth, scrollHeight;
         var calculatedImageWidth = imageWidth * aspectRatio;
@@ -48,6 +60,7 @@ public static class ImageSizeCalculationHelper
         {
             windowWidth = calculatedImageWidth + galleryWidth;
             windowHeight = calculatedImageHeight + uiBottomSize + uiTopSize + galleryHeight;
+
         }
         
         return new ImageSize(windowWidth, windowHeight, calculatedImageWidth, calculatedImageHeight, scrollWidth, scrollHeight,
@@ -73,19 +86,38 @@ public static class ImageSizeCalculationHelper
         }
     }
 
-    private static (double maxWidth, double maxHeight) GetMaxAvailableScreenSize(ScreenSize screenSize, double uiTopSize, double uiBottomSize, double galleryWidth, double galleryHeight)
+    private static (double maxWidth, double maxHeight) GetMaxAvailableScreenSize(
+        ScreenSize screenSize, double uiTopSize, double uiBottomSize, double galleryWidth, double galleryHeight)
     {
-        double maxAvailableWidth, maxAvailableHeight;
         if (Settings.WindowProperties.Fullscreen)
         {
-            maxAvailableWidth = screenSize.Width - galleryWidth;
-            maxAvailableHeight = screenSize.Height - galleryHeight;
+            return (Math.Max(0, screenSize.Width - galleryWidth), 
+                Math.Max(0, screenSize.Height - galleryHeight));
         }
-        else
-        {
-            maxAvailableWidth = screenSize.WorkingAreaWidth - galleryWidth;
-            maxAvailableHeight = screenSize.WorkingAreaHeight - (galleryHeight + Settings.WindowProperties.Margin + uiBottomSize + uiTopSize);
-        }
+
+        // 1. Calculate the absolute maximum allowed window size (Working area minus the margin)
+        var maxWindowWidth = screenSize.WorkingAreaWidth - Settings.WindowProperties.Margin;
+        var maxWindowHeight = screenSize.WorkingAreaHeight - Settings.WindowProperties.Margin;
+
+        // 2. The available space specifically for the *image* is the max window size minus UI elements
+        var maxAvailableWidth = maxWindowWidth - galleryWidth;
+        var maxAvailableHeight = maxWindowHeight - (galleryHeight + uiBottomSize + uiTopSize);
+
+        // 3. Ensure we don't return negative values if the UI is somehow larger than the screen bounds
+        return (Math.Max(0, maxAvailableWidth), Math.Max(0, maxAvailableHeight));
+    }
+
+    private static (double maxWidth, double maxHeight) GetMaxAvailableImageSize(
+        ScreenSize screenSize, double imageWidth, double imageHeight, double uiTopSize, double uiBottomSize, double galleryWidth, double galleryHeight)
+    {
+        // 1. Get the absolute maximum space the screen allows for an image
+        var (screenMaxWidth, screenMaxHeight) = GetMaxAvailableScreenSize(screenSize, uiTopSize, uiBottomSize, galleryWidth, galleryHeight);
+
+        // 2. Bound that available space by the native image resolution. 
+        // This ensures the aspect ratio calculation never scales the image beyond 100%.
+        var maxAvailableWidth = Math.Min(screenMaxWidth, imageWidth);
+        var maxAvailableHeight = Math.Min(screenMaxHeight, imageHeight);
+
         return (maxAvailableWidth, maxAvailableHeight);
     }
 

@@ -63,6 +63,7 @@ public class TabViewModel(Action<uint> closeTab, IFileWatcherService? fileWatche
     public BindableReactiveProperty<bool> IsRotated180 { get; } = new(false);
     public BindableReactiveProperty<bool> IsRotated270 { get; } = new(false);
     public BindableReactiveProperty<double> ScaleX { get; } = new(1);
+    public BindableReactiveProperty<double> FittingScale { get; } = new(1);
     #endregion
 
     #region Navigation properties
@@ -149,20 +150,21 @@ public class TabViewModel(Action<uint> closeTab, IFileWatcherService? fileWatche
         
         WindowTitles GetTitles()
         {
+            var zoom = FittingScale.Value * 100;
             if (Model.TiffNavigation is { } tiff)
             {
                 return ImageTitleFormatter.GenerateTiffTitleStrings(width, height,
-                    index, Model.FileInfo, 100, ImageIterator.Files, tiff.CurrentPage, tiff.PageCount);
+                    index, Model.FileInfo, zoom, ImageIterator.Files, tiff.CurrentPage, tiff.PageCount);
             }
 
             if (!Settings.ImageScaling.ShowImageSideBySide || SecondaryModel is null)
             {
                 return ImageTitleFormatter.GenerateTitleStrings(width, height,
-                    index, Model.FileInfo, 100, ImageIterator.Files);
+                    index, Model.FileInfo, zoom, ImageIterator.Files);
             }
 
-            var firstInfo = new ImageTitleInfo(width, height, index, Model.FileInfo, 100);
-            var secondInfo = new ImageTitleInfo(SecondaryModel.PixelWidth, SecondaryModel.PixelHeight, index + 1, SecondaryModel.FileInfo, 100);
+            var firstInfo = new ImageTitleInfo(width, height, index, Model.FileInfo, zoom);
+            var secondInfo = new ImageTitleInfo(SecondaryModel.PixelWidth, SecondaryModel.PixelHeight, index + 1, SecondaryModel.FileInfo, zoom);
             return ImageTitleFormatter.GenerateTitleForSideBySide(firstInfo, secondInfo, ImageIterator.CurrentIndex, ImageIterator.SecondaryCurrentIndex, ImageIterator.Files);
         }
     }
