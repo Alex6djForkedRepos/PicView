@@ -10,7 +10,7 @@ public static class GalleryHelper
     public static (double width, double height) GetGallerySize(MainWindowViewModel main)
     {
         if (!Settings.Gallery.IsGalleryDocked || Slideshow.IsRunning || 
-            !Settings.Gallery.ShowBottomGalleryInHiddenUI && !main.IsUIShown.CurrentValue)
+            !Settings.Gallery.ShowDockedGalleryInHiddenUI && !main.IsUIShown.CurrentValue)
         {
             return (0, 0);
         }

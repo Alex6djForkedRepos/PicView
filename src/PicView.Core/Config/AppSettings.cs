@@ -256,27 +256,15 @@ public class Gallery
     /// </summary>
     public bool ShowDockedGalleryInHiddenUI { get; set; } = false;
 
-    // TODO: Deprecated, delete when cleaning up the fork 
-    public bool ShowBottomGalleryInHiddenUI { get; set; } = false;
-
     /// <summary>
     /// Specifies the height/width of the gallery items displayed at the docked section of the gallery view.
     /// </summary>
     public double DockedGalleryItemSize { get; set; } = 37;
-    
-    // TODO: Deprecated, delete when cleaning up the fork 
-    public double BottomGalleryItemSize { get; set; } = 37;
 
     /// <summary>
     /// Specifies the height of gallery thumbnails, when the gallery is in expanded mode.
     /// </summary>
     public double ExpandedGalleryItemSize { get; set; } = 23;
-
-    // TODO: Deprecated, delete when cleaning up the fork 
-    public string FullGalleryStretchMode { get; set; } = "Uniform";
-    
-    // TODO: Deprecated, delete when cleaning up the fork 
-    public string BottomGalleryStretchMode { get; set; } = "Uniform";
 
     public double ItemSpacing { get; set; } = 25;
 

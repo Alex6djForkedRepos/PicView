@@ -17,7 +17,7 @@ public static class GalleryLoader
         tab.Gallery.LoadingState = GalleryLoadingState.Loading;
         tab.Gallery.GalleryItems.Clear();
 
-        var dockedHeight = Settings.Gallery.BottomGalleryItemSize;
+        var dockedHeight = Settings.Gallery.DockedGalleryItemSize;
         var expandedHeight = Settings.Gallery.ExpandedGalleryItemSize;
         var maxHeight = Math.Max(dockedHeight, expandedHeight);
         if (maxHeight <= 0)

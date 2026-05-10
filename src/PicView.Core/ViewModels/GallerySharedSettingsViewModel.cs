@@ -44,7 +44,7 @@ public class GallerySharedSettingsViewModel
         new(Settings.Gallery.ExpandedGalleryStretchMode == GalleryStretchMode.FillSquare);
 
     public BindableReactiveProperty<bool> IsDockedGalleryShownInHiddenUI { get; } =
-        new(Settings.Gallery.ShowBottomGalleryInHiddenUI);
+        new(Settings.Gallery.ShowDockedGalleryInHiddenUI);
 
     public BindableReactiveProperty<double> DockedGalleryItemSize { get; } =
         new(Settings.Gallery.DockedGalleryItemSize);
@@ -303,9 +303,9 @@ public class GallerySharedSettingsViewModel
             .Skip(1)
             .SubscribeAwait(async (x, _) =>
             {
-                if (Settings.Gallery.ShowBottomGalleryInHiddenUI != x)
+                if (Settings.Gallery.ShowDockedGalleryInHiddenUI != x)
                 {
-                    Settings.Gallery.ShowBottomGalleryInHiddenUI = x;
+                    Settings.Gallery.ShowDockedGalleryInHiddenUI = x;
                     await SaveSettingsAsync();
                 }
             }, result =>
@@ -319,7 +319,7 @@ public class GallerySharedSettingsViewModel
 #endif
             });
 
-        Observable.EveryValueChanged(Settings.Gallery, x => x.ShowBottomGalleryInHiddenUI)
+        Observable.EveryValueChanged(Settings.Gallery, x => x.ShowDockedGalleryInHiddenUI)
             .Subscribe(x => { IsDockedGalleryShownInHiddenUI.Value = x; }, result =>
             {
 #if DEBUG

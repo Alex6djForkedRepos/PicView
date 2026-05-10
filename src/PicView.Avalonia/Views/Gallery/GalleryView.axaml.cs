@@ -40,7 +40,7 @@ public partial class GalleryView : GalleryAnimationControl
 
          if (Settings.Gallery.IsGalleryDocked)
          {
-             Height = Settings.Gallery.BottomGalleryItemSize + 2 + SizeDefaults.ScrollbarSize;
+             Height = Settings.Gallery.DockedGalleryItemSize + 2 + SizeDefaults.ScrollbarSize;
          }
          else
          {

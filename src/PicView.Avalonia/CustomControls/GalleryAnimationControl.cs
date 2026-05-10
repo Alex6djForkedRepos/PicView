@@ -44,7 +44,7 @@ public class GalleryAnimationControl : UserControl
 
     private static Thickness GetDockedMargin => new(0);
     private static Thickness GetExpandedMargin => new(15, 40, 15, 5);
-    private static double GetDockedSize => Settings.Gallery.BottomGalleryItemSize + BorderTopAndBottomThickness + SizeDefaults.ScrollbarSize;
+    private static double GetDockedSize => Settings.Gallery.DockedGalleryItemSize + BorderTopAndBottomThickness + SizeDefaults.ScrollbarSize;
     private static bool IsHorizontalDock(GalleryDockPosition dock) => dock is GalleryDockPosition.Top or GalleryDockPosition.Bottom;
 
     #endregion
@@ -232,7 +232,7 @@ public class GalleryAnimationControl : UserControl
     private void SetDockedThumbs()
     {
         ApplyThumbSettings(
-            Settings.Gallery.BottomGalleryItemSize,
+            Settings.Gallery.DockedGalleryItemSize,
             Settings.Gallery.DockedGalleryStretchMode,
             GetDockedMargin);
     }
@@ -511,7 +511,7 @@ public class GalleryAnimationControl : UserControl
         else
         {
             var startWidth = ParentControl.Bounds.Width;
-            var targetWidth = Settings.Gallery.BottomGalleryItemSize;
+            var targetWidth = Settings.Gallery.DockedGalleryItemSize;
             Width = startWidth;
             await AnimationsHelper.WidthAnimation(startWidth, targetWidth, GalleryDefaults.SlowAnimationSpeed).RunAsync(this);
             Width = targetWidth;

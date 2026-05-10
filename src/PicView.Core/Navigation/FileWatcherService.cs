@@ -181,7 +181,7 @@ public class FileWatcherService(
 
             if (thumbnailLoader != null)
             {
-                var maxHeight = Math.Max(Settings.Gallery.BottomGalleryItemSize, Settings.Gallery.ExpandedGalleryItemSize);
+                var maxHeight = Math.Max(Settings.Gallery.DockedGalleryItemSize, Settings.Gallery.ExpandedGalleryItemSize);
                 if (maxHeight <= 0)
                 {
                     maxHeight = GalleryDefaults.DefaultBottomGalleryHeight;
@@ -312,7 +312,7 @@ public class FileWatcherService(
 
             if (thumbnailLoader != null)
             {
-                var maxHeight = Math.Max(Settings.Gallery.BottomGalleryItemSize, Settings.Gallery.ExpandedGalleryItemSize);
+                var maxHeight = Math.Max(Settings.Gallery.DockedGalleryItemSize, Settings.Gallery.ExpandedGalleryItemSize);
                 if (maxHeight <= 0)
                 {
                     maxHeight = GalleryDefaults.DefaultBottomGalleryHeight;
