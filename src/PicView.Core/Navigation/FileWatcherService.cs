@@ -10,26 +10,21 @@ using R3;
 
 namespace PicView.Core.Navigation;
 
-public class FileWatcherService : IFileWatcherService, IDisposable
+public class FileWatcherService(
+    Func<string, string, int> stringComparer,
+    IImageCache cache,
+    IThumbnailCache? thumbnailCache = null,
+    IThumbnailLoader? thumbnailLoader = null)
+    : IFileWatcherService, IDisposable
 {
-    private readonly IImageCache _cache;
-    private readonly IThumbnailCache? _thumbnailCache;
-    private readonly IThumbnailLoader? _thumbnailLoader;
+    private readonly IImageCache _cache = cache ?? throw new ArgumentNullException(nameof(cache));
     private readonly Lock _lock = new();
-    private readonly Func<string, string, int> _stringComparer;
+    private readonly Func<string, string, int> _stringComparer = stringComparer ?? throw new ArgumentNullException(nameof(stringComparer));
 
     // Maps Directory Path -> (Watcher, Subscribers)
     private readonly
         ConcurrentDictionary<string, (FileSystemWatcher Watcher, IDisposable Subscription,
             List<WeakReference<TabViewModel>> Subscribers)> _watchers = new();
-
-    public FileWatcherService(Func<string, string, int> stringComparer, IImageCache cache, IThumbnailCache? thumbnailCache = null, IThumbnailLoader? thumbnailLoader = null)
-    {
-        _stringComparer = stringComparer ?? throw new ArgumentNullException(nameof(stringComparer));
-        _cache = cache ?? throw new ArgumentNullException(nameof(cache));
-        _thumbnailCache = thumbnailCache;
-        _thumbnailLoader = thumbnailLoader;
-    }
 
     public void Watch(TabViewModel tab, string? directory = null)
     {
@@ -103,13 +98,16 @@ public class FileWatcherService : IFileWatcherService, IDisposable
             // which protects the Integrity of the 'files' list and the CurrentIndex.
 
             var fileCreatedSub = created.SubscribeAwait(async (e, ct) =>
-                await OnFileCreatedAsync(directory, e, ct));
+                await OnFileCreatedAsync(tab, e), 
+                DebugHelper.LogError(nameof(FileWatcherService), nameof(OnFileCreatedAsync)));
 
             var fileDeletedSub = deleted.SubscribeAwait(async (e, ct) =>
-                await OnFileDeletedAsync(directory, e, ct));
+                await OnFileDeletedAsync(tab, e), 
+                DebugHelper.LogError(nameof(FileWatcherService), nameof(OnFileDeletedAsync)));
 
             var fileRenamedSub = renamed.SubscribeAwait(async (e, ct) =>
-                await OnFileRenamedAsync(directory, e, ct));
+                await OnFileRenamedAsync(tab, e), 
+                DebugHelper.LogError(nameof(FileWatcherService), nameof(OnFileRenamedAsync)));
 
             // Combine disposables
             var subscription = Disposable.Combine(fileCreatedSub, fileDeletedSub, fileRenamedSub);
@@ -150,7 +148,7 @@ public class FileWatcherService : IFileWatcherService, IDisposable
         }
     }
 
-    private async ValueTask OnFileCreatedAsync(string directory, FileSystemEventArgs e, CancellationToken ct)
+    private async ValueTask OnFileCreatedAsync(TabViewModel tab, FileSystemEventArgs e)
     {
         if (!e.FullPath.IsSupported())
         {
@@ -159,49 +157,102 @@ public class FileWatcherService : IFileWatcherService, IDisposable
 
         var newFile = new FileInfo(e.FullPath);
 
-        await HandleUpdateAsync(directory, async tab =>
+        var files = tab.ImageIterator.Files as List<FileInfo>;
+        var insertionIndex = -1;
+        if (files != null)
         {
-            var files = tab.ImageIterator.Files as List<FileInfo>;
-            var insertionIndex = -1;
-            if (files != null)
+            insertionIndex = FileSortOrder.InsertSorted(files, newFile, _stringComparer);
+        }
+
+        if (insertionIndex >= 0 && tab.Gallery.GalleryItems.Count > insertionIndex)
+        {
+            var item = new GalleryItemViewModel
             {
-                insertionIndex = FileSortOrder.InsertSorted(files, newFile, _stringComparer);
+                FileInfo = newFile
+            };
+
+            var thumbData = GalleryThumbInfo.GalleryThumbHolder.GetThumbData(newFile);
+            item.FileName.Value = thumbData.FileName;
+            item.FileSize.Value = thumbData.FileSize;
+            item.FileDate.Value = thumbData.FileDate;
+            item.FileLocation.Value = thumbData.FileLocation;
+
+            tab.Gallery.GalleryItems.Insert(insertionIndex, item);
+
+            if (thumbnailLoader != null)
+            {
+                var maxHeight = Math.Max(Settings.Gallery.BottomGalleryItemSize, Settings.Gallery.ExpandedGalleryItemSize);
+                if (maxHeight <= 0)
+                {
+                    maxHeight = GalleryDefaults.DefaultBottomGalleryHeight;
+                }
+
+                var thumb = await thumbnailLoader.GetThumbnailAsync(newFile, (uint)maxHeight).ConfigureAwait(false);
+                if (thumb != null)
+                {
+                    thumbnailCache?.Add(tab.Id, newFile.FullName, thumb);
+                }
+                item.Image.Value = thumb;
             }
+        }
 
-            if (insertionIndex >= 0)
+        var currentFile = tab.Model?.FileInfo;
+        if (currentFile != null && files != null)
+        {
+            var newIndex = files.FindIndex(x =>
+                x.FullName.AsSpan().Equals(currentFile.FullName.AsSpan(), StringComparison.OrdinalIgnoreCase));
+            if (newIndex >= 0)
             {
-                var item = new GalleryItemViewModel
+                tab.ImageIterator.SetCurrentIndex(newIndex);
+            }
+        }
+
+        _cache.Resynchronize(tab.Id, files);
+        tab.UpdateTabTitle();
+    }
+
+    private async ValueTask OnFileDeletedAsync(TabViewModel tab, FileSystemEventArgs e)
+    {
+        if (!e.FullPath.IsSupported())
+        {
+            return;
+        }
+        var fullPath = e.FullPath;
+
+        thumbnailCache?.Remove(fullPath);
+        
+        var oldIndex = tab.ImageIterator.CurrentIndex;
+        var currentFile = tab.Model?.FileInfo;
+        var wasCurrentFileDeleted =
+            currentFile?.FullName.AsSpan().Equals(e.FullPath.AsSpan(), StringComparison.OrdinalIgnoreCase) ?? false;
+
+        var files = tab.ImageIterator.Files as List<FileInfo>;
+        if (files != null)
+        {
+            var removeIndex = files.FindIndex(x => x.FullName.AsSpan().Equals(fullPath.AsSpan(), StringComparison.OrdinalIgnoreCase));
+            if (removeIndex >= 0)
+            {
+                files.RemoveAt(removeIndex);
+                if (tab.Gallery.GalleryItems.Count > removeIndex)
                 {
-                    FileInfo = newFile
-                };
-
-                var thumbData = GalleryThumbInfo.GalleryThumbHolder.GetThumbData(newFile);
-                item.FileName.Value = thumbData.FileName;
-                item.FileSize.Value = thumbData.FileSize;
-                item.FileDate.Value = thumbData.FileDate;
-                item.FileLocation.Value = thumbData.FileLocation;
-
-                tab.Gallery.GalleryItems.Insert(insertionIndex, item);
-
-                if (_thumbnailLoader != null)
-                {
-                    var maxHeight = Math.Max(Settings.Gallery.BottomGalleryItemSize, Settings.Gallery.ExpandedGalleryItemSize);
-                    if (maxHeight <= 0)
-                    {
-                        maxHeight = GalleryDefaults.DefaultBottomGalleryHeight;
-                    }
-
-                    var thumb = await _thumbnailLoader.GetThumbnailAsync(newFile, (uint)maxHeight).ConfigureAwait(false);
-                    if (thumb != null)
-                    {
-                        _thumbnailCache?.Add(tab.Id, newFile.FullName, thumb);
-                    }
-                    item.Image.Value = thumb;
+                    tab.Gallery.GalleryItems.RemoveAt(removeIndex);
                 }
             }
-
-            var currentFile = tab.Model?.FileInfo;
-            if (currentFile != null && files != null)
+        }
+        
+        if (wasCurrentFileDeleted && files != null)
+        {
+            if (files.Count != 0)
+            {
+                var isNavigatingBackwards = Settings.Navigation.IsNavigatingBackwardsWhenDeleting;
+                var targetIndex = isNavigatingBackwards ? oldIndex - 1 : oldIndex;
+                targetIndex = Math.Clamp(targetIndex, 0, files.Count - 1);
+                await tab.ImageIterator.IterateToIndexAsync(targetIndex, tab.GetTabCancellation());
+            }
+        }
+        else
+        {
+            if (currentFile != null)
             {
                 var newIndex = files.FindIndex(x =>
                     x.FullName.AsSpan().Equals(currentFile.FullName.AsSpan(), StringComparison.OrdinalIgnoreCase));
@@ -210,198 +261,101 @@ public class FileWatcherService : IFileWatcherService, IDisposable
                     tab.ImageIterator.SetCurrentIndex(newIndex);
                 }
             }
+        }
 
-            _cache.Resynchronize(tab.Id, files);
-            tab.UpdateTabTitle();
-        });
+        _cache.Resynchronize(tab.Id, files);
+        tab.UpdateTabTitle();
     }
 
-    private async ValueTask OnFileDeletedAsync(string directory, FileSystemEventArgs e, CancellationToken ct)
+    private async ValueTask OnFileRenamedAsync(TabViewModel tab, RenamedEventArgs e)
     {
         if (!e.FullPath.IsSupported())
         {
             return;
         }
 
-        _thumbnailCache?.Remove(e.FullPath);
-
-        await HandleUpdateAsync(directory, async tab =>
-        {
-            var oldIndex = tab.ImageIterator.CurrentIndex;
-            var currentFile = tab.Model?.FileInfo;
-            var wasCurrentFileDeleted =
-                currentFile?.FullName.AsSpan().Equals(e.FullPath.AsSpan(), StringComparison.OrdinalIgnoreCase) ?? false;
-
-            var files = tab.ImageIterator.Files as List<FileInfo>;
-            if (files != null)
-            {
-                var removeIndex = files.FindIndex(x => x.FullName.AsSpan().Equals(e.FullPath.AsSpan(), StringComparison.OrdinalIgnoreCase));
-                if (removeIndex >= 0)
-                {
-                    files.RemoveAt(removeIndex);
-                    tab.Gallery.GalleryItems.RemoveAt(removeIndex);
-                }
-            }
-            
-            if (wasCurrentFileDeleted && files != null)
-            {
-                if (files.Count == 0)
-                {
-                    // TODO: Switch current view to a StartUpMenu
-                }
-                else
-                {
-                    var isNavigatingBackwards = Settings.Navigation.IsNavigatingBackwardsWhenDeleting;
-                    var targetIndex = isNavigatingBackwards ? oldIndex - 1 : oldIndex;
-                    targetIndex = Math.Clamp(targetIndex, 0, files.Count - 1);
-                    await tab.ImageIterator.IterateToIndexAsync(targetIndex, tab.GetTabCancellation());
-                }
-            }
-            else
-            {
-                if (currentFile != null)
-                {
-                    var newIndex = files.FindIndex(x =>
-                        x.FullName.AsSpan().Equals(currentFile.FullName.AsSpan(), StringComparison.OrdinalIgnoreCase));
-                    if (newIndex >= 0)
-                    {
-                        tab.ImageIterator.SetCurrentIndex(newIndex);
-                    }
-                }
-            }
-
-            _cache.Resynchronize(tab.Id, files);
-            tab.UpdateTabTitle();
-        });
-    }
-
-    private async ValueTask OnFileRenamedAsync(string directory, RenamedEventArgs e, CancellationToken ct)
-    {
-        if (!e.FullPath.IsSupported())
-        {
-            return;
-        }
-
-        _thumbnailCache?.Remove(e.OldFullPath);
+        thumbnailCache?.Remove(e.OldFullPath);
 
         var newFileInfo = new FileInfo(e.FullPath);
 
-        await HandleUpdateAsync(directory, async tab =>
+        var currentFile = tab.Model?.FileInfo;
+        var wasCurrentFileRenamed = currentFile?.FullName.AsSpan()
+            .Equals(e.OldFullPath.AsSpan(), StringComparison.OrdinalIgnoreCase) ?? false;
+
+        var files = tab.ImageIterator.Files as List<FileInfo>;
+        var insertionIndex = -1;
+        if (files != null)
         {
-            var currentFile = tab.Model?.FileInfo;
-            var wasCurrentFileRenamed = currentFile?.FullName.AsSpan()
-                .Equals(e.OldFullPath.AsSpan(), StringComparison.OrdinalIgnoreCase) ?? false;
-
-            var files = tab.ImageIterator.Files as List<FileInfo>;
-            var insertionIndex = -1;
-            if (files != null)
+            var removeIndex = files.FindIndex(x => x.FullName.AsSpan().Equals(e.OldFullPath.AsSpan(), StringComparison.OrdinalIgnoreCase));
+            if (removeIndex >= 0)
             {
-                var removeIndex = files.FindIndex(x => x.FullName.AsSpan().Equals(e.OldFullPath.AsSpan(), StringComparison.OrdinalIgnoreCase));
-                if (removeIndex >= 0)
-                {
-                    files.RemoveAt(removeIndex);
-                    tab.Gallery.GalleryItems.RemoveAt(removeIndex);
-                }
-                insertionIndex = FileSortOrder.InsertSorted(files, newFileInfo, _stringComparer);
+                files.RemoveAt(removeIndex);
+                tab.Gallery.GalleryItems.RemoveAt(removeIndex);
             }
+            insertionIndex = FileSortOrder.InsertSorted(files, newFileInfo, _stringComparer);
+        }
 
-            if (insertionIndex >= 0)
+        if (insertionIndex >= 0 && insertionIndex > tab.Gallery.GalleryItems.Count)
+        {
+            var item = new GalleryItemViewModel
             {
-                var item = new GalleryItemViewModel
+                FileInfo = newFileInfo
+            };
+
+            var thumbData = GalleryThumbInfo.GalleryThumbHolder.GetThumbData(newFileInfo);
+            item.FileName.Value = thumbData.FileName;
+            item.FileSize.Value = thumbData.FileSize;
+            item.FileDate.Value = thumbData.FileDate;
+            item.FileLocation.Value = thumbData.FileLocation;
+
+            tab.Gallery.GalleryItems.Insert(insertionIndex, item);
+
+            if (thumbnailLoader != null)
+            {
+                var maxHeight = Math.Max(Settings.Gallery.BottomGalleryItemSize, Settings.Gallery.ExpandedGalleryItemSize);
+                if (maxHeight <= 0)
                 {
-                    FileInfo = newFileInfo
+                    maxHeight = GalleryDefaults.DefaultBottomGalleryHeight;
+                }
+
+                var thumb = await thumbnailLoader.GetThumbnailAsync(newFileInfo, (uint)maxHeight).ConfigureAwait(false);
+                if (thumb != null)
+                {
+                    thumbnailCache?.Add(tab.Id, newFileInfo.FullName, thumb);
+                }
+                item.Image.Value = thumb;
+            }
+        }
+
+        if (wasCurrentFileRenamed)
+        {
+            var currentModel = tab.Model;
+            if (currentModel != null)
+            {
+                var newModel = new ImageModel
+                {
+                    FileInfo = newFileInfo,
+                    Image = currentModel.Image,
+                    ImageType = currentModel.ImageType
                 };
-
-                var thumbData = GalleryThumbInfo.GalleryThumbHolder.GetThumbData(newFileInfo);
-                item.FileName.Value = thumbData.FileName;
-                item.FileSize.Value = thumbData.FileSize;
-                item.FileDate.Value = thumbData.FileDate;
-                item.FileLocation.Value = thumbData.FileLocation;
-
-                tab.Gallery.GalleryItems.Insert(insertionIndex, item);
-
-                if (_thumbnailLoader != null)
-                {
-                    var maxHeight = Math.Max(Settings.Gallery.BottomGalleryItemSize, Settings.Gallery.ExpandedGalleryItemSize);
-                    if (maxHeight <= 0)
-                    {
-                        maxHeight = GalleryDefaults.DefaultBottomGalleryHeight;
-                    }
-
-                    var thumb = await _thumbnailLoader.GetThumbnailAsync(newFileInfo, (uint)maxHeight).ConfigureAwait(false);
-                    if (thumb != null)
-                    {
-                        _thumbnailCache?.Add(tab.Id, newFileInfo.FullName, thumb);
-                    }
-                    item.Image.Value = thumb;
-                }
-            }
-
-            if (wasCurrentFileRenamed)
-            {
-                var currentModel = tab.Model;
-                if (currentModel != null)
-                {
-                    var newModel = new ImageModel
-                    {
-                        FileInfo = newFileInfo,
-                        Image = currentModel.Image,
-                        ImageType = currentModel.ImageType
-                    };
-                    tab.Model = newModel;
-                }
-            }
-
-            var fileToCheck = wasCurrentFileRenamed ? newFileInfo : currentFile;
-
-            if (fileToCheck != null && files != null)
-            {
-                var newIndex = files.FindIndex(x =>
-                    x.FullName.Equals(fileToCheck.FullName, StringComparison.OrdinalIgnoreCase));
-                if (newIndex >= 0)
-                {
-                    tab.ImageIterator.SetCurrentIndex(newIndex);
-                }
-            }
-
-            _cache.Resynchronize(tab.Id, files);
-            tab.UpdateTabTitle();
-        });
-    }
-
-    private async ValueTask HandleUpdateAsync(string directory, Func<TabViewModel, ValueTask> updateAction)
-    {
-        List<TabViewModel> targets = [];
-        lock (_lock)
-        {
-            if (_watchers.TryGetValue(directory, out var entry))
-            {
-                foreach (var wr in entry.Subscribers)
-                {
-                    if (wr.TryGetTarget(out var tab))
-                    {
-                        targets.Add(tab);
-                    }
-                }
+                tab.Model = newModel;
             }
         }
 
-        if (targets.Count == 0)
+        var fileToCheck = wasCurrentFileRenamed ? newFileInfo : currentFile;
+
+        if (fileToCheck != null && files != null)
         {
-            return;
+            var newIndex = files.FindIndex(x =>
+                x.FullName.Equals(fileToCheck.FullName, StringComparison.OrdinalIgnoreCase));
+            if (newIndex >= 0)
+            {
+                tab.ImageIterator.SetCurrentIndex(newIndex);
+            }
         }
 
-        foreach (var tab in targets)
-        {
-            try
-            {
-                await updateAction(tab);
-            }
-            catch (Exception ex)
-            {
-                DebugHelper.LogDebug(nameof(FileWatcherService), nameof(updateAction), ex);
-            }
-        }
+        _cache.Resynchronize(tab.Id, files);
+        tab.UpdateTabTitle();
     }
 
     #region IDispose
