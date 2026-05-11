@@ -89,15 +89,14 @@ public partial class ImageViewer : UserControl
             core.MainWindows.ActiveWindow.CurrentValue);
         ZoomPanControl.Initialize(ZoomPreview);
 
-        if (DataContext is not TabViewModel tab)
-        {
-            return;
-        }
-
         Observable.EveryValueChanged(ZoomPanControl, zoom => zoom.Scale)
             .Skip(1)
             .Subscribe(zoomLevel =>
             {
+                if (DataContext is not TabViewModel tab)
+                {
+                    return;
+                }
                 var adjustedZoomLevel = Convert.ToInt32(tab.AspectRatio.CurrentValue * (zoomLevel * 100));
                 tab.ZoomLevel.Value = adjustedZoomLevel;;
                 tab.UpdateTabTitle();
@@ -118,6 +117,10 @@ public partial class ImageViewer : UserControl
                 handler => HoverBar.ProgressBar.ClickedOnTrack -= handler)
             .SubscribeAwait(async (x, _) =>
             {
+                if (DataContext is not TabViewModel tab)
+                {
+                    return;
+                }
                 await tab.ImageIterator.SkipToIndexAsync(x, tab.GetTabCancellation()).ConfigureAwait(false);
             }, DebugHelper.LogError(nameof(ImageViewer), nameof(InitializeImageTransformer)), AwaitOperation.Drop)
             .AddTo(ref _disposables);
@@ -130,6 +133,10 @@ public partial class ImageViewer : UserControl
             .Debounce(TimeSpan.FromMilliseconds(25)) // Debounce handles rapid events during drag
             .SubscribeAwait(async (x, _) =>
             {
+                if (DataContext is not TabViewModel tab)
+                {
+                    return;
+                }
                 await tab.ImageIterator.SkipToIndexAsync(x, tab.GetTabCancellation()).ConfigureAwait(false);
             },DebugHelper.LogError(nameof(ImageViewer), nameof(InitializeImageTransformer)), AwaitOperation.Drop)
             .AddTo(ref _disposables);

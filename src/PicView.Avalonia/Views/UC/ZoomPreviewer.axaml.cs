@@ -176,7 +176,7 @@ public partial class ZoomPreviewer : UserControl
 
     public void UpdateVisibility()
     {
-        if (_zoomPanControl == null)
+        if (_zoomPanControl == null || !Settings.Zoom.IsShowingZoomPreviewer)
         {
             SetInvisible();
             return;

@@ -13,7 +13,7 @@ namespace PicView.Core.ViewModels;
 public class SettingsViewModel : IDisposable
 {
     private readonly Stack<NavigationState> _backStack = new();
-    private readonly CompositeDisposable _disposables = new();
+    private DisposableBag _disposables;
     private readonly Stack<NavigationState> _forwardStack = new();
     private NavigationState _currentState;
     private bool _isNavigatingHistory;
@@ -56,30 +56,30 @@ public class SettingsViewModel : IDisposable
         {
             SelectedCategory.Value = category;
             IsOverviewVisible.Value = false;
-        }).AddTo(_disposables);
+        }).AddTo(ref _disposables);
 
-        IsOverviewVisible.Subscribe(_ => OnStateChanged()).AddTo(_disposables);
-        SelectedCategory.Subscribe(_ => OnStateChanged()).AddTo(_disposables);
+        IsOverviewVisible.Subscribe(_ => OnStateChanged()).AddTo(ref _disposables);
+        SelectedCategory.Subscribe(_ => OnStateChanged()).AddTo(ref _disposables);
 
         _currentState = GetCurrentState();
 
-        GoBackCommand = IsBackButtonEnabled.ToReactiveCommand(_ => GoBack()).AddTo(_disposables);
-        GoForwardCommand = IsForwardButtonEnabled.ToReactiveCommand(_ => GoForward()).AddTo(_disposables);
-        GoHomeCommand = IsHome.ToReactiveCommand(_ => GoHome()).AddTo(_disposables);
+        GoBackCommand = IsBackButtonEnabled.ToReactiveCommand(_ => GoBack()).AddTo(ref _disposables);
+        GoForwardCommand = IsForwardButtonEnabled.ToReactiveCommand(_ => GoForward()).AddTo(ref _disposables);
+        GoHomeCommand = IsHome.ToReactiveCommand(_ => GoHome()).AddTo(ref _disposables);
         
         // Navigation Properties
-        IsIncludingSubdirectories.Subscribe(x => Settings.Sorting.IncludeSubDirectories = x).AddTo(_disposables);
-        IsLooping.Subscribe(x => Settings.UIProperties.Looping = x).AddTo(_disposables);
-        IsShowingTaskbarProgress.Subscribe(x => Settings.UIProperties.IsTaskbarProgressEnabled = x).AddTo(_disposables);
-        IsFileHistoryEnabled.Subscribe(x => Settings.Navigation.IsFileHistoryEnabled = x).AddTo(_disposables);
+        IsIncludingSubdirectories.Subscribe(x => Settings.Sorting.IncludeSubDirectories = x).AddTo(ref _disposables);
+        IsLooping.Subscribe(x => Settings.UIProperties.Looping = x).AddTo(ref _disposables);
+        IsShowingTaskbarProgress.Subscribe(x => Settings.UIProperties.IsTaskbarProgressEnabled = x).AddTo(ref _disposables);
+        IsFileHistoryEnabled.Subscribe(x => Settings.Navigation.IsFileHistoryEnabled = x).AddTo(ref _disposables);
         
-        ToggleUsingTouchpadCommand = new ReactiveCommand(_ => IsUsingTouchpad.Value = !IsUsingTouchpad.Value).AddTo(_disposables);
+        ToggleUsingTouchpadCommand = new ReactiveCommand(_ => IsUsingTouchpad.Value = !IsUsingTouchpad.Value).AddTo(ref _disposables);
 
         // Search Initialization
         SearchData = new SettingsSearchData();
         var allSuggestions = SettingsSearchIndex.Build(SearchData);
         
-        ClearSearchCommand = new ReactiveCommand(_ => SearchQuery.Value = string.Empty).AddTo(_disposables);
+        ClearSearchCommand = new ReactiveCommand(_ => SearchQuery.Value = string.Empty).AddTo(ref _disposables);
 
         SearchQuery.Subscribe(query =>
         {
@@ -99,7 +99,7 @@ public class SettingsViewModel : IDisposable
                 Suggestions.Value = [];
             }
 
-        }).AddTo(_disposables);
+        }).AddTo(ref _disposables);
 
         SelectedSuggestion.Subscribe(item =>
         {
@@ -110,7 +110,7 @@ public class SettingsViewModel : IDisposable
 
             SearchQuery.Value = item.Name;
             Suggestions.Value = [];
-        }).AddTo(_disposables);
+        }).AddTo(ref _disposables);
 
         UpdateNavigationProperties();
     }
@@ -298,67 +298,67 @@ public class SettingsViewModel : IDisposable
             {
                 Settings.UIProperties.NavSpeed = x;
                 GetNavSpeed.Value = Math.Round(Settings.UIProperties.NavSpeed, 2);
-            }).AddTo(_disposables);
+            }).AddTo(ref _disposables);
         Observable.EveryValueChanged(this, x => x.ZoomSpeed.CurrentValue)
             .Subscribe(x =>
             {
                 Settings.Zoom.ZoomSpeed = x;
                 GetZoomSpeed.Value = Math.Round(Settings.Zoom.ZoomSpeed, 2);
-            }).AddTo(_disposables);
+            }).AddTo(ref _disposables);
         Observable.EveryValueChanged(this, x => x.SlideshowSpeed.CurrentValue)
             .Subscribe(x =>
             {
                 var roundedValue = Math.Round(x, 2);
                 Settings.UIProperties.SlideShowTimer = roundedValue;
                 GetSlideshowSpeed.Value = roundedValue;
-            }).AddTo(_disposables);
+            }).AddTo(ref _disposables);
 
         Observable.EveryValueChanged(this, x => x.IsShowingPermanentDeletionDialog.CurrentValue)
             .SubscribeAwait(async (x, _) =>
             {
                 Settings.UIProperties.ShowPermanentDeletionConfirmation = x;
                 await SaveSettingsAsync();
-            }).AddTo(_disposables);
+            }).AddTo(ref _disposables);
 
         Observable.EveryValueChanged(this, x => x.IsShowingRecycleDialog.CurrentValue)
             .SubscribeAwait(async (x, _) =>
             {
                 Settings.UIProperties.ShowRecycleConfirmation = x;
                 await SaveSettingsAsync();
-            }).AddTo(_disposables);
+            }).AddTo(ref _disposables);
 
         Observable.EveryValueChanged(this, x => x.IsResettingZoomOnImageChange.CurrentValue)
-            .Subscribe(x => Settings.Zoom.ResetZoomOnChange = x).AddTo(_disposables);
+            .Subscribe(x => Settings.Zoom.ResetZoomOnChange = x).AddTo(ref _disposables);
 
         Observable.EveryValueChanged(this, x => x.IsAvoidingZoomingOut.CurrentValue)
-            .Subscribe(x => Settings.Zoom.AvoidZoomingOut = x).AddTo(_disposables);
+            .Subscribe(x => Settings.Zoom.AvoidZoomingOut = x).AddTo(ref _disposables);
 
         Observable.EveryValueChanged(this, x => x.IsZoomAnimated.CurrentValue)
-            .Subscribe(x => Settings.Zoom.IsZoomAnimated = x).AddTo(_disposables);
+            .Subscribe(x => Settings.Zoom.IsZoomAnimated = x).AddTo(ref _disposables);
 
         Observable.EveryValueChanged(this, x => x.IsShowingZoomPercentagePopup.CurrentValue)
-            .Subscribe(x => Settings.Zoom.IsShowingZoomPercentagePopup = x).AddTo(_disposables);
+            .Subscribe(x => Settings.Zoom.IsShowingZoomPercentagePopup = x).AddTo(ref _disposables);
 
         Observable.EveryValueChanged(this, x => x.IsShowingZoomPreviewer.CurrentValue)
-            .Subscribe(x => Settings.Zoom.IsShowingZoomPreviewer = x).AddTo(_disposables);
+            .Subscribe(x => Settings.Zoom.IsShowingZoomPreviewer = x).AddTo(ref _disposables);
 
         Observable.EveryValueChanged(this, x => x.IsUsingTouchpad.CurrentValue)
-            .Subscribe(x => Settings.Zoom.IsUsingTouchPad = x).AddTo(_disposables);
+            .Subscribe(x => Settings.Zoom.IsUsingTouchPad = x).AddTo(ref _disposables);
 
         Observable.EveryValueChanged(this, x => x.IsStayingCentered.CurrentValue)
-            .Subscribe(x => Settings.WindowProperties.KeepCentered = x).AddTo(_disposables);
+            .Subscribe(x => Settings.WindowProperties.KeepCentered = x).AddTo(ref _disposables);
 
         Observable.EveryValueChanged(this, x => x.IsShowingConfirmationOnEsc.CurrentValue)
-            .Subscribe(x => Settings.UIProperties.ShowConfirmationOnEsc = x).AddTo(_disposables);
+            .Subscribe(x => Settings.UIProperties.ShowConfirmationOnEsc = x).AddTo(ref _disposables);
 
         Observable.EveryValueChanged(this, x => x.IsOpeningInSameWindow.CurrentValue)
-            .Subscribe(x => Settings.UIProperties.OpenInSameWindow = x).AddTo(_disposables);
+            .Subscribe(x => Settings.UIProperties.OpenInSameWindow = x).AddTo(ref _disposables);
 
         Observable.EveryValueChanged(this, x => x.WindowMargin.CurrentValue)
-            .Subscribe(x => Settings.WindowProperties.Margin = x).AddTo(_disposables);
+            .Subscribe(x => Settings.WindowProperties.Margin = x).AddTo(ref _disposables);
 
         Observable.EveryValueChanged(this, x => x.MouseDoubleClickBehaviorIndex.CurrentValue)
-            .Subscribe(x => Settings.UIProperties.DoubleClickBehavior = x).AddTo(_disposables);
+            .Subscribe(x => Settings.UIProperties.DoubleClickBehavior = x).AddTo(ref _disposables);
         
         // General
         Observable.EveryValueChanged(this, x => x.StartUpIndex.CurrentValue)
@@ -366,30 +366,30 @@ public class SettingsViewModel : IDisposable
                  OpenLastFile.Value = x == 1;
                  Settings.StartUp.OpenLastFile = x == 1;
                  await SaveSettingsAsync();
-             }).AddTo(_disposables);
+             }).AddTo(ref _disposables);
              
         Observable.EveryValueChanged(this, x => x.DeletionIndex.CurrentValue)
              .SubscribeAwait(async (x, _) => {
                  IsNavigatingBackwardsWhenDeleting.Value = x == 1;
                  Settings.Navigation.IsNavigatingBackwardsWhenDeleting = x == 1;
                  await SaveSettingsAsync();
-             }).AddTo(_disposables);
+             }).AddTo(ref _disposables);
              
         // Appearance
         Observable.EveryValueChanged(this, x => x.ThemeIndex.CurrentValue)
-            .Subscribe(x => _themeService?.SetTheme(x)).AddTo(_disposables);
+            .Subscribe(x => _themeService?.SetTheme(x)).AddTo(ref _disposables);
             
         SetColorThemeCommand
             .Subscribe(x => {
             ColorThemeIndex.Value = (int)x;
             _themeService?.SetColorTheme((int)x);
-        }).AddTo(_disposables);
+        }).AddTo(ref _disposables);
 
         SetBackgroundCommand
             .Subscribe(x => {
             BackgroundChoice.Value = (int)x;
             _themeService?.SetBackground((int)x);
-        }).AddTo(_disposables);
+        }).AddTo(ref _disposables);
 
         // Image
         Observable.EveryValueChanged(this, x => x.ImageScalingIndex.CurrentValue)
@@ -399,7 +399,7 @@ public class SettingsViewModel : IDisposable
                 Settings.ImageScaling.IsScalingSetToNearestNeighbor = isNearestNeighbor;
                 _imageSettingsService?.TriggerScalingModeUpdate(isNearestNeighbor);
                 await SaveSettingsAsync();
-            }).AddTo(_disposables);
+            }).AddTo(ref _disposables);
             
         // Zoom
         Observable.EveryValueChanged(this, x => x.CtrlZoom.CurrentValue)
@@ -408,7 +408,7 @@ public class SettingsViewModel : IDisposable
                 // Sync MouseWheelBehavior if needed
                 MouseWheelBehavior.Value = x ? 0 : 1;
                 await SaveSettingsAsync();
-            }).AddTo(_disposables);
+            }).AddTo(ref _disposables);
 
         Observable.EveryValueChanged(this, x => x.ScrollDirectionIndex.CurrentValue)
             .SubscribeAwait(async (x, _) => {
@@ -416,7 +416,7 @@ public class SettingsViewModel : IDisposable
                  HorizontalReverseScroll.Value = reverse;
                  Settings.Zoom.HorizontalReverseScroll = reverse;
                  await SaveSettingsAsync();
-             }).AddTo(_disposables);
+             }).AddTo(ref _disposables);
              
         // Mouse
         Observable.EveryValueChanged(this, x => x.MouseSideButtonBehavior.CurrentValue)
@@ -437,7 +437,7 @@ public class SettingsViewModel : IDisposable
                         break;
                 }
                 await SaveSettingsAsync();
-            }).AddTo(_disposables);
+            }).AddTo(ref _disposables);
 
         Observable.EveryValueChanged(this, x => x.MouseWheelBehavior.CurrentValue)
             .SubscribeAwait(async (x, _) => {
@@ -445,7 +445,7 @@ public class SettingsViewModel : IDisposable
                 Settings.Zoom.CtrlZoom = ctrlZoom;
                 if (CtrlZoom.Value != ctrlZoom) CtrlZoom.Value = ctrlZoom;
                 await SaveSettingsAsync();
-            }).AddTo(_disposables);
+            }).AddTo(ref _disposables);
             
         // Language
         Observable.EveryValueChanged(this, x => x.UserLanguage.CurrentValue)
@@ -458,12 +458,12 @@ public class SettingsViewModel : IDisposable
                         await _languageService.UpdateLanguageAsync(x);
                     }
                 }
-            }).AddTo(_disposables);
+            }).AddTo(ref _disposables);
         
         GalleryMouseWheelBehavior
             .Subscribe(x => {
                 Settings.Gallery.GalleryMouseWheelBehavior = (GalleryMouseWheel)x;
-            }).AddTo(_disposables);
+            }).AddTo(ref _disposables);
     }
     
     private readonly record struct NavigationState(bool IsOverview, SettingsCategory Category);

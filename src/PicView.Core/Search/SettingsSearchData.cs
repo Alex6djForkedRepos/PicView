@@ -41,6 +41,7 @@ public class SettingsSearchData
     public string ZoomOutSearchTags { get; }
     public string ZoomAnimationSearchTags { get; }
     public string ZoomPopupSearchTags { get; }
+    public string ZoomPreviewerSearchTags { get; }
     public string ZoomSpeedSearchTags { get; }
     public string MouseDoubleClickSearchTags { get; }
     public string MouseNavigationSearchTags { get; }
@@ -388,8 +389,17 @@ public class SettingsSearchData
         sb.Append(space);
         sb.Append(TranslationManager.Translation.ShowZoomPercentagePopup);
         sb.Append(space);
-        sb.Append("Percentage Popup");
+        sb.Append("Percentage Popup pop-up");
         ZoomPopupSearchTags = sb.ToString();
+        
+        sb.Clear();
+        
+        sb.Append(TranslationManager.Translation.Zoom);
+        sb.Append(space);
+        sb.Append(TranslationManager.Translation.ShowZoomPreviewer);
+        sb.Append(space);
+        sb.Append("Popup pop-up");
+        ZoomPreviewerSearchTags = sb.ToString();
         
         sb.Clear();
         
