@@ -293,6 +293,332 @@
             </MenuItem>
         </ContextMenu>
 
+        <ContextMenu x:Key="SettingsContextMenu">
+            <!--  Change background  -->
+            <MenuItem
+                Command="{CompiledBinding ChangeBackgroundCommand}"
+                Header="{CompiledBinding Translation.ChangeBackground.Value,
+                                         Mode=OneWay}"
+                StaysOpenOnClick="True">
+                <MenuItem.Icon>
+                    <Image
+                        Width="12"
+                        Height="12"
+                        Source="{StaticResource PaletteImage}" />
+                </MenuItem.Icon>
+            </MenuItem>
+
+            <Separator />
+
+            <!--  Toggle Subdirectories  -->
+            <MenuItem
+                Command="{CompiledBinding ToggleSubdirectoriesCommand}"
+                Header="{CompiledBinding Translation.SearchSubdirectory.Value,
+                                         Mode=OneWay}"
+                IsChecked="{Binding GlobalSettings.IsIncludingSubdirectories.Value}"
+                ToggleType="CheckBox" />
+
+            <Separator />
+
+            <!--  Toggle looping  -->
+            <MenuItem
+                Command="{CompiledBinding ToggleLoopingCommand}"
+                Header="{CompiledBinding Translation.IsLooping.Value,
+                                         Mode=OneWay}"
+                IsChecked="{Binding GlobalSettings.IsLooping.Value}"
+                ToggleType="CheckBox" />
+
+            <Separator />
+
+            <!--  Toggle scrolling  -->
+            <MenuItem
+                Header="{CompiledBinding Translation.IsScrolling.Value,
+                                         Mode=OneWay}"
+                IsChecked="{CompiledBinding IsScrollingEnabled.Value}"
+                ToggleType="CheckBox" />
+
+            <!--  Toggle stretching  -->
+            <MenuItem
+                Command="{CompiledBinding StretchCommand}"
+                Header="{CompiledBinding Translation.Stretch.Value,
+                                         Mode=OneWay}"
+                IsChecked="{CompiledBinding IsStretched.Value}"
+                ToggleType="CheckBox" />
+
+            <Separator />
+
+            <!--  Toggle topmost  -->
+            <MenuItem
+                Command="{CompiledBinding SetTopMostCommand}"
+                Header="{CompiledBinding Translation.StayTopMost.Value,
+                                         Mode=OneWay}"
+                IsChecked="{CompiledBinding IsTopMost.Value}"
+                ToggleType="CheckBox" />
+
+            <!--  Toggle auto fit  -->
+            <MenuItem
+                Command="{CompiledBinding AutoFitWindowCommand}"
+                Header="{CompiledBinding Translation.AutoFitWindow.Value,
+                                         Mode=OneWay}"
+                IsChecked="{CompiledBinding IsAutoFit.Value}"
+                ToggleType="CheckBox" />
+
+            <!--  Toggle ctrl zoom  -->
+            <MenuItem Command="{CompiledBinding ChangeCtrlZoomCommand}" Header="{CompiledBinding Translation.IsCtrlToZoom.Value, Mode=OneWay}">
+                <!-- <MenuItem.Icon> -->
+                <!--  <Image  -->
+                <!--  Height="12"  -->
+                <!--  Source="{CompiledBinding MainWindow.ChangeCtrlZoomImage.Value}"  -->
+                <!--  Width="12" />  -->
+                <!-- </MenuItem.Icon> -->
+            </MenuItem>
+
+            <Separator />
+
+            <!--  Show about window  -->
+            <MenuItem Command="{CompiledBinding AboutWindowCommand}" Header="{CompiledBinding Translation.About.Value, Mode=OneWay}">
+                <MenuItem.Icon>
+                    <Image
+                        Width="12"
+                        Height="12"
+                        Source="{StaticResource AboutImage}" />
+                </MenuItem.Icon>
+            </MenuItem>
+
+            <!--  Show Settings window  -->
+            <MenuItem Command="{CompiledBinding SettingsWindowCommand}" Header="{CompiledBinding Translation.ShowAllSettingsWindow.Value, Mode=OneWay}">
+                <MenuItem.Icon>
+                    <Image Classes="CogImage" />
+                </MenuItem.Icon>
+            </MenuItem>
+
+            <Separator />
+
+            <!--  Toggle UI  -->
+            <MenuItem Command="{Binding ToggleInterfaceCommand}" Header="{Binding Translation.IsShowingUI.Value, Mode=OneWay}">
+                <MenuItem.Icon>
+                    <Image
+                        Width="12"
+                        Height="12"
+                        Source="{StaticResource EyeOffImage}" />
+                </MenuItem.Icon>
+            </MenuItem>
+
+            <!--  Toggle bottom bar  -->
+            <MenuItem Command="{Binding ToggleBottomToolbarCommand}" Header="{Binding Translation.ShowBottomToolbar.Value, Mode=OneWay}">
+                <MenuItem.Icon>
+                    <Image
+                        Width="12"
+                        Height="12"
+                        Source="{StaticResource Panel-Bottom}" />
+                </MenuItem.Icon>
+            </MenuItem>
+        </ContextMenu>
+
+        <ContextMenu x:Key="OpenMenu">
+            <!--  Open  -->
+            <MenuItem
+                MinWidth="180"
+                Command="{CompiledBinding OpenCommand}"
+                Header="{CompiledBinding Translation.Open.Value,
+                                         Mode=OneWay}">
+                <MenuItem.Icon>
+                    <Image Classes="OpenImage" />
+                </MenuItem.Icon>
+            </MenuItem>
+
+            <!--  Save  -->
+            <MenuItem
+                Command="{CompiledBinding SaveCommand}"
+                Header="{CompiledBinding Translation.Save.Value,
+                                         Mode=OneWay}"
+                IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.Image.Value,
+                                            Converter={x:Static ObjectConverters.IsNotNull},
+                                            FallbackValue=False}">
+                <MenuItem.Icon>
+                    <Path Classes="SavePath" />
+                </MenuItem.Icon>
+            </MenuItem>
+
+            <!--  Save as  -->
+            <MenuItem
+                Command="{CompiledBinding SaveAsCommand}"
+                Header="{CompiledBinding Translation.SaveAs.Value,
+                                         Mode=OneWay}"
+                IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.Image.Value,
+                                            Converter={x:Static ObjectConverters.IsNotNull}}">
+                <MenuItem.Icon>
+                    <Path Classes="SavePath" />
+                </MenuItem.Icon>
+            </MenuItem>
+
+            <!--  Print  -->
+            <MenuItem
+                x:Name="PrintMenuItem"
+                Command="{CompiledBinding PrintCommand}"
+                Header="{CompiledBinding Translation.Print.Value,
+                                         Mode=OneWay}"
+                IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.Image.Value,
+                                            Converter={x:Static ObjectConverters.IsNotNull},
+                                            FallbackValue=False,
+                                            Mode=OneWay}">
+                <MenuItem.Icon>
+                    <Path Classes="PrintPath" />
+                </MenuItem.Icon>
+            </MenuItem>
+
+            <!--  Open with  -->
+            <MenuItem
+                x:Name="OpenWithMenuItem"
+                Command="{CompiledBinding OpenWithCommand}"
+                Header="{CompiledBinding Translation.OpenWith.Value,
+                                         Mode=OneWay}"
+                IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.FileInfo.Value,
+                                            Converter={x:Static ObjectConverters.IsNotNull},
+                                            FallbackValue=False}">
+                <MenuItem.Icon>
+                    <Image
+                        Width="12"
+                        Height="12"
+                        Source="{StaticResource OpenExternalImage}" />
+                </MenuItem.Icon>
+            </MenuItem>
+
+            <!--  Locate on disk  -->
+            <MenuItem
+                Command="{CompiledBinding OpenInExplorerCommand}"
+                Header="{CompiledBinding Translation.ShowInFolder.Value,
+                                         Mode=OneWay}"
+                IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.FileInfo.Value,
+                                            Converter={x:Static ObjectConverters.IsNotNull},
+                                            FallbackValue=False}">
+                <MenuItem.Icon>
+                    <Path Classes="ShowInFolderPath" />
+                </MenuItem.Icon>
+            </MenuItem>
+
+            <Separator />
+
+            <!--  Delete file  -->
+            <MenuItem
+                x:Name="DeleteFileMenuItem"
+                Command="{CompiledBinding DeleteFileCommand}"
+                Header="{CompiledBinding Translation.DeleteFile.Value,
+                                         Mode=OneWay}"
+                IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.FileInfo.Value,
+                                            Converter={x:Static ObjectConverters.IsNotNull},
+                                            FallbackValue=False,
+                                            Mode=OneWay}">
+                <MenuItem.Icon>
+                    <Path Classes="RecyclePath" />
+                </MenuItem.Icon>
+            </MenuItem>
+
+            <Separator />
+
+            <!--  Paste  -->
+            <MenuItem Command="{CompiledBinding PasteCommand}" Header="{CompiledBinding Translation.Paste.Value, Mode=OneWay}">
+                <MenuItem.Icon>
+                    <Path Classes="PastePath" />
+                </MenuItem.Icon>
+            </MenuItem>
+
+            <!--  Copy  -->
+            <MenuItem Header="{CompiledBinding Translation.Copy.Value, Mode=OneWay}">
+                <MenuItem.Icon>
+                    <Path Classes="CopyPath" />
+                </MenuItem.Icon>
+
+                <!--  Copy image  -->
+                <MenuItem Header="{CompiledBinding Translation.CopyImage.Value, Mode=OneWay}" IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.Image.Value, Converter={x:Static ObjectConverters.IsNotNull}, FallbackValue=False, Mode=OneWay}">
+                    <MenuItem.Icon>
+                        <Path Classes="CopyPath" />
+                    </MenuItem.Icon>
+                </MenuItem>
+
+                <!--  Copy file path  -->
+                <MenuItem
+                    Command="{CompiledBinding CopyFileCommand}"
+                    Header="{Binding Translation.FileCopyPath.Value, Mode=OneWay}"
+                    IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.FileInfo.Value,
+                                                Converter={x:Static ObjectConverters.IsNotNull},
+                                                FallbackValue=False,
+                                                Mode=OneWay}">
+                    <MenuItem.Icon>
+                        <Path Classes="CopyPath" />
+                    </MenuItem.Icon>
+                </MenuItem>
+
+                <!--  Copy base64  -->
+                <MenuItem Command="{CompiledBinding CopyBase64Command}" IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.Image.Value, Converter={x:Static ObjectConverters.IsNotNull}, FallbackValue=False, Mode=OneWay}">
+                    <MenuItem.Header>
+                        <TextBlock>
+                            <Run Text="{CompiledBinding Translation.Copy.Value, Mode=OneWay}" />
+                            <Run Text=" base64" />
+                        </TextBlock>
+                    </MenuItem.Header>
+                    <MenuItem.Icon>
+                        <Path Classes="CopyPath" />
+                    </MenuItem.Icon>
+                </MenuItem>
+
+                <Separator />
+
+                <!--  Duplicate file  -->
+                <MenuItem
+                    Command="{CompiledBinding DuplicateFileCommand}"
+                    Header="{CompiledBinding Translation.DuplicateFile.Value,
+                                             Mode=OneWay}"
+                    IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.FileInfo.Value,
+                                                Converter={x:Static ObjectConverters.IsNotNull},
+                                                FallbackValue=False,
+                                                Mode=OneWay}">
+                    <MenuItem.Icon>
+                        <Path Classes="DuplicatePath" />
+                    </MenuItem.Icon>
+                </MenuItem>
+
+            </MenuItem>
+
+            <!--  Copy file  -->
+            <MenuItem
+                Command="{CompiledBinding CopyFileCommand}"
+                Header="{CompiledBinding Translation.CopyFile.Value,
+                                         Mode=OneWay}"
+                IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.FileInfo.Value,
+                                            Converter={x:Static ObjectConverters.IsNotNull},
+                                            FallbackValue=False,
+                                            Mode=OneWay}">
+                <MenuItem.Icon>
+                    <Path Classes="CopyPath" />
+                </MenuItem.Icon>
+            </MenuItem>
+
+            <Separator />
+
+            <!--  Toggle bottom bar  -->
+            <MenuItem Command="{Binding ToggleBottomToolbarCommand}" Header="{Binding Translation.ShowBottomToolbar.Value, Mode=OneWay}">
+                <MenuItem.Icon>
+                    <Image
+                        Width="12"
+                        Height="12"
+                        Source="{StaticResource Panel-Bottom}" />
+                </MenuItem.Icon>
+            </MenuItem>
+        </ContextMenu>
+
+        <ContextMenu x:Key="BottomMenu">
+            <!--  Toggle bottom bar  -->
+            <MenuItem Command="{Binding ToggleBottomToolbarCommand}" Header="{Binding Translation.ShowBottomToolbar.Value, Mode=OneWay}">
+                <MenuItem.Icon>
+                    <Image
+                        Width="12"
+                        Height="12"
+                        Source="{StaticResource Panel-Bottom}" />
+                </MenuItem.Icon>
+            </MenuItem>
+        </ContextMenu>
+
     </UserControl.Resources>
 
     <Border
@@ -301,7 +627,8 @@
                                  Mode=OneWay}"
         Background="{DynamicResource MenuBackgroundColor}"
         BorderBrush="{DynamicResource WindowBorderColor}"
-        BorderThickness="0,1,0,0">
+        BorderThickness="0,1,0,0"
+        ContextMenu="{StaticResource BottomMenu}">
         <Panel>
             <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
 
@@ -314,6 +641,7 @@
                     BorderThickness="1,0,1,0"
                     Classes="noBorderHover"
                     Command="{CompiledBinding OpenCommand}"
+                    ContextMenu="{StaticResource OpenMenu}"
                     Foreground="{DynamicResource MainTextColor}"
                     Icon="{StaticResource OpenFolderImage}"
                     IconHeight="17"
@@ -331,6 +659,7 @@
                     BorderThickness="0,0,1,0"
                     Classes="noBorderHover"
                     Command="{CompiledBinding ZoomOutCommand}"
+                    ContextMenu="{StaticResource RotationContextMenu}"
                     Icon="{StaticResource ZoomOutImage}"
                     IconHeight="16"
                     IconWidth="18"
@@ -351,6 +680,7 @@
                     BorderThickness="0,0,1,0"
                     Classes="noBorderHover"
                     Command="{CompiledBinding ZoomInCommand}"
+                    ContextMenu="{StaticResource RotationContextMenu}"
                     Icon="{StaticResource ZoomImage}"
                     IconHeight="16"
                     IconWidth="18"
@@ -371,6 +701,7 @@
                     BorderThickness="0,0,1,0"
                     Classes="noBorderHover"
                     Command="{CompiledBinding ResetZoomAndRotationsCommand}"
+                    ContextMenu="{StaticResource RotationContextMenu}"
                     Icon="{StaticResource RefreshCcwOff}"
                     IconHeight="17"
                     IconWidth="17"
@@ -506,6 +837,7 @@
                     BorderThickness="0,0,1,0"
                     Classes="noBorderHover"
                     Command="{CompiledBinding SettingsWindowCommand}"
+                    ContextMenu="{StaticResource SettingsContextMenu}"
                     Foreground="{DynamicResource MainTextColor}"
                     Icon="{StaticResource CogImage}"
                     IconHeight="18"
