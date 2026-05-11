@@ -859,7 +859,7 @@
                 Fill="{DynamicResource MainTextColor}"
                 IsVisible="{Binding !IsAutoFit.Value}"
                 Stretch="Fill"
-                Stroke="{DynamicResource MainBackgroundColor}"
+                Stroke="{DynamicResource MainBorderColor}"
                 StrokeThickness="1" />
         </Panel>
     </Border>
