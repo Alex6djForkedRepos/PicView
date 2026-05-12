@@ -347,7 +347,7 @@ public static class PolishUnitTest
         Assert.Equal(TranslationManager.Translation.StayCentered, "Pozostaw okno wyśrodkowane");
         Assert.Equal(TranslationManager.Translation.StayTopMost, "Pozostań ponad innymi oknami");
         Assert.Equal(TranslationManager.Translation.Stretch, "Rozciągnij");
-        Assert.Equal(TranslationManager.Translation.StretchImage, "Rozciągnij obraz");
+        Assert.Equal(TranslationManager.Translation.ZoomToFit, "Powiększ do rozmiaru");
         Assert.Equal(TranslationManager.Translation.StrobeReturnLightDetected, "Wykryto światło powrotne");
         Assert.Equal(TranslationManager.Translation.StrobeReturnLightNotDetected, "Nie wykryto światła powrotnego");
         Assert.Equal(TranslationManager.Translation.Subject, "Temat");

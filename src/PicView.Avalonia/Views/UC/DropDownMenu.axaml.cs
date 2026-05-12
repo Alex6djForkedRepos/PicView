@@ -194,8 +194,8 @@ public partial class DropDownMenu : AnimatedMenu
         ScrollButton.Classes.Remove("altHover");
         ScrollButton.Classes.Add("hover");
         
-        StretchButton.Classes.Remove("altHover");
-        StretchButton.Classes.Add("hover");
+        ZoomToFitButton.Classes.Remove("altHover");
+        ZoomToFitButton.Classes.Add("hover");
         
         SideBySideButton.Classes.Remove("altHover");
         SideBySideButton.Classes.Add("hover");

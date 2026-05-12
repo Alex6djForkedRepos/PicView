@@ -343,7 +343,7 @@ public static class EnglishUnitTest
         Assert.Equal(TranslationManager.Translation.StayCentered, "Keep window centered");
         Assert.Equal(TranslationManager.Translation.StayTopMost, "Stay on top of other windows");
         Assert.Equal(TranslationManager.Translation.Stretch, "Stretch");
-        Assert.Equal(TranslationManager.Translation.StretchImage, "Stretch image");
+        Assert.Equal(TranslationManager.Translation.ZoomToFit, "Zoom to fit");
         Assert.Equal(TranslationManager.Translation.StrobeReturnLightDetected, "Strobe return light detected");
         Assert.Equal(TranslationManager.Translation.StrobeReturnLightNotDetected, "Strobe return light not detected");
         Assert.Equal(TranslationManager.Translation.Subject, "Subject");

@@ -346,7 +346,7 @@ public static class DanishUnitTest
         Assert.Equal(TranslationManager.Translation.StayCentered, "Hold vinduet centreret");
         Assert.Equal(TranslationManager.Translation.StayTopMost, "Hold vinduet øverst");
         Assert.Equal(TranslationManager.Translation.Stretch, "Stræk");
-        Assert.Equal(TranslationManager.Translation.StretchImage, "Stræk billedet");
+        Assert.Equal(TranslationManager.Translation.ZoomToFit, "Zoom for at tilpasse");
         Assert.Equal(TranslationManager.Translation.StrobeReturnLightDetected, "Strob returneringslys genkendt");
         Assert.Equal(TranslationManager.Translation.StrobeReturnLightNotDetected, "returneringslys ikke genkendt");
         Assert.Equal(TranslationManager.Translation.Subject, "Emne");

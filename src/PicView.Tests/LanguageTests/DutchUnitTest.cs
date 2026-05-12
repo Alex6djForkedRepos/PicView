@@ -350,7 +350,7 @@ public static class DutchUnitTest
         Assert.Equal(TranslationManager.Translation.StayCentered, "Blijf gecentreerd");
         Assert.Equal(TranslationManager.Translation.StayTopMost, "Blijf boven andere vensters");
         Assert.Equal(TranslationManager.Translation.Stretch, "Rekken");
-        Assert.Equal(TranslationManager.Translation.StretchImage, "Afbeelding rekken");
+        Assert.Equal(TranslationManager.Translation.ZoomToFit, "Zoom om te passen");
         Assert.Equal(TranslationManager.Translation.StrobeReturnLightDetected, "Strobe teruggekeerd licht gedetecteerd");
         Assert.Equal(TranslationManager.Translation.StrobeReturnLightNotDetected,
             "Strobe teruggekeerd licht niet gedetecteerd");

@@ -351,7 +351,7 @@ public class SpanishUnitTest
         Assert.Equal(TranslationManager.Translation.StayCentered, "Mantener ventana centrada");
         Assert.Equal(TranslationManager.Translation.StayTopMost, "Mostrar sobre otras ventanas");
         Assert.Equal(TranslationManager.Translation.Stretch, "Estirar");
-        Assert.Equal(TranslationManager.Translation.StretchImage, "Estirar imagen");
+        Assert.Equal(TranslationManager.Translation.ZoomToFit, "Zoom para ajustar");
         Assert.Equal(TranslationManager.Translation.StrobeReturnLightDetected, "Luz de retorno de flash detectada");
         Assert.Equal(TranslationManager.Translation.StrobeReturnLightNotDetected,
             "Luz de retorno de flash no detectada");

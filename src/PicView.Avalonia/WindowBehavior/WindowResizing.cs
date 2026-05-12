@@ -155,7 +155,7 @@ public static class WindowResizing
 
     public static void SetSize(ImageSize size, WindowResizeReason reason, MainWindowViewModel vm)
     {
-        vm.WindowTabs.ActiveTab.CurrentValue.AspectRatio.Value = size.AspectRatio;
+        vm.WindowTabs.ActiveTab.CurrentValue.InitialZoom.Value = size.InitialZoom;
         vm.ScrollViewerWidth.Value = size.ScrollViewerWidth;
         vm.ScrollViewerHeight.Value = size.ScrollViewerHeight;
         var rotationAngle = vm.WindowTabs.ActiveTab.CurrentValue.RotationAngle.CurrentValue;

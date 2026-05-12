@@ -156,7 +156,7 @@ public class FunctionsMapper2(MainWindowViewModel vm, Window window) : IFunction
             "Crop" => Crop,
             "Flip" => Flip,
             "OptimizeImage" => OptimizeImage,
-            "Stretch" => Stretch,
+            "Stretch" => ZoomToFit,
 
             // Set stars
             "Set0Star" => Set0Star,
@@ -619,10 +619,9 @@ public class FunctionsMapper2(MainWindowViewModel vm, Window window) : IFunction
     #region Image Scaling and Window Behavior
     
     /// <inheritdoc cref="WindowFunctions.Stretch(MainViewModel)" />
-    public async ValueTask Stretch()
+    public async ValueTask ZoomToFit()
     {
-        // await WindowFunctions.Stretch(vm).ConfigureAwait(false);
-        return;
+        await WindowFunctions.Stretch(vm);
     }
     
     /// <inheritdoc cref="WindowFunctions.ToggleAutoFit(MainViewModel)" />

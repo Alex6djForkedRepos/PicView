@@ -422,7 +422,6 @@ public class LanguageModel
     public string? StayCentered { get; set; }
     public string? StayTopMost { get; set; }
     public string? Stretch { get; set; }
-    public string? StretchImage { get; set; }
     public string? StrobeReturnLightDetected { get; set; }
     public string? StrobeReturnLightNotDetected { get; set; }
     public string? Subject { get; set; }
@@ -476,5 +475,7 @@ public class LanguageModel
     public string? Zoom { get; set; }
     public string? ZoomIn { get; set; }
     public string? ZoomOut { get; set; }
+    public string? ZoomToFit { get; set; }
+    
     #endregion
 }

@@ -76,7 +76,7 @@ public class MainWindowViewModel : IDisposable
     
     public BindableReactiveProperty<bool> IsScrollingEnabled { get; } = new(Settings.Zoom.ScrollEnabled);
 
-    public BindableReactiveProperty<bool> IsStretched { get; } = new(Settings.ImageScaling.StretchImage);
+    public BindableReactiveProperty<bool> IsZoomedToFit { get; } = new(Settings.ImageScaling.ZoomToFit);
     
     public BindableReactiveProperty<bool> IsTopMost { get; } = new(Settings.WindowProperties.TopMost);
     
@@ -256,8 +256,8 @@ public class MainWindowViewModel : IDisposable
 
     #region Window State
 
-    public ReactiveCommand StretchCommand { get; }
-    private async ValueTask Stretch(Unit unit, CancellationToken cancellationToken) { if (Mapper is null) return; await Mapper.Stretch(); }
+    public ReactiveCommand ZoomToFitCommand { get; }
+    private async ValueTask ZoomToFit(Unit unit, CancellationToken cancellationToken) { if (Mapper is null) return; await Mapper.ZoomToFit(); }
 
     public ReactiveCommand AutoFitWindowCommand { get; }
     private async ValueTask AutoFitWindow(Unit unit, CancellationToken cancellationToken) { if (Mapper is null) return; await Mapper.AutoFitWindow(); }
@@ -593,7 +593,7 @@ public class MainWindowViewModel : IDisposable
         SettingsWindowCommand = new ReactiveCommand(SettingsWindow);
 
         // Window State
-        StretchCommand = new ReactiveCommand(Stretch);
+        ZoomToFitCommand = new ReactiveCommand(ZoomToFit);
         AutoFitWindowCommand = new ReactiveCommand(AutoFitWindow);
         NormalWindowCommand = new ReactiveCommand(NormalWindow);
         ToggleFullscreenCommand = new ReactiveCommand(ToggleFullscreen);
@@ -761,7 +761,7 @@ public class MainWindowViewModel : IDisposable
             BatchResizeWindowCommand,
             SettingsWindowCommand,
             CheckForUpdatesCommand,
-            StretchCommand,
+            ZoomToFitCommand,
             AutoFitWindowCommand,
             NormalWindowCommand,
             ToggleFullscreenCommand,
@@ -843,7 +843,7 @@ public class MainWindowViewModel : IDisposable
             IsSideBySide,
             IsFullscreen,
             IsScrollingEnabled,
-            IsStretched
+            IsZoomedToFit
         );
         GC.SuppressFinalize(this);
     }

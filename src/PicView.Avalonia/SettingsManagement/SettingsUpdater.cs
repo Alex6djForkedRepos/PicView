@@ -156,13 +156,13 @@ public static class SettingsUpdater
 
     public static async Task ToggleStretch(MainViewModel vm)
     {
-        if (Settings.ImageScaling.StretchImage)
+        if (Settings.ImageScaling.ZoomToFit)
         {
-            Settings.ImageScaling.StretchImage = false;
+            Settings.ImageScaling.ZoomToFit = false;
         }
         else
         {
-            Settings.ImageScaling.StretchImage = true;
+            Settings.ImageScaling.ZoomToFit = true;
         }
         //await WindowResizing.SetSizeAsync(vm).ConfigureAwait(false);
         await SaveSettingsAsync();

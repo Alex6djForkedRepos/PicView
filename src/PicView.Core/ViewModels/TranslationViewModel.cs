@@ -364,6 +364,7 @@ public class TranslationViewModel
         Zoom.Value = t.Zoom;
         ZoomIn.Value = t.ZoomIn;
         ZoomOut.Value = t.ZoomOut;
+        ZoomToFit.Value = t.ZoomToFit;
     }
 
     public void SubscribeToDynamicTranslationUpdates()
@@ -749,6 +750,7 @@ public class TranslationViewModel
     public BindableReactiveProperty<string?> Zoom { get; } = new();
     public BindableReactiveProperty<string?> ZoomIn { get; } = new();
     public BindableReactiveProperty<string?> ZoomOut { get; } = new();
+    public BindableReactiveProperty<string?> ZoomToFit { get; } = new();
     #endregion strings
 
     #region Dynamic Translation strings

@@ -349,7 +349,7 @@ public static class GermanUnitTest
         Assert.Equal(TranslationManager.Translation.StayCentered, "Fenster zentriert halten");
         Assert.Equal(TranslationManager.Translation.StayTopMost, "Immer im Vordergrund");
         Assert.Equal(TranslationManager.Translation.Stretch, "Strecken");
-        Assert.Equal(TranslationManager.Translation.StretchImage, "Bild strecken");
+        Assert.Equal(TranslationManager.Translation.ZoomToFit, "Zoom anpassen");
         Assert.Equal(TranslationManager.Translation.StrobeReturnLightDetected, "Blitzlicht erkannt");
         Assert.Equal(TranslationManager.Translation.StrobeReturnLightNotDetected, "Blitzlicht nicht erkannt");
         Assert.Equal(TranslationManager.Translation.Subject, "Thema");

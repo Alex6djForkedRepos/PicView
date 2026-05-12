@@ -356,7 +356,7 @@ public static class FrenchUnitTest
         Assert.Equal(TranslationManager.Translation.StayCentered, "Garder la fenêtre centrée");
         Assert.Equal(TranslationManager.Translation.StayTopMost, "Rester au-dessus des autres fenêtres");
         Assert.Equal(TranslationManager.Translation.Stretch, "Étirez");
-        Assert.Equal(TranslationManager.Translation.StretchImage, "Étirer l'image");
+        Assert.Equal(TranslationManager.Translation.ZoomToFit, "Zoom pour adapter");
         Assert.Equal(TranslationManager.Translation.StrobeReturnLightDetected,
             "Lumière de retour du stroboscope détectée");
         Assert.Equal(TranslationManager.Translation.StrobeReturnLightNotDetected,

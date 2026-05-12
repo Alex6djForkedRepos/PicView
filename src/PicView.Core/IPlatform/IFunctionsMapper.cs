@@ -76,7 +76,7 @@ public interface IFunctionsMapper
     ValueTask SettingsWindow();
     
     // Windows operations
-    ValueTask Stretch();
+    ValueTask ZoomToFit();
     ValueTask AutoFitWindow();
     ValueTask NormalWindow();
     ValueTask ToggleFullscreen();

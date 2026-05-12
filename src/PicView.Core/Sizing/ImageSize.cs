@@ -7,4 +7,4 @@ public readonly record struct ImageSize(
     double Height,
     double ScrollViewerWidth,
     double ScrollViewerHeight,
-    double AspectRatio);
+    double InitialZoom);

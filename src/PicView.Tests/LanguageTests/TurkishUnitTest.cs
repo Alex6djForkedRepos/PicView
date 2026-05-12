@@ -346,7 +346,7 @@ public static class TurkishUnitTest
         Assert.Equal(TranslationManager.Translation.StayCentered, "Pencereyi ortada tut");
         Assert.Equal(TranslationManager.Translation.StayTopMost, "Diğer pencerelerin üstünde kal");
         Assert.Equal(TranslationManager.Translation.Stretch, "Esneme");
-        Assert.Equal(TranslationManager.Translation.StretchImage, "Resmi esnet");
+        Assert.Equal(TranslationManager.Translation.ZoomToFit, "Pencereye sığdır");
         Assert.Equal(TranslationManager.Translation.StrobeReturnLightDetected, "Strob ışık geri dönüşü algılandı");
         Assert.Equal(TranslationManager.Translation.StrobeReturnLightNotDetected, "Strob ışık geri dönüşü algılanmadı");
         Assert.Equal(TranslationManager.Translation.Subject, "Konu");

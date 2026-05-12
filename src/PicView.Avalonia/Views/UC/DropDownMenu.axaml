@@ -604,18 +604,18 @@
                             ToolTip.Tip="{CompiledBinding Translation.ToggleScroll.Value,
                                                           Mode=OneWay}" />
 
-                        <!--  Stretch  -->
+                        <!--  Zoom to fit  -->
                         <customControls:TextToggleButton
-                            x:Name="StretchButton"
+                            x:Name="ZoomToFitButton"
                             Padding="7,0"
                             Background="Transparent"
                             Classes="altHover"
-                            Command="{Binding MainWindows.ActiveWindow.Value.StretchCommand}"
+                            Command="{Binding MainWindows.ActiveWindow.Value.ZoomToFitCommand}"
                             Foreground="{DynamicResource MainTextColor}"
-                            IsChecked="{Binding MainWindows.ActiveWindow.Value.IsStretched.Value, Mode=TwoWay}"
-                            Text="{Binding Translation.Stretch.Value}"
+                            IsChecked="{Binding MainWindows.ActiveWindow.Value.IsZoomedToFit.Value, Mode=TwoWay}"
+                            Text="{Binding Translation.ZoomToFit.Value}"
                             TextMargin="0,0,7,0"
-                            ToolTip.Tip="{CompiledBinding Translation.Stretch.Value,
+                            ToolTip.Tip="{CompiledBinding Translation.ZoomToFit.Value,
                                                           Mode=OneWay}" />
 
                         <!--  Side by side  -->

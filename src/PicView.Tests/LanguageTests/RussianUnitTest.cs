@@ -350,7 +350,7 @@ public static class RussianUnitTest
         Assert.Equal(TranslationManager.Translation.StayCentered, "Зафиксировать окно по центру");
         Assert.Equal(TranslationManager.Translation.StayTopMost, "Оставаться поверх других окон");
         Assert.Equal(TranslationManager.Translation.Stretch, "Растянуть");
-        Assert.Equal(TranslationManager.Translation.StretchImage, "Растянуть изображение");
+        Assert.Equal(TranslationManager.Translation.ZoomToFit, "Масштаб по размеру");
         Assert.Equal(TranslationManager.Translation.StrobeReturnLightDetected, "Вспышка обнаружила возвратный свет");
         Assert.Equal(TranslationManager.Translation.StrobeReturnLightNotDetected,
             "Вспышка не обнаружила возвратного света");

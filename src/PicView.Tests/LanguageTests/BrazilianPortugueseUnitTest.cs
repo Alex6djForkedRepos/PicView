@@ -351,7 +351,7 @@ public static class BrazilianPortugueseUnitTest
         Assert.Equal(TranslationManager.Translation.StayCentered, "Manter a janela centralizada");
         Assert.Equal(TranslationManager.Translation.StayTopMost, "Manter a janela sobreposta");
         Assert.Equal(TranslationManager.Translation.Stretch, "Esticar");
-        Assert.Equal(TranslationManager.Translation.StretchImage, "Esticar imagem");
+        Assert.Equal(TranslationManager.Translation.ZoomToFit, "Zoom para ajustar");
         Assert.Equal(TranslationManager.Translation.StrobeReturnLightDetected,
             "Detecção de luz de retorno estroboscópica");
         Assert.Equal(TranslationManager.Translation.StrobeReturnLightNotDetected,

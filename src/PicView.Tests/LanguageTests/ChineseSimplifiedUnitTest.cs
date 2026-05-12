@@ -335,7 +335,7 @@ public static class ChineseSimplifiedUnitTest
         Assert.Equal(TranslationManager.Translation.StayCentered, "保持窗口居中");
         Assert.Equal(TranslationManager.Translation.StayTopMost, "窗口置顶");
         Assert.Equal(TranslationManager.Translation.Stretch, "拉伸");
-        Assert.Equal(TranslationManager.Translation.StretchImage, "拉伸图像");
+        Assert.Equal(TranslationManager.Translation.ZoomToFit, "缩放以适合");
         Assert.Equal(TranslationManager.Translation.StrobeReturnLightDetected, "检测到闪光灯返回光");
         Assert.Equal(TranslationManager.Translation.StrobeReturnLightNotDetected, "未检测到闪光灯返回光");
         Assert.Equal(TranslationManager.Translation.Subject, "主题");

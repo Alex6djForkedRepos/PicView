@@ -139,7 +139,7 @@ public static class UpdateImage
         {
             imageViewer.GalleryView.GalleryItemsControl.ScrollToCenterOfCurrentItem();
         }
-        tabViewModel.ZoomLevel.Value = Convert.ToInt32(tabViewModel.AspectRatio.CurrentValue * 100);;
+        tabViewModel.ZoomLevel.Value = Convert.ToInt32(tabViewModel.InitialZoom.CurrentValue * 100);;
         tabViewModel.UpdateTabTitle();
     }
 }

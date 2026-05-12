@@ -345,7 +345,7 @@ public static class SwedishUnitTest
         Assert.Equal(TranslationManager.Translation.StayCentered, "Centrera fönstret");
         Assert.Equal(TranslationManager.Translation.StayTopMost, "Lägg fönstret överst");
         Assert.Equal(TranslationManager.Translation.Stretch, "Sträck");
-        Assert.Equal(TranslationManager.Translation.StretchImage, "Sträck bilden");
+        Assert.Equal(TranslationManager.Translation.ZoomToFit, "Zooma för att passa");
         Assert.Equal(TranslationManager.Translation.StrobeReturnLightDetected, "Strob-returljus detekterat");
         Assert.Equal(TranslationManager.Translation.StrobeReturnLightNotDetected, "Strob-returljus inte detekterat");
         Assert.Equal(TranslationManager.Translation.Subject, "Ämne");

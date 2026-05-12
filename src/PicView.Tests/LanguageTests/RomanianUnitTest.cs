@@ -349,7 +349,7 @@ public static class RomanianUnitTest
         Assert.Equal(TranslationManager.Translation.StayCentered, "Păstrează fereastra centrată");
         Assert.Equal(TranslationManager.Translation.StayTopMost, "Rămâi deasupra celorlalte ferestre");
         Assert.Equal(TranslationManager.Translation.Stretch, "Întindere");
-        Assert.Equal(TranslationManager.Translation.StretchImage, "Întinde imaginea");
+        Assert.Equal(TranslationManager.Translation.ZoomToFit, "Zoom pentru potrivire");
         Assert.Equal(TranslationManager.Translation.StrobeReturnLightDetected,
             "Lumină de întoarcere a blițului detectată");
         Assert.Equal(TranslationManager.Translation.StrobeReturnLightNotDetected,

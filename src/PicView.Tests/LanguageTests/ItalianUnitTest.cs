@@ -354,7 +354,7 @@ public static class ItalianUnitTest
         Assert.Equal(TranslationManager.Translation.StayCentered, "Mantieni la finestra centrata");
         Assert.Equal(TranslationManager.Translation.StayTopMost, "Rimani in cima alle altre finestre");
         Assert.Equal(TranslationManager.Translation.Stretch, "Allungare");
-        Assert.Equal(TranslationManager.Translation.StretchImage, "Estendi immagine");
+        Assert.Equal(TranslationManager.Translation.ZoomToFit, "Zoom per adattare");
         Assert.Equal(TranslationManager.Translation.StrobeReturnLightDetected, "Luce di ritorno dello strobo rilevata");
         Assert.Equal(TranslationManager.Translation.StrobeReturnLightNotDetected,
             "Luce di ritorno dello strobo non rilevata");

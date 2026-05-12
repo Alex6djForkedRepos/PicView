@@ -337,12 +337,12 @@
                 IsChecked="{CompiledBinding IsScrollingEnabled.Value}"
                 ToggleType="CheckBox" />
 
-            <!--  Toggle stretching  -->
+            <!--  Zoom to fit  -->
             <MenuItem
-                Command="{CompiledBinding StretchCommand}"
-                Header="{CompiledBinding Translation.Stretch.Value,
+                Command="{CompiledBinding ZoomToFitCommand}"
+                Header="{CompiledBinding Translation.ZoomToFit.Value,
                                          Mode=OneWay}"
-                IsChecked="{CompiledBinding IsStretched.Value}"
+                IsChecked="{CompiledBinding IsZoomedToFit.Value}"
                 ToggleType="CheckBox" />
 
             <Separator />

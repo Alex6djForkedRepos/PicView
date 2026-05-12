@@ -18,7 +18,7 @@ public static class ImageSizeCalculationHelper
         }
         
         double maxAvailableWidth, maxAvailableHeight;
-        if (Settings.ImageScaling.StretchImage)
+        if (Settings.ImageScaling.ZoomToFit)
         {
             var (w, h) = GetMaxAvailableScreenSize(screenSize, uiTopSize, uiBottomSize, galleryWidth, galleryHeight);
             maxAvailableWidth = w;
@@ -62,9 +62,10 @@ public static class ImageSizeCalculationHelper
             windowHeight = calculatedImageHeight + uiBottomSize + uiTopSize + galleryHeight;
 
         }
-        
-        return new ImageSize(windowWidth, windowHeight, calculatedImageWidth, calculatedImageHeight, scrollWidth, scrollHeight,
-            aspectRatio);
+
+        var initialZoom = Settings.WindowProperties.AutoFit ? aspectRatio : 1.0;
+        return new ImageSize(windowWidth, windowHeight, calculatedImageWidth, calculatedImageHeight, 
+            scrollWidth, scrollHeight, initialZoom);
     }
 
     private static double CalculateAspectRatio(double rotationAngle, double maxWidth, double maxHeight, double width,

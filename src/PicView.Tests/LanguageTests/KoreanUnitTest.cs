@@ -336,7 +336,7 @@ public static class KoreanUnitTest
         Assert.Equal(TranslationManager.Translation.StayCentered, "창 중앙 유지");
         Assert.Equal(TranslationManager.Translation.StayTopMost, "다른 창 위에 유지");
         Assert.Equal(TranslationManager.Translation.Stretch, "늘이기");
-        Assert.Equal(TranslationManager.Translation.StretchImage, "이미지 늘리기");
+        Assert.Equal(TranslationManager.Translation.ZoomToFit, "크기에 맞게 확대/축소");
         Assert.Equal(TranslationManager.Translation.StrobeReturnLightDetected, "스트로브 반사 빛 감지됨");
         Assert.Equal(TranslationManager.Translation.StrobeReturnLightNotDetected, "스트로브 반사 빛 감지 안 됨");
         Assert.Equal(TranslationManager.Translation.Subject, "주제");

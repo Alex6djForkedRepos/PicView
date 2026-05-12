@@ -335,7 +335,7 @@ public static class ChineseTraditionalUnitTest
         Assert.Equal(TranslationManager.Translation.StayCentered, "保持視窗居中");
         Assert.Equal(TranslationManager.Translation.StayTopMost, "視窗置頂");
         Assert.Equal(TranslationManager.Translation.Stretch, "拉伸");
-        Assert.Equal(TranslationManager.Translation.StretchImage, "拉伸圖片");
+        Assert.Equal(TranslationManager.Translation.ZoomToFit, "縮放以適合");
         Assert.Equal(TranslationManager.Translation.StrobeReturnLightDetected, "檢測到閃光燈反射");
         Assert.Equal(TranslationManager.Translation.StrobeReturnLightNotDetected, "未檢測到閃光燈反射");
         Assert.Equal(TranslationManager.Translation.Subject, "主題");

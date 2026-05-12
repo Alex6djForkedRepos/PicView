@@ -190,14 +190,14 @@ public static class WindowFunctions
     {
         // TODO: Reimplement or figure out refactor
         
-        if (Settings.ImageScaling.StretchImage)
+        if (Settings.ImageScaling.ZoomToFit)
         {
-            Settings.ImageScaling.StretchImage = false;
+            Settings.ImageScaling.ZoomToFit = false;
             // vm.GlobalSettings.IsStretched.Value = false;
         }
         else
         {
-            Settings.ImageScaling.StretchImage = true;
+            Settings.ImageScaling.ZoomToFit = true;
             // vm.GlobalSettings.IsStretched.Value = true;
         }
 

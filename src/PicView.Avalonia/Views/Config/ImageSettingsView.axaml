@@ -1,76 +1,76 @@
 ﻿<UserControl
     x:Class="PicView.Avalonia.Views.Config.ImageSettingsView"
-    x:DataType="viewModels:CoreViewModel"
     xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:customControls="clr-namespace:PicView.Avalonia.CustomControls"
     xmlns:ui="clr-namespace:PicView.Avalonia.UI"
     xmlns:viewModels="clr-namespace:PicView.Core.ViewModels;assembly=PicView.Core"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    x:DataType="viewModels:CoreViewModel">
 
     <StackPanel HorizontalAlignment="Center" Orientation="Vertical">
 
         <StackPanel Classes="searchHeader">
             <Image
+                Width="18"
                 Height="18"
-                Source="{StaticResource ImageSettingImage}"
-                Width="18" />
+                Source="{StaticResource ImageSettingImage}" />
             <TextBlock
-                Classes="txt bold"
                 Margin="0,20,0,20"
+                Classes="txt bold"
                 Text="{CompiledBinding Translation.Image.Value,
                                        Mode=OneWay}" />
         </StackPanel>
 
-        <Border Classes="searchBorder" ui:SearchProperties.Keywords="{CompiledBinding SettingsViewModel.SearchData.ImageStretchSearchTags}">
+        <Border ui:SearchProperties.Keywords="{CompiledBinding SettingsViewModel.SearchData.ImageStretchSearchTags}" Classes="searchBorder">
             <customControls:TextToggleButton
+                x:Name="StretchToggleButton"
                 Classes="altHover settingsToggleButton"
-                IsChecked="{CompiledBinding MainWindows.ActiveWindow.Value.IsStretched.Value}"
+                IsChecked="{CompiledBinding MainWindows.ActiveWindow.Value.IsZoomedToFit.Value}"
                 Text="{CompiledBinding Translation.Stretch.Value,
                                        Mode=OneWay}"
                 ToolTip.Tip="{CompiledBinding Translation.Stretch.Value,
-                                              Mode=OneWay}"
-                x:Name="StretchToggleButton" />
+                                              Mode=OneWay}" />
         </Border>
 
-        <Border Classes="searchBorder" ui:SearchProperties.Keywords="{CompiledBinding SettingsViewModel.SearchData.ImageScrollingSearchTags}">
+        <Border ui:SearchProperties.Keywords="{CompiledBinding SettingsViewModel.SearchData.ImageScrollingSearchTags}" Classes="searchBorder">
             <customControls:TextToggleButton
+                x:Name="ScrollToggleButton"
                 Classes="altHover settingsToggleButton"
                 Command="{CompiledBinding MainWindows.ActiveWindow.Value.ToggleScrollCommand}"
                 IsChecked="{CompiledBinding MainWindows.ActiveWindow.Value.IsScrollingEnabled.Value}"
                 Text="{CompiledBinding Translation.IsScrolling.Value,
-                                       Mode=OneWay}"
-                x:Name="ScrollToggleButton" />
+                                       Mode=OneWay}" />
         </Border>
 
-        <Border Classes="searchBorder" ui:SearchProperties.Keywords="{CompiledBinding SettingsViewModel.SearchData.ImageSideBySideSearchTags}">
+        <Border ui:SearchProperties.Keywords="{CompiledBinding SettingsViewModel.SearchData.ImageSideBySideSearchTags}" Classes="searchBorder">
             <customControls:TextToggleButton
+                x:Name="SideBySideToggleButton"
                 Classes="altHover settingsToggleButton"
                 Command="{CompiledBinding MainWindows.ActiveWindow.Value.SideBySideCommand}"
                 Text="{CompiledBinding Translation.SideBySide.Value,
-                                       Mode=OneWay}"
-                x:Name="SideBySideToggleButton" />
+                                       Mode=OneWay}" />
 
         </Border>
 
-        <Border Classes="searchBorder" ui:SearchProperties.Keywords="{CompiledBinding SettingsViewModel.SearchData.ImageScalingSearchTags}">
+        <Border ui:SearchProperties.Keywords="{CompiledBinding SettingsViewModel.SearchData.ImageScalingSearchTags}" Classes="searchBorder">
             <StackPanel>
                 <TextBlock
-                    Classes="txt bold"
                     Margin="0,20,0,20"
+                    Classes="txt bold"
                     Text="{CompiledBinding Translation.ImageAliasing.Value,
                                            Mode=OneWay}" />
                 <ComboBox
+                    x:Name="ImageAliasingBox"
+                    Width="300"
+                    Margin="0,6,0,10"
+                    Padding="5,7,0,7"
                     Background="{DynamicResource SecondaryBackgroundColor}"
                     BorderBrush="{DynamicResource MainBorderColor}"
                     BorderThickness="1"
                     FontFamily="/Assets/Fonts/Roboto-Medium.ttf#Roboto"
                     Foreground="{DynamicResource MainTextColor}"
-                    Margin="0,6,0,10"
-                    Padding="5,7,0,7"
                     SelectedIndex="{CompiledBinding SettingsViewModel.ImageScalingIndex.Value,
-                                                    Mode=TwoWay}"
-                    Width="300"
-                    x:Name="ImageAliasingBox">
+                                                    Mode=TwoWay}">
                     <ComboBoxItem Content="{CompiledBinding Translation.HighQuality.Value, Mode=OneWay}" Foreground="{DynamicResource MainTextColor}" />
                     <ComboBoxItem Content="{CompiledBinding Translation.None.Value, Mode=OneWay}" Foreground="{DynamicResource MainTextColor}" />
                 </ComboBox>

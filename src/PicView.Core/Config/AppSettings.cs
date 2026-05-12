@@ -276,9 +276,9 @@ public class Gallery
 public class ImageScaling
 {
     /// <summary>
-    /// Indicates whether images should be stretched to fill the available space.
+    /// Indicates whether images should be stretched to fill the available space (height).
     /// </summary>
-    public bool StretchImage { get; set; } = false;
+    public bool ZoomToFit { get; set; } = false;
     /// Legacy setting, only used for switching between high quality image scaling. Set false for High Quality.
     public bool IsScalingSetToNearestNeighbor { get; set; } = false;
 

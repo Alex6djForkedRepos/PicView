@@ -97,7 +97,7 @@ public partial class ImageViewer : UserControl
                 {
                     return;
                 }
-                var adjustedZoomLevel = Convert.ToInt32(tab.AspectRatio.CurrentValue * (zoomLevel * 100));
+                var adjustedZoomLevel = Convert.ToInt32(tab.InitialZoom.CurrentValue * (zoomLevel * 100));
                 tab.ZoomLevel.Value = adjustedZoomLevel;;
                 tab.UpdateTabTitle();
                 if (Settings.Zoom.IsShowingZoomPercentagePopup)
