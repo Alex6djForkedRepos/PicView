@@ -20,6 +20,7 @@ using PicView.Core.ColorHandling;
 using PicView.Core.FileHistory;
 using PicView.Core.FileSorting;
 using PicView.Core.IPlatform;
+using PicView.Core.Keybindings;
 using PicView.Core.Navigation;
 using PicView.Core.ProcessHandling;
 using PicView.Core.ViewModels;
@@ -1160,16 +1161,24 @@ public class FunctionsMapper2(MainWindowViewModel vm, Window window) : IFunction
         return;
     }
     
-    public async ValueTask ShowSettingsFile()
+    public ValueTask ShowSettingsFile()
     {
-        // await Task.Run(() => vm?.PlatformService?.OpenWith(CurrentSettingsPath)).ConfigureAwait(false);
-        return;
+        if (Application.Current.DataContext is not CoreViewModel core)
+        {
+            return ValueTask.CompletedTask;
+        }
+        core.PlatformService.OpenWith(CurrentSettingsPath);
+        return ValueTask.CompletedTask;
     }
     
-    public async ValueTask ShowKeybindingsFile()
+    public ValueTask ShowKeybindingsFile()
     {
-        // await Task.Run(() => vm?.PlatformService?.OpenWith(KeybindingFunctions.CurrentKeybindingsPath)).ConfigureAwait(false);
-        return;
+        if (Application.Current.DataContext is not CoreViewModel core)
+        {
+            return ValueTask.CompletedTask;
+        }
+        core.PlatformService.OpenWith(KeybindingFunctions.CurrentKeybindingsPath);
+        return ValueTask.CompletedTask;
     }
     
     public ValueTask ShowRecentHistoryFile()
