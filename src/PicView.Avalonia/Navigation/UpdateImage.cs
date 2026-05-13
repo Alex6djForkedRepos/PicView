@@ -1,6 +1,5 @@
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Svg.Skia;
 using ImageMagick;

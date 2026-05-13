@@ -77,7 +77,10 @@ public static class ClipboardFileOperations
         try
         {
             var currentPath = activeTab.Model.FileInfo?.FullName;
-            if (string.IsNullOrWhiteSpace(currentPath)) return;
+            if (string.IsNullOrWhiteSpace(currentPath))
+            {
+                return;
+            }
 
             var duplicatedPath =
                 await FileHelper.DuplicateAndReturnFileNameAsync(currentPath);
@@ -86,11 +89,9 @@ public static class ClipboardFileOperations
             {
                 return;
             }
-
-            var loadTask = vm.WindowTabs.SharedNavigation.LoadFromFileAsync(duplicatedPath, activeTab, activeTab.GetTabCancellation());
-            var animTask = AnimationsHelper.CopyAnimation();
-
-            await Task.WhenAll(animTask, loadTask.AsTask());
+            
+            _ = AnimationsHelper.CopyAnimation();
+            await vm.WindowTabs.SharedNavigation.LoadFromFileAsync(duplicatedPath, activeTab, activeTab.GetTabCancellation());
         }
         catch (Exception ex)
         {
@@ -159,29 +160,6 @@ public static class ClipboardFileOperations
              await Task.WhenAll(animTask, fileTask);
         }
     }
-    
-    /// <summary>
-    /// Copies text (file path) to the clipboard
-    /// </summary>
-    public static async Task<bool> CopyFilePath(string? text, Visual? visual = null)
-    {
-        if (string.IsNullOrWhiteSpace(text))
-        {
-            return false;
-        }
-        
-        var clipboard = ClipboardService.GetClipboard(visual);
-        if (clipboard == null)
-        {
-            return false;
-        }
-
-        return await ClipboardService.ExecuteClipboardOperation(async () =>
-        {
-            await clipboard.SetTextAsync(text);
-            return true;
-        }, showAnimation: true);
-    }
 
     /// <summary>
     /// Cuts a file to the clipboard (copy + mark for deletion on paste)
@@ -196,9 +174,8 @@ public static class ClipboardFileOperations
             return Task.FromResult(false);
         }
 
-        return ClipboardService.ExecuteClipboardOperation(
-            () => Task.Run(() => platformService.CutFile(filePath))
-        );
+        // TODO
+        return Task.FromResult(false);
     }
 
     public static async ValueTask PasteFiles(object files, MainWindowViewModel vm)

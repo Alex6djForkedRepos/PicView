@@ -767,7 +767,7 @@
 
                 <!--  Copy file path  -->
                 <MenuItem
-                    Command="{Binding CopyFileCommand}"
+                    Command="{Binding CopyFilePathCommand}"
                     Header="{Binding Translation.FileCopyPath.Value, Mode=OneWay}"
                     IsEnabled="{Binding WindowTabs.ActiveTab.Value.FileInfo.Value, Converter={x:Static ObjectConverters.IsNotNull}, FallbackValue=False, Mode=OneWay}">
                     <MenuItem.Icon>
