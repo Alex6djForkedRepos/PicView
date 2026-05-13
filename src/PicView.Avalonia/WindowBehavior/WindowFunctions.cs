@@ -177,6 +177,15 @@ public static class WindowFunctions
             CenterWindowOnScreen();
         }
     }
+    
+    public static void SetManualWindow(MainWindowViewModel vm)
+    {
+        if (Application.Current.ApplicationLifetime  is not IClassicDesktopStyleApplicationLifetime desktop)
+        {
+            return;
+        }
+        SetManualWindow(vm, desktop.MainWindow);
+    }
 
     public static void SetManualWindow(MainWindowViewModel vm, Window window)
     {
@@ -184,58 +193,6 @@ public static class WindowFunctions
         window.SizeToContent = SizeToContent.Manual;
         Settings.WindowProperties.AutoFit = false;
         vm.IsAutoFit.Value = false;
-    }
-
-    public static void Minimize()
-    {
-        if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop)
-        {
-            return;
-        }
-
-        if (desktop.Windows.Count > 1)
-        {
-            foreach (var window in desktop.Windows)
-            {
-                if (!window.IsActive)
-                {
-                    continue;
-                }
-
-                window.WindowState = WindowState.Minimized;
-                return;
-            }
-        }
-        else
-        {
-            desktop.Windows[0].WindowState = WindowState.Minimized;
-        }
-    }
-
-    public static void Close()
-    {
-        if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop)
-        {
-            return;
-        }
-
-        if (desktop.Windows.Count > 1)
-        {
-            foreach (var window in desktop.Windows)
-            {
-                if (!window.IsActive)
-                {
-                    continue;
-                }
-
-                window.Close();
-                return;
-            }
-        }
-        else
-        {
-            desktop.Windows[0].Close();
-        }
     }
 
     #endregion

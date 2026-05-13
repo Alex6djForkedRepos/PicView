@@ -4,6 +4,7 @@ using Avalonia.Threading;
 using PicView.Avalonia.Crop;
 using PicView.Avalonia.Navigation;
 using PicView.Avalonia.ViewModels;
+using PicView.Avalonia.Views.UC.PopUps;
 
 namespace PicView.Avalonia.UI;
 
@@ -39,7 +40,7 @@ public static class DialogManager
     {
         if (Settings.UIProperties.ShowConfirmationOnEsc)
         {
-            //UIHelper.GetMainView?.MainGrid.Children.Add(new CloseDialog());
+            UIHelper.GetMainView?.MainPanel.Children.Add(new CloseDialog());
         }
         else
         {

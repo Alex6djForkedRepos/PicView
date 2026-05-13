@@ -624,17 +624,17 @@ public class FunctionsMapper2(MainWindowViewModel vm, Window window) : IFunction
         await ImageStretching.ZoomToFit(vm);
     }
     
-    /// <inheritdoc cref="WindowFunctions.ToggleAutoFit(MainViewModel)" />
+    /// <inheritdoc cref="WindowFunctions.ToggleAutoFit(MainWindowViewModel, Window)" />
     public async ValueTask AutoFitWindow()
     {
         await WindowFunctions.ToggleAutoFit(vm, window);
     }
 
-    /// <inheritdoc cref="WindowFunctions.NormalWindow(MainViewModel)" />
-    public async ValueTask NormalWindow()
+    /// <inheritdoc cref="WindowFunctions.SetManualWindow(MainWindowViewModel)" />
+    public ValueTask NormalWindow()
     {
-        // await WindowFunctions.NormalWindow(vm).ConfigureAwait(false);
-        return;
+        WindowFunctions.SetManualWindow(vm);
+        return ValueTask.CompletedTask;
     }
 
     /// <inheritdoc cref="Interfaces.IPlatformWindowService.ToggleFullscreen" />
@@ -644,18 +644,17 @@ public class FunctionsMapper2(MainWindowViewModel vm, Window window) : IFunction
     // This shouldn't be here, but keep as alias and backwards compatibility.
     public ValueTask Fullscreen() => ToggleFullscreen();
 
-    /// <inheritdoc cref="WindowFunctions.ToggleTopMost(MainViewModel)" />
+    /// <inheritdoc cref="WindowFunctions.ToggleTopMost(MainWindowViewModel)" />
     public async ValueTask SetTopMost()
     {
-        // await WindowFunctions.ToggleTopMost(vm).ConfigureAwait(false);
-        return;
+        await WindowFunctions.ToggleTopMost(vm).ConfigureAwait(false);
     }
 
     #endregion
 
     #region File funnctions
 
-    /// <inheritdoc cref="NavigationManager.LoadPicFromStringAsync(string, MainViewModel)" />
+    /// <inheritdoc cref=" UIHelper.OpenLastFile(MainWindowViewModel)" />
     public async ValueTask OpenLastFile()
     {
         await UIHelper.OpenLastFile(vm);
