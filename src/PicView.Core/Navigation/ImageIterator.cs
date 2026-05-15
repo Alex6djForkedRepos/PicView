@@ -382,6 +382,7 @@ public class ImageIterator(IImageCache cache, IThumbnailCache thumbCache, IThumb
     public void Dispose()
     {
         Cache.Clear(_tab, CurrentIndex, CurrentDirectory, Files);
+        Files = [];
         GC.SuppressFinalize(this);
     }
 

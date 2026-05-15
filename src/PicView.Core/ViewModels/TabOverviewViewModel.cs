@@ -1,5 +1,6 @@
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using PicView.Core.DebugTools;
 using PicView.Core.FileSorting;
 using PicView.Core.Models;
 using PicView.Core.Navigation;
@@ -290,6 +291,8 @@ public class TabOverviewViewModel
     {
         if (SharedNavigation is null)
         {
+            DebugHelper.LogDebug(nameof(TabOverviewViewModel), nameof(LoadFromStringAsync), 
+                $"{nameof(SharedNavigation)} is null, make sure to initialize it before use");
             return false;
         }
         var tab = senderTab ?? ActiveTab.Value;
@@ -304,6 +307,22 @@ public class TabOverviewViewModel
 
         ActiveTab.Value = tab;
         CanActiveTabNavigate.Value = tab.ImageIterator.Files.Count > 1;
+        return true;
+    }
+    
+    public async ValueTask<bool> LoadFromUrlAsync(string source, TabViewModel? senderTab = null)
+    {
+        if (SharedNavigation is null)
+        {
+            return false;
+        }
+        var tab = senderTab ?? ActiveTab.Value;
+        var ct = tab.GetTabCancellation();
+
+        await SharedNavigation.LoadFromUrlAsync(source, tab, ct).ConfigureAwait(false);
+
+        ActiveTab.Value = tab;
+        CanActiveTabNavigate.Value = false;
         return true;
     }
     

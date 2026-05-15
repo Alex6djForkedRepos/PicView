@@ -40,11 +40,7 @@ public static class QuickLoad
             var check = FileTypeResolver.CheckIfLoadableString(source);
             if (check is null)
             {
-                Dispatcher.UIThread.Invoke(() =>
-                {
-                    core.MainWindows.ActiveWindow.Value.WindowTabs.ActiveTab.Value.CurrentView.Value = new StartUpMenu();
-                    core.MainWindows.ActiveWindow.Value.IsLoadingIndicatorShown.Value = false;
-                }, DispatcherPriority.Send);
+                RevertToStartUpMenuOnFail(core);
                 return;
             }
 
@@ -58,10 +54,7 @@ public static class QuickLoad
                     var files = FileListRetriever.RetrieveFiles(new FileInfo(check.Value.Data),core.PlatformService.CompareStrings);
                     if (files.Count == 0)
                     {
-                        Dispatcher.UIThread.Invoke(() =>
-                        {
-                            core.MainWindows.ActiveWindow.Value.WindowTabs.ActiveTab.Value.CurrentView.Value = new StartUpMenu();
-                        }, DispatcherPriority.Send);
+                        RevertToStartUpMenuOnFail(core);
                         return;
                     }
                     await LoadSingleFileAsync(core, files[0], files).ConfigureAwait(false);
@@ -76,11 +69,7 @@ public static class QuickLoad
                 case FileTypeResolver.LoadAbleFileType.Zip:
                     throw new NotImplementedException();
                 default:
-                    Dispatcher.UIThread.Invoke(() =>
-                    {
-                        core.MainWindows.ActiveWindow.Value.WindowTabs.ActiveTab.Value.CurrentView.Value = new StartUpMenu();
-                        core.MainWindows.ActiveWindow.Value.IsLoadingIndicatorShown.Value = false;
-                    }, DispatcherPriority.Send);
+                    RevertToStartUpMenuOnFail(core);
                     break;
             }
             core.MainWindows.ActiveWindow.Value.IsLoadingIndicatorShown.Value = false;
@@ -97,6 +86,16 @@ public static class QuickLoad
         {
             await LoadSingleFileAsync(core, fileInfo).ConfigureAwait(false);
         }
+    }
+
+    private static void RevertToStartUpMenuOnFail(CoreViewModel core)
+    {
+        Dispatcher.UIThread.Invoke(() =>
+        {
+            core.MainWindows.ActiveWindow.Value.WindowTabs.ActiveTab.Value.CurrentView.Value = new StartUpMenu();
+            core.MainWindows.ActiveWindow.Value.IsLoadingIndicatorShown.Value = false;
+        }, DispatcherPriority.Send);
+        TabNavigationInitializer.Initialize(core);
     }
 
     private static async ValueTask LoadUrlImageAsync(CoreViewModel core, string url)
@@ -132,11 +131,7 @@ public static class QuickLoad
         tab.Model = model;
         tab.SourceURL = url;
         tab.SingleImageType = SingleImageType.Url;
-        
-        tab.TabTitle.Value = safeFileName;
-        tab.Title.Value = safeFileName;
-        tab.WindowTitle.Value = safeFileName;
-        tab.TitleTooltip.Value = destPath;
+        tab.UpdateTabTitle();
 
         FileHistoryManager.Add(url);
     }

@@ -133,34 +133,15 @@ public class TabViewModel(Action<uint> closeTab, IFileWatcherService? fileWatche
         var width = Model.PixelWidth;
         var height = Model.PixelHeight;
         
-        if (ImageIterator is null || ImageIterator.CurrentIndex is -1)
+        if (ImageIterator is null || ImageIterator.CurrentIndex is -1 || SingleImageType is not SingleImageType.None)
         {
             if (Image.CurrentValue is null)
             {
                 SetNewTabTitle();
             }
-            else if (width is not 0 && height is not 0)
+            else
             {
-                string nameTitle;
-                switch (SingleImageType)
-                {
-                    case SingleImageType.Clipboard:
-                        Debug.Assert(TranslationManager.Translation != null);
-                        Debug.Assert(TranslationManager.Translation.ClipboardImage != null);
-                        nameTitle = TranslationManager.Translation.ClipboardImage;
-                        break;
-                    case SingleImageType.Url:
-                        nameTitle = SourceURL ?? string.Empty;
-                        break;
-                    default:
-                        nameTitle = Model?.FileInfo?.Name ?? string.Empty;
-                        break;
-                }
-                var zoom = ZoomLevel.CurrentValue;
-                var singleTitles = ImageTitleFormatter.GenerateTitleForSingleImage(width, height, nameTitle, zoom);
-                WindowTitle.Value = singleTitles.TitleWithAppName;
-                Title.Value = singleTitles.BaseTitle;
-                TitleTooltip.Value = singleTitles.FilePathTitle;
+                SetSingleTitle();
             }
 
             return;
@@ -201,6 +182,31 @@ public class TabViewModel(Action<uint> closeTab, IFileWatcherService? fileWatche
 
             return ImageTitleFormatter.GenerateTitleStrings(firstInfo, zoom);
         }
+        
+        void SetSingleTitle()
+        {
+            string nameTitle;
+            switch (SingleImageType)
+            {
+                case SingleImageType.Clipboard:
+                    Debug.Assert(TranslationManager.Translation != null);
+                    Debug.Assert(TranslationManager.Translation.ClipboardImage != null);
+                    nameTitle = TranslationManager.Translation.ClipboardImage;
+                    break;
+                case SingleImageType.Url:
+                    nameTitle = SourceURL ?? string.Empty;
+                    break;
+                default:
+                    nameTitle = Model?.FileInfo?.Name ?? string.Empty;
+                    break;
+            }
+            var zoom = ZoomLevel.CurrentValue;
+            var singleTitles = ImageTitleFormatter.GenerateTitleForSingleImage(width, height, nameTitle, zoom);
+            WindowTitle.Value = singleTitles.TitleWithAppName;
+            Title.Value = singleTitles.BaseTitle;
+            TitleTooltip.Value = singleTitles.FilePathTitle;
+        }
+        
     }
     
     public void SetNewTabTitle()

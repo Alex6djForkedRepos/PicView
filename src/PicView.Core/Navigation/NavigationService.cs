@@ -7,6 +7,7 @@ using PicView.Core.Gallery;
 using PicView.Core.Http;
 using PicView.Core.IPlatform;
 using PicView.Core.Localization;
+using PicView.Core.Models;
 using PicView.Core.Navigation.Interfaces;
 using PicView.Core.Preloading;
 using PicView.Core.ViewModels;
@@ -137,7 +138,7 @@ public class NavigationService(
         }
     }
 
-    private async ValueTask LoadFromUrlAsync(string url, TabViewModel tab, CancellationTokenSource ct)
+    public async ValueTask LoadFromUrlAsync(string url, TabViewModel tab, CancellationTokenSource ct)
     {
         tab.ImageIterator?.Dispose();
 
@@ -179,10 +180,12 @@ public class NavigationService(
             tab.SecondaryModel = null;
             
             // Set titles to filename after successful load
-            tab.TabTitle.Value = safeFileName;
-            tab.Title.Value = safeFileName;
-            tab.WindowTitle.Value = safeFileName;
-            tab.TitleTooltip.Value = destPath;
+            tab.SourceURL = url;
+            tab.SingleImageType = SingleImageType.Url;
+            tab.UpdateTabTitle();
+            
+            tab.CanNavigateBackwards.Value = false;
+            tab.CanNavigateForwards.Value = false;
 
             FileHistoryManager.Add(url);
         }

@@ -173,7 +173,7 @@ public static class DragAndDropManager
             {
                 tab.CurrentView.Value = new ImageViewer();
             }
-            await tabOverview.LoadFromStringAsync(url);
+            await tabOverview.LoadFromUrlAsync(url);
         }
     }
 

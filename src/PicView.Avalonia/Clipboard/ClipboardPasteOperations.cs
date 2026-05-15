@@ -1,4 +1,5 @@
 ﻿using Avalonia.Input.Platform;
+using PicView.Avalonia.StartUp;
 using PicView.Core.DebugTools;
 using PicView.Core.ViewModels;
 
@@ -32,8 +33,7 @@ public static class ClipboardPasteOperations
             var text = await clipboard.TryGetTextAsync();
             if (!string.IsNullOrWhiteSpace(text))
             {
-                await vm.WindowTabs.LoadFromStringAsync(text);
-                return true;
+                return await vm.WindowTabs.LoadFromStringAsync(text);
             }
 
             // Try to paste image data
