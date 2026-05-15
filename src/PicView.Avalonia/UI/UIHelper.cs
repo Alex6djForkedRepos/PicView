@@ -121,17 +121,25 @@ public static class UIHelper
     public static async Task OpenLastFile(MainWindowViewModel vm)
     {
         vm.IsLoadingIndicatorShown.Value = true;
-        if (await vm.WindowTabs.LoadLastFileAsync())
+        var isViewStartupMenu = false;
+        await Dispatcher.UIThread.InvokeAsync(() =>
+        {
+            if (vm.WindowTabs.ActiveTab.CurrentValue.CurrentView.CurrentValue is StartUpMenu)
+            {
+                isViewStartupMenu = true;
+                vm.WindowTabs.ActiveTab.Value.CurrentView.Value = new ImageViewer();
+            }
+        }, DispatcherPriority.Send);
+        TabNavigationInitializer.InitializeNewTab(vm.WindowTabs.ActiveTab.Value, vm);
+        var isSuccessFullyLoaded = await vm.WindowTabs.LoadLastFileAsync();
+        if (!isSuccessFullyLoaded && isViewStartupMenu)
         {
             await Dispatcher.UIThread.InvokeAsync(() =>
             {
-                if (vm.WindowTabs.ActiveTab.CurrentValue.CurrentView.CurrentValue is StartUpMenu)
-                {
-                    vm.WindowTabs.ActiveTab.Value.CurrentView.Value = new ImageViewer();
-                }
+                vm.WindowTabs.ActiveTab.Value.CurrentView.Value = new StartUpMenu();
             });
-            TabNavigationInitializer.InitializeNewTab(vm.WindowTabs.ActiveTab.Value, vm);
         }
+        vm.WindowTabs.ActiveTab.CurrentValue.UpdateTabTitle();
         vm.IsLoadingIndicatorShown.Value = false;
     }
     
