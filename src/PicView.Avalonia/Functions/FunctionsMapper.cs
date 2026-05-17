@@ -412,10 +412,10 @@ public static class FunctionsMapper
     public static async Task ShowStartUpMenu()
     {
     }
-    
+
     /// <inheritdoc cref="DialogManager.HandleShouldClosing" />
     public static async ValueTask Close() =>
-        await DialogManager.HandleShouldClosing(Vm).ConfigureAwait(false);
+        await ValueTask.CompletedTask;
 
     public static async ValueTask Center()
     {
@@ -615,7 +615,7 @@ public static class FunctionsMapper
 
     /// <inheritdoc cref="Navigation.Slideshow.StartSlideshow(MainViewModel)" />
     public static async ValueTask Slideshow() =>
-        await Navigation.Slideshow.StartSlideshow(Vm).ConfigureAwait(false);
+        await ValueTask.CompletedTask;
 
     public static ValueTask ColorPicker()
     {

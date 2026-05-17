@@ -3,8 +3,8 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Threading;
 using PicView.Avalonia.Crop;
 using PicView.Avalonia.Navigation;
-using PicView.Avalonia.ViewModels;
 using PicView.Avalonia.Views.UC.PopUps;
+using PicView.Core.ViewModels;
 
 namespace PicView.Avalonia.UI;
 
@@ -15,13 +15,13 @@ public static class DialogManager
     /// <summary>
     /// Handles close action based on current application state
     /// </summary>
-    public static async Task HandleShouldClosing(MainViewModel vm)
+    public static async Task HandleShouldClosing(MainWindowViewModel vm)
     {
 
         // Handle cropping mode
         if (CropFunctions.IsCropping)
         {
-            CropFunctions.CloseCropControl(vm);
+            //CropFunctions.CloseCropControl(vm);
             return;
         }
 

@@ -201,6 +201,12 @@ public static class MainKeyboardShortcuts2
                 return true;
             }
             
+            if (Slideshow.IsRunning)
+            {
+                Slideshow.StopSlideshow(vm);
+                return true;
+            }
+            
             if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime { Windows.Count: > 1 } desktop)
             {
                  // Check if the current window (associated with vm) is one of the secondary windows
@@ -208,12 +214,6 @@ public static class MainKeyboardShortcuts2
                  // For now, mirroring legacy behavior of checking count
                 desktop.Windows[^1].Close();
                 IsKeyHeldDown = true; // If closing the last window, make sure not to call Close()
-                return true;
-            }
-
-            if (Slideshow.IsRunning)
-            {
-                // Slideshow.StopSlideshow(vm); // Needs refactor
                 return true;
             }
 

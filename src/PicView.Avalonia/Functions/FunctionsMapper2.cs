@@ -539,10 +539,9 @@ public class FunctionsMapper2(MainWindowViewModel vm, Window window) : IFunction
     }
     
     /// <inheritdoc cref="DialogManager.HandleShouldClosing" />
-    public ValueTask Close()
+    public async ValueTask Close()
     {
-        DialogManager.CloseWithOptionalDialog();
-        return ValueTask.CompletedTask;
+        await DialogManager.HandleShouldClosing(vm);
     }
     
     public ValueTask Exit()
@@ -870,11 +869,10 @@ public class FunctionsMapper2(MainWindowViewModel vm, Window window) : IFunction
         return;
     }
 
-    /// <inheritdoc cref="Navigation.Slideshow.StartSlideshow(MainViewModel)" />
+    /// <inheritdoc cref="Navigation.Slideshow.StartSlideshow(MainWindowViewModel)" />
     public async ValueTask Slideshow()
     {
-        // await Navigation.Slideshow.StartSlideshow(vm).ConfigureAwait(false);
-        return;
+        await Navigation.Slideshow.StartSlideshow(vm).ConfigureAwait(false);
     }
 
     public ValueTask ColorPicker()
