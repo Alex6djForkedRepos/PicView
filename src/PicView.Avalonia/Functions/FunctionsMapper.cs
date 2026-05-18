@@ -5,15 +5,12 @@ using PicView.Avalonia.Clipboard;
 using PicView.Avalonia.ColorManagement;
 using PicView.Avalonia.Crop;
 using PicView.Avalonia.FileSystem;
-using PicView.Avalonia.Gallery;
 using PicView.Avalonia.ImageHandling;
-using PicView.Avalonia.Navigation;
 using PicView.Avalonia.SettingsManagement;
 using PicView.Avalonia.UI;
 using PicView.Avalonia.ViewModels;
 using PicView.Avalonia.WindowBehavior;
 using PicView.Core.FileHistory;
-using PicView.Core.FileSorting;
 using PicView.Core.Keybindings;
 using PicView.Core.ProcessHandling;
 
@@ -26,156 +23,6 @@ namespace PicView.Avalonia.Functions;
 public static class FunctionsMapper
 {
     public static MainViewModel? Vm;
-
-    public static Func<ValueTask>? GetFunctionByName(string functionName)
-    {
-        // Remember to have exact matching names, or it will be null
-        return functionName switch
-        {
-            // Navigation values
-            "Next" => Next,
-            "Prev" => Prev,
-            
-            "NextFolder" => NextFolder,
-            "PrevFolder" => PrevFolder,
-            
-            "Up" => Up,
-            "Down" => Down,
-            
-            "Last" => Last,
-            "First" => First,
-            
-            "Next10" => Next10,
-            "Prev10" => Prev10,
-            
-            "Next100" => Next100,
-            "Prev100" => Prev100,
-
-            "Search" => Search,
-
-            "NextArchive" => NextArchive,
-            "PrevArchive" => PrevArchive,
-            
-            // Rotate
-            "RotateLeft" => RotateLeft,
-            "RotateRight" => RotateRight,
-
-            // Scroll
-            "ScrollUp" => ScrollUp,
-            "ScrollDown" => ScrollDown,
-            "ScrollToTop" => ScrollToTop,
-            "ScrollToBottom" => ScrollToBottom,
-
-            // Zoom
-            "ZoomIn" => ZoomIn,
-            "ZoomOut" => ZoomOut,
-            "ResetZoom" => ResetZoom,
-            "ChangeCtrlZoom" => ChangeCtrlZoom,
-
-            // Toggles
-            "ToggleScroll" => ToggleScroll,
-            "ToggleLooping" => ToggleLooping,
-            "ToggleGallery" => ToggleGallery,
-
-            // Scale Window
-            "AutoFitWindow" => AutoFitWindow,
-            "NormalWindow" => NormalWindow,
-
-            // Window functions
-            "Fullscreen" => Fullscreen,
-            "ToggleFullscreen" => ToggleFullscreen,
-            "SetTopMost" => SetTopMost,
-            "Close" => Close,
-            "ToggleInterface" => ToggleInterface,
-            "NewWindow" => NewWindow,
-            "Center" => Center,
-            "Maximize" => Maximize,
-            "Restore" => Restore,
-
-            // Windows
-            "AboutWindow" => AboutWindow,
-            "EffectsWindow" => EffectsWindow,
-            "ImageInfoWindow" => ImageInfoWindow,
-            "ResizeWindow" => ResizeWindow,
-            "SettingsWindow" => SettingsWindow,
-            "KeybindingsWindow" => KeybindingsWindow,
-            "BatchResizeWindow" => BatchResizeWindow,
-            "ConvertWindow" => ConvertWindow,
-
-            // Open functions
-            "Open" => Open,
-            "OpenWith" => OpenWith,
-            "OpenInExplorer" => OpenInExplorer,
-            "Save" => Save,
-            "SaveAs" => SaveAs,
-            "Print" => Print,
-            "Reload" => Reload,
-
-            // Copy functions
-            "CopyFile" => CopyFile,
-            "CopyFilePath" => CopyFilePath,
-            "CopyImage" => CopyImage,
-            "CopyBase64" => CopyBase64,
-            "DuplicateFile" => DuplicateFile,
-            "CutFile" => CutFile,
-            "Paste" => Paste,
-
-            // File functions
-            "DeleteFile" => DeleteFile,
-            "DeleteFilePermanently" => DeleteFilePermanently,
-            "Rename" => Rename,
-            "ShowFileProperties" => ShowFileProperties,
-            "ShowSettingsFile" => ShowSettingsFile,
-            "ShowKeybindingsFile" => ShowKeybindingsFile,
-            
-            // Sorting functions
-            "SortFilesByName" => SortFilesByName,
-            "SortFilesByCreationTime" => SortFilesByCreationTime,
-            "SortFilesByLastAccessTime" => SortFilesByLastAccessTime,
-            "SortFilesByLastWriteTime" => SortFilesByLastWriteTime,
-            "SortFilesBySize" => SortFilesBySize,
-            "SortFilesByExtension" => SortFilesByExtension,
-            "SortFilesRandomly" => SortFilesRandomly,
-            
-            "SortFilesAscending" => SortFilesAscending,
-            "SortFilesDescending" => SortFilesDescending,
-            
-            // Image functions
-            "ResizeImage" => ResizeImage,
-            "Crop" => Crop,
-            "Flip" => Flip,
-            "OptimizeImage" => OptimizeImage,
-            "Stretch" => Stretch,
-
-            // Set stars
-            "Set0Star" => Set0Star,
-            "Set1Star" => Set1Star,
-            "Set2Star" => Set2Star,
-            "Set3Star" => Set3Star,
-            "Set4Star" => Set4Star,
-            "Set5Star" => Set5Star,
-            
-            // Background and lock screen image
-            "SetAsLockScreen" => SetAsLockScreen,
-            "SetAsLockscreenCentered" => SetAsLockscreenCentered,
-            "SetAsWallpaper" => SetAsWallpaper,
-            "SetAsWallpaperFitted" => SetAsWallpaperFitted,
-            "SetAsWallpaperStretched" => SetAsWallpaperStretched,
-            "SetAsWallpaperFilled" => SetAsWallpaperFilled,
-            "SetAsWallpaperCentered" => SetAsWallpaperCentered,
-            "SetAsWallpaperTiled" => SetAsWallpaperTiled,
-
-            // Misc
-            "ChangeBackground" => ChangeBackground,
-            "SideBySide" => SideBySide,
-            "GalleryClick" => GalleryClick,
-            "Slideshow" => Slideshow,
-            "ColorPicker" => ColorPicker,
-            "Restart" => Restart,
-
-            _ => null
-        };
-    }
 
     #region Functions
 
@@ -209,14 +56,6 @@ public static class FunctionsMapper
     #endregion Menus
 
     #region Navigation, zoom and rotation
-
-    /// <inheritdoc cref="NavigationManager.Iterate(bool, MainViewModel)" />
-    public static async ValueTask Next() =>
-        await ValueTask.CompletedTask;
-    
-    /// <inheritdoc cref="NavigationManager.NavigateBetweenDirectories(bool, MainViewModel)" />
-    public static async ValueTask NextFolder() =>
-        await ValueTask.CompletedTask;
 
     public static async ValueTask NextArchive() =>
         await ValueTask.CompletedTask;
@@ -623,46 +462,6 @@ public static class FunctionsMapper
     }
     
     #endregion
-
-    #region Sorting
-
-    /// <inheritdoc cref="FileListManager.UpdateFileList(PicView.Avalonia.Interfaces.IPlatformSpecificService, MainViewModel, SortFilesBy)" />
-    public static async ValueTask SortFilesByName() =>
-        await FileListManager.UpdateFileList(Vm.PlatformService, Vm, SortFilesBy.Name).ConfigureAwait(false);
-
-    /// <inheritdoc cref="FileListManager.UpdateFileList(PicView.Avalonia.Interfaces.IPlatformSpecificService, MainViewModel, SortFilesBy)" />
-    public static async ValueTask SortFilesByCreationTime() =>
-        await FileListManager.UpdateFileList(Vm?.PlatformService, Vm, SortFilesBy.CreationTime).ConfigureAwait(false);
-
-    /// <inheritdoc cref="FileListManager.UpdateFileList(PicView.Avalonia.Interfaces.IPlatformSpecificService, MainViewModel, SortFilesBy)" />
-    public static async ValueTask SortFilesByLastAccessTime() =>
-        await FileListManager.UpdateFileList(Vm?.PlatformService, Vm, SortFilesBy.LastAccessTime).ConfigureAwait(false);
-
-    /// <inheritdoc cref="FileListManager.UpdateFileList(PicView.Avalonia.Interfaces.IPlatformSpecificService, MainViewModel, SortFilesBy)" />
-    public static async ValueTask SortFilesByLastWriteTime() =>
-        await FileListManager.UpdateFileList(Vm?.PlatformService, Vm, SortFilesBy.LastWriteTime).ConfigureAwait(false);
-
-    /// <inheritdoc cref="FileListManager.UpdateFileList(PicView.Avalonia.Interfaces.IPlatformSpecificService, MainViewModel, SortFilesBy)" />
-    public static async ValueTask SortFilesBySize() =>
-        await FileListManager.UpdateFileList(Vm?.PlatformService, Vm, SortFilesBy.FileSize).ConfigureAwait(false);
-
-    /// <inheritdoc cref="FileListManager.UpdateFileList(PicView.Avalonia.Interfaces.IPlatformSpecificService, MainViewModel, SortFilesBy)" />
-    public static async ValueTask SortFilesByExtension() =>
-        await FileListManager.UpdateFileList(Vm?.PlatformService, Vm, SortFilesBy.Extension).ConfigureAwait(false);
-
-    /// <inheritdoc cref="FileListManager.UpdateFileList(PicView.Avalonia.Interfaces.IPlatformSpecificService, MainViewModel, SortFilesBy)" />
-    public static async ValueTask SortFilesRandomly() =>
-        await FileListManager.UpdateFileList(Vm?.PlatformService, Vm, SortFilesBy.Random).ConfigureAwait(false);
-
-    /// <inheritdoc cref="FileListManager.UpdateFileList(PicView.Avalonia.Interfaces.IPlatformSpecificService, MainViewModel, bool)" />
-    public static async ValueTask SortFilesAscending() =>
-        await FileListManager.UpdateFileList(Vm?.PlatformService, Vm, ascending: true).ConfigureAwait(false);
-
-    /// <inheritdoc cref="FileListManager.UpdateFileList(PicView.Avalonia.Interfaces.IPlatformSpecificService, MainViewModel, bool)" />
-    public static async ValueTask SortFilesDescending() =>
-        await FileListManager.UpdateFileList(Vm?.PlatformService, Vm, ascending: false).ConfigureAwait(false);
-
-    #endregion Sorting
 
     #region Rating
 
