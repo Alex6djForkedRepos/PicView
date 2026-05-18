@@ -11,7 +11,7 @@ public class AnimatedMenu : UserControl, IDisposable
     public static readonly AvaloniaProperty<bool> IsOpenProperty =
         AvaloniaProperty.Register<AnimatedMenu, bool>(nameof(IsOpen));
 
-    private DisposableBag _disposable;
+    private IDisposable _disposable;
 
     public bool IsOpen
     {
@@ -22,7 +22,7 @@ public class AnimatedMenu : UserControl, IDisposable
     protected AnimatedMenu()
     {
         // Subscribe to changes in the IsOpen property
-       this.GetObservable(IsOpenProperty).ToObservable()
+        _disposable = this.GetObservable(IsOpenProperty).ToObservable()
             .Skip(1)
             .SubscribeAwait(async (isOpen, _) =>
             {
@@ -40,8 +40,7 @@ public class AnimatedMenu : UserControl, IDisposable
                     IsVisible = false;
                 }
                 
-            }, DebugHelper.LogError(nameof(AnimatedMenu), nameof(IsOpenProperty)))
-            .AddTo(ref _disposable);
+            }, DebugHelper.LogError(nameof(AnimatedMenu), nameof(IsOpenProperty)));
     }
     
     /// <summary>
@@ -58,7 +57,7 @@ public class AnimatedMenu : UserControl, IDisposable
         await anim.RunAsync(this);
     }
     
-    public void Dispose()
+    public virtual void Dispose()
     {
         _disposable.Dispose();
         GC.SuppressFinalize(this);

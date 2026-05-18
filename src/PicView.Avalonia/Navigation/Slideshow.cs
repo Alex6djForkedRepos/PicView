@@ -64,7 +64,7 @@ public static class Slideshow
 
     private static bool InitiateAndStart(MainWindowViewModel vm)
     {
-        if (!vm.WindowTabs.ActiveTab.CurrentValue.CanNavigateBackwards.CurrentValue)
+        if (!vm.WindowTabs.ActiveTab.CurrentValue.CanNavigateForwards.CurrentValue)
         {
             return false;
         }

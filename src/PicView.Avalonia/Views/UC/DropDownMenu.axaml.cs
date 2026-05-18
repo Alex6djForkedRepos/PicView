@@ -2,11 +2,11 @@ using Avalonia.Interactivity;
 using System.Collections.Specialized;
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.LogicalTree;
 using Avalonia.Media;
 using Avalonia.Threading;
 using ObservableCollections;
 using PicView.Avalonia.CustomControls;
+using PicView.Avalonia.Navigation;
 using PicView.Avalonia.UI;
 using PicView.Core.DebugTools;
 using PicView.Core.Localization;
@@ -48,7 +48,16 @@ public partial class DropDownMenu : AnimatedMenu
         SlideShow60Sec.Text = $"60 {TranslationManager.Translation.SecAbbreviation}";
         SlideShow90Sec.Text = $"90 {TranslationManager.Translation.SecAbbreviation}";
         SlideShow120Sec.Text = $"120 {TranslationManager.Translation.SecAbbreviation}";
-
+        
+        SlideShow2Sec.Click += SlideShow2SecOnClick;
+        SlideShow5Sec.Click += SlideShow5SecOnClick;
+        SlideShow10Sec.Click += SlideShow10SecOnClick;
+        SlideShow20Sec.Click += SlideShow20SecOnClick;
+        SlideShow30Sec.Click += SlideShow30SecOnClick;
+        SlideShow60Sec.Click += SlideShow60SecOnClick;
+        SlideShow90Sec.Click += SlideShow90SecOnClick;
+        SlideShow120Sec.Click += SlideShow120SecOnClick;
+        
         if (Application.Current.DataContext is not CoreViewModel core)
         {
             return;
@@ -74,6 +83,100 @@ public partial class DropDownMenu : AnimatedMenu
                     core.MainWindows.ActiveWindow.Value.TopTitlebarViewModel.DropDownMenu.CloseToDefault();
                 }
             }, DebugHelper.LogError(nameof(DropDownMenu), nameof(_menuVisibilitySubscription)));
+    }
+
+    private void SlideShow120SecOnClick(object? sender, RoutedEventArgs e)
+    {
+        CloseDropDownMenu();
+
+        if (Application.Current.DataContext is not CoreViewModel core)
+        {
+            return;
+        }
+
+        _ = Slideshow.StartSlideshow(core.MainWindows.ActiveWindow.CurrentValue, 120000);
+    }
+
+    private void SlideShow90SecOnClick(object? sender, RoutedEventArgs e)
+    {
+        CloseDropDownMenu();
+
+        if (Application.Current.DataContext is not CoreViewModel core)
+        {
+            return;
+        }
+
+        _ = Slideshow.StartSlideshow(core.MainWindows.ActiveWindow.CurrentValue, 90000);
+    }
+
+    private void SlideShow60SecOnClick(object? sender, RoutedEventArgs e)
+    {
+        CloseDropDownMenu();
+
+        if (Application.Current.DataContext is not CoreViewModel core)
+        {
+            return;
+        }
+
+        _ = Slideshow.StartSlideshow(core.MainWindows.ActiveWindow.CurrentValue, 60000);
+    }
+
+    private void SlideShow30SecOnClick(object? sender, RoutedEventArgs e)
+    {
+        CloseDropDownMenu();
+
+        if (Application.Current.DataContext is not CoreViewModel core)
+        {
+            return;
+        }
+
+        _ = Slideshow.StartSlideshow(core.MainWindows.ActiveWindow.CurrentValue, 30000);
+    }
+
+    private void SlideShow20SecOnClick(object? sender, RoutedEventArgs e)
+    {
+        CloseDropDownMenu();
+
+        if (Application.Current.DataContext is not CoreViewModel core)
+        {
+            return;
+        }
+
+        _ = Slideshow.StartSlideshow(core.MainWindows.ActiveWindow.CurrentValue, 20000);
+    }
+
+    private void SlideShow10SecOnClick(object? sender, RoutedEventArgs e)
+    {
+        CloseDropDownMenu();
+
+        if (Application.Current.DataContext is not CoreViewModel core)
+        {
+            return;
+        }
+
+        _ = Slideshow.StartSlideshow(core.MainWindows.ActiveWindow.CurrentValue, 10000);
+    }
+
+    private void SlideShow5SecOnClick(object? sender, RoutedEventArgs e)
+    {
+        if (Application.Current.DataContext is not CoreViewModel core)
+        {
+            return;
+        }
+
+        _ = Slideshow.StartSlideshow(core.MainWindows.ActiveWindow.CurrentValue, 5000);
+    }
+
+    private void SlideShow2SecOnClick(object? sender, RoutedEventArgs e)
+    {
+        CloseDropDownMenu();
+        
+        if (Application.Current.DataContext is not CoreViewModel core)
+        {
+            return;
+        }
+
+        _ = Slideshow.StartSlideshow(core.MainWindows.ActiveWindow.CurrentValue, 2000);
     }
 
     private void ApplyLightTheme()
@@ -269,21 +372,33 @@ public partial class DropDownMenu : AnimatedMenu
         }
     }
 
-    protected override void OnDetachedFromLogicalTree(LogicalTreeAttachmentEventArgs e)
+    public override void Dispose()
     {
-        base.OnDetachedFromLogicalTree(e);
+        base.Dispose();
         Loaded -= OnLoaded;
         _menuVisibilitySubscription?.Dispose();
         if (Application.Current.DataContext is not CoreViewModel core)
         {
             return;
         }
-
+        
         core.FileHistory.PinnedEntries.CollectionChanged -= PinnedEntriesOnCollectionChanged;
         core.FileHistory.Entries.CollectionChanged -= EntriesOnCollectionChanged;
+        
+        SlideShow2Sec.Click -= SlideShow2SecOnClick;
+        SlideShow5Sec.Click -= SlideShow5SecOnClick;
+        SlideShow10Sec.Click -= SlideShow10SecOnClick;
+        SlideShow20Sec.Click -= SlideShow20SecOnClick;
+        SlideShow30Sec.Click -= SlideShow30SecOnClick;
+        SlideShow60Sec.Click -= SlideShow60SecOnClick;
+        SlideShow90Sec.Click -= SlideShow90SecOnClick;
+        SlideShow120Sec.Click -= SlideShow120SecOnClick;
     }
 
     private void Close_OnClick(object? sender, RoutedEventArgs e)
+        => CloseDropDownMenu();
+
+    private void CloseDropDownMenu()
     {
         // Trigger closing animation
         IsOpen = false;
