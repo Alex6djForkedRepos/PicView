@@ -5,6 +5,7 @@ using PicView.Avalonia.Input;
 using PicView.Avalonia.UI;
 using PicView.Avalonia.ViewModels;
 using PicView.Avalonia.Views.UC;
+using PicView.Core.ViewModels;
 
 namespace PicView.Avalonia.Crop;
 
@@ -23,7 +24,7 @@ public class CropKeyboardManager(CropControl control)
                 // await vm.Crop.SaveCroppedImageAsync();
                 return;
             case Key.Escape:
-                CropFunctions.CloseCropControl(UIHelper.GetMainView.DataContext as MainViewModel);
+                CropFunctions.CloseCropControl(UIHelper.GetMainView.DataContext as MainWindowViewModel);
                 return;
         }
 

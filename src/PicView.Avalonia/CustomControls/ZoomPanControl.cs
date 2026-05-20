@@ -6,6 +6,7 @@ using Avalonia.Interactivity;
 using Avalonia.Media;
 using PicView.Avalonia.ViewModels;
 using PicView.Avalonia.Views.UC;
+using PicView.Core.ViewModels;
 
 namespace PicView.Avalonia.CustomControls;
 
@@ -360,10 +361,11 @@ public class ZoomPanControl : Decorator
     private void UpdateZoomLevel()
     {
         ZoomLevel = Scale * FittingScale * 100;
-        if (DataContext is MainViewModel vm)
-        {
-            vm.PicViewer.ZoomValue.Value = ZoomLevel;
-        }
+        // if (DataContext is TabViewModel vm)
+        // {
+        //     vm.PicViewer.ZoomValue.Value = ZoomLevel;
+        //     vm.ZoomLevel.Value = ZoomLevel;
+        // }
     }
 
     /// <summary>

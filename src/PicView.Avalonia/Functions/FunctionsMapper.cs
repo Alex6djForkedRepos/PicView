@@ -342,7 +342,7 @@ public static class FunctionsMapper
     
     /// <inheritdoc cref="FileManager.Print(string, MainViewModel)" />
     public static async ValueTask Print() =>
-        await FileManager.Print(Vm.PicViewer.FileInfo?.CurrentValue?.FullName, Vm).ConfigureAwait(false);
+        await ValueTask.CompletedTask;
 
     /// <inheritdoc cref="FilePicker.SelectAndLoadFile(MainViewModel)" />
     public static async ValueTask Open() =>
@@ -350,13 +350,11 @@ public static class FunctionsMapper
 
     /// <inheritdoc cref="FileManager.OpenWith(string, MainViewModel)" />
     public static async ValueTask OpenWith() =>
-        await Task.Run(() => Vm?.PlatformService?.OpenWith(Vm.PicViewer.FileInfo?.CurrentValue?.FullName))
-            .ConfigureAwait(false);
+        await ValueTask.CompletedTask;
     
     /// <inheritdoc cref="FileManager.LocateOnDisk(string, MainViewModel)" />
     public static async ValueTask OpenInExplorer()=>
-        await Task.Run(() => Vm?.PlatformService?.LocateOnDisk(Vm.PicViewer.FileInfo?.CurrentValue?.FullName))
-            .ConfigureAwait(false);
+        await ValueTask.CompletedTask;
 
     /// <inheritdoc cref="FileSaverHelper.SaveCurrentFile(MainViewModel)" />
     public static async ValueTask Save() =>
@@ -368,15 +366,11 @@ public static class FunctionsMapper
     
     /// <inheritdoc cref="FileManager.DeleteFileWithOptionalDialog" />
     public static async ValueTask DeleteFile() =>
-        await FileManager
-            .DeleteFileWithOptionalDialog(true, Vm.PicViewer?.FileInfo?.CurrentValue?.FullName, Vm.PlatformService)
-            .ConfigureAwait(false);
+        await ValueTask.CompletedTask;
     
     /// <inheritdoc cref="FileManager.DeleteFileWithOptionalDialog" />
     public static async ValueTask DeleteFilePermanently() =>
-        await FileManager
-            .DeleteFileWithOptionalDialog(false, Vm.PicViewer?.FileInfo?.CurrentValue?.FullName, Vm.PlatformService)
-            .ConfigureAwait(false);
+        await ValueTask.CompletedTask;
 
     public static async ValueTask Rename()
     {
@@ -389,7 +383,7 @@ public static class FunctionsMapper
     
     /// <inheritdoc cref="FileManager.ShowFileProperties(string, MainViewModel)" />
     public static async ValueTask ShowFileProperties() =>
-        await Task.Run(() => Vm?.PlatformService?.ShowFileProperties(Vm.PicViewer.FileInfo?.CurrentValue.FullName)).ConfigureAwait(false);
+        await ValueTask.CompletedTask;
     
     #endregion
 
@@ -397,11 +391,11 @@ public static class FunctionsMapper
 
     /// <inheritdoc cref="ClipboardFileOperations.CopyFileToClipboard(string, MainViewModel)" />
     public static async ValueTask CopyFile() =>
-        await ClipboardFileOperations.CopyFileToClipboard(Vm?.PicViewer.FileInfo?.CurrentValue.FullName).ConfigureAwait(false);
+        await ValueTask.CompletedTask;
     
     /// <inheritdoc cref="ClipboardTextOperations.CopyTextToClipboard(string)" />
     public static async ValueTask CopyFilePath() => 
-        await ClipboardTextOperations.CopyTextToClipboard(Vm?.PicViewer.FileInfo?.CurrentValue.FullName).ConfigureAwait(false);
+        await ValueTask.CompletedTask;
 
     /// <inheritdoc cref="ClipboardImageOperations.CopyImageToClipboard(MainViewModel)" />
     public static async ValueTask CopyImage() => 
@@ -444,7 +438,7 @@ public static class FunctionsMapper
 
     /// <inheritdoc cref="CropFunctions.StartCropControl(MainViewModel)" />
     public static async ValueTask Crop() =>
-        await CropFunctions.StartCropControlAsync(Vm).ConfigureAwait(false);
+        await ValueTask.CompletedTask;
 
     public static ValueTask Flip() => ValueTask.CompletedTask;
 
@@ -491,25 +485,25 @@ public static class FunctionsMapper
         await SetAsWallpaperFilled();
 
     public static async ValueTask SetAsWallpaperTiled() =>
-        await Task.Run(() => Vm.PlatformService.SetAsWallpaper(Vm.PicViewer.FileInfo.CurrentValue.FullName, 0)).ConfigureAwait(false);
+        await ValueTask.CompletedTask;
     
     public static async ValueTask SetAsWallpaperCentered() =>
-        await Task.Run(() => Vm.PlatformService.SetAsWallpaper(Vm.PicViewer.FileInfo.CurrentValue.FullName, 1)).ConfigureAwait(false);
+        await ValueTask.CompletedTask;
     
     public static async ValueTask SetAsWallpaperStretched() =>
-        await Task.Run(() => Vm.PlatformService.SetAsWallpaper(Vm.PicViewer.FileInfo.CurrentValue.FullName, 2)).ConfigureAwait(false);
+        await ValueTask.CompletedTask;
     
     public static async ValueTask SetAsWallpaperFitted() =>
-        await Task.Run(() => Vm.PlatformService.SetAsWallpaper(Vm.PicViewer.FileInfo.CurrentValue.FullName, 3)).ConfigureAwait(false);
+        await ValueTask.CompletedTask;
     
     public static async ValueTask SetAsWallpaperFilled() =>
-        await Task.Run(() => Vm.PlatformService.SetAsWallpaper(Vm.PicViewer.FileInfo.CurrentValue.FullName, 4)).ConfigureAwait(false);
+        await ValueTask.CompletedTask;
     
     public static async ValueTask SetAsLockscreenCentered() =>
-        await Task.Run(() => Vm.PlatformService.SetAsLockScreen(Vm.PicViewer.FileInfo.CurrentValue.FullName)).ConfigureAwait(false);
+        await ValueTask.CompletedTask;
     
     public static async ValueTask SetAsLockScreen() =>
-        await Task.Run(() => Vm.PlatformService.SetAsLockScreen(Vm.PicViewer.FileInfo.CurrentValue.FullName)).ConfigureAwait(false);
+        await ValueTask.CompletedTask;
 
     #endregion
 
@@ -522,42 +516,42 @@ public static class FunctionsMapper
     public static async ValueTask Restart()
     {
         // TODO: Needs refactoring into its own method
-        var openFile = string.Empty;
-        var getFromArgs = false;
-        if (Vm?.PicViewer.FileInfo is not null)
-        {
-            if (Vm.PicViewer.FileInfo.CurrentValue.Exists)
-            {
-                openFile = Vm.PicViewer.FileInfo.CurrentValue.FullName;
-            }
-            else
-            {
-                getFromArgs = true;
-            }
-        }
-        else
-        {
-            getFromArgs = true;
-        }
-        if (getFromArgs)
-        {
-            var args = Environment.GetCommandLineArgs();
-            if (args is not null && args.Length > 0)
-            {
-                openFile = args[1];
-            }
-        }
-        ProcessHelper.RestartApp(openFile);
-
-        if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop)
-        {
-            Environment.Exit(0);
-            return;
-        }
-        await Dispatcher.UIThread.InvokeAsync(() =>
-        {
-            desktop.MainWindow?.Close();
-        });
+        // var openFile = string.Empty;
+        // var getFromArgs = false;
+        // if (Vm?.PicViewer.FileInfo is not null)
+        // {
+        //     if (Vm.PicViewer.FileInfo.CurrentValue.Exists)
+        //     {
+        //         openFile = Vm.PicViewer.FileInfo.CurrentValue.FullName;
+        //     }
+        //     else
+        //     {
+        //         getFromArgs = true;
+        //     }
+        // }
+        // else
+        // {
+        //     getFromArgs = true;
+        // }
+        // if (getFromArgs)
+        // {
+        //     var args = Environment.GetCommandLineArgs();
+        //     if (args is not null && args.Length > 0)
+        //     {
+        //         openFile = args[1];
+        //     }
+        // }
+        // ProcessHelper.RestartApp(openFile);
+        //
+        // if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop)
+        // {
+        //     Environment.Exit(0);
+        //     return;
+        // }
+        // await Dispatcher.UIThread.InvokeAsync(() =>
+        // {
+        //     desktop.MainWindow?.Close();
+        // });
     }
     
     public static async ValueTask ShowSettingsFile() =>

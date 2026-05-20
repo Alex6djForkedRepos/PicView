@@ -3,7 +3,7 @@ using PicView.Core.DebugTools;
 
 namespace PicView.Avalonia.ImageHandling;
 
-// TODO: Reimplement
+// TODO: refactor to MainWindowViewModel
 
 /// <summary>
 /// Provides image optimization functionality
@@ -24,21 +24,21 @@ public static class ImageOptimizer
         try
         {
             // vm.MainWindow.IsLoadingIndicatorShown.Value = true;
-            await Task.Run(() =>
-            {
-                try
-                {
-                    var optimizer = new ImageMagick.ImageOptimizer
-                    {
-                        OptimalCompression = true
-                    };
-                    optimizer.LosslessCompress(vm.PicViewer.FileInfo.CurrentValue.FullName);
-                }
-                catch (Exception ex)
-                {
-                    DebugHelper.LogDebug(nameof(ImageOptimizer), nameof(OptimizeImageAsync), ex);
-                }
-            });
+            // await Task.Run(() =>
+            // {
+            //     try
+            //     {
+            //         var optimizer = new ImageMagick.ImageOptimizer
+            //         {
+            //             OptimalCompression = true
+            //         };
+            //         optimizer.LosslessCompress(vm.PicViewer.FileInfo.CurrentValue.FullName);
+            //     }
+            //     catch (Exception ex)
+            //     {
+            //         DebugHelper.LogDebug(nameof(ImageOptimizer), nameof(OptimizeImageAsync), ex);
+            //     }
+            // });
             // await NavigationManager.QuickReload();
         }
         finally

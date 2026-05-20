@@ -308,8 +308,8 @@ public static class SettingsUpdater
     public static void TurnOffSideBySide(MainViewModel vm)
     {
         Settings.ImageScaling.ShowImageSideBySide = false;
-        vm.PicViewer.IsShowingSideBySide.Value = false;
-        vm.PicViewer.SecondaryImageSource.Value = null;
+        // vm.PicViewer.IsShowingSideBySide.Value = false;
+        // vm.PicViewer.SecondaryImageSource.Value = null;
       //  WindowResizing.SetSize(vm);
         //TitleManager.SetTitle(vm);
     }

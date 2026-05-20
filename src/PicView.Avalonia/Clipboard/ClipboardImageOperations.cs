@@ -125,4 +125,15 @@ public static class ClipboardImageOperations
             DebugHelper.LogDebug(nameof(ClipboardImageOperations), nameof(PasteClipboardImage), ex);
         }
     }
+    
+    public static async Task CopyImageToClipboard(Bitmap bitmap)
+    {
+        var clipboard = ClipboardService.GetClipboard();
+        if (clipboard == null)
+        {
+            return;
+        }
+        await clipboard.ClearAsync();
+        await clipboard.SetBitmapAsync(bitmap);
+    }
 }

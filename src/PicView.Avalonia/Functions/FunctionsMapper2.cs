@@ -765,10 +765,6 @@ public class FunctionsMapper2(MainWindowViewModel vm, Window window) : IFunction
     /// <inheritdoc cref="FileManager.ShowFileProperties(string, MainViewModel)" />
     public async ValueTask ShowFileProperties()
     {
-        if (Application.Current.DataContext is not CoreViewModel core)
-        {
-            return;
-        }
         await Task.Run(() =>
             FileManager2.ShowFileProperties(vm.WindowTabs.ActiveTab.CurrentValue.Model
                 .FileInfo?.FullName)).ConfigureAwait(false);
@@ -855,11 +851,10 @@ public class FunctionsMapper2(MainWindowViewModel vm, Window window) : IFunction
     public async ValueTask ResizeImage() =>
         await ResizeWindow();
 
-    /// <inheritdoc cref="CropFunctions.StartCropControl(MainViewModel)" />
+    /// <inheritdoc cref="CropFunctions.StartCropControl(MainWindowViewModel)" />
     public async ValueTask Crop()
     {
-        // await CropFunctions.StartCropControlAsync(vm).ConfigureAwait(false);
-        return;
+        await CropFunctions.StartCropControlAsync(vm).ConfigureAwait(false);
     }
 
     /// <inheritdoc cref="ImageOptimizer.OptimizeImageAsync(MainViewModel)" />

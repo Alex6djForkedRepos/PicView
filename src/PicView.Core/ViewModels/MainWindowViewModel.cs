@@ -20,6 +20,7 @@ public class MainWindowViewModel : IDisposable
     public ImageInfoWindowViewModel? InfoWindow { get; set; } 
     public ExifViewModel? Exif { get; set; }
     public ResizeImageViewModel? ResizeImageViewModel { get; set; }
+    public CropViewModel? Crop { get; set; }
 
     #region Window state
     public bool IsNavigationButtonLeftClicked { get; set; }
@@ -382,7 +383,7 @@ public class MainWindowViewModel : IDisposable
     private async ValueTask ResizeImage(Unit unit, CancellationToken cancellationToken) { if (Mapper is null) return; await Mapper.ResizeImage(); }
 
     public ReactiveCommand CropCommand { get; }
-    private async ValueTask Crop(Unit unit, CancellationToken cancellationToken) { if (Mapper is null) return; await Mapper.Crop(); }
+    private async ValueTask StartCrop(Unit unit, CancellationToken cancellationToken) { if (Mapper is null) return; await Mapper.Crop(); }
 
     public ReactiveCommand FlipCommand { get; }
     private async ValueTask Flip(Unit unit, CancellationToken cancellationToken) { if (Mapper is null) return; await Mapper.Flip(); }
@@ -637,7 +638,7 @@ public class MainWindowViewModel : IDisposable
         SideBySideCommand = new ReactiveCommand(SideBySide);
         ReloadCommand = new ReactiveCommand(Reload);
         ResizeImageCommand = new ReactiveCommand(ResizeImage);
-        CropCommand = new ReactiveCommand(Crop);
+        CropCommand = new ReactiveCommand(StartCrop);
         FlipCommand = new ReactiveCommand(Flip);
         OptimizeImageCommand = new ReactiveCommand(OptimizeImage);
         SlideshowCommand = new ReactiveCommand(Slideshow);

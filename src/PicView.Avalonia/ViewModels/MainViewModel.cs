@@ -14,7 +14,6 @@ public class MainViewModel
     public TranslationViewModel Translation { get; } = new();
     public GlobalSettingsViewModel GlobalSettings { get; } = new();
     public SettingsViewModel? SettingsViewModel { get; set; }
-    public PicViewerModel PicViewer { get; } = new();
     public ImageInfoWindowViewModel? InfoWindow { get; set; }
     public FileAssociationsViewModel? AssociationsViewModel { get; set; }
     public BatchResizeViewModel? BatchResizeViewModel { get; set; }

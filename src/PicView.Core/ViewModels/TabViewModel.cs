@@ -69,6 +69,7 @@ public class TabViewModel(Action<uint> closeTab, IFileWatcherService? fileWatche
     public BindableReactiveProperty<bool> IsRotated90 { get; } = new(false);
     public BindableReactiveProperty<bool> IsRotated180 { get; } = new(false);
     public BindableReactiveProperty<bool> IsRotated270 { get; } = new(false);
+    public BindableReactiveProperty<bool> ShouldCropBeEnabled { get; } = new(false);
     public BindableReactiveProperty<double> ScaleX { get; } = new(1);
     public BindableReactiveProperty<double> InitialZoom { get; } = new(1);
     public BindableReactiveProperty<int> ZoomLevel { get; } = new();
