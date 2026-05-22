@@ -655,12 +655,9 @@
                 <!--  Crop  -->
                 <MenuItem
                     x:Name="CropMenuItem"
-                    Header="{CompiledBinding Translation.Crop.Value,
-                                             Mode=OneWay}"
-                    IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.Image.Value,
-                                                Converter={x:Static ObjectConverters.IsNotNull},
-                                                FallbackValue=False,
-                                                Mode=OneWay}">
+                    Command="{Binding CropCommand}"
+                    Header="{Binding Translation.Crop.Value, Mode=OneWay}"
+                    IsEnabled="{Binding WindowTabs.ActiveTab.Value.Image.Value, Converter={x:Static ObjectConverters.IsNotNull}, FallbackValue=False, Mode=OneWay}">
                     <MenuItem.Icon>
                         <Image Classes="CropImage" />
                     </MenuItem.Icon>
