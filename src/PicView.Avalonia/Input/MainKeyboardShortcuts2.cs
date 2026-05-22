@@ -2,8 +2,11 @@
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Input;
+using PicView.Avalonia.CustomControls;
 using PicView.Avalonia.Navigation;
 using PicView.Avalonia.UI;
+using PicView.Avalonia.Views.UC;
+using PicView.Avalonia.Views.UC.PopUps;
 using PicView.Core.ViewModels;
 
 namespace PicView.Avalonia.Input;
@@ -161,30 +164,34 @@ public static class MainKeyboardShortcuts2
     /// <returns>True if the key event was handled by a special case handler.</returns>
     private static async ValueTask<bool> HandleSpecialCases(KeyEventArgs e, MainWindowViewModel? vm)
     {
-        if (vm is null) return false;
-
-        // TODO: Re-implement cropping logic with new architecture if needed
-        // For now, we stub this out or need to access the relevant View/ViewModel
-        /*
         // Handle cropping mode
-        if (CropFunctions.IsCropping)
+        if (vm.WindowTabs.ActiveTab.CurrentValue.CropService is not null)
         {
-            if (vm.MainWindow.CurrentView.CurrentValue is CropControl cropControl )
+            if (vm.WindowTabs.ActiveTab.CurrentValue.CropService.IsCropping )
             {
-                await cropControl.KeyDownHandler(null, e);
+                vm.WindowTabs.ActiveTab.CurrentValue.CropService.CloseCropControl();
+                return true;
             }
-            return true;
         }
-        */
 
         // Handle open dialog
         if (DialogManager.IsDialogOpen)
         {
-            if (vm.TopTitlebarViewModel.DropDownMenu.IsDropDownMenuVisible.CurrentValue && e.Key is Key.Escape)
+            if (e.Key is Key.Escape)
             {
-                vm.TopTitlebarViewModel.DropDownMenu.IsDropDownMenuVisible.Value = false;
+                if (vm.TopTitlebarViewModel.DropDownMenu.IsDropDownMenuVisible.CurrentValue)
+                {
+                    vm.TopTitlebarViewModel.DropDownMenu.IsDropDownMenuVisible.Value = false;
+                    return true;
+                }
+                
+                var animatedPopUp = UIHelper.GetMainView.MainPanel.Children.OfType<AnimatedPopUp>().FirstOrDefault();
+                if (animatedPopUp is not null)
+                {
+                    await animatedPopUp.AnimatedClosing();
+                    return true;
+                }
             }
-            return false;
         }
         
         // Handle escape key

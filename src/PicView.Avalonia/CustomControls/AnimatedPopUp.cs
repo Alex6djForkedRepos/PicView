@@ -25,8 +25,6 @@ public class AnimatedPopUp : ContentControl
         Loaded += async delegate { await AnimatedOpening(); };
     }
 
-    public event EventHandler<KeyEventArgs> KeyChanged;
-
     public bool ClickingOutsideCloses
     {
         get => (bool)GetValue(ClickingOutsideClosesProperty)!;
@@ -121,19 +119,6 @@ public class AnimatedPopUp : ContentControl
         {
             IsHitTestVisible = false;
             IsVisible = false;
-        }
-    }
-
-    // ReSharper disable once UnusedMember.Global
-    public void KeyDownHandler(object? sender, KeyEventArgs e)
-    {
-        if (e.Key is Key.Escape)
-        {
-            _ = AnimatedClosing();
-        }
-        else
-        {
-            KeyChanged(this, e);
         }
     }
 }

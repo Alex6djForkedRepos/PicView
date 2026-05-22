@@ -3,8 +3,6 @@ using Avalonia.Interactivity;
 using Avalonia.LogicalTree;
 using PicView.Avalonia.CustomControls;
 using PicView.Avalonia.Functions;
-using PicView.Avalonia.UI;
-using PicView.Avalonia.ViewModels;
 using PicView.Core.DebugTools;
 using PicView.Core.ViewModels;
 using R3;
@@ -22,8 +20,6 @@ public partial class QuickSettingsDialog : AnimatedPopUp
 
     private void OnLoaded(object? sender, RoutedEventArgs e)
     {
-        _disposables.Clear();
-
         Observable.FromEventHandler<RoutedEventArgs>(h => AllSettingsButton.Click += h,
                 h => AllSettingsButton.Click -= h)
             .SubscribeAwait(async (_, _) =>
