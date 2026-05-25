@@ -67,9 +67,8 @@ public static class ImageSizeCalculationHelper
             windowHeight = calculatedImageHeight + uiBottomSize + uiTopSize + galleryHeight;
         }
 
-        var initialZoom = Settings.WindowProperties.AutoFit ? aspectRatio : 1.0;
         return new ImageSize(windowWidth, windowHeight, calculatedImageWidth, calculatedImageHeight, 
-            scrollWidth, scrollHeight, initialZoom);
+            scrollWidth, scrollHeight, aspectRatio);
     }
 
     private static double CalculateAspectRatio(double rotationAngle, double maxWidth, double maxHeight, double width,

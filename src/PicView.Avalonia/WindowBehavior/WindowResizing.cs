@@ -158,62 +158,36 @@ public static class WindowResizing
         vm.WindowTabs.ActiveTab.CurrentValue.InitialZoom.Value = size.InitialZoom;
         vm.ScrollViewerWidth.Value = size.ScrollViewerWidth;
         vm.ScrollViewerHeight.Value = size.ScrollViewerHeight;
-        var rotationAngle = vm.WindowTabs.ActiveTab.CurrentValue.RotationAngle.CurrentValue;
-        var isRotated = rotationAngle is 90 or 270;
-
-        var imageWidth = isRotated ? size.Height : size.Width;
-        var imageHeight = isRotated ? size.Width : size.Height;
+        
+        vm.ImageWidth.Value = size.Width;
+        vm.ImageHeight.Value = size.Height;
 
         if (Settings.WindowProperties.Fullscreen)
         {
             vm.WindowMaxWidth.Value = ScreenHelper.ScreenSize.Width;
             vm.WindowMaxHeight.Value = ScreenHelper.ScreenSize.Height;
-            vm.ImageWidth.Value = imageWidth;
-            vm.ImageHeight.Value = imageHeight;
         }
         else if (Settings.WindowProperties.Maximized)
         {
             vm.WindowMaxWidth.Value = ScreenHelper.ScreenSize.WorkingAreaWidth;
             vm.WindowMaxHeight.Value = ScreenHelper.ScreenSize.WorkingAreaHeight;
-            vm.ImageWidth.Value = imageWidth;
-            vm.ImageHeight.Value = imageHeight;
         }
         else if (Settings.WindowProperties.AutoFit)
         {
             if (reason is WindowResizeReason.User)
             {
-                if (isRotated)
-                {
-                    vm.ImageWidth.Value = imageHeight;
-                    vm.ImageHeight.Value = imageWidth;
-                }
-                else
-                {
-                    vm.ImageWidth.Value = imageWidth;
-                    vm.ImageHeight.Value = imageHeight;
-                }
-
+                vm.WindowMaxWidth.Value = vm.WindowMaxHeight.Value = double.NaN;
             }
             else
             {
+                var rotationAngle = vm.WindowTabs.ActiveTab.CurrentValue.RotationAngle.CurrentValue;
+                var isRotated = rotationAngle is 90 or 270;
                 vm.WindowMaxWidth.Value = isRotated ? size.WindowHeight : size.WindowWidth;
                 vm.WindowMaxHeight.Value = isRotated ? size.WindowWidth : size.WindowHeight;
-                vm.ImageWidth.Value = Convert.ToInt32(imageWidth - 2); // Fixes incorrect rounding
-                vm.ImageHeight.Value = imageHeight;
             }
         }
         else
         {
-            if (isRotated)
-            {
-                vm.ImageWidth.Value = imageHeight;
-                vm.ImageHeight.Value = imageWidth;
-            }
-            else
-            {
-                vm.ImageWidth.Value = imageWidth;
-                vm.ImageHeight.Value = imageHeight;
-            }
             vm.WindowMaxWidth.Value =
                 vm.WindowMaxHeight.Value = double.NaN;
         }
