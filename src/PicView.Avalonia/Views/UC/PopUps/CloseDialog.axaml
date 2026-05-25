@@ -30,7 +30,9 @@
                 x:Name="CancelButton"
                 Margin="0,0,10,0"
                 Padding="30,0"
-                Classes="BorderStyle altHover mainBtn">
+                Classes="BorderStyle altHover mainBtn"
+                HotKey="Escape"
+                IsCancel="True">
                 <TextBlock
                     Classes="txt"
                     Foreground="{DynamicResource MainTextColor}"
@@ -40,7 +42,9 @@
                 x:Name="CloseButton"
                 Padding="30,0"
                 Background="{DynamicResource AccentColor}"
-                Classes="BorderStyle accentHover mainBtn">
+                Classes="BorderStyle accentHover mainBtn"
+                HotKey="Enter"
+                IsDefault="True">
                 <TextBlock Classes="txt" Text="{CompiledBinding Translation.Close.Value}" />
             </Button>
         </StackPanel>
