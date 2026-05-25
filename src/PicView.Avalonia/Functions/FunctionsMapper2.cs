@@ -410,11 +410,10 @@ public class FunctionsMapper2(MainWindowViewModel vm, Window window) : IFunction
 
         #region Toggle UI functions
 
-        /// <inheritdoc cref="SettingsUpdater.ToggleScroll(MainViewModel)" />
+    /// <inheritdoc cref="SettingsUpdater.ToggleScroll(MainViewModel)" />
     public async ValueTask ToggleScroll()
     {
-        // await SettingsUpdater.ToggleScroll(vm).ConfigureAwait(false);
-        return;
+        await SettingsUpdater2.ToggleScroll(vm).ConfigureAwait(false);
     }
 
     /// <inheritdoc cref="SettingsUpdater.ToggleCtrlZoom(MainViewModel)" />

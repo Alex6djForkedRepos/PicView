@@ -23,6 +23,8 @@
                 <customControls:ZoomPanControl x:Name="ZoomPanControl" FittingScale="{Binding InitialZoom.Value}">
                     <customControls:AutoScrollViewer
                         x:Name="ImageScrollViewer"
+                        Width="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).ScrollViewerWidth.Value}"
+                        Height="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).ScrollViewerHeight.Value}"
                         Focusable="False"
                         HorizontalScrollBarVisibility="Disabled"
                         VerticalScrollBarVisibility="Disabled">

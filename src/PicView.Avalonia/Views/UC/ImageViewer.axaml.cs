@@ -1,5 +1,6 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.LogicalTree;
@@ -104,6 +105,13 @@ public partial class ImageViewer : UserControl
                 }
 
                 ZoomPreview.Margin = HoverBar.Opacity > 0 ? new Thickness(0,0,25,HoverBar.Bounds.Height / 2 + 25) : new Thickness(0, 0, 25, 25);
+            }, DebugHelper.LogError(nameof(ImageViewer), nameof(InitializeImageTransformer))).AddTo(ref _disposables);
+        
+        Observable.EveryValueChanged(Settings.Zoom, zoom => zoom.ScrollEnabled)
+            .Subscribe(isScrolling =>
+            {
+                ImageScrollViewer.VerticalScrollBarVisibility = isScrolling ?
+                    ScrollBarVisibility.Visible : ScrollBarVisibility.Hidden;
             }, DebugHelper.LogError(nameof(ImageViewer), nameof(InitializeImageTransformer))).AddTo(ref _disposables);
         
         // Correspond to change when index clicked on track

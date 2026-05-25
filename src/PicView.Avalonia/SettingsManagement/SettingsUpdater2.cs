@@ -355,7 +355,7 @@ public static class SettingsUpdater2
         
         if (Settings.Zoom.ScrollEnabled)
         {
-            // TurnOffScroll(vm);
+            TurnOffScroll(vm);
         }
         else
         {

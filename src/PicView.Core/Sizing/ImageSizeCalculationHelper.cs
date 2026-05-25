@@ -37,32 +37,34 @@ public static class ImageSizeCalculationHelper
 
 
         double scrollWidth, scrollHeight;
-        var calculatedImageWidth = imageWidth * aspectRatio;
-        var calculatedImageHeight = imageHeight * aspectRatio;
-        if (Settings.Zoom.ScrollEnabled)
-        {            
-            // TODO
-            scrollWidth = double.NaN;
-            scrollHeight = double.NaN;
-        }
-        else
-        {
-            scrollWidth = double.NaN;
-            scrollHeight = double.NaN;
-        }
-
-
         double windowWidth, windowHeight;
+        double calculatedImageWidth, calculatedImageHeight;
+
         if (Settings.Zoom.ScrollEnabled)
         {
-            // TODO
-            windowWidth = windowHeight = double.NaN;
+            // Calculate aspect ratio that fits the image to the available width, 
+            // but ignore the height constraint to allow for scrolling.
+            aspectRatio = CalculateAspectRatio(rotationAngle, maxAvailableWidth, double.PositiveInfinity, imageWidth, imageHeight);
+
+            calculatedImageWidth = imageWidth * aspectRatio;
+            calculatedImageHeight = imageHeight * aspectRatio;
+
+            scrollWidth = Math.Min(calculatedImageWidth, maxAvailableWidth);
+            scrollHeight = Math.Min(calculatedImageHeight, maxAvailableHeight);
+
+            windowWidth = scrollWidth + galleryWidth;
+            windowHeight = scrollHeight + uiBottomSize + uiTopSize + galleryHeight;
         }
         else
         {
+            calculatedImageWidth = imageWidth * aspectRatio;
+            calculatedImageHeight = imageHeight * aspectRatio;
+
+            scrollWidth = double.NaN;
+            scrollHeight = double.NaN;
+
             windowWidth = calculatedImageWidth + galleryWidth;
             windowHeight = calculatedImageHeight + uiBottomSize + uiTopSize + galleryHeight;
-
         }
 
         var initialZoom = Settings.WindowProperties.AutoFit ? aspectRatio : 1.0;
@@ -173,28 +175,42 @@ public static class ImageSizeCalculationHelper
         var aspectRatio = CalculateAspectRatio(rotationAngle, maxAvailableWidth, maxAvailableHeight, combinedWidth, largestHeight);
 
         // 4. Apply the scaling factor to our virtual image.
-        var calculatedCombinedWidth = combinedWidth * aspectRatio;
-        var calculatedLargestHeight = largestHeight * aspectRatio;
-
+        double calculatedCombinedWidth, calculatedLargestHeight;
+        double scrollWidth, scrollHeight;
         double windowWidth, windowHeight;
+
         if (Settings.Zoom.ScrollEnabled)
         {
-            // TODO: Add scrolling logic in the future
-            windowWidth = windowHeight = double.NaN;
+            aspectRatio = CalculateAspectRatio(rotationAngle, maxAvailableWidth, double.PositiveInfinity, combinedWidth, largestHeight);
+
+            calculatedCombinedWidth = combinedWidth * aspectRatio;
+            calculatedLargestHeight = largestHeight * aspectRatio;
+
+            scrollWidth = Math.Min(calculatedCombinedWidth, maxAvailableWidth);
+            scrollHeight = Math.Min(calculatedLargestHeight, maxAvailableHeight);
+
+            windowWidth = scrollWidth + galleryWidth;
+            windowHeight = scrollHeight + uiBottomSize + uiTopSize + galleryHeight;
         }
         else
         {
+            calculatedCombinedWidth = combinedWidth * aspectRatio;
+            calculatedLargestHeight = largestHeight * aspectRatio;
+
+            scrollWidth = double.NaN;
+            scrollHeight = double.NaN;
+
             windowWidth = calculatedCombinedWidth + galleryWidth;
             windowHeight = calculatedLargestHeight + uiBottomSize + uiTopSize + galleryHeight;
         }
-        
+
         return new ImageSize(
             windowWidth, 
             windowHeight, 
             calculatedCombinedWidth, 
             calculatedLargestHeight, 
-            double.NaN, // scrollWidth
-            double.NaN, // scrollHeight
+            scrollWidth, 
+            scrollHeight, 
             aspectRatio);
     }
 }
