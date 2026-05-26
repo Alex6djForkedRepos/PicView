@@ -251,6 +251,214 @@ public class NavigationService(
 
     public bool CanNavigate(TabViewModel tab) => tab?.ImageIterator?.Files?.Count > 0;
 
+    public async ValueTask NavigateToNextFolderAsync(TabViewModel tab, CancellationTokenSource ct)
+    {
+        var currentDir = tab.Model?.FileInfo?.DirectoryName;
+        if (currentDir == null)
+        {
+            return;
+        }
+
+        var nextDir = await Task.Run(() => FindNextValidDirectory(currentDir), ct.Token).ConfigureAwait(false);
+        if (nextDir != null)
+        {
+            await LoadFromDirectoryAsync(new FileInfo(nextDir), tab, ct).ConfigureAwait(false);
+        }
+    }
+
+    public async ValueTask NavigateToPreviousFolderAsync(TabViewModel tab, CancellationTokenSource ct)
+    {
+        var currentDir = tab.Model?.FileInfo?.DirectoryName;
+        if (currentDir == null)
+        {
+            return;
+        }
+
+        var prevDir = await Task.Run(() => FindPreviousValidDirectory(currentDir), ct.Token).ConfigureAwait(false);
+        if (prevDir != null)
+        {
+            await LoadFromDirectoryAsync(new FileInfo(prevDir), tab, ct).ConfigureAwait(false);
+        }
+    }
+
+    private string? FindNextValidDirectory(string currentPath)
+    {
+        if (!Settings.Sorting.IncludeSubDirectories)
+        {
+            return GetNextSiblingOrAncestorSibling(currentPath);
+        }
+
+        var firstChild = GetFirstValidChild(currentPath);
+        return firstChild ?? GetNextSiblingOrAncestorSibling(currentPath);
+    }
+
+    private string? GetFirstValidChild(string path)
+    {
+        try
+        {
+            var dir = new DirectoryInfo(path);
+            var subDirs = dir.GetDirectories().ToList();
+            SortDirectories(subDirs);
+
+            foreach (var sub in subDirs)
+            {
+                if (IsDirectoryValid(sub.FullName)) return sub.FullName;
+                if (!Settings.Sorting.IncludeSubDirectories)
+                {
+                    continue;
+                }
+
+                var child = GetFirstValidChild(sub.FullName);
+                if (child != null)
+                {
+                    return child;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            DebugHelper.LogDebug(nameof(NavigationService), nameof(GetFirstValidChild), ex);
+        }
+        return null;
+    }
+
+    private string? GetNextSiblingOrAncestorSibling(string path)
+    {
+        var dir = new DirectoryInfo(path);
+        var parent = dir.Parent;
+        if (parent == null)
+        {
+            return null;
+        }
+
+        try
+        {
+            var siblings = parent.GetDirectories().ToList();
+            SortDirectories(siblings);
+            var index = siblings.FindIndex(d => d.FullName.Equals(path, StringComparison.OrdinalIgnoreCase));
+
+            for (var i = index + 1; i < siblings.Count; i++)
+            {
+                var sibling = siblings[i];
+                if (IsDirectoryValid(sibling.FullName)) return sibling.FullName;
+                if (!Settings.Sorting.IncludeSubDirectories)
+                {
+                    continue;
+                }
+
+                var child = GetFirstValidChild(sibling.FullName);
+                if (child != null) return child;
+            }
+        }
+        catch (Exception ex)
+        {
+            DebugHelper.LogDebug(nameof(NavigationService), nameof(GetNextSiblingOrAncestorSibling), ex);
+        }
+
+        return GetNextSiblingOrAncestorSibling(parent.FullName);
+    }
+
+    private string? FindPreviousValidDirectory(string currentPath)
+    {
+        var dir = new DirectoryInfo(currentPath);
+        var parent = dir.Parent;
+        if (parent is null)
+        {
+            return null;
+        }
+
+        try
+        {
+            var siblings = parent.GetDirectories().ToList();
+            SortDirectories(siblings);
+            var index = siblings.FindIndex(d => d.FullName.Equals(currentPath, StringComparison.OrdinalIgnoreCase));
+
+            if (index <= 0)
+            {
+                return IsDirectoryValid(parent.FullName)
+                    ? parent.FullName
+                    : FindPreviousValidDirectory(parent.FullName);
+            }
+
+            for (var i = index - 1; i >= 0; i--)
+            {
+                var sibling = siblings[i];
+                var lastChild = GetLastValidDescendantOrSelf(sibling.FullName);
+                if (lastChild != null)
+                {
+                    return lastChild;
+                }
+            }
+
+            return IsDirectoryValid(parent.FullName) ? parent.FullName : FindPreviousValidDirectory(parent.FullName);
+        }
+        catch (Exception ex)
+        {
+            DebugHelper.LogDebug(nameof(NavigationService), nameof(FindPreviousValidDirectory), ex);
+            return null;
+        }
+    }
+
+    private string? GetLastValidDescendantOrSelf(string path)
+    {
+        if (!Settings.Sorting.IncludeSubDirectories)
+        {
+            return IsDirectoryValid(path) ? path : null;
+        }
+
+        try
+        {   
+            var dir = new DirectoryInfo(path);
+            var subDirs = dir.GetDirectories().ToList();
+            SortDirectories(subDirs);
+
+            for (var i = subDirs.Count - 1; i >= 0; i--)
+            {
+                var lastChild = GetLastValidDescendantOrSelf(subDirs[i].FullName);
+                if (lastChild != null) return lastChild;
+            }
+        }
+        catch (Exception ex)
+        {
+            DebugHelper.LogDebug(nameof(NavigationService), nameof(GetLastValidDescendantOrSelf), ex);
+        }
+
+        return IsDirectoryValid(path) ? path : null;
+    }
+
+    private static bool IsDirectoryValid(string path)
+    {
+        try
+        {
+            var dir = new DirectoryInfo(path);
+            if (!dir.Exists)
+            {
+                return false;
+            }
+
+            return Settings.Sorting.IncludeSubDirectories ?
+                dir.EnumerateFiles("*", SearchOption.AllDirectories).Any(f => f.FullName.IsSupported()) :
+                dir.EnumerateFiles("*", SearchOption.TopDirectoryOnly).Any(f => f.FullName.IsSupported());
+        }
+        catch (Exception ex)
+        {
+            DebugHelper.LogDebug(nameof(NavigationService), nameof(IsDirectoryValid), ex);
+            return false;
+        }
+    }
+
+    private void SortDirectories(List<DirectoryInfo> dirs)
+    {
+        if (!Settings.Sorting.Ascending)
+        {
+            dirs.Sort((x, y) => stringComparer(y.Name, x.Name));
+        }
+        else
+        {
+            dirs.Sort((x, y) => stringComparer(x.Name, y.Name));
+        }
+    }
+
     public async ValueTask SortAsync(TabViewModel tab, SortFilesBy sortOrder, CancellationTokenSource ct)
     {
         Settings.Sorting.SortPreference = (int)sortOrder;

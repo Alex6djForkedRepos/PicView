@@ -34,4 +34,16 @@ public interface INavigationService
     ValueTask SortAsync(TabViewModel tab, bool ascending, CancellationTokenSource ct);
 
     ValueTask<bool> LoadLastFileAsync(TabViewModel tab, CancellationTokenSource ct);
+
+    /// <summary>
+    /// Navigates to the next folder relative to the current image's directory.
+    /// If <see cref="PicView.Core.Config.Sorting.IncludeSubDirectories"/> is true, it explores subdirectories first.
+    /// </summary>
+    ValueTask NavigateToNextFolderAsync(TabViewModel tab, CancellationTokenSource ct);
+
+    /// <summary>
+    /// Navigates to the previous folder relative to the current image's directory.
+    /// If <see cref="PicView.Core.Config.Sorting.IncludeSubDirectories"/> is true, it explores subdirectories in reverse order.
+    /// </summary>
+    ValueTask NavigateToPreviousFolderAsync(TabViewModel tab, CancellationTokenSource ct);
 }

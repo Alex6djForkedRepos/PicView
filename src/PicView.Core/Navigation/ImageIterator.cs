@@ -1,6 +1,4 @@
-using PicView.Core.DebugTools;
 using PicView.Core.FileHistory;
-using PicView.Core.ImageDecoding;
 using PicView.Core.Models;
 using PicView.Core.Navigation.Interfaces;
 using PicView.Core.ViewModels;

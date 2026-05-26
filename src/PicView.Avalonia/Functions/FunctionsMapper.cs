@@ -209,16 +209,12 @@ public class FunctionsMapper(MainWindowViewModel vm, Window window) : IFunctions
             NavigateTo.Next).ConfigureAwait(false);
 
     /// <inheritdoc cref="NavigationManager.NavigateBetweenDirectories(bool, MainViewModel)" />
-    public async ValueTask NextFolder()
-    {
-        // await NavigationManager.NavigateBetweenDirectories(true, vm).ConfigureAwait(false);
-        return;
-    }
+    public async ValueTask NextFolder() =>
+        await vm.WindowTabs.NextFolder().ConfigureAwait(false);
 
     public async ValueTask NextArchive()
     {
-        // await NavigationManager.NavigateBetweenArchives(true, vm).ConfigureAwait(false);
-        return;
+        
     }
     
     /// <inheritdoc cref="NavigationManager.NavigateFirstOrLast(bool, MainViewModel)" />
@@ -231,16 +227,12 @@ public class FunctionsMapper(MainWindowViewModel vm, Window window) : IFunctions
             NavigateTo.Previous).ConfigureAwait(false);
 
     /// <inheritdoc cref="NavigationManager.NavigateBetweenDirectories(bool, MainViewModel)" />
-    public async ValueTask PrevFolder()
-    {
-        // await NavigationManager.NavigateBetweenDirectories(false, vm).ConfigureAwait(false);
-        return;
-    }
+    public async ValueTask PrevFolder() =>
+        await vm.WindowTabs.PrevFolder().ConfigureAwait(false);
 
     public async ValueTask PrevArchive()
     {
-        // await NavigationManager.NavigateBetweenArchives(false, vm).ConfigureAwait(false);
-        return;
+        
     }
 
     /// <inheritdoc cref="NavigationManager.NavigateFirstOrLast(bool, MainViewModel)" />
