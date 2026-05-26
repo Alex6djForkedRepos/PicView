@@ -235,7 +235,7 @@ public partial class BatchResizeView : UserControl
         return (thumbIsPercentageResized, thumbIsWidthResized, thumbIsHeightResized, saveDestination);
     }
 
-    private static void InitializeData()
+    private void InitializeData()
     {
         if (Application.Current.DataContext is not CoreViewModel core)
         {
@@ -258,6 +258,13 @@ public partial class BatchResizeView : UserControl
 
         batch.SingleWidthValue.Value = batch.WidthValue.Value = width;
         batch.SingleHeightValue.Value = batch.HeightValue.Value = height;
+
+        var config = batch.Config;
+        CompressionComboBox.SelectedIndex = config.WindowProperties.CompressionIndex;
+        IsQualityEnabledBox.IsChecked = config.WindowProperties.IsQualityEnabled;
+        ConversionComboBox.SelectedIndex = config.WindowProperties.ConvertToIndex;
+        ResizeComboBox.SelectedIndex = config.WindowProperties.ResizeIndex;
+        ThumbnailsComboBox.SelectedIndex = config.WindowProperties.GenerateThumbnailsIndex;
     }
 
     private void IsQualityEnabledBox_OnIsCheckedChanged(object? sender, RoutedEventArgs e)
