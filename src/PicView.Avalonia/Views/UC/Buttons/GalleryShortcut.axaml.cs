@@ -20,7 +20,7 @@ public partial class GalleryShortcut : UserControl
             {
                 return;
             }
-            _ = new HoverFadeButtonHandler(this, vm, InnerButton);
+            _ = new HoverFadeButtonHandler(this, InnerButton);
         };
     }
 }

@@ -3,10 +3,8 @@ using Avalonia.Input;
 using Avalonia.LogicalTree;
 using Avalonia.Threading;
 using PicView.Avalonia.Animations;
-using PicView.Avalonia.Gallery;
 using PicView.Avalonia.Views.UC;
 using PicView.Core.DebugTools;
-using PicView.Core.ViewModels;
 
 namespace PicView.Avalonia.UI;
 
@@ -17,20 +15,17 @@ public class HoverFadeButtonHandler : IDisposable
 {
     private readonly Control? _childButton;
     private readonly Control _mainButton;
-    private readonly MainWindowViewModel _vm;
     private CancellationTokenSource? _fadeCts;
 
     /// <summary>
     ///     Initializes the hover fade logic for a button or button group.
     /// </summary>
     /// <param name="mainButton">The main button or parent control.</param>
-    /// <param name="vm">The ViewModel for context (navigation, settings, etc).</param>
     /// <param name="childButton">Optional child button (e.g., an icon inside the button).</param>
-    public HoverFadeButtonHandler(Control mainButton, MainWindowViewModel vm, Control? childButton = null)
+    public HoverFadeButtonHandler(Control mainButton, Control? childButton = null)
     {
         _mainButton = mainButton ?? throw new ArgumentNullException(nameof(mainButton));
         _childButton = childButton;
-        _vm = vm ?? throw new ArgumentNullException(nameof(vm));
 
         AttachEvents();
     }
