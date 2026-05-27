@@ -56,13 +56,13 @@ public static class ImageSizeCalculationHelper
 
             if (isRotated)
             {
-                windowWidth = scrollHeight + uiBottomSize + uiTopSize + galleryHeight; 
-                windowHeight = scrollWidth + galleryWidth;   
+                windowWidth = Math.Max(scrollHeight + uiBottomSize + uiTopSize + galleryHeight, SizeDefaults.WindowMinSize); 
+                windowHeight = Math.Max(scrollWidth + galleryWidth, SizeDefaults.WindowMinSize);   
             }
             else
             {
-                windowWidth = scrollWidth + galleryWidth;
-                windowHeight = scrollHeight + uiBottomSize + uiTopSize + galleryHeight;
+                windowWidth = Math.Max(scrollWidth + galleryWidth, SizeDefaults.WindowMinSize);
+                windowHeight = Math.Max(scrollHeight + uiBottomSize + uiTopSize + galleryHeight, SizeDefaults.WindowMinSize);
             }
         }
         else
@@ -75,13 +75,13 @@ public static class ImageSizeCalculationHelper
 
             if (isRotated)
             {
-                windowWidth = calculatedImageHeight + galleryWidth;
-                windowHeight = calculatedImageWidth + uiBottomSize + uiTopSize + galleryHeight;
+                windowWidth = Math.Max(calculatedImageHeight + galleryWidth, SizeDefaults.WindowMinSize);
+                windowHeight = Math.Max(calculatedImageWidth + uiBottomSize + uiTopSize + galleryHeight, SizeDefaults.WindowMinSize);
             }
             else
             {
-                windowWidth = calculatedImageWidth + galleryWidth;
-                windowHeight = calculatedImageHeight + uiBottomSize + uiTopSize + galleryHeight;
+                windowWidth = Math.Max(calculatedImageWidth + galleryWidth, SizeDefaults.WindowMinSize);
+                windowHeight = Math.Max(calculatedImageHeight + uiBottomSize + uiTopSize + galleryHeight, SizeDefaults.WindowMinSize);
             }
         }
 

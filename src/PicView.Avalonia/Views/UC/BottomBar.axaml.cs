@@ -271,17 +271,22 @@ public partial class BottomBar : UserControl, IDisposable
             case < 520 and > 430:
                 PreviousButton.Width = NextButton.Width = 65;
                 break;
-            case < 380 and > 360:
-                PreviousButton.Width = NextButton.Width = 50;
+            case < 430 and > 350:
+                PreviousButton.Width = NextButton.Width = 60;
                 break;
             default:
-                PreviousButton.Width = NextButton.Width = 42;
+                ZoomInButton.Width = ZoomOutButton.Width = FlipButton.Width = RotateRightButton.Width = 33;
+                PreviousButton.Width = NextButton.Width = 50;
                 break;
         }
 
         if (width < 430)
         {
             ResetZoomButton.IsVisible = RotateLeftButton.IsVisible = false;
+        }
+        else
+        {
+            ZoomInButton.Width = ZoomOutButton.Width = FlipButton.Width = RotateRightButton.Width = 38;
         }
     }   
     
