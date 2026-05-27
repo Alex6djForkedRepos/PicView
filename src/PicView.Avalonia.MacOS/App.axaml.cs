@@ -57,7 +57,7 @@ public class App : Application, IPlatformSpecificService, IPlatformWindowService
                 {
                     if (e is ProtocolActivatedEventArgs protocolArgs)
                     {
-                        startUpFilePath = protocolArgs.Uri.AbsolutePath;
+                        startUpFilePath = protocolArgs.Uri.LocalPath;
                         await HandleInitialLoadOrConsecutive();
                     }
                     else if (e is FileActivatedEventArgs fileArgs)
