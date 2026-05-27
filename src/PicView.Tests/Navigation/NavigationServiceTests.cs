@@ -1,4 +1,3 @@
-using PicView.Core.Config;
 using PicView.Core.FileHandling.Interfaces;
 using PicView.Core.Localization;
 using PicView.Core.IPlatform;
@@ -14,7 +13,6 @@ namespace PicView.Tests.Navigation;
 public class NavigationServiceTests
 {
     private readonly MockImageLoader _mockImageLoader;
-    private readonly MockArchiveService _mockArchiveService;
     private readonly MockImageCache _mockCache;
     private readonly MockFileWatcherService _mockFileWatcherService;
     private readonly MockThumbnailLoader _mockThumbnailLoader;
@@ -23,7 +21,7 @@ public class NavigationServiceTests
 
     public NavigationServiceTests()
     {
-        SettingsManager.SetDefaults();
+        SetDefaults();
         TranslationManager.Init();
         // Initialize required translations to avoid NullReferenceException in GalleryThumbInfo
         if (TranslationManager.Translation != null)
@@ -37,14 +35,12 @@ public class NavigationServiceTests
         Directory.CreateDirectory(_testDirectory);
 
         _mockImageLoader = new MockImageLoader();
-        _mockArchiveService = new MockArchiveService();
         _mockCache = new MockImageCache();
         _mockFileWatcherService = new MockFileWatcherService();
         _mockThumbnailLoader = new MockThumbnailLoader();
 
         _navigationService = new NavigationService(
             _mockImageLoader,
-            _mockArchiveService,
             _mockCache,
             _mockFileWatcherService,
             new MockPlatformSpecificService(),
@@ -98,7 +94,7 @@ public class NavigationServiceTests
 
     private TabViewModel CreateTab(string directory)
     {
-        var tab = new TabViewModel("test", null);
+        var tab = new TabViewModel(null);
         // Initialize with mocks to avoid null refs
         var thumbCache = new MockThumbnailCache();
         tab.Initialize(_mockCache, thumbCache, new MockThumbnailLoader(), null, thumbCache);

@@ -163,6 +163,8 @@ public class FileWatcherService(
         {
             insertionIndex = FileSortOrder.InsertSorted(files, newFile, _stringComparer);
         }
+        
+        tab.ImageIterator.UpdateNavigationProperties();
 
         if (insertionIndex >= 0 && tab.Gallery.GalleryItems.Count > insertionIndex)
         {

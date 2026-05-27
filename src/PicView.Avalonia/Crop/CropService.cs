@@ -63,18 +63,14 @@ public class CropService(TabViewModel tabViewModel) : ICropService
         });
 
         IsCropping = true;
-
-        var windowTabs = vm.WindowTabs;
         
         tabViewModel.Title.Value = TranslationManager.Translation.CropMessage!;
         tabViewModel.TitleTooltip.Value = TranslationManager.Translation.CropMessage!;
 
-        _couldNavigate = windowTabs.CanActiveTabNavigate.CurrentValue;
         _couldNavigateBackwards = tabViewModel.CanNavigateBackwards.CurrentValue;
         _couldNavigateForwards = tabViewModel.CanNavigateForwards.CurrentValue;
         tabViewModel.CanNavigateBackwards.Value = false;
         tabViewModel.CanNavigateForwards.Value = false;
-        windowTabs.CanActiveTabNavigate.Value = false;
         
         //await FunctionsMapper.CloseMenus();
         
@@ -147,7 +143,6 @@ public class CropService(TabViewModel tabViewModel) : ICropService
         
         tabViewModel.CanNavigateBackwards.Value = _couldNavigateBackwards;
         tabViewModel.CanNavigateForwards.Value = _couldNavigateForwards;
-        vm.WindowTabs.CanActiveTabNavigate.Value = _couldNavigate;
     }
 
     private async ValueTask PackAndSaveImage()

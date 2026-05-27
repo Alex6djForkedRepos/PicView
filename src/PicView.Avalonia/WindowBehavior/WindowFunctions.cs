@@ -71,7 +71,6 @@ public static class WindowFunctions
         {
             await SaveSettingsAsync();
             //await KeybindingManager.UpdateKeyBindingsFile(); // Save keybindings
-            TempFileHelper.DeleteTempFiles();
             TempFileManager.Cleanup();
             await FileHistoryManager.SaveToFileAsync();
             ArchiveExtraction.Cleanup();

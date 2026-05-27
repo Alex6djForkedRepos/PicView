@@ -52,7 +52,7 @@
                 Command="{CompiledBinding WindowTabs.Next10}"
                 Header="{CompiledBinding Translation.AdvanceBy10Images,
                                          Mode=OneWay}"
-                IsEnabled="{CompiledBinding WindowTabs.CanActiveTabNavigate.Value}"
+                IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.CanNavigateForwards.Value}"
                 StaysOpenOnClick="True">
                 <MenuItem.Icon>
                     <Image
@@ -67,7 +67,7 @@
                 Command="{CompiledBinding WindowTabs.Next100}"
                 Header="{CompiledBinding Translation.AdvanceBy100Images.Value,
                                          Mode=OneWay}"
-                IsEnabled="{CompiledBinding WindowTabs.CanActiveTabNavigate.Value}"
+                IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.CanNavigateForwards.Value}"
                 StaysOpenOnClick="True">
                 <MenuItem.Icon>
                     <Image
@@ -82,7 +82,7 @@
                 Command="{CompiledBinding WindowTabs.Prev10}"
                 Header="{CompiledBinding Translation.GoBackBy10Images.Value,
                                          Mode=OneWay}"
-                IsEnabled="{CompiledBinding WindowTabs.CanActiveTabNavigate.Value}"
+                IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.CanNavigateBackwards.Value}"
                 StaysOpenOnClick="True">
                 <MenuItem.Icon>
                     <Image
@@ -97,7 +97,7 @@
                 Command="{CompiledBinding WindowTabs.Prev100}"
                 Header="{CompiledBinding Translation.GoBackBy100Images.Value,
                                          Mode=OneWay}"
-                IsEnabled="{CompiledBinding WindowTabs.CanActiveTabNavigate.Value}"
+                IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.CanNavigateBackwards.Value}"
                 StaysOpenOnClick="True">
                 <MenuItem.Icon>
                     <Image
@@ -114,7 +114,7 @@
                 Command="{CompiledBinding WindowTabs.FirstFile}"
                 Header="{CompiledBinding Translation.FirstImage.Value,
                                          Mode=OneWay}"
-                IsEnabled="{CompiledBinding WindowTabs.CanActiveTabNavigate.Value}">
+                IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.CanNavigateBackwards.Value}">
                 <MenuItem.Icon>
                     <Image
                         Width="12"
@@ -128,7 +128,7 @@
                 Command="{CompiledBinding WindowTabs.LastFile}"
                 Header="{CompiledBinding Translation.LastImage.Value,
                                          Mode=OneWay}"
-                IsEnabled="{CompiledBinding WindowTabs.CanActiveTabNavigate.Value}">
+                IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.CanNavigateForwards.Value}">
                 <MenuItem.Icon>
                     <Image
                         Width="12"

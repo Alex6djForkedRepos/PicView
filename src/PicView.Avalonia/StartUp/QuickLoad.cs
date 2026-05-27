@@ -66,21 +66,20 @@ public static class QuickLoad
                     break;
                 }
                 case FileTypeResolver.LoadAbleFileType.Base64:
-                case FileTypeResolver.LoadAbleFileType.Zip:
                     throw new NotImplementedException();
+                case FileTypeResolver.LoadAbleFileType.Zip:
+                    await LoadArchiveFileAsync(core, fileInfo).ConfigureAwait(false);
+                    break;
                 default:
                     RevertToStartUpMenuOnFail(core);
                     break;
             }
             core.MainWindows.ActiveWindow.Value.IsLoadingIndicatorShown.Value = false;
-            return;
         }
-
+        
         if (source.IsArchive()) // Handle if file exist and is an archive
         {
-     //       vm.MainWindow.IsLoadingIndicatorShown.Value = true;);
-          //  await NavigationManager.LoadPicFromArchiveAsync(file, vm).ConfigureAwait(false);
-            return;
+            await LoadArchiveFileAsync(core, fileInfo).ConfigureAwait(false);
         }
         else
         {
@@ -185,6 +184,28 @@ public static class QuickLoad
         core.MainWindows.ActiveWindow.Value.IsLoadingIndicatorShown.Value = false;
         FileHistoryManager.Add(fileInfo.FullName);
 
+        await LoadGalleryIfNeeded(core, tab).ConfigureAwait(false);
+    }
+    
+    private static async ValueTask LoadArchiveFileAsync(CoreViewModel core, FileInfo source)
+    {
+        Dispatcher.UIThread.Invoke(() =>
+        {
+            core.MainWindows.ActiveWindow.Value.WindowTabs.ActiveTab.Value.CurrentView.Value = new ImageViewer();
+        }, DispatcherPriority.Send);
+        TabNavigationInitializer.Initialize(core, source);
+        var tab = core.MainWindows.ActiveWindow.CurrentValue.WindowTabs.ActiveTab.CurrentValue;
+        var isArchiveLoaded = await core.MainWindows.ActiveWindow.CurrentValue.WindowTabs.LoadFromArchiveAsync(source.FullName).ConfigureAwait(false);
+        if (!isArchiveLoaded)
+        {
+            RevertToStartUpMenuOnFail(core);
+            return;
+        }
+        await LoadGalleryIfNeeded(core, tab).ConfigureAwait(false);
+    }
+
+    private static async ValueTask LoadGalleryIfNeeded(CoreViewModel core, TabViewModel tab)
+    {
         if (Settings.Gallery.IsGalleryDocked)
         {
             if (Settings.Gallery.DockPosition is GalleryDockPosition.Closed)

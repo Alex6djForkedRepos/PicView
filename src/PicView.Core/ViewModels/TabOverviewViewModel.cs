@@ -21,7 +21,6 @@ public class TabOverviewViewModel
 {
     public BindableReactiveProperty<ObservableCollection<TabViewModel>> Tabs { get; } = new([]);
     public BindableReactiveProperty<TabViewModel> ActiveTab { get; }
-    public BindableReactiveProperty<bool> CanActiveTabNavigate { get; } = new();
     
     public INavigationService? SharedNavigation { get; private set; }
     public IImageCache? SharedCache { get; private set; }
@@ -63,7 +62,6 @@ public class TabOverviewViewModel
         Initialize(navigationService, cache, thumbnailLoader, fileWatcherService, thumbCache);
         ActiveTab.Value.InitializeImageIterator(files, cache, thumbCache, thumbnailLoader, fileWatcherService, thumbCache);
         SharedCache.Preload(ActiveTab.Value.Id, ActiveTab.Value.ImageIterator.CurrentIndex, false, files, ActiveTab.CurrentValue.GetTabCancellation().Token);
-        CanActiveTabNavigate.Value = files.Count > 1;
     }
     /// <inheritdoc cref="Initialize(INavigationService, IImageCache, IThumbnailLoader, IFileWatcherService, IThumbnailCache)"/>>
     public void LoadAndInitialize(INavigationService navigationService, IImageCache cache, IThumbnailCache thumbCache, IThumbnailLoader thumbnailLoader, IFileWatcherService fileWatcherService)
@@ -134,7 +132,6 @@ public class TabOverviewViewModel
         ActiveTab.Value = tab;
         
         ActiveTab.Value.IsSelected = true;
-        CanActiveTabNavigate.Value = ActiveTab.Value.ImageIterator?.Files?.Count > 1;
     }
     
     public void CloseTab()
@@ -247,7 +244,7 @@ public class TabOverviewViewModel
             return;
         }
         
-        if (!CanActiveTabNavigate.Value || SharedNavigation is null || tab.ImageIterator is null)
+        if (SharedNavigation is null || tab.ImageIterator is null)
         {
             return;
         }
@@ -328,7 +325,6 @@ public class TabOverviewViewModel
         }
 
         ActiveTab.Value = tab;
-        CanActiveTabNavigate.Value = tab.ImageIterator.Files.Count > 1;
         return true;
     }
     
@@ -344,7 +340,6 @@ public class TabOverviewViewModel
         await SharedNavigation.LoadFromUrlAsync(source, tab, ct).ConfigureAwait(false);
 
         ActiveTab.Value = tab;
-        CanActiveTabNavigate.Value = false;
         return true;
     }
     
@@ -357,7 +352,6 @@ public class TabOverviewViewModel
         var tab = senderTab ?? ActiveTab.Value;
         var ct = tab.GetTabCancellation();
         await SharedNavigation.LoadFromFileAsync(file, tab, ct).ConfigureAwait(false);
-        CanActiveTabNavigate.Value = tab.ImageIterator?.Files?.Count > 1;
         tab.SingleImageType = SingleImageType.None;
     }
     
@@ -375,7 +369,6 @@ public class TabOverviewViewModel
         var tab = senderTab ?? ActiveTab.Value;
         var ct = tab.GetTabCancellation();
         await SharedNavigation.LoadFromDirectoryAsync(new FileInfo(file), tab, ct).ConfigureAwait(false);
-        CanActiveTabNavigate.Value = tab.ImageIterator?.Files?.Count > 1;
         tab.SingleImageType = SingleImageType.None;
     }
     
@@ -398,12 +391,21 @@ public class TabOverviewViewModel
         var lastFileExists = await SharedNavigation.LoadLastFileAsync(tab, ct).ConfigureAwait(false);
         if (lastFileExists)
         {
-            CanActiveTabNavigate.Value = tab.ImageIterator?.Files?.Count > 1;
             return true;
         }
-        CanActiveTabNavigate.Value = false;
         tab.SingleImageType = SingleImageType.None;
         return false;
+    }
+
+    public async ValueTask<bool> LoadFromArchiveAsync(string source, TabViewModel? senderTab = null)
+    {
+        if (SharedNavigation is null)
+        {
+            return false;
+        }
+        var tab = senderTab ?? ActiveTab.Value;
+        var ct = tab.GetTabCancellation();
+        return await SharedNavigation.LoadFromArchiveAsync(source, tab, ct).ConfigureAwait(false);
     }
 
     public async ValueTask ReloadAsync(TabViewModel? senderTab = null)

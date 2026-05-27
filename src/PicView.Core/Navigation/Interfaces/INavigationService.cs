@@ -15,6 +15,8 @@ public interface INavigationService
     
     ValueTask LoadFromUrlAsync(string source, TabViewModel tab, CancellationTokenSource ct);
 
+    ValueTask<bool> LoadFromArchiveAsync(string archivePath, TabViewModel tab, CancellationTokenSource ct);
+
     ValueTask NavigateAsync(TabViewModel tab, NavigateTo to, CancellationTokenSource ct);
 
     ValueTask NavigateByIncrementsAsync(TabViewModel tab, SkipAmount skipAmount, bool forwards, CancellationTokenSource ct);

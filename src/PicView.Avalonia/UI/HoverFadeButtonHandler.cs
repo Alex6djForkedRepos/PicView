@@ -105,7 +105,7 @@ public class HoverFadeButtonHandler : IDisposable
                 return false;
             }
         }
-        return _childButton == null || _vm.WindowTabs.CanActiveTabNavigate.Value;
+        return true;
     }
 
     /// <summary>

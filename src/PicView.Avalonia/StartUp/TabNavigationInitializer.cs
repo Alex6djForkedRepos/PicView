@@ -17,7 +17,6 @@ public static class TabNavigationInitializer
         
         // 1. Create dependencies
         var imageLoader = new AvaloniaImageLoader();
-        var archiveService = new AvaloniaArchiveService();
         var thumbnailService = new AvaloniaThumbnailLoader();
 
         // 2. Create SharedImageCache
@@ -29,7 +28,7 @@ public static class TabNavigationInitializer
         var fileWatcher = new FileWatcherService(core.PlatformService.CompareStrings, sharedCache, thumbnailCache, thumbnailService);
 
         // 3. Create NavigationService (Core)
-        core.SharedNavigationService ??= new NavigationService(imageLoader, archiveService, sharedCache, fileWatcher, core.PlatformService, thumbnailService, core.PlatformService.CompareStrings);
+        core.SharedNavigationService ??= new NavigationService(imageLoader, sharedCache, fileWatcher, core.PlatformService, thumbnailService, core.PlatformService.CompareStrings);
 
         Debug.Assert(core.MainWindows.ActiveWindow.CurrentValue != null);
         var tabOverView = core.MainWindows.ActiveWindow.CurrentValue.WindowTabs;
@@ -57,7 +56,6 @@ public static class TabNavigationInitializer
         
         // 1. Create dependencies
         var imageLoader = new AvaloniaImageLoader();
-        var archiveService = new AvaloniaArchiveService();
         var thumbnailService = new AvaloniaThumbnailLoader();
 
         // 2. Create SharedImageCache
@@ -69,7 +67,7 @@ public static class TabNavigationInitializer
         var fileWatcher = new FileWatcherService(core.PlatformService.CompareStrings, sharedCache, thumbnailCache, thumbnailService);
 
         // 3. Create NavigationService (Core)
-        core.SharedNavigationService ??= new NavigationService(imageLoader, archiveService, sharedCache, fileWatcher, core.PlatformService, thumbnailService, core.PlatformService.CompareStrings);
+        core.SharedNavigationService ??= new NavigationService(imageLoader, sharedCache, fileWatcher, core.PlatformService, thumbnailService, core.PlatformService.CompareStrings);
 
         // 4. Initialize ViewModel
         Debug.Assert(core.MainWindows.ActiveWindow.CurrentValue != null);
