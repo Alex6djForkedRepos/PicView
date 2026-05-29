@@ -15,7 +15,7 @@ public abstract class AbstractPrintEngine : IPrintEngine
 
     public abstract PaperInfo ResolvePaper(PrintSettings settings);
 
-    public virtual async ValueTask UpdatePreviewAsync(MainWindowViewModel mainVm, PrintPreviewViewModel previewVm)
+    public virtual async ValueTask UpdatePreviewAsync(TabViewModel tab, PrintPreviewViewModel previewVm)
     {
         try
         {
@@ -25,7 +25,8 @@ public abstract class AbstractPrintEngine : IPrintEngine
                 return;
             }
 
-            if (GetBitmap(mainVm) is not { } avaloniaBmp)
+            var avaloniaBmp = GetBitmap(tab);
+            if (avaloniaBmp is null)
             {
                 return;
             }
@@ -81,30 +82,21 @@ public abstract class AbstractPrintEngine : IPrintEngine
             previewVm.PreviewImage.Value = rtb;
             previewVm.PageWidth.Value = layout.PageWidthPx;
             previewVm.PageHeight.Value = layout.PageHeightPx;
-            
-            previewVm.IsProcessing.Value = false;
         }
         catch (Exception ex)
         {
             DebugHelper.LogDebug(GetType().Name, nameof(UpdatePreviewAsync), ex);
         }
+        finally
+        {
+            previewVm.IsProcessing.Value = false;
+        }
     }
 
-    public async ValueTask RunPrintAsync(MainWindowViewModel vm)
+    public async ValueTask RunPrintAsync(TabViewModel tab, PrintPreviewViewModel preview)
     {
-        if (vm.PrintPreview == null)    
-        {
-            return;
-        }
-
-        var preview = vm.PrintPreview;
         var settings = preview.PrintSettings.Value;
         if (settings == null)
-        {
-            return;
-        }
-
-        if (GetBitmap(vm) is not { } avaloniaBmp)
         {
             return;
         }
@@ -113,7 +105,7 @@ public abstract class AbstractPrintEngine : IPrintEngine
 
         try
         {
-            await RunPrintJob(settings, avaloniaBmp);
+            await RunPrintJob(settings, GetBitmap(tab));
         }
         catch (Exception ex)
         {
@@ -127,10 +119,8 @@ public abstract class AbstractPrintEngine : IPrintEngine
 
     protected abstract ValueTask RunPrintJob(PrintSettings settings, Bitmap avaloniaBmp);
 
-    private static Bitmap? GetBitmap(MainWindowViewModel mainVm)
+    private static Bitmap? GetBitmap(TabViewModel tab)
     {
-        var tab = mainVm.WindowTabs.ActiveTab.Value;
-        if (tab == null) return null;
-        return tab.Image.Value as Bitmap ?? tab.Model.Image as Bitmap;
+        return tab.Image.CurrentValue as Bitmap;
     }
 }

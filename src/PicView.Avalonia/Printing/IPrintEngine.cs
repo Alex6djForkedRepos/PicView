@@ -4,6 +4,6 @@ namespace PicView.Avalonia.Printing;
 
 public interface IPrintEngine
 {
-    ValueTask UpdatePreviewAsync(MainWindowViewModel mainVm, PrintPreviewViewModel previewVm);
-    ValueTask RunPrintAsync(MainWindowViewModel mainVm);
+    ValueTask UpdatePreviewAsync(TabViewModel tab, PrintPreviewViewModel previewVm);
+    ValueTask RunPrintAsync(TabViewModel tab, PrintPreviewViewModel preview);
 }

@@ -1,4 +1,5 @@
 ﻿using PicView.Core.Config;
+using PicView.Core.DebugTools;
 using PicView.Core.Printing;
 using PicView.Core.ViewModels;
 using R3;
@@ -74,8 +75,8 @@ public static class PrintInitialization
             .ObserveOnThreadPool()
             .SubscribeAwait(async (_, _) =>
             {
-                await printEngine.UpdatePreviewAsync(vm, vm.PrintPreview);
-            })
+                await printEngine.UpdatePreviewAsync(vm.WindowTabs.ActiveTab.CurrentValue, vm.PrintPreview);
+            }, DebugHelper.LogError(nameof(PrintInitialization), nameof(InitializeAsync)))
             .AddTo(vm.PrintPreview.Disposables);
         
         // Any setting change triggers preview update
@@ -94,15 +95,16 @@ public static class PrintInitialization
             .ObserveOnThreadPool()
             .SubscribeAwait(async (_, _) =>
             {
-                await printEngine.UpdatePreviewAsync(vm, vm.PrintPreview);
-            })
+                await printEngine.UpdatePreviewAsync(vm.WindowTabs.ActiveTab.CurrentValue, vm.PrintPreview);
+            }, DebugHelper.LogError(nameof(PrintInitialization), nameof(InitializeAsync)))
             .AddTo(vm.PrintPreview.Disposables);
 
-        await printEngine.UpdatePreviewAsync(vm, vm.PrintPreview);
+        await printEngine.UpdatePreviewAsync(vm.WindowTabs.ActiveTab.CurrentValue, vm.PrintPreview);
         
         vm.PrintPreview.PrintCommand.SubscribeAwait(async (_, _) =>
         {
-            await printEngine.RunPrintAsync(vm);
-        }).AddTo(vm.PrintPreview.Disposables);
+            await printEngine.RunPrintAsync(vm.WindowTabs.ActiveTab.CurrentValue, vm.PrintPreview);
+        }, DebugHelper.LogError(nameof(PrintInitialization), nameof(InitializeAsync)))
+        .AddTo(vm.PrintPreview.Disposables);
     }
 }
