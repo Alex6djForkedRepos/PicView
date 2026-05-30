@@ -10,11 +10,12 @@ public static class Win32Print
     {
         var printers = new List<string> { TranslationManager.Translation.SaveAsPdf };
         const uint flags = NativeMethods.PRINTER_ENUM_LOCAL | NativeMethods.PRINTER_ENUM_CONNECTIONS;
-        
-        uint pcbNeeded;
-        uint pcReturned;
-        NativeMethods.EnumPrintersW(flags, null, 2, IntPtr.Zero, 0, out pcbNeeded, out pcReturned);
-        if (pcbNeeded == 0) return printers;
+
+        NativeMethods.EnumPrintersW(flags, null, 2, IntPtr.Zero, 0, out var pcbNeeded, out var pcReturned);
+        if (pcbNeeded == 0)
+        {
+            return printers;
+        }
 
         var pAddr = Marshal.AllocHGlobal((int)pcbNeeded);
         try
@@ -48,7 +49,10 @@ public static class Win32Print
     {
         uint pcchBuffer = 0;
         NativeMethods.GetDefaultPrinter(IntPtr.Zero, ref pcchBuffer);
-        if (pcchBuffer == 0) return null;
+        if (pcchBuffer == 0)
+        {
+            return null;
+        }
 
         var pAddr = Marshal.AllocHGlobal((int)pcchBuffer * 2);
         try
@@ -72,14 +76,17 @@ public static class Win32Print
     public static List<string> GetPaperSizes(string printerName)
     {
         var names = new List<string>();
-        var count = NativeMethods.DeviceCapabilitiesW(printerName, null, NativeMethods.DC_PAPERNAMES, IntPtr.Zero, IntPtr.Zero);
-        if (count <= 0) return names;
+        var count = NativeMethods.DeviceCapabilitiesW(printerName, null!, NativeMethods.DC_PAPERNAMES, IntPtr.Zero, IntPtr.Zero);
+        if (count <= 0)
+        {
+            return names;
+        }
 
         // DC_PAPERNAMES returns an array of char[64]
         var pAddr = Marshal.AllocHGlobal(count * 64 * 2);
         try
         {
-            if (NativeMethods.DeviceCapabilitiesW(printerName, null, NativeMethods.DC_PAPERNAMES, pAddr, IntPtr.Zero) != -1)
+            if (NativeMethods.DeviceCapabilitiesW(printerName, null!, NativeMethods.DC_PAPERNAMES, pAddr, IntPtr.Zero) != -1)
             {
                 for (var i = 0; i < count; i++)
                 {
@@ -120,39 +127,43 @@ public static class Win32Print
                 lpszDocName = jobTitle
             };
 
-            if (NativeMethods.StartDocW(hdc, ref di) > 0)
+            if (NativeMethods.StartDocW(hdc, ref di) <= 0)
             {
-                for (var i = 0; i < copies; i++)
-                {
-                    if (NativeMethods.StartPage(hdc) > 0)
-                    {
-                        var printableWidth = NativeMethods.GetDeviceCaps(hdc, NativeMethods.PHYSICALWIDTH);
-                        var printableHeight = NativeMethods.GetDeviceCaps(hdc, NativeMethods.PHYSICALHEIGHT);
-
-                        var bmi = new NativeMethods.BITMAPINFOHEADER
-                        {
-                            biSize = (uint)Marshal.SizeOf<NativeMethods.BITMAPINFOHEADER>(),
-                            biWidth = width,
-                            biHeight = -height, // Negative for top-down
-                            biPlanes = 1,
-                            biBitCount = 32,
-                            biCompression = 0 // BI_RGB
-                        };
-
-                        NativeMethods.StretchDIBits(
-                            hdc,
-                            0, 0, printableWidth, printableHeight,
-                            0, 0, width, height,
-                            pixels,
-                            ref bmi,
-                            NativeMethods.DIB_RGB_COLORS,
-                            NativeMethods.SRCCOPY);
-
-                        NativeMethods.EndPage(hdc);
-                    }
-                }
-                NativeMethods.EndDoc(hdc);
+                return true;
             }
+
+            for (var i = 0; i < copies; i++)
+            {
+                if (NativeMethods.StartPage(hdc) <= 0)
+                {
+                    continue;
+                }
+
+                var printableWidth = NativeMethods.GetDeviceCaps(hdc, NativeMethods.PHYSICALWIDTH);
+                var printableHeight = NativeMethods.GetDeviceCaps(hdc, NativeMethods.PHYSICALHEIGHT);
+
+                var bmi = new NativeMethods.BITMAPINFOHEADER
+                {
+                    biSize = (uint)Marshal.SizeOf<NativeMethods.BITMAPINFOHEADER>(),
+                    biWidth = width,
+                    biHeight = -height, // Negative for top-down
+                    biPlanes = 1,
+                    biBitCount = 32,
+                    biCompression = 0 // BI_RGB
+                };
+
+                NativeMethods.StretchDIBits(
+                    hdc,
+                    0, 0, printableWidth, printableHeight,
+                    0, 0, width, height,
+                    pixels,
+                    ref bmi,
+                    NativeMethods.DIB_RGB_COLORS,
+                    NativeMethods.SRCCOPY);
+
+                NativeMethods.EndPage(hdc);
+            }
+            NativeMethods.EndDoc(hdc);
             return true;
         }
         catch (Exception ex)
