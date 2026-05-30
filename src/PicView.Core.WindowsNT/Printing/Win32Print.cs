@@ -1,5 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 using PicView.Core.DebugTools;
+using PicView.Core.Localization;
 
 namespace PicView.Core.WindowsNT.Printing;
 
@@ -7,7 +8,7 @@ public static class Win32Print
 {
     public static List<string> GetAvailablePrinters()
     {
-        var printers = new List<string>();
+        var printers = new List<string> { TranslationManager.Translation.SaveAsPdf };
         const uint flags = NativeMethods.PRINTER_ENUM_LOCAL | NativeMethods.PRINTER_ENUM_CONNECTIONS;
         
         uint pcbNeeded;
