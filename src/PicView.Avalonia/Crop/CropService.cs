@@ -6,7 +6,6 @@ using ImageMagick;
 using PicView.Avalonia.Animations;
 using PicView.Avalonia.Clipboard;
 using PicView.Avalonia.FileSystem;
-using PicView.Avalonia.Functions;
 using PicView.Avalonia.ImageHandling;
 using PicView.Avalonia.Views.UC;
 using PicView.Avalonia.WindowBehavior;
@@ -25,7 +24,6 @@ public class CropService(TabViewModel tabViewModel) : ICropService
     private object? _backUpView;
     private bool _couldNavigateBackwards;
     private bool _couldNavigateForwards;
-    private bool _couldNavigate;
 
     public async Task StartCropControlAsync(MainWindowViewModel vm)
     {
@@ -36,7 +34,7 @@ public class CropService(TabViewModel tabViewModel) : ICropService
         
         _backUpView = tabViewModel.CurrentView.Value;
         var isDockedGalleryShown = Settings.Gallery.IsGalleryDocked;
-        // Hide bottom gallery when entering crop mode
+        // Hide gallery when entering crop mode
         if (isDockedGalleryShown)
         {
             // Reset setting before resizing
@@ -72,7 +70,7 @@ public class CropService(TabViewModel tabViewModel) : ICropService
         tabViewModel.CanNavigateBackwards.Value = false;
         tabViewModel.CanNavigateForwards.Value = false;
         
-        //await FunctionsMapper.CloseMenus();
+        vm.TopTitlebarViewModel.CloseDropDownMenu();
         
         if (isDockedGalleryShown)
         {
