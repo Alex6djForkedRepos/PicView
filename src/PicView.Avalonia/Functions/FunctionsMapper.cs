@@ -652,10 +652,13 @@ public class FunctionsMapper(MainWindowViewModel vm, Window window) : IFunctions
         await UIHelper.OpenNextFileHistoryEntry(vm).ConfigureAwait(false);
     }
     
-    /// <inheritdoc cref="FileManager.Print(string, MainViewModel)" />
     public async ValueTask Print()
     {
-        await FileManager2.Print(vm.WindowTabs.ActiveTab.CurrentValue.Model.FileInfo?.FullName, vm).ConfigureAwait(false);
+        if (Application.Current.DataContext is not CoreViewModel core)
+        {
+            return;
+        }
+        await Task.Run(() => core.PlatformService.Print(vm.WindowTabs.ActiveTab.CurrentValue.Model.FileInfo?.FullName));
     }
     
     public async ValueTask SaveAsPDF()
@@ -716,7 +719,7 @@ public class FunctionsMapper(MainWindowViewModel vm, Window window) : IFunctions
         }
 
         const bool recycle = true;
-        await FileManager2
+        await FileManager
             .DeleteFileWithOptionalDialog(recycle, vm.WindowTabs.ActiveTab.CurrentValue.Model
                 .FileInfo?.FullName, core.PlatformService)
             .ConfigureAwait(false);
@@ -730,7 +733,7 @@ public class FunctionsMapper(MainWindowViewModel vm, Window window) : IFunctions
             return;
         }
         const bool recycle = false;
-        await FileManager2
+        await FileManager
             .DeleteFileWithOptionalDialog(recycle, vm.WindowTabs.ActiveTab.CurrentValue.Model
                 .FileInfo?.FullName, core.PlatformService)
             .ConfigureAwait(false);
@@ -749,7 +752,7 @@ public class FunctionsMapper(MainWindowViewModel vm, Window window) : IFunctions
     public async ValueTask ShowFileProperties()
     {
         await Task.Run(() =>
-            FileManager2.ShowFileProperties(vm.WindowTabs.ActiveTab.CurrentValue.Model
+            FileManager.ShowFileProperties(vm.WindowTabs.ActiveTab.CurrentValue.Model
                 .FileInfo?.FullName)).ConfigureAwait(false);
     }
 

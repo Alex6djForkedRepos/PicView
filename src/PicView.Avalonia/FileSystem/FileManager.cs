@@ -1,12 +1,11 @@
-﻿using System.Runtime.InteropServices;
+﻿using Avalonia;
 using Avalonia.Threading;
-using PicView.Avalonia.ImageHandling;
-using PicView.Avalonia.Interfaces;
 using PicView.Avalonia.UI;
-using PicView.Avalonia.ViewModels;
 using PicView.Avalonia.Views.UC.PopUps;
 using PicView.Core.DebugTools;
+using PicView.Core.IPlatform;
 using PicView.Core.Localization;
+using PicView.Core.ViewModels;
 
 namespace PicView.Avalonia.FileSystem;
 
@@ -15,7 +14,7 @@ public static class FileManager
     /// <summary>
     ///     Deletes the current file, either permanently or by moving to recycle bin
     /// </summary>
-    public static async Task DeleteFileWithOptionalDialog(bool recycle, string path, IPlatformSpecificService platformService)
+    public static async ValueTask DeleteFileWithOptionalDialog(bool recycle, string path, IPlatformSpecificService platformService)
     {
         if (string.IsNullOrWhiteSpace(path))
         {
@@ -48,131 +47,78 @@ public static class FileManager
         }
         catch (Exception ex)
         {
-            LogAndShowError(ex, nameof(DeleteFileWithOptionalDialog));
+            DebugHelper.LogDebug(nameof(FileManager), nameof(DeleteFileWithOptionalDialog), ex);
         }
 
         return;
 
         void ShowDeleteDialog()
         {
+            var prompt = recycle
+                ? TranslationManager.Translation.DeleteFile
+                : TranslationManager.Translation.DeleteFilePermanently;
+            var deleteDialog = new DeleteDialog(prompt, path, recycle);
+            UIHelper.GetMainView.MainPanel.Children.Add(deleteDialog);
+            // Dialog handles the deletion
         }
     }
 
     /// <summary>
     ///     Shows properties dialog for the specified file
     /// </summary>
-    public static async Task ShowFileProperties(string path, MainViewModel vm)
+    public static void ShowFileProperties(string path)
     {
-        if (!ValidateParameters(path, vm.PlatformService))
+        CoreViewModel? core = Dispatcher.UIThread.Invoke(() => Application.Current.DataContext as CoreViewModel);
+        if (core is null)
         {
             return;
         }
-
         try
         {
-            await Task.Run(() => vm.PlatformService!.ShowFileProperties(path));
+            core.PlatformService.ShowFileProperties(path);
         }
         catch (Exception ex)
         {
-            LogAndShowError(ex, nameof(ShowFileProperties));
+            DebugHelper.LogDebug(nameof(FileManager), nameof(ShowFileProperties), ex);
         }
-    }
-
-    /// <summary>
-    ///     Prints the specified image file
-    /// </summary>
-    public static async Task Print(string? path, MainViewModel vm)
-    {
-        // try
-        // {
-        //     vm.MainWindow.IsLoadingIndicatorShown.Value = true;
-        //     if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-        //     {
-        //         await Task.Run(() => vm.PlatformService.Print(path));
-        //     }
-        //     else
-        //     {
-        //         // TODO: Refactor this for Windows
-        //         var file = await ImageFormatConverter.ConvertToCommonSupportedFormatAsync(path, vm)
-        //             .ConfigureAwait(false);
-        //
-        //         if (string.IsNullOrWhiteSpace(file))
-        //         {
-        //             TooltipHelper.ShowTooltipMessage(TranslationManager.Translation.UnexpectedError);
-        //             return;
-        //         }
-        //
-        //         await Task.Run(() => vm.PlatformService.Print(file));
-        //     }
-        // }
-        // catch (Exception ex)
-        // {
-        //     LogAndShowError(ex, nameof(Print));
-        // }
-        // finally
-        // {
-        //     vm.MainWindow.IsLoadingIndicatorShown.Value = false;
-        // }
     }
 
     /// <summary>
     ///     Opens the file location in file explorer
     /// </summary>
-    public static async Task LocateOnDisk(string path, MainViewModel vm)
+    public static async Task LocateOnDisk(string path)
     {
-        if (!ValidateParameters(path, vm.PlatformService))
+        if (Application.Current.DataContext is not CoreViewModel core)
         {
             return;
         }
 
         try
         {
-            await Task.Run(() => vm.PlatformService!.LocateOnDisk(path));
+            await Task.Run(() => core.PlatformService!.LocateOnDisk(path));
         }
         catch (Exception ex)
         {
-            LogAndShowError(ex, nameof(LocateOnDisk));
+            DebugHelper.LogDebug(nameof(FileManager), nameof(LocateOnDisk), ex);
         }
     }
 
     /// <summary>
     ///     Shows the dialog to open the file with another application
     /// </summary>
-    public static async Task OpenWith(string path, MainViewModel vm)
+    public static async Task OpenWith(string path)
     {
-        if (!ValidateParameters(path, vm.PlatformService))
+        if (Application.Current.DataContext is not CoreViewModel core)
         {
             return;
         }
-
         try
         {
-            await Task.Run(() => vm.PlatformService!.OpenWith(path));
+            await Task.Run(() => core.PlatformService!.OpenWith(path));
         }
         catch (Exception ex)
         {
-            LogAndShowError(ex, nameof(LocateOnDisk));
+            DebugHelper.LogDebug(nameof(FileManager), nameof(OpenWith), ex);
         }
     }
-
-    #region Private Helper Methods
-
-    /// <summary>
-    ///     Validates common parameters for file operations
-    /// </summary>
-    private static bool ValidateParameters(string? path, object? platformService)
-    {
-        return !string.IsNullOrWhiteSpace(path) && platformService != null;
-    }
-
-    /// <summary>
-    ///     Logs errors and shows appropriate error messages
-    /// </summary>
-    private static void LogAndShowError(Exception ex, string methodName)
-    {
-        DebugHelper.LogDebug(nameof(FileManager), methodName, ex);
-        TooltipHelper.ShowTooltipMessage(ex.Message);
-    }
-
-    #endregion
 }

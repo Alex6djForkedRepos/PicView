@@ -90,9 +90,8 @@ public partial class GalleryItem : NavigateAbleItem
         {
             return;
         }
-        var mainViewModel = core.MainWindows.ActiveWindow.CurrentValue;
         var fileName = item.FileLocation.CurrentValue;
-        _ = FileManager2.Print(fileName, mainViewModel).ConfigureAwait(false);
+        core.PlatformService.Print(fileName);
     }
 
     private void OpenWith_OnClick(object? sender, RoutedEventArgs e)
@@ -102,7 +101,7 @@ public partial class GalleryItem : NavigateAbleItem
             return;
         }
         var fileName = item.FileLocation.CurrentValue;
-        _ = FileManager2.OpenWith(fileName).ConfigureAwait(false);
+        _ = FileManager.OpenWith(fileName).ConfigureAwait(false);
     }
 
     private void LocateOnDisk_OnClick(object? sender, RoutedEventArgs e)
@@ -112,7 +111,7 @@ public partial class GalleryItem : NavigateAbleItem
             return;
         }
         var fileName = item.FileLocation.CurrentValue;
-        _ = FileManager2.LocateOnDisk(fileName).ConfigureAwait(false);
+        _ = FileManager.LocateOnDisk(fileName).ConfigureAwait(false);
     }
 
     private void WallpaperFilled_OnClick(object? sender, RoutedEventArgs e)
