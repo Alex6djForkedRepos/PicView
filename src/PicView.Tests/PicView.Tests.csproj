@@ -5,7 +5,7 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
 
-	    <EnablePreviewFeatures>true</EnablePreviewFeatures>
+        <EnablePreviewFeatures>true</EnablePreviewFeatures>
 
         <IsPackable>false</IsPackable>
         <IsTestProject>true</IsTestProject>
@@ -27,8 +27,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <!-- MacOS project excluded due to pre-existing build errors on Windows -->
-        <!--<ProjectReference Include="..\PicView.Avalonia.MacOS\PicView.Avalonia.MacOS.csproj" />-->
+        <ProjectReference Include="..\PicView.Avalonia.MacOS\PicView.Avalonia.MacOS.csproj" />
         <ProjectReference Include="..\PicView.Avalonia\PicView.Avalonia.csproj" />
         <ProjectReference Include="..\PicView.Core\PicView.Core.csproj" />
     </ItemGroup>
