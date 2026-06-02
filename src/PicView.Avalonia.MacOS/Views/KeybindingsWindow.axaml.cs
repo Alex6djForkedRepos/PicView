@@ -1,13 +1,8 @@
-using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Controls.ApplicationLifetimes;
-using Avalonia.Input;
 using Avalonia.Media;
 using PicView.Avalonia.CustomControls;
 using PicView.Avalonia.UI;
-using PicView.Avalonia.WindowBehavior;
 using PicView.Core.Config;
-using R3;
+using PicView.Core.Localization;
 
 namespace PicView.Avalonia.MacOS.Views;
 
@@ -26,6 +21,6 @@ public partial class KeybindingsWindow : GenericWindow
         {
             XKeybindingsView.Background = UIHelper.GetMenuBackgroundColor();
         }
-        GenericWindowHelper.KeybindingsWindowInitialize(this, config.WindowProperties);
+        GenericWindowHelper.GenericWindowInitialize(this, TranslationManager.Translation.ApplicationShortcuts, true, config.WindowProperties);
     }
 }

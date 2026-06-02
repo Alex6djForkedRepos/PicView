@@ -7,6 +7,7 @@ using PicView.Avalonia.MacOS.WindowImpl;
 using WindowInitializer = PicView.Avalonia.Services.WindowInitializer;
 using PicView.Avalonia.StartUp;
 using PicView.Avalonia.UI;
+using PicView.Avalonia.Views.UC;
 using PicView.Core.DebugTools;
 using PicView.Core.IPlatform;
 using PicView.Core.ViewModels;
@@ -248,8 +249,8 @@ public partial class MacMainWindow : MainWindow, IPlatformWindowService
     public void ShowSingleImageResizeWindow() =>
         _windowInitializer?.ShowSingleImageResizeWindow();
 
-    public async Task ShowBatchResizeWindow() =>
-        await _windowInitializer?.ShowBatchResizeWindow(DataContext as MainWindowViewModel);
+    public async ValueTask ShowBatchResizeWindow() =>
+        await _windowInitializer.ShowBatchResizeWindow();
 
     public void ShowEffectsWindow() =>
         _windowInitializer?.ShowEffectsWindow();
