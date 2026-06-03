@@ -34,9 +34,8 @@ public static class QuickLoad
     public static async ValueTask QuickLoadAsync(CoreViewModel core, string source, bool continueFromLeftOff)
     {        
         var fileInfo = new FileInfo(source);
-        if (!fileInfo.Exists) // If not file, try to load if URL, base64 or directory
+        if (!fileInfo.Exists) // If not file, try to load if URL or directory
         {
-            core.MainWindows.ActiveWindow.Value.IsLoadingIndicatorShown.Value = true;
             var check = FileTypeResolver.CheckIfLoadableString(source);
             if (check is null)
             {
@@ -46,9 +45,6 @@ public static class QuickLoad
 
             switch (check.Value.Type)
             {
-                case FileTypeResolver.LoadAbleFileType.File:
-                    await LoadSingleFileAsync(core, fileInfo).ConfigureAwait(false);
-                    break;
                 case FileTypeResolver.LoadAbleFileType.Directory:
                 {
                     var files = FileListRetriever.RetrieveFiles(new FileInfo(check.Value.Data),core.PlatformService.CompareStrings);
@@ -58,26 +54,20 @@ public static class QuickLoad
                         return;
                     }
                     await LoadSingleFileAsync(core, files[0], files).ConfigureAwait(false);
-                    break;
+                    return;
                 }
                 case FileTypeResolver.LoadAbleFileType.Web:
                 {
                     await LoadUrlImageAsync(core, check.Value.Data).ConfigureAwait(false);
-                    break;
+                    return;
                 }
-                case FileTypeResolver.LoadAbleFileType.Base64:
-                    throw new NotImplementedException();
-                case FileTypeResolver.LoadAbleFileType.Zip:
-                    await LoadArchiveFileAsync(core, fileInfo).ConfigureAwait(false);
-                    break;
                 default:
                     RevertToStartUpMenuOnFail(core);
-                    break;
+                    return;
             }
-            core.MainWindows.ActiveWindow.Value.IsLoadingIndicatorShown.Value = false;
         }
         
-        if (source.IsArchive()) // Handle if file exist and is an archive
+        if (source.IsArchive())
         {
             await LoadArchiveFileAsync(core, fileInfo).ConfigureAwait(false);
         }
@@ -114,16 +104,20 @@ public static class QuickLoad
             var displayProgress = HttpManager.GetProgressDisplay(totalFileSize, totalBytesDownloaded, progressPercentage);
             var title = $"{safeFileName} {TranslationManager.Translation?.Downloading} {displayProgress}";
 
-            // Update UI properties
-            if (tab.TabTitle.Value != title) tab.TabTitle.Value = title;
-            if (tab.Title.Value != title) tab.Title.Value = title;
-            if (tab.WindowTitle.Value != title) tab.WindowTitle.Value = title;
-            if (tab.TitleTooltip.Value != title) tab.TitleTooltip.Value = title;
+            tab.TabTitle.Value = 
+            tab.Title.Value = 
+            tab.WindowTitle.Value = 
+            tab.TitleTooltip.Value = title;
 
-            // if (totalBytesDownloaded.HasValue && totalFileSize.HasValue)
-            // {
-            //     platformService.SetTaskbarProgress((ulong)totalBytesDownloaded.Value, (ulong)totalFileSize.Value);
-            // }
+            if (!Settings.UIProperties.IsTaskbarProgressEnabled || !totalBytesDownloaded.HasValue || !totalFileSize.HasValue)
+            {
+                return;
+            }
+
+            var downloadedBytes = (ulong)totalBytesDownloaded.Value;
+            var totalSize = (ulong)totalFileSize.Value;
+            core.PlatformService.SetTaskbarProgress(downloadedBytes, totalSize);
+
         };
         await client.StartDownloadAsync(CancellationToken.None).ConfigureAwait(false);
         var model = await GetImageModel.GetImageModelAsync(new FileInfo(destPath)).ConfigureAwait(false);
@@ -133,6 +127,11 @@ public static class QuickLoad
         tab.UpdateTabTitle();
 
         FileHistoryManager.Add(url);
+
+        if (Settings.UIProperties.IsTaskbarProgressEnabled)
+        {
+            core.PlatformService.StopTaskbarProgress();
+        }
     }
 
     private static async ValueTask LoadSingleFileAsync(CoreViewModel core, FileInfo fileInfo, List<FileInfo>? files = null)
@@ -173,7 +172,14 @@ public static class QuickLoad
         }
         else
         {
-            TabNavigationInitializer.Initialize(core, fileInfo);
+            if (files is null)
+            {
+                TabNavigationInitializer.Initialize(core, fileInfo);
+            }
+            else
+            {
+                TabNavigationInitializer.Initialize(core, files);
+            }
         }
 
         if (Settings.WindowProperties.AutoFit)
@@ -189,18 +195,22 @@ public static class QuickLoad
     
     private static async ValueTask LoadArchiveFileAsync(CoreViewModel core, FileInfo source)
     {
+        var tab = core.MainWindows.ActiveWindow.CurrentValue.WindowTabs.ActiveTab.CurrentValue;
         Dispatcher.UIThread.Invoke(() =>
         {
             core.MainWindows.ActiveWindow.Value.WindowTabs.ActiveTab.Value.CurrentView.Value = new ImageViewer();
         }, DispatcherPriority.Send);
         TabNavigationInitializer.Initialize(core, source);
-        var tab = core.MainWindows.ActiveWindow.CurrentValue.WindowTabs.ActiveTab.CurrentValue;
+        core.MainWindows.ActiveWindow.Value.IsLoadingIndicatorShown.Value = true;
+        tab.SetLoading();
+
         var isArchiveLoaded = await core.MainWindows.ActiveWindow.CurrentValue.WindowTabs.LoadFromArchiveAsync(source.FullName).ConfigureAwait(false);
         if (!isArchiveLoaded)
         {
             RevertToStartUpMenuOnFail(core);
             return;
         }
+        core.MainWindows.ActiveWindow.Value.IsLoadingIndicatorShown.Value = false;
         await LoadGalleryIfNeeded(core, tab).ConfigureAwait(false);
     }
 
