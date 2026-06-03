@@ -234,6 +234,28 @@ public class TabOverviewViewModel
         await SharedNavigation.NavigateToPreviousFolderAsync(tab, ct).ConfigureAwait(false);
     }
 
+    public async ValueTask NextArchive()
+    {
+        var tab = ActiveTab.Value;
+        if (SharedNavigation is null)
+        {
+            return;
+        }
+        var ct = tab.GetTabCancellation();
+        await SharedNavigation.NavigateToNextArchiveAsync(tab, ct).ConfigureAwait(false);
+    }
+
+    public async ValueTask PrevArchive()
+    {
+        var tab = ActiveTab.Value;
+        if (SharedNavigation is null)
+        {
+            return;
+        }
+        var ct = tab.GetTabCancellation();
+        await SharedNavigation.NavigateToPreviousArchiveAsync(tab, ct).ConfigureAwait(false);
+    }
+
     public async ValueTask NavigateDirectionalAsync(bool isKeyHeldDown, NavigateTo direction)
     {
         var tab = ActiveTab.Value;

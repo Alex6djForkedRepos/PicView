@@ -52,7 +52,21 @@ public interface INavigationService
     /// If <see cref="PicView.Core.Config.Sorting.IncludeSubDirectories"/> is true, it explores subdirectories in reverse order.
     /// </summary>
     ValueTask NavigateToPreviousFolderAsync(TabViewModel tab, CancellationTokenSource ct);
-    
+
+    /// <summary>
+    /// Navigates to the next archive file relative to the current image's directory.
+    /// An archive is identified using <see cref="PicView.Core.FileHandling.SupportedFiles"/>'s <c>IsArchive</c> check.
+    /// If <see cref="PicView.Core.Config.Sorting.IncludeSubDirectories"/> is true, subdirectories are explored first.
+    /// </summary>
+    ValueTask NavigateToNextArchiveAsync(TabViewModel tab, CancellationTokenSource ct);
+
+    /// <summary>
+    /// Navigates to the previous archive file relative to the current image's directory.
+    /// An archive is identified using <see cref="PicView.Core.FileHandling.SupportedFiles"/>'s <c>IsArchive</c> check.
+    /// If <see cref="PicView.Core.Config.Sorting.IncludeSubDirectories"/> is true, subdirectories are explored in reverse order.
+    /// </summary>
+    ValueTask NavigateToPreviousArchiveAsync(TabViewModel tab, CancellationTokenSource ct);
+
     public BindableReactiveProperty<ObservableCollection<FileSearchResult>?>? FilteredFileInfos { get; set; }
 
 }

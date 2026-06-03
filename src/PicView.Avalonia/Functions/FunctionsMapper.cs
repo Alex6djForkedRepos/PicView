@@ -212,10 +212,9 @@ public class FunctionsMapper(MainWindowViewModel vm, Window window) : IFunctions
     public async ValueTask NextFolder() =>
         await vm.WindowTabs.NextFolder().ConfigureAwait(false);
 
-    public async ValueTask NextArchive()
-    {
-        
-    }
+    /// <inheritdoc cref="Core.Navigation.Interfaces.INavigationService.NavigateToNextArchiveAsync" />
+    public async ValueTask NextArchive() =>
+        await vm.WindowTabs.NextArchive().ConfigureAwait(false);
     
     /// <inheritdoc cref="NavigationManager.NavigateFirstOrLast(bool, MainViewModel)" />
     public async ValueTask Last() =>
@@ -230,10 +229,9 @@ public class FunctionsMapper(MainWindowViewModel vm, Window window) : IFunctions
     public async ValueTask PrevFolder() =>
         await vm.WindowTabs.PrevFolder().ConfigureAwait(false);
 
-    public async ValueTask PrevArchive()
-    {
-        
-    }
+    /// <inheritdoc cref="Core.Navigation.Interfaces.INavigationService.NavigateToPreviousArchiveAsync" />
+    public async ValueTask PrevArchive() =>
+        await vm.WindowTabs.PrevArchive().ConfigureAwait(false);
 
     /// <inheritdoc cref="NavigationManager.NavigateFirstOrLast(bool, MainViewModel)" />
     public async ValueTask First() =>
@@ -398,7 +396,7 @@ public class FunctionsMapper(MainWindowViewModel vm, Window window) : IFunctions
 
     #endregion
 
-        #region Toggle UI functions
+    #region Toggle UI functions
 
     /// <inheritdoc cref="SettingsUpdater.ToggleScroll(MainViewModel)" />
     public async ValueTask ToggleScroll()

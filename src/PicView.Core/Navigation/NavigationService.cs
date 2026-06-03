@@ -1,5 +1,4 @@
 using System.Collections.ObjectModel;
-using System.Windows.Input;
 using PicView.Core.ArchiveHandling;
 using PicView.Core.DebugTools;
 using PicView.Core.Extensions;
@@ -357,6 +356,251 @@ public class NavigationService(
         {
             await LoadFromDirectoryAsync(new FileInfo(prevDir), tab, ct).ConfigureAwait(false);
         }
+    }
+
+    public async ValueTask NavigateToNextArchiveAsync(TabViewModel tab, CancellationTokenSource ct) 
+        => await NavigateArchiveCoreAsync(tab, true, ct).ConfigureAwait(false);
+
+    public async ValueTask NavigateToPreviousArchiveAsync(TabViewModel tab, CancellationTokenSource ct)
+        => await NavigateArchiveCoreAsync(tab, false, ct).ConfigureAwait(false);
+
+    private async ValueTask NavigateArchiveCoreAsync(TabViewModel tab, bool next, CancellationTokenSource ct)
+    {
+        var currentFile = ArchiveExtraction.IsArchived ?
+            new FileInfo(ArchiveExtraction.LastOpenedArchive) : tab.Model.FileInfo;
+           
+        var currentDir = currentFile?.DirectoryName;
+        if (currentDir == null)
+        {
+            return;
+        }
+
+        var nextArchive = 
+            await Task.Run(() => FindNextArchive(currentDir, next, currentFile!.FullName), ct.Token).ConfigureAwait(false);
+        if (nextArchive != null)
+        {
+            await LoadFromArchiveAsync(nextArchive, tab, ct).ConfigureAwait(false);
+        }
+    }
+
+    private List<FileInfo> GetSortedArchivesInDirectory(string path)
+    {
+        try
+        {
+            var dir = new DirectoryInfo(path);
+            if (!dir.Exists)
+            {
+                return [];
+            }
+
+            var archives = dir.EnumerateFiles("*", SearchOption.TopDirectoryOnly)
+                .Where(f => f.FullName.IsArchive())
+                .ToList();
+
+            if (!Settings.Sorting.Ascending)
+            {
+                archives.Sort((x, y) => stringComparer(y.Name, x.Name));
+            }
+            else
+            {
+                archives.Sort((x, y) => stringComparer(x.Name, y.Name));
+            }
+
+            return archives;
+        }
+        catch (Exception ex)
+        {
+            DebugHelper.LogDebug(nameof(NavigationService), nameof(GetSortedArchivesInDirectory), ex);
+            return [];
+        }
+    }
+
+    private string? FindNextArchive(string currentDir, bool next, string currentFilePath)
+    {
+        // Look for next archive in the current directory after the current file
+        var archives = GetSortedArchivesInDirectory(currentDir);
+        var idx = archives.FindIndex(a => a.FullName.Equals(currentFilePath, StringComparison.OrdinalIgnoreCase));
+        if (!next)
+        {
+            return idx switch
+            {
+                > 0 => archives[idx - 1].FullName,
+                < 0 when archives.Count > 0 => archives[^1].FullName,
+                _ => GetLastArchiveInPreviousSiblingOrAncestor(currentDir)
+            };
+        }
+        switch (idx)
+        {
+            case >= 0 when idx + 1 < archives.Count:
+                return archives[idx + 1].FullName;
+            case < 0 when archives.Count > 0:
+                return archives[0].FullName;
+        }
+    
+        if (!Settings.Sorting.IncludeSubDirectories)
+        {
+            return GetFirstArchiveInNextSiblingOrAncestor(currentDir);
+        }
+    
+        var firstInChild = GetFirstArchiveInDescendants(currentDir);
+        return firstInChild ?? GetFirstArchiveInNextSiblingOrAncestor(currentDir);
+    }
+
+    private string? GetFirstArchiveInDescendants(string path)
+    {
+        try
+        {
+            var dir = new DirectoryInfo(path);
+            var subDirs = dir.GetDirectories().ToList();
+            SortDirectories(subDirs);
+
+            foreach (var sub in subDirs)
+            {
+                var archives = GetSortedArchivesInDirectory(sub.FullName);
+                if (archives.Count > 0)
+                {
+                    return archives[0].FullName;
+                }
+
+                if (!Settings.Sorting.IncludeSubDirectories)
+                {
+                    continue;
+                }
+
+                var child = GetFirstArchiveInDescendants(sub.FullName);
+                if (child != null)
+                {
+                    return child;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            DebugHelper.LogDebug(nameof(NavigationService), nameof(GetFirstArchiveInDescendants), ex);
+        }
+        return null;
+    }
+
+    private string? GetFirstArchiveInNextSiblingOrAncestor(string path)
+    {
+        var dir = new DirectoryInfo(path);
+        var parent = dir.Parent;
+        if (parent == null)
+        {
+            return null;
+        }
+
+        try
+        {
+            var siblings = parent.GetDirectories().ToList();
+            SortDirectories(siblings);
+            var index = siblings.FindIndex(d => d.FullName.Equals(path, StringComparison.OrdinalIgnoreCase));
+
+            for (var i = index + 1; i < siblings.Count; i++)
+            {
+                var sibling = siblings[i];
+                var archives = GetSortedArchivesInDirectory(sibling.FullName);
+                if (archives.Count > 0)
+                {
+                    return archives[0].FullName;
+                }
+
+                if (!Settings.Sorting.IncludeSubDirectories)
+                {
+                    continue;
+                }
+
+                var child = GetFirstArchiveInDescendants(sibling.FullName);
+                if (child != null)
+                {
+                    return child;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            DebugHelper.LogDebug(nameof(NavigationService), nameof(GetFirstArchiveInNextSiblingOrAncestor), ex);
+        }
+
+        return GetFirstArchiveInNextSiblingOrAncestor(parent.FullName);
+    }
+
+    private string? GetLastArchiveInPreviousSiblingOrAncestor(string currentPath)
+    {
+        var dir = new DirectoryInfo(currentPath);
+        var parent = dir.Parent;
+        if (parent is null)
+        {
+            return null;
+        }
+
+        try
+        {
+            var siblings = parent.GetDirectories().ToList();
+            SortDirectories(siblings);
+            var index = siblings.FindIndex(d => d.FullName.Equals(currentPath, StringComparison.OrdinalIgnoreCase));
+
+            if (index <= 0)
+            {
+                var parentArchives = GetSortedArchivesInDirectory(parent.FullName);
+                if (parentArchives.Count > 0)
+                {
+                    return parentArchives[^1].FullName;
+                }
+                return GetLastArchiveInPreviousSiblingOrAncestor(parent.FullName);
+            }
+
+            for (var i = index - 1; i >= 0; i--)
+            {
+                var sibling = siblings[i];
+                var lastChild = GetLastArchiveInDescendantOrSelf(sibling.FullName);
+                if (lastChild != null)
+                {
+                    return lastChild;
+                }
+            }
+
+            var parentArchivesFallback = GetSortedArchivesInDirectory(parent.FullName);
+            if (parentArchivesFallback.Count > 0)
+            {
+                return parentArchivesFallback[^1].FullName;
+            }
+            return GetLastArchiveInPreviousSiblingOrAncestor(parent.FullName);
+        }
+        catch (Exception ex)
+        {
+            DebugHelper.LogDebug(nameof(NavigationService), nameof(GetLastArchiveInPreviousSiblingOrAncestor), ex);
+            return null;
+        }
+    }
+
+    private string? GetLastArchiveInDescendantOrSelf(string path)
+    {
+        if (!Settings.Sorting.IncludeSubDirectories)
+        {
+            var archives = GetSortedArchivesInDirectory(path);
+            return archives.Count > 0 ? archives[^1].FullName : null;
+        }
+
+        try
+        {
+            var dir = new DirectoryInfo(path);
+            var subDirs = dir.GetDirectories().ToList();
+            SortDirectories(subDirs);
+
+            for (var i = subDirs.Count - 1; i >= 0; i--)
+            {
+                var lastChild = GetLastArchiveInDescendantOrSelf(subDirs[i].FullName);
+                if (lastChild != null) return lastChild;
+            }
+        }
+        catch (Exception ex)
+        {
+            DebugHelper.LogDebug(nameof(NavigationService), nameof(GetLastArchiveInDescendantOrSelf), ex);
+        }
+
+        var archivesHere = GetSortedArchivesInDirectory(path);
+        return archivesHere.Count > 0 ? archivesHere[^1].FullName : null;
     }
 
     private string? FindNextValidDirectory(string currentPath)
