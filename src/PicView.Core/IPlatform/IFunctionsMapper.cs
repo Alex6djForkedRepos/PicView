@@ -148,10 +148,6 @@ public interface IFunctionsMapper
     ValueTask Set4Star();
     ValueTask Set5Star();
 
-    // Maps
-    ValueTask OpenGoogleMaps();
-    ValueTask OpenBingMaps();
-
     // Wallpaper
     ValueTask SetAsWallpaper();
     ValueTask SetAsWallpaperTiled();

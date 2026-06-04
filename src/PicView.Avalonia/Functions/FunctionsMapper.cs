@@ -208,7 +208,7 @@ public class FunctionsMapper(MainWindowViewModel vm, Window window) : IFunctions
         await vm.WindowTabs.NavigateDirectionalAsync(MainKeyboardShortcuts2.IsKeyHeldDown,
             NavigateTo.Next).ConfigureAwait(false);
 
-    /// <inheritdoc cref="NavigationManager.NavigateBetweenDirectories(bool, MainViewModel)" />
+    /// <inheritdoc cref="Core.Navigation.Interfaces.INavigationService.NavigateToNextFolderAsync" />
     public async ValueTask NextFolder() =>
         await vm.WindowTabs.NextFolder().ConfigureAwait(false);
 
@@ -216,7 +216,7 @@ public class FunctionsMapper(MainWindowViewModel vm, Window window) : IFunctions
     public async ValueTask NextArchive() =>
         await vm.WindowTabs.NextArchive().ConfigureAwait(false);
     
-    /// <inheritdoc cref="NavigationManager.NavigateFirstOrLast(bool, MainViewModel)" />
+    /// <inheritdoc cref="Core.Navigation.Interfaces.INavigationService.NavigateByIncrementsAsync" />
     public async ValueTask Last() =>
         await vm.WindowTabs.LastFile().ConfigureAwait(false);
 
@@ -225,7 +225,7 @@ public class FunctionsMapper(MainWindowViewModel vm, Window window) : IFunctions
         await vm.WindowTabs.NavigateDirectionalAsync(MainKeyboardShortcuts2.IsKeyHeldDown,
             NavigateTo.Previous).ConfigureAwait(false);
 
-    /// <inheritdoc cref="NavigationManager.NavigateBetweenDirectories(bool, MainViewModel)" />
+    /// <inheritdoc cref="Core.Navigation.Interfaces.INavigationService.NavigateToPreviousFolderAsync" />
     public async ValueTask PrevFolder() =>
         await vm.WindowTabs.PrevFolder().ConfigureAwait(false);
 
@@ -233,28 +233,25 @@ public class FunctionsMapper(MainWindowViewModel vm, Window window) : IFunctions
     public async ValueTask PrevArchive() =>
         await vm.WindowTabs.PrevArchive().ConfigureAwait(false);
 
-    /// <inheritdoc cref="NavigationManager.NavigateFirstOrLast(bool, MainViewModel)" />
+    /// <inheritdoc cref="Core.Navigation.Interfaces.INavigationService.NavigateByIncrementsAsync" />
     public async ValueTask First() =>
         await vm.WindowTabs.FirstFile().ConfigureAwait(false);
     
-    /// <inheritdoc cref="Core.ViewModels.TabOverviewViewModel.Next10()" />
+    /// <inheritdoc cref="Core.Navigation.Interfaces.INavigationService.NavigateByIncrementsAsync" />
     public async ValueTask Next10() =>
         await vm.WindowTabs.Next10().ConfigureAwait(false);
 
-    /// <inheritdoc cref="Core.ViewModels.TabOverviewViewModel.Next100()" />
+    /// <inheritdoc cref="Core.Navigation.Interfaces.INavigationService.NavigateByIncrementsAsync" />
     public async ValueTask Next100() =>
         await vm.WindowTabs.Next100().ConfigureAwait(false);
     
-    /// <inheritdoc cref="NavigationManager.Prev10(MainViewModel)" />
+    /// <inheritdoc cref="Core.Navigation.Interfaces.INavigationService.NavigateByIncrementsAsync" />
     public async ValueTask Prev10() =>
         await vm.WindowTabs.Prev10().ConfigureAwait(false);
     
-    /// <inheritdoc cref="NavigationManager.Prev100(MainViewModel)" />
-    public async ValueTask Prev100()
-    {
+    /// <inheritdoc cref="Core.Navigation.Interfaces.INavigationService.NavigateByIncrementsAsync" />
+    public async ValueTask Prev100() =>
         await vm.WindowTabs.Prev100().ConfigureAwait(false);
-        // await NavigationManager.Prev100(vm).ConfigureAwait(false);
-    }
 
     public async ValueTask Search() =>
         await Dispatcher.UIThread.InvokeAsync(DialogManager.AddFileSearchDialog);
@@ -800,54 +797,40 @@ public class FunctionsMapper(MainWindowViewModel vm, Window window) : IFunctions
             .FileInfo?.FullName, core.PlatformService).ConfigureAwait(false);
     }
 
-    /// <inheritdoc cref="ClipboardPasteOperations.Paste(MainViewModel)" />
-    public async ValueTask Paste()
-    {
+    /// <inheritdoc cref="ClipboardPasteOperations.Paste(MainWindowViewModel)" />
+    public async ValueTask Paste() =>
         await ClipboardPasteOperations.Paste(vm).ConfigureAwait(false);
-    }
     
     #endregion
 
     #region Image Functions
     
     /// <inheritdoc cref="BackgroundManager.ChangeBackground(MainWindowViewModel)" />
-    public async ValueTask ChangeBackground()
-    {
+    public async ValueTask ChangeBackground() =>
         await BackgroundManager.ChangeBackgroundAsync(vm).ConfigureAwait(false);
-    }
-    
-    /// <inheritdoc cref="SettingsUpdater.ToggleSideBySide(MainWindowViewModel)" />
-    public async ValueTask SideBySide()
-    {
+
+    /// <inheritdoc cref="SettingsUpdater.ToggleSideBySide" />
+    public async ValueTask SideBySide() =>
         await SettingsUpdater.ToggleSideBySide().ConfigureAwait(false);
-    }
-    
-    /// <inheritdoc cref="ErrorHandling.ReloadAsync(MainViewModel)" />
-    public async ValueTask Reload()
-    {
+
+    /// <inheritdoc cref="Core.Navigation.Interfaces.IImageIterator.ReloadAsync"/>
+    public async ValueTask Reload() =>
         await vm.WindowTabs.ActiveTab.CurrentValue.ImageIterator.ReloadAsync(vm.WindowTabs.ActiveTab.CurrentValue.GetTabCancellation()).ConfigureAwait(false);
-    }
 
     public async ValueTask ResizeImage() =>
         await ResizeWindow();
 
     /// <inheritdoc cref="CropManager.StartCropControlAsync(MainWindowViewModel)" />
-    public async ValueTask Crop()
-    {
+    public async ValueTask Crop() =>
         await CropManager.StartCropControlAsync(vm).ConfigureAwait(false);
-    }
 
     /// <inheritdoc cref="ImageOptimizer.OptimizeImageAsync(MainWindowViewModel)" />
-    public async ValueTask OptimizeImage()
-    {
+    public async ValueTask OptimizeImage() =>
         await ImageOptimizer.OptimizeImageAsync(vm).ConfigureAwait(false);
-    }
 
     /// <inheritdoc cref="Navigation.Slideshow.StartSlideshow(MainWindowViewModel)" />
-    public async ValueTask Slideshow()
-    {
+    public async ValueTask Slideshow() =>   
         await Navigation.Slideshow.StartSlideshow(vm).ConfigureAwait(false);
-    }
 
     public ValueTask ColorPicker()
     {
@@ -926,40 +909,6 @@ public class FunctionsMapper(MainWindowViewModel vm, Window window) : IFunctions
     public async ValueTask Set5Star()
     {
         await SetExifRatingHelper.Set5Star(vm);
-    }
-
-    #endregion
-
-    #region Open GPS link
-
-    public async ValueTask OpenGoogleMaps()
-    {
-        // TODO: Needs refactoring into its own method
-        if (vm is null)
-        {
-            return;
-        }
-        // if (string.IsNullOrEmpty(vm.Exif.GoogleLink.CurrentValue))
-        // {
-        //     return;
-        // }
-        //
-        // await Task.Run(() => ProcessHelper.OpenLink(vm.Exif.GoogleLink.CurrentValue));
-    }
-    
-    public async ValueTask OpenBingMaps()
-    {
-        // TODO: Needs refactoring into its own method
-        if (vm is null)
-        {
-            return;
-        }
-        // if (string.IsNullOrEmpty(vm.Exif.BingLink.CurrentValue))
-        // {
-        //     return;
-        // }
-        //
-        // await Task.Run(() => ProcessHelper.OpenLink(vm.Exif.BingLink.CurrentValue));
     }
 
     #endregion

@@ -451,16 +451,6 @@ public class MainWindowViewModel : IDisposable
 
     #endregion
 
-    #region Maps
-
-    public ReactiveCommand OpenGoogleMapsCommand { get; }
-    private async ValueTask OpenGoogleMaps(Unit unit, CancellationToken cancellationToken) { if (Mapper is null) return; await Mapper.OpenGoogleMaps(); }
-
-    public ReactiveCommand OpenBingMapsCommand { get; }
-    private async ValueTask OpenBingMaps(Unit unit, CancellationToken cancellationToken) { if (Mapper is null) return; await Mapper.OpenBingMaps(); }
-
-    #endregion
-
     #region Wallpaper
 
     public ReactiveCommand SetAsWallpaperCommand { get; }
@@ -662,10 +652,6 @@ public class MainWindowViewModel : IDisposable
         Set4StarCommand = new ReactiveCommand(Set4Star);
         Set5StarCommand = new ReactiveCommand(Set5Star);
 
-        // Maps
-        OpenGoogleMapsCommand = new ReactiveCommand(OpenGoogleMaps);
-        OpenBingMapsCommand = new ReactiveCommand(OpenBingMaps);
-
         // Wallpaper
         SetAsWallpaperCommand = new ReactiveCommand(SetAsWallpaper);
         SetAsWallpaperTiledCommand = new ReactiveCommand(SetAsWallpaperTiled);
@@ -819,8 +805,6 @@ public class MainWindowViewModel : IDisposable
             Set3StarCommand,
             Set4StarCommand,
             Set5StarCommand,
-            OpenGoogleMapsCommand,
-            OpenBingMapsCommand,
             SetAsWallpaperCommand,
             SetAsWallpaperTiledCommand,
             SetAsWallpaperCenteredCommand,
