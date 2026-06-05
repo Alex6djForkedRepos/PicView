@@ -210,7 +210,7 @@ public class MainWindowViewModel : IDisposable
     private async ValueTask ToggleGallery(Unit unit, CancellationToken cancellationToken) { if (Mapper is null) return; await Mapper.ToggleGallery(); }
 
     public ReactiveCommand OpenCloseBottomGalleryCommand { get; }
-    private async ValueTask OpenCloseBottomGallery(Unit unit, CancellationToken cancellationToken) { if (Mapper is null) return; await Mapper.OpenCloseBottomGallery(); }
+    private async ValueTask OpenCloseBottomGallery(Unit unit, CancellationToken cancellationToken) { if (Mapper is null) return; await Mapper.OpenCloseDockedGallery(); }
 
     public ReactiveCommand CloseGalleryCommand { get; }
     private async ValueTask CloseGallery(Unit unit, CancellationToken cancellationToken) { if (Mapper is null) return; await Mapper.CloseGallery(); }
@@ -221,10 +221,6 @@ public class MainWindowViewModel : IDisposable
     #endregion
 
     #region Windows & Dialogs
-
-    public ReactiveCommand ShowStartUpMenuCommand { get; }
-    private async ValueTask ShowStartUpMenu(Unit unit, CancellationToken cancellationToken) { if (Mapper is null) return; await Mapper.ShowStartUpMenu(); }
-
     public ReactiveCommand AboutWindowCommand { get; }
     private async ValueTask AboutWindow(Unit unit, CancellationToken cancellationToken) { if (Mapper is null) return; await Mapper.AboutWindow(); }
 
@@ -571,7 +567,6 @@ public class MainWindowViewModel : IDisposable
         GalleryClickCommand = new ReactiveCommand(GalleryClick);
 
         // Windows & Dialogs
-        ShowStartUpMenuCommand = new ReactiveCommand(ShowStartUpMenu);
         AboutWindowCommand = new ReactiveCommand(AboutWindow);
         CheckForUpdatesCommand = new ReactiveCommand(CheckForUpdates);
         ConvertWindowCommand = new ReactiveCommand(ConvertWindow);
@@ -737,7 +732,6 @@ public class MainWindowViewModel : IDisposable
             OpenCloseBottomGalleryCommand,
             CloseGalleryCommand,
             GalleryClickCommand,
-            ShowStartUpMenuCommand,
             AboutWindowCommand,
             ConvertWindowCommand,
             KeybindingsWindowCommand,

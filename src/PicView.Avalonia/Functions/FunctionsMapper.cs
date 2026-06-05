@@ -256,8 +256,6 @@ public class FunctionsMapper(MainWindowViewModel vm, Window window) : IFunctions
     public async ValueTask Search() =>
         await Dispatcher.UIThread.InvokeAsync(DialogManager.AddFileSearchDialog);
     
-
-    /// <inheritdoc cref="RotationNaRotationNavigationp(MainViewModel)" />
     public async ValueTask Up()
     {
         if (vm.WindowTabs.ActiveTab.Value.Gallery.IsGalleryExpanded.Value)
@@ -269,51 +267,50 @@ public class FunctionsMapper(MainWindowViewModel vm, Window window) : IFunctions
         await RotateRight();
     }
 
-    /// <inheritdoc cref="RotationNavigation.RotateRight(MainViewModel)" />
+    /// <inheritdoc cref="RotationManager.RotateRight(MainWindowViewModel)" />
     public ValueTask RotateRight()
     {
         RotationManager.RotateRight(vm);
         return ValueTask.CompletedTask;
     }
 
-    /// <inheritdoc cref="RotationNavigation.RotateLeft(MainViewModel)" />
+    /// <inheritdoc cref="RotationManager.RotateLeft(MainWindowViewModel)" />
     public ValueTask RotateLeft()
     {
         RotationManager.RotateLeft(vm);
         return ValueTask.CompletedTask;
     }
-
+    /// <inheritdoc cref="RotationManager.Rotate(MainWindowViewModel, int)" />
     public ValueTask Rotate0()
     {
         RotationManager.Rotate(vm, 0);
         return ValueTask.CompletedTask;
     }
-
+    /// <inheritdoc cref="RotationManager.Rotate(MainWindowViewModel, int)" />
     public ValueTask Rotate90()
     {
         RotationManager.Rotate(vm, 90);
         return ValueTask.CompletedTask;
     }
-
+    /// <inheritdoc cref="RotationManager.Rotate(MainWindowViewModel, int)" />
     public ValueTask Rotate180()
     {
         RotationManager.Rotate(vm, 180);
         return ValueTask.CompletedTask;
     }
-    
+    /// <inheritdoc cref="RotationManager.Rotate(MainWindowViewModel, int)" />
     public ValueTask Rotate270()
     {
         RotationManager.Rotate(vm, 270);
         return ValueTask.CompletedTask;
     }
-    
+    /// <inheritdoc cref="RotationManager.Flip(MainWindowViewModel)" />
     public ValueTask Flip()
     {
         RotationManager.Flip(vm);
         return ValueTask.CompletedTask;
     }
 
-    /// <inheritdoc cref="RotationNavigation.NavigateDown(MainViewModel)" />
     public async ValueTask Down()
     {
         if (vm.WindowTabs.ActiveTab.Value.Gallery.IsGalleryExpanded.Value)
@@ -327,37 +324,49 @@ public class FunctionsMapper(MainWindowViewModel vm, Window window) : IFunctions
     
     public async ValueTask ScrollDown()
     {
-        // TODO: ImageViewer Needs refactor
+        if (vm.WindowTabs.ActiveTab.Value.CurrentView.CurrentValue is not ImageViewer imageViewer)
+        {
+            return;
+        }
         await Dispatcher.UIThread.InvokeAsync(() =>
         {
-            // vm.ImageViewer.ImageScrollViewer.LineDown();
+            imageViewer.ImageScrollViewer.LineDown();
         });
     }
     
     public async ValueTask ScrollUp()
     {
-        // TODO: ImageViewer Needs refactor
+        if (vm.WindowTabs.ActiveTab.Value.CurrentView.CurrentValue is not ImageViewer imageViewer)
+        {
+            return;
+        }
         await Dispatcher.UIThread.InvokeAsync(() =>
         {
-            // vm.ImageViewer.ImageScrollViewer.LineUp();
+            imageViewer.ImageScrollViewer.LineUp();
         });
     }
 
     public async ValueTask ScrollToTop()
     {
-        // TODO: ImageViewer Needs refactor
+        if (vm.WindowTabs.ActiveTab.Value.CurrentView.CurrentValue is not ImageViewer imageViewer)
+        {
+            return;
+        }
         await Dispatcher.UIThread.InvokeAsync(() =>
         {
-            // vm.ImageViewer.ImageScrollViewer.ScrollToHome();
+            imageViewer.ImageScrollViewer.ScrollToHome();
         });
     }
 
     public async ValueTask ScrollToBottom()
     {
-        // TODO: ImageViewer Needs refactor
+        if (vm.WindowTabs.ActiveTab.Value.CurrentView.CurrentValue is not ImageViewer imageViewer)
+        {
+            return;
+        }
         await Dispatcher.UIThread.InvokeAsync(() =>
         {
-            // vm.ImageViewer.ImageScrollViewer.ScrollToEnd();
+            imageViewer.ImageScrollViewer.ScrollToEnd();
         });
     }
 
@@ -395,45 +404,43 @@ public class FunctionsMapper(MainWindowViewModel vm, Window window) : IFunctions
 
     #region Toggle UI functions
 
-    /// <inheritdoc cref="SettingsUpdater.ToggleScroll(MainViewModel)" />
+    /// <inheritdoc cref="SettingsUpdater.ToggleScroll(MainWindowViewModel)" />
     public async ValueTask ToggleScroll()
     {
         await SettingsUpdater.ToggleScroll(vm).ConfigureAwait(false);
     }
 
-    /// <inheritdoc cref="SettingsUpdater.ToggleCtrlZoom(MainViewModel)" />
+    /// <inheritdoc cref="SettingsUpdater.ToggleCtrlZoom(MainWindowViewModel)" />
     public async ValueTask ChangeCtrlZoom()
     {
-        // await SettingsUpdater.ToggleCtrlZoom(vm).ConfigureAwait(false);
-        return;
+        await SettingsUpdater.ToggleCtrlZoom(vm).ConfigureAwait(false);
     }
 
-    /// <inheritdoc cref="SettingsUpdater.ToggleLooping(MainViewModel)" />
+    /// <inheritdoc cref="SettingsUpdater.ToggleLooping(MainWindowViewModel)" />
     public async ValueTask ToggleLooping()
     {
         await SettingsUpdater.ToggleLooping(vm).ConfigureAwait(false);
     }
     
-    /// <inheritdoc cref="HideInterfaceLogic.ToggleUI(MainViewModel)" />
+    /// <inheritdoc cref="ToggleUIVisibility.ToggleInterface(MainWindowViewModel)" />
     public async ValueTask ToggleInterface()
     {
-        // await HideInterfaceLogic.ToggleUI(vm).ConfigureAwait(false);
-        return;
+        await ToggleUIVisibility.ToggleInterface(vm).ConfigureAwait(false);
     }
     
-    /// <inheritdoc cref="SettingsUpdater.ToggleSubdirectories(MainViewModel)" />
+    /// <inheritdoc cref="SettingsUpdater.ToggleSubdirectories(MainWindowViewModel)" />
     public async ValueTask ToggleSubdirectories()
     {
         await SettingsUpdater.ToggleSubdirectories(vm).ConfigureAwait(false);
     }
     
-    /// <inheritdoc cref="HideInterfaceLogic.ToggleBottomToolbar(MainViewModel)" />
+    /// <inheritdoc cref="ToggleUIVisibility.ToggleBottomBar(MainWindowViewModel)" />
     public async ValueTask ToggleBottomToolbar()
     {
         await ToggleUIVisibility.ToggleBottomBar(vm);
     }
     
-    /// <inheritdoc cref="SettingsUpdater2.ToggleTaskbarProgress(MainWindowViewModel)" />
+    /// <inheritdoc cref="SettingsUpdater.ToggleTaskbarProgress(MainWindowViewModel)" />
     public async ValueTask ToggleTaskbarProgress()
     {
         await SettingsUpdater.ToggleTaskbarProgress(vm).ConfigureAwait(false);
@@ -449,27 +456,24 @@ public class FunctionsMapper(MainWindowViewModel vm, Window window) : IFunctions
 
     #region Gallery functions
 
-    /// <inheritdoc cref="GalleryFunctions.ToggleGallery(MainViewModel)" />
-    public async ValueTask ToggleGallery()
+    public ValueTask ToggleGallery()
     {
         vm.WindowTabs.ActiveTab.CurrentValue.Gallery.ToggleGalleryCommand.Execute(Unit.Default);
-    }
-
-    /// <inheritdoc cref="GalleryFunctions.OpenCloseBottomGallery(MainViewModel)" />
-    public async ValueTask OpenCloseBottomGallery()
-    {
-        // await Task.Run(() => GalleryFunctions.OpenCloseBottomGallery(vm));
-        return;
-    }
-    
-    /// <inheritdoc cref="GalleryFunctions.CloseGallery(MainViewModel)" />
-    public ValueTask CloseGallery()
-    {
-        // GalleryFunctions.CloseGallery(vm);
         return ValueTask.CompletedTask;
     }
 
-    /// <inheritdoc cref="GalleryNavigation.GalleryClick(MainViewModel)" />
+    public ValueTask OpenCloseDockedGallery()
+    {
+        vm.WindowTabs.ActiveTab.CurrentValue.Gallery.ContractToDockedOrCloseGalleryCommand.Execute(Unit.Default);
+        return ValueTask.CompletedTask;
+    }
+    
+    public ValueTask CloseGallery()
+    {
+        vm.WindowTabs.ActiveTab.CurrentValue.Gallery.CloseGalleryCommand.Execute(Unit.Default);
+        return ValueTask.CompletedTask;
+    }
+    
     public ValueTask GalleryClick()
     {
         var gallery = vm.WindowTabs.ActiveTab.CurrentValue.Gallery;
@@ -485,15 +489,6 @@ public class FunctionsMapper(MainWindowViewModel vm, Window window) : IFunctions
     #endregion
     
     #region Windows and window functions
-
-    public async ValueTask ShowStartUpMenu()
-    {
-        //TODO: Needs refactor, add async overload for ShowStartUpMenu
-        await Dispatcher.UIThread.InvokeAsync(() =>
-        {
-            // ErrorHandling.ShowStartUpMenu(vm);
-        });
-    }
     
     /// <inheritdoc cref="DialogManager.HandleShouldClosing" />
     public async ValueTask Close()
@@ -595,7 +590,7 @@ public class FunctionsMapper(MainWindowViewModel vm, Window window) : IFunctions
 
     #region Image Scaling and Window Behavior
     
-    /// <inheritdoc cref="SettingsUpdater2.ToggleZoomToFit" />
+    /// <inheritdoc cref="SettingsUpdater.ToggleZoomToFit" />
     public async ValueTask ZoomToFit()
     {
         await SettingsUpdater.ToggleZoomToFit(vm);
@@ -741,7 +736,7 @@ public class FunctionsMapper(MainWindowViewModel vm, Window window) : IFunctions
         });
     }
 
-    /// <inheritdoc cref="FileManager.ShowFileProperties(string, MainViewModel)" />
+    /// <inheritdoc cref="FileManager.ShowFileProperties(string)" />
     public async ValueTask ShowFileProperties()
     {
         await Task.Run(() =>
@@ -753,7 +748,7 @@ public class FunctionsMapper(MainWindowViewModel vm, Window window) : IFunctions
 
     #region Copy and Paste functions
 
-    /// <inheritdoc cref="ClipboardFileOperations.CopyFileToClipboard(string, MainViewModel)" />
+    /// <inheritdoc cref="ClipboardFileOperations.CopyFileToClipboard(string, Visual?)" />
     public async ValueTask CopyFile()
     {
         await ClipboardFileOperations.CopyFileToClipboard(vm.WindowTabs.ActiveTab.CurrentValue.Model
@@ -767,19 +762,19 @@ public class FunctionsMapper(MainWindowViewModel vm, Window window) : IFunctions
             .FileInfo?.FullName).ConfigureAwait(false);
     }
 
-    /// <inheritdoc cref="ClipboardImageOperations.CopyImageToClipboard(MainViewModel)" />
+    /// <inheritdoc cref="ClipboardImageOperations.CopyImageToClipboard(MainWindowViewModel)" />
     public async ValueTask CopyImage()
     {
         await ClipboardImageOperations.CopyImageToClipboard(vm).ConfigureAwait(false);
     }
 
-    /// <inheritdoc cref="ClipboardImageOperations.CopyBase64ToClipboard(string, MainViewModel)" />
+    /// <inheritdoc cref="ClipboardImageOperations.CopyBase64ToClipboard(string, MainWindowViewModel)" />
     public async ValueTask CopyBase64()
     {
         await ClipboardImageOperations.CopyBase64ToClipboard(vm.WindowTabs.ActiveTab.CurrentValue?.FileInfo?.CurrentValue?.FullName, vm).ConfigureAwait(false);
     }
 
-    /// <inheritdoc cref="ClipboardFileOperations.Duplicate(string, MainViewModel)" />
+    /// <inheritdoc cref="ClipboardFileOperations.Duplicate(string, MainWindowViewModel)" />
     public async ValueTask DuplicateFile()
     {
         await ClipboardFileOperations.Duplicate(vm.WindowTabs.ActiveTab.CurrentValue.Model
@@ -1014,6 +1009,7 @@ public class FunctionsMapper(MainWindowViewModel vm, Window window) : IFunctions
     /// <inheritdoc cref="SettingsUpdater.ResetSettings(MainViewModel)" />
     public async ValueTask ResetSettings()
     {
+        // TODO
         // await SettingsUpdater.ResetSettings(vm).ConfigureAwait(false);
         return;
     }
@@ -1092,12 +1088,14 @@ public class FunctionsMapper(MainWindowViewModel vm, Window window) : IFunctions
     
     public async ValueTask ToggleOpeningInSameWindow()
     {
+        // TODO
         // await SettingsUpdater.ToggleOpeningInSameWindow(vm).ConfigureAwait(false);
         return;
     }
     
     public async ValueTask ToggleFileHistory()
     {
+        // TODO
         // await SettingsUpdater.ToggleFileHistory(vm).ConfigureAwait(false);
         return;
     }

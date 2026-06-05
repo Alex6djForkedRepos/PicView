@@ -59,12 +59,11 @@ public interface IFunctionsMapper
     
     // Gallery
     ValueTask ToggleGallery();
-    ValueTask OpenCloseBottomGallery();
+    ValueTask OpenCloseDockedGallery();
     ValueTask CloseGallery();
     ValueTask GalleryClick();
 
     // Open Windows/Dialogs
-    ValueTask ShowStartUpMenu();
     ValueTask AboutWindow();
     ValueTask CheckForUpdates();
     ValueTask ConvertWindow();

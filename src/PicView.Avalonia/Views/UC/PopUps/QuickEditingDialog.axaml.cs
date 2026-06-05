@@ -109,8 +109,8 @@ public partial class QuickEditingDialog : AnimatedPopUp
                 {
                     return;
                 }
-                await vm.Mapper.OpenCloseBottomGallery();
-            }, DebugHelper.LogError(nameof(QuickEditingDialog), nameof(FunctionsMapper.OpenCloseBottomGallery)))
+                await vm.Mapper.OpenCloseDockedGallery();
+            }, DebugHelper.LogError(nameof(QuickEditingDialog), nameof(FunctionsMapper.OpenCloseDockedGallery)))
             .AddTo(ref _disposables);
         
         Observable.FromEventHandler<RoutedEventArgs>(h => SideBySideButton.Click += h,
