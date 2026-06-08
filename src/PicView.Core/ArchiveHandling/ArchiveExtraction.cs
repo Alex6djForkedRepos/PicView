@@ -46,9 +46,9 @@ public static class ArchiveExtraction
         bool IsFullyExtracted);
 
     /// <summary>
-    ///     Prepares an archive for staged extraction: creates a temporary directory, lists all
-    ///     supported entries (or fully extracts the archive when local software is required) and
-    ///     returns a sorted entry list.
+    /// Prepares an archive for staged extraction: creates a temporary directory, lists all
+    /// supported entries (or fully extracts the archive when local software is required) and
+    /// returns a sorted entry list.
     /// </summary>
     public static async Task<ArchivePreparation?> PrepareArchiveAsync(
         string archivePath,
@@ -133,31 +133,23 @@ public static class ArchiveExtraction
         {
             return null;
         }
-
         try
         {
-            return await Task.Run(() =>
+            await using var archive = await ArchiveFactory.OpenAsyncArchive(archivePath, cancellationToken: ct);
+            await foreach (var entry in archive.EntriesAsync.WithCancellation(ct))
             {
-                using var archive = ArchiveFactory.OpenArchive(archivePath);
-                foreach (var entry in archive.Entries)
+                if (entry.IsDirectory || string.IsNullOrEmpty(entry.Key))
                 {
-                    ct.ThrowIfCancellationRequested();
-
-                    if (entry.IsDirectory || string.IsNullOrEmpty(entry.Key))
-                    {
-                        continue;
-                    }
-
-                    if (!string.Equals(entry.Key, entryKey, StringComparison.Ordinal))
-                    {
-                        continue;
-                    }
-
-                    return WriteEntryFlat(entry, tempDirectory);
+                    continue;
                 }
 
-                return null;
-            }, ct).ConfigureAwait(false);
+                if (!string.Equals(entry.Key, entryKey, StringComparison.Ordinal))
+                {
+                    continue;
+                }
+
+                return WriteEntryFlat(entry, tempDirectory);
+            }
         }
         catch (OperationCanceledException)
         {
@@ -168,6 +160,8 @@ public static class ArchiveExtraction
             DebugHelper.LogDebug(nameof(ArchiveExtraction), nameof(ExtractEntryAsync), ex);
             return null;
         }
+
+        return null;
     }
 
     /// <summary>
