@@ -108,7 +108,7 @@ public class NavigationService(
     public async ValueTask LoadFromDirectoryAsync(FileInfo source, TabViewModel tab, CancellationTokenSource ct)
     {
         var files = await Task.Run(() => FileListRetriever.RetrieveFiles(source, stringComparer), ct.Token).ConfigureAwait(false);
-        if (files.Count == 0)
+        if (files.Count is 0)
         {
             return;
         }
@@ -126,7 +126,7 @@ public class NavigationService(
         }
 
         var check = FileTypeResolver.CheckIfLoadableString(source);
-        if (check == null)
+        if (check is null)
         {
             return false;
         }

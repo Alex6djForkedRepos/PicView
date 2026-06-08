@@ -203,28 +203,6 @@ public class App : Application, IPlatformSpecificService
         // wallpaper and lockscreen are the same in macOS
         return false;
     }
-    
-    public bool CopyFile(string path)
-    {
-        // TODO: Implement copying file to clipboard
-        return false;
-    }
-    
-    public bool CutFile(string path)
-    {
-        // TODO: Implement cutting file to clipboard
-        return false;
-    }
-
-    public Task CopyImageToClipboard(object image)
-    {
-        return Task.CompletedTask;
-    }
-
-    public Task<object?> GetImageFromClipboard()
-    {
-        return null;
-    }
 
     public Task<bool> ExtractWithLocalSoftwareAsync(string path, string tempDirectory)
     {

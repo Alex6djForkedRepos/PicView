@@ -5,6 +5,8 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.LogicalTree;
+using Avalonia.Media;
+using Avalonia.Media.Imaging;
 using PicView.Avalonia.Clipboard;
 using PicView.Avalonia.CustomControls;
 using PicView.Avalonia.FileSystem;
@@ -166,32 +168,35 @@ public partial class GalleryItem : NavigateAbleItem
 
     private void CopyFile_OnClick(object? sender, RoutedEventArgs e)
     {
-        if (Application.Current.DataContext is not CoreViewModel core || DataContext is not GalleryItemViewModel item)
+        if (DataContext is not GalleryItemViewModel item)
         {
             return;
         }
         var fileName = item.FileLocation.CurrentValue;
-        _ = core.PlatformService.CopyFile(fileName);
+        _ = ClipboardFileOperations.CopyFileToClipboard(fileName);
     }
 
     private void CopyImage_OnClick(object? sender, RoutedEventArgs e)
     {
-        if (Application.Current.DataContext is not CoreViewModel core || DataContext is not GalleryItemViewModel item)
+        if (DataContext is not GalleryItemViewModel item)
         {
             return;
         }
-        var fileName = item.FileLocation.CurrentValue;
-        // TODO
+
+        if (item.Image.CurrentValue is Bitmap image)
+        {
+            _ = ClipboardImageOperations.CopyImageToClipboard(image);
+        }
     }
 
     private void CopyBase64_OnClick(object? sender, RoutedEventArgs e)
     {
-        if (Application.Current.DataContext is not CoreViewModel core || DataContext is not GalleryItemViewModel item)
+        if (DataContext is not GalleryItemViewModel item)
         {
             return;
         }
-        var fileName = item.FileLocation.CurrentValue;
         // TODO
+        //ClipboardImageOperations.CopyBase64ToClipboard(fileName);
     }
 
     private void DuplicateFile_OnClick(object? sender, RoutedEventArgs e)

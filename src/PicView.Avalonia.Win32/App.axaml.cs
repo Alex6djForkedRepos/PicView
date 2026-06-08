@@ -16,7 +16,6 @@ using PicView.Core.WindowsNT.FileAssociation;
 using PicView.Core.WindowsNT.FileHandling;
 using PicView.Core.WindowsNT.Taskbar;
 using PicView.Core.WindowsNT.Wallpaper;
-using Win32Clipboard = PicView.Core.WindowsNT.Copy.Win32Clipboard;
 
 namespace PicView.Avalonia.Win32;
 
@@ -156,26 +155,6 @@ public class App : Application, IPlatformSpecificService
     {
         return false;
         // return LockscreenHelper.SetLockScreenImage(path);
-    }
-
-    public bool CopyFile(string path)
-    {
-        return Win32Clipboard.CopyFileToClipboard(false, path);
-    }
-
-    public bool CutFile(string path)
-    {
-        return Win32Clipboard.CopyFileToClipboard(true, path);
-    }
-
-    public async Task CopyImageToClipboard(object bitmap)
-    {
-        await Task.CompletedTask; // TODO: Implement image copying to clipboard
-    }
-
-    public async Task<object?> GetImageFromClipboard()
-    {
-        throw new NotImplementedException(); // TODO: Implement image copying to clipboard
     }
 
     public async Task<bool> ExtractWithLocalSoftwareAsync(string path, string tempDirectory)

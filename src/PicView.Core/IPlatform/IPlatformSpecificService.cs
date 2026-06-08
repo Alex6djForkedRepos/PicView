@@ -25,14 +25,6 @@ public interface IPlatformSpecificService
     
     bool SetAsLockScreen(string path);
     
-    bool CopyFile(string path);
-    
-    bool CutFile(string path);
-    
-    Task CopyImageToClipboard(object bitmap);
-    
-    Task<object?> GetImageFromClipboard();
-    
     Task<bool> ExtractWithLocalSoftwareAsync(string path, string tempDirectory);
 
     string DefaultJsonKeyMap();
