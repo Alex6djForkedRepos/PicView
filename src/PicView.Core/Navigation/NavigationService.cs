@@ -8,6 +8,7 @@ using PicView.Core.FileSearch;
 using PicView.Core.FileSorting;
 using PicView.Core.Gallery;
 using PicView.Core.Http;
+using PicView.Core.ImageDecoding;
 using PicView.Core.IPlatform;
 using PicView.Core.Localization;
 using PicView.Core.Models;
@@ -147,7 +148,8 @@ public class NavigationService(
             case FileTypeResolver.LoadAbleFileType.Zip:
                 return await LoadFromArchiveAsync(check.Value.Data, tab, ct).ConfigureAwait(false);
             case FileTypeResolver.LoadAbleFileType.Base64:
-                throw new NotImplementedException();
+                await LoadFromBase64Async(check.Value.Data, tab, ct).ConfigureAwait(false);
+                return true;
             default:
                 return false;
         }
@@ -223,6 +225,53 @@ public class NavigationService(
 
         FileHistoryManager.Add(archivePath);
         return true;
+    }
+
+    public async ValueTask LoadFromBase64Async(string source, TabViewModel tab, CancellationTokenSource ct)
+    {
+        if (string.IsNullOrWhiteSpace(source))
+        {
+            return;
+        }
+
+        try
+        {
+            var base64Data = Base64Decoder.IsBase64String(source);
+            if (string.IsNullOrEmpty(base64Data))
+            {
+                return;
+            }
+
+            var bytes = Convert.FromBase64String(base64Data);
+
+            // Write to a temp file so we can reuse the regular image-loading pipeline.
+            var destPath = TempFileManager.GetNewTempFilePath($"base64_{Guid.NewGuid():N}");
+            await File.WriteAllBytesAsync(destPath, bytes, ct.Token).ConfigureAwait(false);
+
+            if (ct.IsCancellationRequested)
+            {
+                return;
+            }
+
+            tab.ImageIterator?.Dispose();
+
+            var model = await imageLoader.GetImageModelAsync(new FileInfo(destPath), ct.Token).ConfigureAwait(false);
+            tab.Model = model;
+            tab.SecondaryModel = null;
+
+            tab.SingleImageType = SingleImageType.Base64;
+            tab.UpdateTabTitle();
+
+            tab.CanNavigateBackwards.Value = false;
+            tab.CanNavigateForwards.Value = false;
+
+            ArchiveExtraction.Cleanup();
+        }
+        catch (Exception e)
+        {
+            DebugHelper.LogDebug(nameof(NavigationService), nameof(LoadFromBase64Async), e);
+            tab.TabTitle.Value = TranslationManager.Translation?.ErrorLoadingImage ?? "Error";
+        }
     }
 
     public async ValueTask LoadFromUrlAsync(string url, TabViewModel tab, CancellationTokenSource ct)
