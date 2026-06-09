@@ -1,5 +1,6 @@
 ﻿using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Threading;
@@ -30,12 +31,10 @@ public static class UIHelper
     public static BottomBar? GetBottomBar { get; private set; }
     public static DropDownMenu? GetDropDownMenu { get; private set; }
     public static ToolTipMessage? GetToolTipMessage { get; private set; }
-    
-    public static AvaloniaRenderingFrameProvider? GetFrameProvider { get; private set; }
 
-    public static void SetFrameProvider(AvaloniaRenderingFrameProvider frameProvider) =>
-        GetFrameProvider = frameProvider;
-    
+    public static AvaloniaRenderingFrameProvider? GetFrameProvider =>
+        Application.Current.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime { MainWindow: MainWindow window } ? null : window.FrameProvider;
+
     public static CoreViewModel CoreViewModel => Application.Current.DataContext as CoreViewModel ?? throw new InvalidOperationException("CoreViewModel is null");
 
     /// <summary>
@@ -65,6 +64,8 @@ public static class UIHelper
 
         return null;
     }
+    
+
     
     public static void AddDropDownMenu()
     {

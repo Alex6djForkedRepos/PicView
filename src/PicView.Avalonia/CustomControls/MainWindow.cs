@@ -30,7 +30,6 @@ public class MainWindow : Window, IMainWindow
     protected MainWindow()
     {
         FrameProvider = new AvaloniaRenderingFrameProvider(GetTopLevel(this)!);
-        UIHelper.SetFrameProvider(FrameProvider);
         Loaded += OnLoaded;
     }
 
