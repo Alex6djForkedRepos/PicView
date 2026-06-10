@@ -177,23 +177,6 @@ public static class StartUpHelper
 
         UIHelper.SetControls(window);
 
-        // if (!RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-        // {
-        //     // Need to delay setting fullscreen or maximized until after the window is shown to select the correct monitor
-        //     if (Settings.WindowProperties.Maximized && !Settings.WindowProperties.Fullscreen)
-        //     {
-        //         Dispatcher.UIThread.Post(() =>
-        //                 vm.MainWindows.ActiveWindow.CurrentValue.PlatformWindowService.Maximize(false),
-        //             DispatcherPriority.Background);
-        //     }
-        //     else if (Settings.WindowProperties.Fullscreen)
-        //     {
-        //         Dispatcher.UIThread.Post(() =>
-        //                 vm.MainWindows.ActiveWindow.CurrentValue.PlatformWindowService.Fullscreen(false),
-        //             DispatcherPriority.Background);
-        //     }
-        // }
-
         if (Settings.UIProperties.ShowHoverNavigationBar)
         {
             vm.MainWindows.ActiveWindow.CurrentValue.WindowTabs.ActiveTab.CurrentValue.Hoverbar.IsHoverbarVisible
@@ -210,7 +193,7 @@ public static class StartUpHelper
             // Windows needs a named pipe server to open files in the same window
             if (Settings.UIProperties.OpenInSameWindow && !ProcessHelper.CheckIfAnotherInstanceIsRunning())
             {
-  //              _ = IPC.StartListeningForArguments(vm);
+                _ = IPC.StartListeningForArguments();
             }
         }
         
