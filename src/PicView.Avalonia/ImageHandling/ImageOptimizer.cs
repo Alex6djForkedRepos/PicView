@@ -39,5 +39,7 @@ public static class ImageOptimizer
         });
         await tab.ImageIterator.ReloadAsync(tab.GetTabCancellation());
         vm.IsLoadingIndicatorShown.Value = false;
+        
+        // TODO: have to create a new loading view, that blocks navigation until finished. With a cancel button.
     }
 }

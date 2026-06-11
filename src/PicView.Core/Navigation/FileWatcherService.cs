@@ -1,6 +1,5 @@
 using System.Collections.Concurrent;
 using PicView.Core.DebugTools;
-using PicView.Core.Extensions;
 using PicView.Core.FileHandling;
 using PicView.Core.FileSorting;
 using PicView.Core.Gallery;
@@ -373,11 +372,6 @@ public class FileWatcherService(
     /// Update the tabs FileInfo to reflect an updated new file size
     private void OnFileChanged(TabViewModel tab, FileSystemEventArgs e)
     {
-        if (e.FullPath != tab.FileInfo.CurrentValue.FullName)
-        {
-            return;
-        }
-        
         var newFile = new FileInfo(e.FullPath);
         var previousFile = tab.Model?.FileInfo;
         if (newFile.Length == previousFile.Length)
@@ -394,6 +388,11 @@ public class FileWatcherService(
         if (index >= 0)
         {
             files[index] = newFile;
+        }
+        
+        if (e.FullPath != tab.FileInfo.CurrentValue.FullName)
+        {
+            return;
         }
         
         tab.Model.FileInfo = newFile;

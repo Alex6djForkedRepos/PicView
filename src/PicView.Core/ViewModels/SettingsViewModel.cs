@@ -396,10 +396,14 @@ public class SettingsViewModel : IDisposable
                  Settings.Navigation.IsNavigatingBackwardsWhenDeleting = x == 1;
                  await SaveSettingsAsync();
              }).AddTo(ref _disposables);
-             
+        
         // Appearance
         Observable.EveryValueChanged(this, x => x.ThemeIndex.CurrentValue)
-            .Subscribe(x => _themeService?.SetTheme(x)).AddTo(ref _disposables);
+            .SubscribeAwait(async (x, _) =>
+            {
+                _themeService?.SetTheme(x);
+                await SaveSettingsAsync();
+            }).AddTo(ref _disposables);
             
         SetColorThemeCommand
             .Subscribe(x => {
