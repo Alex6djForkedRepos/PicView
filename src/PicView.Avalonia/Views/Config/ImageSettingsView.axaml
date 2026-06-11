@@ -21,14 +21,14 @@
                                        Mode=OneWay}" />
         </StackPanel>
 
-        <Border ui:SearchProperties.Keywords="{CompiledBinding SettingsViewModel.SearchData.ImageStretchSearchTags}" Classes="searchBorder">
+        <Border ui:SearchProperties.Keywords="{CompiledBinding SettingsViewModel.SearchData.ImageZoomToFitSearchTags}" Classes="searchBorder">
             <customControls:TextToggleButton
                 x:Name="ZoomToFitToggleButton"
                 Classes="altHover settingsToggleButton"
                 IsChecked="{CompiledBinding MainWindows.ActiveWindow.Value.IsZoomedToFit.Value}"
-                Text="{CompiledBinding Translation.Stretch.Value,
+                Text="{CompiledBinding Translation.ZoomToFit.Value,
                                        Mode=OneWay}"
-                ToolTip.Tip="{CompiledBinding Translation.Stretch.Value,
+                ToolTip.Tip="{CompiledBinding Translation.ZoomToFit.Value,
                                               Mode=OneWay}" />
         </Border>
 

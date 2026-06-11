@@ -78,7 +78,7 @@ public static class SettingsSearchIndex
 
         // Image Settings
         if (t.Stretch != null)
-            list.Add(new SettingsSearchItem(t.Stretch, data.ImageStretchSearchTags));
+            list.Add(new SettingsSearchItem(t.Stretch, data.ImageZoomToFitSearchTags));
         if (t.Scrolling != null)
             list.Add(new SettingsSearchItem(t.Scrolling, data.ImageScrollingSearchTags));
         if (t.SideBySide != null)

@@ -19,7 +19,7 @@ public class SettingsSearchData
     public string ShowUISearchTags { get; }
     public string ShowFadeInButtonsSearchTags { get; }
     public string ShowHoverNavigationBarSearchTags { get; }
-    public string ImageStretchSearchTags { get; }
+    public string ImageZoomToFitSearchTags { get; }
     public string ImageScrollingSearchTags { get; }
     public string ImageSideBySideSearchTags { get; }
     public string ImageScalingSearchTags { get; }
@@ -172,10 +172,14 @@ public class SettingsSearchData
         
         sb.Append(TranslationManager.Translation.Image);
         sb.Append(space);
+        sb.Append(TranslationManager.Translation.ZoomToFit);
+        sb.Append(space);
         sb.Append(TranslationManager.Translation.Stretch);
         sb.Append(space);
-        sb.Append("Stretch");
-        ImageStretchSearchTags = sb.ToString();
+        sb.Append(TranslationManager.Translation.Scale);
+        sb.Append(space);
+        sb.Append(TranslationManager.Translation.Zoom);
+        ImageZoomToFitSearchTags = sb.ToString();
         
         sb.Clear();
         
