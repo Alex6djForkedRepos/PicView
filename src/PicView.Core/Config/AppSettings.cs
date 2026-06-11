@@ -1,4 +1,5 @@
 using PicView.Core.Gallery;
+using PicView.Core.Navigation;
 
 namespace PicView.Core.Config;
 
@@ -447,21 +448,16 @@ public class Navigation
     public int NegativeIterations { get; set; } = 3;
 
     /// <summary>
-    /// Determines whether navigating through the file history is enabled, with the mouse side buttons.
-    /// When set to true, navigation will cycle through the historical entries of accessed files.
+    /// Defines the navigation behavior when using mouse side buttons.
+    /// Determines how the application handles interactions with side buttons
+    /// for tasks such as navigating files, directories, or other navigation contexts.
     /// </summary>
-    public bool IsNavigatingFileHistory { get; set; } = true;
+    public NavigationMode MouseSideButtonNavigationMode { get; set; }
     
     /// <summary>
     /// Determines if the file history should be saved.
     /// </summary>
     public bool IsFileHistoryEnabled { get; set; } = true;
-    
-    /// <summary>
-    /// Determines whether navigation between directories is enabled, with the mouse side buttons.
-    /// When set to true, navigation will cycle through the directories, next to the current file order.
-    /// </summary>
-    public bool IsNavigatingBetweenDirectories { get; set; } = false;
 
     /// <summary>
     /// Indicates whether navigation should move backward in the sequence when an image file is deleted.

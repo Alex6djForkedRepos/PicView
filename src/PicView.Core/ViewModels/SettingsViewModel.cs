@@ -3,6 +3,7 @@ using PicView.Core.Localization;
 using PicView.Core.ColorHandling;
 using PicView.Core.Gallery;
 using PicView.Core.ISettings;
+using PicView.Core.Navigation;
 using PicView.Core.Search;
 using R3;
 
@@ -43,6 +44,15 @@ public class SettingsViewModel : IDisposable
             new SettingsCategoryItem(translation.FileAssociations, "FileAssociationImage", SettingsCategory.FileAssociations)
         ];
 
+        MouseSideButtonBehaviors = new BindableReactiveProperty<string[]>(
+        [
+            TranslationManager.Translation.None!,
+            TranslationManager.Translation.Navigate!,
+            TranslationManager.Translation.NavigateFileHistory!,
+            TranslationManager.Translation.NavigateBetweenDirectories!,
+            TranslationManager.Translation.Archives!
+        ]);
+        
         MouseDoubleClickBehaviors = new BindableReactiveProperty<string[]>(
         [
             TranslationManager.Translation.None!,
@@ -163,13 +173,15 @@ public class SettingsViewModel : IDisposable
     public BindableReactiveProperty<int> ScrollDirectionIndex { get; } = new(Settings.Zoom.HorizontalReverseScroll ? 0 : 1);
 
     // Mouse
-    public BindableReactiveProperty<int> MouseSideButtonBehavior { get; } = new(
-        Settings.Navigation.IsNavigatingFileHistory ? 0 : 
-        Settings.Navigation.IsNavigatingBetweenDirectories ? 1 : 2);
+    public BindableReactiveProperty<string[]> MouseSideButtonBehaviors { get; }
+    public BindableReactiveProperty<int> MouseSideButtonBehaviorIndex { get; } = new((int)Settings.Navigation.MouseSideButtonNavigationMode);
     
     public BindableReactiveProperty<int> GalleryMouseWheelBehavior { get; } = new((int)Settings.Gallery.GalleryMouseWheelBehavior);
     
     public BindableReactiveProperty<int> MouseWheelBehavior { get; } = new(Settings.Zoom.CtrlZoom ? 0 : 1);
+    
+    public BindableReactiveProperty<string[]> MouseDoubleClickBehaviors { get; }
+    public BindableReactiveProperty<int> MouseDoubleClickBehaviorIndex { get; }
 
     // Language
     public BindableReactiveProperty<List<LanguageItem>> AvailableLanguages { get; } = new();
@@ -220,9 +232,6 @@ public class SettingsViewModel : IDisposable
 
     public BindableReactiveProperty<double> SlideshowSpeed { get; } = new(Settings.UIProperties.SlideShowTimer);
     public BindableReactiveProperty<double> GetSlideshowSpeed { get; } = new();
-
-    public BindableReactiveProperty<string[]> MouseDoubleClickBehaviors { get; }
-    public BindableReactiveProperty<int> MouseDoubleClickBehaviorIndex { get; }
     
     // Commands for simple toggles or actions
     public ReactiveCommand<ColorOptions> SetColorThemeCommand { get; } = new();
@@ -282,7 +291,8 @@ public class SettingsViewModel : IDisposable
             CtrlZoom,
             HorizontalReverseScroll,
             ScrollDirectionIndex,
-            MouseSideButtonBehavior,
+            MouseSideButtonBehaviors,
+            MouseSideButtonBehaviorIndex,
             MouseWheelBehavior,
             UserLanguage,
             IsIncludingSubdirectories,
@@ -431,23 +441,9 @@ public class SettingsViewModel : IDisposable
              }).AddTo(ref _disposables);
              
         // Mouse
-        Observable.EveryValueChanged(this, x => x.MouseSideButtonBehavior.CurrentValue)
+        Observable.EveryValueChanged(this, x => x.MouseSideButtonBehaviorIndex.CurrentValue)
             .SubscribeAwait(async (x, _) => {
-                switch(x)
-                {
-                    case 0:
-                        Settings.Navigation.IsNavigatingFileHistory = true;
-                        Settings.Navigation.IsNavigatingBetweenDirectories = false;
-                        break;
-                    case 1:
-                        Settings.Navigation.IsNavigatingFileHistory = false;
-                        Settings.Navigation.IsNavigatingBetweenDirectories = true;
-                        break;
-                    case 2:
-                        Settings.Navigation.IsNavigatingFileHistory = false;
-                        Settings.Navigation.IsNavigatingBetweenDirectories = false;
-                        break;
-                }
+                Settings.Navigation.MouseSideButtonNavigationMode = (NavigationMode)x;
                 await SaveSettingsAsync();
             }).AddTo(ref _disposables);
 

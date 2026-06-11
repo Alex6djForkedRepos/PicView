@@ -602,7 +602,12 @@
                 </MenuItem>
 
                 <!--  Image effects  -->
-                <MenuItem Header="{CompiledBinding Translation.Effects.Value, Mode=OneWay}" ToolTip.Tip="{CompiledBinding Translation.EffectsTooltip.Value, Mode=OneWay}">
+                <MenuItem
+                    Command="{Binding EffectsWindowCommand}"
+                    Header="{CompiledBinding Translation.Effects.Value,
+                                             Mode=OneWay}"
+                    ToolTip.Tip="{CompiledBinding Translation.EffectsTooltip.Value,
+                                                  Mode=OneWay}">
                     <MenuItem.Icon>
                         <Image
                             Width="12"

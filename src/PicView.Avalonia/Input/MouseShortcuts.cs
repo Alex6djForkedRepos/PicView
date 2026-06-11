@@ -7,6 +7,7 @@ using Avalonia.Threading;
 using PicView.Avalonia.CustomControls;
 using PicView.Avalonia.UI;
 using PicView.Avalonia.Views.UC;
+using PicView.Core.Navigation;
 using PicView.Core.ViewModels;
 
 namespace PicView.Avalonia.Input;
@@ -200,28 +201,48 @@ public static class MouseShortcuts
         // Handle mouse side buttons
         if (prop.IsXButton1Pressed)
         {
-            if (Settings.Navigation.IsNavigatingFileHistory)
+            switch (Settings.Navigation.MouseSideButtonNavigationMode)
             {
-                await windowViewModel.Mapper.OpenPreviousFileHistoryEntry().ConfigureAwait(false);
-            }
-            else if (Settings.Navigation.IsNavigatingBetweenDirectories)
-            {
-                await windowViewModel.Mapper.PrevFolder().ConfigureAwait(false);
+                default:
+                case NavigationMode.None:
+                    return;
+                case NavigationMode.NavigatingFileHistory:
+                    await windowViewModel.Mapper.OpenPreviousFileHistoryEntry().ConfigureAwait(false);
+                    return;
+                case NavigationMode.NavigatingBetweenDirectories:
+                    await windowViewModel.WindowTabs.PrevFolder().ConfigureAwait(false);
+                    return;
+                case NavigationMode.NavigatingBetweenFiles:
+                    await windowViewModel.WindowTabs.PrevFile().ConfigureAwait(false);
+                    return;
+                case NavigationMode.NavigatingBetweenArchives:
+                    await windowViewModel.WindowTabs.PrevArchive().ConfigureAwait(false);
+                    return;
             }
         }
-        else if (prop.IsXButton2Pressed)
+        if (prop.IsXButton2Pressed)
         {
-            if (Settings.Navigation.IsNavigatingFileHistory)
+            switch (Settings.Navigation.MouseSideButtonNavigationMode)
             {
-                await windowViewModel.Mapper.OpenNextFileHistoryEntry().ConfigureAwait(false);
-            }
-            else if (Settings.Navigation.IsNavigatingBetweenDirectories)
-            {
-                await windowViewModel.Mapper.NextFolder().ConfigureAwait(false);
+                default:
+                case NavigationMode.None:
+                    return;
+                case NavigationMode.NavigatingFileHistory:
+                    await windowViewModel.Mapper.OpenNextFileHistoryEntry().ConfigureAwait(false);
+                    return;
+                case NavigationMode.NavigatingBetweenDirectories:
+                    await windowViewModel.WindowTabs.NextFolder().ConfigureAwait(false);
+                    return;
+                case NavigationMode.NavigatingBetweenFiles:
+                    await windowViewModel.WindowTabs.NextFile().ConfigureAwait(false);
+                    return;
+                case NavigationMode.NavigatingBetweenArchives:
+                    await windowViewModel.WindowTabs.NextArchive().ConfigureAwait(false);
+                    return;
             }
         }
         // Handle double click
-        else if (e.ClickCount is 2)
+        if (e.ClickCount is 2)
         {
             switch (Settings.UIProperties.DoubleClickBehavior)
             {
