@@ -945,13 +945,13 @@
             HorizontalAlignment="Right"
             VerticalAlignment="Top"
             Background="Transparent"
-            IsVisible="{Binding !IsUIShown.Value}"
+            IsVisible="{Binding !WindowTabs.ActiveTab.Value.Gallery.IsGalleryExpanded.Value}"
             Opacity="0"
             Orientation="Horizontal"
             ZIndex="9">
-            <buttons:AltMinimize x:Name="AltMinimize" />
-            <buttons:AltRestore x:Name="AltRestore" />
-            <buttons:AltClose x:Name="AltClose" />
+            <buttons:AltMinimize x:Name="AltMinimize" IsVisible="{Binding !IsUIShown.Value}" />
+            <buttons:AltRestore x:Name="AltRestore" IsVisible="{Binding !IsUIShown.Value}" />
+            <buttons:AltClose x:Name="AltClose" IsVisible="{Binding !IsUIShown.Value}" />
         </StackPanel>
 
         <uc:ToolTipMessage
