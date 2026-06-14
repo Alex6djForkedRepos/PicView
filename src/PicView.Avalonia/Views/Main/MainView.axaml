@@ -264,6 +264,18 @@
 
                 <Separator />
 
+                <!--  Toggle ctrl zoom  -->
+                <MenuItem Command="{CompiledBinding ChangeCtrlZoomCommand}" Header="{CompiledBinding Translation.IsCtrlToZoom.Value, Mode=OneWay}">
+                    <MenuItem.Icon>
+                        <Image
+                            Width="12"
+                            Height="12"
+                            Source="{CompiledBinding ChangeCtrlZoomImage.Value}" />
+                    </MenuItem.Icon>
+                </MenuItem>
+
+                <Separator />
+
                 <!--  Toggle UI  -->
                 <MenuItem
                     Command="{CompiledBinding ToggleInterfaceCommand}"
@@ -644,9 +656,7 @@
                     Command="{Binding OptimizeImageCommand}"
                     Header="{CompiledBinding Translation.OptimizeImage.Value,
                                              Mode=OneWay}"
-                    IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.FileInfo.Value,
-                                                Converter={x:Static ObjectConverters.IsNotNull},
-                                                FallbackValue=False,
+                    IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.ShouldOptimizeImageBeEnabled.Value,
                                                 Mode=OneWay}">
                     <MenuItem.Icon>
                         <Image
@@ -663,7 +673,8 @@
                     x:Name="CropMenuItem"
                     Command="{Binding CropCommand}"
                     Header="{Binding Translation.Crop.Value, Mode=OneWay}"
-                    IsEnabled="{Binding WindowTabs.ActiveTab.Value.Image.Value, Converter={x:Static ObjectConverters.IsNotNull}, FallbackValue=False, Mode=OneWay}">
+                    IsEnabled="{CompiledBinding WindowTabs.ActiveTab.Value.ShouldCropBeEnabled.Value,
+                                                Mode=OneWay}">
                     <MenuItem.Icon>
                         <Image Classes="CropImage" />
                     </MenuItem.Icon>

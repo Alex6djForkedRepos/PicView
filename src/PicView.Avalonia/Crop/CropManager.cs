@@ -1,4 +1,5 @@
-﻿using PicView.Avalonia.UI;
+﻿using Avalonia.Media.Imaging;
+using PicView.Avalonia.UI;
 using PicView.Core.ViewModels;
 
 namespace PicView.Avalonia.Crop;
@@ -26,6 +27,35 @@ public static class CropManager
         }
 
         return service;
+    }
+
+    public static bool SetIfCropEnabled(MainWindowViewModel vm)
+    {
+        if (IsCropping)
+        {
+            return false;
+        }
+        var tab = vm.WindowTabs.ActiveTab.Value;
+        
+        if (tab.Image.CurrentValue is not Bitmap || Settings.ImageScaling.ShowImageSideBySide)
+        {
+            tab.ShouldCropBeEnabled.Value = false;
+            return false;
+        }
+        
+        if (vm.IsEditableTitlebarOpen.CurrentValue)
+        {
+            return false;
+        }
+        
+        if (tab.RotationAngle.CurrentValue is 0 && tab.ScaleX.CurrentValue is 1)
+        {
+            tab.ShouldCropBeEnabled.Value = true;
+            return true;
+        }
+        
+        tab.ShouldCropBeEnabled.Value = false;
+        return false;
     }
 
     /// <summary>

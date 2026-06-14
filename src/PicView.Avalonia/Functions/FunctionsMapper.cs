@@ -876,35 +876,23 @@ public class FunctionsMapper(MainWindowViewModel vm, Window window) : IFunctions
 
     #region Rating
 
-    public async ValueTask Set0Star()
-    {
+    public async ValueTask Set0Star() =>
         await SetExifRatingHelper.Set0Star(vm);
-    }
 
-    public async ValueTask Set1Star()
-    {
+    public async ValueTask Set1Star() =>
         await SetExifRatingHelper.Set1Star(vm);
-    }
 
-    public async ValueTask Set2Star()
-    {
+    public async ValueTask Set2Star() =>
         await SetExifRatingHelper.Set2Star(vm);
-    }
 
-    public async ValueTask Set3Star()
-    {
+    public async ValueTask Set3Star() =>
         await SetExifRatingHelper.Set3Star(vm);
-    }
 
-    public async ValueTask Set4Star()
-    {
+    public async ValueTask Set4Star() =>
         await SetExifRatingHelper.Set4Star(vm);
-    }
 
-    public async ValueTask Set5Star()
-    {
+    public async ValueTask Set5Star() =>
         await SetExifRatingHelper.Set5Star(vm);
-    }
 
     #endregion
 
@@ -1018,19 +1006,11 @@ public class FunctionsMapper(MainWindowViewModel vm, Window window) : IFunctions
         return ValueTask.CompletedTask;
     }
     
-    public async ValueTask ToggleOpeningInSameWindow()
-    {
-        // TODO
-        // await SettingsUpdater.ToggleOpeningInSameWindow(vm).ConfigureAwait(false);
-        return;
-    }
+    public async ValueTask ToggleOpeningInSameWindow() =>
+        await SettingsUpdater.ToggleOpeningInSameWindow().ConfigureAwait(false);
     
-    public async ValueTask ToggleFileHistory()
-    {
-        // TODO
-        // await SettingsUpdater.ToggleFileHistory(vm).ConfigureAwait(false);
-        return;
-    }
+    public async ValueTask ToggleFileHistory() =>
+        await SettingsUpdater.ToggleFileHistory(vm).ConfigureAwait(false);
 
     #endregion
     

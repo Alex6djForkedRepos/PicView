@@ -12,6 +12,7 @@ using PicView.Avalonia.Input;
 using PicView.Avalonia.UI;
 using PicView.Avalonia.Views.UC;
 using PicView.Avalonia.WindowBehavior;
+using PicView.Core.Conversion;
 using PicView.Core.Sizing;
 using PicView.Core.ViewModels;
 using MainWindowViewModel = PicView.Core.ViewModels.MainWindowViewModel;
@@ -47,8 +48,7 @@ public partial class MainView : UserControl
             {
                 if (value is ContextMenu mainContextMenu)
                 {
-                    //mainContextMenu.Opened += async (sender, args) =>  await OnMainContextMenuOpened(sender, args);
-                    mainContextMenu.Opening += async (sender, args) => OnMainContextMenuOpening(sender, args);
+                    mainContextMenu.Opening += OnMainContextMenuOpening;
                 }
             }
             
@@ -70,8 +70,8 @@ public partial class MainView : UserControl
         {
             return;
         }
-
-        if (vm.WindowTabs.ActiveTab.CurrentValue.CurrentView.CurrentValue is ImageViewer imageViewer)
+        var tab = vm.WindowTabs.ActiveTab.CurrentValue;
+        if (tab.CurrentView.CurrentValue is ImageViewer imageViewer)
         {
             // Cancel the context menu if the hover bar is visible, because custom pop-up dialogs are shown instead.
             if (imageViewer.HoverBar.Opacity > 0)
@@ -79,6 +79,21 @@ public partial class MainView : UserControl
                 e.Cancel = true;
             }
         }
+        
+        CropManager.SetIfCropEnabled(vm);
+        tab.ShouldOptimizeImageBeEnabled.Value = ConversionHelper.DetermineIfOptimizeImageShouldBeEnabled(tab.FileInfo.CurrentValue);
+        
+        // Set source for ChangeCtrlZoomImage
+        if (!Application.Current.TryGetResource("ScanEyeImage", Application.Current.RequestedThemeVariant, out var scanEyeImage))
+        {
+            return;
+        }
+        if (!Application.Current.TryGetResource("LeftRightArrowsImage", Application.Current.RequestedThemeVariant, out var leftRightArrowsImage))
+        {
+            return;
+        }
+        var isNavigatingWithCtrl = Settings.Zoom.CtrlZoom;
+        vm.ChangeCtrlZoomImage.Value = isNavigatingWithCtrl ? leftRightArrowsImage as DrawingImage : scanEyeImage as DrawingImage;
     }
 
     private void MainTabControlOnTabCreated(object? sender, TabCreatedEventArgs e)

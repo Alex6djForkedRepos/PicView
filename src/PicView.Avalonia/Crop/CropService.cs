@@ -27,7 +27,7 @@ public class CropService(TabViewModel tabViewModel) : ICropService
 
     public async Task StartCropControlAsync(MainWindowViewModel vm)
     {
-        if (!DetermineIfShouldBeEnabled(vm))
+        if (!CropManager.SetIfCropEnabled(vm))
         {
             return;
         }
@@ -211,33 +211,5 @@ public class CropService(TabViewModel tabViewModel) : ICropService
 
         image.Crop(geometry);
         await image.WriteAsync(saveFilePath);
-    }
-
-    public bool DetermineIfShouldBeEnabled(MainWindowViewModel vm)
-    {
-        if (IsCropping)
-        {
-            return false;
-        }
-        
-        if (tabViewModel.Image.CurrentValue is not Bitmap || Settings.ImageScaling.ShowImageSideBySide)
-        {
-            tabViewModel.ShouldCropBeEnabled.Value = false;
-            return false;
-        }
-        
-        if (vm.IsEditableTitlebarOpen.CurrentValue)
-        {
-            return false;
-        }
-        
-        if (tabViewModel.RotationAngle.CurrentValue is 0 && tabViewModel.ScaleX.CurrentValue is 1)
-        {
-            tabViewModel.ShouldCropBeEnabled.Value = true;
-            return true;
-        }
-        
-        tabViewModel.ShouldCropBeEnabled.Value = false;
-        return false;
     }
 }
