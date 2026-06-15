@@ -32,9 +32,7 @@
                 x:Name="MainMenu"
                 Height="{Binding TitlebarHeight.Value, Mode=OneWay}"
                 HorizontalAlignment="Left"
-                Background="{DynamicResource WindowSecondaryBackgroundColor}"
-                BorderBrush="{DynamicResource MainBorderColor}"
-                BorderThickness="0,0,0,1"
+                Background="{DynamicResource ContextMenuBackgroundColor}"
                 Foreground="{DynamicResource MainTextColor}"
                 IsVisible="{Binding TopTitlebarViewModel.IsMainMenuVisible.Value}"
                 ZIndex="9">
@@ -251,11 +249,10 @@
                 </MenuItem>
 
                 <!--  View  -->
-                <MenuItem
-                    x:Name="ViewMenuItem"
-                    MaxWidth="{Binding TopTitlebarViewModel.MaxItemWidth.Value}"
-                    Header="{CompiledBinding Translation.View,
-                                             Mode=OneWay}">
+                <MenuItem x:Name="ViewMenuItem" MaxWidth="{Binding TopTitlebarViewModel.MaxItemWidth.Value}">
+                    <MenuItem.Header>
+                        <TextBlock Classes="txt" Text="{Binding Translation.View.Value, Mode=OneWay}" />
+                    </MenuItem.Header>
 
                     <!--  Change background  -->
                     <MenuItem
