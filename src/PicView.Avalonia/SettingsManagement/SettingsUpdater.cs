@@ -255,6 +255,7 @@ public static class SettingsUpdater
     public static void TurnOnScroll(MainWindowViewModel vm)
     {
         vm.Translation.IsScrolling.Value = TranslationManager.Translation.ScrollingEnabled;
+        vm.IsScrollingEnabled.Value = true;
         Settings.Zoom.ScrollEnabled = true;
     }
     
