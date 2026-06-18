@@ -139,14 +139,14 @@ public class NavigateAbleItemsViewer : ItemsControl
 
     public void ScrollToCenterOfCurrentItem()
     {
-        if (_scrollViewer is null || CurrentItemIndex < 0 || CurrentItemIndex >= ItemCount)
-        {
-            return;
-        }
-        
         // Need to use Post to have calculations take place after render
         Dispatcher.UIThread.Post(() =>
         {
+            if (_scrollViewer is null || CurrentItemIndex < 0 || CurrentItemIndex >= ItemCount)
+            {
+                return;
+            }
+
             var container = ContainerFromIndex(CurrentItemIndex);
 
             // Get item position relative to the ScrollViewer's viewport
