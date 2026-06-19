@@ -62,10 +62,12 @@
             </StackPanel>
         </Border>
 
+        <!--  Fade buttons toggle  -->
         <Border ui:SearchProperties.Keywords="{CompiledBinding SettingsViewModel.SearchData.ShowFadeInButtonsSearchTags}" Classes="searchBorder">
             <customControls:TextIconButton
                 x:Name="ToggleFadeUIButton"
                 Classes="altHover settingsTextIconButton"
+                Command="{CompiledBinding SettingsViewModel.ToggleFadeButtonsCommand}"
                 Icon="{StaticResource CursorImage}"
                 IconHeight="18"
                 IconMargin="10,0,10,0"

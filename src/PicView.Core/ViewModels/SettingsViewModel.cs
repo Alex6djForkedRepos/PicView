@@ -97,6 +97,30 @@ public class SettingsViewModel : IDisposable
                 translation.IsUsingTouchpad.Value = TranslationManager.Translation.UsingTouchpad;
             }
         }).AddTo(ref _disposables);
+        ToggleUsingTouchpadCommand.SubscribeAwait(async (_, _) =>
+        {
+            await SaveSettingsAsync();
+        });
+        
+        ToggleFadeButtonsCommand = new ReactiveCommand( _ =>
+        {
+            if (IsShowingFadeButtons.Value)
+            {
+                IsShowingFadeButtons.Value = false;
+                translation.IsShowingFadingUIButtons.Value = TranslationManager.Translation.ShowFadeInButtonsOnHover;
+                Settings.UIProperties.ShowAltInterfaceButtons = false;
+            }
+            else
+            {
+                IsShowingFadeButtons.Value = true;
+                translation.IsShowingFadingUIButtons.Value = TranslationManager.Translation.DisableFadeInButtonsOnHover;
+                Settings.UIProperties.ShowAltInterfaceButtons = true;
+            }
+        }).AddTo(ref _disposables);
+        ToggleFadeButtonsCommand.SubscribeAwait(async (_, _) =>
+        {
+            await SaveSettingsAsync();
+        });
 
         // Search Initialization
         SearchData = new SettingsSearchData();
@@ -208,6 +232,8 @@ public class SettingsViewModel : IDisposable
     public BindableReactiveProperty<bool> IsStayingCentered { get; } = new(Settings.WindowProperties.KeepCentered);
 
     public BindableReactiveProperty<bool> IsUsingTouchpad { get; } = new(Settings.Zoom.IsUsingTouchPad);
+    
+    public BindableReactiveProperty<bool> IsShowingFadeButtons { get; } = new(Settings.UIProperties.ShowAltInterfaceButtons);
 
     public BindableReactiveProperty<bool> IsConstrainingBackgroundColor { get; } =
         new(Settings.UIProperties.IsConstrainBackgroundColorEnabled);
@@ -238,6 +264,7 @@ public class SettingsViewModel : IDisposable
     public ReactiveCommand<ColorOptions> SetColorThemeCommand { get; } = new();
     public ReactiveCommand<BackgroundType> SetBackgroundCommand { get; } = new();
     public ReactiveCommand ToggleUsingTouchpadCommand { get; }
+    public ReactiveCommand ToggleFadeButtonsCommand { get; }
 
     
     public BindableReactiveProperty<bool> IsSearchVisible { get; } = new(false);
@@ -304,7 +331,8 @@ public class SettingsViewModel : IDisposable
             ToggleUsingTouchpadCommand,
             SearchQuery,
             IsSearchVisible,
-            ClearSearchCommand
+            ClearSearchCommand,
+            ToggleFadeButtonsCommand
             );
     }
 
