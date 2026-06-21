@@ -156,13 +156,10 @@ public static class GalleryLoader
     
     public static async ValueTask ToggleGalleryAndLoadItem(TabViewModel tabViewModel, int index)
     {
-        if (tabViewModel.ImageIterator is null)
+        var gallery = tabViewModel.Gallery;
+        if (gallery.IsGalleryExpanded.Value)
         {
-            return;
-        }
-        if (tabViewModel.Gallery.IsGalleryExpanded.Value)
-        {
-            tabViewModel.Gallery.ToggleGalleryCommand.Execute(Unit.Default);
+            GalleryManager.ToggleGallery(gallery);
         }
 
         await tabViewModel.ImageIterator.SkipToIndexAsync(index, tabViewModel.GetTabCancellation()).ConfigureAwait(false);

@@ -88,18 +88,7 @@ public class GalleryViewModel : IDisposable
         
         ToggleGalleryCommand.Subscribe(_ =>
         {
-            if (Settings.Gallery.IsGalleryDocked && IsGalleryExpanded.CurrentValue)
-            {
-                GalleryMode.Value = GalleryMode2.Docked;
-            }
-            else if (IsGalleryExpanded.CurrentValue)
-            {
-                GalleryMode.Value = GalleryMode2.Closed;
-            }
-            else
-            {
-                GalleryMode.Value = GalleryMode2.Expanded;
-            }
+            GalleryManager.ToggleGallery(this);
         }, DebugHelper.LogError(nameof(GalleryViewModel), nameof(Initialize)))
         .AddTo(ref _disposables);
         

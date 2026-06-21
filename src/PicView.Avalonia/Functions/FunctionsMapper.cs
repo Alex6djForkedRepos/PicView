@@ -11,11 +11,12 @@ using PicView.Avalonia.SettingsManagement;
 using PicView.Avalonia.UI;
 using PicView.Avalonia.Views.UC;
 using PicView.Avalonia.Input;
-using PicView.Avalonia.StartUp;
+using PicView.Avalonia.Navigation;
 using PicView.Avalonia.Wallpaper;
 using PicView.Avalonia.WindowBehavior;
 using PicView.Core.FileHistory;
 using PicView.Core.FileSorting;
+using PicView.Core.Gallery;
 using PicView.Core.IPlatform;
 using PicView.Core.Keybindings;
 using PicView.Core.Navigation;
@@ -476,16 +477,10 @@ public class FunctionsMapper(MainWindowViewModel vm, Window window) : IFunctions
         return ValueTask.CompletedTask;
     }
     
-    public ValueTask GalleryClick()
+    public async ValueTask GalleryClick()
     {
-        var gallery = vm.WindowTabs.ActiveTab.CurrentValue.Gallery;
-        var index = gallery.SelectedGalleryItemIndex.Value;
-        if (index > -1)
-        {
-            gallery.OpenSelectedItemCommand.Execute(index);
-        }
-        
-        return ValueTask.CompletedTask;
+        var tab = vm.WindowTabs.ActiveTab.CurrentValue;
+        await GalleryLoader.ToggleGalleryAndLoadItem(tab, tab.Gallery.SelectedGalleryItemIndex.Value);
     }
 
     #endregion
@@ -634,20 +629,20 @@ public class FunctionsMapper(MainWindowViewModel vm, Window window) : IFunctions
 
     #region File funnctions
 
-    /// <inheritdoc cref=" UIHelper.OpenLastFile(MainWindowViewModel)" />
+    /// <inheritdoc cref=" UINavigationHelper.OpenLastFile(MainWindowViewModel)" />
     public async ValueTask OpenLastFile()
     {
-        await UIHelper.OpenLastFile(vm);
+        await UINavigationHelper.OpenLastFile(vm);
     }
 
     public async ValueTask OpenPreviousFileHistoryEntry()
     {
-        await UIHelper.OpenPreviousFileHistoryEntry(vm).ConfigureAwait(false);
+        await UINavigationHelper.OpenPreviousFileHistoryEntry(vm).ConfigureAwait(false);
     }
    
     public async ValueTask OpenNextFileHistoryEntry()
     {
-        await UIHelper.OpenNextFileHistoryEntry(vm).ConfigureAwait(false);
+        await UINavigationHelper.OpenNextFileHistoryEntry(vm).ConfigureAwait(false);
     }
     
     public async ValueTask Print()

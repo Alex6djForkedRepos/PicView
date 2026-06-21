@@ -19,7 +19,6 @@ namespace PicView.Avalonia.CustomControls;
 public class GalleryAnimationControl : UserControl
 {
     #region Fields and Properties
-
     private const int ZeroSize = 0;
     private const int BorderTopAndBottomThickness = 2;
 
@@ -400,7 +399,10 @@ public class GalleryAnimationControl : UserControl
 
     private async Task ClosedToDocked()
     {
-        if (!Settings.Gallery.IsGalleryDocked) return;
+        if (!Settings.Gallery.IsGalleryDocked)
+        {
+            return;
+        }
 
         var dock = Settings.Gallery.DockPosition;
         IsVisible = true;
@@ -470,8 +472,6 @@ public class GalleryAnimationControl : UserControl
 
     private async Task DockedToExpanded()
     {
-        if (TabViewModel == null || ParentControl == null) return;
-
         var dock = Settings.Gallery.DockPosition;
         SetExpandedLayoutCore(dock);
 
@@ -496,8 +496,6 @@ public class GalleryAnimationControl : UserControl
 
     private async Task ExpandedToDocked()
     {
-        if (TabViewModel == null || ParentControl == null) return;
-
         var dock = Settings.Gallery.DockPosition;
 
         if (IsHorizontalDock(dock))
@@ -523,8 +521,6 @@ public class GalleryAnimationControl : UserControl
 
     private async Task ClosedToExpanded()
     {
-        if (ParentControl == null) return;
-
         IsVisible = true;
         Width = Height = ZeroSize;
 
@@ -536,9 +532,10 @@ public class GalleryAnimationControl : UserControl
             AnimationsHelper.HeightAnimation(ZeroSize, targetHeight, GalleryDefaults.MediumAnimationSpeed).RunAsync(this)
         );
 
+        _viewer?.SetHorizontalScrolling();
         _itemsPanel?.Orientation = Orientation.Vertical;
         TabViewModel?.Gallery.ItemSpacing.Value = Settings.Gallery.ItemSpacing;
-
+        
         SetExpandedThumbs();
         _viewer?.ScrollToCenterOfCurrentItem();
     }

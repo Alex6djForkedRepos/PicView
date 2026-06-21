@@ -193,6 +193,11 @@ public static class QuickLoad
             WindowFunctions.CenterWindowOnScreen();
         }
 
+        if (Settings.UIProperties.IsTaskbarProgressEnabled)
+        {
+            core.PlatformService.SetTaskbarProgress((ulong)tab.ImageIterator.CurrentIndex, (ulong)tab.ImageIterator.Files.Count);
+        }
+
         core.MainWindows.ActiveWindow.Value.IsLoadingIndicatorShown.Value = false;
         FileHistoryManager.Add(fileInfo.FullName);
 
@@ -240,17 +245,6 @@ public static class QuickLoad
                     core.SharedThumbnailCache,
                     core.MainWindows.ActiveWindow.Value.WindowTabs.ActiveTab.Value.GetTabCancellation().Token)
                 .ConfigureAwait(false);
-            await Dispatcher.UIThread.InvokeAsync(() =>
-            {
-                if (tab.CurrentView.CurrentValue is ImageViewer imageViewer)
-                {
-                    var gallery = imageViewer.GalleryView.GalleryItemsControl;
-                    gallery.CurrentItemIndex = tab.NavigationIndex.Value;
-                    gallery.UpdatePreviousAndNextSelection(tab.NavigationIndex.Value, -1);
-                    gallery.ScrollToCenterOfCurrentItem();
-                }
-            });
-
         }
         else
         {

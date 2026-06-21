@@ -1,5 +1,4 @@
-﻿using Avalonia;
-using PicView.Avalonia.Navigation;
+﻿using PicView.Avalonia.Navigation;
 using PicView.Avalonia.Views.UC;
 using MainWindowViewModel = PicView.Core.ViewModels.MainWindowViewModel;
 
@@ -7,31 +6,22 @@ namespace PicView.Avalonia.Gallery;
 
 public static class GalleryHelper
 {
-    public static (double width, double height) GetGallerySize(MainWindowViewModel main)
+    public static (double width, double height) GetGallerySize(MainWindowViewModel vm)
     {
-        if (!Settings.Gallery.IsGalleryDocked || Slideshow.IsRunning || 
-            !Settings.Gallery.ShowDockedGalleryInHiddenUI && !main.IsUIShown.CurrentValue)
+        var tabs = vm.WindowTabs;
+        var tab = tabs.ActiveTab.CurrentValue;
+        var gallery = tab.Gallery;
+        if (!Settings.Gallery.IsGalleryDocked || Slideshow.IsRunning || gallery.IsGalleryExpanded.CurrentValue ||
+            !Settings.Gallery.ShowDockedGalleryInHiddenUI && !vm.IsUIShown.CurrentValue)
         {
             return (0, 0);
         }
-
-        Rect galleryBounds;
-        if (main.WindowTabs.ActiveTab.CurrentValue.CurrentView.CurrentValue is ImageViewer imageViewer)
+        
+        if (gallery.IsLeftDocked.CurrentValue || gallery.IsRightDocked.CurrentValue)
         {
-            galleryBounds = imageViewer.GalleryView.Bounds;
+            return (vm.GallerySettings.DockedGalleryItemSize.CurrentValue, 0);
         }
-        else
-        {
-            return (0, 0);
-        }
-
-        if (main.WindowTabs.ActiveTab.CurrentValue.Gallery.IsLeftDocked.CurrentValue || 
-            main.WindowTabs.ActiveTab.CurrentValue.Gallery.IsRightDocked.CurrentValue)
-        {
-            return (galleryBounds.Width, 0);
-        }
-
-        return (0, galleryBounds.Height);
+        return (0, vm.GallerySettings.DockedGalleryItemSize.CurrentValue);
     }
 
     public static void CenterGallery(MainWindowViewModel main)

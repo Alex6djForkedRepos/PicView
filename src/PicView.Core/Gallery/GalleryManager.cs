@@ -1,4 +1,6 @@
-﻿namespace PicView.Core.Gallery;
+﻿using PicView.Core.ViewModels;
+
+namespace PicView.Core.Gallery;
 
 public static class GalleryManager
 {
@@ -9,5 +11,21 @@ public static class GalleryManager
         await Task.Delay(TimeSpan.FromSeconds(GalleryDefaults.VeryFastAnimationSpeed), ct);
         Settings.Gallery.DockPosition = GalleryDockPosition.Closed;
         await SaveSettingsAsync();
+    }
+    
+    public static void ToggleGallery(GalleryViewModel galleryViewModel)
+    {
+        if (Settings.Gallery.IsGalleryDocked && galleryViewModel.IsGalleryExpanded.CurrentValue)
+        {
+            galleryViewModel.GalleryMode.Value = GalleryMode2.Docked;
+        }
+        else if (galleryViewModel.IsGalleryExpanded.CurrentValue)
+        {
+            galleryViewModel.GalleryMode.Value = GalleryMode2.Closed;
+        }
+        else
+        {
+            galleryViewModel.GalleryMode.Value = GalleryMode2.Expanded;
+        }
     }
 }

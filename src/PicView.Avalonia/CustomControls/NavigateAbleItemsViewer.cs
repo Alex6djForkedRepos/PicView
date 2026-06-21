@@ -6,7 +6,6 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
-using PicView.Core.DebugTools;
 using PicView.Core.Gallery;
 using PicView.Core.ViewModels;
 
@@ -383,6 +382,8 @@ public class NavigateAbleItemsViewer : ItemsControl
                 break;
             default: return;
         }
+        
+        ContainerFromIndex(SelectedItemIndex)?.BringIntoView();
     }
 
     private List<ItemPosition> GetItemPositions()
