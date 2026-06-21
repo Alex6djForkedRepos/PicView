@@ -106,9 +106,7 @@ public class TabOverviewViewModel
         SelectTab(tab);
         return tab;
     }
-
-    public async ValueTask<TabViewModel> CreateNewTabFromFileAsync(string filePath)
-        => await CreateNewTabFromFileAsync(new FileInfo(filePath));
+    
     public async ValueTask<TabViewModel> CreateNewTabFromFileAsync(FileInfo file)
     {
         var tab = CreateTab(file);

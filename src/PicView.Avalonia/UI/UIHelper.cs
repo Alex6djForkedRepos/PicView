@@ -121,6 +121,20 @@ public static class UIHelper
     
     public static async Task OpenLastFile(MainWindowViewModel vm)
     {
+        var tab = vm.WindowTabs.ActiveTab.CurrentValue;
+        if (!tab.IsInitialized)
+        {
+            var lastEntry = FileHistoryManager.GetLastEntry();
+            var lastFile = string.IsNullOrWhiteSpace(lastEntry) ? lastEntry : Settings.StartUp.LastFile;
+            if (string.IsNullOrWhiteSpace(lastFile))
+            {
+                return;
+            }
+
+            var core = await Dispatcher.UIThread.InvokeAsync(() => Application.Current.DataContext as CoreViewModel);
+            await QuickLoad.QuickLoadAsync(core, lastFile, true);
+            return;
+        }
         vm.IsLoadingIndicatorShown.Value = true;
         var isViewStartupMenu = false;
         await Dispatcher.UIThread.InvokeAsync(() =>
@@ -131,7 +145,7 @@ public static class UIHelper
                 vm.WindowTabs.ActiveTab.Value.CurrentView.Value = new ImageViewer();
             }
         }, DispatcherPriority.Send);
-        TabNavigationInitializer.InitializeNewTab(vm.WindowTabs.ActiveTab.Value, vm);
+
         var isSuccessFullyLoaded = await vm.WindowTabs.LoadLastFileAsync();
         if (!isSuccessFullyLoaded && isViewStartupMenu)
         {
@@ -150,6 +164,20 @@ public static class UIHelper
     
     public static async ValueTask OpenPreviousFileHistoryEntry(MainWindowViewModel vm)
     {
+        var tab = vm.WindowTabs.ActiveTab.CurrentValue;
+        if (!tab.IsInitialized)
+        {
+            var prevEntry = FileHistoryManager.GetPreviousEntry();
+            var lastFile = string.IsNullOrWhiteSpace(prevEntry) ? prevEntry : Settings.StartUp.LastFile;
+            if (string.IsNullOrWhiteSpace(lastFile))
+            {
+                return;
+            }
+
+            var core = await Dispatcher.UIThread.InvokeAsync(() => Application.Current.DataContext as CoreViewModel);
+            await QuickLoad.QuickLoadAsync(core, lastFile, true);
+            return;
+        }
         vm.IsLoadingIndicatorShown.Value = true;
         if (await vm.WindowTabs.LoadFromStringAsync(FileHistoryManager.GetPreviousEntry()).ConfigureAwait(false))
         {
@@ -160,13 +188,27 @@ public static class UIHelper
                     vm.WindowTabs.ActiveTab.Value.CurrentView.Value = new ImageViewer();
                 }
             });
-            TabNavigationInitializer.InitializeNewTab(vm.WindowTabs.ActiveTab.Value, vm);
+
         }
         vm.IsLoadingIndicatorShown.Value = false;
     }
     
     public static async ValueTask OpenNextFileHistoryEntry(MainWindowViewModel vm)
     {
+        var tab = vm.WindowTabs.ActiveTab.CurrentValue;
+        if (!tab.IsInitialized)
+        {
+            var nextEntry = FileHistoryManager.GetNextEntry();
+            var lastFile = string.IsNullOrWhiteSpace(nextEntry) ? nextEntry : Settings.StartUp.LastFile;
+            if (string.IsNullOrWhiteSpace(lastFile))
+            {
+                return;
+            }
+
+            var core = await Dispatcher.UIThread.InvokeAsync(() => Application.Current.DataContext as CoreViewModel);
+            await QuickLoad.QuickLoadAsync(core, lastFile, true);
+            return;
+        }
         vm.IsLoadingIndicatorShown.Value = true;
         if (await vm.WindowTabs.LoadFromStringAsync(FileHistoryManager.GetNextEntry()).ConfigureAwait(false))
         {
@@ -177,7 +219,7 @@ public static class UIHelper
                     vm.WindowTabs.ActiveTab.Value.CurrentView.Value = new ImageViewer();
                 }
             });
-            TabNavigationInitializer.InitializeNewTab(vm.WindowTabs.ActiveTab.Value, vm);
+
         }
         vm.IsLoadingIndicatorShown.Value = false;
     }

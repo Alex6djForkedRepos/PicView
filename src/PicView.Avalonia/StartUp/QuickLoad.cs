@@ -85,7 +85,6 @@ public static class QuickLoad
             core.MainWindows.ActiveWindow.Value.WindowTabs.ActiveTab.Value.CurrentView.Value = new StartUpMenu();
             core.MainWindows.ActiveWindow.Value.IsLoadingIndicatorShown.Value = false;
         }, DispatcherPriority.Send);
-        TabNavigationInitializer.Initialize(core);
     }
 
     private static async ValueTask LoadUrlImageAsync(CoreViewModel core, string url)

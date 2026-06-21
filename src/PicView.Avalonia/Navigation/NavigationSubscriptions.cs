@@ -17,12 +17,14 @@ public static class NavigationSubscriptions
         Dispatcher.UIThread.Invoke(() =>
         {
             Observable.EveryValueChanged(tabViewModel, tab => tab.Model.FileInfo, UIHelper.GetFrameProvider)
+                .Skip(1)
                 .Subscribe(file =>
                 {
                     UpdateImage.UpdateFileInfo(tabViewModel, file);
                 }, DebugHelper.LogError(nameof(NavigationSubscriptions), nameof(UpdateImage)))
                 .AddTo(tabViewModel.Disposables);
             Observable.EveryValueChanged(tabViewModel, tab => tab.Model.Image, UIHelper.GetFrameProvider)
+                .Skip(1)
                 .Subscribe(_ =>
                 {
                     UpdateImage.ChangeImage(tabViewModel, mainWindowViewModel);
@@ -40,7 +42,9 @@ public static class NavigationSubscriptions
                     await GalleryLoader.LoadGalleryIfDockedOrExpanded(tabViewModel, mode, core.SharedThumbnailCache, new AvaloniaThumbnailLoader());
                 }, DebugHelper.LogError(nameof(NavigationSubscriptions), nameof(GalleryLoader.LoadGalleryIfDockedOrExpanded)))
                 .AddTo(tabViewModel.Disposables);
+            
             tabViewModel.Gallery.OpenSelectedItemCommand
+                .Skip(1)
                 .SubscribeAwait(async (index, _) =>
                 {
                     await GalleryLoader.ToggleGalleryAndLoadItem(tabViewModel, index);

@@ -25,6 +25,14 @@ public static class FilePicker
         {
             return;
         }
+
+        var core = await Dispatcher.UIThread.InvokeAsync(() => Application.Current.DataContext as CoreViewModel);
+        var tab = vm.WindowTabs.ActiveTab.CurrentValue;
+        if (!tab.IsInitialized)
+        {
+            await QuickLoad.QuickLoadAsync(core, file, false).ConfigureAwait(false);
+            return;
+        }
         
         Dispatcher.UIThread.Invoke(() =>
         {
@@ -34,7 +42,6 @@ public static class FilePicker
             }
 
             vm.WindowTabs.ActiveTab.Value.CurrentView.Value = new ImageViewer();
-            TabNavigationInitializer.InitializeNewTab(vm.WindowTabs.ActiveTab.Value, vm);
         });
 
 

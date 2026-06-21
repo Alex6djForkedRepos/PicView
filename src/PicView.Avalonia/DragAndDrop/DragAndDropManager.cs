@@ -363,13 +363,19 @@ public static class DragAndDropManager
 
     private static async ValueTask LoadSupportedFile(string path, TabOverviewViewModel tabOverview)
     {
-        var tab = tabOverview.ActiveTab.CurrentValue;
-        var droppedFileInfo = new FileInfo(path);
-        
         if (_preLoadValue is null || Application.Current.DataContext is not CoreViewModel core)
         {
             return;
         }
+        
+        var tab = tabOverview.ActiveTab.CurrentValue;
+        if (!tab.IsInitialized)
+        {
+            await QuickLoad.QuickLoadAsync(core, path, false).ConfigureAwait(false);
+            return;
+        }
+        var droppedFileInfo = new FileInfo(path);
+        
         var droppedDir = droppedFileInfo.DirectoryName ?? string.Empty;
         var currentDir = tab.ImageIterator?.CurrentDirectory ?? string.Empty;
 
@@ -389,37 +395,15 @@ public static class DragAndDropManager
         var index = files.FindIndex(x => x.FullName.AsSpan().Equals(droppedFileInfo.FullName.AsSpan(), StringComparison.OrdinalIgnoreCase));
 
         core.SharedCache.Add(tab.Id, index, _preLoadValue, files.Count, false);
-
+        
         if (isSameDir)
         {
             await tabOverview.LoadFromIndexAsync(index, tab).ConfigureAwait(false);
         }
         else
         {
-            InitializeTab(tabOverview, droppedFileInfo);
             await tabOverview.LoadFromFileAsync(path).ConfigureAwait(false);
         }
-    }
-    
-    private static void InitializeTab(TabOverviewViewModel tabOverview, FileInfo? fileInfo)
-    {
-        if (fileInfo is null)
-        {
-            return;
-        }
-        
-        var tab = tabOverview.ActiveTab.Value;
-        
-        if (tab.CurrentView.CurrentValue is ImageViewer)
-        {
-            return;
-        }
-        tab.CurrentView.Value = new ImageViewer();
-        if (Application.Current?.DataContext is not CoreViewModel core)
-        {
-            return;
-        }
-        TabNavigationInitializer.InitializeNewTab(tab, core.MainWindows.ActiveWindow.CurrentValue);
     }
 
     #endregion

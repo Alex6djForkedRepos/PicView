@@ -948,8 +948,7 @@ public class FunctionsMapper(MainWindowViewModel vm, Window window) : IFunctions
 
     public ValueTask NewTab()
     {
-        var tab = vm.WindowTabs.CreateTab();
-        TabNavigationInitializer.InitializeNewTab(tab, vm);
+        vm.WindowTabs.CreateTab();
         return ValueTask.CompletedTask;
     }
     

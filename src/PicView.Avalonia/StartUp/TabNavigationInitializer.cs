@@ -113,7 +113,7 @@ public static class TabNavigationInitializer
         parentVm.WindowTabs.RemoveTab(tab);
     }
     
-    public static void InitializeNewTab(TabViewModel newTab, MainWindowViewModel mainWindowViewModel)
+    private static void InitializeNewTab(TabViewModel newTab, MainWindowViewModel mainWindowViewModel)
     {
         if (newTab is null)
         {

@@ -230,8 +230,13 @@ public static class ClipboardFileOperations
         // Open consecutive files in a new process
         foreach (var file in storageItems.Skip(1))
         {
-            var tab = await vm.WindowTabs.CreateNewTabFromFileAsync(file.Path.AbsolutePath);
-            TabNavigationInitializer.InitializeNewTab(tab, vm);
+            var path = file.Path.LocalPath;
+            var fileInfo = new FileInfo(path);
+            await vm.WindowTabs.CreateNewTabFromFileAsync(fileInfo);
+            if (Application.Current.DataContext is CoreViewModel core)
+            {
+                TabNavigationInitializer.Initialize(core, fileInfo);
+            }
             file.Dispose();
         }
     }
