@@ -13,7 +13,7 @@ public static class WindowResizing
 {
     #region Window Resize Handling
 
-    public static bool KeepWindowSize(Window window, AvaloniaPropertyChangedEventArgs<Size> size)
+    private static bool KeepWindowSize(Window window, AvaloniaPropertyChangedEventArgs<Size> size)
     {
         if (!size.OldValue.HasValue || !size.NewValue.HasValue ||
             size.Sender != window || size.OldValue.Value.Width == 0 || size.OldValue.Value.Height == 0 ||
@@ -32,6 +32,24 @@ public static class WindowResizing
         
         return true;
     }
+    
+    private static void FastCenterWindow(Window window)
+    {
+        var screen = ScreenHelper.ScreenSize;
+
+        // Get the size of the window
+        var windowSize = window.ClientSize;
+
+        var x = screen.X;
+        var y = screen.Y;
+
+        // Calculate the position to center the window on the screen
+        var centeredX = x + (screen.WorkingAreaWidth - windowSize.Width) / 2;
+        var centeredY = y + (screen.WorkingAreaHeight - windowSize.Height) / 2;
+
+        // Set the window's new position
+        window.Position = new PixelPoint((int)centeredX, (int)centeredY);
+    }
 
     public static void HandleWindowResize(Window window, AvaloniaPropertyChangedEventArgs<Size> size)
     {
@@ -40,10 +58,17 @@ public static class WindowResizing
             return;
         }
 
-        var isWindowResized = KeepWindowSize(window, size);
-        if (!isWindowResized)
+        if (Settings.WindowProperties.KeepCentered)
         {
-            return;
+            FastCenterWindow(window);
+        }
+        else
+        {
+            var isWindowResized = KeepWindowSize(window, size);
+            if (!isWindowResized)
+            {
+                return;
+            }
         }
         
         if (window.DataContext is not MainWindowViewModel mainWindowVm)
