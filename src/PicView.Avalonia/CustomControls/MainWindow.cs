@@ -8,6 +8,7 @@ using Avalonia.Threading;
 using PicView.Avalonia.DragAndDrop;
 using PicView.Avalonia.Interfaces;
 using PicView.Avalonia.UI;
+using PicView.Avalonia.Views.Main;
 using PicView.Avalonia.Views.UC;
 using PicView.Avalonia.WindowBehavior;
 using PicView.Core.DebugTools;
@@ -25,6 +26,7 @@ public class MainWindow : Window, IMainWindow
     public bool IsChangingWindowState { get; set; }
     public BottomBar? SharedBottomBar { get; set; }
     public MainTitleBar? SharedTitleBar { get; set; }
+    public MainView? SharedMainView { get; set; }
     public AvaloniaRenderingFrameProvider? FrameProvider { get; set; }
 
     protected MainWindow()

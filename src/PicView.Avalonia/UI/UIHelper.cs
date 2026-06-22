@@ -40,12 +40,12 @@ public static class UIHelper
     /// <summary>
     /// Sets up control references from the main desktop application
     /// </summary>
-    public static void SetControls(Window mainWindow)
+    public static void SetControls(MainWindow mainWindow)
     {
-        GetMainView = mainWindow?.FindControl<MainView>("MainView");
-        GetTitlebar = mainWindow?.FindControl<Control>("Titlebar");
-        GetEditableTitlebar = GetTitlebar?.FindControl<EditableTitlebar>("EditableTitlebar");
-        GetBottomBar = mainWindow?.FindControl<BottomBar>("BottomBar");
+        GetMainView = mainWindow.SharedMainView;
+        GetTitlebar = mainWindow.SharedTitleBar;
+        GetEditableTitlebar = mainWindow.SharedTitleBar.FindControl<EditableTitlebar>("EditableTitlebar");
+        GetBottomBar = mainWindow.SharedBottomBar;
         GetToolTipMessage = GetMainView?.MainPanel.FindControl<ToolTipMessage>("ToolTipMessage");
         GetMainTabControl = GetMainView.MainTabControl;
     }

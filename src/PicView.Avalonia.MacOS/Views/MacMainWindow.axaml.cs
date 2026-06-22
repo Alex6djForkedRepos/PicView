@@ -33,6 +33,7 @@ public partial class MacMainWindow : MainWindow, IPlatformWindowService
         
         SharedBottomBar = BottomBar;
         SharedTitleBar = Titlebar;
+        SharedMainView = MainView;
 
         Loaded += delegate
         {

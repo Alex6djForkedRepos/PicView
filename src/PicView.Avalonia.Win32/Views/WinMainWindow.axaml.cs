@@ -34,6 +34,7 @@ public partial class WinMainWindow : MainWindow, IPlatformWindowService
         
         SharedBottomBar = BottomBar;
         SharedTitleBar = Titlebar;
+        SharedMainView = MainView;
 
         LoadedInitialization();
     }
