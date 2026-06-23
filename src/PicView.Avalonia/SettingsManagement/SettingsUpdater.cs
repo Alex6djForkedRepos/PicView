@@ -225,7 +225,7 @@ public static class SettingsUpdater
         }
         
         WindowResizing.SetSize(window, WindowResizeReason.Application);
-
+        tab.UpdateTabTitle();
         await SaveSettingsAsync();
     }
     
