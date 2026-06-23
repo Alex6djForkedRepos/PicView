@@ -92,7 +92,10 @@ public class GalleryAnimationControl : UserControl
     {
         Debug.Assert(Settings.Gallery is not null);
 
-        var core = UIHelper.CoreViewModel;
+        if (Application.Current.DataContext is not CoreViewModel core)
+        {
+            return;
+        }
 
         // Change layout corresponding to DockPositions
         Observable.EveryValueChanged(Settings.Gallery, gallery => gallery.DockPosition, UIHelper.GetFrameProvider)
@@ -251,7 +254,11 @@ public class GalleryAnimationControl : UserControl
         {
             return;
         }
-        UIHelper.CoreViewModel.GallerySettings.ItemHeight.Value = itemHeight;
+        if (Application.Current.DataContext is not CoreViewModel core)
+        {
+            return;
+        }
+        core.GallerySettings.ItemHeight.Value = itemHeight;
     }
 
     #endregion
@@ -295,7 +302,10 @@ public class GalleryAnimationControl : UserControl
 
     private void SetDockedThumbPosition(GalleryDockPosition dock)
     {
-        var core = UIHelper.CoreViewModel;
+        if (Application.Current.DataContext is not CoreViewModel core)
+        {
+            return;
+        }
         var gallery = core.MainWindows.ActiveWindow.CurrentValue.WindowTabs.ActiveTab.Value.Gallery;
 
         // Reset all dock flags
@@ -333,11 +343,11 @@ public class GalleryAnimationControl : UserControl
 
     private void UpdateDockedItemHeight(double itemHeight)
     {
-        if (TabViewModel.Gallery.IsGalleryExpanded.CurrentValue)
+        if (TabViewModel.Gallery.IsGalleryExpanded.CurrentValue || Application.Current.DataContext is not CoreViewModel core)
         {
             return;
         }
-        UIHelper.CoreViewModel.GallerySettings.ItemHeight.Value = itemHeight;
+        core.GallerySettings.ItemHeight.Value = itemHeight;
 
         // Resize control bounds
         var size = itemHeight + BorderTopAndBottomThickness + SizeDefaults.ScrollbarSize;
@@ -355,7 +365,11 @@ public class GalleryAnimationControl : UserControl
     
     private void ApplyThumbSettings(double size, GalleryStretchMode mode, Thickness margin, double spacing = 0)
     {
-        var settings = UIHelper.CoreViewModel.GallerySettings;
+        if (Application.Current.DataContext is not CoreViewModel core)
+        {
+            return;
+        }
+        var settings = core.GallerySettings;
         settings.ItemHeight.Value = size;
         switch (mode)
         {

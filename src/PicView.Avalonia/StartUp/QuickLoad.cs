@@ -162,6 +162,7 @@ public static class QuickLoad
         tab.SetLoading();
         var imageModel = await GetImageModel.GetImageModelAsync(fileInfo, magickImage).ConfigureAwait(false);
         tab.Image.Value = imageModel.Image;
+        tab.FileInfo.Value = fileInfo;
         tab.Model = imageModel;
         var initialDirectory = GetInitialDirectory(!Settings.ImageScaling.ShowImageSideBySide, fileInfo);
 

@@ -33,10 +33,7 @@ public static class UIHelper
     public static DropDownMenu? GetDropDownMenu { get; private set; }
     public static ToolTipMessage? GetToolTipMessage { get; private set; }
 
-    public static AvaloniaRenderingFrameProvider? GetFrameProvider =>
-        Application.Current.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime { MainWindow: MainWindow window } ? null : window.FrameProvider;
-
-    public static CoreViewModel CoreViewModel => Application.Current.DataContext as CoreViewModel ?? throw new InvalidOperationException("CoreViewModel is null");
+    public static AvaloniaRenderingFrameProvider? GetFrameProvider => GetMainWindow.FrameProvider;
 
     /// <summary>
     /// Sets up control references from the main desktop application
