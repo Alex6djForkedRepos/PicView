@@ -33,7 +33,7 @@ public static class MacOsKeybindings
                                                 "Home": "ScrollToTop",
                                                 "End": "ScrollToBottom",
                                                 "Cmd+Up": "ScrollToTop",
-                                                "Cmd+Down": "ScrollToBottom"
+                                                "Cmd+Down": "ScrollToBottom",
                                                 "G": "ToggleGallery",
                                                 "F": "Flip",
                                                 "L": "ToggleLooping",
@@ -45,7 +45,7 @@ public static class MacOsKeybindings
                                                 "Cmd+Shift+E": "EffectsWindow",
                                                 "Cmd+Shift+O": "OpenInExplorer",
                                                 "Alt+S": "SettingsWindow",
-                                                "Cmd+,": "SettingsWindow"
+                                                "Cmd+,": "SettingsWindow",
                                                 "Cmd+Shift+P": "Slideshow",
                                                 "Ctrl+Cmd+F": "Fullscreen",
                                                 "B": "ChangeBackground",
