@@ -14,6 +14,8 @@ public class LinuxWindowProvider : IWindowProvider
     public Window CreateAboutWindow() => new AboutWindow();
 
     public Window CreateBatchResizeWindow(BatchResizeWindowConfig config) => new BatchResizeWindow(config);
+    
+    public Window CreateFileAssociationsWindow() => null!;
 
     public Window CreateConvertWindow() => new ConvertWindow();
 

@@ -247,6 +247,9 @@ public class MainWindowViewModel : IDisposable
     public ReactiveCommand BatchResizeWindowCommand { get; }
     private async ValueTask BatchResizeWindow(Unit unit, CancellationToken cancellationToken) { if (Mapper is null) return; await Mapper.BatchResizeWindow(); }
 
+    public ReactiveCommand FileAssociationsWindowCommand { get; }
+    private async ValueTask FileAssociationsWindow(Unit unit, CancellationToken cancellationToken) { if (Mapper is null) return; await Mapper.FileAssociationsWindow(); }
+
     public ReactiveCommand SettingsWindowCommand { get; }
     private async ValueTask SettingsWindow(Unit unit, CancellationToken cancellationToken) { if (Mapper is null) return; await Mapper.SettingsWindow(); }
     
@@ -581,6 +584,7 @@ public class MainWindowViewModel : IDisposable
         ImageInfoWindowCommand = new ReactiveCommand(ImageInfoWindow);
         ResizeWindowCommand = new ReactiveCommand(ResizeWindow);
         BatchResizeWindowCommand = new ReactiveCommand(BatchResizeWindow);
+        FileAssociationsWindowCommand = new ReactiveCommand(FileAssociationsWindow);
         SettingsWindowCommand = new ReactiveCommand(SettingsWindow);
 
         // Window State

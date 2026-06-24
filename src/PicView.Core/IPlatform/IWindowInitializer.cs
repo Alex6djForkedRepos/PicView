@@ -17,6 +17,8 @@ public interface IWindowInitializer
     void ShowSingleImageResizeWindow();
     
     ValueTask ShowBatchResizeWindow();
+    
+    void ShowFileAssociationsWindow();
 
     void ShowConvertWindow();
     

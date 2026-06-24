@@ -9,6 +9,7 @@ public interface IWindowProvider
 {
     Window CreateAboutWindow();
     Window CreateBatchResizeWindow(BatchResizeWindowConfig config);
+    Window CreateFileAssociationsWindow();
     Window CreateConvertWindow();
     Window CreateEffectsWindow();
     Window CreateImageInfoWindow(MainWindowViewModel vm);

@@ -73,6 +73,7 @@ public interface IFunctionsMapper
     ValueTask ImageInfoWindow();
     ValueTask ResizeWindow();
     ValueTask BatchResizeWindow();
+    ValueTask FileAssociationsWindow();
     ValueTask SettingsWindow();
     
     // Windows operations

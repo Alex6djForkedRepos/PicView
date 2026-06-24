@@ -14,6 +14,8 @@ public class Win32WindowProvider : IWindowProvider
     public Window CreateAboutWindow() => new AboutWindow();
 
     public Window CreateBatchResizeWindow(BatchResizeWindowConfig config) => new BatchResizeWindow(config);
+    
+    public Window CreateFileAssociationsWindow() => new FileAssociationWindow();
 
     public Window CreateConvertWindow() => new ConvertWindow();
 

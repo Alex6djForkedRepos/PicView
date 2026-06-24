@@ -27,6 +27,7 @@ public class WindowInitializer(IWindowProvider provider) : IWindowInitializer, I
     private Window? _settingsWindow;
     private Window? _singleImageResizeWindow;
     private Window? _printPreviewWindow;
+    private Window? _fileAssociationsWindow;
 
     public async Task HandlePlatformUpdate(UpdateInfo updateInfo, string tempPath)
     {
@@ -473,6 +474,69 @@ public class WindowInitializer(IWindowProvider provider) : IWindowInitializer, I
                 else
                 {
                     _convertWindow.Activate();
+                }
+            }
+        }
+    }
+
+    public void ShowFileAssociationsWindow()
+    {
+        if (Dispatcher.UIThread.CheckAccess())
+        {
+            Set();
+        }
+        else
+        {
+            Dispatcher.UIThread.InvokeAsync(Set);
+        }
+
+        return;
+
+        void Set()
+        {
+            if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop ||
+                Application.Current.DataContext is not CoreViewModel core)
+            {
+                return;
+            }
+
+            if (_fileAssociationsWindow is null)
+            {
+                core.AssociationsViewModel ??= new FileAssociationsViewModel();
+                _fileAssociationsWindow = provider.CreateFileAssociationsWindow();
+                if (_fileAssociationsWindow is null)
+                {
+                    return;
+                }
+
+                _fileAssociationsWindow.DataContext = core;
+                _fileAssociationsWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+
+                if (desktop.MainWindow is not null)
+                {
+                    _fileAssociationsWindow.Show(desktop.MainWindow);
+                }
+                else
+                {
+                    _fileAssociationsWindow.Show();
+                }
+
+                _fileAssociationsWindow.Closing += (_, _) =>
+                {
+                    core.AssociationsViewModel.Dispose();
+                    core.AssociationsViewModel = null;
+                    _fileAssociationsWindow = null;
+                };
+            }
+            else
+            {
+                if (_fileAssociationsWindow.WindowState == WindowState.Minimized)
+                {
+                    WindowFunctions.ShowMinimizedWindow(_fileAssociationsWindow);
+                }
+                else
+                {
+                    _fileAssociationsWindow.Activate();
                 }
             }
         }

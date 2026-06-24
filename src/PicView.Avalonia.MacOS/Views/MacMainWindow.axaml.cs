@@ -253,6 +253,9 @@ public partial class MacMainWindow : MainWindow, IPlatformWindowService
     public async ValueTask ShowBatchResizeWindow() =>
         await _windowInitializer.ShowBatchResizeWindow();
 
+    public void ShowFileAssociationsWindow() =>
+        _windowInitializer?.ShowFileAssociationsWindow();
+
     public void ShowEffectsWindow() =>
         _windowInitializer?.ShowEffectsWindow();
 

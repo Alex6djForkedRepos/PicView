@@ -107,6 +107,7 @@ public class FunctionsMapper(MainWindowViewModel vm, Window window) : IFunctions
             "SettingsWindow" => SettingsWindow,
             "KeybindingsWindow" => KeybindingsWindow,
             "BatchResizeWindow" => BatchResizeWindow,
+            "FileAssociationsWindow" => FileAssociationsWindow,
             "ConvertWindow" => ConvertWindow,
 
             // Open functions
@@ -583,6 +584,12 @@ public class FunctionsMapper(MainWindowViewModel vm, Window window) : IFunctions
     public ValueTask BatchResizeWindow()
     {
         vm?.PlatformWindowService?.ShowBatchResizeWindow();
+        return ValueTask.CompletedTask;
+    }
+
+    public ValueTask FileAssociationsWindow()
+    {
+        vm?.PlatformWindowService?.ShowFileAssociationsWindow();
         return ValueTask.CompletedTask;
     }
 

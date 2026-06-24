@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
@@ -12,6 +13,12 @@ public partial class SettingsView : UserControl
     public SettingsView()
     {
         InitializeComponent();
+
+        if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
+            FileAssociationsListBoxItem.IsVisible = FileAssociationsListBoxItem.IsVisible = false;
+        }
+        
         Loaded += OnLoaded;
         Unloaded += OnUnloaded;
     }

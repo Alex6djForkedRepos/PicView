@@ -366,6 +366,18 @@
                         </ListBoxItem.Content>
                     </ListBoxItem>
 
+                    <ListBoxItem x:Name="FileAssociationsListBoxItem" Tag="{x:Static viewModels1:SettingsCategory.FileAssociations}">
+                        <ListBoxItem.Content>
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <Image
+                                    Width="18"
+                                    Height="18"
+                                    Source="{StaticResource FileAssociationImage}" />
+                                <TextBlock Classes="txt" Text="{CompiledBinding Translation.FileAssociations.Value, Mode=OneWay}" />
+                            </StackPanel>
+                        </ListBoxItem.Content>
+                    </ListBoxItem>
+
                 </ListBox>
 
                 <customControls:AutoScrollViewer
@@ -434,6 +446,11 @@
 
                         <config:KeybindingsView
                             x:Name="KeybindingsSection"
+                            Background="Transparent"
+                            Focusable="True" />
+
+                        <config:FileAssociationsView
+                            x:Name="FileAssociationsSection"
                             Background="Transparent"
                             Focusable="True" />
 

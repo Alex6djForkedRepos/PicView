@@ -50,6 +50,8 @@ public class SettingsSearchData
     public string MouseTouchpadSearchTags { get; }
     public string LanguageSearchTags { get; }
     public string KeybindingsSearchTags { get; }
+    public string FileAssociationSearchTags { get; }
+    
     public SettingsSearchData()
     {
         // Search Initialization
@@ -461,6 +463,11 @@ public class SettingsSearchData
         sb.Append(space);
         sb.Append("Key keybindings");
         KeybindingsSearchTags = sb.ToString();
+                
+        sb.Clear();
+        
+        sb.Append(TranslationManager.Translation.FileAssociations);
+        FileAssociationSearchTags = sb.ToString();
         
         sb.Dispose();
     }
