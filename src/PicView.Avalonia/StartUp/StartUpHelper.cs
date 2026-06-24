@@ -170,7 +170,7 @@ public static class StartUpHelper
     {
         SetMemorySettings();
         
-        BackGroundLoadings(settingsExists);
+        BackGroundLoadings();
 
         SetWindowEventHandlers(window);
         HandleThemeUpdates();
@@ -201,18 +201,11 @@ public static class StartUpHelper
         
         return;
         
-        void BackGroundLoadings(bool defaultKeybindings)
+        void BackGroundLoadings()
         {
             Task.Run(async() =>
             {
-                if (defaultKeybindings)
-                {
-                    KeybindingManager.SetDefaultKeybindings(vm.PlatformService);
-                }
-                else
-                {
-                    await KeybindingManager.LoadKeybindings(vm.PlatformService);
-                }
+                await KeybindingManager.LoadKeybindings(vm.PlatformService);
                 vm.MainWindows.ActiveWindow.Value.Mapper =
                     new FunctionsMapper(vm.MainWindows.ActiveWindow.CurrentValue, window);
                 FileHistoryManager.Initialize();
