@@ -92,8 +92,7 @@ public partial class FileAssociationWindow : GenericWindow
             var groupCheckBox = new CheckBox
             {
                 Classes = { "altHover", "y", "changeColor" },
-                Tag = "group",
-                Name = fileTypeGroup.Name,
+                Tag = fileTypeGroup,
                 Foreground = brush,
                 IsChecked = fileTypeGroup.IsSelected.CurrentValue
             };
@@ -114,6 +113,11 @@ public partial class FileAssociationWindow : GenericWindow
             // Add to the collection for filtering
             _allCheckBoxes.Add((groupCheckBox, fileTypeGroup.Name));
 
+            // Subscribe to changes in the file type group's IsSelected property
+            Observable.EveryValueChanged(fileTypeGroup, x => x.IsSelected.Value, UIHelper.GetFrameProvider)
+                .Subscribe(isSelected => { groupCheckBox.IsChecked = isSelected; })
+                .AddTo(_disposables);
+
             // Handle group checkbox changes to update all items in the group
             groupCheckBox.Click += delegate
             {
@@ -131,7 +135,7 @@ public partial class FileAssociationWindow : GenericWindow
                 var fileCheckBox = new CheckBox
                 {
                     Classes = { "altHover", "x", "changeColor" },
-                    Tag = fileType.Extension,
+                    Tag = fileType,
                     IsChecked = fileType.IsSelected.CurrentValue,
                     Foreground = brush
                 };
@@ -164,13 +168,13 @@ public partial class FileAssociationWindow : GenericWindow
                 };
 
                 // Subscribe to changes in the file type's IsSelected property
-                Observable.EveryValueChanged(fileType, x => x.IsSelected, UIHelper.GetFrameProvider)
-                    .Subscribe(isSelected => { fileCheckBox.IsChecked = isSelected.CurrentValue; })
+                Observable.EveryValueChanged(fileType, x => x.IsSelected.Value, UIHelper.GetFrameProvider)
+                    .Subscribe(isSelected => { fileCheckBox.IsChecked = isSelected; })
                     .AddTo(_disposables);
 
                 // Subscribe to changes in the file type's IsVisible property
-                Observable.EveryValueChanged(fileType, x => x.IsVisible, UIHelper.GetFrameProvider)
-                    .Subscribe(isVisible => { fileCheckBox.IsVisible = isVisible.CurrentValue; })
+                Observable.EveryValueChanged(fileType, x => x.IsVisible.Value, UIHelper.GetFrameProvider)
+                    .Subscribe(isVisible => { fileCheckBox.IsVisible = isVisible; })
                     .AddTo(_disposables);
             }
         }
@@ -179,9 +183,8 @@ public partial class FileAssociationWindow : GenericWindow
     private void UpdateGroupCheckboxState(FileTypeGroup group)
     {
         // Find all checkboxes that are part of this group
-        var fileTypeCheckboxes = Enumerable.OfType<CheckBox>(FileTypesContainer.Children)
-            .Where(c => c.Tag != null && c.Tag.ToString() != "group" &&
-                        c.IsVisible && IsCheckboxInGroup(c, group));
+        var fileTypeCheckboxes = FileTypesContainer.Children.OfType<CheckBox>()
+            .Where(c => c.Tag is FileTypeItem ft && group.FileTypes.Contains(ft) && c.IsVisible);
 
         var allTrue = true;
         var allFalse = true;
@@ -189,7 +192,7 @@ public partial class FileAssociationWindow : GenericWindow
 
         foreach (var cb in fileTypeCheckboxes)
         {
-            if (!cb.IsChecked.HasValue || cb.IsChecked == null)
+            if (!cb.IsChecked.HasValue)
             {
                 anyNull = true;
                 allTrue = false;
@@ -207,7 +210,7 @@ public partial class FileAssociationWindow : GenericWindow
 
         // Find the group checkbox
         var groupCheckbox = FileTypesContainer.Children.OfType<CheckBox>()
-            .FirstOrDefault(c => c.Tag?.ToString() == "group" && c.Name == group.Name.Trim());
+            .FirstOrDefault(c => c.Tag == group);
 
         if (groupCheckbox == null)
         {
@@ -235,18 +238,6 @@ public partial class FileAssociationWindow : GenericWindow
         group.IsSelected.Value = groupCheckbox.IsChecked;
     }
 
-    private static bool IsCheckboxInGroup(CheckBox checkbox, FileTypeGroup group)
-    {
-        // You can determine this by position in the UI or by extension tag
-        var extension = checkbox.Tag?.ToString();
-        if (string.IsNullOrEmpty(extension))
-        {
-            return false;
-        }
-
-        return group.FileTypes.Any(ft => ft.Extensions.Contains(extension) ||
-                                         extension.Contains(ft.Extensions.FirstOrDefault() ?? ""));
-    }
 
     private void UpdateCheckBoxesFromViewModel(Unit unit)
     {
@@ -255,6 +246,8 @@ public partial class FileAssociationWindow : GenericWindow
             return;
         }
 
+        var checkBoxes = FileTypesContainer.Children.OfType<CheckBox>().ToList();
+
         foreach (var group in core.AssociationsViewModel.FileTypeGroups)
         {
             if (group?.Name is null)
@@ -262,16 +255,19 @@ public partial class FileAssociationWindow : GenericWindow
                 continue;
             }
 
-            // Find the group checkbox
-            var boxes = FileTypesContainer.GetLogicalChildren().OfType<CheckBox>();
-            var checkBoxes = boxes.ToList();
-
             foreach (var fileType in group.FileTypes)
             {
-                foreach (var checkBox in checkBoxes.Where(x => x.Tag.Equals(fileType.Extension)))
+                foreach (var checkBox in checkBoxes.Where(x => x.Tag == fileType))
                 {
-                    checkBox.IsChecked = fileType.IsSelected.Value ?? false;
+                    checkBox.IsChecked = fileType.IsSelected.Value;
                 }
+            }
+
+            // Also update the group checkbox
+            var groupCheckBox = checkBoxes.FirstOrDefault(x => x.Tag == group);
+            if (groupCheckBox != null)
+            {
+                groupCheckBox.IsChecked = group.IsSelected.Value;
             }
         }
     }
@@ -285,13 +281,22 @@ public partial class FileAssociationWindow : GenericWindow
             {
                 checkBox.IsVisible = true;
             }
-
-            return;
+        }
+        else
+        {
+            foreach (var (checkBox, searchText) in _allCheckBoxes)
+            {
+                checkBox.IsVisible = searchText.Contains(filterText, StringComparison.InvariantCultureIgnoreCase);
+            }
         }
 
-        foreach (var (checkBox, searchText) in _allCheckBoxes)
+        // Update all group checkbox states after filtering
+        if (DataContext is CoreViewModel core)
         {
-            checkBox.IsVisible = searchText.Contains(filterText, StringComparison.InvariantCultureIgnoreCase);
+            foreach (var group in core.AssociationsViewModel.FileTypeGroups)
+            {
+                UpdateGroupCheckboxState(group);
+            }
         }
     }
 }

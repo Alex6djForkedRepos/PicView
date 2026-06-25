@@ -206,7 +206,7 @@ public class FileAssociationsViewModel : IDisposable
             foreach (var fileType in group.FileTypes.Where(ft => ft.IsVisible.CurrentValue))
             {
                 totalVisible++;
-                if (fileType.IsSelected == null)
+                if (fileType.IsSelected.Value == null)
                 {
                     indeterminateCount++;
                 }

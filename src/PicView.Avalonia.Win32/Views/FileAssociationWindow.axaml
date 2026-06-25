@@ -15,11 +15,13 @@
     <Border
         x:Name="ParentBorder"
         BorderBrush="{DynamicResource WindowBorderColor}"
-        BorderThickness="1"
-        PointerPressed="MoveWindow">
+        BorderThickness="1">
         <StackPanel>
 
-            <DockPanel Height="28" LastChildFill="True">
+            <DockPanel
+                Height="28"
+                LastChildFill="True"
+                PointerPressed="MoveWindow">
 
                 <Border
                     x:Name="IconBorder"
@@ -100,7 +102,7 @@
                                               Mode=OneWay}">
 
                     <TextBlock
-                        Margin="0,20,0,0"
+                        Margin="10,20,10,0"
                         Classes="txt"
                         DockPanel.Dock="Top"
                         FontFamily="avares://PicView.Avalonia/Assets/Fonts/Roboto-Bold.ttf#Roboto"
@@ -109,6 +111,7 @@
                                                Mode=OneWay}" />
 
                     <TextBlock
+                        Margin="10,01"
                         Padding="0,5,10,15"
                         HorizontalAlignment="Left"
                         Classes="txt"
@@ -128,14 +131,14 @@
                             <Image
                                 Width="14"
                                 Height="14"
-                                Margin="5,0,0,0"
+                                Margin="10,0,0,0"
                                 HorizontalAlignment="Left"
                                 Source="{StaticResource SearchImage}" />
 
                             <TextBox
                                 x:Name="FilterBox"
                                 Width="269"
-                                Padding="23,7,4,6"
+                                Padding="30,7,4,6"
                                 HorizontalAlignment="Left"
                                 Background="Transparent"
                                 BorderBrush="Transparent"
@@ -199,13 +202,15 @@
                         Height="520"
                         Background="Transparent"
                         DockPanel.Dock="Top">
-                        <StackPanel x:Name="FileTypesContainer">
+                        <StackPanel x:Name="FileTypesContainer" Margin="10,0">
                             <StackPanel.Styles>
                                 <Style Selector="CheckBox.x">
                                     <Setter Property="Margin" Value="15,0,0,5" />
+                                    <Setter Property="Background" Value="Transparent" />
                                 </Style>
                                 <Style Selector="CheckBox.y">
                                     <Setter Property="Margin" Value="0,10,0,10" />
+                                    <Setter Property="Background" Value="Transparent" />
                                 </Style>
                             </StackPanel.Styles>
 
