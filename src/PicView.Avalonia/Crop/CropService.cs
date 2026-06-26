@@ -164,7 +164,7 @@ public class CropService(TabViewModel tabViewModel) : ICropService
 
         if (tabViewModel.FileInfo.Value.FullName == saveFileDialog)
         {
-            await tabViewModel.ImageIterator.ReloadAsync(tabViewModel.GetTabCancellation());
+            await tabViewModel.ImageIterator.ReloadAsync();
         }
     }
 

@@ -44,7 +44,7 @@ public static class RenameHelper
                 using var magick = new MagickImage(oldPath);
                 await magick.WriteAsync(newPath);
                 File.Delete(oldPath);
-                await tab.ImageIterator.ReloadAsync(tab.GetTabCancellation()).ConfigureAwait(false);
+                await tab.ImageIterator.ReloadAsync().ConfigureAwait(false);
             }
 
             var newFileInfo = new FileInfo(newPath);
