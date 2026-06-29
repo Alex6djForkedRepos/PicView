@@ -25,17 +25,21 @@ public class MainTitleBar : UserControl, ITitleBar
 
     private void OnPointerPressed(object? sender, PointerPressedEventArgs e)
     {
-        WindowDragAndDoubleClickBehavior(e);
+        if ( TopLevel.GetTopLevel(this) is not MainWindow mainWindow)
+        {
+            return;
+        }
+        WindowDragAndDoubleClickBehavior(mainWindow, e);
     }
 
-    private void WindowDragAndDoubleClickBehavior(PointerPressedEventArgs e)
+    private void WindowDragAndDoubleClickBehavior(MainWindow mainWindow, PointerPressedEventArgs e)
     {
         if (VisualRoot is null || DataContext is not MainWindowViewModel vm)
         {
             return;
         }
 
-        if (vm.IsEditableTitlebarOpen.Value || UIHelper.GetDropDownMenu.IsOpen)
+        if (vm.IsEditableTitlebarOpen.Value || mainWindow.UIHelper.GetDropDownMenu.IsOpen)
         {
             return;
         }
@@ -47,10 +51,7 @@ public class MainTitleBar : UserControl, ITitleBar
             return;
         }
 
-        if (TopLevel.GetTopLevel(this) is Window window)
-        {
-            WindowFunctions.WindowDragAndDoubleClickBehavior(window, e, vm.PlatformWindowService);
-        }
+        WindowFunctions.WindowDragAndDoubleClickBehavior(mainWindow, e, vm.PlatformWindowService);
     }
 
     protected override void OnDetachedFromLogicalTree(LogicalTreeAttachmentEventArgs e)

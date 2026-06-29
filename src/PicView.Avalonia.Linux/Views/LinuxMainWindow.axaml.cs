@@ -39,7 +39,7 @@ public partial class LinuxMainWindow : MainWindow, IPlatformWindowService
         
         SharedBottomBar = BottomBar;
         SharedTitleBar = Titlebar;
-
+        UIHelper.Initialize(this);
         LoadedInitialization();
     }
 
@@ -217,7 +217,7 @@ public partial class LinuxMainWindow : MainWindow, IPlatformWindowService
                 desktop.MainWindow = newWindow;
             }, DispatcherPriority.Send);
 
-            TabNavigationInitializer.InitializeDetachedWindow(parentVm, newVm, tab);
+            TabNavigationInitializer.InitializeDetachedWindow(this, parentVm, newVm, tab);
         });
     }
 

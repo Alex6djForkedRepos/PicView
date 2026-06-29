@@ -4,7 +4,7 @@ using Avalonia.Controls.Metadata;
 using Avalonia.Controls.Primitives;
 using Avalonia.Media;
 using PicView.Avalonia.Animations;
-using PicView.Avalonia.UI;
+using PicView.Core.ViewModels;
 
 namespace PicView.Avalonia.CustomControls;
 
@@ -80,6 +80,12 @@ public class AnimatedPopUp : ContentControl
 
     public async Task AnimatedOpening()
     {
+        if ( TopLevel.GetTopLevel(this) is not MainWindow mainWindow)
+        {
+            return;
+        }
+        
+        mainWindow.IsDialogOpen = true;
         IsHitTestVisible = true;
         IsVisible = true;
         
@@ -87,7 +93,6 @@ public class AnimatedPopUp : ContentControl
         const int fromY = 100;
         const int toX = 0;
         const int toY = 0;
-        DialogManager.IsDialogOpen = true;
         var fadeIn = AnimationsHelper.OpacityAnimation(0, 1, AnimSpeed);
         var centering = AnimationsHelper.CenteringAnimation(fromX, fromY, toX, toY, AnimSpeed);
         await Task.WhenAll(
@@ -99,11 +104,20 @@ public class AnimatedPopUp : ContentControl
 
     public async Task AnimatedClosing(bool remove = true)
     {
+        if ( TopLevel.GetTopLevel(this) is not MainWindow mainWindow)
+        {
+            return;
+        }
+        
+        if (mainWindow.DataContext is MainWindowViewModel vm)
+        {
+            mainWindow.IsDialogOpen = vm.TopTitlebarViewModel.DropDownMenu.IsDropDownMenuVisible.CurrentValue;
+        }
+        
         const int fromX = 0;
         const int fromY = 0;
         const int toX = 50;
         const int toY = 100;
-        DialogManager.IsDialogOpen = false;
         var fadeIn = AnimationsHelper.OpacityAnimation(1, 0, AnimSpeed);
         var centering = AnimationsHelper.CenteringAnimation(fromX, fromY, toX, toY, AnimSpeed);
         await Task.WhenAll(
@@ -113,7 +127,7 @@ public class AnimatedPopUp : ContentControl
         );
         if (remove)
         {
-            UIHelper.GetMainView.MainPanel.Children.Remove(this);
+            mainWindow.UIHelper.GetMainView.MainPanel.Children.Remove(this);
         }
         else
         {

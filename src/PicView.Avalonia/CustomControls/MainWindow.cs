@@ -5,11 +5,14 @@ using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
+using PicView.Avalonia.Crop;
 using PicView.Avalonia.DragAndDrop;
 using PicView.Avalonia.Interfaces;
+using PicView.Avalonia.Navigation;
 using PicView.Avalonia.UI;
 using PicView.Avalonia.Views.Main;
 using PicView.Avalonia.Views.UC;
+using PicView.Avalonia.Views.UC.PopUps;
 using PicView.Avalonia.WindowBehavior;
 using PicView.Core.DebugTools;
 using PicView.Core.Sizing;
@@ -27,11 +30,13 @@ public class MainWindow : Window, IMainWindow
     public BottomBar? SharedBottomBar { get; set; }
     public MainTitleBar? SharedTitleBar { get; set; }
     public MainView? SharedMainView { get; set; }
-    public AvaloniaRenderingFrameProvider? FrameProvider { get; set; }
+    public AvaloniaRenderingFrameProvider FrameProvider { get; set; }
+    public UIControlHelper UIHelper { get; set; }
 
     protected MainWindow()
     {
-        FrameProvider = new AvaloniaRenderingFrameProvider(GetTopLevel(this)!);
+        UIHelper = new UIControlHelper();
+        FrameProvider = new AvaloniaRenderingFrameProvider(GetTopLevel(this));
         Loaded += OnLoaded;
     }
 
@@ -49,12 +54,12 @@ public class MainWindow : Window, IMainWindow
             .Subscribe(HandleWindowResize, DebugHelper.LogError(nameof(MainWindow), nameof(HandleWindowResize)))
             .AddTo(Disposables);
             
-        UIHelper.AddDropDownMenu();
+        UIHelper.AddDropDownMenu(this);
         Activated += OnActivated;
         
         ScalingChanged += OnScalingChanged;
         
-        PointerExited += (_, _) => { DragAndDropManager.RemoveDragDropView(); };
+        PointerExited += (_, _) => { DragAndDropManager.RemoveDragDropView(this); };
         
         Deactivated += OnDeactivated;
     }
@@ -70,12 +75,8 @@ public class MainWindow : Window, IMainWindow
 
     private void OnScalingChanged(object? sender, EventArgs e)
     {
-        if (DataContext is not MainWindowViewModel windowViewModel)
-        {
-            return;
-        }
         ScreenHelper.UpdateScreenSize(this);
-        WindowResizing.SetSize(windowViewModel, WindowResizeReason.DpiChange);
+        WindowResizing.SetSize(this, WindowResizeReason.DpiChange);
     }
 
     private void OnActivated(object? sender, EventArgs e)
@@ -114,6 +115,88 @@ public class MainWindow : Window, IMainWindow
         base.OnClosed(e);
     }
 
+    #region Dialog
+
+    
+    public bool IsDialogOpen { get; set; }
+    
+    /// <summary>
+    /// Handles close action based on current application state
+    /// </summary>
+    public async Task HandleShouldClosing(MainWindowViewModel vm)
+    {
+        // Handle cropping mode
+        if (CropManager.IsCropping(this))
+        {
+            CropManager.CloseCropControl(vm);
+            return;
+        }
+
+        // Handle slideshow
+        if (Slideshow.IsRunning)
+        {
+            Slideshow.StopSlideshow(vm);
+            return;
+        }
+        
+        // Handle window close
+        await Dispatcher.UIThread.InvokeAsync(CloseWithOptionalDialog);
+    }
+
+    public void CloseWithOptionalDialog()
+    {
+        if (Settings.UIProperties.ShowConfirmationOnEsc)
+        {
+            UIHelper.GetMainView?.MainPanel.Children.Add(new CloseDialog());
+        }
+        else
+        {
+            Close();
+        }
+    }
+
+    public bool ContainsFileSearchDialog() =>
+        UIHelper.GetMainView.MainPanel.Children.OfType<FileSearchDialog>().Any();
+    
+    public bool ContainsNavigationDialog() =>
+        UIHelper.GetMainView.MainPanel.Children.OfType<NavigationDialog>().Any();
+    
+    public bool ContainsRenameDialog() =>
+        UIHelper.GetMainView.MainPanel.Children.OfType<RenameDialog>().Any();
+
+    public void AddFileSearchDialog()
+    {
+        if (ContainsFileSearchDialog() || UIHelper.GetMainView.DataContext is not MainWindowViewModel vm)
+        {
+            return;
+        }
+        vm.TopTitlebarViewModel.CloseDropDownMenu();
+        UIHelper.GetMainView.MainPanel.Children.Add(new FileSearchDialog());
+    }
+
+    public void AddNavigationDialog()
+    {
+        if (ContainsNavigationDialog() || UIHelper.GetMainView.DataContext is not MainWindowViewModel vm)
+        {
+            return;
+        }
+        
+        vm.TopTitlebarViewModel.CloseDropDownMenu();
+        UIHelper.GetMainView.MainPanel.Children.Add(new NavigationDialog());
+    }
+    
+    public void AddRenameDialog()
+    {
+        if (ContainsRenameDialog() || UIHelper.GetMainView.DataContext is not MainWindowViewModel vm)
+        {
+            return;
+        }
+        vm.TopTitlebarViewModel.CloseDropDownMenu();
+        UIHelper.GetMainView.MainPanel.Children.Add(new RenameDialog());
+    }
+
+    #endregion
+
     #region Sizing
 
     private void SetLayoutSizeAndVisibility(double width)
@@ -147,8 +230,7 @@ public class MainWindow : Window, IMainWindow
             // User manually resized (not maximize or restore), reset to manual window
             Dispatcher.CurrentDispatcher.Post(() => WindowFunctions.SetManualWindow(vm, this));
         }
-
-        WindowResizing.SetSize(vm, e.Reason);
+        WindowResizing.SetSize(this, e.Reason);
         SetLayoutSizeAndVisibility(e.ClientSize.Width);
     }
     

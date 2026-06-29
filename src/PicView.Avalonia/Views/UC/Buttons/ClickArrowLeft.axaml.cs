@@ -2,6 +2,7 @@
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using PicView.Avalonia.CustomControls;
 using PicView.Avalonia.UI;
 using PicView.Core.ViewModels;
 
@@ -31,20 +32,24 @@ public partial class ClickArrowLeft : UserControl
 
     private void ManagePointerPressed(object? sender, PointerPressedEventArgs e)
     {
+        if ( TopLevel.GetTopLevel(this) is not MainWindow mainWindow)
+        {
+            return;
+        }
         var props = e.Properties;
 
         if (PolyButton.IsPointerOver)
         {
             if (props.IsRightButtonPressed)
             {
-                DialogManager.AddNavigationDialog();
+                mainWindow.AddNavigationDialog();
             }
         }
         else
         {
             if (props.IsRightButtonPressed)
             {
-                UIHelper.ShowMainContextMenu();
+                UIHelper.ShowMainContextMenu(mainWindow);
             }
         }
     }

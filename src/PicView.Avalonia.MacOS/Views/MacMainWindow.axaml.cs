@@ -6,8 +6,6 @@ using PicView.Avalonia.CustomControls;
 using PicView.Avalonia.MacOS.WindowImpl;
 using WindowInitializer = PicView.Avalonia.Services.WindowInitializer;
 using PicView.Avalonia.StartUp;
-using PicView.Avalonia.UI;
-using PicView.Avalonia.Views.UC;
 using PicView.Core.DebugTools;
 using PicView.Core.IPlatform;
 using PicView.Core.ViewModels;
@@ -34,6 +32,7 @@ public partial class MacMainWindow : MainWindow, IPlatformWindowService
         SharedBottomBar = BottomBar;
         SharedTitleBar = Titlebar;
         SharedMainView = MainView;
+        UIHelper.Initialize(this);
 
         Loaded += delegate
         {
@@ -221,7 +220,7 @@ public partial class MacMainWindow : MainWindow, IPlatformWindowService
                 }
             }, DispatcherPriority.Send);
 
-            TabNavigationInitializer.InitializeDetachedWindow(parentVm, newVm, tab);
+            TabNavigationInitializer.InitializeDetachedWindow(this, parentVm, newVm, tab);
         });
     }
     

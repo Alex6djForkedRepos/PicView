@@ -96,21 +96,26 @@ public class GalleryAnimationControl : UserControl
         {
             return;
         }
+        
+        if ( TopLevel.GetTopLevel(this) is not MainWindow mainWindow)
+        {
+            return;
+        }
 
         // Change layout corresponding to DockPositions
-        Observable.EveryValueChanged(Settings.Gallery, gallery => gallery.DockPosition, UIHelper.GetFrameProvider)
+        Observable.EveryValueChanged(Settings.Gallery, gallery => gallery.DockPosition, mainWindow.FrameProvider)
             .Skip(1)
             .Subscribe(SetDockedLayout, DebugHelper.LogError(nameof(GalleryAnimationControl), nameof(SetDockedLayout)))
             .AddTo(ref _disposables);
         
         // Update expanded item sizes
-        Observable.EveryValueChanged(core.GallerySettings, gallery => gallery.ExpandedGalleryItemSize.CurrentValue, UIHelper.GetFrameProvider)
+        Observable.EveryValueChanged(core.GallerySettings, gallery => gallery.ExpandedGalleryItemSize.CurrentValue, mainWindow.FrameProvider)
             .Skip(1)
             .Subscribe(UpdateExpandedItemHeight, DebugHelper.LogError(nameof(GalleryAnimationControl), nameof(UpdateExpandedItemHeight)))
             .AddTo(ref _disposables);
 
         // Update docked item sizes
-        Observable.EveryValueChanged(core.GallerySettings, gallery => gallery.DockedGalleryItemSize.CurrentValue, UIHelper.GetFrameProvider)
+        Observable.EveryValueChanged(core.GallerySettings, gallery => gallery.DockedGalleryItemSize.CurrentValue, mainWindow.FrameProvider)
             .Skip(1)
             .Subscribe(UpdateDockedItemHeight, DebugHelper.LogError(nameof(GalleryAnimationControl), nameof(UpdateDockedItemHeight)))
             .AddTo(ref _disposables);
@@ -445,11 +450,11 @@ public class GalleryAnimationControl : UserControl
         {
             Dispatcher.UIThread.Post(() =>
             {
-                if (Application.Current.DataContext is not CoreViewModel core)
+                if (Application.Current.DataContext is not CoreViewModel core || TopLevel.GetTopLevel(this) is not MainWindow mainWindow)
                 {
                     return;
                 }
-                WindowResizing.SetSize(core.MainWindows.ActiveWindow.CurrentValue, WindowResizeReason.Layout);
+                WindowResizing.SetSize(mainWindow, WindowResizeReason.Layout);
             });
         }
     }
@@ -475,11 +480,11 @@ public class GalleryAnimationControl : UserControl
         {
             Dispatcher.UIThread.Post(() =>
             {
-                if (Application.Current.DataContext is not CoreViewModel core)
+                if (Application.Current.DataContext is not CoreViewModel core || TopLevel.GetTopLevel(this) is not MainWindow mainWindow)
                 {
                     return;
                 }
-                WindowResizing.SetSize(core.MainWindows.ActiveWindow.CurrentValue, WindowResizeReason.Layout);
+                WindowResizing.SetSize(mainWindow, WindowResizeReason.Layout);
             });
         }
     }
@@ -562,11 +567,11 @@ public class GalleryAnimationControl : UserControl
         );
 
         IsVisible = false;
-        if (Application.Current.DataContext is not CoreViewModel core)
+        if (Application.Current.DataContext is not CoreViewModel core || TopLevel.GetTopLevel(this) is not MainWindow mainWindow)
         {
             return;
         }
-        WindowResizing.SetSize(core.MainWindows.ActiveWindow.CurrentValue, WindowResizeReason.Layout);
+        WindowResizing.SetSize(mainWindow, WindowResizeReason.Layout);
     }
 
     private void ParentSizeChanged(object? sender, SizeChangedEventArgs e)

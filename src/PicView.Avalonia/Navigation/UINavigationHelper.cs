@@ -1,5 +1,6 @@
 ﻿using Avalonia;
 using Avalonia.Threading;
+using PicView.Avalonia.CustomControls;
 using PicView.Avalonia.StartUp;
 using PicView.Core.FileHistory;
 using PicView.Core.ViewModels;
@@ -8,7 +9,7 @@ namespace PicView.Avalonia.Navigation;
 
 public static class UINavigationHelper
 {
-    public static async ValueTask OpenNextFileHistoryEntry(MainWindowViewModel vm)
+    public static async ValueTask OpenNextFileHistoryEntry(MainWindow mainWindow, MainWindowViewModel vm)
     {
         var tab = vm.WindowTabs.ActiveTab.CurrentValue;
         if (!tab.IsInitialized)
@@ -21,7 +22,7 @@ public static class UINavigationHelper
             }
 
             var core = await Dispatcher.UIThread.InvokeAsync(() => Application.Current.DataContext as CoreViewModel);
-            await QuickLoad.QuickLoadAsync(core, lastFile, true);
+            await QuickLoad.QuickLoadAsync(mainWindow, core, lastFile, true);
             return;
         }
         vm.IsLoadingIndicatorShown.Value = true;
@@ -29,7 +30,7 @@ public static class UINavigationHelper
         vm.IsLoadingIndicatorShown.Value = false;
     }
     
-    public static async ValueTask OpenPreviousFileHistoryEntry(MainWindowViewModel vm)
+    public static async ValueTask OpenPreviousFileHistoryEntry(MainWindow mainWindow, MainWindowViewModel vm)
     {
         var tab = vm.WindowTabs.ActiveTab.CurrentValue;
         if (!tab.IsInitialized)
@@ -42,7 +43,7 @@ public static class UINavigationHelper
             }
 
             var core = await Dispatcher.UIThread.InvokeAsync(() => Application.Current.DataContext as CoreViewModel);
-            await QuickLoad.QuickLoadAsync(core, lastFile, true);
+            await QuickLoad.QuickLoadAsync(mainWindow, core, lastFile, true);
             return;
         }
         vm.IsLoadingIndicatorShown.Value = true;
@@ -50,7 +51,7 @@ public static class UINavigationHelper
         vm.IsLoadingIndicatorShown.Value = false;
     }
     
-    public static async Task OpenLastFile(MainWindowViewModel vm)
+    public static async Task OpenLastFile(MainWindow mainWindow, MainWindowViewModel vm)
     {
         var tab = vm.WindowTabs.ActiveTab.CurrentValue;
         if (!tab.IsInitialized)
@@ -63,7 +64,7 @@ public static class UINavigationHelper
             }
 
             var core = await Dispatcher.UIThread.InvokeAsync(() => Application.Current.DataContext as CoreViewModel);
-            await QuickLoad.QuickLoadAsync(core, lastFile, true);
+            await QuickLoad.QuickLoadAsync(mainWindow, core, lastFile, true);
             return;
         }
         vm.IsLoadingIndicatorShown.Value = true;

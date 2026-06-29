@@ -35,7 +35,7 @@ public static class Win32Window
         
         HideInterface(vm);
         
-        WindowResizing.SetSize(vm, WindowResizeReason.Application);
+        WindowResizing.SetSize(window, WindowResizeReason.Application);
         Dispatcher.UIThread.Post(() => window.IsChangingWindowState = false, DispatcherPriority.SystemIdle);
         
         if (saveSettings)
@@ -63,7 +63,7 @@ public static class Win32Window
             window.WindowState = WindowState.Maximized;
         }
         
-        WindowResizing.SetSize(vm, WindowResizeReason.Application);
+        WindowResizing.SetSize(window, WindowResizeReason.Application);
         Dispatcher.UIThread.Post(() => window.IsChangingWindowState = false, DispatcherPriority.SystemIdle);
         
         if (saveSettings)
@@ -96,7 +96,7 @@ public static class Win32Window
         
         window.WindowState = WindowState.Normal;
         
-        WindowResizing.SetSize(vm, WindowResizeReason.Application);
+        WindowResizing.SetSize(window, WindowResizeReason.Application);
         
         Dispatcher.UIThread.Post(() => window.IsChangingWindowState = false, DispatcherPriority.SystemIdle);
         

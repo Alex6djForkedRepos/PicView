@@ -1,19 +1,12 @@
 ﻿using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Controls.ApplicationLifetimes;
-using Avalonia.Layout;
 using Avalonia.Media;
-using Avalonia.Threading;
 using PicView.Avalonia.CustomControls;
 using PicView.Avalonia.Gallery;
-using PicView.Avalonia.StartUp;
-using PicView.Avalonia.Views.Main;
 using PicView.Avalonia.Views.UC;
 using PicView.Avalonia.Views.UC.Buttons;
 using PicView.Avalonia.WindowBehavior;
-using PicView.Core.FileHistory;
 using PicView.Core.ViewModels;
-using R3.Avalonia;
 
 namespace PicView.Avalonia.UI;
 
@@ -22,68 +15,6 @@ namespace PicView.Avalonia.UI;
 /// </summary>
 public static class UIHelper
 {
-    #region Controls
-
-    public static MainWindow? GetMainWindow { get; private set; }
-    public static MainView? GetMainView { get; private set; }
-    public static DraggableTabControl? GetMainTabControl { get; private set; }
-    public static Control? GetTitlebar { get; private set; }
-    public static EditableTitlebar? GetEditableTitlebar { get; private set; }
-    public static BottomBar? GetBottomBar { get; private set; }
-    public static DropDownMenu? GetDropDownMenu { get; private set; }
-    public static ToolTipMessage? GetToolTipMessage { get; private set; }
-
-    public static AvaloniaRenderingFrameProvider? GetFrameProvider => GetMainWindow.FrameProvider;
-
-    /// <summary>
-    /// Sets up control references from the main desktop application
-    /// </summary>
-    public static void SetControls(MainWindow mainWindow)
-    {
-        GetMainWindow = mainWindow;
-        GetMainView = mainWindow.SharedMainView;
-        GetTitlebar = mainWindow.SharedTitleBar;
-        GetEditableTitlebar = mainWindow.SharedTitleBar.FindControl<EditableTitlebar>("EditableTitlebar");
-        GetBottomBar = mainWindow.SharedBottomBar;
-        GetToolTipMessage = GetMainView?.MainPanel.FindControl<ToolTipMessage>("ToolTipMessage");
-        GetMainTabControl = GetMainView.MainTabControl;
-    }
-
-    public static HoverBar? GetHoverBar()
-    {
-        if (Application.Current.DataContext is not CoreViewModel core)
-        {
-            return null;
-        }
-
-        if (core.MainWindows.ActiveWindow.CurrentValue.WindowTabs.ActiveTab.CurrentValue.CurrentView.CurrentValue is ImageViewer imageViewer)
-        {
-            return imageViewer.HoverBar;
-        }
-
-        return null;
-    }
-    
-
-    
-    public static void AddDropDownMenu()
-    {
-        var dropDownMenu = new DropDownMenu
-        {
-            Name = "DropDownMenu",
-            VerticalAlignment = VerticalAlignment.Top,
-            Margin = new Thickness(3, 0, 3, 0),
-            IsVisible = false,
-            HorizontalAlignment = HorizontalAlignment.Right,
-            ZIndex = 2
-        };
-        GetMainView.MainPanel.Children.Add(dropDownMenu);
-        GetDropDownMenu = dropDownMenu;
-    }
-
-    #endregion
-
-    #region Helper functions
     
     public static ClickArrowRight? GetClickArrowRight(MainWindowViewModel vm)
     {
@@ -103,14 +34,29 @@ public static class UIHelper
         return null;
     }
     
+    public static HoverBar? GetHoverBar()
+    {
+        if (Application.Current.DataContext is not CoreViewModel core)
+        {
+            return null;
+        }
+
+        if (core.MainWindows.ActiveWindow.CurrentValue.WindowTabs.ActiveTab.CurrentValue.CurrentView.CurrentValue is ImageViewer imageViewer)
+        {
+            return imageViewer.HoverBar;
+        }
+
+        return null;
+    }
+    
     private const string BoldFontLocation = "avares://PicView.Avalonia/Assets/Fonts/Roboto-Medium.ttf#Roboto";
     public static FontFamily BoldFontFamily => new(BoldFontLocation);
     private const string MediumFontLocation = "avares://PicView.Avalonia/Assets/Fonts/Roboto-Medium.ttf#Roboto";
     public static FontFamily MediumFontFamily => new(MediumFontLocation);
 
-    public static void ShowMainContextMenu()
+    public static void ShowMainContextMenu(MainWindow mainWindow)
     {
-        if (GetMainView.Resources.TryGetResource("MainContextMenu", Application.Current.ActualThemeVariant,
+        if (mainWindow.SharedMainView.Resources.TryGetResource("MainContextMenu", Application.Current.ActualThemeVariant,
                 out var value)
             && value is ContextMenu mainContextMenu)
         {
@@ -211,6 +157,4 @@ public static class UIHelper
 
     public static SolidColorBrush? GetMenuBackgroundColor() =>
         GetBrush("MenuBackgroundColor");
-
-    #endregion
 }

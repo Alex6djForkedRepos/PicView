@@ -19,9 +19,11 @@ namespace PicView.Avalonia.Views.UC;
 public partial class DropDownMenu : AnimatedMenu
 {
     private IDisposable? _menuVisibilitySubscription;
+    private MainWindow _mainWindow;
 
-    public DropDownMenu()
+    public DropDownMenu(MainWindow mainWindow)
     {
+        _mainWindow = mainWindow;
         if (Application.Current.DataContext is not CoreViewModel core)
         {
             return;
@@ -31,6 +33,7 @@ public partial class DropDownMenu : AnimatedMenu
         DataContext = core;
         InitializeComponent();
         Loaded += OnLoaded;
+
     }
 
     private void OnLoaded(object? sender, RoutedEventArgs e)
@@ -67,18 +70,15 @@ public partial class DropDownMenu : AnimatedMenu
         core.FileHistory.Entries.CollectionChanged += EntriesOnCollectionChanged;
 
         _menuVisibilitySubscription = Observable.EveryValueChanged(this, x => x.IsVisible)
-            .SubscribeOn(UIHelper.GetFrameProvider).Subscribe(isVisible =>
+            .SubscribeOn(_mainWindow.FrameProvider).Subscribe(isVisible =>
             {
                 if (isVisible)
                 {
-                    MaxHeight = UIHelper.GetMainView.Bounds.Height - 1;
-                    DialogManager.IsDialogOpen  = true;
+                    MaxHeight = _mainWindow.UIHelper.GetMainView.Bounds.Height - 1;
                     core.FileHistory.UpdateHistory();
                 }
                 else
                 {
-                    DialogManager.IsDialogOpen  = false;
-                    
                     // Reset it, so that it opens in default state the next time it opens
                     core.MainWindows.ActiveWindow.Value.TopTitlebarViewModel.DropDownMenu.CloseToDefault();
                 }

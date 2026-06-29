@@ -48,13 +48,6 @@ public partial class EffectsWindow : GenericWindow, IDisposable
         GenericWindowHelper.GenericWindowInitialize(this, StringExtensions.CombineWithAppName(TranslationManager.Translation.Effects));
         Loaded += delegate
         {
-            ClientSizeProperty.Changed.ToObservable()
-                .ObserveOn(UIHelper.GetFrameProvider)
-                .Subscribe(size =>
-                {
-                    WindowResizing.HandleWindowResize(this, size);
-                }, DebugHelper.LogError(nameof(EffectsWindow), nameof(WindowResizing.HandleWindowResize)))
-                .AddTo(_disposables);
             ClearEffectsItem.Click += delegate
             {
                 EffectsView?.RemoveEffects();

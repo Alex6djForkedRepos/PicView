@@ -2,6 +2,7 @@
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Threading;
+using PicView.Avalonia.CustomControls;
 using PicView.Avalonia.FileSystem;
 using PicView.Avalonia.Input;
 using PicView.Avalonia.Functions;
@@ -227,7 +228,7 @@ public class WindowInitializer(IWindowProvider provider) : IWindowInitializer, I
             core.SettingsViewModel.Initialize(new ThemeService(), new LanguageService(), new ImageSettingsService());
             core.SettingsViewModel.WindowMargin.Subscribe(_ =>
             {
-                WindowResizing.SetSize(core.MainWindows.ActiveWindow.CurrentValue, WindowResizeReason.Application);
+                WindowResizing.SetSize(desktop.MainWindow as MainWindow, WindowResizeReason.Application);
             }, DebugHelper.LogError(nameof(core.SettingsViewModel), nameof(core.SettingsViewModel.WindowMargin)));
         }
 

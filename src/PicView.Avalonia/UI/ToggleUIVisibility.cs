@@ -14,7 +14,7 @@ namespace PicView.Avalonia.UI;
 
 public static class ToggleUIVisibility
 {
-    public static async ValueTask ToggleBottomBar(MainWindowViewModel vm)
+    public static async ValueTask ToggleBottomBar(MainWindowViewModel vm, MainWindow mainWindow)
     {
         if (Settings.UIProperties.ShowBottomNavBar)
         {
@@ -24,7 +24,7 @@ public static class ToggleUIVisibility
             vm.WindowTabs.ActiveTab.CurrentValue.Hoverbar.IsHoverbarVisible.Value =
                 Settings.UIProperties.ShowHoverNavigationBar;
 
-            WindowResizing.SetSize(vm, WindowResizeReason.Layout);
+            WindowResizing.SetSize(mainWindow, WindowResizeReason.Layout);
         }
         else
         {
@@ -34,21 +34,15 @@ public static class ToggleUIVisibility
             vm.Translation.IsShowingBottomToolbar.Value = TranslationManager.Translation.HideBottomToolbar;
             vm.WindowTabs.ActiveTab.CurrentValue.Hoverbar.IsHoverbarVisible.Value = false;
 
-            WindowResizing.SetSize(vm, WindowResizeReason.Layout);
+            WindowResizing.SetSize(mainWindow, WindowResizeReason.Layout);
 
-            if (Application.Current.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime
-                {
-                    MainWindow: MainWindow mainWindow
-                })
-            {
-                Dispatcher.UIThread.Post(() => mainWindow.SharedBottomBar.ResponsiveNavigationBtnSize());
-            }
+            Dispatcher.UIThread.Post(() => mainWindow.SharedBottomBar.ResponsiveNavigationBtnSize());
         }
 
         await SaveSettingsAsync();
     }
 
-    public static async ValueTask ToggleInterface(MainWindowViewModel vm)
+    public static async ValueTask ToggleInterface(MainWindowViewModel vm, MainWindow mainWindow)
     {
         var tab = vm.WindowTabs.ActiveTab.CurrentValue;
         if (Settings.UIProperties.ShowInterface)
@@ -113,14 +107,8 @@ public static class ToggleUIVisibility
         }
 
         vm.TopTitlebarViewModel.CloseDropDownMenu();
-        WindowResizing.SetSize(vm, WindowResizeReason.Layout);
-        if (Application.Current.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime
-            {
-                MainWindow: MainWindow mainWindow
-            })
-        {
-            Dispatcher.UIThread.Post(() => mainWindow.SharedBottomBar.ResponsiveNavigationBtnSize());
-        }
+        WindowResizing.SetSize(mainWindow, WindowResizeReason.Layout);
+        Dispatcher.UIThread.Post(() => mainWindow.SharedBottomBar.ResponsiveNavigationBtnSize());
 
         await SaveSettingsAsync();
     }

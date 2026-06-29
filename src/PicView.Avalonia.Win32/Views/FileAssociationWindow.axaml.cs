@@ -55,7 +55,7 @@ public partial class FileAssociationWindow : GenericWindow
     {
         var container = FileTypesContainer;
 
-        if (DataContext is not CoreViewModel core)
+        if (DataContext is not CoreViewModel core || GetTopLevel(this) is not MainWindow mainWindow)
         {
             return;
         }
@@ -63,7 +63,7 @@ public partial class FileAssociationWindow : GenericWindow
         core.AssociationsViewModel ??= new FileAssociationsViewModel();
 
         // Subscribe to changes in the filter text
-        Observable.EveryValueChanged(core.AssociationsViewModel, x => x.FilterText.Value, UIHelper.GetFrameProvider)
+        Observable.EveryValueChanged(core.AssociationsViewModel, x => x.FilterText.Value, mainWindow.FrameProvider)
             .Subscribe(FilterCheckBoxes)
             .AddTo(_disposables);
 
@@ -127,7 +127,7 @@ public partial class FileAssociationWindow : GenericWindow
             _allCheckBoxes.Add((groupCheckBox, fileTypeGroup.Name));
 
             // Subscribe to changes in the file type group's IsSelected property
-            Observable.EveryValueChanged(fileTypeGroup, x => x.IsSelected.Value, UIHelper.GetFrameProvider)
+            Observable.EveryValueChanged(fileTypeGroup, x => x.IsSelected.Value, mainWindow.FrameProvider)
                 .Subscribe(isSelected => { groupCheckBox.IsChecked = isSelected; })
                 .AddTo(_disposables);
 
@@ -181,12 +181,12 @@ public partial class FileAssociationWindow : GenericWindow
                 };
 
                 // Subscribe to changes in the file type's IsSelected property
-                Observable.EveryValueChanged(fileType, x => x.IsSelected.Value, UIHelper.GetFrameProvider)
+                Observable.EveryValueChanged(fileType, x => x.IsSelected.Value, mainWindow.FrameProvider)
                     .Subscribe(isSelected => { fileCheckBox.IsChecked = isSelected; })
                     .AddTo(_disposables);
 
                 // Subscribe to changes in the file type's IsVisible property
-                Observable.EveryValueChanged(fileType, x => x.IsVisible.Value, UIHelper.GetFrameProvider)
+                Observable.EveryValueChanged(fileType, x => x.IsVisible.Value, mainWindow.FrameProvider)
                     .Subscribe(isVisible => { fileCheckBox.IsVisible = isVisible; })
                     .AddTo(_disposables);
             }

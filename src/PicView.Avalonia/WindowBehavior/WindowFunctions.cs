@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Input;
 using Avalonia.Threading;
+using PicView.Avalonia.CustomControls;
 using PicView.Avalonia.Input;
 using PicView.Avalonia.UI;
 using PicView.Core.ArchiveHandling;
@@ -148,17 +149,17 @@ public static class WindowFunctions
         await SaveSettingsAsync().ConfigureAwait(false);
     }
 
-    public static async Task ToggleAutoFit(MainWindowViewModel vm, Window window)
+    public static async Task ToggleAutoFit(MainWindowViewModel vm, MainWindow mainWindow)
     {
         if (Settings.WindowProperties.AutoFit)
         {
-            SetManualWindow(vm, window);
+            SetManualWindow(vm, mainWindow);
         }
         else
         {
-            SetAutoFit(vm, window);
+            SetAutoFit(vm, mainWindow);
         }
-        WindowResizing.SetSize(vm, WindowResizeReason.Application);
+        WindowResizing.SetSize(mainWindow, WindowResizeReason.Application);
         await SaveSettingsAsync().ConfigureAwait(false);
     }
 
@@ -361,7 +362,7 @@ public static class WindowFunctions
 
     #region Window Drag and Behavior
 
-    public static void WindowDragAndDoubleClickBehavior(Window window, PointerPressedEventArgs e,
+    public static void WindowDragAndDoubleClickBehavior(MainWindow window, PointerPressedEventArgs e,
         IPlatformWindowService platformWindowService)
     {
         var currentScreen = ScreenHelper.ScreenSize;
@@ -387,10 +388,10 @@ public static class WindowFunctions
         }
 
         ScreenHelper.UpdateScreenSize(window);
-        WindowResizing.SetSize(window.DataContext as MainWindowViewModel, WindowResizeReason.DpiChange);
+        WindowResizing.SetSize(window, WindowResizeReason.DpiChange);
     }
 
-    public static void WindowDragBehavior(Window window, PointerPressedEventArgs e)
+    public static void WindowDragBehavior(MainWindow window, PointerPressedEventArgs e)
     {
         var currentScreen = ScreenHelper.ScreenSize;
         window.BeginMoveDrag(e);
@@ -407,7 +408,7 @@ public static class WindowFunctions
         }
 
         ScreenHelper.UpdateScreenSize(window);
-        WindowResizing.SetSize(window.DataContext as MainWindowViewModel, WindowResizeReason.DpiChange);
+        WindowResizing.SetSize(window, WindowResizeReason.DpiChange);
     }
 
     #endregion

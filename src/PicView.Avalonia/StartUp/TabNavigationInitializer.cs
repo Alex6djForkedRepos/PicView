@@ -1,4 +1,6 @@
 using System.Diagnostics;
+using Avalonia.Controls;
+using PicView.Avalonia.CustomControls;
 using PicView.Avalonia.Navigation;
 using PicView.Avalonia.Navigation.Services;
 using PicView.Core.DebugTools;
@@ -9,7 +11,7 @@ namespace PicView.Avalonia.StartUp;
 
 public static class TabNavigationInitializer
 {
-    public static void Initialize(CoreViewModel core)
+    public static void Initialize(CoreViewModel core, MainWindow mainWindow)
     {
         // --- Initialization Logic ---
         // This is the initialization logic for the navigation system.
@@ -37,18 +39,18 @@ public static class TabNavigationInitializer
         // 4. Initialize ViewModel
         tabOverView.LoadAndInitialize(core.SharedNavigationService, sharedCache,thumbnailCache, thumbnailService, fileWatcher);
         tabOverView.SetParentContext(core.MainWindows.ActiveWindow.CurrentValue);
-        InitializeNewTab(tab, core.MainWindows.ActiveWindow.CurrentValue);
+        InitializeNewTab(tab, core.MainWindows.ActiveWindow.CurrentValue, mainWindow);
         tab.Gallery.Initialize();
         core.GallerySettings.Initialize();
     }
     
-    public static void Initialize(CoreViewModel core, FileInfo fileInfo)
+    public static void Initialize(CoreViewModel core, FileInfo fileInfo, MainWindow mainWindow)
     {
         Debug.Assert(core.PlatformService != null);
-        Initialize(core, core.PlatformService.GetFiles(fileInfo));
+        Initialize(core, core.PlatformService.GetFiles(fileInfo), mainWindow);
     }
     
-    public static void Initialize(CoreViewModel core, List<FileInfo> files)
+    public static void Initialize(CoreViewModel core, List<FileInfo> files, MainWindow mainWindow)
     {
         // --- Initialization Logic ---
         // This is the initialization logic for the navigation system.
@@ -75,12 +77,12 @@ public static class TabNavigationInitializer
         var tab = tabOverView.ActiveTab.CurrentValue;
         tabOverView.LoadAndInitializeFromPath(files, core.SharedNavigationService, sharedCache, thumbnailCache, thumbnailService, fileWatcher);
         tabOverView.SetParentContext(core.MainWindows.ActiveWindow.CurrentValue);
-        InitializeNewTab(tab, core.MainWindows.ActiveWindow.CurrentValue);
+        InitializeNewTab(tab, core.MainWindows.ActiveWindow.CurrentValue, mainWindow);
         tab.Gallery.Initialize();
         core.GallerySettings.Initialize();
     }
     
-    public static void InitializeDetachedWindow(MainWindowViewModel parentVm, MainWindowViewModel newVm, TabViewModel tab)
+    public static void InitializeDetachedWindow(MainWindow mainWindow, MainWindowViewModel parentVm, MainWindowViewModel newVm, TabViewModel tab)
     {
         newVm.WindowTabs.Tabs.Value[0] = tab;
         
@@ -95,25 +97,35 @@ public static class TabNavigationInitializer
             return;
         }
         
-        newVm.WindowTabs.LoadAndInitialize(nav, cache, thumbCache, thumbLoader, fileWatcher);
-        newVm.WindowTabs.SetParentContext(newVm);
-        if (tab.FileInfo?.CurrentValue is not null)
+        if (tab.FileInfo.CurrentValue is not null)
         {
+            newVm.WindowTabs.LoadAndInitializeFromPath(tab.ImageIterator.Files, nav, cache, thumbCache, thumbLoader, fileWatcher);
             newVm.WindowTabs.ActiveTab.CurrentValue.UpdateTabTitle();
         }
         else
         {
             newVm.WindowTabs.ActiveTab.CurrentValue.SetNewTabTitle();
+            
+            newVm.WindowTabs.LoadAndInitialize(nav, cache, thumbCache, thumbLoader, fileWatcher);
+            newVm.WindowTabs.SetParentContext(newVm);
         }
         newVm.WindowTabs.SelectTab(tab);
-        Debug.Assert(tab.ImageIterator != null);
         tab.ImageIterator.UpdateNavigationProperties();
+        
+        // Unsubscribe from the old and start listening to a new one
+        tab.Disposables.Clear();
+        NavigationSubscriptions.ModelSubscription(tab, newVm, mainWindow);
         
         // Need to properly remove it from the previous location
         parentVm.WindowTabs.RemoveTab(tab);
+
+        if (Settings.WindowProperties.AutoFit)
+        {
+            mainWindow.SizeToContent = SizeToContent.WidthAndHeight;
+        }
     }
     
-    private static void InitializeNewTab(TabViewModel newTab, MainWindowViewModel mainWindowViewModel)
+    private static void InitializeNewTab(TabViewModel newTab, MainWindowViewModel mainWindowViewModel, MainWindow mainWindow)
     {
         if (newTab is null)
         {
@@ -126,7 +138,8 @@ public static class TabNavigationInitializer
 #endif
             return;
         }
-        NavigationSubscriptions.ModelSubscription(newTab, mainWindowViewModel);
+
+        NavigationSubscriptions.ModelSubscription(newTab, mainWindowViewModel, mainWindow);
         newTab.IsInitialized = true;
     }
 }

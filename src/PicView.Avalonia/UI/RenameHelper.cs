@@ -1,4 +1,5 @@
 ﻿using ImageMagick;
+using PicView.Avalonia.CustomControls;
 using PicView.Avalonia.Input;
 using PicView.Core.FileHandling;
 using PicView.Core.ViewModels;
@@ -7,17 +8,17 @@ namespace PicView.Avalonia.UI;
 
 public static class RenameHelper
 {
-    public static void Rename(MainWindowViewModel vm)
+    public static void Rename(MainWindowViewModel vm, MainWindow mainWindow)
     {
         if (!vm.IsTopToolbarShown.CurrentValue || vm.IsFullscreen.CurrentValue)
         {
-            DialogManager.AddRenameDialog();
+            mainWindow.AddRenameDialog();
             return;
         }
-        UIHelper.GetEditableTitlebar.SelectFileName();   
+        mainWindow.UIHelper.GetEditableTitlebar.SelectFileName();   
     }
 
-    public static void RenameAction(MainWindowViewModel vm, string newName)
+    public static void RenameAction(MainWindowViewModel vm, MainWindow mainWindow, string newName)
     {
         vm.IsLoadingIndicatorShown.Value = true;
         var tab = vm.WindowTabs.ActiveTab.CurrentValue;
@@ -54,7 +55,7 @@ public static class RenameHelper
             vm.IsLoadingIndicatorShown.Value = false;
         });
         
-        UIHelper.GetMainView.Focus();
+        mainWindow.UIHelper.GetMainView.Focus();
         MainKeyboardShortcuts.IsKeysEnabled = true;
     }
 }

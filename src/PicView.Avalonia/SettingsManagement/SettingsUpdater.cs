@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia.Threading;
 using PicView.Avalonia.ColorManagement;
+using PicView.Avalonia.CustomControls;
 using PicView.Avalonia.Functions;
 using PicView.Avalonia.Navigation;
 using PicView.Avalonia.UI;
@@ -44,7 +45,7 @@ public static class SettingsUpdater
         AppFunctions.Restart(core?.MainWindows.ActiveWindow.Value.WindowTabs.ActiveTab?.Value);
     }
     
-    public static async ValueTask ToggleZoomToFit(MainWindowViewModel vm)
+    public static async ValueTask ToggleZoomToFit(MainWindowViewModel vm, MainWindow mainWindow)
     {
         if (Settings.ImageScaling.ZoomToFit)
         {
@@ -57,7 +58,7 @@ public static class SettingsUpdater
             vm.IsZoomedToFit.Value = true;
         }
 
-        WindowResizing.SetSize(vm, WindowResizeReason.Layout);
+        WindowResizing.SetSize(mainWindow, WindowResizeReason.Layout);
 
         var tabViewModel = vm.WindowTabs.ActiveTab.CurrentValue;
         tabViewModel.ZoomLevel.Value = Convert.ToInt32(tabViewModel.InitialZoom.CurrentValue * 100);;
@@ -193,20 +194,20 @@ public static class SettingsUpdater
         await SaveSettingsAsync();
     }
     
-    public static async Task ToggleSideBySide()
+    public static async Task ToggleSideBySide(MainWindow mainWindow)
     {
         if (Application.Current.DataContext is not CoreViewModel core)
         {
             return;
         }
-        var window = core.MainWindows.ActiveWindow.Value;
-        var tab = window.WindowTabs.ActiveTab.Value;
+        var vm = core.MainWindows.ActiveWindow.Value;
+        var tab = vm.WindowTabs.ActiveTab.Value;
         
         var showSideBySide = !Settings.ImageScaling.ShowImageSideBySide;
         if (showSideBySide)
         {
             Settings.ImageScaling.ShowImageSideBySide = true;
-            window.IsSideBySide.Value = true;
+            vm.IsSideBySide.Value = true;
             if (tab.CurrentView.CurrentValue is ImageViewer imageViewer)
             {
                 await tab.ImageIterator.ReloadAsync(false).ConfigureAwait(false);
@@ -217,19 +218,19 @@ public static class SettingsUpdater
         else
         {
             Settings.ImageScaling.ShowImageSideBySide = false;
-            window.IsSideBySide.Value = false;
+            vm.IsSideBySide.Value = false;
             if (tab.CurrentView.CurrentValue is ImageViewer imageViewer)
             {
                 imageViewer.SecondaryImage.Source = null;
             }
         }
         
-        WindowResizing.SetSize(window, WindowResizeReason.Application);
+        WindowResizing.SetSize(mainWindow, WindowResizeReason.Application);
         tab.UpdateTabTitle();
         await SaveSettingsAsync();
     }
     
-    public static async Task ToggleScroll(MainWindowViewModel vm)
+    public static async Task ToggleScroll(MainWindowViewModel vm, MainWindow mainWindow)
     {
         if (vm is null)
         {
@@ -245,7 +246,7 @@ public static class SettingsUpdater
             TurnOnScroll(vm);
         }
         
-        WindowResizing.SetSize(vm, WindowResizeReason.Application);
+        WindowResizing.SetSize(mainWindow, WindowResizeReason.Application);
         
         await SaveSettingsAsync();
     }

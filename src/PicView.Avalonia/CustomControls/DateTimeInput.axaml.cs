@@ -197,9 +197,14 @@ public class DateTimeInput : TemplatedControl
             VerticalAlignment = VerticalAlignment.Center,
             Margin = new Thickness(2, 0, 0, 0)
         };
-        Observable.EveryValueChanged(this, x => x.IsEffectivelyEnabled, UIHelper.GetFrameProvider)
-            .Subscribe(b => _ampmToggle.IsVisible = b)
-            .AddTo(_disposables);
+        
+        if ( TopLevel.GetTopLevel(this) is MainWindow mainWindow)
+        {
+            Observable.EveryValueChanged(this, x => x.IsEffectivelyEnabled, mainWindow.FrameProvider)
+                .Subscribe(b => _ampmToggle.IsVisible = b)
+                .AddTo(_disposables);
+        }
+
         _ampmToggle.Click += OnAmPmToggleClick;
         container.Children.Add(_ampmToggle);
         _isAm = true; // Default to AM
@@ -281,9 +286,12 @@ public class DateTimeInput : TemplatedControl
 
     private void HideTextBlockWhenNotEnabledSubscription(TextBlock textBlock)
     {
-        Observable.EveryValueChanged(this, x => x.IsEffectivelyEnabled, UIHelper.GetFrameProvider)
-            .Subscribe(b => textBlock.IsVisible = b)
-            .AddTo(_disposables);
+        if ( TopLevel.GetTopLevel(this) is MainWindow mainWindow)
+        {
+            Observable.EveryValueChanged(this, x => x.IsEffectivelyEnabled, mainWindow.FrameProvider)
+                .Subscribe(b => textBlock.IsVisible = b)
+                .AddTo(_disposables);
+        }
     }
     
     /// <summary>

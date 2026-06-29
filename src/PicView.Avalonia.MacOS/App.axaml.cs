@@ -107,7 +107,7 @@ public class App : Application, IPlatformSpecificService
             return;
         }
         
-        StartUpHelper.HandlePostWindowUpdates(_coreViewModel, settingsExists, desktop, _mainWindow);
+        StartUpHelper.HandlePostWindowUpdates(_coreViewModel, desktop, _mainWindow);
         
         return;
 

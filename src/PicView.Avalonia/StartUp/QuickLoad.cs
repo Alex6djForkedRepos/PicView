@@ -2,6 +2,7 @@ using System.Diagnostics;
 using Avalonia.Controls;
 using Avalonia.Threading;
 using ImageMagick;
+using PicView.Avalonia.CustomControls;
 using PicView.Avalonia.ImageHandling;
 using PicView.Avalonia.Navigation;
 using PicView.Avalonia.Navigation.Services;
@@ -34,7 +35,7 @@ public static class QuickLoad
     /// <param name="core">The main view model.</param>
     /// <param name="source">The file, URL, or directory path to be loaded.</param>
     /// <param name="continueFromLeftOff">A boolean indicating whether to continue loading from the last session folder structure.</param>
-    public static async ValueTask QuickLoadAsync(CoreViewModel core, string source, bool continueFromLeftOff)
+    public static async ValueTask QuickLoadAsync(MainWindow mainWindow, CoreViewModel core, string source, bool continueFromLeftOff)
     {        
         var fileInfo = new FileInfo(source);
         if (!fileInfo.Exists) // If not file, try to load if URL or directory
@@ -56,12 +57,12 @@ public static class QuickLoad
                         ViewChangeHelper.SwitchToStartUpMenu(core.MainWindows.ActiveWindow.CurrentValue);
                         return;
                     }
-                    await LoadSingleFileAsync(core, files[0], continueFromLeftOff, files).ConfigureAwait(false);
+                    await LoadSingleFileAsync(mainWindow, core, files[0], continueFromLeftOff, files).ConfigureAwait(false);
                     return;
                 }
                 case FileTypeResolver.LoadAbleFileType.Web:
                 {
-                    await LoadUrlImageAsync(core, check.Value.Data).ConfigureAwait(false);
+                    await LoadUrlImageAsync(mainWindow, core, check.Value.Data).ConfigureAwait(false);
                     return;
                 }
                 default:
@@ -72,15 +73,15 @@ public static class QuickLoad
         
         if (source.IsArchive())
         {
-            await LoadArchiveFileAsync(core, fileInfo).ConfigureAwait(false);
+            await LoadArchiveFileAsync(mainWindow, core, fileInfo).ConfigureAwait(false);
         }
         else
         {
-            await LoadSingleFileAsync(core, fileInfo, continueFromLeftOff).ConfigureAwait(false);
+            await LoadSingleFileAsync(mainWindow, core, fileInfo, continueFromLeftOff).ConfigureAwait(false);
         }
     }
 
-    private static async ValueTask LoadUrlImageAsync(CoreViewModel core, string url)
+    private static async ValueTask LoadUrlImageAsync(MainWindow mainWindow, CoreViewModel core, string url)
     {
         Dispatcher.UIThread.Invoke(() =>
         {
@@ -91,7 +92,7 @@ public static class QuickLoad
         using var client = new HttpClientDownloadWithProgress(url, destPath);
         Debug.Assert(core.MainWindows.ActiveWindow.CurrentValue != null);
         var tab = core.MainWindows.ActiveWindow.CurrentValue.WindowTabs.ActiveTab.CurrentValue;
-        TabNavigationInitializer.Initialize(core);
+        TabNavigationInitializer.Initialize(core, mainWindow);
         client.ProgressChanged += (totalFileSize, totalBytesDownloaded, progressPercentage) =>
         {
             var displayProgress = HttpManager.GetProgressDisplay(totalFileSize, totalBytesDownloaded, progressPercentage);
@@ -127,7 +128,7 @@ public static class QuickLoad
         }
     }
 
-    private static async ValueTask LoadSingleFileAsync(CoreViewModel core,
+    private static async ValueTask LoadSingleFileAsync(MainWindow mainWindow, CoreViewModel core,
         FileInfo fileInfo,
         bool continueFromLeftOff,
         List<FileInfo>? files = null)
@@ -147,8 +148,8 @@ public static class QuickLoad
             {
                 // Predict window size and center beforehand for pleasant opening when double-clicking a file
                 WindowResizing.SetSize(magickImage.Width, magickImage.Height,
-                    0, 0, WindowResizeReason.Application, vm);
-                Dispatcher.UIThread.Invoke(WindowResizing.FastCenterWindow, DispatcherPriority.Render);
+                    0, 0, WindowResizeReason.Application, mainWindow, vm);
+                Dispatcher.UIThread.Invoke( () => WindowResizing.FastCenterWindow(mainWindow), DispatcherPriority.Render);
             }
         }
         catch (Exception e)
@@ -175,20 +176,20 @@ public static class QuickLoad
             var nextFileInfo = files[nextIndex];
             var secondImageModel = await GetImageModel.GetImageModelAsync(nextFileInfo).ConfigureAwait(false);
             tab.SecondaryModel = secondImageModel;
-            UpdateImage.ChangeImage(tab, core.MainWindows.ActiveWindow.CurrentValue);
+            UpdateImage.ChangeImage(mainWindow, tab, core.MainWindows.ActiveWindow.CurrentValue);
             UpdateImage.UpdateTabSideBySideTitles(tab, index, nextIndex, fileInfo, nextFileInfo, files);
-            TabNavigationInitializer.Initialize(core, files);
+            TabNavigationInitializer.Initialize(core, files, mainWindow);
         }
         else
         {
-            UpdateImage.ChangeImage(tab, core.MainWindows.ActiveWindow.CurrentValue);
+            UpdateImage.ChangeImage(mainWindow, tab, core.MainWindows.ActiveWindow.CurrentValue);
             if (files is null)
             {
-                TabNavigationInitializer.Initialize(core, initialDirectory);
+                TabNavigationInitializer.Initialize(core, initialDirectory, mainWindow);
             }
             else
             {
-                TabNavigationInitializer.Initialize(core, files);
+                TabNavigationInitializer.Initialize(core, files, mainWindow);
             }
         }
 
@@ -213,14 +214,14 @@ public static class QuickLoad
         magickImage.Dispose();
     }
     
-    private static async ValueTask LoadArchiveFileAsync(CoreViewModel core, FileInfo source)
+    private static async ValueTask LoadArchiveFileAsync(MainWindow mainWindow, CoreViewModel core, FileInfo source)
     {
         var tab = core.MainWindows.ActiveWindow.CurrentValue.WindowTabs.ActiveTab.CurrentValue;
         Dispatcher.UIThread.Invoke(() =>
         {
             core.MainWindows.ActiveWindow.Value.WindowTabs.ActiveTab.Value.CurrentView.Value = new ImageViewer();
         }, DispatcherPriority.Send);
-        TabNavigationInitializer.Initialize(core, source);
+        TabNavigationInitializer.Initialize(core, source, mainWindow);
         core.MainWindows.ActiveWindow.Value.IsLoadingIndicatorShown.Value = true;
         tab.SetLoading();
 

@@ -2,6 +2,7 @@
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Platform.Storage;
 using Avalonia.Threading;
+using PicView.Avalonia.CustomControls;
 using PicView.Avalonia.StartUp;
 using PicView.Avalonia.Views.UC;
 using PicView.Core.DebugTools;
@@ -13,7 +14,7 @@ namespace PicView.Avalonia.FileSystem;
 
 public static class FilePicker
 {
-    public static async Task SelectAndLoadFile(MainWindowViewModel vm)
+    public static async Task SelectAndLoadFile(MainWindow mainWindow, MainWindowViewModel vm)
     {
         if (vm is null)
         {
@@ -30,7 +31,7 @@ public static class FilePicker
         var tab = vm.WindowTabs.ActiveTab.CurrentValue;
         if (!tab.IsInitialized)
         {
-            await QuickLoad.QuickLoadAsync(core, file, false).ConfigureAwait(false);
+            await QuickLoad.QuickLoadAsync(mainWindow, core, file, false).ConfigureAwait(false);
             return;
         }
         

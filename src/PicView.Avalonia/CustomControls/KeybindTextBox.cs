@@ -99,11 +99,15 @@ public class KeybindTextBox : TextBox
 
     private void SetupKeyEventHandlers()
     {
+        if ( TopLevel.GetTopLevel(this) is not MainWindow mainWindow)
+        {
+            return;
+        }
         if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
         {
             var keyUp = Observable.FromEventHandler<KeyEventArgs>(handler => KeyUp += handler, handler => KeyUp -= handler);
             keyUp.Select(e => e.e)
-                .ObserveOn(UIHelper.GetFrameProvider)
+                .ObserveOn(mainWindow.FrameProvider)
                 .SubscribeAwait(async (e, _) => await AssociateKey(e))
                 .AddTo(_disposables);
             // On macOS, we only get KeyUp because the option to select a different character
@@ -113,13 +117,13 @@ public class KeybindTextBox : TextBox
         {
             var keyDown = Observable.FromEventHandler<KeyEventArgs>(handler => KeyDown += handler, handler => KeyDown -= handler);
             keyDown.Select(e => e.e)
-                .ObserveOn(UIHelper.GetFrameProvider)
+                .ObserveOn(mainWindow.FrameProvider)
                 .SubscribeAwait(async (e, _) =>  await AssociateKey(e))
                 .AddTo(_disposables);
             
             var keyUp = Observable.FromEventHandler<KeyEventArgs>(handler => KeyUp += handler, handler => KeyUp -= handler);
             keyUp.Select(e => e.e)
-                .ObserveOn(UIHelper.GetFrameProvider)
+                .ObserveOn(mainWindow.FrameProvider)
                 .Subscribe(_ => KeyUpHandler())
                 .AddTo(_disposables);
         }

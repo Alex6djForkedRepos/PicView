@@ -50,7 +50,11 @@ public partial class BottomBar : UserControl, IDisposable
 
     private void OnPointerExited(object? sender, PointerEventArgs e)
     {
-        DragAndDropManager.RemoveDragDropView();
+        if (TopLevel.GetTopLevel(this) is not MainWindow mainWindow)
+        {
+            return;
+        }
+        DragAndDropManager.RemoveDragDropView(mainWindow);
     }
 
     private void OnPreviousButtonClick(object? sender, RoutedEventArgs e)
@@ -251,9 +255,9 @@ public partial class BottomBar : UserControl, IDisposable
             vm.TopTitlebarViewModel.CloseDropDownMenu();
         }
 
-        if (TopLevel.GetTopLevel(this) is Window window)
+        if (TopLevel.GetTopLevel(this) is MainWindow mainWindow)
         {
-            WindowFunctions.WindowDragBehavior(window, e);
+            WindowFunctions.WindowDragBehavior(mainWindow, e);
         }
     }
 

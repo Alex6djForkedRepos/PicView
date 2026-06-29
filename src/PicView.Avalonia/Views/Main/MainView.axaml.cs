@@ -80,7 +80,7 @@ public partial class MainView : UserControl
             }
         }
         
-        CropManager.SetIfCropEnabled(vm);
+        CropManager.SetIfCropEnabled(TopLevel.GetTopLevel(this) as MainWindow);
         tab.ShouldOptimizeImageBeEnabled.Value = ConversionHelper.DetermineIfOptimizeImageShouldBeEnabled(tab.FileInfo.CurrentValue);
         
         // Set source for ChangeCtrlZoomImage
@@ -151,18 +151,21 @@ public partial class MainView : UserControl
 
     private void PointerPressedBehavior(object? sender, PointerPressedEventArgs e)
     {
-        if (MainKeyboardShortcuts.ShiftDown && !CropManager.IsCropping)
+        if (TopLevel.GetTopLevel(this) is not MainWindow mainWindow)
         {
-            var hostWindow = (Window)VisualRoot!;
-            WindowFunctions.WindowDragBehavior(hostWindow, e);
+            return;
+        }
+        if (MainKeyboardShortcuts.ShiftDown && !CropManager.IsCropping(mainWindow))
+        {
+            WindowFunctions.WindowDragBehavior(mainWindow, e);
         }
         
-        DragAndDropManager.RemoveDragDropView();
+        DragAndDropManager.RemoveDragDropView(TopLevel.GetTopLevel(this) as MainWindow);
     }
     
-    private static void HandleLostFocus(object? sender, EventArgs e)
+    private void HandleLostFocus(object? sender, EventArgs e)
     {
-        DragAndDropManager.RemoveDragDropView();
+        DragAndDropManager.RemoveDragDropView(TopLevel.GetTopLevel(this) as MainWindow);
     }
 
     private async ValueTask Drop(object? sender, DragEventArgs e)
@@ -172,16 +175,16 @@ public partial class MainView : UserControl
             return;
         }
         
-        await DragAndDropManager.Drop(e, vm.WindowTabs);
+        await DragAndDropManager.Drop(e, vm.WindowTabs, TopLevel.GetTopLevel(this) as MainWindow);
     }
     
     private async ValueTask DragEnter(object? sender, DragEventArgs e)
     {
-        await DragAndDropManager.DragEnter(e, this);
+        await DragAndDropManager.DragEnter(e, TopLevel.GetTopLevel(this) as MainWindow);
     }
     
     private void DragLeave(object? sender, DragEventArgs e)
     {
-        DragAndDropManager.DragLeave(this);
+        DragAndDropManager.DragLeave(TopLevel.GetTopLevel(this) as MainWindow);
     }
 }

@@ -5,6 +5,7 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.Threading;
+using PicView.Avalonia.CustomControls;
 using PicView.Avalonia.UI;
 using PicView.Avalonia.Views.UC.PopUps;
 using PicView.Core.DebugTools;
@@ -26,8 +27,19 @@ public partial class HoverBar : UserControl, IDisposable
             ChangeHoverClasses();
         }
         
+        Loaded += OnLoaded;
+
+    }
+
+    private void OnLoaded(object? sender, RoutedEventArgs e)
+    {
+        if (TopLevel.GetTopLevel(this) is not MainWindow mainWindow)
+        {
+            return;
+        }
+        
         AddHandler(PointerPressedEvent, ManagePointerPressed, RoutingStrategies.Tunnel);
-        UIHelper.GetMainView.SizeChanged += (_, args) => ApplyResponsiveResize(args.NewSize.Width);
+        mainWindow.UIHelper.GetMainView.SizeChanged += (_, args) => ApplyResponsiveResize(args.NewSize.Width);
         ApplyResponsiveResize(Bounds.Width);
 
         if (Settings.Theme.GlassTheme)
@@ -92,7 +104,7 @@ public partial class HoverBar : UserControl, IDisposable
             })
             .AddTo(ref _disposables);
     }
-    
+
     #region Theming
 
     private void ChangeHoverClasses()
@@ -195,10 +207,15 @@ public partial class HoverBar : UserControl, IDisposable
                     ZoomOutMenuButton.IsVisible = showAdvancedButtons;
 
         IsVisible = true;
+        
+        if ( TopLevel.GetTopLevel(this) is not MainWindow mainWindow)
+        {
+            return;
+        }
 
         // Make sure hover bar is above the bottom gallery if needed
         var newHeight = Settings.Gallery.IsGalleryDocked ? 50 : 160;
-        Height = UIHelper.GetMainView.Bounds.Height > SizeDefaults.WindowMinSize ? newHeight : double.NaN;
+        Height = mainWindow.UIHelper.GetMainView.Bounds.Height > SizeDefaults.WindowMinSize ? newHeight : double.NaN;
     }
 
 
@@ -281,25 +298,54 @@ public partial class HoverBar : UserControl, IDisposable
         {
             if (props.IsRightButtonPressed)
             {
-                UIHelper.ShowMainContextMenu();
+                if (TopLevel.GetTopLevel(this) is not MainWindow mainWindow)
+                {
+                    return;
+                }
+                UIHelper.ShowMainContextMenu(mainWindow);
             }
         }
     }
 
-    private static void ShowNavigationDialog() =>
-        DialogManager.AddNavigationDialog();
+    private void ShowNavigationDialog()
+    {
+        if (TopLevel.GetTopLevel(this) is not MainWindow mainWindow)
+        {
+            return;
+        }
+        mainWindow.AddNavigationDialog();
+    }
 
-    private static void ShowQuickSettingsDialog() =>
-        UIHelper.GetMainView.MainPanel.Children.Add(new QuickSettingsDialog());
-    
-    private static void ShowQuickEditingDialog() =>
-        UIHelper.GetMainView.MainPanel.Children.Add(new QuickEditingDialog());
+    private void ShowQuickSettingsDialog()
+    {
+        if (TopLevel.GetTopLevel(this) is not MainWindow mainWindow)
+        {
+            return;
+        }
+        mainWindow.UIHelper.GetMainView.MainPanel.Children.Add(new QuickSettingsDialog());
+    }
 
-    private static void ShowSearchDialog() =>
-        DialogManager.AddFileSearchDialog();
+    private void ShowQuickEditingDialog()
+    {
+        if (TopLevel.GetTopLevel(this) is not MainWindow mainWindow)
+        {
+            return;
+        }
+        mainWindow.UIHelper.GetMainView.MainPanel.Children.Add(new QuickEditingDialog());
+    }
+
+    private void ShowSearchDialog()
+    {
+        if (TopLevel.GetTopLevel(this) is not MainWindow mainWindow)
+        {
+            return;
+        }
+        mainWindow.AddFileSearchDialog();
+    }
 
     public void Dispose()
     {
+        Loaded -= OnLoaded;
         RemoveHandler(PointerPressedEvent, ManagePointerPressed);
         _disposables.Dispose();
     }

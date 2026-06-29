@@ -2,6 +2,7 @@ using Avalonia.Input.Platform;
 using Avalonia.Media.Imaging;
 using PicView.Avalonia.Animations;
 using PicView.Avalonia.Crop;
+using PicView.Avalonia.CustomControls;
 using PicView.Avalonia.Navigation;
 using PicView.Core.DebugTools;
 using PicView.Core.Localization;
@@ -18,7 +19,7 @@ public static class ClipboardImageOperations
     /// <summary>
     ///     Copies the current image to the clipboard
     /// </summary>
-    public static async Task CopyImageToClipboard(MainWindowViewModel vm)
+    public static async Task CopyImageToClipboard(MainWindowViewModel vm, MainWindow mainWindow)
     {
         var clipboard = ClipboardService.GetClipboard();
         if (clipboard == null)
@@ -29,7 +30,7 @@ public static class ClipboardImageOperations
         {
             if (cropService.GetCroppedImage() is Bitmap clipboardBitmap)
             {
-                await CopyImageToClipboard(clipboard, clipboardBitmap);
+                await CopyImageToClipboard(clipboard, clipboardBitmap, mainWindow);
                 return;
             }
         }
@@ -37,12 +38,12 @@ public static class ClipboardImageOperations
         {
             return;
         }
-        await CopyImageToClipboard(clipboard, bitmap);
+        await CopyImageToClipboard(clipboard, bitmap, mainWindow);
     }
     
-    public static async Task CopyImageToClipboard(IClipboard clipboard, Bitmap bitmap)
+    public static async Task CopyImageToClipboard(IClipboard clipboard, Bitmap bitmap, MainWindow mainWindow)
     {
-        _ = AnimationsHelper.CopyAnimation();
+        _ = AnimationsHelper.CopyAnimation(mainWindow);
         await clipboard.ClearAsync();
         await clipboard.SetBitmapAsync(bitmap);
     }
@@ -50,8 +51,7 @@ public static class ClipboardImageOperations
     /// <summary>
     ///     Copies an image as base64 string to the clipboard
     /// </summary>
-    /// <param name="path">Path to the image file</param>
-    public static async Task<bool> CopyBase64ToClipboard(string path)
+    public static async Task<bool> CopyBase64ToClipboard(string path, MainWindow mainWindow)
     {
         var clipboard = ClipboardService.GetClipboard();
         if (clipboard == null)
@@ -65,7 +65,7 @@ public static class ClipboardImageOperations
         {
             return false;
         }
-        _ = AnimationsHelper.CopyAnimation();
+        _ = AnimationsHelper.CopyAnimation(mainWindow);
         
         try
         {
@@ -88,13 +88,8 @@ public static class ClipboardImageOperations
         }
         return null; // TODO handle non-image types, such as SVGs
     }
-
-    /// <summary>
-    ///     Pastes an image from the clipboard
-    /// </summary>
-    /// <param name="vm">The main view model</param>
-    /// <returns>A task representing the asynchronous operation</returns>
-    public static async Task PasteClipboardImage(MainWindowViewModel vm)
+    
+    public static async Task PasteClipboardImage(MainWindowViewModel vm, MainWindow mainWindow)
     {
         var clipboard = ClipboardService.GetClipboard();
         if (clipboard == null)
@@ -109,7 +104,7 @@ public static class ClipboardImageOperations
             {
                 return;
             }
-            UpdateImage.SetSingleImage(vm, bitmap, SingleImageType.Clipboard, TranslationManager.Translation.ClipboardImage);
+            UpdateImage.SetSingleImage(vm, mainWindow, bitmap, SingleImageType.Clipboard, TranslationManager.Translation.ClipboardImage);
         }
         catch (Exception ex)
         {

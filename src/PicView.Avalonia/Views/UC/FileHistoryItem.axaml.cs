@@ -3,9 +3,9 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.LogicalTree;
+using PicView.Avalonia.CustomControls;
 using PicView.Avalonia.StartUp;
 using PicView.Avalonia.WindowBehavior;
-using PicView.Core.FileHistory;
 using PicView.Core.ViewModels;
 
 namespace PicView.Avalonia.Views.UC;
@@ -26,16 +26,20 @@ public partial class FileHistoryItem : UserControl
         {
             return;
         }
-        var window = core.MainWindows.ActiveWindow.CurrentValue;
-        window.TopTitlebarViewModel.DropDownMenu.IsDropDownMenuVisible.Value = false;
+        var vm = core.MainWindows.ActiveWindow.CurrentValue;
+        vm.TopTitlebarViewModel.DropDownMenu.IsDropDownMenuVisible.Value = false;
         
-        var tabs = window.WindowTabs;
+        var tabs = vm.WindowTabs;
         var tab = tabs.ActiveTab.CurrentValue;
         var path = entry.FilePath.CurrentValue;
         
         if (!tab.IsInitialized)
         {
-            await QuickLoad.QuickLoadAsync(core, path, true);
+            if ( TopLevel.GetTopLevel(this) is not MainWindow mainWindow)
+            {
+                return;
+            }
+            await QuickLoad.QuickLoadAsync(mainWindow, core, path, true);
             return;
         }
 
@@ -53,7 +57,11 @@ public partial class FileHistoryItem : UserControl
         }
         else
         {
-            WindowResizing.SetSize(window, WindowResizeReason.Layout);
+            if (TopLevel.GetTopLevel(this) is not MainWindow mainWindow)
+            {
+                return;
+            }
+            WindowResizing.SetSize(mainWindow, WindowResizeReason.Layout);
         }
     }
 

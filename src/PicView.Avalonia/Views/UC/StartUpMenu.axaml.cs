@@ -6,6 +6,7 @@ using Avalonia.Layout;
 using Avalonia.Media;
 using PicView.Avalonia.Clipboard;
 using PicView.Avalonia.ColorManagement;
+using PicView.Avalonia.CustomControls;
 using PicView.Avalonia.FileSystem;
 using PicView.Avalonia.Navigation;
 using PicView.Core.Extensions;
@@ -57,13 +58,14 @@ public partial class StartUpMenu : UserControl
 
     private async ValueTask PasteClick(object? sender, RoutedEventArgs e)
     {
-        if (Application.Current.DataContext is not CoreViewModel core || DataContext is not TabViewModel tab)
+        if (Application.Current.DataContext is not CoreViewModel core || DataContext is not TabViewModel tab
+            || TopLevel.GetTopLevel(this) is not MainWindow mainWindow)
         {
             return;
         }
 
         tab.CurrentView.Value = new ImageViewer();
-        var isPastedSuccessfully = await ClipboardPasteOperations.Paste(core.MainWindows.ActiveWindow.CurrentValue);
+        var isPastedSuccessfully = await ClipboardPasteOperations.Paste(core.MainWindows.ActiveWindow.CurrentValue, mainWindow);
         if (!isPastedSuccessfully)
         {
             tab.CurrentView.Value = new StartUpMenu();
@@ -72,12 +74,11 @@ public partial class StartUpMenu : UserControl
 
     private void OpenLastFileButtonOnClick(object? sender, RoutedEventArgs e)
     {
-        if (Application.Current.DataContext is not CoreViewModel core)
+        if (Application.Current.DataContext is not CoreViewModel core || TopLevel.GetTopLevel(this) is not MainWindow mainWindow)
         {
             return;
         }
-        
-        _ = UINavigationHelper.OpenLastFile(core.MainWindows.ActiveWindow.CurrentValue).ConfigureAwait(false);
+        _ = UINavigationHelper.OpenLastFile(mainWindow, core.MainWindows.ActiveWindow.CurrentValue).ConfigureAwait(false);
     }
 
     private void PasteButtonOnPointerExited(object? sender, PointerEventArgs e)
@@ -134,14 +135,14 @@ public partial class StartUpMenu : UserControl
         selectFileBrush.Color = ColorManager.PrimaryAccentColor;
     }
 
-    private static void SelectFileButtonOnClick(object? sender, RoutedEventArgs e)
+    private void SelectFileButtonOnClick(object? sender, RoutedEventArgs e)
     {
         // There is problems with DataContext and commands, so just use event
-        if (Application.Current.DataContext is not CoreViewModel core)
+        if (Application.Current.DataContext is not CoreViewModel core || TopLevel.GetTopLevel(this) is not MainWindow mainWindow)
         {
             return;
         }
-        FilePicker.SelectAndLoadFile(core.MainWindows.ActiveWindow.CurrentValue).ConfigureAwait(false);
+        FilePicker.SelectAndLoadFile(mainWindow, core.MainWindows.ActiveWindow.CurrentValue).ConfigureAwait(false);
     }
 
     private void SelectFileButtonOnPointerExited(object? sender, PointerEventArgs e)

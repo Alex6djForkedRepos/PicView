@@ -79,60 +79,52 @@ public static class StartUpHelper
         
         void ImageStartUp(string filePath)
         {
+            desktop.MainWindow = window;
+            
             SettingsUpdater.InitializeSettings(vm.MainWindows.ActiveWindow.CurrentValue, settingsExists);
 
             HandleWindowScalingMode(vm, window);
 
-            HandleStartImage(vm, filePath);
+            HandleStartImage(window, vm, filePath);
             window.Show();
 
-            HandlePostWindowUpdates(vm, settingsExists, desktop, window);
+            HandlePostWindowUpdates(vm, desktop, window);
         }
 
         void BlankStartUp()
         {
+            desktop.MainWindow = window;
+            
             SettingsUpdater.InitializeSettings(vm.MainWindows.ActiveWindow.CurrentValue, settingsExists);
 
             HandleWindowScalingMode(vm, window);
 
-            HandlePostWindowUpdates(vm, settingsExists, desktop, window);
+            HandlePostWindowUpdates(vm, desktop, window);
         }
     }
-
     
-    public static void StartUpBlank(CoreViewModel vm, bool settingsExists,
-        IClassicDesktopStyleApplicationLifetime desktop, MainWindow window)
+    public static void DetachedWindowStartup(CoreViewModel core, IClassicDesktopStyleApplicationLifetime desktop, MainWindow window)
     {
-        SettingsUpdater.InitializeSettings(vm.MainWindows.ActiveWindow.CurrentValue, settingsExists);
-        
-        HandleWindowScalingMode(vm, window);
-
-        window.Show();
-
-        HandlePostWindowUpdates(vm, settingsExists, desktop, window);
-    }
-    
-    public static void DetachedWindowStartup(CoreViewModel vm,  IClassicDesktopStyleApplicationLifetime desktop, MainWindow window)
-    {
-        SettingsUpdater.InitializeSettings(vm.MainWindows.ActiveWindow.CurrentValue, true);
-
+        SettingsUpdater.InitializeSettings(window.DataContext as MainWindowViewModel, true);
+        HandleWindowScalingMode(core, window);
         window.Show();
         
-        HandlePostWindowUpdates(vm, true, desktop, window);
+        HandlePostWindowUpdates(core, desktop, window);
     }
     
     public static void RegularStartUp(CoreViewModel vm, bool settingsExists,
         IClassicDesktopStyleApplicationLifetime desktop, MainWindow window)
     {
+        desktop.MainWindow = window;
         TranslationManager.Init();
         SettingsUpdater.InitializeSettings(vm.MainWindows.ActiveWindow.CurrentValue, settingsExists);
 
         HandleWindowScalingMode(vm, window);
 
-        StartUpMenuOrLastFile(vm);
+        StartUpMenuOrLastFile(window, vm);
         window.Show();
 
-        HandlePostWindowUpdates(vm, settingsExists, desktop, window);
+        HandlePostWindowUpdates(vm, desktop, window);
     }
     
     public static void HandleWindowScalingMode(CoreViewModel vm, MainWindow window)
@@ -165,8 +157,7 @@ public static class StartUpHelper
         }
     }
 
-    public static void HandlePostWindowUpdates(CoreViewModel vm, bool settingsExists,
-        IClassicDesktopStyleApplicationLifetime desktop, MainWindow window)
+    public static void HandlePostWindowUpdates(CoreViewModel core, IClassicDesktopStyleApplicationLifetime desktop, MainWindow window)
     {
         SetMemorySettings();
         
@@ -175,18 +166,14 @@ public static class StartUpHelper
         SetWindowEventHandlers(window);
         HandleThemeUpdates();
 
-        UIHelper.SetControls(window);
-
         if (Settings.UIProperties.ShowHoverNavigationBar)
         {
-            vm.MainWindows.ActiveWindow.CurrentValue.WindowTabs.ActiveTab.CurrentValue.Hoverbar.IsHoverbarVisible
+            core.MainWindows.ActiveWindow.CurrentValue.WindowTabs.ActiveTab.CurrentValue.Hoverbar.IsHoverbarVisible
                 .Value = !Settings.UIProperties.ShowBottomNavBar;
         }
-        
-        desktop.MainWindow = window;
 
-        vm.MainWindows.ActiveWindow.CurrentValue.ToolTip ??= new ToolTipViewModel();
-        TooltipHelper.StartTooltipSubscription(vm.MainWindows.ActiveWindow.CurrentValue.ToolTip);
+        core.MainWindows.ActiveWindow.CurrentValue.ToolTip ??= new ToolTipViewModel();
+        TooltipHelper.StartTooltipSubscription(core.MainWindows.ActiveWindow.CurrentValue.ToolTip, window);
         
         if (!RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
         {
@@ -205,12 +192,12 @@ public static class StartUpHelper
         {
             Task.Run(async() =>
             {
-                await KeybindingManager.LoadKeybindings(vm.PlatformService);
-                vm.MainWindows.ActiveWindow.Value.Mapper =
-                    new FunctionsMapper(vm.MainWindows.ActiveWindow.CurrentValue, window);
+                await KeybindingManager.LoadKeybindings(core.PlatformService);
+                core.MainWindows.ActiveWindow.Value.Mapper =
+                    new FunctionsMapper(core.MainWindows.ActiveWindow.CurrentValue, window);
                 FileHistoryManager.Initialize();
-                HandleWindowControlSettings(vm, desktop);
-                vm.MainWindows.ActiveWindow.CurrentValue.WindowTabs.SetSortOrder((SortFilesBy)Settings.Sorting.SortPreference);
+                HandleWindowControlSettings(core, desktop);
+                core.MainWindows.ActiveWindow.CurrentValue.WindowTabs.SetSortOrder((SortFilesBy)Settings.Sorting.SortPreference);
             });
         }
     }
@@ -242,12 +229,12 @@ public static class StartUpHelper
         }
     }
 
-    private static void HandleStartImage(CoreViewModel vm, string arg)
+    private static void HandleStartImage(MainWindow mainWindow, CoreViewModel vm, string arg)
     {
-        Task.Run(() => QuickLoad.QuickLoadAsync(vm, arg, false));
+        Task.Run(() => QuickLoad.QuickLoadAsync(mainWindow, vm, arg, false));
     }
 
-    public static void StartUpMenuOrLastFile(CoreViewModel vm)
+    public static void StartUpMenuOrLastFile(MainWindow mainWindow, CoreViewModel vm)
     {
         if (Settings.StartUp.OpenLastFile)
         {
@@ -257,7 +244,7 @@ public static class StartUpHelper
             }
             else
             {
-                Task.Run(() => QuickLoad.QuickLoadAsync(vm, Settings.StartUp.LastFile, true));
+                Task.Run(() => QuickLoad.QuickLoadAsync(mainWindow, vm, Settings.StartUp.LastFile, true));
             }
         }
         else
@@ -297,8 +284,9 @@ public static class StartUpHelper
     private static async ValueTask MainWindow_KeysDownAsync(object? sender, KeyEventArgs e)
     {
         // Extract the ViewModel from the window that received the key press
-        var vm = (sender as Control)?.DataContext as MainWindowViewModel;
-        await MainKeyboardShortcuts.MainWindow_KeysDownAsync(e, vm).ConfigureAwait(false);
+        var mainWindow = sender as MainWindow;
+        var vm = mainWindow.DataContext as MainWindowViewModel;
+        await MainKeyboardShortcuts.MainWindow_KeysDownAsync(e, vm, mainWindow).ConfigureAwait(false);
     }
 
     private static async ValueTask MainWindow_KeyUpAsync(object? sender, KeyEventArgs e)

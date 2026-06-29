@@ -128,7 +128,6 @@ public class TabOverviewViewModel
     public void SelectTab(TabViewModel tab)
     {
         ActiveTab.Value = tab;
-        
         ActiveTab.Value.IsSelected = true;
     }
     

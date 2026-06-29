@@ -35,7 +35,11 @@ public partial class RenameDialog : AnimatedPopUp
         switch (e.Key)
         {
             case Key.Enter:
-                RenameHelper.RenameAction(DataContext as MainWindowViewModel, RenameBox.Text);
+                if ( TopLevel.GetTopLevel(this) is not MainWindow mainWindow)
+                {
+                    return;
+                }
+                RenameHelper.RenameAction(DataContext as MainWindowViewModel, mainWindow, RenameBox.Text);
                 e.Handled = true;
                 break;
             case Key.Escape:
@@ -47,7 +51,11 @@ public partial class RenameDialog : AnimatedPopUp
 
     private void ApplyButtonOnClick(object? sender, RoutedEventArgs e)
     {
-        RenameHelper.RenameAction(DataContext as MainWindowViewModel, RenameBox.Text);
+        if ( TopLevel.GetTopLevel(this) is not MainWindow mainWindow)
+        {
+            return;
+        }
+        RenameHelper.RenameAction(DataContext as MainWindowViewModel, mainWindow, RenameBox.Text);
         _ = AnimatedClosing();
     }
 

@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using ImageMagick;
+using PicView.Avalonia.CustomControls;
 using PicView.Avalonia.Input;
 using PicView.Avalonia.UI;
 using PicView.Core.FileHandling;
@@ -94,7 +95,8 @@ public partial class EditableTitlebar : UserControl
     {
         base.OnKeyUp(e);
         
-        if (Application.Current.DataContext is not CoreViewModel core || DataContext is not MainWindowViewModel vm)
+        if (Application.Current.DataContext is not CoreViewModel core || DataContext is not MainWindowViewModel vm
+            || TopLevel.GetTopLevel(this) is not MainWindow mainWindow)
         {
             return;
         }
@@ -103,7 +105,7 @@ public partial class EditableTitlebar : UserControl
         {
             if (e.Key != Key.Escape)
             {
-                _ = MainKeyboardShortcuts.MainWindow_KeysDownAsync(e, vm).ConfigureAwait(false);
+                _ = MainKeyboardShortcuts.MainWindow_KeysDownAsync(e, vm, mainWindow).ConfigureAwait(false);
             }
         
             return;
@@ -112,10 +114,10 @@ public partial class EditableTitlebar : UserControl
         switch (e.Key)
         {
             case Key.Enter:
-                RenameHelper.RenameAction(vm, TextBox.Text);
+                RenameHelper.RenameAction(vm, mainWindow, TextBox.Text);
                 break;
             case Key.Escape:
-                UIHelper.GetMainView.Focus();
+                mainWindow.UIHelper.GetMainView.Focus();
                 MainKeyboardShortcuts.IsKeysEnabled = true;
                 break;
         }

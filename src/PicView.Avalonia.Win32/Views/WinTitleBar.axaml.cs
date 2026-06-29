@@ -62,7 +62,7 @@ public partial class WinTitleBar : MainTitleBar
         MainMenu.Closed += (_, _) => { CloseMenu(); };
         
         Observable.EveryValueChanged(vm.TopTitlebarViewModel.IsMainMenuVisible, x => x.Value,
-                UIHelper.GetFrameProvider)
+                mainWindow.FrameProvider)
             .Subscribe( isVisible =>
             {
                 if (isVisible)

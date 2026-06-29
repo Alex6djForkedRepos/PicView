@@ -5,7 +5,6 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Threading;
 using PicView.Avalonia.CustomControls;
 using PicView.Avalonia.StartUp;
-using PicView.Avalonia.UI;
 using PicView.Avalonia.Win32.WindowImpl;
 using WindowInitializer = PicView.Avalonia.Services.WindowInitializer;
 using PicView.Core.DebugTools;
@@ -35,7 +34,7 @@ public partial class WinMainWindow : MainWindow, IPlatformWindowService
         SharedBottomBar = BottomBar;
         SharedTitleBar = Titlebar;
         SharedMainView = MainView;
-
+        UIHelper.Initialize(this);
         LoadedInitialization();
     }
 
@@ -198,7 +197,7 @@ public partial class WinMainWindow : MainWindow, IPlatformWindowService
 
                 desktop.MainWindow = newWindow;
                 
-                TabNavigationInitializer.InitializeDetachedWindow(parentVm, newVm, tab);
+                TabNavigationInitializer.InitializeDetachedWindow(this, parentVm, newVm, tab);
             }, DispatcherPriority.Send);
         });
     }

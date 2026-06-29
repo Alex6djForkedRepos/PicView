@@ -44,9 +44,7 @@ public static class MainKeyboardShortcuts
     /// <summary>
     /// Processes the KeyDown event for the main window.
     /// </summary>
-    /// <param name="e">The key event arguments.</param>
-    /// <param name="mainWindowViewModel">The ViewModel of the active MainWindow.</param>
-    public static async ValueTask MainWindow_KeysDownAsync(KeyEventArgs e, MainWindowViewModel? mainWindowViewModel)
+    public static async ValueTask MainWindow_KeysDownAsync(KeyEventArgs e, MainWindowViewModel? mainWindowViewModel, MainWindow mainWindow)
     {
         if (KeybindingManager.CustomShortcuts is null || !IsKeysEnabled)
         {
@@ -71,7 +69,7 @@ public static class MainKeyboardShortcuts
         IsKeyHeldDown = _keyRepeatCount > KeyRepeatThreshold;
 
         // Handle special cases before processing shortcuts
-        if (await HandleSpecialCases(e, mainWindowViewModel))
+        if (await HandleSpecialCases(e, mainWindowViewModel, mainWindow))
         {
             return;
         }
@@ -163,7 +161,7 @@ public static class MainKeyboardShortcuts
     /// Handles special cases like cropping, dialog handling, and escape key.
     /// </summary>
     /// <returns>True if the key event was handled by a special case handler.</returns>
-    private static async ValueTask<bool> HandleSpecialCases(KeyEventArgs e, MainWindowViewModel? vm)
+    private static async ValueTask<bool> HandleSpecialCases(KeyEventArgs e, MainWindowViewModel? vm, MainWindow mainWindow)
     {
         // Handle cropping mode
         if (vm.WindowTabs.ActiveTab.CurrentValue.CropService is not null)
@@ -181,7 +179,7 @@ public static class MainKeyboardShortcuts
         }
 
         // Handle open dialog
-        if (DialogManager.IsDialogOpen)
+        if (mainWindow.IsDialogOpen)
         {
             if (e.Key is not Key.Escape)
             {
@@ -194,7 +192,7 @@ public static class MainKeyboardShortcuts
                 return true;
             }
                 
-            var animatedPopUp = UIHelper.GetMainView.MainPanel.Children.OfType<AnimatedPopUp>().FirstOrDefault();
+            var animatedPopUp = mainWindow.UIHelper.GetMainView.MainPanel.Children.OfType<AnimatedPopUp>().FirstOrDefault();
             if (animatedPopUp is not null)
             {
                 await animatedPopUp.AnimatedClosing();
