@@ -924,6 +924,11 @@ public class FunctionsMapper(MainWindowViewModel vm, MainWindow mainWindow) : IF
 
     public ValueTask NewTab()
     {
+        if (vm.WindowTabs.ActiveTab.CurrentValue.Gallery.IsGalleryDocked.CurrentValue)
+        {
+            // TODO: Consecutive tabs or windows currently not supported when gallery is enabled
+            return ValueTask.CompletedTask;
+        }
         vm.WindowTabs.CreateTab();
         return ValueTask.CompletedTask;
     }

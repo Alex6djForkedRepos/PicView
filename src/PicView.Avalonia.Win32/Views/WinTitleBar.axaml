@@ -1111,7 +1111,7 @@
                 DockPanel.Dock="Right"
                 Foreground="{DynamicResource MainTextColor}"
                 IsTabStop="False"
-                IsVisible="{Binding TopTitlebarViewModel.IsMenuButtonVisible.Value}">
+                IsVisible="{Binding !WindowTabs.ActiveTab.Value.Gallery.IsGalleryDocked.Value}">
                 <Path
                     Width="13"
                     Height="13"

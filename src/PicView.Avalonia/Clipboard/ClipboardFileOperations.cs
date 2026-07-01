@@ -201,8 +201,13 @@ public static class ClipboardFileOperations
             await vm.WindowTabs.LoadFromFileAsync(firstItem).ConfigureAwait(false);
         }
 
-
-        // Open consecutive files in a new process
+        if (vm.WindowTabs.ActiveTab.CurrentValue.Gallery.IsGalleryDocked.CurrentValue)
+        {
+            // TODO: Consecutive tabs or windows currently not supported when gallery is enabled
+            return;
+        }
+        
+        // Open consecutive files in a new tab
         foreach (var file in storageItems.Skip(1))
         {
             var path = file.Path.LocalPath;
